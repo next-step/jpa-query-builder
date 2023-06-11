@@ -27,4 +27,12 @@ public enum DbDialect {
     public String getSqlType() {
         return sqlType;
     }
+
+    public boolean isString() {
+        return this == STRING;
+    }
+
+    public boolean isNotString() {
+        return this != STRING;
+    }
 }

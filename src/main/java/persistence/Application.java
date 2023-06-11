@@ -5,7 +5,9 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.collection.DbDialectMap;
 import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.ddl.DefaultJavaToSqlColumnParser;
 import persistence.sql.ddl.Person;
 
 public class Application {
@@ -18,7 +20,9 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final String sql = new DdlQueryBuilder()
+
+            final DefaultJavaToSqlColumnParser columnParser = new DefaultJavaToSqlColumnParser(new DbDialectMap());
+            final String sql = new DdlQueryBuilder(columnParser)
                     .create(Person.class)
                     .build();
             jdbcTemplate.execute(sql);

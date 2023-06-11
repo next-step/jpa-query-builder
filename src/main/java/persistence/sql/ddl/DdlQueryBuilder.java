@@ -1,31 +1,27 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import persistence.sql.ddl.collection.IdGeneratedValueStrategyMap;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static persistence.sql.ddl.DbDialect.*;
-
 public class DdlQueryBuilder {
     private static final String CREATE_TABLE = "create table %s (%s);";
     private static final String BLANK = " ";
     private static final String COMMA = ",";
-    private final Map<Class<?>, DbDialect> JAVA_TO_SQL;
-    private final Map<String, Class<?>> idColumns = new LinkedHashMap<>();
-    private final Map<String, Class<?>> columns = new LinkedHashMap<>();
+    private final Map<String, String> idColumns = new LinkedHashMap<>();
+    private final Map<String, String> columns = new LinkedHashMap<>();
+    private final DefaultJavaToSqlColumnParser javaToSqlDialectMap;
+    private final IdGeneratedValueStrategyMap idGeneratedValueStrategyMap;
     private Class<?> entity;
 
-    public DdlQueryBuilder() {
-        JAVA_TO_SQL = Map.of(
-                Long.class, LONG,
-                Long.TYPE, LONG,
-                String.class, STRING,
-                Integer.class, INTEGER,
-                Integer.TYPE, INTEGER
-        );
+    public DdlQueryBuilder(DefaultJavaToSqlColumnParser javaToSqlDialectMap) {
+        this.javaToSqlDialectMap = javaToSqlDialectMap;
+        this.idGeneratedValueStrategyMap = new IdGeneratedValueStrategyMap();
     }
 
     public DdlQueryBuilder create(Class<?> entity) {
@@ -42,18 +38,39 @@ public class DdlQueryBuilder {
 
     private void addColumns(Field field) {
         if (field.isAnnotationPresent(Id.class)) {
-            idColumns.put(getColumnName(field), field.getType());
+            idColumns.put(getColumnName(field), getColumnTypeAndConstraint(field));
             return;
         }
-        columns.put(getColumnName(field), field.getType());
+        columns.put(getColumnName(field), getColumnTypeAndConstraint(field));
     }
 
     private String getColumnName(Field field) {
-        return field.getName().toLowerCase();
+        if (!field.isAnnotationPresent(Column.class)) {
+            return field.getName().toLowerCase();
+        }
+        final Column column = field.getAnnotation(Column.class);
+        if (column.name().isBlank()) {
+            return field.getName().toLowerCase();
+        }
+        return column.name();
     }
 
-    private String getColumnType(Class<?> javaType) {
-        return JAVA_TO_SQL.get(javaType).getSqlType();
+    private String getColumnTypeAndConstraint(Field field) {
+        StringBuilder sb = new StringBuilder();
+        if (field.isAnnotationPresent(Column.class)) {
+            final Column column = field.getAnnotation(Column.class);
+            sb.append(javaToSqlDialectMap.parse(field.getType(), column));
+        }
+        if (!field.isAnnotationPresent(Column.class)) {
+            sb.append(javaToSqlDialectMap.parse(field.getType()));
+        }
+
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
+            final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+            sb.append(BLANK)
+                    .append(idGeneratedValueStrategyMap.get(generatedValue.strategy()));
+        }
+        return sb.toString();
     }
 
     public String build() {
@@ -79,22 +96,22 @@ public class DdlQueryBuilder {
         return sb.toString();
     }
 
-    private String addColumns(Map<String, Class<?>> columns) {
+    private String addColumns(Map<String, String> columns) {
         StringBuilder sb = new StringBuilder();
         columns.forEach((key, value) -> {
             sb.append(key);
             sb.append(BLANK);
-            sb.append(getColumnType(value));
+            sb.append(value);
             sb.append(COMMA);
         });
         return sb.toString();
     }
 
-    public Map<String, Class<?>> getIdColumns() {
+    public Map<String, String> getIdColumns() {
         return idColumns;
     }
 
-    public Map<String, Class<?>> getColumns() {
+    public Map<String, String> getColumns() {
         return columns;
     }
 }
