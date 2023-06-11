@@ -23,7 +23,7 @@ class DdlQueryBuilderTest {
         assertThat(ddlQueryBuilder.getColumns().keySet()).containsExactly("nick_name", "old", "email");
         assertThat(ddlQueryBuilder.getColumns().values()).containsExactly("varchar(255) null", "int(3) null", "varchar(255) not null");
         assertThat(ddlQueryBuilder.build())
-                .isEqualTo("create table person (id bigint auto_increment,nick_name varchar(255) null,old int(3) null,email varchar(255) not null, constraint pk_person primary key (id));");
+                .isEqualTo("create table users (id bigint auto_increment,nick_name varchar(255) null,old int(3) null,email varchar(255) not null, constraint pk_person primary key (id));");
     }
 
 }

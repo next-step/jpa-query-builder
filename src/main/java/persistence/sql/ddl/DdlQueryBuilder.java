@@ -1,8 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import persistence.sql.ddl.collection.IdGeneratedValueStrategyMap;
 
 import java.lang.reflect.Field;
@@ -37,6 +35,9 @@ public class DdlQueryBuilder {
     }
 
     private void addColumns(Field field) {
+        if (field.isAnnotationPresent(Transient.class)) {
+            return;
+        }
         if (field.isAnnotationPresent(Id.class)) {
             idColumns.put(getColumnName(field), getColumnTypeAndConstraint(field));
             return;
@@ -80,7 +81,18 @@ public class DdlQueryBuilder {
         String content = addColumns(idColumns) +
                 addColumns(columns) +
                 addConstraint();
-        return String.format(CREATE_TABLE, entity.getSimpleName().toLowerCase(), content);
+        return String.format(CREATE_TABLE, getTableName(), content);
+    }
+
+    private String getTableName() {
+        if (entity.isAnnotationPresent(Table.class)) {
+            final Table table = entity.getAnnotation(Table.class);
+            if (table.name().isBlank()) {
+                return entity.getSimpleName().toLowerCase();
+            }
+            return table.name();
+        }
+        return entity.getSimpleName().toLowerCase();
     }
 
     private String addConstraint() {
