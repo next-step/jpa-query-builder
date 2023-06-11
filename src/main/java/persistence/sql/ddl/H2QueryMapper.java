@@ -1,9 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -11,13 +8,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class H2QueryMapper {
-    private static final String ID_COLUMN_DEFAULT_FORMAT = "%s primary key";
 
     public String createQuery(Class<?> clazz) {
         String tableQuery = tableQuery(clazz);
         String columnsQuery = columnsQuery(clazz);
 
         return String.format("%s %s", tableQuery, columnsQuery);
+    }
+
+    private String tableQuery(Class<?> clazz) {
+        return String.format("create table %s", getTableName(clazz));
+    }
+
+    private String getTableName(Class<?> clazz) {
+        Table table = clazz.getAnnotation(Table.class);
+
+        if (table != null && !table.name().isBlank()) {
+            return String.format(table.name());
+        }
+
+        return String.format(clazz.getSimpleName());
     }
 
     private String columnsQuery(Class<?> clazz) {
@@ -34,7 +44,7 @@ public class H2QueryMapper {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("@Id 어노테이션이 선언된 필드가 존재하지 않습니다."));
 
-        StringBuilder queryBuilder = new StringBuilder(ID_COLUMN_DEFAULT_FORMAT);
+        StringBuilder queryBuilder = new StringBuilder("%s primary key");
         GeneratedValue generatedValue = idField.getAnnotation(GeneratedValue.class);
 
         if (generatedValue != null && generatedValue.strategy().equals(GenerationType.IDENTITY)) {
@@ -47,6 +57,7 @@ public class H2QueryMapper {
     private String getColumnsQuery(Field[] declaredFields) {
         List<Field> fields = Arrays.stream(declaredFields)
                 .filter(field -> !field.isAnnotationPresent(Id.class))
+                .filter(filed -> !filed.isAnnotationPresent(Transient.class))
                 .toList();
 
         return fields.stream()
@@ -66,7 +77,19 @@ public class H2QueryMapper {
         return String.format("%s %s", columnName, columnType);
     }
 
-    private static String getColumnName(Column column, Field field) {
+    private String getNoneColumnAnnotationQuery(Field field) {
+        String columnName = field.getName();
+        Class<?> type = field.getType();
+        String columnType = getColumnType(type);
+
+        if (type.equals(String.class)) {
+            columnType = columnType + "(255)";
+        }
+
+        return String.format("%s %s", columnName, columnType);
+    }
+
+    private String getColumnName(Column column, Field field) {
         String name = column.name();
 
         if (name.isBlank()) {
@@ -87,19 +110,7 @@ public class H2QueryMapper {
         return builder.toString();
     }
 
-    private static String getNoneColumnAnnotationQuery(Field field) {
-        String columnName = field.getName();
-        Class<?> type = field.getType();
-        String columnType = getColumnType(type);
-
-        if (type.equals(String.class)) {
-            columnType = columnType + "(255)";
-        }
-
-        return String.format("%s %s", columnName, columnType);
-    }
-
-    private static String getColumnType(Class<?> type) {
+    private String getColumnType(Class<?> type) {
         if (type.equals(Long.class)) {
             return "bigint";
         }
@@ -113,9 +124,5 @@ public class H2QueryMapper {
         }
 
         throw new IllegalArgumentException("존재하지 않는 컬럼 타입 입니다.");
-    }
-
-    private static String tableQuery(Class<?> clazz) {
-        return String.format("create table %s", clazz.getSimpleName());
     }
 }
