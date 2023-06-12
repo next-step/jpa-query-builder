@@ -5,6 +5,8 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.Person;
+import persistence.sql.ddl.SchemaCreator;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -16,6 +18,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            jdbcTemplate.execute(new SchemaCreator(Person.class).create());
 
             server.stop();
         } catch (Exception e) {
