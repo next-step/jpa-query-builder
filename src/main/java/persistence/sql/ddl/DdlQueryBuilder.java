@@ -23,13 +23,16 @@ public class DdlQueryBuilder {
         this.idGeneratedValueStrategyMap = new IdGeneratedValueStrategyMap();
     }
 
-    public DdlQueryBuilder create(Class<?> entity) {
+    public String build(Class<?> entity) {
+        if (entity == null) {
+            throw new IllegalStateException("Entity is not set");
+        }
         this.entity = entity;
-        setFields(entity);
-        return this;
+        setFields();
+        return buildSql();
     }
 
-    private void setFields(Class<?> entity) {
+    private void setFields() {
         final Field[] declaredFields = entity.getDeclaredFields();
         Arrays.stream(declaredFields)
                 .forEach(this::addColumns);
@@ -75,10 +78,7 @@ public class DdlQueryBuilder {
         return sb.toString();
     }
 
-    public String build() {
-        if (entity == null) {
-            throw new IllegalStateException("Entity is not set");
-        }
+    private String buildSql() {
         String content = addColumns(idColumns) +
                 addColumns(columns) +
                 addConstraint();

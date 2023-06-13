@@ -13,17 +13,14 @@ class DdlQueryBuilderTest {
     void ddlQueryBuildTest() {
         final DefaultJavaToSqlColumnParser columnParser = new DefaultJavaToSqlColumnParser(new DbDialectMap());
         DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(columnParser);
-        ddlQueryBuilder = ddlQueryBuilder.create(Person.class);
-
-        final String sql = ddlQueryBuilder.build();
-        System.out.println(sql);
+        final String sql = ddlQueryBuilder.build(Person.class);
 
         assertThat(ddlQueryBuilder.getIdColumns().keySet()).containsExactly("id");
         assertThat(ddlQueryBuilder.getIdColumns().values()).containsExactly("bigint auto_increment");
         assertThat(ddlQueryBuilder.getColumns().keySet()).containsExactly("nick_name", "old", "email");
-        assertThat(ddlQueryBuilder.getColumns().values()).containsExactly("varchar(255) null", "int(3) null", "varchar(255) not null");
-        assertThat(ddlQueryBuilder.build())
-                .isEqualTo("create table users (id bigint auto_increment,nick_name varchar(255) null,old int(3) null,email varchar(255) not null, constraint pk_person primary key (id));");
+        assertThat(ddlQueryBuilder.getColumns().values()).containsExactly("varchar(255) null", "int null", "varchar(255) not null");
+        assertThat(sql)
+                .isEqualTo("create table users (id bigint auto_increment,nick_name varchar(255) null,old int null,email varchar(255) not null, constraint pk_person primary key (id));");
     }
 
 }

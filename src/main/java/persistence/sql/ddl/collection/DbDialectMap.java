@@ -5,7 +5,6 @@ import persistence.sql.ddl.DbDialect;
 import java.util.Map;
 
 import static persistence.sql.ddl.DbDialect.*;
-import static persistence.sql.ddl.DbDialect.INTEGER;
 
 public class DbDialectMap {
     private final Map<Class<?>, DbDialect> JAVA_TO_SQL;

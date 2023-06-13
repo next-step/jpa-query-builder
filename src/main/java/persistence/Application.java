@@ -22,9 +22,7 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             final DefaultJavaToSqlColumnParser columnParser = new DefaultJavaToSqlColumnParser(new DbDialectMap());
-            final String sql = new DdlQueryBuilder(columnParser)
-                    .create(Person.class)
-                    .build();
+            final String sql = new DdlQueryBuilder(columnParser).build(Person.class);
             jdbcTemplate.execute(sql);
 
             server.stop();
