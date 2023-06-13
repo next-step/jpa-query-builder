@@ -1,8 +1,8 @@
 package persistence;
 
-
 import jakarta.persistence.Id;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -20,10 +20,46 @@ public class EntityScanner {
     public Columns columns() {
         return Arrays.stream(entity.getDeclaredFields())
                 .map(it -> Column.of(
-                        it.getName(),
+                        columnName(it),
                         it.getType(),
-                        it.isAnnotationPresent(Id.class)
+                        columnSize(it),
+                        it.isAnnotationPresent(Id.class),
+                        columnNullable(it)
                 ))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Columns::new));
+    }
+
+    private boolean columnNullable(Field field) {
+        jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
+
+        if (columnAnnotation == null) {
+            return false;
+        }
+
+        return columnAnnotation.nullable();
+    }
+
+    private int columnSize(Field field) {
+        jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
+
+        if (columnAnnotation == null) {
+            return -1;
+        }
+
+        return columnAnnotation.length();
+    }
+
+    private String columnName(Field field) {
+        jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
+
+        if (columnAnnotation == null) {
+            return field.getName();
+        }
+
+        if (columnAnnotation.name().equals("")) {
+            return field.getName();
+        }
+
+        return columnAnnotation.name();
     }
 }
