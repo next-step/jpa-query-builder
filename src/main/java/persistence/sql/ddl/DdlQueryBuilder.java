@@ -11,6 +11,7 @@ public class DdlQueryBuilder {
     private static final String CREATE_TABLE = "create table %s (%s);";
     private static final String BLANK = " ";
     private static final String COMMA = ",";
+
     private final Map<String, String> idColumns = new LinkedHashMap<>();
     private final Map<String, String> columns = new LinkedHashMap<>();
     private final DefaultJavaToSqlColumnParser javaToSqlDialectMap;
