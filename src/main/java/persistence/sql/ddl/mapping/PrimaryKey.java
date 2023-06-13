@@ -1,6 +1,7 @@
 package persistence.sql.ddl.mapping;
 
 import jakarta.persistence.Id;
+import persistence.sql.ddl.exception.NoIdentifierException;
 
 import java.lang.reflect.Field;
 
@@ -15,7 +16,7 @@ public class PrimaryKey {
 
     private void validate(Field field) {
         if (!field.isAnnotationPresent(Id.class)) {
-            throw new IllegalArgumentException();
+            throw new NoIdentifierException(field.getDeclaringClass().getName());
         }
     }
 

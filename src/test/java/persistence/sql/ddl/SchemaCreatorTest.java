@@ -12,6 +12,6 @@ class SchemaCreatorTest {
     void create() {
         SchemaCreator creator = new SchemaCreator(Person.class);
         String ddl = creator.create();
-        assertThat(ddl).isEqualTo("CREATE TABLE Person (id bigint not null, name text, age integer, primary key (id))");
+        assertThat(ddl).isEqualTo("CREATE TABLE Person (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id))");
     }
 }

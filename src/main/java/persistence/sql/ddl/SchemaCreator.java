@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
 import persistence.sql.ddl.exception.NoIdentifierException;
-import persistence.sql.ddl.mapping.Column;
+import persistence.sql.ddl.mapping.TableColumn;
 import persistence.sql.ddl.mapping.PrimaryKey;
 
 import java.lang.reflect.Field;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class SchemaCreator {
 
     private final Class<?> entityClass;
-    private final List<Column> columns = new ArrayList<>();
+    private final List<TableColumn> tableColumns = new ArrayList<>();
     private PrimaryKey primaryKey;
 
     public SchemaCreator(Class<?> entityClass) {
@@ -32,7 +32,7 @@ public class SchemaCreator {
         if (field.isAnnotationPresent(Id.class)) {
             primaryKey = new PrimaryKey(field);
         }
-        columns.add(new Column(field));
+        tableColumns.add(new TableColumn(field));
     }
 
     public String create() {
@@ -53,8 +53,8 @@ public class SchemaCreator {
     }
 
     private String createColumnDdlString() {
-        return columns.stream()
-            .map(Column::createDdlString)
+        return tableColumns.stream()
+            .map(TableColumn::createDdlString)
             .collect(Collectors.joining(", "));
     }
 
