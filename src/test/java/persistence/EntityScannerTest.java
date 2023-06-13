@@ -1,6 +1,7 @@
 package persistence;
 
 import domain.Person;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,6 +46,7 @@ class EntityScannerTest {
     }
 
     @Test
+    @DisplayName("표현식 추출, 맵핑 불가 맵핑 안됨")
     void 표현식() {
         EntityScanner entityScanner = new EntityScanner(Person.class);
 

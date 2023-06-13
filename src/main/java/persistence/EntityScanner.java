@@ -19,6 +19,7 @@ public class EntityScanner {
 
     public Columns columns() {
         return Arrays.stream(entity.getDeclaredFields())
+                .filter(this::notTransient)
                 .map(it -> Column.of(
                         columnName(it),
                         it.getType(),
@@ -27,6 +28,12 @@ public class EntityScanner {
                         columnNullable(it)
                 ))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Columns::new));
+    }
+
+    private boolean notTransient(Field field) {
+        jakarta.persistence.Transient annotation = field.getAnnotation(jakarta.persistence.Transient.class);
+
+        return annotation == null;
     }
 
     private boolean columnNullable(Field field) {
