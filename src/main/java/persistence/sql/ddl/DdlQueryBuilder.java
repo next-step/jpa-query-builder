@@ -14,12 +14,12 @@ public class DdlQueryBuilder {
 
     private final Map<String, String> idColumns = new LinkedHashMap<>();
     private final Map<String, String> columns = new LinkedHashMap<>();
-    private final DefaultJavaToSqlColumnParser javaToSqlDialectMap;
+    private final JavaToSqlColumnParser javaToSqlColumnParser;
     private final IdGeneratedValueStrategyMap idGeneratedValueStrategyMap;
     private Class<?> entity;
 
-    public DdlQueryBuilder(DefaultJavaToSqlColumnParser javaToSqlDialectMap) {
-        this.javaToSqlDialectMap = javaToSqlDialectMap;
+    public DdlQueryBuilder(JavaToSqlColumnParser javaToSqlColumnParser) {
+        this.javaToSqlColumnParser = javaToSqlColumnParser;
         this.idGeneratedValueStrategyMap = new IdGeneratedValueStrategyMap();
     }
 
@@ -64,10 +64,10 @@ public class DdlQueryBuilder {
         StringBuilder sb = new StringBuilder();
         if (field.isAnnotationPresent(Column.class)) {
             final Column column = field.getAnnotation(Column.class);
-            sb.append(javaToSqlDialectMap.parse(field.getType(), column));
+            sb.append(javaToSqlColumnParser.parse(field.getType(), column));
         }
         if (!field.isAnnotationPresent(Column.class)) {
-            sb.append(javaToSqlDialectMap.parse(field.getType()));
+            sb.append(javaToSqlColumnParser.parse(field.getType()));
         }
 
         if (field.isAnnotationPresent(GeneratedValue.class)) {

@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.collection.DbDialectMap;
+import persistence.sql.ddl.dialect.H2DbDialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,7 +11,8 @@ class DdlQueryBuilderTest {
     @DisplayName("DDL 쿼리 생성 테스트")
     @Test
     void ddlQueryBuildTest() {
-        final DefaultJavaToSqlColumnParser columnParser = new DefaultJavaToSqlColumnParser(new DbDialectMap());
+
+        final JavaToSqlColumnParser columnParser = new JavaToSqlColumnParser(new H2DbDialect());
         DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(columnParser);
         final String sql = ddlQueryBuilder.build(Person.class);
 

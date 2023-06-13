@@ -5,10 +5,11 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.collection.DbDialectMap;
 import persistence.sql.ddl.DdlQueryBuilder;
-import persistence.sql.ddl.DefaultJavaToSqlColumnParser;
+import persistence.sql.ddl.JavaToSqlColumnParser;
 import persistence.sql.ddl.Person;
+import persistence.sql.ddl.collection.Dialects;
+import persistence.sql.ddl.dialect.Dialect;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -20,8 +21,9 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-
-            final DefaultJavaToSqlColumnParser columnParser = new DefaultJavaToSqlColumnParser(new DbDialectMap());
+            final Dialects dialects = new Dialects();
+            final Dialect dialect = dialects.get("h2");
+            final JavaToSqlColumnParser columnParser = new JavaToSqlColumnParser(dialect);
             final String sql = new DdlQueryBuilder(columnParser).build(Person.class);
             jdbcTemplate.execute(sql);
 
