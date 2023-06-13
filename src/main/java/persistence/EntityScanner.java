@@ -1,6 +1,5 @@
 package persistence;
 
-
 import jakarta.persistence.Id;
 
 import java.util.Arrays;
