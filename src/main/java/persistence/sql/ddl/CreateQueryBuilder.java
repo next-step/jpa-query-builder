@@ -14,14 +14,14 @@ public class CreateQueryBuilder<T> {
         return new StringBuilder()
                 .append("CREATE TABLE ")
                 .append(new TableName<>(clazz))
-                .append(" (\n")
+                .append(" (")
                 .append(getColumnSql())
-                .append("\n);")
+                .append(");")
                 .toString();
     }
 
     private String getColumnSql() {
-        final String DELIMITER = ",\n";
+        final String DELIMITER = ", ";
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(ColumnBuilder::new)
