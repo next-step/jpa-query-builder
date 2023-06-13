@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -10,19 +13,24 @@ public class CreateQueryBuilder<T> {
 
     public String build() {
         return new StringBuilder()
-                .append("create table " + getTableName() + " (\n")
+                .append("CREATE TABLE " + getTableName() + " (\n")
                 .append(getColumnSql())
                 .append("\n)")
                 .toString();
     }
 
-    public String getTableName() {
-        return clazz.getSimpleName().toUpperCase();
+    private String getTableName() {
+        Table table = clazz.getAnnotation(Table.class);
+        String tableName = table == null || table.name().isBlank()
+                ? clazz.getSimpleName()
+                : table.name();
+        return tableName.toLowerCase();
     }
 
-    public String getColumnSql() {
+    private String getColumnSql() {
         final String DELIMITER = ",\n";
         return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(ColumnBuilder::new)
                 .map(ColumnBuilder::build)
                 .collect(Collectors.joining(DELIMITER));
