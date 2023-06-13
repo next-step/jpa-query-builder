@@ -2,6 +2,7 @@ package persistence;
 
 public class Column implements Node {
     private static final String SPACE = " ";
+
     private final String name;
     private final String type;
     private final boolean unique;

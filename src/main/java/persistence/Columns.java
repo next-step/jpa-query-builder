@@ -29,11 +29,15 @@ public class Columns {
     }
 
     private void primaryKeyBuild() {
-        stringBuilder.append(new PrimaryKey(uniqueKey()).expression());
+        stringBuilder.append(new PrimaryKey(uniqueKey())
+                .expression());
     }
 
     private String uniqueKey() {
-        return columns.stream().filter(Column::unique).findFirst().orElseThrow(RuntimeException::new).name();
+        return columns.stream()
+                .filter(Column::unique)
+                .findFirst()
+                .orElseThrow(RuntimeException::new).name();
     }
 
     private void normalColumnBuild() {
@@ -49,16 +53,24 @@ public class Columns {
     }
 
     private void checkDuplicateUnique(List<Column> columns) {
-        if (columns.stream().filter(Column::unique).count() > 1) {
+        boolean isOver = columns.stream()
+                .filter(Column::unique)
+                .count() > 1;
+
+        if (isOver) {
             throw new DuplicateFormatFlagsException("Multiple columns with unique flag found.");
         }
     }
 
     private void checkDuplicateName(List<Column> columns) {
         Set<String> names = new HashSet<>();
-        columns.stream().filter(column -> !names.add(column.name())).findFirst().ifPresent(column -> {
-            throw new DuplicateFormatFlagsException("Duplicate column name: " + column.name());
-        });
+
+        columns.stream()
+                .filter(column -> !names.add(column.name()))
+                .findFirst()
+                .ifPresent(column -> {
+                    throw new DuplicateFormatFlagsException("Duplicate column name: " + column.name());
+                });
     }
 
     private Column findColumn(int index) {

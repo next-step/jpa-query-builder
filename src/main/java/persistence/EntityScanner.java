@@ -4,8 +4,6 @@ package persistence;
 import jakarta.persistence.Id;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class EntityScanner {
