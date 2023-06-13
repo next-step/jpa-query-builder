@@ -7,8 +7,9 @@ import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 
+import static persistence.sql.ddl.StringConstant.BLANK;
+
 public class ColumnBuilder {
-    private static final String BLANK = "";
     private final Field field;
 
     public ColumnBuilder(Field field) {this.field = field;}
