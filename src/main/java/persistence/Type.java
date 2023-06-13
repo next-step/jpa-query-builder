@@ -4,17 +4,17 @@ import java.util.Arrays;
 
 public enum Type {
     LONG(Long.class, "bigint") {
-        String expression() {
+        String expression(int size) {
             return this.getType();
         }
     },
     STRING(String.class, "varchar") {
-        String expression() {
-            return this.getType() + "(255)";
+        String expression(int size) {
+            return String.format("%s(%d)", this.getType(), size);
         }
     },
-    INTEGER(Integer.class, "bigint") {
-        String expression() {
+    INTEGER(Integer.class, "integer") {
+        String expression(int size) {
             return this.getType();
         }
     };
@@ -27,17 +27,17 @@ public enum Type {
         this.dbType = dbType;
     }
 
-    public static String valueOf(Class<?> type) {
+    public static String valueOf(Class<?> type, int size) {
         return Arrays.stream(values())
                 .filter(it -> it.typeClass.equals(type))
                 .findFirst()
                 .orElseThrow(RuntimeException::new)
-                .expression();
+                .expression(size);
     }
 
     public String getType() {
         return dbType;
     }
 
-    abstract String expression();
+    abstract String expression(int size);
 }
