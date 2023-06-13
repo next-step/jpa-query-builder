@@ -20,13 +20,7 @@ public class DefaultJavaToSqlColumnParser {
                     .append(column.length())
                     .append(")");
         }
-        if (dbDialect.isNotString() && column.length() != 255) {
-            sb.append(dbDialect.getSqlType())
-                    .append("(")
-                    .append(column.length())
-                    .append(")");
-        }
-        if (dbDialect.isNotString() && column.length() == 255) {
+        if (dbDialect.isNotString()) {
             sb.append(dbDialect.getSqlType());
         }
         if (column.nullable()) {
