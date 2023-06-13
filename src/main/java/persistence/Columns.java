@@ -78,7 +78,6 @@ public class Columns {
         return columns.size();
     }
 
-
     private void checkDuplicateUnique(List<Column> columns) {
         boolean isOver = columns.stream()
                 .filter(Column::unique)

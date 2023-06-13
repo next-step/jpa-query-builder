@@ -26,22 +26,6 @@ public class Column implements Node {
         return new Column(name, Type.valueOf(type, size), unique, nullable);
     }
 
-    public String name() {
-        return name;
-    }
-
-    public String type() {
-        return type;
-    }
-
-    public boolean unique() {
-        return unique;
-    }
-
-    private String token(String token) {
-        return token + SPACE;
-    }
-
     @Override
     public String expression() {
         stringBuilder.append(token(name()));
@@ -53,6 +37,22 @@ public class Column implements Node {
         }
 
         return stringBuilder.toString();
+    }
+
+    private String token(String token) {
+        return token + SPACE;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public String type() {
+        return type;
+    }
+
+    public boolean unique() {
+        return unique;
     }
 
     private String nullable() {
