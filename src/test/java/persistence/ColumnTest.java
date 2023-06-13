@@ -1,0 +1,16 @@
+package persistence;
+
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class ColumnTest {
+
+    @Test
+    void 컬럼_표현식() {
+        Column actual = Column.of("name", Long.class, false);
+
+        assertThat(actual.expression()).isEqualTo("name bigint");
+    }
+
+}
