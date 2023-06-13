@@ -21,9 +21,9 @@ class TypeMapperTest {
     }
 
     @Test
-    @DisplayName("String 타입은 TEXT 로 변환된다.")
+    @DisplayName("String 타입은 VARCHAR 로 변환된다.")
     void stringToType() {
         assertThat(TypeMapper.toSqlType(String.class))
-                .isEqualTo("TEXT");
+                .isEqualTo("VARCHAR");
     }
 }

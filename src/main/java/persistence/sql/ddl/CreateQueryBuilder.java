@@ -9,11 +9,11 @@ public class CreateQueryBuilder<T> {
     public CreateQueryBuilder(Class<T> clazz) {this.clazz = clazz;}
 
     public String build() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("create table " + getTableName() + " (\n");
-        builder.append(getColumnSql());
-        builder.append("\n)");
-        return builder.toString();
+        return new StringBuilder()
+                .append("create table " + getTableName() + " (\n")
+                .append(getColumnSql())
+                .append("\n)")
+                .toString();
     }
 
     public String getTableName() {

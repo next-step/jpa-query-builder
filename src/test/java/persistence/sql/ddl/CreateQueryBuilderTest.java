@@ -13,9 +13,10 @@ class CreateQueryBuilderTest {
     @DisplayName("Person Entity 를 위한 create 쿼리를 생성한다.")
     void build() {
         String expected = "create table PERSON (\n"
-                + "id BIGINT PRIMARY KEY,\n"
-                + "name TEXT,\n"
-                + "age BIGINT\n"
+                + "id BIGINT AUTO_INCREMENT PRIMARY KEY,\n"
+                + "nick_name VARCHAR(255),\n"
+                + "old BIGINT(3),\n"
+                + "email VARCHAR(255) NOT NULL\n"
                 + ")";
         String actual = new CreateQueryBuilder<>(
                 Person.class

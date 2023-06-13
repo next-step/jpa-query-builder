@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -11,26 +14,56 @@ public class ColumnBuilder {
     public ColumnBuilder(Field field) {this.field = field;}
 
     public String build() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(getColumnName());
-        builder.append(" ");
-        builder.append(getSqlType());
-        builder.append(getPKSql());
-        return builder.toString();
+        return new StringBuilder()
+                .append(getColumnName())
+                .append(" ")
+                .append(getSqlType())
+                .append(getNullable())
+                .append(getGenerationStrategy())
+                .append(getPKSql())
+                .toString();
     }
 
     private String getColumnName() {
-        return field.getName();
+        final Column column = field.getDeclaredAnnotation(Column.class);
+        final String name = column == null || column.name().isBlank()
+                ? field.getName()
+                : column.name();
+        return name.toLowerCase();
     }
 
     private String getSqlType() {
-        return TypeMapper.toSqlType(field.getType());
+        String type = TypeMapper.toSqlType(field.getType());
+        final Column column = field.getDeclaredAnnotation(Column.class);
+        if (column == null) {
+            return type;
+        }
+        return new StringBuilder()
+                .append(type)
+                .append("(")
+                .append(column.length())
+                .append(")")
+                .toString();
+    }
+
+    private String getNullable() {
+        final Column column = field.getDeclaredAnnotation(Column.class);
+        return column == null || column.nullable()
+                ? BLANK
+                : " NOT NULL";
     }
 
     private String getPKSql() {
         final String PK_SQL = " PRIMARY KEY";
         return field.isAnnotationPresent(Id.class)
                 ? PK_SQL
+                : BLANK;
+    }
+
+    private String getGenerationStrategy() {
+        final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        return generatedValue != null && generatedValue.strategy() == GenerationType.IDENTITY
+                ? " AUTO_INCREMENT"
                 : BLANK;
     }
 }

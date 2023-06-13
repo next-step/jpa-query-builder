@@ -9,32 +9,42 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class ColumnBuilderTest {
 
     @Test
-    @DisplayName("Integer 타입은 BIGINT 로 변환된다.")
-    void integerToColumn() throws NoSuchFieldException {
-        final ColumnBuilder builder = new ColumnBuilder(
-                Person.class.getDeclaredField("age")
-        );
-        assertThat(builder.build())
-                .isEqualTo("age BIGINT");
-    }
-
-    @Test
-    @DisplayName("Long 타입은 BIGINT 로 변환된다.")
-    void longToColumn() throws NoSuchFieldException {
-        final ColumnBuilder builder = new ColumnBuilder(
+    @DisplayName("id 를 Column 으로 변환한다.")
+    void idToColumn() throws NoSuchFieldException {
+        final String actual = new ColumnBuilder(
                 Person.class.getDeclaredField("id")
-        );
-        assertThat(builder.build())
-                .isEqualTo("id BIGINT PRIMARY KEY");
+        ).build();
+        assertThat(actual)
+                .isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
     }
 
     @Test
-    @DisplayName("String 타입은 TEXT 로 변환된다.")
-    void stringToColumn() throws NoSuchFieldException {
-        final ColumnBuilder builder = new ColumnBuilder(
+    @DisplayName("name 를 Column 으로 변환한다.")
+    void nameToColumn() throws NoSuchFieldException {
+        final String actual = new ColumnBuilder(
                 Person.class.getDeclaredField("name")
-        );
-        assertThat(builder.build())
-                .isEqualTo("name TEXT");
+        ).build();
+        assertThat(actual)
+                .isEqualTo("nick_name VARCHAR(255)");
+    }
+
+    @Test
+    @DisplayName("age 를 Column 으로 변환한다.")
+    void ageToColumn() throws NoSuchFieldException {
+        final String actual = new ColumnBuilder(
+                Person.class.getDeclaredField("age")
+        ).build();
+        assertThat(actual)
+                .isEqualTo("old BIGINT(3)");
+    }
+
+    @Test
+    @DisplayName("email 를 Column 으로 변환한다.")
+    void emailToColumn() throws NoSuchFieldException {
+        final String actual = new ColumnBuilder(
+                Person.class.getDeclaredField("email")
+        ).build();
+        assertThat(actual)
+                .isEqualTo("email VARCHAR(255) NOT NULL");
     }
 }
