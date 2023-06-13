@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SchemaCreator {
+public class SchemaGenerator {
 
     private final Class<?> entityClass;
     private final List<TableColumn> tableColumns = new ArrayList<>();
     private PrimaryKey primaryKey;
 
-    public SchemaCreator(Class<?> entityClass) {
+    public SchemaGenerator(Class<?> entityClass) {
         this.entityClass = entityClass;
         init(entityClass);
     }
@@ -42,7 +42,15 @@ public class SchemaCreator {
         tableColumns.add(new TableColumn(field));
     }
 
-    public String create() {
+    public String generateDropTableDdlString() {
+        String tableName = entityClass.getName();
+        if (entityClass.isAnnotationPresent(Table.class)) {
+            tableName = entityClass.getAnnotation(Table.class).name();
+        }
+        return String.format("DROP TABLE IF EXISTS %s", tableName);
+    }
+
+    public String generateCreateTableDdlString() {
         if (!hasPrimaryKey()) {
             throw new NoIdentifierException(entityClass.getName());
         }
