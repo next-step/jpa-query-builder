@@ -29,13 +29,13 @@ class ColumnBuilderTest {
     }
 
     @Test
-    @DisplayName("age 를 Column 으로 변환한다.")
+    @DisplayName("age 를 Column 으로 변환한다. String 타입이 아니면 Column length 가 표시되어서는 안된다.")
     void ageToColumn() throws NoSuchFieldException {
         final String actual = new ColumnBuilder(
                 Person.class.getDeclaredField("age")
         ).build();
         assertThat(actual)
-                .isEqualTo("old BIGINT(3)");
+                .isEqualTo("old INTEGER");
     }
 
     @Test
@@ -45,6 +45,6 @@ class ColumnBuilderTest {
                 Person.class.getDeclaredField("email")
         ).build();
         assertThat(actual)
-                .isEqualTo("email VARCHAR(255) NOT NULL");
+                .isEqualTo("email VARCHAR(320) NOT NULL");
     }
 }

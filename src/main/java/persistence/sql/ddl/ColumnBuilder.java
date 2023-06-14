@@ -34,13 +34,18 @@ public class ColumnBuilder {
     }
 
     private String getSqlType() {
-        String type = TypeMapper.toSqlType(field.getType());
+        return new StringBuilder()
+                .append(TypeMapper.toSqlType(field.getType()))
+                .append(getColumnLength())
+                .toString();
+    }
+
+    private String getColumnLength() {
         final Column column = field.getDeclaredAnnotation(Column.class);
-        if (column == null) {
-            return type;
+        if (column == null || !field.getType().equals(String.class)) {
+            return BLANK;
         }
         return new StringBuilder()
-                .append(type)
                 .append("(")
                 .append(column.length())
                 .append(")")

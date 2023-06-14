@@ -22,7 +22,7 @@ public class Person {
     @Column(name = "old", length = 3)
     private Integer age;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 320)
     private String email;
 
     @Transient

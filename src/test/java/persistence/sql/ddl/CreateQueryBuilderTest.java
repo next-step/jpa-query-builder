@@ -15,8 +15,8 @@ class CreateQueryBuilderTest {
         String expected = "CREATE TABLE users ("
                 + "id BIGINT AUTO_INCREMENT PRIMARY KEY, "
                 + "nick_name VARCHAR(255), "
-                + "old BIGINT(3), "
-                + "email VARCHAR(255) NOT NULL"
+                + "old INTEGER, "
+                + "email VARCHAR(320) NOT NULL"
                 + ");";
         String actual = new CreateQueryBuilder<>(
                 Person.class

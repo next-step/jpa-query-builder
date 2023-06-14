@@ -6,7 +6,7 @@ import java.util.Map;
 public final class TypeMapper {
     private static final Map<Class<?>, String> javaToSql = Map.of(
             Long.class, "BIGINT",
-            Integer.class, "BIGINT",
+            Integer.class, "INTEGER",
             String.class, "VARCHAR"
     );
 

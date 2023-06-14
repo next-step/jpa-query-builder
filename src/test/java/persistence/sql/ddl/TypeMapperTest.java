@@ -7,10 +7,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class TypeMapperTest {
     @Test
-    @DisplayName("Integer 타입은 BIGINT 로 변환된다.")
+    @DisplayName("Integer 타입은 INTEGER 로 변환된다.")
     void integerToType() {
         assertThat(TypeMapper.toSqlType(Integer.class))
-                .isEqualTo("BIGINT");
+                .isEqualTo("INTEGER");
     }
 
     @Test
