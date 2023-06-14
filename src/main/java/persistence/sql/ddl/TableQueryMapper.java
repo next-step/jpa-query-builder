@@ -11,6 +11,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TableQueryMapper {
+    private static final String SPACE = " ";
+    private static final String CREATE_QUERY_FORMAT = "create table %s";
+    private static final String DROP_QUERY_FORMAT = "drop table %s";
+    private static final String ID_QUERY_FORMAT = "%s primary key";
+    private static final String COLUMN_QUERY_FORMAT = "(%s, %s)";
+    private static final String COLUMN_SEPARATOR = ", ";
     private final ColumnMapper columnMapper;
     private final GeneratedValueStrategy generatedValueStrategy;
 
@@ -27,7 +33,7 @@ public class TableQueryMapper {
     }
 
     private String tableQuery(Class<?> clazz) {
-        return String.format("create table %s", getTableName(clazz));
+        return String.format(CREATE_QUERY_FORMAT, getTableName(clazz));
     }
 
     private String getTableName(Class<?> clazz) {
@@ -45,7 +51,7 @@ public class TableQueryMapper {
         String idColumnQuery = getIdColumnQuery(declaredFields);
         String columnsQuery = getColumnsQuery(declaredFields);
 
-        return String.format("(%s, %s)", idColumnQuery, columnsQuery);
+        return String.format(COLUMN_QUERY_FORMAT, idColumnQuery, columnsQuery);
     }
 
     private String getIdColumnQuery(Field[] declaredFields) {
@@ -54,11 +60,11 @@ public class TableQueryMapper {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("@Id 어노테이션이 선언된 필드가 존재하지 않습니다."));
 
-        StringBuilder queryBuilder = new StringBuilder("%s primary key");
+        StringBuilder queryBuilder = new StringBuilder(ID_QUERY_FORMAT);
         String generate = generatedValueStrategy.generate(idField.getAnnotation(GeneratedValue.class));
 
         if (!generate.isBlank()) {
-            queryBuilder.append(" ").append(generate);
+            queryBuilder.append(SPACE).append(generate);
         }
 
         return String.format(queryBuilder.toString(), columnMapper.column(idField));
@@ -72,11 +78,11 @@ public class TableQueryMapper {
 
         return fields.stream()
                 .map(columnMapper::column)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(COLUMN_SEPARATOR));
     }
 
     public String drop(Class<?> clazz) {
         String tableName = getTableName(clazz);
-        return String.format("drop table %s", tableName);
+        return String.format(DROP_QUERY_FORMAT, tableName);
     }
 }
