@@ -17,7 +17,7 @@ public class ColumnMapper {
         String defaultColumn = String.format("%s %s", getColumnName(field, column), getColumnType(field, column));
         StringBuilder columnQuery = new StringBuilder(defaultColumn);
 
-        if (!column.nullable()) {
+        if (column != null && !column.nullable()) {
             columnQuery
                     .append(SPACE)
                     .append("not null");
