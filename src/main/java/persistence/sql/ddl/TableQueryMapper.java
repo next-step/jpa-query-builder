@@ -34,10 +34,10 @@ public class TableQueryMapper {
         Table table = clazz.getAnnotation(Table.class);
 
         if (table != null && !table.name().isBlank()) {
-            return String.format(table.name());
+            return table.name();
         }
 
-        return String.format(clazz.getSimpleName());
+        return clazz.getSimpleName();
     }
 
     private String columnsQuery(Class<?> clazz) {
