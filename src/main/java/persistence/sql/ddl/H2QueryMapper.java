@@ -58,7 +58,7 @@ public class H2QueryMapper {
         List<Field> fields = Arrays.stream(declaredFields)
                 .filter(field -> !field.isAnnotationPresent(Id.class))
                 .filter(filed -> !filed.isAnnotationPresent(Transient.class))
-                .toList();
+                .collect(Collectors.toList());
 
         return fields.stream()
                 .map(this::getColumnQuery)

@@ -13,7 +13,8 @@ class H2QueryMapperTest {
         H2QueryMapper h2QueryMapper = new H2QueryMapper();
         String query = h2QueryMapper.createQuery(PersonV3.class);
 
-        assertThat(query).isEqualToIgnoringCase("create table person (id bigint primary key, name varchar(255), age integer)");
+        assertThat(query).isEqualToIgnoringCase("create table person " +
+                "(id bigint primary key, name varchar(255), age integer)");
     }
 
     @Test
@@ -22,7 +23,9 @@ class H2QueryMapperTest {
         H2QueryMapper h2QueryMapper = new H2QueryMapper();
         String query = h2QueryMapper.createQuery(PersonV2.class);
 
-        assertThat(query).isEqualToIgnoringCase("create table personv2 (id bigint primary key auto_increment, nick_name varchar(255), old integer(3), email varchar(255) not null)");
+        assertThat(query).isEqualToIgnoringCase(
+                "create table personv2 " +
+                        "(id bigint primary key auto_increment, nick_name varchar(255), old integer(3), email varchar(255) not null)");
     }
 
     @Test
