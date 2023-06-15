@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.dml.DeleteByIdQueryBuilder;
 import persistence.sql.dml.FindAllQueryBuilder;
 import persistence.sql.dml.FindByIdQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
@@ -44,6 +45,11 @@ public class Application {
                             Person.class
                     ).build(id),
                     new PersonMapper()
+            );
+            jdbcTemplate.execute(
+                    new DeleteByIdQueryBuilder<>(
+                            Person.class
+                    ).build(id)
             );
 
             jdbcTemplate.execute(
