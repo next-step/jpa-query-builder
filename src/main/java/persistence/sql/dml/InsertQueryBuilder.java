@@ -18,7 +18,9 @@ public class InsertQueryBuilder<T> {
         return new StringBuilder()
                 .append("INSERT INTO ")
                 .append(new TableName<>(clazz))
+                .append(" (")
                 .append(ColumnNames.from(columnFields))
+                .append(")")
                 .append(ColumnValues.of(object, columnFields))
                 .append(SEMICOLON)
                 .toString();

@@ -20,16 +20,14 @@ public class ColumnNames {
         );
     }
 
-    @Override
-    public String toString() {
-        return new StringBuilder()
-                .append(" (")
-                .append(joining())
-                .append(")")
-                .toString();
+    public static ColumnNames from(Class<?> clazz) {
+        return ColumnNames.from(
+                ColumnFields.from(clazz)
+        );
     }
 
-    private String joining() {
+    @Override
+    public String toString() {
         return columnNames.stream()
                 .map(ColumnName::toString)
                 .collect(Collectors.joining(DELIMITER));

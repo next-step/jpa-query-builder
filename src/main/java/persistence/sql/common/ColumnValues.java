@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import static persistence.sql.common.StringConstant.DELIMITER;
 
 public class ColumnValues {
-    private final List<Object> values = new ArrayList<>();
+    private final List<ColumnValue> values = new ArrayList<>();
 
     public static ColumnValues of(Object object, ColumnFields columnFields) {
         return columnFields.stream().reduce(
@@ -23,7 +23,9 @@ public class ColumnValues {
     private ColumnValues addValue(Object object, Field field) {
         try {
             field.setAccessible(true);
-            values.add(field.get(object));
+            values.add(new ColumnValue(
+                    field.get(object)
+            ));
         } catch (IllegalAccessException e) {
             throw new IllegalFieldAccessException();
         }

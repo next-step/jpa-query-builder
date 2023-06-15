@@ -16,6 +16,6 @@ class ColumnValuesTest {
         Assertions.assertThat(
                 ColumnValues.of(person, fields)
                         .toString()
-        ).isEqualTo(" VALUES (고정완, 30, ghojeong@email.com)");
+        ).isEqualTo(" VALUES ('고정완', 30, 'ghojeong@email.com')");
     }
 }
