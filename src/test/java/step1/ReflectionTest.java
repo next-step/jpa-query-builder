@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
@@ -65,17 +65,17 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("요구사항 2 - test로 시작하는 메소드 실행")
-    void testPrefixMethod() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    void testPrefixMethod() throws InvocationTargetException, IllegalAccessException {
         final List<Object> actual = new ArrayList<>();
         for (Method declaredMethod : Car.class.getDeclaredMethods()) {
             if (declaredMethod.getName().startsWith("test")) {
                 actual.add(declaredMethod.invoke(car));
             }
         }
-        assertThat(actual).isEqualTo(List.of(
+        assertThat(actual).containsExactlyInAnyOrder(
                 "test : 포르쉐",
                 "test : 1000000"
-        ));
+        );
     }
 
     @Test
