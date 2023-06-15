@@ -3,8 +3,6 @@ package persistence.sql.dml;
 import persistence.sql.common.ColumnNames;
 import persistence.sql.common.TableName;
 
-import static persistence.sql.common.StringConstant.SEMICOLON;
-
 public class FindAllQueryBuilder<T> {
     private final Class<T> clazz;
 
@@ -16,7 +14,6 @@ public class FindAllQueryBuilder<T> {
                 .append(ColumnNames.from(clazz))
                 .append(" FROM ")
                 .append(new TableName<>(clazz))
-                .append(SEMICOLON)
                 .toString();
     }
 }

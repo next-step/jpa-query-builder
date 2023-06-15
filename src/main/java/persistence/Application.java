@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dml.FindAllQueryBuilder;
+import persistence.sql.dml.FindByIdQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 
 public class Application {
@@ -32,10 +33,16 @@ public class Application {
                             PersonFixture.createPerson()
                     ).build()
             );
-            jdbcTemplate.query(
+            Long id = jdbcTemplate.query(
                     new FindAllQueryBuilder<>(
                             Person.class
                     ).build(),
+                    new PersonMapper()
+            ).get(0).getId();
+            jdbcTemplate.query(
+                    new FindByIdQueryBuilder<>(
+                            Person.class
+                    ).build(id),
                     new PersonMapper()
             );
 

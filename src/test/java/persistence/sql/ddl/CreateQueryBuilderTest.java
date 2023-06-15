@@ -17,7 +17,7 @@ class CreateQueryBuilderTest {
                 + "nick_name VARCHAR(255), "
                 + "old INTEGER, "
                 + "email VARCHAR(320) NOT NULL"
-                + ");";
+                + ")";
         String actual = new CreateQueryBuilder<>(
                 Person.class
         ).build();

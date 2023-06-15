@@ -6,7 +6,6 @@ import persistence.sql.common.TableName;
 import java.util.stream.Collectors;
 
 import static persistence.sql.common.StringConstant.DELIMITER;
-import static persistence.sql.common.StringConstant.SEMICOLON;
 
 public class CreateQueryBuilder<T> {
     private final Class<T> clazz;
@@ -18,7 +17,6 @@ public class CreateQueryBuilder<T> {
                 .append("CREATE TABLE ")
                 .append(new TableName<>(clazz))
                 .append(getColumnSql())
-                .append(SEMICOLON)
                 .toString();
     }
 

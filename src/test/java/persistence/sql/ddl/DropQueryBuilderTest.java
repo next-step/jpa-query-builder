@@ -11,7 +11,7 @@ class DropQueryBuilderTest {
     @Test
     @DisplayName("Person Entity 를 위한 drop 쿼리를 생성한다.")
     void createDropQuery() {
-        final String expected = "DROP TABLE IF EXISTS users;";
+        final String expected = "DROP TABLE IF EXISTS users";
         final String actual = new DropQueryBuilder<>(
                 Person.class
         ).build();

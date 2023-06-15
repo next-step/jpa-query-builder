@@ -28,6 +28,10 @@ public class Person {
     @Transient
     private Integer index;
 
+    public Long getId() {
+        return id;
+    }
+
     public Person setId(Long id) {
         this.id = id;
         return this;

@@ -13,7 +13,7 @@ class InsertQueryBuilderTest {
     void build() {
         String expected = "INSERT INTO users"
                 + " (nick_name, old, email)"
-                + " VALUES ('고정완', 30, 'ghojeong@email.com');";
+                + " VALUES ('고정완', 30, 'ghojeong@email.com')";
         String actual = new InsertQueryBuilder<>(
                 PersonFixture.createPerson()
         ).build();
