@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CreateQueryBuilderTest {
 
     @Test
-    @DisplayName("Person Entity 를 위한 create 쿼리를 생성한다.")
+    @DisplayName("Person Entity 를 위한 CREATE 쿼리를 생성한다.")
     void build() {
         String expected = "CREATE TABLE users ("
                 + "id BIGINT AUTO_INCREMENT PRIMARY KEY, "
