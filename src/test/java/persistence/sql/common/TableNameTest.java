@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.common;
 
 import domain.Person;
 import org.junit.jupiter.api.DisplayName;

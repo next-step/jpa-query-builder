@@ -28,4 +28,28 @@ public class Person {
     @Transient
     private Integer index;
 
+    public Person setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Person setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Person setAge(Integer age) {
+        this.age = age;
+        return this;
+    }
+
+    public Person setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Person setIndex(Integer index) {
+        this.index = index;
+        return this;
+    }
 }

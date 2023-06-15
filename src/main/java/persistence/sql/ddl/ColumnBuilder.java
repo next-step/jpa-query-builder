@@ -4,10 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import persistence.sql.common.ColumnName;
 
 import java.lang.reflect.Field;
 
-import static persistence.sql.ddl.StringConstant.BLANK;
+import static persistence.sql.common.StringConstant.BLANK;
 
 public class ColumnBuilder {
     private final Field field;
@@ -16,21 +17,13 @@ public class ColumnBuilder {
 
     public String build() {
         return new StringBuilder()
-                .append(getColumnName())
+                .append(new ColumnName(field))
                 .append(" ")
                 .append(getSqlType())
                 .append(getNullable())
                 .append(getGenerationStrategy())
                 .append(getPKSql())
                 .toString();
-    }
-
-    private String getColumnName() {
-        final Column column = field.getDeclaredAnnotation(Column.class);
-        final String name = column == null || column.name().isBlank()
-                ? field.getName()
-                : column.name();
-        return name.toLowerCase();
     }
 
     private String getSqlType() {
