@@ -1,12 +1,12 @@
 package persistence;
 
-
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Columns {
     private static final String DELIMITER = ",";
     private final List<Column> columns;
-    private final StringBuilder stringBuilder = new StringBuilder();
 
     public Columns(List<Column> columns) {
         checkDuplicateName(columns);
@@ -16,29 +16,29 @@ public class Columns {
     }
 
     public String expression() {
-        idBuild();
-        normalColumnBuild();
-        primaryKeyBuild();
-
-        return stringBuilder.toString();
+        return idBuild() +
+                addDelimiter() +
+                normalColumnBuild() +
+                addDelimiter() +
+                primaryKeyBuild();
     }
 
-    private void idBuild() {
-        stringBuilder.append(new Id(primaryKey())
-                .expression());
-
-        addDelimiter();
+    private String idBuild() {
+        return new Id(primaryKey())
+                .expression();
     }
 
-    private void normalColumnBuild() {
-        for (int i = 0; i < size(); i++) {
-            appendRow(i);
-        }
+    private String normalColumnBuild() {
+        return IntStream.range(0, size())
+                .mapToObj(this::findColumn)
+                .filter(column -> !column.unique())
+                .map(Column::expression)
+                .collect(Collectors.joining(","));
     }
 
-    private void primaryKeyBuild() {
-        stringBuilder.append(new PrimaryKey(primaryKey())
-                .expression());
+    private String primaryKeyBuild() {
+        return new PrimaryKey(primaryKey())
+                .expression();
     }
 
 
@@ -47,17 +47,6 @@ public class Columns {
                 .filter(Column::unique)
                 .findFirst()
                 .orElseThrow(RuntimeException::new).name();
-    }
-
-    private void appendRow(int index) {
-        Column column = findColumn(index);
-        if (column.unique()) {
-            return;
-        }
-
-        stringBuilder.append(findColumn(index).expression());
-
-        addDelimiter();
     }
 
     private Column findColumn(int index) {
@@ -70,8 +59,8 @@ public class Columns {
                 .findFirst();
     }
 
-    private void addDelimiter() {
-        stringBuilder.append(DELIMITER);
+    private String addDelimiter() {
+        return DELIMITER;
     }
 
     public int size() {
