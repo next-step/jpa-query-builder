@@ -6,10 +6,10 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class EntityScanner {
+public class EntityReflectionManager {
     private final Class<?> entity;
 
-    public EntityScanner(Class<?> entity) {
+    public EntityReflectionManager(Class<?> entity) {
         this.entity = entity;
     }
 

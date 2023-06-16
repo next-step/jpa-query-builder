@@ -24,7 +24,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            EntityScanner entityScanner = new EntityScanner(Person.class);
+            EntityReflectionManager entityScanner = new EntityReflectionManager(Person.class);
             Table table = entityScanner.table();
             Columns columns = entityScanner.columns();
 
@@ -32,9 +32,9 @@ public class Application {
             DeleteTableBuilder deleteTableBuilder = new DeleteTableBuilder(table);
 
             jdbcTemplate.execute(createTableBuilder.query());
-//            jdbcTemplate.execute(deleteTableBuilder.query());
+            jdbcTemplate.execute(deleteTableBuilder.query());
 
-//            server.stop();
+            server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
         } finally {

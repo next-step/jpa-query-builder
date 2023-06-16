@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EntityScannerTest {
+class EntityReflectionManagerTest {
 
     @Test
     void table_추출() {
-        EntityScanner entityScanner = new EntityScanner(Person.class);
+        EntityReflectionManager entityScanner = new EntityReflectionManager(Person.class);
 
         Table actual = entityScanner.table();
 
@@ -20,7 +20,7 @@ class EntityScannerTest {
 
     @Test
     void column_annotation_name_추출() {
-        EntityScanner entityScanner = new EntityScanner(Person.class);
+        EntityReflectionManager entityScanner = new EntityReflectionManager(Person.class);
 
         Columns actual = entityScanner.columns();
 
@@ -29,7 +29,7 @@ class EntityScannerTest {
 
     @Test
     void column_annotation_name속성_없으면_필드이름_추출() {
-        EntityScanner entityScanner = new EntityScanner(Person.class);
+        EntityReflectionManager entityScanner = new EntityReflectionManager(Person.class);
 
         Columns actual = entityScanner.columns();
 
@@ -38,7 +38,7 @@ class EntityScannerTest {
 
     @Test
     void column_annotation_없으면_필드이름_추출() {
-        EntityScanner entityScanner = new EntityScanner(Person.class);
+        EntityReflectionManager entityScanner = new EntityReflectionManager(Person.class);
 
         Columns actual = entityScanner.columns();
 
@@ -48,7 +48,7 @@ class EntityScannerTest {
     @Test
     @DisplayName("표현식 추출, 맵핑 불가 맵핑 안됨")
     void 표현식() {
-        EntityScanner entityScanner = new EntityScanner(Person.class);
+        EntityReflectionManager entityScanner = new EntityReflectionManager(Person.class);
 
         Columns actual = entityScanner.columns();
 
