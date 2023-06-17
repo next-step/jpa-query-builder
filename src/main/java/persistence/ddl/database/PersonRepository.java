@@ -17,7 +17,11 @@ public class PersonRepository implements Database<Person> {
     public List<Person> findAll() {
         ReflectiveRowMapper<Person> reflectiveRowMapper = new ReflectiveRowMapper<>(Person.class);
 
-        return query("select * from PERSON", reflectiveRowMapper);
+        return query(String.format("select * from %s", tableName()), reflectiveRowMapper);
+    }
+
+    private String tableName() {
+        return Person.class.getSimpleName();
     }
 
     @Override
