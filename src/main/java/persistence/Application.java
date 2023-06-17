@@ -42,13 +42,12 @@ public class Application {
                     ).build(),
                     rowMapper
             ).get(0).getId();
-            Person person = jdbcTemplate.query(
+            jdbcTemplate.query(
                     new FindByIdQueryBuilder<>(
                             Person.class
                     ).build(id),
                     rowMapper
             ).get(0);
-            System.out.println("person = " + person.getId());
 
             jdbcTemplate.execute(
                     new DeleteByIdQueryBuilder<>(
