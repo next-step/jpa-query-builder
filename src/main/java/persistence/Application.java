@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.JavaToSqlColumnParser;
-import persistence.sql.ddl.Person;
+import persistence.entity.Person;
 import persistence.sql.ddl.collection.Dialects;
 import persistence.sql.ddl.dialect.Dialect;
 

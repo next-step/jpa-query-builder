@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.entity.Person;
 import persistence.sql.ddl.dialect.H2DbDialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
