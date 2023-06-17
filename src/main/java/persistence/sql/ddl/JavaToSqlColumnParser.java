@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
-import persistence.sql.ddl.dialect.Dialect;
+import persistence.dialect.Dialect;
 
 public class JavaToSqlColumnParser {
     private final Dialect dialect;

@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect.type;
+package persistence.dialect.type;
 
 public enum JavaToMySqlType {
     LONG("bigint"),

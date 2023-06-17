@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
-import persistence.sql.ddl.collection.IdGeneratedValueStrategyMap;
+import persistence.dialect.collection.IdGeneratedValueStrategyMap;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

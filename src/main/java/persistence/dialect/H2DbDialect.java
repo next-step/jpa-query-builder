@@ -1,6 +1,6 @@
-package persistence.sql.ddl.dialect;
+package persistence.dialect;
 
-import persistence.sql.ddl.dialect.type.JavaToH2Type;
+import persistence.dialect.type.JavaToH2Type;
 
 import java.util.Map;
 

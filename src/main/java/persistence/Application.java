@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.JavaToSqlColumnParser;
 import persistence.entity.Person;
-import persistence.sql.ddl.collection.Dialects;
-import persistence.sql.ddl.dialect.Dialect;
+import persistence.dialect.collection.Dialects;
+import persistence.dialect.Dialect;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

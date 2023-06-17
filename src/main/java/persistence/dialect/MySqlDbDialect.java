@@ -1,6 +1,6 @@
-package persistence.sql.ddl.dialect;
+package persistence.dialect;
 
-import persistence.sql.ddl.dialect.type.JavaToMySqlType;
+import persistence.dialect.type.JavaToMySqlType;
 
 import java.util.Map;
 
