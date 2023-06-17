@@ -9,7 +9,8 @@ public class ColumnNode implements Node {
     private final boolean nullable;
     private final StringBuilder stringBuilder;
 
-    private ColumnNode(String name, String type, boolean unique, boolean nullable) {
+
+    public ColumnNode(String name, String type, boolean unique, boolean nullable) {
         this.name = name;
         this.type = type;
         this.unique = unique;

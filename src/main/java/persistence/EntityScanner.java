@@ -20,7 +20,7 @@ public class EntityScanner {
     public Columns columns() {
         return Arrays.stream(entity.getDeclaredFields())
                 .filter(this::notTransient)
-                .map(it -> Column.of(
+                .map(it -> ColumnNode.of(
                         columnName(it),
                         it.getType(),
                         columnSize(it),
