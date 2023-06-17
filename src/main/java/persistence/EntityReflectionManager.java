@@ -82,7 +82,7 @@ public class EntityReflectionManager {
         return columnAnnotation.length();
     }
 
-    private String columnName(Field field) {
+    public String columnName(Field field) {
         jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
 
         if (columnAnnotation == null) {
@@ -94,5 +94,11 @@ public class EntityReflectionManager {
         }
 
         return columnAnnotation.name();
+    }
+
+    public Field[] activeField() {
+        return Arrays.stream(entity.getDeclaredFields())
+                .filter(this::notTransient)
+                .toArray(Field[]::new);
     }
 }
