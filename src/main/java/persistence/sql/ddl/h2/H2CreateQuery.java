@@ -1,5 +1,7 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.h2;
 
+import persistence.sql.dialect.ColumnDialect;
+import persistence.sql.dialect.h2.H2ColumnDialect;
 import persistence.sql.util.ColumnFields;
 import persistence.sql.util.TableName;
 
@@ -7,31 +9,30 @@ import java.util.stream.Collectors;
 
 import static persistence.sql.util.StringConstant.DELIMITER;
 
-public class CreateQuery<T> {
-    private final Class<T> clazz;
+public final class H2CreateQuery {
+    private static final ColumnDialect columnDialect = H2ColumnDialect.getInstance();
 
-    public CreateQuery(Class<T> clazz) {this.clazz = clazz;}
+    private H2CreateQuery() {}
 
-    public String build() {
+    public static String build(Class<?> clazz) {
         return new StringBuilder()
                 .append("CREATE TABLE ")
                 .append(TableName.render(clazz))
-                .append(getColumnSql())
+                .append(getColumnSql(clazz))
                 .toString();
     }
 
-    private String getColumnSql() {
+    private static String getColumnSql(Class<?> clazz) {
         return new StringBuilder()
                 .append(" (")
-                .append(joinColumns())
+                .append(joinColumns(clazz))
                 .append(")")
                 .toString();
     }
 
-    private String joinColumns() {
+    private static String joinColumns(Class<?> clazz) {
         return ColumnFields.forQuery(clazz).stream()
-                .map(ColumnQuery::new)
-                .map(ColumnQuery::build)
+                .map(columnDialect::getSqlColumn)
                 .collect(Collectors.joining(DELIMITER));
     }
 }

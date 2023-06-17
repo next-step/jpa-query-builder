@@ -1,39 +1,46 @@
-package persistence.sql.ddl;
+package persistence.sql.dialect.h2;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import persistence.sql.dialect.ColumnDialect;
+import persistence.sql.dialect.TypeDialect;
 import persistence.sql.util.ColumnName;
 
 import java.lang.reflect.Field;
 
 import static persistence.sql.util.StringConstant.BLANK;
 
-public class ColumnQuery {
-    private final Field field;
+public final class H2ColumnDialect implements ColumnDialect {
+    private final TypeDialect typeDialect = H2TypeDialect.getInstance();
 
-    public ColumnQuery(Field field) {this.field = field;}
+    private H2ColumnDialect() {}
 
-    public String build() {
+    public static H2ColumnDialect getInstance() {
+        return SingletonHelper.INSTANCE;
+    }
+
+    @Override
+    public String getSqlColumn(Field field) {
         return new StringBuilder()
                 .append(ColumnName.render(field))
                 .append(" ")
-                .append(getSqlType())
-                .append(getNullable())
-                .append(getGenerationStrategy())
-                .append(getPKSql())
+                .append(getSqlType(field))
+                .append(getNullable(field))
+                .append(getGenerationStrategy(field))
+                .append(getPKSql(field))
                 .toString();
     }
 
-    private String getSqlType() {
+    private String getSqlType(Field field) {
         return new StringBuilder()
-                .append(TypeMapper.toSqlType(field.getType()))
-                .append(getColumnLength())
+                .append(typeDialect.getSqlType(field.getType()))
+                .append(getColumnLength(field))
                 .toString();
     }
 
-    private String getColumnLength() {
+    private String getColumnLength(Field field) {
         final Column column = field.getDeclaredAnnotation(Column.class);
         if (column == null || !field.getType().equals(String.class)) {
             return BLANK;
@@ -45,24 +52,28 @@ public class ColumnQuery {
                 .toString();
     }
 
-    private String getNullable() {
+    private String getNullable(Field field) {
         final Column column = field.getDeclaredAnnotation(Column.class);
         return column == null || column.nullable()
                 ? BLANK
                 : " NOT NULL";
     }
 
-    private String getPKSql() {
+    private String getPKSql(Field field) {
         final String PK_SQL = " PRIMARY KEY";
         return field.isAnnotationPresent(Id.class)
                 ? PK_SQL
                 : BLANK;
     }
 
-    private String getGenerationStrategy() {
+    private String getGenerationStrategy(Field field) {
         final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         return generatedValue != null && generatedValue.strategy() == GenerationType.IDENTITY
                 ? " AUTO_INCREMENT"
                 : BLANK;
+    }
+
+    private static class SingletonHelper {
+        private static final H2ColumnDialect INSTANCE = new H2ColumnDialect();
     }
 }

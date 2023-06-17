@@ -1,4 +1,4 @@
-package persistence.sql.dml;
+package persistence.sql.dml.h2;
 
 import persistence.sql.util.ColumnFields;
 import persistence.sql.util.ColumnNames;
@@ -8,13 +8,11 @@ import persistence.sql.util.TableName;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class InsertQuery<T> {
-    private final T object;
+public final class H2InsertQuery {
+    private H2InsertQuery() {}
 
-    public InsertQuery(T object) {this.object = object;}
-
-    public String build() {
-        final Class<T> clazz = (Class<T>) object.getClass();
+    public static String build(Object object) {
+        final Class<?> clazz = object.getClass();
         final List<Field> columnFields = ColumnFields.forInsert(clazz);
         return new StringBuilder()
                 .append("INSERT INTO ")
