@@ -1,7 +1,9 @@
-package persistence;
+package persistence.ddl;
 
 import domain.Person;
 import org.junit.jupiter.api.Test;
+import persistence.ColumnMap;
+import persistence.EntityReflectionManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

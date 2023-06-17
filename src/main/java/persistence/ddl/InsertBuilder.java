@@ -1,4 +1,7 @@
-package persistence;
+package persistence.ddl;
+
+import persistence.ColumnMap;
+import persistence.Table;
 
 public class InsertBuilder {
     private static final String KEYWORD = "insert into %s (%s) values (%s)";
