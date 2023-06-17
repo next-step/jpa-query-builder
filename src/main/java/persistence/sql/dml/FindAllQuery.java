@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
-import persistence.sql.view.ColumnFields;
-import persistence.sql.view.ColumnNames;
-import persistence.sql.view.TableName;
+import persistence.sql.util.ColumnFields;
+import persistence.sql.util.ColumnNames;
+import persistence.sql.util.TableName;
 
 public class FindAllQuery<T> {
     private final Class<T> clazz;

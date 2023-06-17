@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.sql.view.TableName;
+import persistence.sql.util.TableName;
 
 public class DropQuery<T> {
     private final Class<T> clazz;

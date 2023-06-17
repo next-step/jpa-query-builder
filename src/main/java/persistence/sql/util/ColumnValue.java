@@ -1,4 +1,4 @@
-package persistence.sql.view;
+package persistence.sql.util;
 
 public final class ColumnValue {
     private ColumnValue() {}

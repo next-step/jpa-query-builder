@@ -1,4 +1,4 @@
-package persistence.sql.view;
+package persistence.sql.util;
 
 import persistence.sql.exception.IllegalFieldAccessException;
 
@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static persistence.sql.view.StringConstant.DELIMITER;
+import static persistence.sql.util.StringConstant.DELIMITER;
 
 public final class ColumnValues {
     private ColumnValues() {}

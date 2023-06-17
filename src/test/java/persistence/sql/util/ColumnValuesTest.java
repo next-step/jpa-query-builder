@@ -1,4 +1,4 @@
-package persistence.sql.view;
+package persistence.sql.util;
 
 import domain.Person;
 import domain.PersonFixture;

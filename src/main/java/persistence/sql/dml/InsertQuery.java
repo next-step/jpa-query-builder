@@ -1,9 +1,9 @@
 package persistence.sql.dml;
 
-import persistence.sql.view.ColumnFields;
-import persistence.sql.view.ColumnNames;
-import persistence.sql.view.ColumnValues;
-import persistence.sql.view.TableName;
+import persistence.sql.util.ColumnFields;
+import persistence.sql.util.ColumnNames;
+import persistence.sql.util.ColumnValues;
+import persistence.sql.util.TableName;
 
 import java.lang.reflect.Field;
 import java.util.List;

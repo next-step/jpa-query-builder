@@ -1,11 +1,11 @@
 package persistence.sql.ddl;
 
-import persistence.sql.view.ColumnFields;
-import persistence.sql.view.TableName;
+import persistence.sql.util.ColumnFields;
+import persistence.sql.util.TableName;
 
 import java.util.stream.Collectors;
 
-import static persistence.sql.view.StringConstant.DELIMITER;
+import static persistence.sql.util.StringConstant.DELIMITER;
 
 public class CreateQuery<T> {
     private final Class<T> clazz;

@@ -1,6 +1,6 @@
 package persistence.sql.dml;
 
-import persistence.sql.view.TableName;
+import persistence.sql.util.TableName;
 
 public class DeleteByIdQuery<T> {
     private final Class<T> clazz;

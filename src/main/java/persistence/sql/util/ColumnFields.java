@@ -1,4 +1,4 @@
-package persistence.sql.view;
+package persistence.sql.util;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;

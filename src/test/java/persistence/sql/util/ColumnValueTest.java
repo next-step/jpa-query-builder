@@ -1,4 +1,4 @@
-package persistence.sql.view;
+package persistence.sql.util;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
