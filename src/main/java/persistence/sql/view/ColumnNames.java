@@ -1,35 +1,17 @@
 package persistence.sql.view;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static persistence.sql.view.StringConstant.DELIMITER;
 
-public class ColumnNames {
-    private final List<ColumnName> columnNames;
+public final class ColumnNames {
+    private ColumnNames() {}
 
-    private ColumnNames(List<ColumnName> columnNames) {
-        this.columnNames = columnNames;
-    }
-
-    public static ColumnNames from(ColumnFields columnFields) {
-        return new ColumnNames(
-                columnFields.stream()
-                        .map(ColumnName::new)
-                        .collect(Collectors.toList())
-        );
-    }
-
-    public static ColumnNames from(Class<?> clazz) {
-        return ColumnNames.from(
-                ColumnFields.from(clazz)
-        );
-    }
-
-    @Override
-    public String toString() {
-        return columnNames.stream()
-                .map(ColumnName::toString)
+    public static String render(List<Field> fields) {
+        return fields.stream()
+                .map(ColumnName::render)
                 .collect(Collectors.joining(DELIMITER));
     }
 }

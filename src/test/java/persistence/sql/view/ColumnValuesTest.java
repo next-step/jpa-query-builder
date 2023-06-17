@@ -11,11 +11,9 @@ class ColumnValuesTest {
     @Test
     @DisplayName("Person 객체들의 필드값을 ColumnValues 로 추출할 수 있다.")
     void filterTransient() {
-        final Person person = PersonFixture.createPerson();
-        final ColumnFields fields = ColumnFields.forInsert(Person.class);
-        Assertions.assertThat(
-                ColumnValues.of(person, fields)
-                        .toString()
-        ).isEqualTo(" VALUES ('고정완', 30, 'ghojeong@email.com')");
+        Assertions.assertThat(ColumnValues.render(
+                PersonFixture.createPerson(),
+                ColumnFields.forInsert(Person.class)
+        )).isEqualTo(" VALUES ('고정완', 30, 'ghojeong@email.com')");
     }
 }

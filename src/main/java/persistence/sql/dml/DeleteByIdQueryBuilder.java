@@ -10,7 +10,7 @@ public class DeleteByIdQueryBuilder<T> {
     public String build(Object id) {
         return new StringBuilder()
                 .append("DELETE FROM ")
-                .append(new TableName<>(clazz))
+                .append(TableName.render(clazz))
                 .append(new WhereIdQueryBuilder<>(clazz).build(id))
                 .toString();
     }

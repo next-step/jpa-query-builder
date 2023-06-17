@@ -10,7 +10,7 @@ public class DropQueryBuilder<T> {
     public String build() {
         return new StringBuilder()
                 .append("DROP TABLE IF EXISTS ")
-                .append(new TableName<>(clazz))
+                .append(TableName.render(clazz))
                 .toString();
     }
 }

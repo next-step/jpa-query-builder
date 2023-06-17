@@ -5,6 +5,9 @@ import persistence.sql.view.ColumnNames;
 import persistence.sql.view.ColumnValues;
 import persistence.sql.view.TableName;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 public class InsertQueryBuilder<T> {
     private final T object;
 
@@ -12,14 +15,14 @@ public class InsertQueryBuilder<T> {
 
     public String build() {
         final Class<T> clazz = (Class<T>) object.getClass();
-        final ColumnFields columnFields = ColumnFields.forInsert(clazz);
+        final List<Field> columnFields = ColumnFields.forInsert(clazz);
         return new StringBuilder()
                 .append("INSERT INTO ")
-                .append(new TableName<>(clazz))
+                .append(TableName.render(clazz))
                 .append(" (")
-                .append(ColumnNames.from(columnFields))
+                .append(ColumnNames.render(columnFields))
                 .append(")")
-                .append(ColumnValues.of(object, columnFields))
+                .append(ColumnValues.render(object, columnFields))
                 .toString();
     }
 }

@@ -15,7 +15,7 @@ public class CreateQueryBuilder<T> {
     public String build() {
         return new StringBuilder()
                 .append("CREATE TABLE ")
-                .append(new TableName<>(clazz))
+                .append(TableName.render(clazz))
                 .append(getColumnSql())
                 .toString();
     }
@@ -29,7 +29,7 @@ public class CreateQueryBuilder<T> {
     }
 
     private String joinColumns() {
-        return ColumnFields.from(clazz).stream()
+        return ColumnFields.forQuery(clazz).stream()
                 .map(ColumnBuilder::new)
                 .map(ColumnBuilder::build)
                 .collect(Collectors.joining(DELIMITER));

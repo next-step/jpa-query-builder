@@ -18,7 +18,7 @@ public class RowMapperImpl<T> implements RowMapper<T> {
     public T mapRow(ResultSet resultSet) {
         try {
             final T object = clazz.getDeclaredConstructor().newInstance();
-            ColumnFields.from(clazz).stream().forEach(
+            ColumnFields.forQuery(clazz).stream().forEach(
                     field -> setField(
                             field, object, resultSet
                     )
@@ -34,7 +34,7 @@ public class RowMapperImpl<T> implements RowMapper<T> {
         field.setAccessible(true);
         try {
             field.set(object, resultSet.getObject(
-                    new ColumnName(field).toString()
+                    ColumnName.render(field)
             ));
         } catch (IllegalAccessException | SQLException e) {
             throw new RowMapException(e);

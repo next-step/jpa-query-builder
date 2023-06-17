@@ -17,7 +17,7 @@ public class ColumnBuilder {
 
     public String build() {
         return new StringBuilder()
-                .append(new ColumnName(field))
+                .append(ColumnName.render(field))
                 .append(" ")
                 .append(getSqlType())
                 .append(getNullable())

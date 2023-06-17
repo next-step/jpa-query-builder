@@ -15,7 +15,7 @@ class ColumnFieldsTest {
     @DisplayName("Transient 어노테이션이 붙은 field 는 제거해야 한다.")
     void filterTransient() {
         Assertions.assertThat(
-                ColumnFields.from(Person.class)
+                ColumnFields.forQuery(Person.class)
                         .stream()
                         .map(Field::getName)
                         .collect(Collectors.toList())

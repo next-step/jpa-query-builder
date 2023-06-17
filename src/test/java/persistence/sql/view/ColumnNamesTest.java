@@ -9,8 +9,8 @@ class ColumnNamesTest {
     @Test
     @DisplayName("Person 클래스의 필드들을 ColumnNames 로 변환할 수 있다.")
     void filterTransient() {
-        Assertions.assertThat(
-                ColumnNames.from(Person.class).toString()
-        ).isEqualTo("id, nick_name, old, email");
+        Assertions.assertThat(ColumnNames.render(
+                ColumnFields.forQuery(Person.class)
+        )).isEqualTo("id, nick_name, old, email");
     }
 }

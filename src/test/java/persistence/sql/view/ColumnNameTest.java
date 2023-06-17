@@ -11,18 +11,18 @@ class ColumnNameTest {
     @Test
     @DisplayName("name 이 명시되지 않으면, 변수명이 ColumnName 이 된다.")
     void columnWithoutName() throws NoSuchFieldException {
-        String actual = new ColumnName(
+        String actual = ColumnName.render(
                 Person.class.getDeclaredField("email")
-        ).toString();
+        );
         assertThat(actual).isEqualTo("email");
     }
 
     @Test
     @DisplayName("name 이 명시되어 있다면, 변수명이 ColumnName 이 된다.")
     void columnWithName() throws NoSuchFieldException {
-        String actual = new ColumnName(
+        String actual = ColumnName.render(
                 Person.class.getDeclaredField("name")
-        ).toString();
+        );
         assertThat(actual).isEqualTo("nick_name");
     }
 }

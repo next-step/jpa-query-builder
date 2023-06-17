@@ -10,7 +10,7 @@ class ColumnValueTest {
     @DisplayName("String 이면 따옴표가 붙는다.")
     void stringType() {
         Assertions.assertThat(
-                new ColumnValue("Nickname").toString()
+                ColumnValue.render("Nickname")
         ).isEqualTo("'Nickname'");
     }
 
@@ -18,7 +18,7 @@ class ColumnValueTest {
     @DisplayName("String 이 아니면 따옴표가 붙지 않는다.")
     void integerType() {
         Assertions.assertThat(
-                new ColumnValue(1).toString()
+                ColumnValue.render(1)
         ).isEqualTo("1");
     }
 }

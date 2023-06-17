@@ -16,7 +16,7 @@ public class WhereIdQueryBuilder<T> {
                 .append(" WHERE ")
                 .append(getIdName())
                 .append(" = ")
-                .append(new ColumnValue(id))
+                .append(ColumnValue.render(id))
                 .toString();
     }
 

@@ -4,19 +4,14 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public class ColumnName {
-    private final String name;
+public final class ColumnName {
 
-    public ColumnName(Field field) {
+    private ColumnName() {}
+
+    public static String render(Field field) {
         final Column column = field.getDeclaredAnnotation(Column.class);
-        final String name = column == null || column.name().isBlank()
+        return column == null || column.name().isBlank()
                 ? field.getName()
                 : column.name();
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 }
