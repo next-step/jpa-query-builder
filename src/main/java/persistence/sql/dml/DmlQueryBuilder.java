@@ -20,12 +20,14 @@ public class DmlQueryBuilder extends QueryBuilder {
         final String tableName = getTableName();
 
         // 2. get columns
-        List<String> fields = new ArrayList<>(idColumns.values().stream()
+        List<String> fields = new ArrayList<>();
+        idColumns.getColumnFields().stream()
                 .filter(isNotTransientField())
                 .filter(isNotGeneratedIdField())
-                .map(super::getColumnName).toList());
+                .map(super::getColumnName)
+                .forEach(fields::add);
 
-        this.columns.values().stream()
+        this.columns.getColumnFields().stream()
                 .filter(isNotTransientField())
                 .filter(isNotGeneratedIdField())
                 .map(super::getColumnName)

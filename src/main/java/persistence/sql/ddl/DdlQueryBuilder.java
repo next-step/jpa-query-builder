@@ -9,8 +9,9 @@ import java.lang.reflect.Field;
 import java.util.Map;
 public class DdlQueryBuilder extends QueryBuilder {
     private static final String CREATE_TABLE = "create table %s (%s);";
-    protected final IdGeneratedValueStrategyMap idGeneratedValueStrategyMap;
+    private final IdGeneratedValueStrategyMap idGeneratedValueStrategyMap;
     private final JavaToSqlColumnParser javaToSqlColumnParser;
+
 
     public DdlQueryBuilder(JavaToSqlColumnParser javaToSqlColumnParser, Class<?> entity) {
         super(entity);
@@ -19,19 +20,23 @@ public class DdlQueryBuilder extends QueryBuilder {
     }
 
     public String createTable() {
-        String content = addColumns(idColumns) +
-                addColumns(columns) +
+        return buildSql();
+    }
+
+    private String buildSql() {
+        String content = addColumns(idColumns.get()) +
+                addColumns(columns.get()) +
                 addConstraint();
         return String.format(CREATE_TABLE, getTableName(), content);
     }
 
     private String addConstraint() {
         StringBuilder sb = new StringBuilder();
-        if (!idColumns.isEmpty()) {
+        if (idColumns.isNotEmpty()) {
             sb.append(" constraint pk_")
                     .append(entity.getSimpleName().toLowerCase())
                     .append(" primary key (");
-            final String join = joinWithComma(idColumns.keySet());
+            final String join = joinWithComma(idColumns.getColumnNames());
             sb.append(join);
             sb.append(")");
         }

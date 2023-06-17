@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public abstract class QueryBuilder {
@@ -15,8 +14,8 @@ public abstract class QueryBuilder {
     protected static final String SINGLE_QUOTE = "'";
 
     protected Class<?> entity;
-    protected final Map<String, Field> idColumns = new LinkedHashMap<>();
-    protected final Map<String, Field> columns = new LinkedHashMap<>();
+    protected final Columns idColumns = new Columns();
+    protected final Columns columns = new Columns();
 
     protected QueryBuilder(Class<?> entity) {
         if (entity == null) {
@@ -65,12 +64,12 @@ public abstract class QueryBuilder {
         return column.name();
     }
 
-    public Map<String, Field> getIdColumns() {
-        return idColumns;
+    public Set<String> getIdColumns() {
+        return idColumns.getColumnNames();
     }
 
-    public Map<String, Field> getColumns() {
-        return columns;
+    public Set<String> getColumns() {
+        return columns.getColumnNames();
     }
 
     protected String joinWithComma(Collection<String> fields) {
