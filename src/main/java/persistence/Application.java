@@ -9,12 +9,12 @@ import jdbc.RowMapper;
 import jdbc.RowMapperImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.CreateQueryBuilder;
-import persistence.sql.ddl.DropQueryBuilder;
-import persistence.sql.dml.DeleteByIdQueryBuilder;
-import persistence.sql.dml.FindAllQueryBuilder;
-import persistence.sql.dml.FindByIdQueryBuilder;
-import persistence.sql.dml.InsertQueryBuilder;
+import persistence.sql.ddl.CreateQuery;
+import persistence.sql.ddl.DropQuery;
+import persistence.sql.dml.DeleteByIdQuery;
+import persistence.sql.dml.FindAllQuery;
+import persistence.sql.dml.FindByIdQuery;
+import persistence.sql.dml.InsertQuery;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -28,35 +28,35 @@ public class Application {
             final RowMapper<Person> rowMapper = new RowMapperImpl(Person.class);
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             jdbcTemplate.execute(
-                    new CreateQueryBuilder<>(Person.class).build()
+                    new CreateQuery<>(Person.class).build()
             );
 
             jdbcTemplate.execute(
-                    new InsertQueryBuilder<>(
+                    new InsertQuery<>(
                             PersonFixture.createPerson()
                     ).build()
             );
             Long id = jdbcTemplate.query(
-                    new FindAllQueryBuilder<>(
+                    new FindAllQuery<>(
                             Person.class
                     ).build(),
                     rowMapper
             ).get(0).getId();
             jdbcTemplate.query(
-                    new FindByIdQueryBuilder<>(
+                    new FindByIdQuery<>(
                             Person.class
                     ).build(id),
                     rowMapper
             ).get(0);
 
             jdbcTemplate.execute(
-                    new DeleteByIdQueryBuilder<>(
+                    new DeleteByIdQuery<>(
                             Person.class
                     ).build(id)
             );
 
             jdbcTemplate.execute(
-                    new DropQueryBuilder<>(Person.class).build()
+                    new DropQuery<>(Person.class).build()
             );
             server.stop();
         } catch (Exception e) {

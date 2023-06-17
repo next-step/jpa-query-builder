@@ -8,10 +8,10 @@ import persistence.sql.view.TableName;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class InsertQueryBuilder<T> {
+public class InsertQuery<T> {
     private final T object;
 
-    public InsertQueryBuilder(T object) {this.object = object;}
+    public InsertQuery(T object) {this.object = object;}
 
     public String build() {
         final Class<T> clazz = (Class<T>) object.getClass();

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class CreateQueryBuilderTest {
+class CreateQueryTest {
 
     @Test
     @DisplayName("Person Entity 를 위한 CREATE 쿼리를 생성한다.")
@@ -18,7 +18,7 @@ class CreateQueryBuilderTest {
                 + "old INTEGER, "
                 + "email VARCHAR(320) NOT NULL"
                 + ")";
-        String actual = new CreateQueryBuilder<>(
+        String actual = new CreateQuery<>(
                 Person.class
         ).build();
         assertThat(actual).isEqualTo(expected);

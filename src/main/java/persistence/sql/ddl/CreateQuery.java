@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 
 import static persistence.sql.view.StringConstant.DELIMITER;
 
-public class CreateQueryBuilder<T> {
+public class CreateQuery<T> {
     private final Class<T> clazz;
 
-    public CreateQueryBuilder(Class<T> clazz) {this.clazz = clazz;}
+    public CreateQuery(Class<T> clazz) {this.clazz = clazz;}
 
     public String build() {
         return new StringBuilder()
@@ -30,8 +30,8 @@ public class CreateQueryBuilder<T> {
 
     private String joinColumns() {
         return ColumnFields.forQuery(clazz).stream()
-                .map(ColumnBuilder::new)
-                .map(ColumnBuilder::build)
+                .map(ColumnQuery::new)
+                .map(ColumnQuery::build)
                 .collect(Collectors.joining(DELIMITER));
     }
 }

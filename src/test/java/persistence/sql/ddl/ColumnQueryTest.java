@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ColumnBuilderTest {
+class ColumnQueryTest {
 
     @Test
     @DisplayName("id 를 Column 으로 변환한다.")
     void idToColumn() throws NoSuchFieldException {
-        final String actual = new ColumnBuilder(
+        final String actual = new ColumnQuery(
                 Person.class.getDeclaredField("id")
         ).build();
         assertThat(actual)
@@ -21,7 +21,7 @@ class ColumnBuilderTest {
     @Test
     @DisplayName("name 를 Column 으로 변환한다.")
     void nameToColumn() throws NoSuchFieldException {
-        final String actual = new ColumnBuilder(
+        final String actual = new ColumnQuery(
                 Person.class.getDeclaredField("name")
         ).build();
         assertThat(actual)
@@ -31,7 +31,7 @@ class ColumnBuilderTest {
     @Test
     @DisplayName("age 를 Column 으로 변환한다. String 타입이 아니면 Column length 가 표시되어서는 안된다.")
     void ageToColumn() throws NoSuchFieldException {
-        final String actual = new ColumnBuilder(
+        final String actual = new ColumnQuery(
                 Person.class.getDeclaredField("age")
         ).build();
         assertThat(actual)
@@ -41,7 +41,7 @@ class ColumnBuilderTest {
     @Test
     @DisplayName("email 를 Column 으로 변환한다.")
     void emailToColumn() throws NoSuchFieldException {
-        final String actual = new ColumnBuilder(
+        final String actual = new ColumnQuery(
                 Person.class.getDeclaredField("email")
         ).build();
         assertThat(actual)

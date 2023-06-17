@@ -6,10 +6,10 @@ import persistence.sql.view.ColumnValue;
 
 import java.util.Arrays;
 
-public class WhereIdQueryBuilder<T> {
+public class WhereIdQuery<T> {
     private final Class<T> clazz;
 
-    public WhereIdQueryBuilder(Class<T> clazz) {this.clazz = clazz;}
+    public WhereIdQuery(Class<T> clazz) {this.clazz = clazz;}
 
     public String build(Object id) {
         return new StringBuilder()

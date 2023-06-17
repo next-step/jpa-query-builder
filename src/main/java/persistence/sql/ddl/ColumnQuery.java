@@ -10,10 +10,10 @@ import java.lang.reflect.Field;
 
 import static persistence.sql.view.StringConstant.BLANK;
 
-public class ColumnBuilder {
+public class ColumnQuery {
     private final Field field;
 
-    public ColumnBuilder(Field field) {this.field = field;}
+    public ColumnQuery(Field field) {this.field = field;}
 
     public String build() {
         return new StringBuilder()
