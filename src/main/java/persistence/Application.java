@@ -4,8 +4,9 @@ import database.DatabaseServer;
 import database.H2;
 import domain.Person;
 import domain.PersonFixture;
-import domain.PersonMapper;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
+import jdbc.RowMapperImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
@@ -24,6 +25,7 @@ public class Application {
             final DatabaseServer server = new H2();
             server.start();
 
+            final RowMapper<Person> rowMapper = new RowMapperImpl(Person.class);
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             jdbcTemplate.execute(
                     new CreateQueryBuilder<>(Person.class).build()
@@ -38,14 +40,16 @@ public class Application {
                     new FindAllQueryBuilder<>(
                             Person.class
                     ).build(),
-                    new PersonMapper()
+                    rowMapper
             ).get(0).getId();
-            jdbcTemplate.query(
+            Person person = jdbcTemplate.query(
                     new FindByIdQueryBuilder<>(
                             Person.class
                     ).build(id),
-                    new PersonMapper()
-            );
+                    rowMapper
+            ).get(0);
+            System.out.println("person = " + person.getId());
+
             jdbcTemplate.execute(
                     new DeleteByIdQueryBuilder<>(
                             Person.class
