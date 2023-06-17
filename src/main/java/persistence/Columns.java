@@ -6,9 +6,9 @@ import java.util.stream.IntStream;
 
 public class Columns {
     private static final String DELIMITER = ",";
-    private final List<Column> columns;
+    private final List<ColumnNode> columns;
 
-    public Columns(List<Column> columns) {
+    public Columns(List<ColumnNode> columns) {
         checkDuplicateName(columns);
         checkDuplicateUnique(columns);
 
@@ -32,7 +32,7 @@ public class Columns {
         return IntStream.range(0, size())
                 .mapToObj(this::findColumn)
                 .filter(column -> !column.unique())
-                .map(Column::expression)
+                .map(ColumnNode::expression)
                 .collect(Collectors.joining(","));
     }
 
@@ -44,16 +44,16 @@ public class Columns {
 
     private String primaryKey() {
         return columns.stream()
-                .filter(Column::unique)
+                .filter(ColumnNode::unique)
                 .findFirst()
                 .orElseThrow(RuntimeException::new).name();
     }
 
-    private Column findColumn(int index) {
+    private ColumnNode findColumn(int index) {
         return columns.get(index);
     }
 
-    public Optional<Column> getColumn(String name) {
+    public Optional<ColumnNode> getColumn(String name) {
         return columns.stream()
                 .filter(it -> it.sameName(name))
                 .findFirst();
@@ -67,9 +67,9 @@ public class Columns {
         return columns.size();
     }
 
-    private void checkDuplicateUnique(List<Column> columns) {
+    private void checkDuplicateUnique(List<ColumnNode> columns) {
         boolean isOver = columns.stream()
-                .filter(Column::unique)
+                .filter(ColumnNode::unique)
                 .count() > 1;
 
         if (isOver) {
@@ -77,7 +77,7 @@ public class Columns {
         }
     }
 
-    private void checkDuplicateName(List<Column> columns) {
+    private void checkDuplicateName(List<ColumnNode> columns) {
         Set<String> names = new HashSet<>();
 
         columns.stream()
