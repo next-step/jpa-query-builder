@@ -23,7 +23,6 @@ class ColumnMapTest {
         map.add("name", "slow");
         map.add("age", "1");
 
-        assertThat(map.values()).isEqualTo("slow,1");
+        assertThat(map.values()).isEqualTo("'slow','1'");
     }
-
 }
