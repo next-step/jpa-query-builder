@@ -13,20 +13,20 @@ class ColumnsTest {
     @Test
     void 중복이름_예외발생() {
         assertThrows(DuplicateFormatFlagsException.class, () -> {
-            new Columns(List.of(Column.of("id", Long.class, -1, true), Column.of("id", Long.class, -1, false)));
+            new Columns(List.of(ColumnNode.of("id", Long.class, -1, true), ColumnNode.of("id", Long.class, -1, false)));
         });
     }
 
     @Test
     void 유니크는_하나만_존재해야함() {
         assertThrows(DuplicateFormatFlagsException.class, () -> {
-            new Columns(List.of(Column.of("id", Long.class, -1, true), Column.of("name", String.class, 255, true)));
+            new Columns(List.of(ColumnNode.of("id", Long.class, -1, true), ColumnNode.of("name", String.class, 255, true)));
         });
     }
 
     @Test
     void 컬럼목록출력() {
-        Columns columns = new Columns(List.of(Column.of("id", Long.class, -1, true), Column.of("name", String.class, 255, false)));
+        Columns columns = new Columns(List.of(ColumnNode.of("id", Long.class, -1, true), ColumnNode.of("name", String.class, 255, false)));
 
         String query = columns.expression();
 
