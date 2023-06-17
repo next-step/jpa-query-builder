@@ -28,32 +28,17 @@ public class Person {
     @Transient
     private Integer index;
 
+    public Person() {}
+
+    public Person(Long id, String name, Integer age, String email, Integer index) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
+
     public Long getId() {
         return id;
-    }
-
-    public Person setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public Person setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public Person setAge(Integer age) {
-        this.age = age;
-        return this;
-    }
-
-    public Person setEmail(String email) {
-        this.email = email;
-        return this;
-    }
-
-    public Person setIndex(Integer index) {
-        this.index = index;
-        return this;
     }
 }
