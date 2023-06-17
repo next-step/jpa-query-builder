@@ -10,6 +10,7 @@ import persistence.dialect.collection.Dialects;
 import persistence.entity.Person;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.JavaToSqlColumnParser;
+import persistence.sql.dml.DmlQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -24,8 +25,12 @@ public class Application {
             final Dialects dialects = new Dialects();
             final Dialect dialect = dialects.get("h2");
             final JavaToSqlColumnParser columnParser = new JavaToSqlColumnParser(dialect);
-            final String sql = new DdlQueryBuilder(columnParser, Person.class).createTable();
-            jdbcTemplate.execute(sql);
+            final String createSql = new DdlQueryBuilder(columnParser, Person.class).createTable();
+            jdbcTemplate.execute(createSql);
+
+            final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(Person.class);
+            final String insertSql = dmlQueryBuilder.insert(new Person(null, "정원", 20, "a@a.com", 10));
+            jdbcTemplate.execute(insertSql);
 
             server.stop();
         } catch (Exception e) {

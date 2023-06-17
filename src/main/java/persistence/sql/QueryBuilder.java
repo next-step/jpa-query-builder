@@ -1,9 +1,6 @@
 package persistence.sql;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -57,7 +54,7 @@ public abstract class QueryBuilder {
         columns.put(getColumnName(field), field);
     }
 
-    private String getColumnName(Field field) {
+    protected String getColumnName(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {
             return field.getName().toLowerCase();
         }
@@ -84,7 +81,14 @@ public abstract class QueryBuilder {
         return field -> !field.isAnnotationPresent(Transient.class);
     }
 
-    protected Predicate<Map.Entry<String, Field>> isNotTransientEntryValue() {
-        return entry -> !entry.getValue().isAnnotationPresent(Transient.class);
+    protected Predicate<Field> isNotGeneratedIdField() {
+        return field -> {
+            final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+            if (generatedValue == null) {
+                return true;
+            }
+
+            return generatedValue.strategy() != GenerationType.IDENTITY;
+        };
     }
 }
