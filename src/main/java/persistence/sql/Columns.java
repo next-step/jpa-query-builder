@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class Columns {
-    private final Map<String, Field> columns = new LinkedHashMap<>();
+    protected final Map<String, Field> columns = new LinkedHashMap<>();
 
     public void put(String columnName, Field field) {
         columns.put(columnName, field);

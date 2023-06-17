@@ -3,7 +3,6 @@ package persistence.sql.dml;
 import persistence.sql.QueryBuilder;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,20 +37,37 @@ public class DmlQueryBuilder extends QueryBuilder {
                 .collect(Collectors.toList());
 
         // 4. build insert sql
-        return String.format(INSERT_QUERY, tableName, joinWithComma(fields), joinWithComma(values)) + COLON;
+        return String.format(INSERT_QUERY, tableName, joinWithComma(fields), joinWithComma(values));
     }
 
     public String findAll() {
-        StringBuilder sql = new StringBuilder();
+        return selectClause() +
+                BLANK +
+                fromClause();
+    }
+
+    public <T> String findById(T id) {
+        return selectClause() + BLANK + fromClause() + BLANK + whereClause(id);
+    }
+
+    private <T> String whereClause(T id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(joinWithComma(idColumns.getColumnNames()));
+        sb.append("=");
+        sb.append(id);
+        return String.format(WHERE_CLAUSE, sb);
+    }
+
+    private String selectClause() {
         List<String> fields = getAllColumnFields()
                 .stream()
                 .filter(isNotTransientField())
                 .map(super::getColumnName).toList();
-        sql.append(String.format(SELECT_CLAUSE, joinWithComma(fields)));
-        sql.append(BLANK);
-        sql.append(String.format(FROM_CLAUSE, getTableName()));
-        sql.append(COLON);
-        return sql.toString();
+        return String.format(SELECT_CLAUSE, joinWithComma(fields));
+    }
+
+    private String fromClause() {
+        return String.format(FROM_CLAUSE, getTableName());
     }
 
     private <T> String convertValue(T instance, Field e) {
@@ -65,7 +81,7 @@ public class DmlQueryBuilder extends QueryBuilder {
     private <T> String convert(T instance, Field field) throws IllegalAccessException {
         field.setAccessible(true);
         if (field.get(instance) == null) {
-            return "null";
+            return NULL;
         }
         if (field.getType().equals(String.class)) {
             return SINGLE_QUOTE + field.get(instance) + SINGLE_QUOTE;

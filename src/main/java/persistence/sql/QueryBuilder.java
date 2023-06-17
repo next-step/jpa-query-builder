@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class QueryBuilder {
     protected static final String BLANK = " ";
     protected static final String COMMA = ",";
     protected static final String SINGLE_QUOTE = "'";
-    protected static final String COLON = ";";
+    protected static final String NULL = "null";
 
     protected Class<?> entity;
     protected final Columns idColumns = new Columns();
@@ -95,5 +97,16 @@ public abstract class QueryBuilder {
         results.addAll(idColumns.getColumnFields());
         results.addAll(columns.getColumnFields());
         return results;
+    }
+
+    protected Map<Class<?>, Field> getAllColumMap() {
+        List<Field> results = new ArrayList<>();
+        results.addAll(idColumns.getColumnFields());
+        results.addAll(columns.getColumnFields());
+        return results.stream().collect(Collectors.toMap(Field::getType, Function.identity()));
+    }
+
+    protected String getIdColumnName() {
+        return joinWithComma(idColumns.getColumnFields().stream().map(this::getColumnName).collect(Collectors.toList()));
     }
 }

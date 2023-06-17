@@ -9,7 +9,7 @@ class DmlQueryBuilderTest {
 
     @Test
     void insertSql() {
-        final Person 정원 = new Person(
+        final Person jeongwon = new Person(
                 null,
                 "정원",
                 15,
@@ -18,16 +18,23 @@ class DmlQueryBuilderTest {
         );
 
         final String insertSql = new DmlQueryBuilder(Person.class)
-                .insert(정원);
+                .insert(jeongwon);
 
-        assertThat(insertSql).isEqualTo("insert into users (nick_name,old,email) values ('정원',15,'a@a.com');");
+        assertThat(insertSql).isEqualTo("insert into users (nick_name,old,email) values ('정원',15,'a@a.com')");
     }
 
     @Test
     void findAllSql() {
         final String findAllSql = new DmlQueryBuilder(Person.class).findAll();
 
-        assertThat(findAllSql).isEqualTo("select id,nick_name,old,email from users;");
+        assertThat(findAllSql).isEqualTo("select id,nick_name,old,email from users");
+    }
+
+    @Test
+    void findByIdSql() {
+        final String findByIdSql = new DmlQueryBuilder(Person.class).findById(1L);
+
+        assertThat(findByIdSql).isEqualTo("select id,nick_name,old,email from users where id=1");
     }
 
 }

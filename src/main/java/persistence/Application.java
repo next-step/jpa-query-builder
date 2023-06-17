@@ -35,6 +35,9 @@ public class Application {
             final String findAllSql = dmlQueryBuilder.findAll();
             jdbcTemplate.execute(findAllSql);
 
+            final String findByIdSql = dmlQueryBuilder.findById(1L);
+            jdbcTemplate.execute(findByIdSql);
+
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
