@@ -32,6 +32,9 @@ public class Application {
             final String insertSql = dmlQueryBuilder.insert(new Person(null, "정원", 20, "a@a.com", 10));
             jdbcTemplate.execute(insertSql);
 
+            final String findAllSql = dmlQueryBuilder.findAll();
+            jdbcTemplate.execute(findAllSql);
+
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

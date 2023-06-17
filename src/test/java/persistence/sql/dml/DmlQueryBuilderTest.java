@@ -23,4 +23,11 @@ class DmlQueryBuilderTest {
         assertThat(insertSql).isEqualTo("insert into users (nick_name,old,email) values ('정원',15,'a@a.com');");
     }
 
+    @Test
+    void findAllSql() {
+        final String findAllSql = new DmlQueryBuilder(Person.class).findAll();
+
+        assertThat(findAllSql).isEqualTo("select id,nick_name,old,email from users;");
+    }
+
 }

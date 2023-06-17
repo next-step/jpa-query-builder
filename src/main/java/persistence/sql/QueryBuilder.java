@@ -3,15 +3,14 @@ package persistence.sql;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class QueryBuilder {
     protected static final String BLANK = " ";
     protected static final String COMMA = ",";
     protected static final String SINGLE_QUOTE = "'";
+    protected static final String COLON = ";";
 
     protected Class<?> entity;
     protected final Columns idColumns = new Columns();
@@ -89,5 +88,12 @@ public abstract class QueryBuilder {
 
             return generatedValue.strategy() != GenerationType.IDENTITY;
         };
+    }
+
+    protected List<Field> getAllColumnFields() {
+        List<Field> results = new ArrayList<>();
+        results.addAll(idColumns.getColumnFields());
+        results.addAll(columns.getColumnFields());
+        return results;
     }
 }

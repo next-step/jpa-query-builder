@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DmlQueryBuilder extends QueryBuilder {
-    private static final String INSERT_QUERY = "insert into %s (%s) values (%s);";
+    private static final String INSERT_QUERY = "insert into %s (%s) values (%s)";
+    private static final String SELECT_CLAUSE = "select %s";
+    private static final String FROM_CLAUSE = "from %s";
+    private static final String WHERE_CLAUSE = "where %s";
 
     public DmlQueryBuilder(Class<?> entity) {
         super(entity);
@@ -20,18 +23,12 @@ public class DmlQueryBuilder extends QueryBuilder {
         final String tableName = getTableName();
 
         // 2. get columns
-        List<String> fields = new ArrayList<>();
-        idColumns.getColumnFields().stream()
+        List<String> fields = getAllColumnFields()
+                .stream()
                 .filter(isNotTransientField())
                 .filter(isNotGeneratedIdField())
                 .map(super::getColumnName)
-                .forEach(fields::add);
-
-        this.columns.getColumnFields().stream()
-                .filter(isNotTransientField())
-                .filter(isNotGeneratedIdField())
-                .map(super::getColumnName)
-                .forEach(fields::add);
+                .collect(Collectors.toList());
 
         // 3. get values
         List<String> values = Arrays.stream(instance.getClass().getDeclaredFields())
@@ -41,7 +38,20 @@ public class DmlQueryBuilder extends QueryBuilder {
                 .collect(Collectors.toList());
 
         // 4. build insert sql
-        return String.format(INSERT_QUERY, tableName, joinWithComma(fields), joinWithComma(values));
+        return String.format(INSERT_QUERY, tableName, joinWithComma(fields), joinWithComma(values)) + COLON;
+    }
+
+    public String findAll() {
+        StringBuilder sql = new StringBuilder();
+        List<String> fields = getAllColumnFields()
+                .stream()
+                .filter(isNotTransientField())
+                .map(super::getColumnName).toList();
+        sql.append(String.format(SELECT_CLAUSE, joinWithComma(fields)));
+        sql.append(BLANK);
+        sql.append(String.format(FROM_CLAUSE, getTableName()));
+        sql.append(COLON);
+        return sql.toString();
     }
 
     private <T> String convertValue(T instance, Field e) {
