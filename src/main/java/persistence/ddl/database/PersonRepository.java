@@ -2,11 +2,12 @@ package persistence.ddl.database;
 
 import domain.Person;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
 
 import java.sql.ResultSet;
 import java.util.List;
 
-public class PersonRepository implements Database {
+public class PersonRepository implements Database<Person> {
     private final JdbcTemplate jdbcTemplate;
 
     public PersonRepository(JdbcTemplate jdbcTemplate) {
@@ -16,7 +17,7 @@ public class PersonRepository implements Database {
     public List<Person> findAll() {
         ReflectiveRowMapper<Person> reflectiveRowMapper = new ReflectiveRowMapper<>(Person.class);
 
-        return jdbcTemplate.query("select * from PERSON", reflectiveRowMapper);
+        return query("select * from PERSON", reflectiveRowMapper);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class PersonRepository implements Database {
     }
 
     @Override
-    public List<ResultSet> query(String sql) {
-        return null;
+    public List<Person> query(String sql, RowMapper<Person> rowMapper) {
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }
