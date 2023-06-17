@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.Id;
-import persistence.sql.common.ColumnValue;
 import persistence.sql.exception.IdNameNotFoundException;
+import persistence.sql.view.ColumnValue;
 
 import java.util.Arrays;
 

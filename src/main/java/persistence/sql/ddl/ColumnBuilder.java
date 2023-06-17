@@ -4,11 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.common.ColumnName;
+import persistence.sql.view.ColumnName;
 
 import java.lang.reflect.Field;
 
-import static persistence.sql.common.StringConstant.BLANK;
+import static persistence.sql.view.StringConstant.BLANK;
 
 public class ColumnBuilder {
     private final Field field;

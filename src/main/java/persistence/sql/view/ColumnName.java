@@ -1,20 +1,22 @@
-package persistence.sql.common;
+package persistence.sql.view;
 
 import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
 public class ColumnName {
-    private final Field field;
+    private final String name;
 
-    public ColumnName(Field field) {this.field = field;}
-
-    @Override
-    public String toString() {
+    public ColumnName(Field field) {
         final Column column = field.getDeclaredAnnotation(Column.class);
         final String name = column == null || column.name().isBlank()
                 ? field.getName()
                 : column.name();
-        return name.toLowerCase();
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

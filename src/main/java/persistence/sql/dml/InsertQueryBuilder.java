@@ -1,9 +1,9 @@
 package persistence.sql.dml;
 
-import persistence.sql.common.ColumnFields;
-import persistence.sql.common.ColumnNames;
-import persistence.sql.common.ColumnValues;
-import persistence.sql.common.TableName;
+import persistence.sql.view.ColumnFields;
+import persistence.sql.view.ColumnNames;
+import persistence.sql.view.ColumnValues;
+import persistence.sql.view.TableName;
 
 public class InsertQueryBuilder<T> {
     private final T object;

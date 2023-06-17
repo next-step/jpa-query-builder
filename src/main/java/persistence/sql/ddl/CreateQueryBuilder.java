@@ -1,11 +1,11 @@
 package persistence.sql.ddl;
 
-import persistence.sql.common.ColumnFields;
-import persistence.sql.common.TableName;
+import persistence.sql.view.ColumnFields;
+import persistence.sql.view.TableName;
 
 import java.util.stream.Collectors;
 
-import static persistence.sql.common.StringConstant.DELIMITER;
+import static persistence.sql.view.StringConstant.DELIMITER;
 
 public class CreateQueryBuilder<T> {
     private final Class<T> clazz;

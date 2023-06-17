@@ -1,4 +1,4 @@
-package persistence.sql.common;
+package persistence.sql.view;
 
 public final class StringConstant {
     public static final String BLANK = "";

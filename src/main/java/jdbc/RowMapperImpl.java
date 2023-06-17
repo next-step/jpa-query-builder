@@ -1,8 +1,8 @@
 package jdbc;
 
 import jdbc.exception.RowMapException;
-import persistence.sql.common.ColumnFields;
-import persistence.sql.common.ColumnName;
+import persistence.sql.view.ColumnFields;
+import persistence.sql.view.ColumnName;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

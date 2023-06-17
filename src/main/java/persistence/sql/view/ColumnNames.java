@@ -1,9 +1,9 @@
-package persistence.sql.common;
+package persistence.sql.view;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static persistence.sql.common.StringConstant.DELIMITER;
+import static persistence.sql.view.StringConstant.DELIMITER;
 
 public class ColumnNames {
     private final List<ColumnName> columnNames;
