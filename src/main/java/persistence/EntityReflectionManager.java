@@ -20,7 +20,7 @@ public class EntityReflectionManager {
     public Columns columns() {
         return Arrays.stream(entity.getDeclaredFields())
                 .filter(this::notTransient)
-                .map(it -> Column.of(
+                .map(it -> ColumnNode.of(
                         columnName(it),
                         it.getType(),
                         columnSize(it),
@@ -30,8 +30,34 @@ public class EntityReflectionManager {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Columns::new));
     }
 
+    public ColumnMap columnValueMap(Object object) {
+        ColumnMap columnMap = new ColumnMap();
+
+        Arrays.stream(entity.getDeclaredFields())
+                .filter(this::notTransient)
+                .filter(this::unique)
+                .forEach(field -> columnMap.add(columnName(field), getFieldValue(field, object)));
+
+        return columnMap;
+    }
+
+    private String getFieldValue(Field field, Object object) {
+        try {
+            field.setAccessible(true);
+            return String.valueOf(field.get(object));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private boolean notTransient(Field field) {
         jakarta.persistence.Transient annotation = field.getAnnotation(jakarta.persistence.Transient.class);
+
+        return annotation == null;
+    }
+
+    private boolean unique(Field field) {
+        jakarta.persistence.Id annotation = field.getAnnotation(jakarta.persistence.Id.class);
 
         return annotation == null;
     }
