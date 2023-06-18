@@ -24,18 +24,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class H2JdbcTemplateTest {
     private final Person PERSON = new Person(1L, "slow", 3, "slow@email.com");
 
-    DatabaseServer server;
-    JdbcTemplate jdbcTemplate;
-    EntityReflectionManager entityReflectionManager;
-    Table table;
-    Columns columns;
-    PersonDatabase personDatabase;
-    ColumnMap columnsMap;
+    private JdbcTemplate jdbcTemplate;
+    private EntityReflectionManager entityReflectionManager;
+    private Table table;
+    private Columns columns;
+    private PersonDatabase personDatabase;
+    private ColumnMap columnsMap;
 
     @BeforeEach
     void beforeEach() throws SQLException {
-        this.server = new H2();
-        jdbcTemplate = new JdbcTemplate(server.getConnection());
+        jdbcTemplate = new JdbcTemplate(new H2().getConnection());
         entityReflectionManager = new EntityReflectionManager(Person.class);
         table = entityReflectionManager.table();
         columns = entityReflectionManager.columns();
