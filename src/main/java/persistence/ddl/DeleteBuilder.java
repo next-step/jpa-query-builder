@@ -3,6 +3,7 @@ package persistence.ddl;
 import persistence.Table;
 
 public class DeleteBuilder {
+    private static final String KEYWORD = "DELETE FROM %s WHERE %s = %s";
     private final Table table;
 
     public DeleteBuilder(Table table) {
@@ -10,6 +11,6 @@ public class DeleteBuilder {
     }
 
     public String query(String column, Object value) {
-        return String.format("DELETE FROM %s WHERE %s = %s", table.expression(), column, value).toUpperCase();
+        return String.format(KEYWORD, table.expression(), column, value).toUpperCase();
     }
 }
