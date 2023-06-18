@@ -1,6 +1,7 @@
-package persistence.sql.ddl;
+package persistence.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 
 @Table(name = "users")
 @Entity
