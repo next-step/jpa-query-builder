@@ -23,7 +23,11 @@ public class JdbcTemplate {
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
         try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
-            return rowMapper.mapRow(resultSet);
+            if (resultSet.next()) { // 첫 번째 행으로 이동
+                return rowMapper.mapRow(resultSet);
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
