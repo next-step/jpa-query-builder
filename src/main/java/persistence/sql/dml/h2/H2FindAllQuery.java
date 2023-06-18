@@ -10,9 +10,9 @@ public final class H2FindAllQuery {
     public static String build(Class<?> clazz) {
         return new StringBuilder()
                 .append("SELECT ")
-                .append(ColumnNames.render(ColumnFields.forQuery(clazz)))
+                .append(ColumnNames.build(ColumnFields.forQuery(clazz)))
                 .append(" FROM ")
-                .append(TableName.render(clazz))
+                .append(TableName.build(clazz))
                 .toString();
     }
 }

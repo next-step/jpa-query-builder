@@ -17,7 +17,7 @@ public final class H2CreateQuery {
     public static String build(Class<?> clazz) {
         return new StringBuilder()
                 .append("CREATE TABLE ")
-                .append(TableName.render(clazz))
+                .append(TableName.build(clazz))
                 .append(getColumnSql(clazz))
                 .toString();
     }

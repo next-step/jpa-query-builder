@@ -11,9 +11,9 @@ import static persistence.sql.util.StringConstant.DELIMITER;
 public final class ColumnValues {
     private ColumnValues() {}
 
-    public static String render(Object object, List<Field> fields) {
+    public static String build(Object object, List<Field> fields) {
         String values = fields.stream()
-                .map(field -> render(object, field))
+                .map(field -> build(object, field))
                 .collect(Collectors.joining(DELIMITER));
         return new StringBuilder()
                 .append(" VALUES (")
@@ -22,10 +22,10 @@ public final class ColumnValues {
                 .toString();
     }
 
-    private static String render(Object object, Field field) {
+    private static String build(Object object, Field field) {
         try {
             field.setAccessible(true);
-            return ColumnValue.render(
+            return ColumnValue.build(
                     field.get(object)
             );
         } catch (IllegalAccessException e) {

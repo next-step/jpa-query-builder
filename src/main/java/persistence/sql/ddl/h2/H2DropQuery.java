@@ -8,7 +8,7 @@ public class H2DropQuery {
     public static String build(Class<?> clazz) {
         return new StringBuilder()
                 .append("DROP TABLE IF EXISTS ")
-                .append(TableName.render(clazz))
+                .append(TableName.build(clazz))
                 .toString();
     }
 }

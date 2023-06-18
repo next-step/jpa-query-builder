@@ -16,11 +16,11 @@ public final class H2InsertQuery {
         final List<Field> columnFields = ColumnFields.forInsert(clazz);
         return new StringBuilder()
                 .append("INSERT INTO ")
-                .append(TableName.render(clazz))
+                .append(TableName.build(clazz))
                 .append(" (")
-                .append(ColumnNames.render(columnFields))
+                .append(ColumnNames.build(columnFields))
                 .append(")")
-                .append(ColumnValues.render(object, columnFields))
+                .append(ColumnValues.build(object, columnFields))
                 .toString();
     }
 }

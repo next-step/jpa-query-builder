@@ -14,7 +14,7 @@ public final class H2WhereIdQuery {
                 .append(" WHERE ")
                 .append(getIdName(clazz))
                 .append(" = ")
-                .append(ColumnValue.render(id))
+                .append(ColumnValue.build(id))
                 .toString();
     }
 

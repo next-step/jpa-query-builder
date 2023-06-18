@@ -24,7 +24,7 @@ public final class H2ColumnDialect implements ColumnDialect {
     @Override
     public String getSqlColumn(Field field) {
         return new StringBuilder()
-                .append(ColumnName.render(field))
+                .append(ColumnName.build(field))
                 .append(" ")
                 .append(getSqlType(field))
                 .append(getNullable(field))

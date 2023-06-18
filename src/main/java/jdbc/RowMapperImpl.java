@@ -34,7 +34,7 @@ public class RowMapperImpl<T> implements RowMapper<T> {
         field.setAccessible(true);
         try {
             field.set(object, resultSet.getObject(
-                    ColumnName.render(field)
+                    ColumnName.build(field)
             ));
         } catch (IllegalAccessException | SQLException e) {
             throw new RowMapException(e);

@@ -8,7 +8,7 @@ public final class ColumnName {
 
     private ColumnName() {}
 
-    public static String render(Field field) {
+    public static String build(Field field) {
         final Column column = field.getDeclaredAnnotation(Column.class);
         return column == null || column.name().isBlank()
                 ? field.getName()

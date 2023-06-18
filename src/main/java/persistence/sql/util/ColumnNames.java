@@ -9,9 +9,9 @@ import static persistence.sql.util.StringConstant.DELIMITER;
 public final class ColumnNames {
     private ColumnNames() {}
 
-    public static String render(List<Field> fields) {
+    public static String build(List<Field> fields) {
         return fields.stream()
-                .map(ColumnName::render)
+                .map(ColumnName::build)
                 .collect(Collectors.joining(DELIMITER));
     }
 }
