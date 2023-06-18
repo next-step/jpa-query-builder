@@ -1,13 +1,9 @@
-package persistence.sql.ddl.h2;
-
-import persistence.sql.ddl.Dialect;
+package persistence.sql.ddl.column.type;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class H2Dialect implements Dialect {
-
-
     private final Map<Class<?>, String> h2TypeJavaClassMappings;
 
     public H2Dialect() {

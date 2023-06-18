@@ -1,8 +1,8 @@
-package persistence.sql.ddl.h2;
+package persistence.sql.ddl.column.option;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.GeneratedValueStrategy;
+import persistence.sql.ddl.column.option.GeneratedValueStrategy;
 
 public class H2GeneratedValueStrategy implements GeneratedValueStrategy {
     @Override

@@ -1,11 +1,10 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.column.option;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.h2.H2GeneratedValueStrategy;
 
 import java.lang.reflect.Field;
 
