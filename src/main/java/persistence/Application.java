@@ -1,6 +1,5 @@
 package persistence;
 
-import database.DataSourceProperties;
 import database.DatabaseServer;
 import database.H2;
 import domain.Person;
@@ -14,13 +13,10 @@ import persistence.ddl.InsertBuilder;
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    private static final DataSourceProperties DEFAULT_PROPERTIES =
-            new DataSourceProperties("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "sa", "");
-
     public static void main(String[] args) {
         logger.info("Starting application...");
         try {
-            final DatabaseServer server = new H2(DEFAULT_PROPERTIES);
+            final DatabaseServer server = new H2();
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
