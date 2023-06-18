@@ -5,11 +5,9 @@ import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.Test;
-import persistence.ColumnMap;
-import persistence.Columns;
-import persistence.EntityReflectionManager;
-import persistence.Table;
+import persistence.*;
 import persistence.ddl.CreateTableBuilder;
+import persistence.ddl.DeleteBuilder;
 import persistence.ddl.InsertBuilder;
 import persistence.ddl.SelectBuilder;
 
@@ -17,6 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class H2JdbcTemplateTest {
 
@@ -42,10 +41,23 @@ class H2JdbcTemplateTest {
 
         PersonDatabase personDatabase = new PersonDatabase(jdbcTemplate);
         ReflectiveRowMapper<Person> reflectiveRowMapper = new ReflectiveRowMapper<>(Person.class);
-        SelectBuilder selectBuilder = new SelectBuilder(table);
-        List<Person> selectPerson = personDatabase.query(selectBuilder.findAllQuery().toUpperCase(), reflectiveRowMapper);
 
-        assertThat(selectPerson).containsExactly(person);
+        SelectBuilder selectBuilder = new SelectBuilder(table, entityReflectionManager.columns());
+        // 전체 조회
+        List<Person> 전체조회Person = personDatabase.query(selectBuilder.findAllQuery().toUpperCase());
+
+        assertThat(전체조회Person).containsExactly(person);
+
+        // 단건 조회
+        Person 단건조회Person = personDatabase.executeQuery(selectBuilder.findById(1L));
+
+        assertThat(단건조회Person).isEqualTo(person);
+
+        // 삭제
+        DeleteBuilder deleteBuilder = new DeleteBuilder(table);
+        personDatabase.execute(deleteBuilder.query("id", 1L));
+
+        assertNull(personDatabase.executeQuery(selectBuilder.findById(1L)));
     }
 
 }
