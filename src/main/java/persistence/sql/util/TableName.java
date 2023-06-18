@@ -1,14 +1,11 @@
-package persistence.sql.ddl;
+package persistence.sql.util;
 
 import jakarta.persistence.Table;
 
-public class TableName<T> {
-    private final Class<T> clazz;
+public final class TableName {
+    private TableName() {}
 
-    public TableName(Class<T> clazz) {this.clazz = clazz;}
-
-    @Override
-    public String toString() {
+    public static <T> String build(Class<T> clazz) {
         Table table = clazz.getAnnotation(Table.class);
         String tableName = table == null || table.name().isBlank()
                 ? clazz.getSimpleName()
