@@ -23,6 +23,19 @@ public class Columns {
                 primaryKeyBuild();
     }
 
+    public String primaryKey() {
+        return columns.stream()
+                .filter(ColumnNode::unique)
+                .findFirst()
+                .orElseThrow(RuntimeException::new).name();
+    }
+
+    public Optional<ColumnNode> getColumn(String name) {
+        return columns.stream()
+                .filter(it -> it.sameName(name))
+                .findFirst();
+    }
+
     private String idBuild() {
         return new Id(primaryKey())
                 .expression();
@@ -41,23 +54,10 @@ public class Columns {
                 .expression();
     }
 
-
-    private String primaryKey() {
-        return columns.stream()
-                .filter(ColumnNode::unique)
-                .findFirst()
-                .orElseThrow(RuntimeException::new).name();
-    }
-
     private ColumnNode findColumn(int index) {
         return columns.get(index);
     }
 
-    public Optional<ColumnNode> getColumn(String name) {
-        return columns.stream()
-                .filter(it -> it.sameName(name))
-                .findFirst();
-    }
 
     private String addDelimiter() {
         return DELIMITER;
