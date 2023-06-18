@@ -11,6 +11,7 @@ import persistence.EntityReflectionManager;
 import persistence.Table;
 import persistence.ddl.CreateTableBuilder;
 import persistence.ddl.InsertBuilder;
+import persistence.ddl.SelectBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,7 +24,6 @@ class H2JdbcTemplateTest {
     void test() throws SQLException {
         final DatabaseServer server = new H2();
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-        final PersonRepository personRepository = new PersonRepository(jdbcTemplate);
 
         EntityReflectionManager entityReflectionManager = new EntityReflectionManager(Person.class);
         Table table = entityReflectionManager.table();
@@ -39,9 +39,13 @@ class H2JdbcTemplateTest {
         jdbcTemplate.execute(createTableBuilder.query());
         jdbcTemplate.execute(insertBuilder.query());
 
-        List<Person> findAllObject = personRepository.findAll();
 
-        assertThat(findAllObject).containsExactly(person);
+        PersonDatabase personDatabase = new PersonDatabase(jdbcTemplate);
+        ReflectiveRowMapper<Person> reflectiveRowMapper = new ReflectiveRowMapper<>(Person.class);
+        SelectBuilder selectBuilder = new SelectBuilder(table);
+        List<Person> selectPerson = personDatabase.query(selectBuilder.findAllQuery().toUpperCase(), reflectiveRowMapper);
+
+        assertThat(selectPerson).containsExactly(person);
     }
 
 }

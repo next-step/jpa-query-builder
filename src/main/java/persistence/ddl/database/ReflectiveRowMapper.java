@@ -5,6 +5,7 @@ import persistence.EntityReflectionManager;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class ReflectiveRowMapper<T> implements RowMapper<T> {
     private final EntityReflectionManager entityReflectionManager;
@@ -16,7 +17,7 @@ public class ReflectiveRowMapper<T> implements RowMapper<T> {
     }
 
     @Override
-    public T mapRow(ResultSet resultSet) {
+    public T mapRow(ResultSet resultSet) throws SQLException {
         T targetObject = null;
         try {
             targetObject = targetType.getDeclaredConstructor().newInstance();
