@@ -1,14 +1,14 @@
 package persistence;
 
-
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Columns {
     private static final String DELIMITER = ",";
-    private final List<Column> columns;
-    private final StringBuilder stringBuilder = new StringBuilder();
+    private final List<ColumnNode> columns;
 
-    public Columns(List<Column> columns) {
+    public Columns(List<ColumnNode> columns) {
         checkDuplicateName(columns);
         checkDuplicateUnique(columns);
 
@@ -16,71 +16,60 @@ public class Columns {
     }
 
     public String expression() {
-        idBuild();
-        normalColumnBuild();
-        primaryKeyBuild();
-
-        return stringBuilder.toString();
+        return idBuild() +
+                addDelimiter() +
+                normalColumnBuild() +
+                addDelimiter() +
+                primaryKeyBuild();
     }
 
-    private void idBuild() {
-        stringBuilder.append(new Id(primaryKey())
-                .expression());
-
-        addDelimiter();
-    }
-
-    private void normalColumnBuild() {
-        for (int i = 0; i < size(); i++) {
-            appendRow(i);
-        }
-    }
-
-    private void primaryKeyBuild() {
-        stringBuilder.append(new PrimaryKey(primaryKey())
-                .expression());
-    }
-
-
-    private String primaryKey() {
+    public String primaryKey() {
         return columns.stream()
-                .filter(Column::unique)
+                .filter(ColumnNode::unique)
                 .findFirst()
                 .orElseThrow(RuntimeException::new).name();
     }
 
-    private void appendRow(int index) {
-        Column column = findColumn(index);
-        if (column.unique()) {
-            return;
-        }
-
-        stringBuilder.append(findColumn(index).expression());
-
-        addDelimiter();
-    }
-
-    private Column findColumn(int index) {
-        return columns.get(index);
-    }
-
-    public Optional<Column> getColumn(String name) {
+    public Optional<ColumnNode> getColumn(String name) {
         return columns.stream()
                 .filter(it -> it.sameName(name))
                 .findFirst();
     }
 
-    private void addDelimiter() {
-        stringBuilder.append(DELIMITER);
+    private String idBuild() {
+        return new Id(primaryKey())
+                .expression();
+    }
+
+    private String normalColumnBuild() {
+        return IntStream.range(0, size())
+                .mapToObj(this::findColumn)
+                .filter(column -> !column.unique())
+                .map(ColumnNode::expression)
+                .collect(Collectors.joining(","));
+    }
+
+    private String primaryKeyBuild() {
+        return new PrimaryKey(primaryKey())
+                .expression();
+    }
+
+    private ColumnNode findColumn(int index) {
+        return columns.get(index);
+    }
+
+
+    private String addDelimiter() {
+        return DELIMITER;
     }
 
     public int size() {
         return columns.size();
     }
 
-    private void checkDuplicateUnique(List<Column> columns) {
+    private void checkDuplicateUnique(List<ColumnNode> columns) {
         boolean isOver = columns.stream()
-                .filter(Column::unique)
+                .filter(ColumnNode::unique)
                 .count() > 1;
 
         if (isOver) {
@@ -88,7 +77,7 @@ public class Columns {
         }
     }
 
-    private void checkDuplicateName(List<Column> columns) {
+    private void checkDuplicateName(List<ColumnNode> columns) {
         Set<String> names = new HashSet<>();
 
         columns.stream()

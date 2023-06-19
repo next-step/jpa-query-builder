@@ -6,10 +6,10 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class EntityScanner {
+public class EntityReflectionManager {
     private final Class<?> entity;
 
-    public EntityScanner(Class<?> entity) {
+    public EntityReflectionManager(Class<?> entity) {
         this.entity = entity;
     }
 
@@ -30,8 +30,34 @@ public class EntityScanner {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Columns::new));
     }
 
+    public ColumnMap columnValueMap(Object object) {
+        ColumnMap columnMap = new ColumnMap();
+
+        Arrays.stream(entity.getDeclaredFields())
+                .filter(this::notTransient)
+                .filter(this::unique)
+                .forEach(field -> columnMap.add(columnName(field), getFieldValue(field, object)));
+
+        return columnMap;
+    }
+
+    private String getFieldValue(Field field, Object object) {
+        try {
+            field.setAccessible(true);
+            return String.valueOf(field.get(object));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private boolean notTransient(Field field) {
         jakarta.persistence.Transient annotation = field.getAnnotation(jakarta.persistence.Transient.class);
+
+        return annotation == null;
+    }
+
+    private boolean unique(Field field) {
+        jakarta.persistence.Id annotation = field.getAnnotation(jakarta.persistence.Id.class);
 
         return annotation == null;
     }
@@ -56,7 +82,7 @@ public class EntityScanner {
         return columnAnnotation.length();
     }
 
-    private String columnName(Field field) {
+    public String columnName(Field field) {
         jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
 
         if (columnAnnotation == null) {
@@ -68,5 +94,11 @@ public class EntityScanner {
         }
 
         return columnAnnotation.name();
+    }
+
+    public Field[] activeField() {
+        return Arrays.stream(entity.getDeclaredFields())
+                .filter(this::notTransient)
+                .toArray(Field[]::new);
     }
 }

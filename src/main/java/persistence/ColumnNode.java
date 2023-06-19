@@ -1,6 +1,6 @@
 package persistence;
 
-public class Column implements Node {
+public class ColumnNode implements Node {
     private static final String SPACE = " ";
 
     private final String name;
@@ -9,8 +9,7 @@ public class Column implements Node {
     private final boolean nullable;
     private final StringBuilder stringBuilder;
 
-
-    public Column(String name, String type, boolean unique, boolean nullable) {
+    public ColumnNode(String name, String type, boolean unique, boolean nullable) {
         this.name = name;
         this.type = type;
         this.unique = unique;
@@ -18,12 +17,12 @@ public class Column implements Node {
         this.stringBuilder = new StringBuilder();
     }
 
-    public static Column of(String name, Class<?> type, int size, boolean unique) {
-        return new Column(name, Type.valueOf(type, size), unique, false);
+    public static ColumnNode of(String name, Class<?> type, int size, boolean unique) {
+        return new ColumnNode(name, Type.valueOf(type, size), unique, false);
     }
 
-    public static Column of(String name, Class<?> type, int size, boolean unique, boolean nullable) {
-        return new Column(name, Type.valueOf(type, size), unique, nullable);
+    public static ColumnNode of(String name, Class<?> type, int size, boolean unique, boolean nullable) {
+        return new ColumnNode(name, Type.valueOf(type, size), unique, nullable);
     }
 
     @Override

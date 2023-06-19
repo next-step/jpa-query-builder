@@ -3,7 +3,7 @@ package persistence.ddl;
 import domain.Person;
 import org.junit.jupiter.api.Test;
 import persistence.Columns;
-import persistence.EntityScanner;
+import persistence.EntityReflectionManager;
 import persistence.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +12,7 @@ class CreateTableBuilderTest {
 
     @Test
     void createDDL() {
-        EntityScanner entityScanner = new EntityScanner(Person.class);
+        EntityReflectionManager entityScanner = new EntityReflectionManager(Person.class);
         Table table = entityScanner.table();
         Columns columns = entityScanner.columns();
 

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.ddl.CreateTableBuilder;
 import persistence.ddl.DeleteTableBuilder;
+import persistence.ddl.InsertBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -20,14 +21,21 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            EntityScanner entityScanner = new EntityScanner(Person.class);
-            Table table = entityScanner.table();
-            Columns columns = entityScanner.columns();
+            EntityReflectionManager entityReflectionManager = new EntityReflectionManager(Person.class);
+            Table table = entityReflectionManager.table();
+            Columns columns = entityReflectionManager.columns();
 
             CreateTableBuilder createTableBuilder = new CreateTableBuilder(table, columns);
+
+            Person person = new Person("slow", 3, "slow@email.com");
+            ColumnMap columnsMap = entityReflectionManager.columnValueMap(person);
+            InsertBuilder insertBuilder = new InsertBuilder(entityReflectionManager.table(), columnsMap);
+
+
             DeleteTableBuilder deleteTableBuilder = new DeleteTableBuilder(table);
 
             jdbcTemplate.execute(createTableBuilder.query());
+            jdbcTemplate.execute(insertBuilder.query());
             jdbcTemplate.execute(deleteTableBuilder.query());
 
             server.stop();
