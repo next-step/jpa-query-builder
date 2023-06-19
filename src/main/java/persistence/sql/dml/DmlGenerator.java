@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import persistence.sql.ddl.exception.NoIdentifierException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -110,5 +111,19 @@ public class DmlGenerator {
 
     private String fromClause() {
         return String.format("FROM %s", getTableName());
+    }
+
+    public String generateFindByIdQuery(Long id) {
+        return new StringBuilder(generateFindAllQuery())
+            .append(whereClause(id))
+            .toString();
+    }
+
+    private String whereClause(Long id) {
+        Field idField = Arrays.stream(entityClass.getDeclaredFields())
+            .filter(field -> field.isAnnotationPresent(Id.class))
+            .findFirst()
+            .orElseThrow(() -> new NoIdentifierException(entityClass.getSimpleName()));
+        return String.format(" WHERE %s = %d", getColumnName(idField), id);
     }
 }
