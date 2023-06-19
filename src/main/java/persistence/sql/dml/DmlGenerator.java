@@ -92,4 +92,23 @@ public class DmlGenerator {
         }
         return String.valueOf(value);
     }
+
+    public String generateFindAllQuery() {
+        return new StringBuilder()
+            .append(selectClause())
+            .append(fromClause())
+            .toString();
+    }
+
+    private String selectClause() {
+        String columns = Arrays.stream(entityClass.getDeclaredFields())
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .map(this::getColumnName)
+            .collect(Collectors.joining(", "));
+        return String.format("SELECT %s ", columns);
+    }
+
+    private String fromClause() {
+        return String.format("FROM %s", getTableName());
+    }
 }
