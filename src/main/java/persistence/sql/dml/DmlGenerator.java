@@ -126,4 +126,18 @@ public class DmlGenerator {
             .orElseThrow(() -> new NoIdentifierException(entityClass.getSimpleName()));
         return String.format(" WHERE %s = %d", getColumnName(idField), id);
     }
+
+    public String generateDeleteAllQuery() {
+        return deleteClause();
+    }
+
+    private String deleteClause() {
+        return String.format("DELETE FROM %s", getTableName());
+    }
+
+    public String generateDeleteByIdQuery(Long id) {
+        return new StringBuilder(generateDeleteAllQuery())
+            .append(whereClause(id))
+            .toString();
+    }
 }

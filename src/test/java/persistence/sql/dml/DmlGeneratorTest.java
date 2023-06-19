@@ -18,7 +18,7 @@ class DmlGeneratorTest {
         assertThat(query).isEqualTo("INSERT INTO users ( nick_name, old, email ) VALUES ( 'jack', 30, 'jack@abc.com' )");
     }
 
-    @DisplayName("저장된 모든 엔티티를 조회하는 SELECT 쿼리를 생성한다.")
+    @DisplayName("모든 엔티티를 조회하는 SELECT 쿼리를 생성한다.")
     @Test
     void findAll() {
         String query = generator.generateFindAllQuery();
@@ -30,5 +30,19 @@ class DmlGeneratorTest {
     void findById() {
         String query = generator.generateFindByIdQuery(1L);
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
+    }
+
+    @DisplayName("모든 엔티티를 삭제하는 DELETE 쿼리를 생성한다.")
+    @Test
+    void delete() {
+        String query = generator.generateDeleteAllQuery();
+        assertThat(query).isEqualTo("DELETE FROM users");
+    }
+
+    @DisplayName("식별자로 하나의 엔티티를 삭제하는 DELETE 쿼리를 생성한다.")
+    @Test
+    void deleteById() {
+        String query = generator.generateDeleteByIdQuery(1L);
+        assertThat(query).isEqualTo("DELETE FROM users WHERE id = 1");
     }
 }
