@@ -2,9 +2,9 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.H2DbDialect;
-import persistence.sql.ddl.dialect.type.JavaToH2Type;
+import persistence.dialect.Dialect;
+import persistence.dialect.H2DbDialect;
+import persistence.dialect.type.JavaToH2Type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;

@@ -1,8 +1,8 @@
-package persistence.sql.ddl.collection;
+package persistence.dialect.collection;
 
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.H2DbDialect;
-import persistence.sql.ddl.dialect.MySqlDbDialect;
+import persistence.dialect.MySqlDbDialect;
+import persistence.dialect.Dialect;
+import persistence.dialect.H2DbDialect;
 
 import java.util.List;
 

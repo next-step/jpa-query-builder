@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect;
+package persistence.dialect;
 
 public interface Dialect {
     boolean support(String dbType);

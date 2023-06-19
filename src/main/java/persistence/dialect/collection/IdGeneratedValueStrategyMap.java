@@ -1,4 +1,4 @@
-package persistence.sql.ddl.collection;
+package persistence.dialect.collection;
 
 import jakarta.persistence.GenerationType;
 
