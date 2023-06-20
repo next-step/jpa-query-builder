@@ -1,11 +1,9 @@
-package persistence.sql.ddl;
+package fixture;
 
 import jakarta.persistence.*;
 
-@Table(name = "users")
 @Entity
-public class PersonV3 {
-
+public class PersonV2 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,8 +16,4 @@ public class PersonV3 {
 
     @Column(nullable = false)
     private String email;
-
-    @Transient
-    private Integer index;
-
 }

@@ -1,9 +1,10 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.column.type;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.h2.H2Dialect;
+import persistence.sql.ddl.column.type.Dialect;
+import persistence.sql.ddl.column.type.H2Dialect;
 
 class DialectTest {
     private final Dialect dialect = new H2Dialect();
