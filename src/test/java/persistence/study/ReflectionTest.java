@@ -32,15 +32,13 @@ class ReflectionTest {
 	@Nested
 	@DisplayName("메서드 테스트")
 	class MethodTest {
-
 		private Car car;
 		private Method[] declaredMethods;
 
 		@BeforeEach
 		void setUp() throws Exception {
 			// given
-			Constructor<Car> declaredConstructor = carClass.getDeclaredConstructor();
-			car = declaredConstructor.newInstance();
+			car = createCarInstance();
 			declaredMethods = carClass.getDeclaredMethods();
 		}
 
@@ -48,7 +46,7 @@ class ReflectionTest {
 		@DisplayName("Car 메서드 네임이 test로 시작하는 메서드 실행하기")
 		void executeMethodStartsWithTest() throws Exception {
 			// given
-			String targetMethodName = "test";
+			final String targetMethodName = "test";
 
 			// when
 			for (Method declaredMethod : declaredMethods) {
@@ -80,50 +78,57 @@ class ReflectionTest {
 		@Test
 		@DisplayName("private field에 값 할당")
 		void privateFieldAccess() throws Exception {
-			// given
-			Car car = this.createCarInstance();
+			final Car car = createCarInstance();
 
 			// when
 			this.injectField(car, "name", carName);
 			this.injectField(car, "price", price);
 
 			// then
-			assertThat(car.testGetPrice()).isEqualTo(TEST_METHOD_PREFIX + price);
-			assertThat(car.testGetName()).isEqualTo(TEST_METHOD_PREFIX + carName);
+			this.assertResult(car);
 		}
 
-		private void injectField(Car car, String fieldName, Object fieldValue) throws Exception {
-			Field nameClassDeclaredField = carClass.getDeclaredField(fieldName);
-			nameClassDeclaredField.setAccessible(true);
-			nameClassDeclaredField.set(car, fieldValue);
-		}
-
-		private Car createCarInstance() throws Exception {
-			Constructor<Car> declaredConstructor = carClass.getDeclaredConstructor();
-			return declaredConstructor.newInstance();
-		}
 
 		@Test
 		@DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
 		void constructorWithArgs() throws Exception {
 			// given
-			Constructor<?>[] constructors = carClass.getConstructors();
+			final Constructor<?>[] constructors = carClass.getConstructors();
+			final int targetConstructorParameterNumber = 2;
 			Car car = null;
 
 			// when
 			for (Constructor<?> constructor : constructors) {
-				if (constructor.getParameterCount() == 2) {
+				if (constructor.getParameterCount() == targetConstructorParameterNumber) {
 					car = (Car) constructor.newInstance(carName, price);
+					break;
 				}
 			}
-
 			if (car == null) {
-				throw new IllegalArgumentException("car가 null입니다.");
+				throw new IllegalArgumentException("car 인스턴스 생성에 실패했습니다.");
 			}
 
 			// then
-			assertThat(car.testGetName()).isEqualTo(TEST_METHOD_PREFIX + carName);
-			assertThat(car.testGetPrice()).isEqualTo(TEST_METHOD_PREFIX + price);
+			this.assertResult(car);
 		}
+
+
+		private void assertResult(final Car car) {
+			assertThat(car.testGetPrice()).isEqualTo(TEST_METHOD_PREFIX + price);
+			assertThat(car.testGetName()).isEqualTo(TEST_METHOD_PREFIX + carName);
+		}
+
+
+		private void injectField(Car car, String fieldName, Object fieldValue) throws Exception {
+			final Field nameClassDeclaredField = carClass.getDeclaredField(fieldName);
+			nameClassDeclaredField.setAccessible(true);
+			nameClassDeclaredField.set(car, fieldValue);
+		}
+
+	}
+
+	private Car createCarInstance() throws Exception {
+		final Constructor<Car> declaredConstructor = carClass.getDeclaredConstructor();
+		return declaredConstructor.newInstance();
 	}
 }
