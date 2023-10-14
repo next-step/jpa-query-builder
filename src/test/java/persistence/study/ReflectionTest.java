@@ -85,6 +85,22 @@ public class ReflectionTest {
         }));
     }
 
+    @Test
+    @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws Exception {
+        //given
+        final String carName = "소나타";
+        final int price = 10;
 
+        //when
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getConstructor(String.class, int.class).newInstance(carName, 10);
+
+        //then
+        assertSoftly((it -> {
+            it.assertThat(car.testGetName()).isEqualTo("test : " + carName);
+            it.assertThat(car.testGetPrice()).contains("test : " + price);
+        }));
+    }
 
 }
