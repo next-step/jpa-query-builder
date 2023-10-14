@@ -51,7 +51,8 @@ class ReflectionTest {
 			// when
 			for (Method declaredMethod : declaredMethods) {
 				if (declaredMethod.getName().startsWith(targetMethodName)) {
-					declaredMethod.invoke(car);
+					final String result = (String) declaredMethod.invoke(car);
+					assertThat(result).startsWith(TEST_METHOD_PREFIX);
 				}
 			}
 		}
