@@ -37,7 +37,7 @@ public class Person {
 
     @Column(name = "old")
     private Integer age;
-    
+
     @Column(nullable = false)
     private String email;
 
@@ -49,4 +49,31 @@ public class Person {
 
 
 - 요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기2
+```java
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+```
+- [ ] @Table(name) 을 통한 테이블명 조정
+- [ ] @Transient 을 이용한 column 맵핑 무시
+
+
 - 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
