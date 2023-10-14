@@ -12,13 +12,13 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DBColumnMapperTest {
+class DefaultDBColumnMapperTest {
 
-    private DBColumnMapper columnMapper;
+    private DefaultDBColumnMapper columnMapper;
 
     @BeforeEach
     void setUp() {
-        columnMapper = new DBColumnMapper();
+        columnMapper = new DefaultDBColumnMapper();
     }
 
     @ParameterizedTest(name = "{0} - {1}")
