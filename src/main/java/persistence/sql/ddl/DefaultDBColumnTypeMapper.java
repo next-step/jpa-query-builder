@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class DefaultDBColumnMapper implements DBColumnMapper {
+public class DefaultDBColumnTypeMapper implements DBColumnTypeMapper {
     private final Map<Class<?>, String> info = new HashMap<>();
 
-    public DefaultDBColumnMapper() {
+    public DefaultDBColumnTypeMapper() {
         info.put(Long.class, "bigint");
         info.put(String.class, "varchar");
         info.put(Integer.class, "int");

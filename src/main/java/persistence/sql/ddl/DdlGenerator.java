@@ -7,10 +7,10 @@ import java.util.Arrays;
 
 public class DdlGenerator {
 
-    private final DBColumnMapper columnMapper;
+    private final DBColumnTypeMapper columnTypeMapper;
 
-    public DdlGenerator(final DBColumnMapper columnMapper) {
-        this.columnMapper = columnMapper;
+    public DdlGenerator(final DBColumnTypeMapper columnTypeMapper) {
+        this.columnTypeMapper = columnTypeMapper;
     }
 
     public String generateCreateDdl(final Class<?> clazz) {
@@ -32,7 +32,7 @@ public class DdlGenerator {
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             field.setAccessible(true);
             final String fieldName = field.getName();
-            final String columnName = columnMapper.getColumnName(field.getType());
+            final String columnName = columnTypeMapper.getColumnName(field.getType());
 
             builder.append(fieldName)
                     .append(" ")

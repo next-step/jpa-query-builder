@@ -10,8 +10,8 @@ class DdlGeneratorTest {
     @Test
     @DisplayName("create 쿼리 생성 테스트")
     void generateCreateDdlTest() {
-        final DBColumnMapper columnMapper = new DefaultDBColumnMapper();
-        final DdlGenerator generator = new DdlGenerator(columnMapper);
+        final DBColumnTypeMapper columnTypeMapper = new DefaultDBColumnTypeMapper();
+        final DdlGenerator generator = new DdlGenerator(columnTypeMapper);
         final String query = generator.generateCreateDdl(Person.class);
         assertThat(query).isEqualToIgnoringCase("create table person (id bigint,name varchar,age int,CONSTRAINT PK_Person PRIMARY KEY (id))");
     }

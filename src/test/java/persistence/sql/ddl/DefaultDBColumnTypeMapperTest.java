@@ -12,20 +12,20 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DefaultDBColumnMapperTest {
+class DefaultDBColumnTypeMapperTest {
 
-    private DefaultDBColumnMapper columnMapper;
+    private DefaultDBColumnTypeMapper columnTypeMapper;
 
     @BeforeEach
     void setUp() {
-        columnMapper = new DefaultDBColumnMapper();
+        columnTypeMapper = new DefaultDBColumnTypeMapper();
     }
 
     @ParameterizedTest(name = "{0} - {1}")
     @MethodSource("classArgumentProvider")
     @DisplayName("getColumnName 테스트")
     void getColumnNameTest(final Class<?> clazz, final String expected) {
-        final String result = columnMapper.getColumnName(clazz);
+        final String result = columnTypeMapper.getColumnName(clazz);
 
         assertThat(result).isEqualTo(expected);
     }
@@ -33,7 +33,7 @@ class DefaultDBColumnMapperTest {
     @Test
     @DisplayName("getColumnName 실패 테스트 - 타입 맵핑 정보가 존재하지 않음")
     void getColumnNameTypeNotExistTest() {
-        assertThatThrownBy(() -> columnMapper.getColumnName(TestClass.class))
+        assertThatThrownBy(() -> columnTypeMapper.getColumnName(TestClass.class))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
