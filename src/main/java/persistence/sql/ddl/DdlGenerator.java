@@ -119,4 +119,11 @@ public class DdlGenerator {
         return clazz.getSimpleName();
     }
 
+    public String generateDropDdl(final Class<?> clazz) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("drop table ")
+                .append(getTableName(clazz));
+
+        return builder.toString();
+    }
 }
