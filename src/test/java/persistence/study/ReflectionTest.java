@@ -2,6 +2,9 @@ package persistence.study;
 
 
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -52,5 +55,36 @@ public class ReflectionTest {
             }
         }
     }
+
+    @Test
+    @DisplayName("요구사항 4 - private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        //given
+        final String carName = "소나타";
+        final int price = 10;
+
+        //when
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        for (Field field : carClass.getDeclaredFields()) {
+            if (field.getName().equals("name")) {
+                field.setAccessible(true);
+                field.set(car, carName);
+            }
+            if (field.getName().equals("price")) {
+                field.setAccessible(true);
+                field.set(car, price);
+            }
+        }
+
+        //then
+        assertSoftly((it -> {
+            it.assertThat(car.testGetName()).isEqualTo("test : " + carName);
+            it.assertThat(car.testGetPrice()).contains("test : " + price);
+        }));
+    }
+
+
 
 }
