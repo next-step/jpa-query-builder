@@ -8,7 +8,7 @@ class StringTest {
 
 
     @Test
-    void test() {
+    void convertToString() {
         int numbers = 123;
         String value = new String();
 
