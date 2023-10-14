@@ -19,10 +19,17 @@ public class DdlGenerator {
         final String className = getTableNameBy(clazz);
         builder.append("create table ")
                 .append(className)
-                .append(" (");
+                .append(" ")
+                .append(generateColumnsStatement(clazz));
 
-        final Field[] declaredFields = clazz.getDeclaredFields();
-        Arrays.stream(declaredFields).forEach(field -> {
+        return builder.toString();
+    }
+
+    private String generateColumnsStatement(final Class<?> clazz) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("(");
+
+        Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             field.setAccessible(true);
             final String fieldName = field.getName();
             final String columnName = columnMapper.getColumnName(field.getType());
@@ -34,18 +41,26 @@ public class DdlGenerator {
 
         });
 
-        final Field idField = getIdField(declaredFields);
+        builder.append(generatePKConstraintStatement(clazz));
+
+        builder.append(")");
+        return builder.toString();
+    }
+
+    private String generatePKConstraintStatement(final Class<?> clazz) {
+        final StringBuilder builder = new StringBuilder();
+        final Field idField = getIdField(clazz);
+        final String className = getTableNameBy(clazz);
         builder.append("CONSTRAINT PK_")
                 .append(className)
                 .append(" PRIMARY KEY (")
                 .append(idField.getName())
-                .append("))");
-
+                .append(")");
         return builder.toString();
     }
 
-    private Field getIdField(final Field[] declaredFields) {
-        return Arrays.stream(declaredFields)
+    private Field getIdField(final Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
                 .orElseThrow();
