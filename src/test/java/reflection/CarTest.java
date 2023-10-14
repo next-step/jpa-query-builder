@@ -87,7 +87,7 @@ class CarTest {
 
 
     @Test
-    void required() throws Exception {
+    void required5() throws Exception {
         String name = "소나타";
         int price = 1000;
 
