@@ -43,9 +43,9 @@ public class Person {
 
 }
 ```
-- [ ] strategy = GenerationType.IDENTITY 를 이용한 PK statement 조정
-- [ ] @Column(name) 을 이용한 column 이름 정보 조정
-- [ ] @Column(nullable) 를 이용한 not null 제약조건 추가
+- [x] strategy = GenerationType.IDENTITY 를 이용한 PK statement 조정
+- [x] @Column(name) 을 이용한 column 이름 정보 조정
+- [x] @Column(nullable) 를 이용한 not null 제약조건 추가
 
 
 - 요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기2

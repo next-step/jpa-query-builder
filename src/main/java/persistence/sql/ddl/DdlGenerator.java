@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -31,20 +34,56 @@ public class DdlGenerator {
 
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             field.setAccessible(true);
-            final String fieldName = field.getName();
-            final String columnName = columnTypeMapper.getColumnName(field.getType());
 
-            builder.append(fieldName)
-                    .append(" ")
-                    .append(columnName)
+            builder.append(generateColumnDefinition(field))
                     .append(",");
-
         });
 
         builder.append(generatePKConstraintStatement(clazz));
 
         builder.append(")");
         return builder.toString();
+    }
+
+    private String generateColumnDefinition(final Field field) {
+        final StringBuilder builder = new StringBuilder();
+        final String columnName = getColumnName(field);
+        final String columnType = columnTypeMapper.getColumnName(field.getType());
+
+        builder.append(columnName)
+                .append(" ")
+                .append(columnType)
+                .append(generateNotNullStatement(field))
+                .append(generateAutoIncrementStatement(field));
+        return builder.toString();
+    }
+
+    private String generateAutoIncrementStatement(final Field field) {
+        final GeneratedValue annotation = field.getDeclaredAnnotation(GeneratedValue.class);
+        final boolean isStrategyAutoIncrement = annotation != null && annotation.strategy() == GenerationType.IDENTITY;
+        if (isStrategyAutoIncrement) {
+            return " auto_increment";
+        }
+        return "";
+    }
+
+    private String generateNotNullStatement(final Field field) {
+        final Column annotation = field.getDeclaredAnnotation(Column.class);
+        final boolean isNotNullable = field.isAnnotationPresent(Id.class) || (annotation != null && !annotation.nullable());
+        if (isNotNullable) {
+            return " not null";
+        }
+        return "";
+    }
+
+    private String getColumnName(final Field field) {
+        final Column annotation = field.getDeclaredAnnotation(Column.class);
+        final boolean isColumnNameDefined = annotation != null && !annotation.name().isEmpty();
+        if (isColumnNameDefined) {
+            return annotation.name();
+        }
+
+        return field.getName();
     }
 
     private String generatePKConstraintStatement(final Class<?> clazz) {
@@ -54,7 +93,7 @@ public class DdlGenerator {
         builder.append("CONSTRAINT PK_")
                 .append(className)
                 .append(" PRIMARY KEY (")
-                .append(idField.getName())
+                .append(getColumnName(idField))
                 .append(")");
         return builder.toString();
     }
