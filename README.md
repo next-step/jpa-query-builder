@@ -72,8 +72,8 @@ public class Person {
 
 }
 ```
-- [ ] @Table(name) 을 통한 테이블명 조정
-- [ ] @Transient 을 이용한 column 맵핑 무시
+- [x] @Table(name) 을 통한 테이블명 조정
+- [x] @Transient 을 이용한 column 맵핑 무시
 
 
 - 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기

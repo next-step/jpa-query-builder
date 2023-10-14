@@ -1,9 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -19,9 +16,9 @@ public class DdlGenerator {
     public String generateCreateDdl(final Class<?> clazz) {
         final StringBuilder builder = new StringBuilder();
 
-        final String className = getTableNameBy(clazz);
+        final String tableName = getTableName(clazz);
         builder.append("create table ")
-                .append(className)
+                .append(tableName)
                 .append(" ")
                 .append(generateColumnsStatement(clazz));
 
@@ -34,6 +31,10 @@ public class DdlGenerator {
 
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             field.setAccessible(true);
+
+            if(field.isAnnotationPresent(Transient.class)) {
+                return;
+            }
 
             builder.append(generateColumnDefinition(field))
                     .append(",");
@@ -64,6 +65,7 @@ public class DdlGenerator {
         if (isStrategyAutoIncrement) {
             return " auto_increment";
         }
+
         return "";
     }
 
@@ -73,6 +75,7 @@ public class DdlGenerator {
         if (isNotNullable) {
             return " not null";
         }
+
         return "";
     }
 
@@ -89,9 +92,10 @@ public class DdlGenerator {
     private String generatePKConstraintStatement(final Class<?> clazz) {
         final StringBuilder builder = new StringBuilder();
         final Field idField = getIdField(clazz);
-        final String className = getTableNameBy(clazz);
+        final String tableName = getTableName(clazz);
+
         builder.append("CONSTRAINT PK_")
-                .append(className)
+                .append(tableName)
                 .append(" PRIMARY KEY (")
                 .append(getColumnName(idField))
                 .append(")");
@@ -105,7 +109,13 @@ public class DdlGenerator {
                 .orElseThrow();
     }
 
-    private String getTableNameBy(final Class<?> clazz) {
+    private String getTableName(final Class<?> clazz) {
+        final Table tableAnnotation = clazz.getDeclaredAnnotation(Table.class);
+        final boolean isTableNameDefined = tableAnnotation != null && !tableAnnotation.name().isEmpty();
+        if (isTableNameDefined) {
+            return tableAnnotation.name();
+        }
+
         return clazz.getSimpleName();
     }
 

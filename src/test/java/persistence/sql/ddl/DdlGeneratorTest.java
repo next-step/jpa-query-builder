@@ -13,6 +13,6 @@ class DdlGeneratorTest {
         final DBColumnTypeMapper columnTypeMapper = new DefaultDBColumnTypeMapper();
         final DdlGenerator generator = new DdlGenerator(columnTypeMapper);
         final String query = generator.generateCreateDdl(Person.class);
-        assertThat(query).isEqualToIgnoringCase("create table person (id bigint not null auto_increment,nick_name varchar,old int,email varchar not null,CONSTRAINT PK_Person PRIMARY KEY (id))");
+        assertThat(query).isEqualToIgnoringCase("create table users (id bigint not null auto_increment,nick_name varchar,old int,email varchar not null,CONSTRAINT PK_Users PRIMARY KEY (id))");
     }
 }
