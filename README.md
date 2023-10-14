@@ -77,3 +77,5 @@ public class Person {
 
 
 - 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
+- [ ] @Table(name) 을 고려해 drop 쿼리 작성
+
