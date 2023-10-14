@@ -9,3 +9,7 @@
   - [X] Car 객체의 메소드 중 test로 시작하는 메소드를 자동으로 실행한다. 
   - [X] 같이 Car 클래스에서 test로 시작하는 메소드만 Java Reflection을 활용해 실행하도록 구현한다.
   - [X] 구현은 src/test/java/persistence/study > ReflectionTest 클래스의 testMethodRun() 메소드에 한다.
+* **요구사항 3 - @PrintView 애노테이션 메소드 실행**
+  - [X] @PrintView애노테이션일 설정되어 있는 메소드를 자동으로 실행한다. 
+  - [X] Java Reflection을 활용해 실행하도록 구현한다.
+  - [X] 구현은 src/test/java/persistence/study > ReflectionTest 클래스의 testAnnotationMethodRun() 메소드에 한다.

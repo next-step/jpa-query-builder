@@ -39,4 +39,18 @@ public class ReflectionTest {
         }
     }
 
+    @Test
+    @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        for (Method method : carClass.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(PrintView.class)) {
+                logger.debug("메소드 호출 {}", method.invoke(car));
+            }
+        }
+    }
+
 }
