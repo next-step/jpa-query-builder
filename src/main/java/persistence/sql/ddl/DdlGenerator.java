@@ -7,6 +7,12 @@ import java.util.Arrays;
 
 public class DdlGenerator {
 
+    private final DBColumnMapper columnMapper;
+
+    public DdlGenerator(final DBColumnMapper columnMapper) {
+        this.columnMapper = columnMapper;
+    }
+
     public String generateCreateDdl(final Class<?> clazz) {
         final StringBuilder builder = new StringBuilder();
 
@@ -18,13 +24,12 @@ public class DdlGenerator {
         final Field[] declaredFields = clazz.getDeclaredFields();
         Arrays.stream(declaredFields).forEach(field -> {
             field.setAccessible(true);
-            final Class<?> type = field.getType();
             final String fieldName = field.getName();
-            final String typeName = getDBColumnTypeFrom(type);
+            final String columnName = columnMapper.getColumnName(field.getType());
 
             builder.append(fieldName)
                     .append(" ")
-                    .append(typeName)
+                    .append(columnName)
                     .append(",");
 
         });
@@ -44,20 +49,6 @@ public class DdlGenerator {
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
                 .orElseThrow();
-    }
-
-    private String getDBColumnTypeFrom(final Class<?> type) {
-        final String typeName;
-        if (type.isAssignableFrom(Long.class)) {
-            typeName = "bigint";
-        } else if (type.isAssignableFrom(String.class)) {
-            typeName = "varchar";
-        } else if (type.isAssignableFrom(Integer.class)) {
-            typeName = "int";
-        } else {
-            throw new IllegalArgumentException("타입 맵핑 정보가 존재하지 않습니다.");
-        }
-        return typeName;
     }
 
     private String getTableNameBy(final Class<?> clazz) {
