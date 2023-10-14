@@ -2,6 +2,8 @@ package persistence.study;
 
 public class Car {
 
+	public static final String TEST_METHOD_PREFIX = "test : ";
+
 	private String name;
 	private int price;
 
@@ -20,11 +22,11 @@ public class Car {
 	}
 
 	public String testGetName() {
-		return "test : " + name;
+		return TEST_METHOD_PREFIX + name;
 	}
 
 	public String testGetPrice() {
-		return "test : " + price;
+		return TEST_METHOD_PREFIX + price;
 	}
 }
 
