@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -68,6 +70,38 @@ public class ReflectionTest {
         });
 
         assertThat(annotationMethods.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        Class<Car> carClass = Car.class;
+        Field nameField = carClass.getDeclaredField("name");
+        nameField.setAccessible(true);
+        Field priceField = carClass.getDeclaredField("price");
+        priceField.setAccessible(true);
+
+        Car car = carClass.getDeclaredConstructor().newInstance();
+        nameField.set(car, "소나타");
+        priceField.set(car, 10000);
+
+        assertThat(car.testGetName()).contains("소나타");
+        assertThat(car.testGetPrice()).contains("10000");
+    }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<?> constructorArgs = stream(carClass.getDeclaredConstructors())
+                .filter(constructor -> constructor.getParameterCount() == 2)
+                .findFirst()
+                .orElseThrow();
+
+        Car carInstance = (Car)constructorArgs.newInstance("소나타", 10000);
+
+        assertThat(carInstance.testGetName()).contains("소나타");
+        assertThat(carInstance.testGetPrice()).contains("10000");
     }
 
 }
