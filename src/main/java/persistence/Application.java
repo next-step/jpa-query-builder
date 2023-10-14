@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) {
+    public static void main(MyString[] args) {
         logger.info("Starting application...");
         try {
             final DatabaseServer server = new H2();
