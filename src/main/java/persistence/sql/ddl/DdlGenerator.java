@@ -20,12 +20,12 @@ public class DdlGenerator {
         builder.append("create table ")
                 .append(tableName)
                 .append(" ")
-                .append(generateColumnsStatement(clazz));
+                .append(generateColumnsClause(clazz));
 
         return builder.toString();
     }
 
-    private String generateColumnsStatement(final Class<?> clazz) {
+    private String generateColumnsClause(final Class<?> clazz) {
         final StringBuilder builder = new StringBuilder();
         builder.append("(");
 
@@ -40,7 +40,7 @@ public class DdlGenerator {
                     .append(",");
         });
 
-        builder.append(generatePKConstraintStatement(clazz));
+        builder.append(generatePKConstraintClause(clazz));
 
         builder.append(")");
         return builder.toString();
@@ -54,12 +54,12 @@ public class DdlGenerator {
         builder.append(columnName)
                 .append(" ")
                 .append(columnType)
-                .append(generateNotNullStatement(field))
-                .append(generateAutoIncrementStatement(field));
+                .append(generateNotNullClause(field))
+                .append(generateAutoIncrementClause(field));
         return builder.toString();
     }
 
-    private String generateAutoIncrementStatement(final Field field) {
+    private String generateAutoIncrementClause(final Field field) {
         final GeneratedValue annotation = field.getDeclaredAnnotation(GeneratedValue.class);
         final boolean isStrategyAutoIncrement = annotation != null && annotation.strategy() == GenerationType.IDENTITY;
         if (isStrategyAutoIncrement) {
@@ -69,10 +69,10 @@ public class DdlGenerator {
         return "";
     }
 
-    private String generateNotNullStatement(final Field field) {
+    private String generateNotNullClause(final Field field) {
         final Column annotation = field.getDeclaredAnnotation(Column.class);
-        final boolean isNotNullable = field.isAnnotationPresent(Id.class) || (annotation != null && !annotation.nullable());
-        if (isNotNullable) {
+        final boolean isNonNullable = field.isAnnotationPresent(Id.class) || (annotation != null && !annotation.nullable());
+        if (isNonNullable) {
             return " not null";
         }
 
@@ -89,7 +89,7 @@ public class DdlGenerator {
         return field.getName();
     }
 
-    private String generatePKConstraintStatement(final Class<?> clazz) {
+    private String generatePKConstraintClause(final Class<?> clazz) {
         final StringBuilder builder = new StringBuilder();
         final Field idField = getIdField(clazz);
         final String tableName = getTableName(clazz);
