@@ -18,9 +18,9 @@ public class Person {
     
 }
 ```
-- [ ] Person 클래스를 순회하며 필드 정보를 가져온다.
-- [ ] 필드 정보를 바탕으로 ddl - create query 를 만든다.
-- [ ] @Id 가 있는 필드는 pk 로 만든다.
+- [x] Person 클래스를 순회하며 필드 정보를 가져온다.
+- [x] 필드 정보를 바탕으로 ddl - create query 를 만든다.
+- [x] @Id 가 있는 필드는 pk 로 만든다.
 
 
 - 요구사항 2 - 추가된 정보를 통해 create 쿼리 만들어보기
