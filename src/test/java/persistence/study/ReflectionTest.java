@@ -25,4 +25,18 @@ public class ReflectionTest {
         logger.debug("Car 클래스의 메소드 {}",  Arrays.toString(carClass.getDeclaredFields()));
     }
 
+    @Test
+    @DisplayName("요구사항 2 - test로 시작하는 메소드 실행")
+    void testMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        for (Method method : carClass.getDeclaredMethods()) {
+            if (method.getName().startsWith("test")) {
+                logger.debug("메소드 호출 {}", method.invoke(car));
+            }
+        }
+    }
+
 }
