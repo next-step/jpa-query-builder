@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class ReflectionTest {
+
 	private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
 	@Test
@@ -78,5 +79,32 @@ class ReflectionTest {
 		// then
 		assertThat(car.testGetPrice()).isEqualTo(TEST_METHOD_PREFIX + price);
 		assertThat(car.testGetName()).isEqualTo(TEST_METHOD_PREFIX + carName);
+	}
+
+	@Test
+	@DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
+	void constructorWithArgs() throws Exception {
+		// given
+		Class<Car> carClass = Car.class;
+		Constructor<?>[] constructors = carClass.getConstructors();
+		Car car = null;
+		int price = 1000;
+		String name = "포르쉐";
+
+		// when
+		for (Constructor<?> constructor : constructors) {
+			if (constructor.getParameterCount() == 2) {
+				car = (Car) constructor.newInstance(name, price);
+			}
+		}
+		if (car == null) {
+			throw new IllegalArgumentException("car가 null입니다.");
+		}
+
+		// then
+		String carName = car.testGetName();
+		String carPrice = car.testGetPrice();
+		assertThat(carName).isEqualTo(TEST_METHOD_PREFIX + name);
+		assertThat(carPrice).isEqualTo(TEST_METHOD_PREFIX + price);
 	}
 }
