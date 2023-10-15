@@ -4,15 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 
 abstract class Query {
     private String tableName;
-    private Field[] fields;
 
-    protected  <T> Query(Class<T> tClass) {
+
+    protected <T> Query(Class<T> tClass) {
         parseTableName(tClass);
-        this.fields = tClass.getDeclaredFields();
     }
 
     /**
@@ -46,17 +44,7 @@ abstract class Query {
         return tClass.isAnnotationPresent(annotation);
     }
 
-    static <A> boolean isAnnotation(Field field, Class<A> aClass) {
-        Class<? extends Annotation> annotation = aClass.asSubclass(Annotation.class);
-
-        return field.isAnnotationPresent(annotation);
-    }
-
     public String getTableName() {
         return tableName;
-    }
-
-    public Field[] getFields() {
-        return fields;
     }
 }
