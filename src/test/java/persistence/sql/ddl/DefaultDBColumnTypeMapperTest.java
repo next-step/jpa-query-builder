@@ -18,7 +18,7 @@ class DefaultDBColumnTypeMapperTest {
 
     @BeforeEach
     void setUp() {
-        columnTypeMapper = new DefaultDBColumnTypeMapper();
+        columnTypeMapper = DefaultDBColumnTypeMapper.getInstance();
     }
 
     @ParameterizedTest(name = "{0} - {1}")

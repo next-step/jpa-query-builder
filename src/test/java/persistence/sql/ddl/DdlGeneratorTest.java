@@ -14,7 +14,7 @@ class DdlGeneratorTest {
 
     @BeforeEach
     void setUp() {
-        columnTypeMapper = new DefaultDBColumnTypeMapper();
+        columnTypeMapper = DefaultDBColumnTypeMapper.getInstance();
         generator = new DdlGenerator(columnTypeMapper);
         personEntityMetadata = new EntityMetadata<>(Person.class);
     }
