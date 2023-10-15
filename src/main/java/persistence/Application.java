@@ -5,6 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.QueryBuilder;
 
 public class Application {
@@ -17,7 +18,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            String sql = QueryBuilder.createTableSQL(Person.class);
+            String sql = new QueryBuilder(new H2Dialect()).createTableSQL(Person.class);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
