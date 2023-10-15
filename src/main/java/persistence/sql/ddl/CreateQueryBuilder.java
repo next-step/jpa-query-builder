@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import persistence.sql.meta.EntityMeta;
 import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -26,8 +26,7 @@ public class CreateQueryBuilder {
     }
 
     private static void validateEntityAnnotation(Class<?> clazz) {
-        Entity entityAnnotation = clazz.getDeclaredAnnotation(Entity.class);
-        if (entityAnnotation == null) {
+        if (!EntityMeta.isEntity(clazz)) {
             throw new IllegalArgumentException("Create Query 빌드 대상이 아닙니다.");
         }
     }
