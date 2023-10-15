@@ -18,6 +18,7 @@ public class ColumnBuilder {
 
     private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
     private static final String PRIMARY_KEY = "PRIMARY KEY";
+    private static final String NOT_NULL = "NOT NULL";
     private static final String COLUMN_JOIN = ", ";
 
     public static String getColumnDefinition(Field[] fields) {
@@ -37,6 +38,7 @@ public class ColumnBuilder {
                 .append(getSqlType(field.getType()))
                 .append(getGenerationStrategy(field))
                 .append(getPrimaryKey(field))
+                .append(getNullable(field))
                 .toString();
     }
 
@@ -65,11 +67,18 @@ public class ColumnBuilder {
 
     private static String getPrimaryKey(Field field) {
         Id pkAnnotation = field.getDeclaredAnnotation(Id.class);
-        if (pkAnnotation == null) {
-            return EMPTY_STRING;
+        if (pkAnnotation != null) {
+            return BLANK + PRIMARY_KEY;
         }
-        return BLANK + PRIMARY_KEY;
+        return EMPTY_STRING;
     }
 
+    private static String getNullable(Field field) {
+        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
+        if (columnAnnotation != null && !columnAnnotation.nullable()) {
+            return BLANK + NOT_NULL;
+        }
+        return EMPTY_STRING;
+    }
 
 }
