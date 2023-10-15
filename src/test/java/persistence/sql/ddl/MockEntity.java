@@ -54,4 +54,21 @@ public class MockEntity {
         private String column;
     }
 
+    @Entity
+    public static class WithoutTableAnnotation {
+        @Id
+        private Long id;
+    }
+
+    @Entity
+    @Table(name = "test_table")
+    public static class WithTable {
+        @Id
+        private Long id;
+    }
+
+    public static class WithoutEntity {
+    }
+
+
 }
