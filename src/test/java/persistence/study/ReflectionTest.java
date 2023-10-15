@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -102,4 +99,21 @@ public class ReflectionTest {
         return field;
     }
 
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+
+        Constructor<?> constructorWithArgs = Arrays.stream(carClass.getDeclaredConstructors())
+                .filter(constructor -> hasParameters(constructor.getParameters()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("인자를 가진 생성자가 존재하지 않습니다."));
+
+        Car car = (Car) constructorWithArgs.newInstance(NAME, PRICE);
+        assertThat(car.getName()).isEqualTo(NAME);
+        assertThat(car.getPrice()).isEqualTo(PRICE);
+    }
+
+    private boolean hasParameters(final Parameter[] parameters) {
+        return parameters.length > 0;
+    }
 }
