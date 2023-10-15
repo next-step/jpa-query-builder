@@ -13,6 +13,8 @@ public class EntityColumn {
     private final boolean isNotNull;
     private final boolean isAutoIncrement;
     private final boolean isTransient;
+    private final boolean isStringValued;
+    private final int stringLength;
 
 
     public EntityColumn(final Field field) {
@@ -23,7 +25,11 @@ public class EntityColumn {
         this.isNotNull = this.isId || initIsNotNull(field);
         this.isAutoIncrement = initIsAutoIncrement(field);
         this.isTransient = initIsTransient(field);
+        this.isStringValued = this.type.isAssignableFrom(String.class);
+        this.stringLength = initStringLength(field);
     }
+
+
 
     private String initName(final Field field) {
         final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
@@ -56,6 +62,12 @@ public class EntityColumn {
         return field.isAnnotationPresent(Transient.class);
     }
 
+    private int initStringLength(final Field field) {
+        final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
+        return Optional.ofNullable(columnMetadata)
+                .map(Column::length)
+                .orElse(255);
+    }
 
     public String getName() {
         return this.name;
@@ -79,6 +91,14 @@ public class EntityColumn {
 
     public Class<?> getType() {
         return this.type;
+    }
+
+    public boolean isStringValued() {
+        return this.isStringValued;
+    }
+
+    public int getStringLength() {
+        return this.stringLength;
     }
 
     @Override

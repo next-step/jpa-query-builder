@@ -70,5 +70,14 @@ public class FixtureEntity {
     public static class WithoutEntity {
     }
 
+    @Entity
+    public static class WithColumnLength {
+        @Id
+        private Long id;
+        @Column(name = "column_length_hundred",length = 100)
+        private String column;
+
+        private String defaultLength;
+    }
 
 }

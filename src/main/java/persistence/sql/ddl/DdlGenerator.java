@@ -44,14 +44,22 @@ public class DdlGenerator {
 
     private String generateColumnDefinition(final EntityColumn column) {
         final StringBuilder builder = new StringBuilder();
-        final String columnName = column.getName();
-        final String columnType = columnTypeMapper.getColumnName(column.getType());
-
-        builder.append(columnName)
+        builder.append(column.getName())
                 .append(" ")
-                .append(columnType)
+                .append(generateColumnTypeClause(column))
                 .append(generateNotNullClause(column))
                 .append(generateAutoIncrementClause(column));
+        return builder.toString();
+    }
+
+    private String generateColumnTypeClause(final EntityColumn column) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(columnTypeMapper.getColumnName(column.getType()));
+        if(column.isStringValued()) {
+            builder.append("(")
+                    .append(column.getStringLength())
+                    .append(")");
+        }
         return builder.toString();
     }
 
