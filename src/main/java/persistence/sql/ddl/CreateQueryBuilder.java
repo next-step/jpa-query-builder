@@ -1,12 +1,12 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import persistence.sql.meta.EntityMeta;
-import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+
+import static persistence.sql.meta.EntityMeta.getTableName;
 
 public class CreateQueryBuilder {
 
@@ -48,14 +48,6 @@ public class CreateQueryBuilder {
                 .append(buildColumns(clazz.getDeclaredFields()))
                 .append(");")
                 .toString();
-    }
-
-    private static String getTableName(Class<?> clazz) {
-        Table tableAnnotation = clazz.getDeclaredAnnotation(Table.class);
-        if (tableAnnotation != null && !StringUtils.isNullOrEmpty(tableAnnotation.name())) {
-            return tableAnnotation.name();
-        }
-        return clazz.getSimpleName().toLowerCase();
     }
 
     private static String buildColumns(Field[] fields) {
