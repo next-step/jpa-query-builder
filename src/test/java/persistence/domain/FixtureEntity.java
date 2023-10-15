@@ -1,9 +1,9 @@
-package persistence.sql.ddl;
+package persistence.domain;
 
 import jakarta.persistence.*;
 
 
-public class MockEntity {
+public class FixtureEntity {
 
     public static class WithoutId {
         private Long id;

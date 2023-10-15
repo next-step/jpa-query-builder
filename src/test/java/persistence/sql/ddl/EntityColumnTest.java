@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.domain.FixtureEntity;
 
 import java.lang.reflect.Field;
 
@@ -15,7 +16,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("EntityColumn Id 테스트")
     void testEntityColumnWithId() throws Exception {
-        mockClass = MockEntity.WithId.class;
+        mockClass = FixtureEntity.WithId.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
         assertResult(column, "id", true, true, false, Long.class);
@@ -24,7 +25,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("EntityColumn IdAndColumn 테스트")
     void testEntityColumnWithIdAndColumn() throws Exception {
-        mockClass = MockEntity.WithIdAndColumn.class;
+        mockClass = FixtureEntity.WithIdAndColumn.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
         assertResult(column, "test_id", true, true, false, Long.class);
@@ -33,7 +34,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("EntityColumn Id GeneratedValue 테스트")
     void testEntityColumnWithIdGeneratedValue() throws Exception {
-        mockClass = MockEntity.IdWithGeneratedValue.class;
+        mockClass = FixtureEntity.IdWithGeneratedValue.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
         assertResult(column, "id", true, true, true, Long.class);
@@ -42,7 +43,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("EntityColumn WithoutColumn 테스트")
     void testEntityColumnWithoutColumn() throws Exception {
-        mockClass = MockEntity.WithoutColumn.class;
+        mockClass = FixtureEntity.WithoutColumn.class;
         final Field field = mockClass.getDeclaredField("column");
         final EntityColumn column = new EntityColumn(field);
         assertResult(column, "column", false, false, false, String.class);
@@ -51,7 +52,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("EntityColumn WithColumn 테스트")
     void testEntityColumnWithColumn() throws Exception {
-        mockClass = MockEntity.WithColumn.class;
+        mockClass = FixtureEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("column");
         final EntityColumn column = new EntityColumn(field);
         assertResult(column, "test_column", false, false, false, String.class);
@@ -60,7 +61,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("EntityColumn WithColumn 테스트")
     void testEntityColumnWithColumnNonNull() throws Exception {
-        mockClass = MockEntity.WithColumn.class;
+        mockClass = FixtureEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("notNullColumn");
         final EntityColumn column = new EntityColumn(field);
         assertResult(column, "notNullColumn", false, true, false, String.class);
@@ -69,7 +70,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("EntityColumn WithTransient 테스트")
     void testEntityColumnWithTransient() throws Exception {
-        mockClass = MockEntity.WithTransient.class;
+        mockClass = FixtureEntity.WithTransient.class;
         final Field field = mockClass.getDeclaredField("column");
         final EntityColumn column = new EntityColumn(field);
         assertThat(column.isTransient()).isTrue();
