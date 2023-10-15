@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
 import persistence.domain.FixtureEntity;
-import persistence.domain.Person;
 
 import java.util.stream.Stream;
 
@@ -29,7 +28,7 @@ class DdlGeneratorTest {
     @Test
     @DisplayName("Person class create 쿼리 생성 테스트")
     void generatePersonCreateDdlTest() {
-        entityMetadata = new EntityMetadata<>(Person.class);
+        entityMetadata = new EntityMetadata<>(FixtureEntity.Person.class);
         final String query = generator.generateCreateDdl(entityMetadata);
 
         assertThat(query).isEqualToIgnoringCase("create table users (id bigint not null auto_increment,nick_name varchar(255),old int,email varchar(255) not null,CONSTRAINT PK_Users PRIMARY KEY (id))");
@@ -38,7 +37,7 @@ class DdlGeneratorTest {
     @Test
     @DisplayName("Person class drop 쿼리 생성 테스트")
     void generatePersonDropDdlTest() {
-        entityMetadata = new EntityMetadata<>(Person.class);
+        entityMetadata = new EntityMetadata<>(FixtureEntity.Person.class);
         final String query = generator.generateDropDdl(entityMetadata);
 
         assertThat(query).isEqualToIgnoringCase("drop table users");
