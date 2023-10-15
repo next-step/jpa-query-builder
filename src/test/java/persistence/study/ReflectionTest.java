@@ -42,4 +42,21 @@ public class ReflectionTest {
         return Arrays.stream(array).map(map).collect(Collectors.toList());
     }
 
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    void testMethodRun() throws InvocationTargetException, IllegalAccessException {
+        carClass = Car.class;
+        Car car = new Car();
+        Method[] methods = carClass.getMethods();
+        for (Method method : methods) {
+            isStartWithTest(car, method);
+        }
+    }
+    private void isStartWithTest(final Car car, final Method method) throws IllegalAccessException, InvocationTargetException {
+        if(method.getName().startsWith("test")) {
+            String invoke = (String) method.invoke(car);
+            assertThat(invoke).startsWith("test : ");
+        }
+    }
+
 }
