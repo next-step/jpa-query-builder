@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,9 +15,28 @@ import java.util.Arrays;
 public class QueryDdl {
     public static final String DEFAULT_CREATE_QUERY = "CREATE TABLE %s (%s)";
     public static final String DEFAULT_PRIMARY_KEY_QUERY = ", PRIMARY KEY (%s)";
+    public static final String DEFAULT_DROP_QUERY = "DROP TABLE %s";
 
     public static <T> String create(Class<T> tClass) {
+        if (!tClass.isAnnotationPresent(Entity.class)) {
+            return null;
+        }
+
         return crateQuery(tClass);
+    }
+
+    public static<T> String drop(Class<T> tClass) {
+        if (!tClass.isAnnotationPresent(Entity.class)) {
+            return null;
+        }
+
+        return dropQuery(tClass);
+    }
+
+    private static <T> String dropQuery(Class<T> tClass) {
+        String tableName = parseTableName(tClass);
+
+        return String.format(DEFAULT_DROP_QUERY, tableName);
     }
 
     /**

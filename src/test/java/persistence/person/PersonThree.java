@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users_three")
 public class PersonThree {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

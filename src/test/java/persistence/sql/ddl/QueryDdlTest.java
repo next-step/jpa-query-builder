@@ -3,8 +3,6 @@ package persistence.sql.ddl;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,10 +13,9 @@ import persistence.person.PersonOne;
 import persistence.person.PersonThree;
 import persistence.person.PersonTwo;
 
-import java.lang.reflect.Field;
 import java.sql.SQLException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class QueryDdlTest {
@@ -46,7 +43,7 @@ class QueryDdlTest {
             //when
             String query = QueryDdl.create(personClass);
 
-            //when & then
+            //then
             assertDoesNotThrow(() -> jdbcTemplate.execute(query));
         }
 
@@ -76,7 +73,7 @@ class QueryDdlTest {
             //when
             String query = QueryDdl.create(personClass);
 
-            //when & then
+            //then
             assertDoesNotThrow(() -> jdbcTemplate.execute(query));
         }
     }
@@ -93,9 +90,44 @@ class QueryDdlTest {
             //when
             String query = QueryDdl.create(personClass);
 
-            //when & then
+            //then
             assertDoesNotThrow(() -> jdbcTemplate.execute(query));
         }
+    }
+
+    @Nested
+    @DisplayName("요구사항4")
+    class four {
+        @Test
+        @DisplayName("정상적으로 Person 테이블 삭제")
+        void success() {
+            //given
+            Class<Person> personClass = Person.class;
+            createTable(personClass);
+
+            //when
+            String query = QueryDdl.drop(personClass);
+
+            //then
+            assertDoesNotThrow(() -> jdbcTemplate.execute(query));
+        }
+
+        @Test
+        @DisplayName("@Entity가 없는 class는 drop query 생성하지 않는다.")
+        void notMakeDropQuery() {
+            //given
+            Class<NotEntityPerson> personClass = NotEntityPerson.class;
+
+            //when
+            String query = QueryDdl.drop(personClass);
+
+            //then
+            assertThat(query).isNull();
+        }
+    }
+
+    private <T> void createTable(Class<T> tClass) {
+        jdbcTemplate.execute(QueryDdl.create(tClass));
     }
 
     @AfterEach
