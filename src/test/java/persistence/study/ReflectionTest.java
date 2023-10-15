@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,35 +22,27 @@ import org.slf4j.LoggerFactory;
 @DisplayName("Reflection 테스트")
 class ReflectionTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
+    private static final Class<Car> carClass = Car.class;
 
     @Test
     @DisplayName("클래스 정보를 확인할 수 있다.")
     void showClass() {
-        Class<Car> carClass = Car.class;
-        assertThat(carClass.getName()).isEqualTo("persistence.study.Car");
+        final String carClassInfo = "persistence.study.Car";
+        assertThat(carClass.getName()).isEqualTo(carClassInfo);
     }
-
 
     @DisplayName("Method 이름에 문자열이 들어간 메서드를 선택적으로 실행할 수 있다.")
     @ParameterizedTest(name = "\"{0}\" 문자열이 들어간 메서드만 실행할 수 있다.")
     @ValueSource(strings = {"test"})
     void testMethodRun(String containWord) {
         //given
-        Class<Car> carClass = Car.class;
         final List<Method> testStartWithMethodList = Arrays.stream(carClass.getDeclaredMethods())
             .filter(method -> method.getName().startsWith(containWord))
             .toList();
 
         //when
         final List<Object> invokedResultList = testStartWithMethodList.stream()
-            .map(method -> {
-                try {
-                    return method.invoke(carClass.getDeclaredConstructor().newInstance());
-                } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                }
-            })
+            .map((Method method) -> tryMethodInvoke(method, carClass))
             .toList();
 
         //then
@@ -64,21 +57,13 @@ class ReflectionTest {
         ByteArrayOutputStream captureOutputConsole = new ByteArrayOutputStream();
         System.setOut(new PrintStream(captureOutputConsole));
 
-        Class<Car> carClass = Car.class;
-
         //when
         final List<Method> testStartWithMethodList = Arrays.stream(carClass.getDeclaredMethods())
             .filter(method -> method.isAnnotationPresent(containAnnotation))
             .toList();
 
         testStartWithMethodList
-            .forEach(method -> {
-                try {
-                    method.invoke(carClass.getDeclaredConstructor().newInstance());
-                } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            .forEach((Method method) -> tryMethodInvoke(method, carClass));
 
         //then
         assertThat(captureOutputConsole.toString().trim()).isEqualTo("자동차 정보를 출력 합니다.");
@@ -91,10 +76,10 @@ class ReflectionTest {
         final String carName = "소나타";
         final int carPrice = 5500000;
 
-        final Car car = Car.class.getDeclaredConstructor().newInstance();
+        final Car car = carClass.getDeclaredConstructor().newInstance();
 
-        final Field name = car.getClass().getDeclaredField("name");
-        final Field price = car.getClass().getDeclaredField("price");
+        final Field name = carClass.getDeclaredField("name");
+        final Field price = carClass.getDeclaredField("price");
 
         name.setAccessible(true);
         price.setAccessible(true);
@@ -118,15 +103,9 @@ class ReflectionTest {
         final int carPrice = 100000;
 
         //when
-        final Car car = (Car) Arrays.stream(Car.class.getDeclaredConstructors())
+        final Car car = (Car) Arrays.stream(carClass.getDeclaredConstructors())
             .filter(constructor -> constructor.getParameterCount() > 0)
-            .map(constructor -> {
-                try {
-                    return constructor.newInstance(carName, carPrice);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            })
+            .map(constructor -> tryNewInstanceWithParameter(constructor, carName, carPrice))
             .findAny()
             .orElseThrow();
 
@@ -135,5 +114,21 @@ class ReflectionTest {
             () -> assertThat(car.testGetName()).isEqualTo(String.format("test : %s", carName)),
             () -> assertThat(car.testGetPrice()).isEqualTo(String.format("test : %s", carPrice))
         );
+    }
+
+    private static Object tryMethodInvoke(Method method, Class<?> clazz) {
+        try {
+            return method.invoke(clazz.getDeclaredConstructor().newInstance());
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Object tryNewInstanceWithParameter(Constructor<?> constructor, String carName, int carPrice) {
+        try {
+            return constructor.newInstance(carName, carPrice);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
