@@ -3,7 +3,6 @@ package persistence.sql.ddl;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class EntityMetadata<T> {
@@ -11,12 +10,14 @@ public class EntityMetadata<T> {
     private final Class<T> clazz;
     private final String tableName;
     private final EntityColumns columns;
+    private final EntityColumn idColumn;
 
     public EntityMetadata(final Class<T> clazz) {
         this.validate(clazz);
         this.clazz = clazz;
         this.tableName = initTableName(clazz);
         this.columns = new EntityColumns(clazz);
+        this.idColumn = this.columns.getId();
     }
 
     private void validate(final Class<T> clazz) {
@@ -42,6 +43,6 @@ public class EntityMetadata<T> {
     }
 
     public String getIdColumnName() {
-        return this.columns.getId().getName();
+        return this.idColumn.getName();
     }
 }

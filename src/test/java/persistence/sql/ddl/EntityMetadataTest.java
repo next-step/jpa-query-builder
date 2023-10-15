@@ -15,8 +15,7 @@ class EntityMetadataTest {
     void entityMetadataCreateTest() {
         mockClass = MockEntity.WithId.class;
         final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
-        assertThat(entityMetadata).isNotNull();
-        assertThat(entityMetadata.getTableName()).isEqualTo("WithId");
+        assertResult(entityMetadata, "WithId", "id");
     }
 
     @Test
@@ -32,7 +31,12 @@ class EntityMetadataTest {
     void tableAnnotatedEntityMetadataCreateTest() {
         mockClass = MockEntity.WithTable.class;
         final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
+        assertResult(entityMetadata, "test_table", "id");
+    }
+
+    private void assertResult(final EntityMetadata<?> entityMetadata, final String withId, final String id) {
         assertThat(entityMetadata).isNotNull();
-        assertThat(entityMetadata.getTableName()).isEqualTo("test_table");
+        assertThat(entityMetadata.getTableName()).isEqualTo(withId);
+        assertThat(entityMetadata.getIdColumnName()).isEqualTo(id);
     }
 }
