@@ -1,8 +1,10 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -30,12 +32,20 @@ public class ColumnBuilder {
 
     private static String toSql(Field field) {
         return new StringBuilder()
-                .append(field.getName().toLowerCase())
+                .append(getColumnName(field))
                 .append(BLANK)
                 .append(getSqlType(field.getType()))
                 .append(getGenerationStrategy(field))
                 .append(getPrimaryKey(field))
                 .toString();
+    }
+
+    private static String getColumnName(Field field) {
+        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
+        if (columnAnnotation == null || StringUtils.isNullOrEmpty(columnAnnotation.name())) {
+            return field.getName().toLowerCase();
+        }
+        return columnAnnotation.name();
     }
 
     private static String getSqlType(Class<?> type) {
