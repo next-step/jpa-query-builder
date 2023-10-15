@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 public class ListUtils {
 
-    public static <T> List<T> filter(List<T> allMethods, Predicate<T> predicate) {
-        return allMethods.stream().filter(
+    public static <T> List<T> filter(List<T> sources, Predicate<T> predicate) {
+        return sources.stream().filter(
                 predicate
         ).collect(Collectors.toList());
     }
