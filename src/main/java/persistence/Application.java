@@ -2,15 +2,21 @@ package persistence;
 
 import database.DatabaseServer;
 import database.H2;
+import entity.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.CreateDDLQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
         logger.info("Starting application...");
+        String test = CreateDDLQueryBuilder.of(Person.class);
+        logger.info("-=-=-=-=-=-=-=");
+        logger.info(test);
+        logger.info("-=-=-=-=-=-=-=");
         try {
             final DatabaseServer server = new H2();
             server.start();
