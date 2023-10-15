@@ -7,6 +7,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -20,6 +21,7 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             jdbcTemplate.execute(CreateQueryBuilder.getQuery(Person.class));
+            jdbcTemplate.execute(DropQueryBuilder.getQuery(Person.class));
 
             server.stop();
         } catch (Exception e) {

@@ -1,11 +1,11 @@
 package persistence.sql.ddl;
 
 import domain.Person;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.mock.PureDomain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -21,7 +21,7 @@ class CreateQueryBuilderTest {
     @DisplayName("쿼리 정상 빌드 테스트")
     void getQuery() {
         String createQuery = CreateQueryBuilder.getQuery(Person.class);
-        Assertions.assertThat(createQuery).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR, old INT, email VARCHAR NOT NULL);");
+        assertThat(createQuery).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR, old INT, email VARCHAR NOT NULL);");
     }
 
     @Test

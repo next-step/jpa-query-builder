@@ -2,6 +2,8 @@ package persistence.sql.ddl;
 
 import persistence.sql.meta.EntityMeta;
 
+import static persistence.sql.meta.EntityMeta.getTableName;
+
 public class DropQueryBuilder {
 
     private static final String DROP_HEADER = "DROP TABLE ";
@@ -21,6 +23,10 @@ public class DropQueryBuilder {
     }
 
     private static String buildQuery(Class<?> clazz) {
-        return "";
+        return new StringBuilder()
+                .append(DROP_HEADER)
+                .append(getTableName(clazz))
+                .append(";")
+                .toString();
     }
 }
