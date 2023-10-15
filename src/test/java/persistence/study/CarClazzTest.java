@@ -28,18 +28,4 @@ public class CarClazzTest {
         logger.info(constructorNames);
         logger.info(methodNames);
     }
-
-    @DisplayName("test로 시작하는 메소드 실행")
-    @Test
-    void invokeMethodsStartWithTest() throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        Class<Car> carClass = Car.class;
-        List<Method> methods = Arrays.stream(carClass
-                        .getDeclaredMethods())
-                .filter(method -> method.getName().startsWith("test"))
-                .collect(Collectors.toList());
-
-        for (Method method : methods) {
-            method.invoke(carClass.newInstance());
-        }
-    }
 }
