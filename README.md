@@ -45,7 +45,7 @@ public class Person {
 ```sql
 CREATE TABLE Person
 (
-    id   bigInt PRIMARY KEY,
+    id   bigInt primary key,
     name varchar(255),
     age  int,
 )
@@ -55,5 +55,55 @@ CREATE TABLE Person
   - [X] @Entity 어노테이션이 안 붙어있으면 예외가 발생한다.
   - [X] Java와 JDBC간의 타입을 치환해준다
   - [X] @Id 어노테이션이 있으면 pirmary key 키워드를 추가한다.
+
+* 요구사항 1 - 아래 정보를 바탕으로 create 쿼리 만들어보기
+``` java
+@Entity
+public class Person {
+    
+    @Id
+    private Long id;
+    
+    private String name;
+    
+    private Integer age;
+    
+}
+```
+
+* 요구사항 2 - 칼럼이름이 변경되는 create 쿼리 만들어보기
+```java
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+    
+    @Column(nullable = false)
+    private String email;
+
+}
+```
+* 결과
+```sql
+CREATE TABLE Person
+(
+    id      bigInt primary key,
+    nick_name varchar(255),
+    old     int,
+    email   varchar(255) not null ,
+)
+```
+- [ ] 칼럼이름이 변경되는 create 쿼리 만들어보기
+  - [ ] 기본값 전략을 @GeneratedValue 으로 변경한다.
+  - [ ] @Column 어노테이션이 있으면 칼럼 이름을 변경한다.
+  - [ ] @Column(nullable = false) 어노테이션이 있으면 not null 키워드를 추가한다.
      
     
