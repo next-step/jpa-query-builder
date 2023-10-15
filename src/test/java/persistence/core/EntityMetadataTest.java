@@ -4,11 +4,11 @@ package persistence.core;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.domain.FixtureEntity;
-import persistence.core.EntityMetadata;
 import persistence.exception.PersistenceException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class EntityMetadataTest {
     private Class<?> mockClass;
@@ -38,8 +38,10 @@ class EntityMetadataTest {
     }
 
     private void assertResult(final EntityMetadata<?> entityMetadata, final String withId, final String id) {
-        assertThat(entityMetadata).isNotNull();
-        assertThat(entityMetadata.getTableName()).isEqualTo(withId);
-        assertThat(entityMetadata.getIdColumnName()).isEqualTo(id);
+        assertSoftly(softly -> {
+            softly.assertThat(entityMetadata).isNotNull();
+            softly.assertThat(entityMetadata.getTableName()).isEqualTo(withId);
+            softly.assertThat(entityMetadata.getIdColumnName()).isEqualTo(id);
+        });
     }
 }

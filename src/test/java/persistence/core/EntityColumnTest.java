@@ -4,11 +4,11 @@ package persistence.core;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.domain.FixtureEntity;
-import persistence.core.EntityColumn;
 
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class EntityColumnTest {
 
@@ -83,11 +83,14 @@ class EntityColumnTest {
                               final boolean isNotNull,
                               final boolean isAutoIncrement,
                               final Class<?> type) {
-        assertThat(result.getName()).isEqualTo(fieldName);
-        assertThat(result.isId()).isEqualTo(isId);
-        assertThat(result.isNotNull()).isEqualTo(isNotNull);
-        assertThat(result.isAutoIncrement()).isEqualTo(isAutoIncrement);
-        assertThat(result.getType()).isEqualTo(type);
+        assertSoftly(softly -> {
+            softly.assertThat(result.getName()).isEqualTo(fieldName);
+            softly.assertThat(result.isId()).isEqualTo(isId);
+            softly.assertThat(result.isNotNull()).isEqualTo(isNotNull);
+            softly.assertThat(result.isAutoIncrement()).isEqualTo(isAutoIncrement);
+            softly.assertThat(result.getType()).isEqualTo(type);
+        });
+
     }
 
 }
