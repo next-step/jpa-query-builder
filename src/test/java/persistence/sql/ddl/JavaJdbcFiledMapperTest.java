@@ -1,13 +1,16 @@
 package persistence.sql.ddl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import java.sql.JDBCType;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.commons.util.StringUtils;
 
 class JavaJdbcFiledMapperTest {
 
@@ -15,7 +18,7 @@ class JavaJdbcFiledMapperTest {
     @DisplayName("javaType을 JdbcType으로 변환해준다")
     @MethodSource("javaType과_Jdbc_타입변환_파라미터")
     void convert(Class<?> type, JDBCType result) {
-        JavaJdbcFiledMapper javaJdbcFiledMapper = new JavaJdbcFiledMapper();
+        JavaToJdbcFiledMapper javaJdbcFiledMapper = new JavaToJdbcFiledMapper();
 
         final JDBCType convert = javaJdbcFiledMapper.convert(type);
 
@@ -30,6 +33,16 @@ class JavaJdbcFiledMapperTest {
                 Arguments.of(Long.class, JDBCType.BIGINT),
                 Arguments.of(long.class, JDBCType.BIGINT)
         );
+    }
+
+
+    @Test
+    @DisplayName("지원하지 않은 타입은 예외가 발생한다.")
+    void notSupport() {
+        JavaToJdbcFiledMapper javaJdbcFiledMapper = new JavaToJdbcFiledMapper();
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> javaJdbcFiledMapper.convert(StringUtils.class));
     }
 
 }
