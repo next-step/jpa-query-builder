@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.person;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,7 @@ import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "users")
-public class Person {
+public class PersonThree {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

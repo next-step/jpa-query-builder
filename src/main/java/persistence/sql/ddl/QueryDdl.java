@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import org.h2.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -35,7 +37,14 @@ public class QueryDdl {
      * class의 이름을 가져와 table 이름으로 설정합니다.
      */
     private static <T> String parseTableName(Class<T> tClass) {
-        return tClass.getSimpleName();
+        String tableName = tClass.getSimpleName();
+
+        if(tClass.isAnnotationPresent(Table.class)
+        && !"".equals(tClass.getAnnotation(Table.class).name())) {
+            tableName = tClass.getAnnotation(Table.class).name();
+        }
+
+        return tableName;
     }
 
     /**
@@ -45,6 +54,7 @@ public class QueryDdl {
         Field[] fieldArray = tClass.getDeclaredFields();
 
         String[] fields = Arrays.stream(fieldArray)
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(field -> {
                     String columnName = extractColumn(field);
 
