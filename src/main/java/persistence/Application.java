@@ -18,7 +18,11 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            String sql = new QueryBuilder(new H2Dialect()).generateCreateDDL(Person.class);
+            String sql = new QueryBuilder(new H2Dialect()).generateTableCreateDDL(Person.class);
+            logger.info(sql);
+            jdbcTemplate.execute(sql);
+
+            sql = new QueryBuilder(new H2Dialect()).generateTableDropDDL(Person.class);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 

@@ -27,25 +27,19 @@ public class QueryBuilder {
         this.mappings = buildJavaClassToJdbcTypeCodeMappings();
     }
 
-    public String generateCreateDDL(Class<?> clazz) {
+    public String generateTableCreateDDL(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new RuntimeException("clazz is not @Entity");
         }
 
         final StringBuilder queryBuilder = new StringBuilder();
-        String tableName = clazz.getSimpleName().toLowerCase();
-        if (clazz.isAnnotationPresent(Table.class)) {
-            Table annotation = clazz.getAnnotation(Table.class);
-            if (!annotation.name().isEmpty()) {
-                tableName = annotation.name().toLowerCase();
-            }
-        }
-
+        String tableName = getTableName(clazz);
         queryBuilder.append("CREATE TABLE ").append(tableName);
-        final Field [] fields = clazz.getDeclaredFields();
-
         queryBuilder.append(" (");
+
+        final Field [] fields = clazz.getDeclaredFields();
         queryBuilder.append(String.join(", ", getCreateColumnQueries(fields)));
+
         queryBuilder.append(");");
 
         return queryBuilder.toString();
@@ -61,8 +55,6 @@ public class QueryBuilder {
     }
 
     public String fieldToColumnQuery(Field field) {
-        final StringBuilder stringBuilder = new StringBuilder();
-
         String columName = field.getName();
         boolean isNotNullable = false;
         if (field.isAnnotationPresent(Column.class)) {
@@ -75,13 +67,13 @@ public class QueryBuilder {
             }
         }
 
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getColumnNameBySingleQuote(columName))
                 .append(" ")
                 .append(getTypeName(field.getType()));
         if (isNotNullable) {
             stringBuilder.append(" NOT NULL");
         }
-
 
         if (field.isAnnotationPresent(Id.class)) {
             if (field.isAnnotationPresent(GeneratedValue.class)) {
@@ -94,6 +86,26 @@ public class QueryBuilder {
         }
 
         return stringBuilder.toString();
+    }
+
+    public String generateTableDropDDL(Class<?> clazz) {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new RuntimeException("clazz is not @Entity");
+        }
+
+        return "DROP TABLE " + getTableName(clazz);
+    }
+
+    private String getTableName(Class<?> clazz) {
+        String tableName = clazz.getSimpleName().toLowerCase();
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table annotation = clazz.getAnnotation(Table.class);
+            if (!annotation.name().isEmpty()) {
+                tableName = annotation.name().toLowerCase();
+            }
+        }
+
+        return tableName;
     }
 
     private ConcurrentHashMap<Class<?>, Integer> buildJavaClassToJdbcTypeCodeMappings() {

@@ -39,7 +39,7 @@ public class QueryBuilderTest {
             @Test
             @DisplayName("에러가 발생한다.")
             void it_raise_an_exception() {
-                Assertions.assertThrows(RuntimeException.class, () -> builder.generateCreateDDL(NoEntityClass.class));
+                Assertions.assertThrows(RuntimeException.class, () -> builder.generateTableCreateDDL(NoEntityClass.class));
             }
         }
 
@@ -53,7 +53,7 @@ public class QueryBuilderTest {
         @Test
         @DisplayName("class의 이름은 table의 이름이다.")
         void class_name_is_name_of_table() {
-            final String query = builder.generateCreateDDL(NameOfTable.class);
+            final String query = builder.generateTableCreateDDL(NameOfTable.class);
             assertThat(query).contains("CREATE TABLE " + "nameoftable");
         }
 
@@ -71,7 +71,7 @@ public class QueryBuilderTest {
             @Test
             @DisplayName("name은 table의 이름이 된다.")
             void name_is_name_of_table() {
-                final String query = builder.generateCreateDDL(OriginalNameOfTable.class);
+                final String query = builder.generateTableCreateDDL(OriginalNameOfTable.class);
                 assertThat(query).contains("CREATE TABLE " + "newnameoftable");
             }
         }
@@ -200,6 +200,57 @@ public class QueryBuilderTest {
             void it_handles_nullable_option() throws NoSuchFieldException {
                 final String columnQueries = builder.fieldToColumnQuery(NameOfTable.class.getDeclaredField("notNullableColumn"));
                 assertThat(columnQueries).contains("`notNullableColumn`" + " VARCHAR(255) NOT NULL");
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName(".generateDropDDL")
+    class GenerateDropDDL {
+
+        @Nested
+        @DisplayName("@Entity annotation 을 가지고 있지 않다면")
+        class HasNoEntityAnnotation {
+
+            class NoEntityClass {}
+
+            @Test
+            @DisplayName("에러가 발생한다.")
+            void it_raise_an_exception() {
+                Assertions.assertThrows(RuntimeException.class, () -> builder.generateTableDropDDL(NoEntityClass.class));
+            }
+        }
+
+        @Entity
+        class NameOfTable {
+
+            @Id
+            private Long primaryKey;
+        }
+
+        @Test
+        @DisplayName("class의 이름은 table의 이름이다.")
+        void class_name_is_name_of_table() {
+            final String query = builder.generateTableDropDDL(NameOfTable.class);
+            assertThat(query).contains("DROP TABLE " + "nameoftable");
+        }
+
+        @Nested
+        @DisplayName("@Table annotation 을 가지고 있다면")
+        class TableAnnotation {
+            @Entity
+            @Table(name = "newNameOfTable")
+            class OriginalNameOfTable {
+
+                @Id
+                private Long primaryKey;
+            }
+
+            @Test
+            @DisplayName("name은 table의 이름이 된다.")
+            void name_is_name_of_table() {
+                final String query = builder.generateTableDropDDL(OriginalNameOfTable.class);
+                assertThat(query).contains("DROP TABLE " + "newnameoftable");
             }
         }
     }
