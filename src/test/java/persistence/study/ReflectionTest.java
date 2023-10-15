@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 
@@ -42,5 +43,31 @@ public class ReflectionTest {
             softAssertions.assertThat(constructorName).isNotNull();
             softAssertions.assertThat(methods).isNotEmpty();
         });
+    }
+
+    @Test
+    @DisplayName("요구사항 2 - test로 시작하는 메소드 실행")
+    void testMethodRun() {
+        //given
+        final String METHOD_START_WORD = "test";
+
+        Class<Car> carClass = Car.class;
+        Method[] methods = carClass.getDeclaredMethods();
+
+        //when
+        String[] result = Arrays.stream(methods).filter(method -> method.getName().startsWith(METHOD_START_WORD))
+                .map(method -> {
+                    try {
+                        String execResult = (String) method.invoke(carClass.newInstance());
+                        logger.info(execResult);
+
+                        return execResult;
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toArray(String[]::new);
+
+        //then
+        assertThat(result).anyMatch(string -> string.contains(METHOD_START_WORD));
     }
 }
