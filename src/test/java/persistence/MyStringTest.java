@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.lang.String;
 
-class StringTest {
+class MyStringTest {
 
     @Test
     void convert() {

@@ -1,5 +1,5 @@
 package persistence;
 
-public class String {
+public class MyString {
 
 }
