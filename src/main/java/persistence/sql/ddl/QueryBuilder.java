@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +27,19 @@ public class QueryBuilder {
         this.mappings = buildJavaClassToJdbcTypeCodeMappings();
     }
 
-    public String createTableSQL(Class<?> clazz) {
+    public String generateCreateDDL(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new RuntimeException("clazz is not @Entity");
         }
 
         final StringBuilder queryBuilder = new StringBuilder();
-        final String tableName = clazz.getSimpleName().toLowerCase();
+        String tableName = clazz.getSimpleName().toLowerCase();
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table annotation = clazz.getAnnotation(Table.class);
+            if (!annotation.name().isEmpty()) {
+                tableName = annotation.name().toLowerCase();
+            }
+        }
 
         queryBuilder.append("CREATE TABLE ").append(tableName);
         final Field [] fields = clazz.getDeclaredFields();
@@ -46,6 +54,7 @@ public class QueryBuilder {
     List<String> getCreateColumnQueries(Field [] fields) {
         return Arrays
                 .stream(fields)
+                .filter(x -> !x.isAnnotationPresent(Transient.class))
                 .filter(x -> mappings.containsKey(x.getType()))
                 .map(this::fieldToColumnQuery)
                 .collect(Collectors.toList());

@@ -5,10 +5,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,8 +27,8 @@ public class QueryBuilderTest {
     }
 
     @Nested
-    @DisplayName(".createTable")
-    class CreateTable {
+    @DisplayName(".generateCreateDDL")
+    class GenerateCreateDDL {
 
         @Nested
         @DisplayName("@Entity annotation 을 가지고 있지 않다면")
@@ -34,7 +39,7 @@ public class QueryBuilderTest {
             @Test
             @DisplayName("에러가 발생한다.")
             void it_raise_an_exception() {
-                Assertions.assertThrows(RuntimeException.class, () -> builder.createTableSQL(NoEntityClass.class));
+                Assertions.assertThrows(RuntimeException.class, () -> builder.generateCreateDDL(NoEntityClass.class));
             }
         }
 
@@ -43,17 +48,60 @@ public class QueryBuilderTest {
 
             @Id
             private Long primaryKey;
-
-            private String stringColumn;
-
-            private Integer integerColumn;
         }
 
         @Test
         @DisplayName("class의 이름은 table의 이름이다.")
         void class_name_is_name_of_table() {
-            final String query = builder.createTableSQL(NameOfTable.class);
+            final String query = builder.generateCreateDDL(NameOfTable.class);
             assertThat(query).contains("CREATE TABLE " + "nameoftable");
+        }
+
+        @Nested
+        @DisplayName("@Table annotation 을 가지고 있다면")
+        class TableAnnotation {
+            @Entity
+            @Table(name = "newNameOfTable")
+            class OriginalNameOfTable {
+
+                @Id
+                private Long primaryKey;
+            }
+
+            @Test
+            @DisplayName("name은 table의 이름이 된다.")
+            void name_is_name_of_table() {
+                final String query = builder.generateCreateDDL(OriginalNameOfTable.class);
+                assertThat(query).contains("CREATE TABLE " + "newnameoftable");
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName(".getCreateColumnQueries")
+    class GetCreateColumnQueries {
+
+        @Nested
+        @DisplayName("Transient Annotation 의 경우")
+        class TransientAnnotation {
+
+            @Entity
+            class NameOfTable {
+                @Id
+                private Long primaryKey;
+
+                @Transient
+                private String transientField;
+            }
+
+            @Test
+            @DisplayName("query 에 포함되지 않는다.")
+            void it_does_not_contain() throws NoSuchFieldException {
+                final List<String> columnQueries = builder.getCreateColumnQueries(
+                    new Field[] { NameOfTable.class.getDeclaredField("transientField") }
+                );
+                assertThat(columnQueries).isEmpty();
+            }
         }
     }
 
