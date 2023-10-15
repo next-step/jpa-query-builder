@@ -51,9 +51,9 @@ CREATE TABLE Person
 )
 
 ```
-- [ ] create 쿼리 만들어보기
-  - [ ] @Entity 어노테이션이 안 붙어있으면 예외가 발생한다.
-  - [ ] Java와 JDBC간의 타입을 치환해준다
-  - [ ] @Id 어노테이션이 있으면 pirmary key 키워드를 추가한다.
+- [X] PK를 가진 create 쿼리 만들어보기
+  - [X] @Entity 어노테이션이 안 붙어있으면 예외가 발생한다.
+  - [X] Java와 JDBC간의 타입을 치환해준다
+  - [X] @Id 어노테이션이 있으면 pirmary key 키워드를 추가한다.
      
     
