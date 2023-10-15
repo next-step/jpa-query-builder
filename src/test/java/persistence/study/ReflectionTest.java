@@ -70,4 +70,22 @@ public class ReflectionTest {
         //then
         assertThat(result).anyMatch(string -> string.contains(METHOD_START_WORD));
     }
+
+    @Test
+    @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() {
+        //given
+        Class<Car> carClass = Car.class;
+        Method[] methods = carClass.getDeclaredMethods();
+
+        //when
+        Arrays.stream(methods).filter(method -> method.isAnnotationPresent(PrintView.class))
+                .forEach(method -> {
+                    try {
+                        method.invoke(carClass.newInstance());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
 }
