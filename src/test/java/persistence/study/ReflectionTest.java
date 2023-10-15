@@ -125,4 +125,24 @@ public class ReflectionTest {
             softAssertions.assertThat(result.getPrice()).isEqualTo(price);
         });
     }
+
+    @Test
+    @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws Exception {
+        //given
+        final String name = "소나타";
+        final int price = 3000;
+
+        Class<Car> carClass = Car.class;
+
+        //when
+        Car result = carClass.getDeclaredConstructor(String.class, int.class)
+                .newInstance(name, price);
+
+        //then
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.getName()).isEqualTo(name);
+            softAssertions.assertThat(result.getPrice()).isEqualTo(price);
+        });
+    }
 }
