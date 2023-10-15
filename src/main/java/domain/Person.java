@@ -19,4 +19,7 @@ public class Person {
     @Column(nullable = false)
     private String email;
 
+    @Transient
+    private Integer index;
+
 }
