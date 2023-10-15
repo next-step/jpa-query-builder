@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,5 +88,41 @@ public class ReflectionTest {
                         throw new RuntimeException(e);
                     }
                 });
+    }
+
+    @Test
+    @DisplayName("요구사항 4 - private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        //given
+        final String name = "소나타";
+        final int price = 3000;
+
+        Class<Car> carClass = Car.class;
+        Car result = carClass.getDeclaredConstructor().newInstance();
+
+        Field[] fields = carClass.getDeclaredFields();
+
+        //when
+        Arrays.stream(fields)
+                .filter(field -> Modifier.isPrivate(field.getModifiers()))
+                .forEach(field -> {
+                    field.setAccessible(true);
+
+                    try {
+                        if ("name".equals(field.getName())) {
+                            field.set(result, name);
+                        } else if ("price".equals(field.getName())) {
+                            field.set(result, price);
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        //then
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.getName()).isEqualTo(name);
+            softAssertions.assertThat(result.getPrice()).isEqualTo(price);
+        });
     }
 }
