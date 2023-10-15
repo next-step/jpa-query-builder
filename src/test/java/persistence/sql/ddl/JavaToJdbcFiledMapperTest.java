@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.util.StringUtils;
 
-class JavaJdbcFiledMapperTest {
+class JavaToJdbcFiledMapperTest {
 
     @ParameterizedTest
     @DisplayName("javaType을 JdbcType으로 변환해준다")

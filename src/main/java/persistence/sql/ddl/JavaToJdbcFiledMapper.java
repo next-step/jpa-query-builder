@@ -4,10 +4,10 @@ import java.sql.JDBCType;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class JavaJdbcFiledMapper {
+public class JavaToJdbcFiledMapper {
     private static final Map<Class<?>, JDBCType> classTypeMapper = new ConcurrentHashMap<>();
 
-    public JavaJdbcFiledMapper() {
+    public JavaToJdbcFiledMapper() {
         classTypeMapper.put(Integer.class, JDBCType.INTEGER);
         classTypeMapper.put(int.class, JDBCType.INTEGER);
         classTypeMapper.put(Long.class, JDBCType.BIGINT);
@@ -16,12 +16,10 @@ public class JavaJdbcFiledMapper {
     }
 
     public JDBCType convert(Class<?> javaType) {
-        final JDBCType jdbcType = classTypeMapper.get(javaType);
-        if (jdbcType == null) {
+        final JDBCType type = classTypeMapper.get(javaType);
+        if (type == null) {
             throw new IllegalArgumentException("지원 하지 않은 타입 입니다.");
         }
-        return classTypeMapper.get(javaType);
+        return type;
     }
-
-
 }
