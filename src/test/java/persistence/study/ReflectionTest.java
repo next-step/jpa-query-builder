@@ -24,6 +24,9 @@ public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
     private Class<Car> carClass;
 
+    final String NAME = "메르세데스 벤츠";
+    final int PRICE = 1000;
+
     @BeforeEach
     void setUp() {
         carClass = Car.class;
@@ -38,7 +41,7 @@ public class ReflectionTest {
 
         assertThat(fields).containsOnly("name", "price");
         assertThat(constructor).containsOnly("persistence.study.Car", "persistence.study.Car");
-        assertThat(methods).containsOnly("testGetPrice", "printView", "testGetName");
+        assertThat(methods).containsOnly("testGetPrice", "printView", "testGetName", "getName", "getPrice");
     }
 
     private <T, R> List<R> convertArrayToListWithMapping(T[] array, Function<T, R> map) {
@@ -77,6 +80,26 @@ public class ReflectionTest {
             method.invoke(car);
             assertThat(out.toString().trim()).isEqualTo("자동차 정보를 출력 합니다.");
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        Field nameFiled = getAccessibleFiled(carClass, "name");
+        Field priceFiled = getAccessibleFiled(carClass, "price");
+        nameFiled.set(car, NAME);
+        priceFiled.set(car, PRICE);
+
+        assertThat(car.getName()).isEqualTo(NAME);
+        assertThat(car.getPrice()).isEqualTo(PRICE);
+    }
+
+    private Field getAccessibleFiled(final Class<?> clazz, final String filedName) throws NoSuchFieldException {
+        Field field = clazz.getDeclaredField(filedName);
+        field.setAccessible(true);
+        return field;
     }
 
 }
