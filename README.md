@@ -3,6 +3,7 @@
 
 
 ## 1단계 - Reflection
+
 * **요구사항 1 - Car 클래스의 정보 출력**
   - [X] src/test/java/persistence/study > Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력한다.
 
@@ -23,3 +24,36 @@
 * **요구사항 5 - 인자를 가진 생성자의 인스턴스 생성**
   - [X] Car 클래스의 인스턴스를 자바 Reflection API를 활용해 Car 인스턴스를 생성한다.
   - [X] 구현은 src/test/java/persistence/study > ReflectionTest 클래스의 constructorWithArgs() 메소드에 한다.
+
+## 2단계 - QueryBuilder DDL
+
+* 요구사항 1 - 아래 정보를 바탕으로 create 쿼리 만들어보기
+``` java
+@Entity
+public class Person {
+    
+    @Id
+    private Long id;
+    
+    private String name;
+    
+    private Integer age;
+    
+}
+```
+* 결과
+```sql
+CREATE TABLE Person
+(
+    id   bigInt PRIMARY KEY,
+    name varchar(255),
+    age  int,
+)
+
+```
+- [ ] create 쿼리 만들어보기
+  - [ ] @Entity 어노테이션이 안 붙어있으면 예외가 발생한다.
+  - [ ] Java와 JDBC간의 타입을 치환해준다
+  - [ ] @Id 어노테이션이 있으면 pirmary key 키워드를 추가한다.
+     
+    
