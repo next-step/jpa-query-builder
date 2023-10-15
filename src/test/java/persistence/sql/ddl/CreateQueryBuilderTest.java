@@ -4,6 +4,7 @@ import domain.Person;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.mock.PureDomain;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,10 +28,6 @@ class CreateQueryBuilderTest {
     @DisplayName("Entity 애노테이션 미존재")
     void doNotHaveEntityAnnotation() {
         assertThrows(IllegalArgumentException.class, () -> CreateQueryBuilder.getQuery(PureDomain.class), "Create Query 빌드 대상이 아닙니다.");
-    }
-
-    private static class PureDomain {
-        private String domainKey;
     }
 
 }
