@@ -1,7 +1,8 @@
-package persistence.sql.ddl;
+package persistence.core;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import persistence.exception.ColumnNotExistException;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -25,7 +26,7 @@ public class EntityColumns implements Iterable<EntityColumn> {
 
     private void validate(final Class<?> clazz) {
         if (this.isIdFieldAbsent(clazz)) {
-            throw new IllegalArgumentException("Id 필드가 존재하지 않습니다.");
+            throw new ColumnNotExistException("Id 필드가 존재하지 않습니다.");
         }
     }
 
@@ -43,6 +44,6 @@ public class EntityColumns implements Iterable<EntityColumn> {
         return this.columns.stream()
                 .filter(EntityColumn::isId)
                 .findFirst()
-                .orElseThrow(()->new IllegalStateException("Id 컬럼이 존재하지 않습니다."));
+                .orElseThrow(() -> new ColumnNotExistException("Id 컬럼이 존재하지 않습니다."));
     }
 }

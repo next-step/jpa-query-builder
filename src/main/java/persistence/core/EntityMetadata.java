@@ -1,6 +1,7 @@
-package persistence.sql.ddl;
+package persistence.core;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Table;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class EntityMetadata<T> {
 
     private void validate(final Class<T> clazz) {
         if(!clazz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException(clazz.getName() + "은 Entity 클래스가 아닙니다.");
+            throw new PersistenceException(clazz.getName() + "은 Entity 클래스가 아닙니다.");
         }
     }
 

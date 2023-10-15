@@ -4,6 +4,8 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.domain.FixtureEntity;
+import persistence.core.EntityMetadata;
+import persistence.exception.PersistenceException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,7 +26,7 @@ class EntityMetadataTest {
     void entityMetadataCreateFailureTest() {
         mockClass = FixtureEntity.WithoutEntity.class;
         assertThatThrownBy(() -> new EntityMetadata<>(mockClass))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(PersistenceException.class);
     }
 
     @Test

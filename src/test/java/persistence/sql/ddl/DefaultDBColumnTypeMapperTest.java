@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import persistence.exception.NoSuchTypeException;
 
 import java.util.stream.Stream;
 
@@ -34,7 +35,7 @@ class DefaultDBColumnTypeMapperTest {
     @DisplayName("getColumnName 실패 테스트 - 타입 맵핑 정보가 존재하지 않음")
     void getColumnNameTypeNotExistTest() {
         assertThatThrownBy(() -> columnTypeMapper.getColumnName(TestClass.class))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NoSuchTypeException.class);
     }
 
     private static Stream<Arguments> classArgumentProvider() {

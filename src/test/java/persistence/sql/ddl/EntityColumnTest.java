@@ -4,6 +4,7 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.domain.FixtureEntity;
+import persistence.core.EntityColumn;
 
 import java.lang.reflect.Field;
 

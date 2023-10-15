@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.exception.NoSuchTypeException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +22,7 @@ public class DefaultDBColumnTypeMapper implements DBColumnTypeMapper {
     @Override
     public String getColumnName(final Class<?> clazz) {
         return Optional.ofNullable(info.get(clazz))
-                .orElseThrow(() -> new IllegalArgumentException(clazz.getName() + "클래스의 타입 맵핑 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchTypeException(clazz.getName() + "클래스의 타입 맵핑 정보가 존재하지 않습니다."));
     }
 
     private static class InstanceHolder {

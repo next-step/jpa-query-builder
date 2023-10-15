@@ -3,6 +3,9 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.domain.FixtureEntity;
+import persistence.core.EntityColumn;
+import persistence.core.EntityColumns;
+import persistence.exception.ColumnNotExistException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,7 +27,7 @@ class EntityColumnsTest {
     void entityColumnsCreateFailureTest() {
         mockClass = FixtureEntity.WithoutId.class;
         assertThatThrownBy(()->new EntityColumns(mockClass))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ColumnNotExistException.class);
     }
 
     @Test

@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import persistence.core.EntityColumn;
+import persistence.core.EntityMetadata;
+
 public class DdlGenerator {
 
     private final DBColumnTypeMapper columnTypeMapper;
