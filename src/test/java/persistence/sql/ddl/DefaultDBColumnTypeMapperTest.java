@@ -24,7 +24,7 @@ class DefaultDBColumnTypeMapperTest {
 
     @ParameterizedTest(name = "{0} - {1}")
     @MethodSource("classArgumentProvider")
-    @DisplayName("getColumnName 테스트")
+    @DisplayName("columnTypeMapper.getColumName 으로 맵핑된 DB 타입을 가져올 수 있다.")
     void getColumnNameTest(final Class<?> clazz, final String expected) {
         final String result = columnTypeMapper.getColumnName(clazz);
 
@@ -32,7 +32,7 @@ class DefaultDBColumnTypeMapperTest {
     }
 
     @Test
-    @DisplayName("getColumnName 실패 테스트 - 타입 맵핑 정보가 존재하지 않음")
+    @DisplayName("columnTypeMapper 에 존재하지 않는 타입을 조회할 수 없다.")
     void getColumnNameTypeNotExistTest() {
         assertThatThrownBy(() -> columnTypeMapper.getColumnName(TestClass.class))
                 .isInstanceOf(NoSuchTypeException.class);

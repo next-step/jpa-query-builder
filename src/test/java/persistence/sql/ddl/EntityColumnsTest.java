@@ -15,7 +15,7 @@ class EntityColumnsTest {
     private Class<?> mockClass;
 
     @Test
-    @DisplayName("EntityColumns 생성 테스트")
+    @DisplayName("Id 컬럼 정보가 있는 클래스를 이용해 EntityColumns 인스턴스를 생성할 수 있다.")
     void entityColumnsCreateTest() {
         mockClass = FixtureEntity.WithId.class;
         final EntityColumns columns = new EntityColumns(mockClass);
@@ -23,7 +23,7 @@ class EntityColumnsTest {
     }
 
     @Test
-    @DisplayName("EntityColumns 생성 실패 테스트")
+    @DisplayName("Id 컬럼 정보가 존재하지 않으면 EntityColumns 인스턴스 생성에 실패해야한다.")
     void entityColumnsCreateFailureTest() {
         mockClass = FixtureEntity.WithoutId.class;
         assertThatThrownBy(()->new EntityColumns(mockClass))
@@ -31,7 +31,7 @@ class EntityColumnsTest {
     }
 
     @Test
-    @DisplayName("EntityColumns getId 메서드 테스트")
+    @DisplayName("EntityColumns.getId 메서드를 통해 Id 컬럼을 가져올 수 있어야 한다.")
     void entityColumnsGetIdTest() throws Exception {
         mockClass = FixtureEntity.WithId.class;
         final EntityColumns columns = new EntityColumns(mockClass);

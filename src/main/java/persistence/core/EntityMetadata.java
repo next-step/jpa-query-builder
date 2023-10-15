@@ -1,8 +1,8 @@
 package persistence.core;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Table;
+import persistence.exception.PersistenceException;
 
 import java.util.Optional;
 

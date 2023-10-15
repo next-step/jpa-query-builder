@@ -15,7 +15,7 @@ class EntityColumnTest {
     private Class<?> mockClass;
 
     @Test
-    @DisplayName("EntityColumn Id 테스트")
+    @DisplayName("Id 컬럼 정보로 EntityColumn 인스턴스를 생성 할 수 있다.")
     void testEntityColumnWithId() throws Exception {
         mockClass = FixtureEntity.WithId.class;
         final Field field = mockClass.getDeclaredField("id");
@@ -24,7 +24,7 @@ class EntityColumnTest {
     }
 
     @Test
-    @DisplayName("EntityColumn IdAndColumn 테스트")
+    @DisplayName("Id 컬럼인데 Column 설정으로 이름을 설정해 EntityColumn 인스턴스를 생성 할 수 있다.")
     void testEntityColumnWithIdAndColumn() throws Exception {
         mockClass = FixtureEntity.WithIdAndColumn.class;
         final Field field = mockClass.getDeclaredField("id");
@@ -33,7 +33,7 @@ class EntityColumnTest {
     }
 
     @Test
-    @DisplayName("EntityColumn Id GeneratedValue 테스트")
+    @DisplayName("Id 컬럼의 GeneratedValue 를 이용하면 not null 과 autoIncrement 값이 true 인 EntityColumn 인스턴스를 생성 할 수있다.")
     void testEntityColumnWithIdGeneratedValue() throws Exception {
         mockClass = FixtureEntity.IdWithGeneratedValue.class;
         final Field field = mockClass.getDeclaredField("id");
@@ -42,7 +42,7 @@ class EntityColumnTest {
     }
 
     @Test
-    @DisplayName("EntityColumn WithoutColumn 테스트")
+    @DisplayName("일반 필드를 이용해 EntityColumn 인스턴스를 생성 할 수 있다.")
     void testEntityColumnWithoutColumn() throws Exception {
         mockClass = FixtureEntity.WithoutColumn.class;
         final Field field = mockClass.getDeclaredField("column");
@@ -51,7 +51,7 @@ class EntityColumnTest {
     }
 
     @Test
-    @DisplayName("EntityColumn WithColumn 테스트")
+    @DisplayName("일반 필드에 @Cloumn 을 이용해 이름 설정해 EntityColumn 인스턴스를 생성 할 수 있다.")
     void testEntityColumnWithColumn() throws Exception {
         mockClass = FixtureEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("column");
@@ -60,7 +60,7 @@ class EntityColumnTest {
     }
 
     @Test
-    @DisplayName("EntityColumn WithColumn 테스트")
+    @DisplayName("일반 필드에 @Cloumn 을 이용해 NotNull 이 true 인 EntityColumn 인스턴스를 생성 할 수 있다.")
     void testEntityColumnWithColumnNonNull() throws Exception {
         mockClass = FixtureEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("notNullColumn");
@@ -69,7 +69,7 @@ class EntityColumnTest {
     }
 
     @Test
-    @DisplayName("EntityColumn WithTransient 테스트")
+    @DisplayName("일반 필드에 @Transient 를 붙이면 isTransient 가 true 인 EntityColumn 인스턴스를 생성 할 수 있다.")
     void testEntityColumnWithTransient() throws Exception {
         mockClass = FixtureEntity.WithTransient.class;
         final Field field = mockClass.getDeclaredField("column");

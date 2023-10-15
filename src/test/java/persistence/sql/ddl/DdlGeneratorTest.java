@@ -22,7 +22,7 @@ class DdlGeneratorTest {
     }
 
     @Test
-    @DisplayName("create 쿼리 생성 테스트")
+    @DisplayName("Person class create 쿼리 생성 테스트")
     void generateCreateDdlTest() {
         final String query = generator.generateCreateDdl(personEntityMetadata);
 
@@ -30,7 +30,7 @@ class DdlGeneratorTest {
     }
 
     @Test
-    @DisplayName("drop 쿼리 생성 테스트")
+    @DisplayName("Person class drop 쿼리 생성 테스트")
     void generateDropDdlTest() {
         final String query = generator.generateDropDdl(personEntityMetadata);
 
