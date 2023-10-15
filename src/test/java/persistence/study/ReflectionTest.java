@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -52,10 +55,27 @@ public class ReflectionTest {
             isStartWithTest(car, method);
         }
     }
+
     private void isStartWithTest(final Car car, final Method method) throws IllegalAccessException, InvocationTargetException {
-        if(method.getName().startsWith("test")) {
+        if (method.getName().startsWith("test")) {
             String invoke = (String) method.invoke(car);
             assertThat(invoke).startsWith("test : ");
+        }
+    }
+
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() throws InvocationTargetException, IllegalAccessException {
+        Car car = new Car();
+        OutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
+
+        List<Method> methodWithPrintView = Arrays.stream(carClass.getMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class)).collect(Collectors.toList());
+        for (Method method : methodWithPrintView) {
+            method.invoke(car);
+            assertThat(out.toString().trim()).isEqualTo("자동차 정보를 출력 합니다.");
         }
     }
 
