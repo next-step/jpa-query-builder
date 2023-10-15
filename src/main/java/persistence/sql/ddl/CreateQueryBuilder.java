@@ -8,16 +8,17 @@ import java.util.Arrays;
 
 public class CreateQueryBuilder {
 
+    private static final String CREATE_HEADER = "CREATE TABLE ";
+
     public static String getQuery(Class<?> clazz) {
 
         // Domain 클래스 검증
         validateEntity(clazz);
 
-        return "";
+        return buildQuery(clazz);
     }
 
     private static void validateEntity(Class<?> clazz) {
-
         validateEntityAnnotation(clazz);
         validatePkAnnotation(clazz);
     }
@@ -36,5 +37,19 @@ public class CreateQueryBuilder {
         if (!isPkPresent) {
             throw new IllegalArgumentException("Primary Key가 정의되지 않았습니다.");
         }
+    }
+
+    private static String buildQuery(Class<?> clazz) {
+        return new StringBuilder()
+                .append(CREATE_HEADER)
+                .append(clazz.getSimpleName().toLowerCase())
+                .append(" (")
+                .append(buildColumns(clazz.getDeclaredFields()))
+                .append(");")
+                .toString();
+    }
+
+    private static String buildColumns(Field[] fields) {
+        return ColumnBuilder.getColumnDefinition(fields);
     }
 }
