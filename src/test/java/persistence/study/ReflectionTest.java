@@ -9,12 +9,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
 
@@ -35,7 +33,7 @@ public class ReflectionTest {
         Method[] declaredMethods = carClass.getDeclaredMethods();
         List<Method> testMethods = stream(declaredMethods)
                 .filter(method -> method.getName().startsWith("test"))
-                .collect(Collectors.toList());
+                .toList();
 
         Car car = carClass.getDeclaredConstructor().newInstance();
         List<String> methodResults = testMethods.stream()
@@ -46,12 +44,10 @@ public class ReflectionTest {
                         fail("Exception occurred invoking test method : {}", testMethod.getName());
                     }
                     return null;
-                }).collect(Collectors.toList());
+                }).toList();
 
-        assertAll(
-                () -> assertThat(methodResults.size()).isEqualTo(2),
-                () -> assertThat(methodResults).allSatisfy(methodResult -> assertThat(methodResult).startsWith("test"))
-        );
+        assertThat(methodResults.size()).isEqualTo(2);
+        assertThat(methodResults).allSatisfy(methodResult -> assertThat(methodResult).startsWith("test"));
     }
 
     @Test
@@ -62,7 +58,7 @@ public class ReflectionTest {
         Method[] declaredMethods = carClass.getDeclaredMethods();
         List<Method> annotationMethods = stream(declaredMethods)
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
-                .collect(Collectors.toList());
+                .toList();
 
         Car car = carClass.getDeclaredConstructor().newInstance();
         annotationMethods.forEach(annotationMethod -> {
@@ -89,11 +85,8 @@ public class ReflectionTest {
         nameField.set(car, "소나타");
         priceField.set(car, 10000);
 
-        assertAll(
-                () -> assertThat(car.testGetName()).contains("소나타"),
-                () -> assertThat(car.testGetPrice()).contains("10000")
-        );
-
+        assertThat(car.testGetName()).contains("소나타");
+        assertThat(car.testGetPrice()).contains("10000");
     }
 
     @Test
@@ -105,13 +98,10 @@ public class ReflectionTest {
                 .findFirst()
                 .orElseThrow();
 
-        Car carInstance = (Car) constructorArgs.newInstance("소나타", 10000);
+        Car carInstance = (Car)constructorArgs.newInstance("소나타", 10000);
 
-        assertAll(
-                () -> assertThat(carInstance.testGetName()).contains("소나타"),
-                () -> assertThat(carInstance.testGetPrice()).contains("10000")
-        );
-
+        assertThat(carInstance.testGetName()).contains("소나타");
+        assertThat(carInstance.testGetPrice()).contains("10000");
     }
 
 }
