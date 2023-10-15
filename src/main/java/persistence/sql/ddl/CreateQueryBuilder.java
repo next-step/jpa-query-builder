@@ -2,6 +2,8 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -42,11 +44,19 @@ public class CreateQueryBuilder {
     private static String buildQuery(Class<?> clazz) {
         return new StringBuilder()
                 .append(CREATE_HEADER)
-                .append(clazz.getSimpleName().toLowerCase())
+                .append(getTableName(clazz))
                 .append(" (")
                 .append(buildColumns(clazz.getDeclaredFields()))
                 .append(");")
                 .toString();
+    }
+
+    private static String getTableName(Class<?> clazz) {
+        Table tableAnnotation = clazz.getDeclaredAnnotation(Table.class);
+        if (tableAnnotation != null && StringUtils.isNullOrEmpty(tableAnnotation.name())) {
+            return tableAnnotation.name();
+        }
+        return clazz.getSimpleName().toLowerCase();
     }
 
     private static String buildColumns(Field[] fields) {
