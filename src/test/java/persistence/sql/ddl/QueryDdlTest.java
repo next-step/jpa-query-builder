@@ -9,14 +9,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.person.NotEntityPerson;
-import persistence.person.PersonOne;
+import persistence.person.NotParseTypePerson;
 import persistence.person.PersonThree;
 import persistence.person.PersonTwo;
 
 import java.sql.SQLException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QueryDdlTest {
 
@@ -35,29 +35,13 @@ class QueryDdlTest {
     @DisplayName("요구사항1")
     class one {
         @Test
-        @DisplayName("정상적으로 Class 정보를 읽어 CREATE QUERY 생성하여 실행 성공")
-        void success() {
-            //given
-            Class<PersonOne> personClass = PersonOne.class;
-
-            //when
-            String query = QueryDdl.create(personClass);
-
-            //then
-            assertDoesNotThrow(() -> jdbcTemplate.execute(query));
-        }
-
-        @Test
         @DisplayName("@Entity가 설정되어 있지 않은 경우 Query를 생성하지 않음")
         void notEntity() {
             //given
             Class<NotEntityPerson> personClass = NotEntityPerson.class;
 
-            //when
-            String query = QueryDdl.create(personClass);
-
-            //then
-            assertThat(query).isNull();
+            //when & then
+            assertThrows(NullPointerException.class, () -> QueryDdl.create(personClass));
         }
     }
 
@@ -75,6 +59,16 @@ class QueryDdlTest {
 
             //then
             assertDoesNotThrow(() -> jdbcTemplate.execute(query));
+        }
+
+        @Test
+        @DisplayName("지원하지 않는 자료형 입력시 오류")
+        void invalidType() {
+            //given
+            Class<NotParseTypePerson> personClass = NotParseTypePerson.class;
+
+            //when & then
+            assertThrows(IllegalArgumentException.class, () -> QueryDdl.create(personClass));
         }
     }
 
@@ -118,11 +112,8 @@ class QueryDdlTest {
             //given
             Class<NotEntityPerson> personClass = NotEntityPerson.class;
 
-            //when
-            String query = QueryDdl.drop(personClass);
-
-            //then
-            assertThat(query).isNull();
+            //when & then
+            assertThrows(NullPointerException.class, () -> QueryDdl.drop(personClass));
         }
     }
 
