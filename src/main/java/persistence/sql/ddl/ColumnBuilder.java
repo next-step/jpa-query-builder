@@ -1,9 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -27,8 +24,13 @@ public class ColumnBuilder {
 
     private static List<String> toSql(Field[] fields) {
         return Arrays.stream(fields)
+                .filter(field -> !isTransient(field))
                 .map(ColumnBuilder::toSql)
                 .collect(Collectors.toList());
+    }
+
+    private static boolean isTransient(Field field) {
+        return field.getDeclaredAnnotation(Transient.class) != null;
     }
 
     private static String toSql(Field field) {
