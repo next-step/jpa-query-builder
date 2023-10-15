@@ -18,7 +18,7 @@ public class EntityColumns implements Iterable<EntityColumn> {
     private List<EntityColumn> generateColumns(final Class<?> clazz) {
         this.validate(clazz);
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> clazz.isAnnotationPresent(Transient.class))
+                .filter(field -> !clazz.isAnnotationPresent(Transient.class))
                 .map(EntityColumn::new)
                 .collect(Collectors.toUnmodifiableList());
     }
@@ -37,5 +37,12 @@ public class EntityColumns implements Iterable<EntityColumn> {
     @Override
     public Iterator<EntityColumn> iterator() {
         return this.columns.iterator();
+    }
+
+    public EntityColumn getId() {
+        return this.columns.stream()
+                .filter(EntityColumn::isId)
+                .findFirst()
+                .orElseThrow(()->new IllegalStateException("Id 컬럼이 존재하지 않습니다."));
     }
 }

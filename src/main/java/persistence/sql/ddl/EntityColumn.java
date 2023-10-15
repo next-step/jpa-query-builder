@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.Optional;
 
 public class EntityColumn {
@@ -78,5 +79,18 @@ public class EntityColumn {
 
     public Class<?> getType() {
         return this.type;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final EntityColumn that = (EntityColumn) o;
+        return isId == that.isId && isNotNull == that.isNotNull && isAutoIncrement == that.isAutoIncrement && isTransient == that.isTransient && Objects.equals(name, that.name) && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type, isId, isNotNull, isAutoIncrement, isTransient);
     }
 }
