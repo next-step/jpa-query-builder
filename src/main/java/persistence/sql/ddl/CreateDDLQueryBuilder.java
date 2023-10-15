@@ -60,7 +60,6 @@ public class CreateDDLQueryBuilder extends DDLQueryBuilder {
             return "(" + getAnnotationValue(field, Column.class, Column::length, 255) + ")";
         }
 
-        return getAnnotationValue(field, Column.class, Column::scale, 0) == 0 ? ""
-                : "(" + getAnnotationValue(field, Column.class, Column::scale, 0) + ")";
+        return "";
     }
 }
