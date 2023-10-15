@@ -9,7 +9,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +33,7 @@ public class ReflectionTest {
         Method[] declaredMethods = carClass.getDeclaredMethods();
         List<Method> testMethods = stream(declaredMethods)
                 .filter(method -> method.getName().startsWith("test"))
-                .collect(Collectors.toList());
+                .toList();
 
         Car car = carClass.getDeclaredConstructor().newInstance();
         List<String> methodResults = testMethods.stream()
@@ -45,7 +44,7 @@ public class ReflectionTest {
                         fail("Exception occurred invoking test method : {}", testMethod.getName());
                     }
                     return null;
-                }).collect(Collectors.toList());
+                }).toList();
 
         assertThat(methodResults.size()).isEqualTo(2);
         assertThat(methodResults).allSatisfy(methodResult -> assertThat(methodResult).startsWith("test"));
@@ -59,7 +58,7 @@ public class ReflectionTest {
         Method[] declaredMethods = carClass.getDeclaredMethods();
         List<Method> annotationMethods = stream(declaredMethods)
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
-                .collect(Collectors.toList());
+                .toList();
 
         Car car = carClass.getDeclaredConstructor().newInstance();
         annotationMethods.forEach(annotationMethod -> {
