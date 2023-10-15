@@ -40,4 +40,8 @@ public class EntityMetadata<T> {
     public EntityColumns getColumns() {
         return this.columns;
     }
+
+    public String getIdColumnName() {
+        return this.columns.getId().getName();
+    }
 }

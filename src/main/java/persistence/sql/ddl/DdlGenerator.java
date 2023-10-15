@@ -1,10 +1,5 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.*;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 public class DdlGenerator {
 
     private final DBColumnTypeMapper columnTypeMapper;
@@ -13,116 +8,80 @@ public class DdlGenerator {
         this.columnTypeMapper = columnTypeMapper;
     }
 
-    public String generateCreateDdl(final Class<?> clazz) {
+    public String generateCreateDdl(final EntityMetadata<?> entityMetadata) {
         final StringBuilder builder = new StringBuilder();
 
-        final String tableName = getTableName(clazz);
+        final String tableName = entityMetadata.getTableName();
         builder.append("create table ")
                 .append(tableName)
                 .append(" ")
-                .append(generateColumnsClause(clazz));
+                .append(generateColumnsClause(entityMetadata));
 
         return builder.toString();
     }
 
-    private String generateColumnsClause(final Class<?> clazz) {
+    private String generateColumnsClause(final EntityMetadata<?> entityMetadata) {
         final StringBuilder builder = new StringBuilder();
         builder.append("(");
 
-        Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
-            field.setAccessible(true);
-
-            if(field.isAnnotationPresent(Transient.class)) {
+        entityMetadata.getColumns().forEach(column -> {
+            if(column.isTransient()) {
                 return;
             }
 
-            builder.append(generateColumnDefinition(field))
+            builder.append(generateColumnDefinition(column))
                     .append(",");
         });
 
-        builder.append(generatePKConstraintClause(clazz));
+        builder.append(generatePKConstraintClause(entityMetadata));
 
         builder.append(")");
         return builder.toString();
     }
 
-    private String generateColumnDefinition(final Field field) {
+    private String generateColumnDefinition(final EntityColumn column) {
         final StringBuilder builder = new StringBuilder();
-        final String columnName = getColumnName(field);
-        final String columnType = columnTypeMapper.getColumnName(field.getType());
+        final String columnName = column.getName();
+        final String columnType = columnTypeMapper.getColumnName(column.getType());
 
         builder.append(columnName)
                 .append(" ")
                 .append(columnType)
-                .append(generateNotNullClause(field))
-                .append(generateAutoIncrementClause(field));
+                .append(generateNotNullClause(column))
+                .append(generateAutoIncrementClause(column));
         return builder.toString();
     }
 
-    private String generateAutoIncrementClause(final Field field) {
-        final GeneratedValue annotation = field.getDeclaredAnnotation(GeneratedValue.class);
-        final boolean isStrategyAutoIncrement = annotation != null && annotation.strategy() == GenerationType.IDENTITY;
-        if (isStrategyAutoIncrement) {
+    private String generateAutoIncrementClause(final EntityColumn column) {
+        if (column.isAutoIncrement()) {
             return " auto_increment";
         }
 
         return "";
     }
 
-    private String generateNotNullClause(final Field field) {
-        final Column annotation = field.getDeclaredAnnotation(Column.class);
-        final boolean isNonNullable = field.isAnnotationPresent(Id.class) || (annotation != null && !annotation.nullable());
-        if (isNonNullable) {
+    private String generateNotNullClause(final EntityColumn column) {
+        if (column.isNotNull()) {
             return " not null";
         }
 
         return "";
     }
 
-    private String getColumnName(final Field field) {
-        final Column annotation = field.getDeclaredAnnotation(Column.class);
-        final boolean isColumnNameDefined = annotation != null && !annotation.name().isEmpty();
-        if (isColumnNameDefined) {
-            return annotation.name();
-        }
-
-        return field.getName();
-    }
-
-    private String generatePKConstraintClause(final Class<?> clazz) {
+    private String generatePKConstraintClause(final EntityMetadata<?> entityMetadata) {
         final StringBuilder builder = new StringBuilder();
-        final Field idField = getIdField(clazz);
-        final String tableName = getTableName(clazz);
-
         builder.append("CONSTRAINT PK_")
-                .append(tableName)
+                .append(entityMetadata.getTableName())
                 .append(" PRIMARY KEY (")
-                .append(getColumnName(idField))
+                .append(entityMetadata.getIdColumnName())
                 .append(")");
         return builder.toString();
     }
 
-    private Field getIdField(final Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow();
-    }
-
-    private String getTableName(final Class<?> clazz) {
-        final Table tableAnnotation = clazz.getDeclaredAnnotation(Table.class);
-        final boolean isTableNameDefined = tableAnnotation != null && !tableAnnotation.name().isEmpty();
-        if (isTableNameDefined) {
-            return tableAnnotation.name();
-        }
-
-        return clazz.getSimpleName();
-    }
-
-    public String generateDropDdl(final Class<?> clazz) {
+    public String generateDropDdl(final EntityMetadata<?> entityMetadata) {
         final StringBuilder builder = new StringBuilder();
         builder.append("drop table ")
-                .append(getTableName(clazz));
+                .append(entityMetadata.getTableName());
 
         return builder.toString();
     }
