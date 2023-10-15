@@ -18,7 +18,7 @@ class EntityColumnTest {
         mockClass = MockEntity.WithId.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "id", true, true, false);
+        assertResult(column, "id", true, true, false, Long.class);
     }
 
     @Test
@@ -27,7 +27,7 @@ class EntityColumnTest {
         mockClass = MockEntity.WithIdAndColumn.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "test_id", true, true, false);
+        assertResult(column, "test_id", true, true, false, Long.class);
     }
 
     @Test
@@ -36,7 +36,7 @@ class EntityColumnTest {
         mockClass = MockEntity.IdWithGeneratedValue.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "id", true, true, true);
+        assertResult(column, "id", true, true, true, Long.class);
     }
 
     @Test
@@ -45,7 +45,7 @@ class EntityColumnTest {
         mockClass = MockEntity.WithoutColumn.class;
         final Field field = mockClass.getDeclaredField("column");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "column", false, false, false);
+        assertResult(column, "column", false, false, false, String.class);
     }
 
     @Test
@@ -54,7 +54,7 @@ class EntityColumnTest {
         mockClass = MockEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("column");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "test_column", false, false, false);
+        assertResult(column, "test_column", false, false, false, String.class);
     }
 
     @Test
@@ -63,7 +63,7 @@ class EntityColumnTest {
         mockClass = MockEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("notNullColumn");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "notNullColumn", false, true, false);
+        assertResult(column, "notNullColumn", false, true, false, String.class);
     }
 
     @Test
@@ -75,11 +75,17 @@ class EntityColumnTest {
         assertThat(column.isTransient()).isTrue();
     }
 
-    private void assertResult(final EntityColumn result, final String fieldName, final boolean isId, final boolean isNotNull, final boolean isAutoIncrement) {
+    private void assertResult(final EntityColumn result,
+                              final String fieldName,
+                              final boolean isId,
+                              final boolean isNotNull,
+                              final boolean isAutoIncrement,
+                              final Class<?> type) {
         assertThat(result.getName()).isEqualTo(fieldName);
         assertThat(result.isId()).isEqualTo(isId);
         assertThat(result.isNotNull()).isEqualTo(isNotNull);
         assertThat(result.isAutoIncrement()).isEqualTo(isAutoIncrement);
+        assertThat(result.getType()).isEqualTo(type);
     }
 
 }

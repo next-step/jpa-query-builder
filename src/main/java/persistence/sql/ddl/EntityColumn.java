@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public class EntityColumn {
     private final String name;
+    private final Class<?> type;
     private final boolean isId;
     private final boolean isNotNull;
     private final boolean isAutoIncrement;
@@ -15,8 +16,9 @@ public class EntityColumn {
 
     public EntityColumn(final Field field) {
         field.setAccessible(true);
-        this.isId = initIsId(field);
         this.name = initName(field);
+        this.type = field.getType();
+        this.isId = initIsId(field);
         this.isNotNull = this.isId || initIsNotNull(field);
         this.isAutoIncrement = initIsAutoIncrement(field);
         this.isTransient = initIsTransient(field);
@@ -71,6 +73,10 @@ public class EntityColumn {
     }
 
     public boolean isTransient() {
-        return isTransient;
+        return this.isTransient;
+    }
+
+    public Class<?> getType() {
+        return this.type;
     }
 }
