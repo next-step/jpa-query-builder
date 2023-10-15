@@ -12,7 +12,6 @@ public class EntityColumn {
     private final boolean isId;
     private final boolean isNotNull;
     private final boolean isAutoIncrement;
-    private final boolean isTransient;
     private final boolean isStringValued;
     private final int stringLength;
 
@@ -24,7 +23,6 @@ public class EntityColumn {
         this.isId = initIsId(field);
         this.isNotNull = this.isId || initIsNotNull(field);
         this.isAutoIncrement = initIsAutoIncrement(field);
-        this.isTransient = initIsTransient(field);
         this.isStringValued = this.type.isAssignableFrom(String.class);
         this.stringLength = initStringLength(field);
     }
@@ -57,11 +55,6 @@ public class EntityColumn {
                 .isPresent();
     }
 
-
-    private boolean initIsTransient(final Field field) {
-        return field.isAnnotationPresent(Transient.class);
-    }
-
     private int initStringLength(final Field field) {
         final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
         return Optional.ofNullable(columnMetadata)
@@ -85,10 +78,6 @@ public class EntityColumn {
         return this.isAutoIncrement;
     }
 
-    public boolean isTransient() {
-        return this.isTransient;
-    }
-
     public Class<?> getType() {
         return this.type;
     }
@@ -106,11 +95,11 @@ public class EntityColumn {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final EntityColumn that = (EntityColumn) o;
-        return isId == that.isId && isNotNull == that.isNotNull && isAutoIncrement == that.isAutoIncrement && isTransient == that.isTransient && Objects.equals(name, that.name) && Objects.equals(type, that.type);
+        return isId == that.isId && isNotNull == that.isNotNull && isAutoIncrement == that.isAutoIncrement && Objects.equals(name, that.name) && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, isId, isNotNull, isAutoIncrement, isTransient);
+        return Objects.hash(name, type, isId, isNotNull, isAutoIncrement);
     }
 }

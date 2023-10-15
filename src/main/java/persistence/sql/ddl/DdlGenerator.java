@@ -27,14 +27,10 @@ public class DdlGenerator {
         final StringBuilder builder = new StringBuilder();
         builder.append("(");
 
-        entityMetadata.getColumns().forEach(column -> {
-            if(column.isTransient()) {
-                return;
-            }
-
-            builder.append(generateColumnDefinition(column))
-                    .append(",");
-        });
+        entityMetadata.getColumns().forEach(column ->
+                builder.append(generateColumnDefinition(column))
+                        .append(",")
+        );
 
         builder.append(generatePKConstraintClause(entityMetadata));
 
@@ -55,7 +51,7 @@ public class DdlGenerator {
     private String generateColumnTypeClause(final EntityColumn column) {
         final StringBuilder builder = new StringBuilder();
         builder.append(columnTypeMapper.getColumnName(column.getType()));
-        if(column.isStringValued()) {
+        if (column.isStringValued()) {
             builder.append("(")
                     .append(column.getStringLength())
                     .append(")");

@@ -7,7 +7,6 @@ import persistence.domain.FixtureEntity;
 
 import java.lang.reflect.Field;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class EntityColumnTest {
@@ -66,15 +65,6 @@ class EntityColumnTest {
         final Field field = mockClass.getDeclaredField("notNullColumn");
         final EntityColumn column = new EntityColumn(field);
         assertResult(column, "notNullColumn", false, true, false, String.class);
-    }
-
-    @Test
-    @DisplayName("일반 필드에 @Transient 를 붙이면 isTransient 가 true 인 EntityColumn 인스턴스를 생성 할 수 있다.")
-    void testEntityColumnWithTransient() throws Exception {
-        mockClass = FixtureEntity.WithTransient.class;
-        final Field field = mockClass.getDeclaredField("column");
-        final EntityColumn column = new EntityColumn(field);
-        assertThat(column.isTransient()).isTrue();
     }
 
     private void assertResult(final EntityColumn result,
