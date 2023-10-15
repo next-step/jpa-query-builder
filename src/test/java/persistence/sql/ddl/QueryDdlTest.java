@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.person.NotEntityPerson;
 import persistence.person.PersonOne;
+import persistence.person.PersonTwo;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
@@ -59,6 +60,23 @@ class QueryDdlTest {
 
             //then
             assertThat(query).isNull();
+        }
+    }
+
+    @Nested
+    @DisplayName("요구사항2")
+    class two {
+        @Test
+        @DisplayName("정상적으로 Class 정보를 읽어 CREATE QUERY 생성하여 실행 성공")
+        void success() {
+            //given
+            Class<PersonTwo> personClass = PersonTwo.class;
+
+            //when
+            String query = QueryDdl.create(personClass);
+
+            //when & then
+            assertDoesNotThrow(() -> jdbcTemplate.execute(query));
         }
     }
 
