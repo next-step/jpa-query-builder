@@ -4,6 +4,7 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.domain.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
