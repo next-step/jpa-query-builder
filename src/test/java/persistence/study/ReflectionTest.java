@@ -1,11 +1,9 @@
 package persistence.study;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static persistence.study.Car.TEST_METHOD_PREFIX;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,8 +75,8 @@ class ReflectionTest {
 		priceClassDeclaredField.set(car, price);
 
 		// then
-		assertThat(car.testGetPrice()).isEqualTo(TEST_METHOD_PREFIX + price);
-		assertThat(car.testGetName()).isEqualTo(TEST_METHOD_PREFIX + carName);
+		assertThat(car.testGetPrice()).isEqualTo("test : " + price);
+		assertThat(car.testGetName()).isEqualTo("test : " + carName);
 	}
 
 	@Test
@@ -104,7 +102,7 @@ class ReflectionTest {
 		// then
 		String carName = car.testGetName();
 		String carPrice = car.testGetPrice();
-		assertThat(carName).isEqualTo(TEST_METHOD_PREFIX + name);
-		assertThat(carPrice).isEqualTo(TEST_METHOD_PREFIX + price);
+		assertThat(carName).isEqualTo("test : " + name);
+		assertThat(carPrice).isEqualTo("test : " + price);
 	}
 }
