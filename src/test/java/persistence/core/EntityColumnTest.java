@@ -19,7 +19,7 @@ class EntityColumnTest {
         mockClass = FixtureEntity.WithId.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "id", true, true, false, Long.class);
+        assertResult(column, "id", "id" , true, true, false, Long.class);
     }
 
     @Test
@@ -28,7 +28,7 @@ class EntityColumnTest {
         mockClass = FixtureEntity.WithIdAndColumn.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "test_id", true, true, false, Long.class);
+        assertResult(column, "test_id", "id" , true, true, false, Long.class);
     }
 
     @Test
@@ -37,7 +37,7 @@ class EntityColumnTest {
         mockClass = FixtureEntity.IdWithGeneratedValue.class;
         final Field field = mockClass.getDeclaredField("id");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "id", true, true, true, Long.class);
+        assertResult(column, "id", "id" , true, true, true, Long.class);
     }
 
     @Test
@@ -46,7 +46,7 @@ class EntityColumnTest {
         mockClass = FixtureEntity.WithoutColumn.class;
         final Field field = mockClass.getDeclaredField("column");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "column", false, false, false, String.class);
+        assertResult(column, "column", "column" , false, false, false, String.class);
     }
 
     @Test
@@ -55,7 +55,7 @@ class EntityColumnTest {
         mockClass = FixtureEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("column");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "test_column", false, false, false, String.class);
+        assertResult(column, "test_column", "column" , false, false, false, String.class);
     }
 
     @Test
@@ -64,17 +64,19 @@ class EntityColumnTest {
         mockClass = FixtureEntity.WithColumn.class;
         final Field field = mockClass.getDeclaredField("notNullColumn");
         final EntityColumn column = new EntityColumn(field);
-        assertResult(column, "notNullColumn", false, true, false, String.class);
+        assertResult(column, "notNullColumn", "notNullColumn" , false, true, false, String.class);
     }
 
     private void assertResult(final EntityColumn result,
+                              final String columnName,
                               final String fieldName,
                               final boolean isId,
                               final boolean isNotNull,
                               final boolean isAutoIncrement,
                               final Class<?> type) {
         assertSoftly(softly -> {
-            softly.assertThat(result.getName()).isEqualTo(fieldName);
+            softly.assertThat(result.getName()).isEqualTo(columnName);
+            softly.assertThat(result.getFieldName()).isEqualTo(fieldName);
             softly.assertThat(result.isId()).isEqualTo(isId);
             softly.assertThat(result.isNotNull()).isEqualTo(isNotNull);
             softly.assertThat(result.isAutoIncrement()).isEqualTo(isAutoIncrement);

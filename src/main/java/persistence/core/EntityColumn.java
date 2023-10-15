@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public class EntityColumn {
     private final String name;
+    private final String fieldName;
     private final Class<?> type;
     private final boolean isId;
     private final boolean isNotNull;
@@ -19,6 +20,7 @@ public class EntityColumn {
     public EntityColumn(final Field field) {
         field.setAccessible(true);
         this.name = initName(field);
+        this.fieldName = field.getName();
         this.type = field.getType();
         this.isId = initIsId(field);
         this.isNotNull = this.isId || initIsNotNull(field);
@@ -88,6 +90,10 @@ public class EntityColumn {
 
     public int getStringLength() {
         return this.stringLength;
+    }
+
+    public String getFieldName() {
+        return this.fieldName;
     }
 
     @Override
