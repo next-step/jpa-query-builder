@@ -20,7 +20,7 @@ class CreateQueryBuilderTest {
     @DisplayName("쿼리 정상 빌드 테스트")
     void getQuery() {
         String createQuery = CreateQueryBuilder.getQuery(Person.class);
-        Assertions.assertThat(createQuery).isEqualTo("CREATE TABLE person (id BIGINT PRIMARY KEY, name VARCHAR, age INT);");
+        Assertions.assertThat(createQuery).isEqualTo("CREATE TABLE person (id BIGINT PRIMARY KEY, name VARCHAR, age INT, email VARCHAR);");
     }
 
     @Test
