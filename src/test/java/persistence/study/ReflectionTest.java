@@ -20,6 +20,8 @@ public class ReflectionTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
     private static final Class<Car> carClass = Car.class;
+    private static final String CAR_NAME = "붕붕이";
+    private static final int CAR_PRICE = 30000;
 
     @Test
     @DisplayName("요구사항 1-1. 클래스의 모든 필드 정보 출력")
@@ -83,16 +85,34 @@ public class ReflectionTest {
     @DisplayName("요구사항 4 - private field에 값 할당")
     void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         Car car = carClass.getDeclaredConstructor().newInstance();
-        String carName = "붕붕이";
-        int carPrice = 30000;
         Field name = car.getClass().getDeclaredField("name");
         Field price = car.getClass().getDeclaredField("price");
         name.setAccessible(true);
-        name.set(car,carName);
+        name.set(car, CAR_NAME);
         price.setAccessible(true);
-        price.setInt(car, carPrice);
-        assertThat(car.getName()).isEqualTo(carName);
-        assertThat(car.getPrice()).isEqualTo(carPrice);
+        price.setInt(car, CAR_PRICE);
+        assertThat(car.getName()).isEqualTo(CAR_NAME);
+        assertThat(car.getPrice()).isEqualTo(CAR_PRICE);
+    }
+
+    @Test
+    @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        Constructor<?>[] declaredConstructors = carClass.getDeclaredConstructors();
+        Arrays.stream(declaredConstructors)
+                .filter(constructor -> constructor.getParameterCount() == 2)
+                .forEach(constructor -> {
+                    constructor.setAccessible(true);
+                    try {
+                        Car car = (Car) constructor.newInstance(CAR_NAME, CAR_PRICE);
+                        assertThat(car.getName()).isEqualTo(CAR_NAME);
+                        assertThat(car.getPrice()).isEqualTo(CAR_PRICE);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+
     }
 
     // 배열을 list 로 바꿔주는 메소드
