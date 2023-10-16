@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
+import persistence.exception.FiledEmptyException;
 
 public class EntityColumn {
     private final String name;
@@ -11,7 +12,7 @@ public class EntityColumn {
 
     public EntityColumn(Field field) {
         if (field == null) {
-            throw new IllegalArgumentException("필드가 비어 있으면 안됩니다.");
+            throw new FiledEmptyException();
         }
         this.name = initName(field);
         this.jdbcType = JavaToJdbcFiledMapper.convert(field.getType());

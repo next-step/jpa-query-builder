@@ -2,12 +2,14 @@ package persistence.sql.ddl;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import jakarta.persistence.Column;
 import java.sql.JDBCType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.exception.FiledEmptyException;
 
 @DisplayName("엔티티 클래스 컬럼 테스트")
 class EntityColumnTest {
@@ -15,7 +17,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("필드 파라미터에 null이 들어가면 예외가 발생한다.")
     void nullField() {
-        assertThatIllegalArgumentException()
+        assertThatExceptionOfType(FiledEmptyException.class)
                 .isThrownBy(() -> new EntityColumn(null));
     }
 
@@ -57,9 +59,11 @@ class EntityColumnTest {
         final EntityColumn nameColumn = new EntityColumn(TestEntity.class.getDeclaredField("name"));
         final EntityColumn ageColumn = new EntityColumn(TestEntity.class.getDeclaredField("age"));
 
-        assertThat(idColumn.getJdbcType()).isEqualTo(JDBCType.BIGINT);
-        assertThat(nameColumn.getJdbcType()).isEqualTo(JDBCType.VARCHAR);
-        assertThat(ageColumn.getJdbcType()).isEqualTo(JDBCType.INTEGER);
+        assertSoftly(it -> {
+            it.assertThat(idColumn.getJdbcType()).isEqualTo(JDBCType.BIGINT);
+            it.assertThat(nameColumn.getJdbcType()).isEqualTo(JDBCType.VARCHAR);
+            it.assertThat(ageColumn.getJdbcType()).isEqualTo(JDBCType.INTEGER);
+        });
     }
 
 }

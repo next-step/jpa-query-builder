@@ -1,9 +1,8 @@
 package persistence.sql.ddl;
 
 
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import jakarta.persistence.Column;
@@ -13,6 +12,7 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.exception.FiledEmptyException;
 
 @DisplayName("컬럼에 대한 옵션 테스트")
 class EntityColumnOptionTest {
@@ -20,7 +20,7 @@ class EntityColumnOptionTest {
     @Test
     @DisplayName("엔티티 칼럼 메타 데이터 클래스의 인수가 없으면 예외가 발생한다.")
     void noArgs() {
-        assertThatIllegalArgumentException()
+        assertThatExceptionOfType(FiledEmptyException.class)
                 .isThrownBy(() -> new EntityColumnOption(null));
     }
 

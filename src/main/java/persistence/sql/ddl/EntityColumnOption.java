@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
+import persistence.exception.FiledEmptyException;
 
 public class EntityColumnOption {
     private final boolean isNullable;
@@ -13,7 +14,7 @@ public class EntityColumnOption {
 
     public EntityColumnOption(Field field) {
         if (field == null) {
-            throw new IllegalArgumentException("필드가 null이면 안됩니다.");
+            throw new FiledEmptyException();
         }
 
         this.isNullable = !field.isAnnotationPresent(Column.class) || field.getAnnotation(Column.class).nullable();
@@ -37,7 +38,7 @@ public class EntityColumnOption {
     public boolean isPk() {
         return isPk;
     }
-    
+
     public GenerationType getGenerationType() {
         return generationType;
     }

@@ -11,6 +11,7 @@ import java.sql.JDBCType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import persistence.exception.NoEntityException;
 
 public class QueryBuilderDDL<T> {
     private final Class<T> entityClass;
@@ -24,7 +25,7 @@ public class QueryBuilderDDL<T> {
 
     public QueryBuilderDDL(Class<T> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("해당 클래스는 엔티티 클래스가 아닙니다.");
+            throw new NoEntityException("해당 클래스는 엔티티 클래스가 아닙니다.");
         }
 
         this.entityClass = entityClass;

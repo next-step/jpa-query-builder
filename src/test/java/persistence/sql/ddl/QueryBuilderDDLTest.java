@@ -1,11 +1,12 @@
 package persistence.sql.ddl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import persistence.exception.NoEntityException;
 import persistence.testFixtures.NoHasEntity;
 import persistence.testFixtures.Person;
 import persistence.testFixtures.PkHasPerson;
@@ -15,8 +16,8 @@ class QueryBuilderDDLTest {
     @Test
     @DisplayName("엔티티 어노테이션이 붙지 않은 엔티티 클래스는 예외가 발생한다.")
     void noEntity() {
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> new QueryBuilderDDL<>(NoHasEntity.class));
+        assertThatExceptionOfType(NoEntityException.class)
+                .isThrownBy(() -> new QueryBuilderDDL<>(NoHasEntity.class).create());
     }
 
 
@@ -83,7 +84,7 @@ class QueryBuilderDDLTest {
         @Test
         @DisplayName("요구사항 4 - @Entity 어노테이션이 없는 경우 예외가 발생한다")
         void noEntity() {
-            assertThatIllegalArgumentException()
+            assertThatExceptionOfType(NoEntityException.class)
                     .isThrownBy(() -> new QueryBuilderDDL<>(NoHasEntity.class).drop());
         }
 
