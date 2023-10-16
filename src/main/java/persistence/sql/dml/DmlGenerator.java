@@ -25,6 +25,19 @@ public class DmlGenerator {
         return String.format("insert into %s %s values %s", entityMetadata.getTableName(), columns, values);
     }
 
+    public String generateFindAllDml(final Class<?> clazz) {
+        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
+        final String selectClause = selectClause(entityMetadata);
+        return String.format("select %s from %s", selectClause, entityMetadata.getTableName());
+    }
+
+    private String selectClause(final EntityMetadata<?> entityMetadata) {
+        return entityMetadata.getColumns()
+                .stream()
+                .map(EntityColumn::getName)
+                .collect(Collectors.joining(", "));
+    }
+
     private String columnsClause(final EntityMetadata<?> entityMetadata) {
         final StringBuilder builder = new StringBuilder();
         builder.append("(");
@@ -42,7 +55,8 @@ public class DmlGenerator {
     }
 
     private String buildValuesClause(final Object entity, final EntityMetadata<?> entityMetadata) {
-        return entityMetadata.getColumns().stream()
+        return entityMetadata.getColumns()
+                .stream()
                 .filter(EntityColumn::isInsertable)
                 .map(entityColumn -> buildValueForColumn(entity, entityColumn))
                 .collect(Collectors.joining(", "));

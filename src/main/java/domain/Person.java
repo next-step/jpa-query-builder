@@ -31,4 +31,8 @@ public class Person {
         this.email = email;
         this.index = index;
     }
+
+    public Person(final String name, final Integer age, final String email) {
+        new Person(name, age, email, 0);
+    }
 }
