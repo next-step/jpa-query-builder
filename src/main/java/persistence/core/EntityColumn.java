@@ -1,6 +1,9 @@
 package persistence.core;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -15,6 +18,7 @@ public class EntityColumn {
     private final boolean isAutoIncrement;
     private final boolean isStringValued;
     private final int stringLength;
+    private final boolean isInsertable;
 
 
     public EntityColumn(final Field field) {
@@ -23,13 +27,12 @@ public class EntityColumn {
         this.fieldName = field.getName();
         this.type = field.getType();
         this.isId = initIsId(field);
-        this.isNotNull = this.isId || initIsNotNull(field);
+        this.isNotNull = initIsNotNull(field);
         this.isAutoIncrement = initIsAutoIncrement(field);
         this.isStringValued = this.type.isAssignableFrom(String.class);
         this.stringLength = initStringLength(field);
+        this.isInsertable = initIsInsertable(field);
     }
-
-
 
     private String initName(final Field field) {
         final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
@@ -44,6 +47,10 @@ public class EntityColumn {
     }
 
     private boolean initIsNotNull(final Field field) {
+        if (this.isId) {
+            return true;
+        }
+
         final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
         return Optional.ofNullable(columnMetadata)
                 .map(column -> !column.nullable())
@@ -62,6 +69,17 @@ public class EntityColumn {
         return Optional.ofNullable(columnMetadata)
                 .map(Column::length)
                 .orElse(255);
+    }
+
+    private boolean initIsInsertable(final Field field) {
+        if (this.isId) {
+            return false;
+        }
+
+        final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
+        return Optional.ofNullable(columnMetadata)
+                .map(Column::insertable)
+                .orElse(true);
     }
 
     public String getName() {
@@ -94,6 +112,10 @@ public class EntityColumn {
 
     public String getFieldName() {
         return this.fieldName;
+    }
+
+    public boolean isInsertable() {
+        return this.isInsertable;
     }
 
     @Override

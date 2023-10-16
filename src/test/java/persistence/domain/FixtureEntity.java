@@ -79,6 +79,21 @@ public class FixtureEntity {
 
         private String defaultLength;
     }
+    @Entity
+    public static class WithColumnNonInsertable {
+        @Id
+        @Column(insertable = false)
+        private Long id;
+        @Column(insertable = false)
+        private String notInsertableColumn;
+    }
+
+    @Entity
+    public static class WithIdInsertable {
+        @Id
+        @Column(insertable = true)
+        private Long id;
+    }
 
     @Table(name = "users")
     @Entity
