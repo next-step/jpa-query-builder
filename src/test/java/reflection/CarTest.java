@@ -1,5 +1,6 @@
 package reflection;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,14 @@ class CarTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CarTest.class);
 
+    @DisplayName("reflection을 사용하여 name field의 이름을 가져온다")
     @Test
     void required1() {
         Class<Car> carClass = Car.class;
         logger.debug(carClass.getName());
     }
 
+    @DisplayName("reflection을 사용하여 test로 시작하는 메서드를 모두 호출한다")
     @Test
     void required2() throws Exception {
         Class<Car> carClass = Car.class;
@@ -46,6 +49,7 @@ class CarTest {
         });
     }
 
+    @DisplayName("reflection을 사용하여 @PrintView annotation이 있는 메서드를 모두 호출한다")
     @Test
     void required3() throws Exception {
         Class<Car> carClass = Car.class;
@@ -68,6 +72,7 @@ class CarTest {
         });
     }
 
+    @DisplayName("reflection을 사용하여 name field의 값을 변경한다")
     @Test
     void required4() throws Exception {
         Class<Car> carClass = Car.class;
@@ -85,7 +90,7 @@ class CarTest {
         assertThat(car.testGetName()).contains(name);
     }
 
-
+    @DisplayName("reflection을 사용하여 name, price field를 가지는 생성자를 호출한다")
     @Test
     void required5() throws Exception {
         String name = "소나타";
