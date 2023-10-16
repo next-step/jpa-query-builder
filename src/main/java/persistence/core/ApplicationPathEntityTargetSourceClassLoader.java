@@ -1,14 +1,13 @@
 package persistence.core;
 
 import jakarta.persistence.Entity;
-import persistence.Application;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApplicationPathEntityTargetSourceLoader {
+public class ApplicationPathEntityTargetSourceClassLoader implements EntityClassLoader {
 
     private static final char PKG_SEPARATOR = '.';
 
@@ -18,11 +17,24 @@ public class ApplicationPathEntityTargetSourceLoader {
 
     private final EntityMetadataModelFactory entityMetadataModelFactory;
 
-    public ApplicationPathEntityTargetSourceLoader() {
+    private final Class<?> applicationClass;
+
+    private EntityMetadataModels cachedEntityMetadataModels;
+
+    public ApplicationPathEntityTargetSourceClassLoader(Class<?> applicationClass) {
         this.entityMetadataModelFactory = new EntityMetadataModelFactory();
+        this.applicationClass = applicationClass;
     }
 
-    public EntityMetadataModels createEntityMetaDataModels(Class<?> applicationClass) {
+    public EntityMetadataModels getEntityMetadataModels() {
+        if (cachedEntityMetadataModels == null) {
+            cachedEntityMetadataModels = createEntityMetaDataModels();
+        }
+
+        return cachedEntityMetadataModels;
+    }
+
+    private EntityMetadataModels createEntityMetaDataModels() {
         String packageName = applicationClass.getPackage().getName();
 
         String relationPath = packageName.replace(PKG_SEPARATOR, DIR_SEPARATOR);
