@@ -8,17 +8,22 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.*;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReflectionTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
+    private final Class<Car> carClass = Car.class;
+    private final String name = "테슬라";
+    private final int price = 99999;
+
     @Test
     @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
-        Class<Car> carClass = Car.class;
         logger.debug(carClass.getName());
 
         for (Field field : carClass.getDeclaredFields()) {
@@ -37,65 +42,86 @@ public class ReflectionTest {
     @Test
     @DisplayName("test로 시작하는 메소드 실행")
     void testMethodRun() throws Exception {
-        Class<Car> carClass = Car.class;
-        Car car = carClass.getConstructor().newInstance();
+        // given
+        final Car car = carClass.getConstructor().newInstance();
 
-        for (Method method : carClass.getDeclaredMethods()) {
-            if (method.getName().startsWith("test")) {
-                method.setAccessible(true);
-                logger.debug((String) method.invoke(car));
-                assertThat((String) method.invoke(car)).matches("^test.*"); ;
-            }
-        }
+        // when
+        // then
+        Stream.of(carClass.getDeclaredMethods())
+                .filter(method -> method.getName().startsWith("test"))
+                .forEach(method -> {
+                    method.setAccessible(true);
+                    String result = invokeTestMethod(method, car);
+                    assertThat(result).startsWith("test");
+                });
     }
 
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
     void testAnnotationMethodRun() throws Exception {
-        Class<Car> carClass = Car.class;
-        Car car = carClass.getConstructor().newInstance();
+        // given
+        final Car car = carClass.getConstructor().newInstance();
 
+        // when
         PrintStream originalStream = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
-        for (Method method : carClass.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(PrintView.class)) {
-                method.setAccessible(true);
-                method.invoke(car);
-                assertThat(outputStream.toString()).contains("자동차 정보를 출력 합니다.");
-            }
-        }
+        Stream.of(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .forEach(method -> {
+                    method.setAccessible(true);
+                    invokeTestMethod(method, car);
+                });
+
+        // then
+        assertThat(outputStream.toString()).contains("자동차 정보를 출력 합니다.");
         System.setOut(originalStream);
     }
 
     @Test
     @DisplayName("private field에 값 할당")
     void privateFieldAccess() throws Exception {
-        Class<Car> carClass = Car.class;
-        Car car = carClass.getConstructor().newInstance();
-        String name = "테슬라";
-        int price = 99999;
+        // given
+        final Car car = carClass.getConstructor().newInstance();
 
+        // when
         for (Field field : carClass.getDeclaredFields()) {
             field.setAccessible(true);
-            field.set(car, field.getType() == int.class ? price : name);
+            field.set(car, getValue(field));
         }
 
-        assertThat(car.getName()).isEqualTo(name);
-        assertThat(car.getPrice()).isEqualTo(price);
+        // then
+        assertAll(
+                () -> assertThat(car.getName()).isEqualTo(name),
+                () -> assertThat(car.getPrice()).isEqualTo(price)
+        );
+    }
+
+    private Object getValue(Field field) {
+        return field.getType() == int.class ? price : name;
     }
 
     @Test
     @DisplayName("인자를 가진 생성자의 인스턴스 생성")
     void constructorWithArgs() throws Exception {
-        Class<Car> carClass = Car.class;
-        String name = "테슬라";
-        int price = 99999;
+        // given
+        // when
         Car car = carClass.getConstructor(String.class, int.class).newInstance(name, price);
 
-        assertThat(car.getName()).isEqualTo(name);
-        assertThat(car.getPrice()).isEqualTo(price);
+        // then
+        assertAll(
+                () -> assertThat(car.getName()).isEqualTo(name),
+                () -> assertThat(car.getPrice()).isEqualTo(price)
+        );
+    }
+
+    private String invokeTestMethod(Method method, Car car) {
+        try {
+            return (String) method.invoke(car);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
