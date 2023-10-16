@@ -59,7 +59,7 @@ public class QueryBuilderDDL<T> {
         return columns
                 .stream()
                 .map(this::getEntityColumnString)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(", ", "", ","));
 
     }
 
