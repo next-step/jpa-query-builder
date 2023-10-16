@@ -33,6 +33,10 @@ public class EntityColumn {
         return jdbcType;
     }
 
+    public boolean isPk() {
+        return option.isPk();
+    }
+
     public EntityColumnOption getOption() {
         return option;
     }
