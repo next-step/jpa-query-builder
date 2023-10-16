@@ -1,22 +1,21 @@
 package persistence.sql.ddl;
 
 public class DropQuery extends Query {
-
-    public static final String DEFAULT_DROP_QUERY = "DROP TABLE %s";
+    private static final String DEFAULT_DROP_QUERY = "DROP TABLE %s";
 
     private <T> DropQuery(Class<T> tClass) {
         super(tClass);
     }
 
-    public static <T> DropQuery initDropQuery(Class<T> tClass) throws NullPointerException {
+    public static <T> String drop(Class<T> tClass) throws NullPointerException {
         if (!isEntity(tClass)) {
             throw new NullPointerException();
         }
 
-        return new DropQuery(tClass);
+        return new DropQuery(tClass).combineQuery();
     }
 
-    public String dropQuery() {
+    private String combineQuery() {
         return String.format(DEFAULT_DROP_QUERY, this.getTableName());
     }
 }

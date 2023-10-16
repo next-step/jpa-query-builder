@@ -2,15 +2,14 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
 class CreateQuery extends Query {
 
-    public static final String DEFAULT_CREATE_QUERY = "CREATE TABLE %s (%s)";
-    public static final String DEFAULT_PRIMARY_KEY_QUERY = ", PRIMARY KEY (%s)";
+    private static final String DEFAULT_CREATE_QUERY = "CREATE TABLE %s (%s)";
+    private static final String DEFAULT_PRIMARY_KEY_QUERY = ", PRIMARY KEY (%s)";
 
     private final Field[] fields;
     private final String columns;
@@ -21,18 +20,18 @@ class CreateQuery extends Query {
         this.columns = createColumns();
     }
 
-    public static <T> CreateQuery initCreateQuery(Class<T> tClass) {
+    public static <T> String create(Class<T> tClass) {
         if (!isEntity(tClass)) {
             throw new NullPointerException();
         }
 
-        return new CreateQuery(tClass);
+        return new CreateQuery(tClass).combineQuery();
     }
 
     /**
      * 해당 Class를 분석하여 CREATE QUERY로 조합합니다.
      */
-    public String crateQuery() {
+    private String combineQuery() {
         return String.format(DEFAULT_CREATE_QUERY, this.getTableName(), columns);
     }
 
@@ -45,9 +44,9 @@ class CreateQuery extends Query {
      */
     private String parseColumn() {
         String[] fieldArray = Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(CreateColumn::makeColumn)
-                .toArray(String[]::new);
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .map(CreateColumn::makeColumn)
+            .toArray(String[]::new);
 
         return String.join(", ", fieldArray);
     }
@@ -57,8 +56,8 @@ class CreateQuery extends Query {
      */
     private String parsePrimary() {
         String[] fieldArray = Arrays.stream(fields).filter(field -> isAnnotation(field, Id.class))
-                .map(Field::getName)
-                .toArray(String[]::new);
+            .map(Field::getName)
+            .toArray(String[]::new);
 
         return String.format(DEFAULT_PRIMARY_KEY_QUERY, String.join(", ", fieldArray));
     }

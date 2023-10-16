@@ -2,12 +2,11 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-
 import java.lang.annotation.Annotation;
 
 abstract class Query {
-    private final String tableName;
 
+    private final String tableName;
 
     protected <T> Query(Class<T> tClass) {
         this.tableName = parseTableName(tClass);
@@ -21,7 +20,7 @@ abstract class Query {
         String tableName = tClass.getSimpleName();
 
         if (isAnnotation(tClass, annotation)
-                && !"".equals(tClass.getAnnotation(annotation).name())) {
+            && !"".equals(tClass.getAnnotation(annotation).name())) {
             tableName = tClass.getAnnotation(annotation).name();
         }
 
@@ -31,20 +30,20 @@ abstract class Query {
     /**
      * 해당 클래스에 @Entity가 존재하는지 확인
      */
-    static <T> boolean isEntity(Class<T> tClass) {
+    protected static <T> boolean isEntity(Class<T> tClass) {
         return isAnnotation(tClass, Entity.class);
     }
 
     /**
      * 해당 annotation이 있는지 확인
      */
-    static <T, A> boolean isAnnotation(Class<T> tClass, Class<A> aClass) {
+    private static <T, A> boolean isAnnotation(Class<T> tClass, Class<A> aClass) {
         Class<? extends Annotation> annotation = aClass.asSubclass(Annotation.class);
 
         return tClass.isAnnotationPresent(annotation);
     }
 
-    public String getTableName() {
+    protected String getTableName() {
         return tableName;
     }
 }
