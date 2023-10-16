@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class QueryBuilderDDLTest {
@@ -69,6 +70,45 @@ class QueryBuilderDDLTest {
                 + " nick_name varchar(255), old integer,"
                 + " email varchar(255) not null"
                 + " primary key (id))");
+
+    }
+
+
+    @DisplayName("요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기")
+    @Nested
+    class DropQuery {
+        @Test
+        @DisplayName("요구사항 4 - @Entity 어노테이션이 없는 경우 예외가 발생한다")
+        void noEntity() {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> new QueryBuilderDDL<>(NoHasEntity.class).drop());
+        }
+
+        @Test
+        @DisplayName("@Table 어노테이션이 없는 경우")
+        void noTable() {
+            //given
+            QueryBuilderDDL<PkHasPerson> ddl = new QueryBuilderDDL<>(PkHasPerson.class);
+
+            //when
+            String sql = ddl.drop();
+
+            //then
+            assertThat(sql).isEqualTo("DROP TABLE PkHasPerson");
+        }
+
+        @Test
+        @DisplayName("@Table 어노테이션이 있는 경우 이름을 치환한다.")
+        void hasTable() {
+            //given
+            QueryBuilderDDL<Person> ddl = new QueryBuilderDDL<>(Person.class);
+
+            //when
+            String sql = ddl.drop();
+
+            //then
+            assertThat(sql).isEqualTo("DROP TABLE users");
+        }
 
     }
 
