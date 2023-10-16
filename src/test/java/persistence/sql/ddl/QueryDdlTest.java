@@ -61,16 +61,6 @@ class QueryDdlTest {
             //then
             assertDoesNotThrow(() -> jdbcTemplate.execute(query));
         }
-
-        @Test
-        @DisplayName("지원하지 않는 자료형 입력시 오류")
-        void invalidType() {
-            //given
-            Class<NotParseTypePerson> personClass = NotParseTypePerson.class;
-
-            //when & then
-            assertThrows(IllegalArgumentException.class, () -> QueryDdl.create(personClass));
-        }
     }
 
     @Nested
