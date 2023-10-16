@@ -23,7 +23,11 @@ public class JdbcTemplate {
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
         try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
-            return rowMapper.mapRow(resultSet);
+            // FIXME 정완님 DM 답장오면 다시 보기
+            if(resultSet.next()) {
+                return rowMapper.mapRow(resultSet);
+            }
+            throw new RuntimeException("Data not exist");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

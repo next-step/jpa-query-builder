@@ -31,6 +31,23 @@ public class DmlGenerator {
         return String.format("select %s from %s", selectClause, entityMetadata.getTableName());
     }
 
+    public String generateFindByIdDml(final Class<?> clazz, final Object id) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(generateFindAllDml(clazz))
+                .append(whereClause(clazz, id));
+        return builder.toString();
+    }
+
+    private String whereClause(final Class<?> clazz, final Object id) {
+        final StringBuilder builder = new StringBuilder();
+        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
+        builder.append(" where ")
+                .append(entityMetadata.getIdColumnName())
+                .append("=")
+                .append(id);
+        return builder.toString();
+    }
+
     private String selectClause(final EntityMetadata<?> entityMetadata) {
         return entityMetadata.getColumns()
                 .stream()

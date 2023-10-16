@@ -128,8 +128,8 @@ private String whereClause(String selectQuery, Class<?> clazz) {
     ...
 }
 ```
-- [ ] 위의 whereClause 를 통해 정상적인 where 구문 생성
-- [ ] select 구문과 연결해 쿼리 생성
-- [ ] Database 에 연결 후 쿼리 실행 및 검증
+- [x] 위의 whereClause 를 통해 정상적인 where 구문 생성
+- [x] select 구문과 연결해 쿼리 생성
+- [x] Database 에 연결 후 쿼리 실행 및 검증
 
 - 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기

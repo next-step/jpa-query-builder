@@ -23,7 +23,7 @@ class DmlGeneratorTest {
         final String name = "min";
         final int age = 30;
         final String email = "jongmin4943@gmail.com";
-        final Person person = new Person(name, age, email, 0);
+        final Person person = new Person(name, age, email);
 
         final String query = generator.generateInsertDml(person);
 
@@ -36,4 +36,12 @@ class DmlGeneratorTest {
         final String query = generator.generateFindAllDml(Person.class);
         assertThat(query).isEqualToIgnoringCase("select id, nick_name, old, email from users");
     }
+
+    @Test
+    @DisplayName("Person 클래스 정보로 select ddl 을 생성할 수 있다.")
+    void findByIdTest() {
+        final String query = generator.generateFindByIdDml(Person.class, 1L);
+        assertThat(query).isEqualToIgnoringCase("select id, nick_name, old, email from users where id=1");
+    }
+
 }

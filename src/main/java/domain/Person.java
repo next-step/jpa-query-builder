@@ -25,14 +25,14 @@ public class Person {
     protected Person() {
     }
 
-    public Person(final String name, final Integer age, final String email, final Integer index) {
+    public Person(final Long id, final String name, final Integer age, final String email) {
+        this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
-        this.index = index;
     }
 
     public Person(final String name, final Integer age, final String email) {
-        new Person(name, age, email, 0);
+        this(null, name, age, email);
     }
 }
