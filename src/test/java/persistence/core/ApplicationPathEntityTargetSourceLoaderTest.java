@@ -10,7 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ApplicationPathEntityTargetSourceLoaderTest {
 
-    @DisplayName("최초 Path 위치의 Class로 부터 패키지 탐색을 통해 EntityMetaDataModels를 생성한다")
+    @DisplayName("entityloaderfixture 패키지의 StartEntityPath 클래스로부터" +
+            " 하위 Path를 통해 2개의 Entity클래스를 읽어 MetadataModel을 생성한다.")
     @Test
     void createEntityMetaDataModels() {
         // given
