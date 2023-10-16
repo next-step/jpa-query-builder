@@ -1,16 +1,14 @@
 package persistence.sql.common;
 
-import persistence.exception.InvalidTypeException;
-
-public class ColumnType {
+class ColumnType {
     private final String type;
 
-    private ColumnType(String type) {
-        this.type = parse(type);
+    private <T> ColumnType(Class<T> tClass) {
+        this.type = parse(tClass.getSimpleName());
     }
 
-    public static ColumnType initType(String type) {
-        return new ColumnType(type);
+    protected static <T> ColumnType of(Class<T> tClass) {
+        return new ColumnType(tClass);
     }
 
     private String parse(String type) {
@@ -23,9 +21,9 @@ public class ColumnType {
                 return "BIGINT";
             case "String":
                 return "VARCHAR(255)";
+            default:
+                return null;
         }
-
-        throw new InvalidTypeException();
     }
 
     public String getType() {
