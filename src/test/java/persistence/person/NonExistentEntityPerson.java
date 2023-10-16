@@ -2,7 +2,7 @@ package persistence.person;
 
 import jakarta.persistence.Id;
 
-public class PersonOne {
+public class NonExistentEntityPerson {
     @Id
     private Long id;
 

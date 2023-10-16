@@ -5,9 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
-public class PersonTwo {
+@Table(name = "users")
+public class ExistTablePerson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,4 +23,7 @@ public class PersonTwo {
 
     @Column(nullable = false)
     private String email;
+
+    @Transient
+    private Integer index;
 }

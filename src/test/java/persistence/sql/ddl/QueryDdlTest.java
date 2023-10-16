@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import persistence.domain.Person;
 import persistence.person.NotEntityPerson;
 import persistence.person.NotParseTypePerson;
-import persistence.person.PersonThree;
-import persistence.person.PersonTwo;
+import persistence.person.ExistTablePerson;
+import persistence.person.NonExistentTablePerson;
 
 import java.sql.SQLException;
 
@@ -53,7 +53,7 @@ class QueryDdlTest {
         @DisplayName("정상적으로 Class 정보를 읽어 CREATE QUERY 생성하여 실행 성공")
         void success() {
             //given
-            Class<PersonTwo> personClass = PersonTwo.class;
+            Class<NonExistentTablePerson> personClass = NonExistentTablePerson.class;
 
             //when
             String query = QueryDdl.create(personClass);
@@ -80,7 +80,7 @@ class QueryDdlTest {
         @DisplayName("정상적으로 Class 정보를 읽어 CREATE QUERY 생성하여 실행 성공")
         void success() {
             //given
-            Class<PersonThree> personClass = PersonThree.class;
+            Class<ExistTablePerson> personClass = ExistTablePerson.class;
 
             //when
             String query = QueryDdl.create(personClass);
