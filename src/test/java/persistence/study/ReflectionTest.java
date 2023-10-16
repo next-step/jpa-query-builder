@@ -79,6 +79,22 @@ public class ReflectionTest {
                         });
     }
 
+    @Test
+    @DisplayName("요구사항 4 - private field에 값 할당")
+    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+        Car car = carClass.getDeclaredConstructor().newInstance();
+        String carName = "붕붕이";
+        int carPrice = 30000;
+        Field name = car.getClass().getDeclaredField("name");
+        Field price = car.getClass().getDeclaredField("price");
+        name.setAccessible(true);
+        name.set(car,carName);
+        price.setAccessible(true);
+        price.setInt(car, carPrice);
+        assertThat(car.getName()).isEqualTo(carName);
+        assertThat(car.getPrice()).isEqualTo(carPrice);
+    }
+
     // 배열을 list 로 바꿔주는 메소드
     private <T, G> List<G> fromArrayToList(T[] array, Function<T, G> toListFunction) {
         return Arrays.stream(array)
