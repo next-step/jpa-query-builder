@@ -18,9 +18,7 @@ class JavaToJdbcFiledMapperTest {
     @DisplayName("javaType을 JdbcType으로 변환해준다")
     @MethodSource("javaType과_Jdbc_타입변환_파라미터")
     void convert(Class<?> type, JDBCType result) {
-        JavaToJdbcFiledMapper javaJdbcFiledMapper = new JavaToJdbcFiledMapper();
-
-        final JDBCType convert = javaJdbcFiledMapper.convert(type);
+        final JDBCType convert = JavaToJdbcFiledMapper.convert(type);
 
         assertThat(convert).isEqualTo(result);
     }
@@ -39,10 +37,8 @@ class JavaToJdbcFiledMapperTest {
     @Test
     @DisplayName("지원하지 않은 타입은 예외가 발생한다.")
     void notSupport() {
-        JavaToJdbcFiledMapper javaJdbcFiledMapper = new JavaToJdbcFiledMapper();
-
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> javaJdbcFiledMapper.convert(StringUtils.class));
+                .isThrownBy(() -> JavaToJdbcFiledMapper.convert(StringUtils.class));
     }
 
 }
