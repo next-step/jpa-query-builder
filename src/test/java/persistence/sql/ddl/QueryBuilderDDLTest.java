@@ -109,7 +109,6 @@ class QueryBuilderDDLTest {
             //then
             assertThat(sql).isEqualTo("DROP TABLE users");
         }
-
     }
 
 }
