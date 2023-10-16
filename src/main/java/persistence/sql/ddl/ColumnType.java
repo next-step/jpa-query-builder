@@ -10,10 +10,9 @@ public class ColumnType {
     private static final String BIGINT = "%s";
     private static final Integer DEFAULT_VARCHAR_LENGTH = 255;
     private static final Integer VARCHAR_MIN_LENGTH = 1;
-    private static final Direct direct = new H2Direct();
-
     private final JDBCType jdbcType;
     private final Integer length;
+
 
     private ColumnType(JDBCType jdbcType, Integer length) {
         if (length < VARCHAR_MIN_LENGTH) {
@@ -45,7 +44,7 @@ public class ColumnType {
         return createVarchar(DEFAULT_VARCHAR_LENGTH);
     }
 
-    public String getColumType() {
+    public String getColumType(Direct direct) {
         if (jdbcType == JDBCType.VARCHAR) {
             return String.format(VARCHAR_FORMAT, direct.getVarchar(), length);
         }
@@ -56,6 +55,10 @@ public class ColumnType {
             return String.format(BIGINT, direct.getBigInt());
         }
         throw new NotSupertypeException();
+    }
+
+    public String getColumType() {
+        return getColumType(new H2Direct());
     }
 
 }

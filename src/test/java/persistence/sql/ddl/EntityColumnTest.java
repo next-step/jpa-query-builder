@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import jakarta.persistence.Column;
-import java.sql.JDBCType;
+import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.exception.FiledEmptyException;
@@ -47,23 +47,45 @@ class EntityColumnTest {
     }
 
     @Test
-    @DisplayName("자바 타입이 정상적으로 변환 된다.")
-    void getJdbcType() throws Exception {
+    @DisplayName("필드가 pk인지 확인한다.")
+    void isPk() throws Exception {
         class TestEntity {
-            private Long id;
+            @Id
             private String name;
-            private Integer age;
         }
 
-        final EntityColumn idColumn = new EntityColumn(TestEntity.class.getDeclaredField("id"));
-        final EntityColumn nameColumn = new EntityColumn(TestEntity.class.getDeclaredField("name"));
-        final EntityColumn ageColumn = new EntityColumn(TestEntity.class.getDeclaredField("age"));
+        final EntityColumn entityColumn = new EntityColumn(TestEntity.class.getDeclaredField("name"));
 
-        assertSoftly(it -> {
-            it.assertThat(idColumn.getJdbcType()).isEqualTo(JDBCType.BIGINT);
-            it.assertThat(nameColumn.getJdbcType()).isEqualTo(JDBCType.VARCHAR);
-            it.assertThat(ageColumn.getJdbcType()).isEqualTo(JDBCType.INTEGER);
+        assertSoftly((it) -> {
+            it.assertThat(entityColumn.isPk()).isTrue();
         });
     }
 
+    @Test
+    @DisplayName("필드가 널을 허용하는 쿼리를 만든다.")
+    void isNull() throws Exception {
+        class TestEntity {
+            @Column(nullable = true)
+            private String name;
+        }
+        final EntityColumn entityColumn = new EntityColumn(TestEntity.class.getDeclaredField("name"));
+
+        assertSoftly((it) -> {
+            it.assertThat(entityColumn.createColumQuery()).isEqualTo("name varchar(255)");
+        });
+    }
+
+    @Test
+    @DisplayName("필드가 널을 허용하지 않은 쿼리를 만든다.")
+    void isNotNull() throws Exception {
+        class TestEntity {
+            @Column(nullable = false)
+            private String name;
+        }
+        final EntityColumn entityColumn = new EntityColumn(TestEntity.class.getDeclaredField("name"));
+
+        assertSoftly((it) -> {
+            it.assertThat(entityColumn.createColumQuery()).isEqualTo("name varchar(255) not null");
+        });
+    }
 }

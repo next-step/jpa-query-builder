@@ -10,6 +10,7 @@ public class QueryBuilder<T> {
     protected final Field[] entityFields;
     protected final String tableName;
 
+
     protected QueryBuilder(Class<T> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new NoEntityException();
@@ -18,6 +19,7 @@ public class QueryBuilder<T> {
         this.entityFields = entityClass.getDeclaredFields();
         this.tableName = createTableName();
     }
+
 
     private String createTableName() {
         if (!entityClass.isAnnotationPresent(Table.class) || entityClass.getAnnotation(Table.class).name().isBlank()) {

@@ -11,12 +11,10 @@ public class EntityColumnOption {
     private final boolean isNullable;
     private final boolean isPk;
     private GenerationType generationType;
-
     public EntityColumnOption(Field field) {
         if (field == null) {
             throw new FiledEmptyException();
         }
-
         this.isNullable = !field.isAnnotationPresent(Column.class) || field.getAnnotation(Column.class).nullable();
         this.isPk = field.isAnnotationPresent(Id.class);
         if (isPk) {
