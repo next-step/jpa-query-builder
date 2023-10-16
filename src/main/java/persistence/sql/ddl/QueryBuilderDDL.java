@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
 import java.util.Arrays;
@@ -29,11 +30,19 @@ public class QueryBuilderDDL<T> {
     }
 
     public String create() {
-        return new StringBuilder(DEFAULT_CREATE_TABLE_FORMAT.formatted(entityClass.getSimpleName()))
+        return new StringBuilder(DEFAULT_CREATE_TABLE_FORMAT.formatted(createTableName()))
                 .append(DEFAULT_CREATE_TABLE_COLUMNS_FORMAT.formatted(
                         createFiledsQuery(entityClass.getDeclaredFields()
                 )))
                 .toString();
+    }
+
+    private String createTableName() {
+        if (!entityClass.isAnnotationPresent(Table.class) || entityClass.getAnnotation(Table.class).name().isBlank()) {
+            return entityClass.getSimpleName();
+        }
+
+        return entityClass.getAnnotation(Table.class).name();
     }
 
     private String createFiledsQuery(Field[] fields) {
