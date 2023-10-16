@@ -57,16 +57,8 @@ public class ReflectionTest {
 
         //when
         String[] result = Arrays.stream(methods).filter(method -> method.getName().startsWith(METHOD_START_WORD))
-                .map(method -> {
-                    try {
-                        String execResult = (String) method.invoke(carClass.newInstance());
-                        logger.info(execResult);
-
-                        return execResult;
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }).toArray(String[]::new);
+                .map(method -> execMethod(method, carClass))
+                .toArray(String[]::new);
 
         //then
         assertThat(result).anyMatch(string -> string.contains(METHOD_START_WORD));
@@ -82,11 +74,7 @@ public class ReflectionTest {
         //when
         Arrays.stream(methods).filter(method -> method.isAnnotationPresent(PrintView.class))
                 .forEach(method -> {
-                    try {
-                        method.invoke(carClass.newInstance());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    execMethod(method, carClass);
                 });
     }
 
@@ -108,15 +96,7 @@ public class ReflectionTest {
                 .forEach(field -> {
                     field.setAccessible(true);
 
-                    try {
-                        if ("name".equals(field.getName())) {
-                            field.set(result, name);
-                        } else if ("price".equals(field.getName())) {
-                            field.set(result, price);
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
+                    parseFiled(field, result, name, price);
                 });
 
         //then
@@ -124,6 +104,18 @@ public class ReflectionTest {
             softAssertions.assertThat(result.getName()).isEqualTo(name);
             softAssertions.assertThat(result.getPrice()).isEqualTo(price);
         });
+    }
+
+    private static void parseFiled(Field field, Car result, String name, int price) {
+        try {
+            if ("name".equals(field.getName())) {
+                field.set(result, name);
+            } else if ("price".equals(field.getName())) {
+                field.set(result, price);
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -144,5 +136,16 @@ public class ReflectionTest {
             softAssertions.assertThat(result.getName()).isEqualTo(name);
             softAssertions.assertThat(result.getPrice()).isEqualTo(price);
         });
+    }
+
+    private String execMethod(Method method, Class<Car> carClass) {
+        try {
+            String execResult = (String) method.invoke(carClass.newInstance());
+            logger.info(execResult);
+
+            return execResult;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
