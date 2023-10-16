@@ -2,23 +2,22 @@ package persistence.sql.dml;
 
 import persistence.core.EntityColumn;
 import persistence.core.EntityMetadata;
+import persistence.core.EntityMetadataCache;
 import persistence.exception.PersistenceException;
 
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class DmlGenerator {
 
-    private final Map<Class<?>, EntityMetadata<?>> entityMetadataCache;
+    private final EntityMetadataCache entityMetadataCache;
 
     public DmlGenerator() {
-        this.entityMetadataCache = new ConcurrentHashMap<>();
+        this.entityMetadataCache = EntityMetadataCache.getInstance();
     }
 
     public String generateInsertDml(final Object entity) {
-        final EntityMetadata<?> entityMetadata = getEntityMetadata(entity);
+        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(entity.getClass());
 
         final String columns = columnsClause(entityMetadata);
         final String values = valueClause(entity, entityMetadata);
@@ -64,7 +63,4 @@ public class DmlGenerator {
         return "'" + value + "'";
     }
 
-    private EntityMetadata<?> getEntityMetadata(final Object entity) {
-        return entityMetadataCache.computeIfAbsent(entity.getClass(), EntityMetadata::new);
-    }
 }
