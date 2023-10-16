@@ -114,5 +114,10 @@ insert into table (column1, column2, column3) values (value1, value2, value3)
 - [x] 두 Clause 를 알맞게 연결
 
 - 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
+
+쿼리 실행을 통해 데이터를 여러 row 를 넣어 정상적으로 나오는지 확인해보자
+- [ ] Person EntityMetadata 를 이용해 findAll 쿼리 생성.
+- [ ] Database 에 연결 후 쿼리를 실행 및 검증.
+
 - 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
 - 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
