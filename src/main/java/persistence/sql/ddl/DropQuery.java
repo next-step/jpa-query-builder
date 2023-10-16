@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.sql.common.Query;
+
 public class DropQuery extends Query {
     private static final String DEFAULT_DROP_QUERY = "DROP TABLE %s";
 

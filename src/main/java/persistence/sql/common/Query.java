@@ -1,11 +1,11 @@
-package persistence.sql.ddl;
+package persistence.sql.common;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.lang.annotation.Annotation;
 import persistence.exception.InvalidEntityException;
 
-abstract class Query {
+public abstract class Query {
 
     private final String tableName;
 

@@ -2,6 +2,8 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import persistence.sql.common.Query;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;

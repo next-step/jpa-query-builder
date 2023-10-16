@@ -7,12 +7,12 @@ import jakarta.persistence.GenerationType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import persistence.exception.InvalidGeneratedValueException;
-import persistence.exception.InvalidTypeException;
+import persistence.sql.common.ColumnType;
 
 public class CreateColumn {
 
     private final String name;
-    private final String type;
+    private final ColumnType type;
     private final String constraints;
     private final String generatedValue;
 
@@ -29,7 +29,7 @@ public class CreateColumn {
     }
 
     private String getColumn() {
-        return name + type + constraints + generatedValue;
+        return name + type.getType() + constraints + generatedValue;
     }
 
     /**
@@ -78,23 +78,8 @@ public class CreateColumn {
     /**
      * 필드의 자료형을 읽어 칼럼 자료형으로 치환합니다.
      */
-    private <T> String parseType(Class<T> type) {
-        return " " + getType(type);
-    }
-
-    private <T> String getType(Class<T> type) {
-        switch (type.getSimpleName()) {
-            case "int":
-                return "INT";
-            case "Integer":
-                return "INTEGER";
-            case "Long":
-                return "BIGINT";
-            case "String":
-                return "VARCHAR(255)";
-        }
-
-        throw new InvalidTypeException();
+    private <T> ColumnType parseType(Class<T> tClass) {
+        return ColumnType.initType(tClass.getSimpleName());
     }
 
     private String getGeneratedValue(GenerationType generationType) {
