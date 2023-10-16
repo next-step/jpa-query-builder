@@ -120,4 +120,16 @@ insert into table (column1, column2, column3) values (value1, value2, value3)
 - [x] Database 에 연결 후 쿼리를 실행 및 검증.
 
 - 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
+```java
+private String whereClause(String selectQuery, Class<?> clazz) {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(selectQuery);
+    stringBuilder.append(" where ");
+    ...
+}
+```
+- [ ] 위의 whereClause 를 통해 정상적인 where 구문 생성
+- [ ] select 구문과 연결해 쿼리 생성
+- [ ] Database 에 연결 후 쿼리 실행 및 검증
+
 - 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
