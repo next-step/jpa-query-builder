@@ -6,6 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import persistence.testFixtures.NoHasEntity;
+import persistence.testFixtures.Person;
+import persistence.testFixtures.PkHasPerson;
 
 class QueryBuilderDDLTest {
 

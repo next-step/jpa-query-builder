@@ -1,16 +1,11 @@
-package persistence.sql.ddl;
+package persistence.testFixtures;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Entity
-public class PkHasPerson {
+public class NoHasEntity {
 
     @Id
     private Long id;
-
     private String name;
-
     private Integer age;
-
 }
