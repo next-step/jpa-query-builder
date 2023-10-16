@@ -8,9 +8,7 @@ public class DropQuery extends Query {
     }
 
     public static <T> String drop(Class<T> tClass) throws NullPointerException {
-        if (!isEntity(tClass)) {
-            throw new NullPointerException();
-        }
+        isEntity(tClass);
 
         return new DropQuery(tClass).combineQuery();
     }

@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.lang.annotation.Annotation;
+import persistence.exception.InvalidEntityException;
 
 abstract class Query {
 
@@ -31,7 +32,10 @@ abstract class Query {
      * 해당 클래스에 @Entity가 존재하는지 확인
      */
     protected static <T> boolean isEntity(Class<T> tClass) {
-        return isAnnotation(tClass, Entity.class);
+        if (!isAnnotation(tClass, Entity.class)) {
+            throw new InvalidEntityException();
+        }
+        return true;
     }
 
     /**

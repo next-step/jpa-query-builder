@@ -21,9 +21,7 @@ class CreateQuery extends Query {
     }
 
     public static <T> String create(Class<T> tClass) {
-        if (!isEntity(tClass)) {
-            throw new NullPointerException();
-        }
+        isEntity(tClass);
 
         return new CreateQuery(tClass).combineQuery();
     }
