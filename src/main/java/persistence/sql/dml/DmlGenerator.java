@@ -38,6 +38,14 @@ public class DmlGenerator {
         return builder.toString();
     }
 
+    public String generateDeleteDml(final Class<?> clazz) {
+        final StringBuilder builder = new StringBuilder();
+        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
+        builder.append("delete from ")
+                .append(entityMetadata.getTableName());
+        return builder.toString();
+    }
+
     private String whereClause(final Class<?> clazz, final Object id) {
         final StringBuilder builder = new StringBuilder();
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);

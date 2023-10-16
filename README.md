@@ -133,4 +133,4 @@ private String whereClause(String selectQuery, Class<?> clazz) {
 - [x] Database 에 연결 후 쿼리 실행 및 검증
 
 - 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
-- [ ] Person EntityMetadata 를 이용해 쿼리 생성
+- [x] Person EntityMetadata 를 이용해 쿼리 생성
