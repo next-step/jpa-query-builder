@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
 import java.util.Arrays;
@@ -47,6 +48,7 @@ public class QueryBuilderDDL<T> {
 
     private String createFiledsQuery(Field[] fields) {
         List<EntityColumn> columns = Arrays.stream(fields)
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(EntityColumn::new)
                 .toList();
 

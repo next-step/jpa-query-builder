@@ -128,8 +128,8 @@ CREATE TABLE users
     primary key (id)
 )
 ```
-- [ ] @Transient와 @Table 이름이 변경되는 create 쿼리 만들어보기
-  - [ ] @Transient 어노테이션이 있으면 해당 필드를 제외한다.
+- [X] @Transient와 @Table 이름이 변경되는 create 쿼리 만들어보기
+  - [X] @Transient 어노테이션이 있으면 해당 필드를 제외한다.
   - [X] @Table 어노테이션에 이름이 있으면 테이블 이름을 변경한다.
 
 
