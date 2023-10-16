@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.domain.Person;
+import domain.Person;
 import persistence.person.NotEntityPerson;
 import persistence.person.NotParseTypePerson;
 import persistence.person.ExistTablePerson;

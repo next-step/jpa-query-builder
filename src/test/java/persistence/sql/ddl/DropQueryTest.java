@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.domain.Person;
+import domain.Person;
 import persistence.exception.InvalidEntityException;
 import persistence.person.ExistTablePerson;
 import persistence.person.NonExistentEntityPerson;
