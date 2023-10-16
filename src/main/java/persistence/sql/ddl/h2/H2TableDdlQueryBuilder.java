@@ -27,7 +27,6 @@ public class H2TableDdlQueryBuilder implements TableDdlQueryBuilder {
     @Override
     public String createDdlQuery(EntityMetadataModel entityMetadataModel) {
         EntityColumn primaryKeyColumn = entityMetadataModel.getPrimaryKeyColumn();
-
         StringBuilder builder = new StringBuilder();
 
         builder.append("create table ")
@@ -38,23 +37,28 @@ public class H2TableDdlQueryBuilder implements TableDdlQueryBuilder {
                 .append(h2Dialect.getDialectType(primaryKeyColumn.getType()))
                 .append(BLANK);
 
-        if (primaryKeyColumn.isAutoIncrement()) {
-            builder.append("auto_increment");
-        }
-
-        entityMetadataModel.getColumns()
-                .forEach(createColumnQueries(builder));
-
+        addGenerateValueQueryIfPresent(primaryKeyColumn, builder);
+        addColumnQueries(entityMetadataModel, builder);
         addPrimaryQuery(primaryKeyColumn, builder);
 
         builder.append(CLOSE_PARENTHESIS);
-
         return builder.toString();
     }
 
     @Override
     public String createDropTableQuery(EntityMetadataModel entityMetadataModel) {
         return "drop table if exists " + entityMetadataModel.getTableName();
+    }
+
+    private void addGenerateValueQueryIfPresent(EntityColumn primaryKeyColumn, StringBuilder builder) {
+        if (primaryKeyColumn.isAutoIncrement()) {
+            builder.append("auto_increment");
+        }
+    }
+
+    private void addColumnQueries(EntityMetadataModel entityMetadataModel, StringBuilder builder) {
+        entityMetadataModel.getColumns()
+                .forEach(createColumnQueries(builder));
     }
 
     private void addPrimaryQuery(EntityColumn primaryKeyColumn, StringBuilder builder) {
