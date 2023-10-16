@@ -11,10 +11,10 @@ import persistence.exception.InvalidType;
 
 public class CreateColumn {
 
-    private String name;
-    private String type;
-    private String constraints;
-    private String generatedValue;
+    private final String name;
+    private final String type;
+    private final String constraints;
+    private final String generatedValue;
 
     public CreateColumn(Field field) {
         this.name = extractName(field);

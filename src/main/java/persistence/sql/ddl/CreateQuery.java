@@ -13,11 +13,12 @@ class CreateQuery extends Query {
     public static final String DEFAULT_PRIMARY_KEY_QUERY = ", PRIMARY KEY (%s)";
 
     private final Field[] fields;
-    private String columns;
+    private final String columns;
 
     private <T> CreateQuery(Class<T> tClass) {
         super(tClass);
         this.fields = tClass.getDeclaredFields();
+        this.columns = createColumns();
     }
 
     public static <T> CreateQuery initCreateQuery(Class<T> tClass) {
@@ -25,10 +26,7 @@ class CreateQuery extends Query {
             throw new NullPointerException();
         }
 
-        CreateQuery createQuery = new CreateQuery(tClass);
-        createQuery.createColumns();
-
-        return createQuery;
+        return new CreateQuery(tClass);
     }
 
     /**
@@ -38,8 +36,8 @@ class CreateQuery extends Query {
         return String.format(DEFAULT_CREATE_QUERY, this.getTableName(), columns);
     }
 
-    private void createColumns() {
-        this.columns = parseColumn() + parsePrimary();
+    private String createColumns() {
+        return parseColumn() + parsePrimary();
     }
 
     /**

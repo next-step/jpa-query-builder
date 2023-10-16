@@ -6,17 +6,17 @@ import jakarta.persistence.Table;
 import java.lang.annotation.Annotation;
 
 abstract class Query {
-    private String tableName;
+    private final String tableName;
 
 
     protected <T> Query(Class<T> tClass) {
-        parseTableName(tClass);
+        this.tableName = parseTableName(tClass);
     }
 
     /**
      * class의 이름을 가져와 table 이름으로 설정합니다.
      */
-    <T> void parseTableName(Class<T> tClass) {
+    <T> String parseTableName(Class<T> tClass) {
         Class<Table> annotation = Table.class;
         String tableName = tClass.getSimpleName();
 
@@ -25,7 +25,7 @@ abstract class Query {
             tableName = tClass.getAnnotation(annotation).name();
         }
 
-        this.tableName = tableName;
+        return tableName;
     }
 
     /**
