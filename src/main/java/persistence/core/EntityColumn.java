@@ -1,8 +1,6 @@
 package persistence.core;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -11,38 +9,54 @@ public class EntityColumn {
 
     private static final String DEFAULT_COLUMN_NAME = "";
 
+    private static final int DEFAULT_LENGTH = 255;
+
     private final String name;
 
     private final Class<?> type;
 
-    private final GeneratedValue generatedValue;
+    private GeneratedValue generatedValue;
 
-    private final boolean isPrimaryKey;
+    private boolean isPrimaryKey;
 
-    private final boolean isUnique;
+    private boolean isUnique;
 
-    private final boolean isNullable;
+    private boolean isNullable;
 
+    private final boolean hasTransient;
+
+    private int length;
 
     public EntityColumn(Field columnField) {
         this.type = columnField.getType();
         this.name = getColumnName(columnField);
 
         if (columnField.isAnnotationPresent(Id.class)) {
-            this.generatedValue = columnField.getAnnotation(GeneratedValue.class);
-            this.isPrimaryKey = true;
+            setPkColumn(columnField);
         } else {
-            this.generatedValue = null;
-            this.isPrimaryKey = false;
+            setColumn(columnField);
         }
 
+        this.hasTransient = columnField.isAnnotationPresent(Transient.class);
+    }
+
+    private void setPkColumn(Field columnField) {
+        this.generatedValue = columnField.getAnnotation(GeneratedValue.class);
+        this.isPrimaryKey = true;
+        this.isNullable = false;
+        this.isUnique = false;
+    }
+
+    private void setColumn(Field columnField) {
         if (columnField.isAnnotationPresent(Column.class)) {
             Column columnAnnotation = columnField.getAnnotation(Column.class);
             this.isUnique = columnAnnotation.unique();
             this.isNullable = columnAnnotation.nullable();
+            this.length = columnAnnotation.length();
         } else {
             this.isUnique = false;
             this.isNullable = true;
+            this.length = DEFAULT_LENGTH;
         }
     }
 
@@ -65,8 +79,44 @@ public class EntityColumn {
         return type;
     }
 
+    public boolean hasGeneratedValue() {
+        return generatedValue != null;
+    }
+
     public GeneratedValue getGeneratedValue() {
         return generatedValue;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public boolean isUnique() {
+        return this.isUnique;
+    }
+
+    public boolean isNullable() {
+        return this.isNullable;
+    }
+
+    public boolean hasTransient() {
+        return this.hasTransient;
+    }
+
+    public boolean isStringType() {
+        return this.type == String.class;
+    }
+
+    public boolean isAutoIncrement() {
+        if (this.generatedValue == null) {
+            return false;
+        }
+
+        return this.generatedValue.strategy() == GenerationType.IDENTITY;
     }
 
     @Override
