@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class EntityColumns implements Iterable<EntityColumn> {
     private final List<EntityColumn> columns;
@@ -38,6 +40,10 @@ public class EntityColumns implements Iterable<EntityColumn> {
     @Override
     public Iterator<EntityColumn> iterator() {
         return this.columns.iterator();
+    }
+
+    public Stream<EntityColumn> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
     public EntityColumn getId() {

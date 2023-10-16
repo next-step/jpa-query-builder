@@ -4,7 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import persistence.exception.PersistenceException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EntityMetadata<T> {
 
@@ -39,6 +41,13 @@ public class EntityMetadata<T> {
 
     public EntityColumns getColumns() {
         return this.columns;
+    }
+
+    public List<String> getInsertableColumnNames() {
+        return this.columns.stream()
+                .filter(EntityColumn::isInsertable)
+                .map(EntityColumn::getName)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public String getIdColumnName() {

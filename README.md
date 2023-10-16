@@ -109,9 +109,9 @@ public class Person {
 
 columns 과 values 를 나누어서 구현해보자
 insert into table (column1, column2, column3) values (value1, value2, value3)
-- [ ] Person EntityMetadata 를 이용해 만들어질 columnsClause 구성
-- [ ] Person 인스턴스를 이용해 valueClause 구성
-- [ ] 두 Clause 를 알맞게 연결
+- [x] Person EntityMetadata 를 이용해 만들어질 columnsClause 구성
+- [x] Person 인스턴스를 이용해 valueClause 구성
+- [x] 두 Clause 를 알맞게 연결
 
 - 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
 - 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기

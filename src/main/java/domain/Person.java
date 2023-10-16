@@ -22,4 +22,13 @@ public class Person {
     @Transient
     private Integer index;
 
+    protected Person() {
+    }
+
+    public Person(final String name, final Integer age, final String email, final Integer index) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
 }
