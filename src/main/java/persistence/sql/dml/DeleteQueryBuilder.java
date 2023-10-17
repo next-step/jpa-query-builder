@@ -11,8 +11,12 @@ public class DeleteQueryBuilder {
     private final Map<String, String> whereData;
     private String tableName;
 
-    public DeleteQueryBuilder() {
+    private DeleteQueryBuilder() {
         this.whereData = new LinkedHashMap<>();
+    }
+
+    public static DeleteQueryBuilder builder() {
+        return new DeleteQueryBuilder();
     }
 
     public DeleteQueryBuilder table(final String tableName) {

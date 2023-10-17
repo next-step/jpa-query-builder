@@ -13,17 +13,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class InsertQueryBuilderTest {
 
-    private InsertQueryBuilder insertQueryBuilder;
-
-    @BeforeEach
-    void setUp() {
-        this.insertQueryBuilder = new InsertQueryBuilder();
-    }
-
     @Test
     @DisplayName("주어진 data 를 이용해 Insert Query 을 생성 할 수 있다.")
     void buildTest() {
-        final String query = insertQueryBuilder
+        final String query = InsertQueryBuilder.builder()
                 .table("test")
                 .addData("id", "1")
                 .addData("test", "test")
@@ -35,7 +28,7 @@ class InsertQueryBuilderTest {
     @Test
     @DisplayName("TableName 없이 build 할 수 없다.")
     void noTableNameBuildFailureTest() {
-        assertThatThrownBy(() -> insertQueryBuilder
+        assertThatThrownBy(() -> InsertQueryBuilder.builder()
                 .addData("test", "test")
                 .build())
                 .isInstanceOf(PersistenceException.class);
@@ -44,7 +37,7 @@ class InsertQueryBuilderTest {
     @Test
     @DisplayName("주어진 data 없이 build 할 수 없다.")
     void noDataBuildFailureTest() {
-        assertThatThrownBy(() -> insertQueryBuilder
+        assertThatThrownBy(() -> InsertQueryBuilder.builder()
                 .table("test")
                 .build())
                 .isInstanceOf(PersistenceException.class);
@@ -53,7 +46,7 @@ class InsertQueryBuilderTest {
     @Test
     @DisplayName("data 를 한꺼번에 넣을땐 columns 와 values 길이가 같아야한다.")
     void columnsValuesSizeNotSameTest() {
-        assertThatThrownBy(() -> insertQueryBuilder
+        assertThatThrownBy(() -> InsertQueryBuilder.builder()
                 .addData(List.of("test"), List.of("1", "2"))
                 .build())
                 .isInstanceOf(PersistenceException.class);

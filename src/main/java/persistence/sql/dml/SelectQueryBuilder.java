@@ -12,9 +12,13 @@ public class SelectQueryBuilder {
     private final Map<String, String> whereData;
     private String tableName;
 
-    public SelectQueryBuilder() {
+    private SelectQueryBuilder() {
         this.data = new ArrayList<>();
         this.whereData = new LinkedHashMap<>();
+    }
+
+    public static SelectQueryBuilder builder() {
+        return new SelectQueryBuilder();
     }
 
     public SelectQueryBuilder table(final String tableName) {

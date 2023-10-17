@@ -11,17 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SelectQueryBuilderTest {
-    private SelectQueryBuilder selectQueryBuilder;
-
-    @BeforeEach
-    void setUp() {
-        this.selectQueryBuilder = new SelectQueryBuilder();
-    }
 
     @Test
     @DisplayName("주어진 column 들을 이용해 Select Query 을 생성 할 수 있다.")
     void buildTest() {
-        final String query = selectQueryBuilder
+        final String query = SelectQueryBuilder.builder()
                 .table("test")
                 .column("column")
                 .column("column2")
@@ -34,7 +28,7 @@ class SelectQueryBuilderTest {
     @Test
     @DisplayName("TableName 없이 build 할 수 없다.")
     void noTableNameBuildFailureTest() {
-        assertThatThrownBy(() -> selectQueryBuilder
+        assertThatThrownBy(() -> SelectQueryBuilder.builder()
                 .column("test")
                 .build())
                 .isInstanceOf(PersistenceException.class);
@@ -43,7 +37,7 @@ class SelectQueryBuilderTest {
     @Test
     @DisplayName("주어진 column 없이 build 할 수 없다.")
     void noDataBuildFailureTest() {
-        assertThatThrownBy(() -> selectQueryBuilder
+        assertThatThrownBy(() -> SelectQueryBuilder.builder()
                 .table("test")
                 .build())
                 .isInstanceOf(PersistenceException.class);
@@ -52,7 +46,7 @@ class SelectQueryBuilderTest {
     @Test
     @DisplayName("where 를 한꺼번에 넣을땐 columns 와 data 길이가 같아야한다.")
     void columnsValuesSizeNotSameTest() {
-        assertThatThrownBy(() -> selectQueryBuilder
+        assertThatThrownBy(() -> SelectQueryBuilder.builder()
                 .where(List.of("test"), List.of("1", "2"))
                 .build())
                 .isInstanceOf(PersistenceException.class);

@@ -10,8 +10,12 @@ public class InsertQueryBuilder {
     private final Map<String, String> data;
     private String tableName;
 
-    public InsertQueryBuilder() {
+    private InsertQueryBuilder() {
         this.data = new LinkedHashMap<>();
+    }
+
+    public static InsertQueryBuilder builder() {
+        return new InsertQueryBuilder();
     }
 
     public InsertQueryBuilder table(final String tableName) {

@@ -12,20 +12,14 @@ import java.util.stream.Collectors;
 public class DmlGenerator {
 
     private final EntityMetadataCache entityMetadataCache;
-    private final InsertQueryBuilder insertQueryBuilder;
-    private final SelectQueryBuilder selectQueryBuilder;
-    private final DeleteQueryBuilder deleteQueryBuilder;
 
     public DmlGenerator() {
         this.entityMetadataCache = EntityMetadataCache.getInstance();
-        this.insertQueryBuilder = new InsertQueryBuilder();
-        this.selectQueryBuilder = new SelectQueryBuilder();
-        this.deleteQueryBuilder = new DeleteQueryBuilder();
     }
 
     public String insert(final Object entity) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(entity.getClass());
-        return insertQueryBuilder
+        return InsertQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .addData(entityMetadata.getInsertableColumnNames(), getEntityValues(entity, entityMetadata))
                 .build();
@@ -33,7 +27,7 @@ public class DmlGenerator {
 
     public String findAll(final Class<?> clazz) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
-        return selectQueryBuilder
+        return SelectQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .column(entityMetadata.getColumnNames())
                 .build();
@@ -41,7 +35,7 @@ public class DmlGenerator {
 
     public String findById(final Class<?> clazz, final Object id) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
-        return selectQueryBuilder
+        return SelectQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .column(entityMetadata.getColumnNames())
                 .where(entityMetadata.getIdColumnName(), String.valueOf(id))
@@ -50,7 +44,7 @@ public class DmlGenerator {
 
     public String delete(final Class<?> clazz) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
-        return deleteQueryBuilder
+        return DeleteQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .build();
     }
