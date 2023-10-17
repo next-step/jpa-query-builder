@@ -2,6 +2,7 @@ package persistence.sql.ddl.builder;
 
 import jakarta.persistence.Table;
 import persistence.sql.ddl.DDLQueryValidator;
+import persistence.sql.ddl.converter.JavaToSqlMapper;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package persistence.sql.ddl.builder;
+package persistence.sql.ddl.converter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

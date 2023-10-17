@@ -1,7 +1,7 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.infra;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.builder.JavaToSqlMapper;
+import persistence.sql.ddl.converter.JavaToSqlMapper;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import persistence.sql.ddl.DDLQueryValidator;
+import persistence.sql.ddl.converter.JavaToSqlConverter;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

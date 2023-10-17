@@ -1,7 +1,9 @@
 package persistence.sql.ddl.builder;
 
 import persistence.sql.ddl.DDLQueryValidator;
-import persistence.sql.ddl.H2JavaToSqlMapper;
+import persistence.sql.ddl.converter.JavaToSqlConverter;
+import persistence.sql.ddl.converter.JavaToSqlMapper;
+import persistence.sql.ddl.infra.H2JavaToSqlMapper;
 import persistence.sql.ddl.model.DDLType;
 import persistence.sql.ddl.model.DatabaseType;
 

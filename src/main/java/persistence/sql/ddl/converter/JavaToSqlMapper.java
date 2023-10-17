@@ -1,4 +1,4 @@
-package persistence.sql.ddl.builder;
+package persistence.sql.ddl.converter;
 
 public interface JavaToSqlMapper {
 
