@@ -30,7 +30,7 @@ public class H2CreateQueryBuilder extends CreateQueryBuilder {
         return buildQuery(clazz);
     }
 
-    private static String buildQuery(Class<?> clazz) {
+    private String buildQuery(Class<?> clazz) {
         return new StringBuilder()
                 .append(CREATE_HEADER)
                 .append(getTableName(clazz))
@@ -40,7 +40,7 @@ public class H2CreateQueryBuilder extends CreateQueryBuilder {
                 .toString();
     }
 
-    private static String buildColumns(Field[] fields) {
+    private String buildColumns(Field[] fields) {
         return columnBuilder.getColumnDefinition(fields);
     }
 }
