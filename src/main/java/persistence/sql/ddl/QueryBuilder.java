@@ -26,6 +26,15 @@ public class QueryBuilder {
         return sb.toString();
     }
 
+    public <T> String drop(Class<T> clazz) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("DROP TABLE ");
+        sb.append(getTableName(clazz));
+        sb.append(";");
+
+        return sb.toString();
+    }
+
     private <T> String getTableName(Class<T> clazz) {
         if (clazz.isAnnotationPresent(Table.class)) {
             Table table = clazz.getAnnotation(Table.class);
