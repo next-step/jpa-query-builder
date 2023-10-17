@@ -9,7 +9,7 @@ public class DropTable extends Table {
         super(tClass);
     }
 
-    public static <T> String drop(Class<T> tClass) throws NullPointerException {
+    public static <T> String drop(Class<T> tClass) {
         isEntity(tClass);
 
         return new DropTable(tClass).combineQuery();

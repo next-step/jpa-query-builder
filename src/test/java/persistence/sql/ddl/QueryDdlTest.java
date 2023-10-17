@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import domain.Person;
 import persistence.person.NotEntityPerson;
-import persistence.person.NotParseTypePerson;
 import persistence.person.ExistTablePerson;
 import persistence.person.NonExistentTablePerson;
 
