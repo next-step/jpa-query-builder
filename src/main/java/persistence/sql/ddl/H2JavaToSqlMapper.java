@@ -1,11 +1,12 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.GenerationType;
+import persistence.sql.ddl.builder.JavaToSqlMapper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class H2JavaToSqlTypeMapper implements JavaToSqlTypeMapper {
+public class H2JavaToSqlMapper implements JavaToSqlMapper {
 
     private static final Map<Class<?>, String> javaToSqlTypeMap = new HashMap<>();
 
