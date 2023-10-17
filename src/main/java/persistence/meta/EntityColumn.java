@@ -1,6 +1,6 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
-import static persistence.sql.ddl.JavaToJdbcFiledMapper.convert;
+import static persistence.meta.JavaToJdbcFiledMapper.convert;
 
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;

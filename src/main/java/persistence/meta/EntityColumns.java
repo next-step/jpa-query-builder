@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;

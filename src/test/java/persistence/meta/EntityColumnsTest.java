@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.exception.FiledEmptyException;
 import persistence.fake.FakeDirect;
+import persistence.meta.EntityColumns;
 import persistence.testFixtures.Person;
 
 class EntityColumnsTest {

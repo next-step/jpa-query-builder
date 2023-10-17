@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;

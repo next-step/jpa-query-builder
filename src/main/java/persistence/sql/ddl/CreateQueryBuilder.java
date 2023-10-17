@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import static java.lang.String.format;
 
 import persistence.dialect.Dialect;
+import persistence.meta.EntityColumns;
 import persistence.vender.dialect.H2Dialect;
 
 public class CreateQueryBuilder<T> extends QueryBuilder<T> {

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.exception.NoEntityException;
 import persistence.fake.FakeDirect;
+import persistence.testFixtures.ChangColumNamePerson;
 import persistence.testFixtures.NoHasEntity;
 import persistence.testFixtures.Person;
 import persistence.testFixtures.PkHasPerson;

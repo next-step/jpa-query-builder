@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.exception.FiledEmptyException;
+import persistence.meta.EntityColumn;
 
 @DisplayName("엔티티 클래스 컬럼 테스트")
 class EntityColumnTest {

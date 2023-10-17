@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
 import java.sql.JDBCType;
 import persistence.dialect.Dialect;
