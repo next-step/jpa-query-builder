@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadata;
-import persistence.core.EntityMetadataCache;
+import persistence.core.EntityMetadataProvider;
 import persistence.sql.ddl.DdlGenerator;
 import persistence.sql.ddl.DefaultDBColumnTypeMapper;
 import persistence.sql.dml.DmlGenerator;
@@ -35,7 +35,7 @@ class ApplicationTest {
         jdbcTemplate = new JdbcTemplate(server.getConnection());
         ddlGenerator = new DdlGenerator(DefaultDBColumnTypeMapper.getInstance());
         dmlGenerator = new DmlGenerator();
-        entityMetadata = EntityMetadataCache.getInstance().getEntityMetadata(Person.class);
+        entityMetadata = EntityMetadataProvider.getInstance().getEntityMetadata(Person.class);
         final String createDdl = ddlGenerator.generateCreateDdl(entityMetadata);
         jdbcTemplate.execute(createDdl);
         people = createDummyUsers();

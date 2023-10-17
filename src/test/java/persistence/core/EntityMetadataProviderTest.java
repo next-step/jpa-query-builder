@@ -9,14 +9,14 @@ import persistence.exception.PersistenceException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-class EntityMetadataCacheTest {
+class EntityMetadataProviderTest {
 
     private Class<?> mockClass;
-    private EntityMetadataCache cache;
+    private EntityMetadataProvider cache;
 
     @BeforeEach
     void setUp() {
-        cache = EntityMetadataCache.getInstance();
+        cache = EntityMetadataProvider.getInstance();
     }
 
     @Test

@@ -1,21 +1,21 @@
 package persistence.sql.dml;
 
 import persistence.core.EntityMetadata;
-import persistence.core.EntityMetadataCache;
+import persistence.core.EntityMetadataProvider;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DmlGenerator {
 
-    private final EntityMetadataCache entityMetadataCache;
+    private final EntityMetadataProvider entityMetadataProvider;
 
     public DmlGenerator() {
-        this.entityMetadataCache = EntityMetadataCache.getInstance();
+        this.entityMetadataProvider = EntityMetadataProvider.getInstance();
     }
 
     public String insert(final Object entity) {
-        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(entity.getClass());
+        final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(entity.getClass());
         return InsertQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .addData(entityMetadata.getInsertableColumnNames(), convertToString(entityMetadata.getEntityValues(entity)))
@@ -23,7 +23,7 @@ public class DmlGenerator {
     }
 
     public String findAll(final Class<?> clazz) {
-        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
+        final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(clazz);
         return SelectQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .column(entityMetadata.getColumnNames())
@@ -31,7 +31,7 @@ public class DmlGenerator {
     }
 
     public String findById(final Class<?> clazz, final Object id) {
-        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
+        final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(clazz);
         return SelectQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .column(entityMetadata.getColumnNames())
@@ -40,7 +40,7 @@ public class DmlGenerator {
     }
 
     public String delete(final Class<?> clazz) {
-        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
+        final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(clazz);
         return DeleteQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
                 .build();

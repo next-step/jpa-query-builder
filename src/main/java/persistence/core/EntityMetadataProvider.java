@@ -3,15 +3,15 @@ package persistence.core;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EntityMetadataCache {
+public class EntityMetadataProvider {
 
     private final Map<Class<?>, EntityMetadata<?>> cache;
 
-    private EntityMetadataCache() {
+    private EntityMetadataProvider() {
         this.cache = new ConcurrentHashMap<>();
     }
 
-    public static EntityMetadataCache getInstance() {
+    public static EntityMetadataProvider getInstance() {
         return InstanceHolder.INSTANCE;
     }
 
@@ -20,7 +20,7 @@ public class EntityMetadataCache {
     }
 
     private static class InstanceHolder {
-        private static final EntityMetadataCache INSTANCE = new EntityMetadataCache();
+        private static final EntityMetadataProvider INSTANCE = new EntityMetadataProvider();
     }
 
 }
