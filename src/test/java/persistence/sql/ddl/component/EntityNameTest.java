@@ -14,13 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EntityNameTest {
 
-    private final EntityName entityName = new EntityName();
-
     @DisplayName("클래스의 테이블 이름을 추출한다.")
     @ParameterizedTest
     @MethodSource("getTableNameTestParams")
     void getTableNameTest(Class<?> testClass, String expected) {
-        assertThat(entityName.getTableName(testClass)).isEqualTo(expected);
+        assertThat(EntityName.getTableName(testClass)).isEqualTo(expected);
     }
 
     private static Stream<Arguments> getTableNameTestParams() {

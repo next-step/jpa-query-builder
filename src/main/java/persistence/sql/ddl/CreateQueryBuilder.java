@@ -7,6 +7,8 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     private static final String SPACE = " ";
     private static final String CREATE_TABLE = "create table";
+    private static final String OPEN_PARENTHESIS = "(";
+    private static final String CLOSE_PARENTHESIS = ")";
 
     private final EntityData entityData;
 
@@ -25,7 +27,7 @@ public class CreateQueryBuilder implements QueryBuilder {
     public String getQuery() {
         return CREATE_TABLE + SPACE +
                 entityData.getTableName() + SPACE +
-                "(id bigint not null, age integer, name varchar(255), primary key (id))";
+                OPEN_PARENTHESIS + "id bigint not null, age integer, name varchar(255), primary key (id)" + CLOSE_PARENTHESIS;
     }
 
 }

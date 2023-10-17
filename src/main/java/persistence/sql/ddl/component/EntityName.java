@@ -4,7 +4,7 @@ import jakarta.persistence.Table;
 
 public class EntityName {
 
-    public String getTableName(Class<?> entityClass) {
+    public static String getTableName(Class<?> entityClass) {
         if (entityClass.isAnnotationPresent(Table.class)) {
             return getTableNameFromTableAnnotation(entityClass);
         }
