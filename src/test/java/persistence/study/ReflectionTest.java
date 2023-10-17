@@ -70,7 +70,7 @@ public class ReflectionTest {
     @Test
     @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
     void testAnnotationMethodRun() {
-        //given when
+
         Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                         .forEach(method -> {
@@ -106,7 +106,6 @@ public class ReflectionTest {
                 () -> assertEquals(CAR_PRICE, car.getPrice()));
     }
 
-    // 배열을 list 로 바꿔주는 메소드
     private <T, G> List<G> fromArrayToList(T[] array, Function<T, G> toListFunction) {
         return Arrays.stream(array)
                 .map(toListFunction)
