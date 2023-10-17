@@ -13,7 +13,7 @@ class QueryGeneratorTest {
 		QueryGenerator queryGenerator = new QueryGenerator();
 		String result = queryGenerator.createQuery();
 
-		String expected = "CREATE TABLE Person (\n"
+		String expected = "CREATE TABLE users (\n"
 			+ "    id BIGINT AUTO_INCREMENT PRIMARY KEY,\n"
 			+ "    nick_name VARCHAR(255),\n"
 			+ "    old INT,\n"
