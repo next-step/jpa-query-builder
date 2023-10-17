@@ -42,7 +42,7 @@ public class QueryBuilder {
         return query;
     }
 
-    private static String parseFieldName(Field field) {
+    private String parseFieldName(Field field) {
         if (field.isAnnotationPresent(Column.class)) {
             String name = field.getAnnotation(Column.class).name();
             if (!name.isEmpty()) {
