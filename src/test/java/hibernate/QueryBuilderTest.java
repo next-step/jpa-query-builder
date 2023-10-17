@@ -55,4 +55,17 @@ class QueryBuilderTest {
         // then
         assertThat(actual).contains(expectedColumns);
     }
+
+    @Test
+    void Column에서_nullable이_false인_경우_NOT_NULL_create_쿼리가_생성된다() {
+        // given
+        String expectedColumn = "email varchar not null";
+
+        // when
+        String actual = queryBuilder.generateCreateQueries(Person2.class)
+                .toLowerCase();
+
+        // then
+        assertThat(actual).contains(expectedColumn);
+    }
 }
