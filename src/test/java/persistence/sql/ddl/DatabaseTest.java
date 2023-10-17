@@ -5,10 +5,15 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class DatabaseTest {
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseTest.class);
+
     protected DatabaseServer server = null;
     protected JdbcTemplate jdbcTemplate = null;
 
@@ -21,6 +26,13 @@ public class DatabaseTest {
 
     @AfterEach
     void close() {
+        List<String> tableNames = jdbcTemplate.query("SHOW TABLES", new StringRowMapper());
+
+        for (String tableName : tableNames) {
+            logger.info("Starting DROP TABLE");
+            jdbcTemplate.execute("DROP TABLE " + tableName);
+        }
+
         server.stop();
     }
 }
