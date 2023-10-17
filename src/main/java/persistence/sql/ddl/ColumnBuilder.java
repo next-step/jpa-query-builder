@@ -1,8 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Transient;
-import persistence.sql.util.StringUtils;
+import persistence.sql.meta.ColumnMeta;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -20,32 +18,20 @@ public abstract class ColumnBuilder {
 
     private List<String> toSql(Field[] fields) {
         return Arrays.stream(fields)
-                .filter(field -> !isTransient(field))
+                .filter(field -> !ColumnMeta.isTransient(field))
                 .map(this::toSql)
                 .collect(Collectors.toList());
     }
 
-    private static boolean isTransient(Field field) {
-        return field.getDeclaredAnnotation(Transient.class) != null;
-    }
-
     private String toSql(Field field) {
         return new StringBuilder()
-                .append(getColumnName(field))
+                .append(ColumnMeta.getColumnName(field))
                 .append(BLANK)
                 .append(getSqlType(field.getType()))
                 .append(getGenerationStrategy(field))
                 .append(getPrimaryKey(field))
                 .append(getNullable(field))
                 .toString();
-    }
-
-    private static String getColumnName(Field field) {
-        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-        if (columnAnnotation == null || StringUtils.isNullOrEmpty(columnAnnotation.name())) {
-            return field.getName().toLowerCase();
-        }
-        return columnAnnotation.name();
     }
 
     protected abstract String getSqlType(Class<?> type);
