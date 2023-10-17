@@ -42,11 +42,8 @@ public class ReflectionTest {
     @Test
     @DisplayName("test로 시작하는 메소드 실행")
     void testMethodRun() throws Exception {
-        // given
         final Car car = carClass.getConstructor().newInstance();
 
-        // when
-        // then
         Stream.of(carClass.getDeclaredMethods())
                 .filter(method -> method.getName().startsWith("test"))
                 .forEach(method -> {
@@ -59,14 +56,11 @@ public class ReflectionTest {
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
     void testAnnotationMethodRun() throws Exception {
-        // given
         final Car car = carClass.getConstructor().newInstance();
 
-        // when
         PrintStream originalStream = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
-
         Stream.of(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                 .forEach(method -> {
@@ -74,24 +68,19 @@ public class ReflectionTest {
                     invokeTestMethod(method, car);
                 });
 
-        // then
         assertThat(outputStream.toString()).contains("자동차 정보를 출력 합니다.");
-        System.setOut(originalStream);
     }
 
     @Test
     @DisplayName("private field에 값 할당")
     void privateFieldAccess() throws Exception {
-        // given
         final Car car = carClass.getConstructor().newInstance();
 
-        // when
         for (Field field : carClass.getDeclaredFields()) {
             field.setAccessible(true);
             field.set(car, getValue(field));
         }
 
-        // then
         assertAll(
                 () -> assertThat(car.getName()).isEqualTo(name),
                 () -> assertThat(car.getPrice()).isEqualTo(price)
@@ -105,11 +94,8 @@ public class ReflectionTest {
     @Test
     @DisplayName("인자를 가진 생성자의 인스턴스 생성")
     void constructorWithArgs() throws Exception {
-        // given
-        // when
         Car car = carClass.getConstructor(String.class, int.class).newInstance(name, price);
 
-        // then
         assertAll(
                 () -> assertThat(car.getName()).isEqualTo(name),
                 () -> assertThat(car.getPrice()).isEqualTo(price)
