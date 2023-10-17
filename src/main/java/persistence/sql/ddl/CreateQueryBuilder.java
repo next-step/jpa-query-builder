@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.annotations.Entity;
+import persistence.common.EntityClazz;
 import persistence.common.EntityField;
 import persistence.sql.QueryBuilder;
 
@@ -13,13 +13,10 @@ public class CreateQueryBuilder implements QueryBuilder {
     @Override
     public String build(Object obj) {
         Class<?> clazz = obj.getClass();
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new NoEntityException(clazz.getName());
-        }
+        EntityClazz entityClazz = new EntityClazz(clazz);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("CREATE TABLE ");
-        sb.append(clazz.getSimpleName() + "(\n");
+        sb.append(entityClazz.getCreateQuery());
 
         List<EntityField> efs = Arrays.stream(clazz.getDeclaredFields())
                 .map(EntityField::new)

@@ -2,6 +2,7 @@ package persistence.entity;
 
 import persistence.annotations.*;
 
+@Table(name = "users")
 @Entity
 public class Person {
 
