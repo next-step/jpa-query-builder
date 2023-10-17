@@ -45,6 +45,9 @@ public class FixtureEntity {
         @Column(nullable = false)
         private String notNullColumn;
 
+        public WithColumn() {
+        }
+
         public WithColumn(final Long id, final String column, final String notNullColumn) {
             this.id = id;
             this.column = column;

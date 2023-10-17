@@ -7,7 +7,6 @@ import persistence.domain.FixtureEntity;
 import persistence.exception.PersistenceException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class EntityMetadataTest {
