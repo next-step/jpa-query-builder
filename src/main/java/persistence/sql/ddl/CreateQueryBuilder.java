@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.annotations.Entity;
 import persistence.common.EntityField;
-import persistence.sql.Entity;
 import persistence.sql.QueryBuilder;
 
 import java.util.Arrays;
