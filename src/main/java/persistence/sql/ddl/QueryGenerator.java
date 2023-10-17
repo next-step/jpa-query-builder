@@ -86,4 +86,21 @@ public class QueryGenerator {
 		}
 		return stringBuilder.toString();
 	}
+
+	public String dropQuery() {
+		Class<Person> personClass = Person.class;
+		StringBuilder query = new StringBuilder();
+		Table table = personClass.getAnnotation(Table.class);
+		if (table.name().isBlank()) {
+			query.append("DROP TABLE ");
+			query.append(personClass.getName());
+			query.append(";");
+		}
+		if (!table.name().isBlank()) {
+			query.append("DROP TABLE ");
+			query.append(table.name());
+			query.append(";");
+		}
+		return query.toString();
+	}
 }
