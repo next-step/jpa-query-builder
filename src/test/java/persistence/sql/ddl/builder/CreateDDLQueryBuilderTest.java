@@ -27,7 +27,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
         class withValidEntity {
             @Test
             @DisplayName("CREATE DDL을 리턴한다.")
-            void testOf() {
+            void returnDDL() {
                 String ddl = DDLQueryBuilder.build()
                         .ddlType(DDLType.CREATE)
                         .database(DatabaseType.H2)
@@ -91,7 +91,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
         class withOutEntityAnnotatedEntity {
             @Test
             @DisplayName("예외를 반환한다.")
-            void testOf() {
+            void throwException() {
                 IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                         () -> DDLQueryBuilder.build()
                                 .ddlType(DDLType.CREATE)

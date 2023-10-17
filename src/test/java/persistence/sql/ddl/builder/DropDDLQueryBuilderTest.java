@@ -20,7 +20,7 @@ public class DropDDLQueryBuilderTest {
         class withValidEntity {
             @Test
             @DisplayName("DROP DDL을 리턴한다.")
-            void testOf() {
+            void returnDDL() {
                 String ddl = DDLQueryBuilder.build()
                         .ddlType(DDLType.DROP)
                         .database(DatabaseType.H2)
