@@ -38,10 +38,12 @@ public class DmlGenerator {
     }
 
     public String generateFindByIdDml(final Class<?> clazz, final Object id) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(generateFindAllDml(clazz))
-                .append(whereClause(clazz, id));
-        return builder.toString();
+        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
+        return selectQueryBuilder
+                .table(entityMetadata.getTableName())
+                .column(entityMetadata.getColumnNames())
+                .where(entityMetadata.getIdColumnName(), String.valueOf(id))
+                .build();
     }
 
     public String generateDeleteDml(final Class<?> clazz) {
@@ -49,16 +51,6 @@ public class DmlGenerator {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
         builder.append("delete from ")
                 .append(entityMetadata.getTableName());
-        return builder.toString();
-    }
-
-    private String whereClause(final Class<?> clazz, final Object id) {
-        final StringBuilder builder = new StringBuilder();
-        final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
-        builder.append(" where ")
-                .append(entityMetadata.getIdColumnName())
-                .append("=")
-                .append(id);
         return builder.toString();
     }
 

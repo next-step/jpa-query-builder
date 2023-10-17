@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.exception.PersistenceException;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -23,9 +25,10 @@ class SelectQueryBuilderTest {
                 .table("test")
                 .column("column")
                 .column("column2")
+                .where("column", "1")
                 .build();
 
-        assertThat(query).isEqualToIgnoringCase("select column, column2 from test");
+        assertThat(query).isEqualToIgnoringCase("select column, column2 from test where column=1");
     }
 
     @Test
@@ -42,6 +45,15 @@ class SelectQueryBuilderTest {
     void noDataBuildFailureTest() {
         assertThatThrownBy(() -> selectQueryBuilder
                 .table("test")
+                .build())
+                .isInstanceOf(PersistenceException.class);
+    }
+
+    @Test
+    @DisplayName("where 를 한꺼번에 넣을땐 columns 와 data 길이가 같아야한다.")
+    void columnsValuesSizeNotSameTest() {
+        assertThatThrownBy(() -> selectQueryBuilder
+                .where(List.of("test"), List.of("1", "2"))
                 .build())
                 .isInstanceOf(PersistenceException.class);
     }
