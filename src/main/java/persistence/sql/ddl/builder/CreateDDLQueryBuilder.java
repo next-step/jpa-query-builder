@@ -9,7 +9,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CreateDDLQueryBuilder extends DDLQueryBuilder {
     private final DDLQueryValidator validator;
@@ -53,12 +52,7 @@ public class CreateDDLQueryBuilder extends DDLQueryBuilder {
     }
 
     private String prepareStatementComponent(Field field) {
-        return Stream.of(
-                        javaToSqlConverter.convertName(field),
-                        javaToSqlConverter.convertAttribute(field),
-                        javaToSqlConverter.convertGenerateValue(field),
-                        javaToSqlConverter.convertNullable(field)
-                ).filter(s -> s != null && !s.isEmpty())
+        return javaToSqlConverter.convert(field).stream().filter(s -> s != null && !s.isEmpty())
                 .collect(Collectors.joining(" "));
     }
 }
