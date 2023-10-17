@@ -14,7 +14,6 @@ public class CreateQueryBuilder {
 
     public static String getQuery(Class<?> clazz) {
 
-        // Domain 클래스 검증
         validateEntity(clazz);
 
         return buildQuery(clazz);
