@@ -44,6 +44,12 @@ public class FixtureEntity {
         private String column;
         @Column(nullable = false)
         private String notNullColumn;
+
+        public WithColumn(final Long id, final String column, final String notNullColumn) {
+            this.id = id;
+            this.column = column;
+            this.notNullColumn = notNullColumn;
+        }
     }
 
     @Entity
@@ -86,6 +92,8 @@ public class FixtureEntity {
         private Long id;
         @Column(insertable = false)
         private String notInsertableColumn;
+
+        private String insertableColumn;
     }
 
     @Entity

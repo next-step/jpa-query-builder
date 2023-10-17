@@ -7,6 +7,7 @@ import persistence.domain.FixtureEntity;
 import persistence.exception.PersistenceException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class EntityMetadataTest {
@@ -29,11 +30,51 @@ class EntityMetadataTest {
     }
 
     @Test
-    @DisplayName("Entity 클래스에 @Table 설정을 통해 tableName 을 설정해 인스턴스를 생성 할 수 있다..")
+    @DisplayName("Entity 클래스에 @Table 설정을 통해 tableName 을 설정해 인스턴스를 생성 할 수 있다.")
     void tableAnnotatedEntityMetadataCreateTest() {
         mockClass = FixtureEntity.WithTable.class;
         final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
         assertResult(entityMetadata, "test_table", "id");
+    }
+
+    @Test
+    @DisplayName("Entity 클래스에 @Column(insertable) 설정을 통해 column insert 여부를 설정해 인스턴스를 생성 할 수 있다.")
+    void withColumnNonInsertableEntityMetadataCreateTest() {
+        mockClass = FixtureEntity.WithColumnNonInsertable.class;
+        final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
+        assertSoftly(softly -> {
+            softly.assertThat(entityMetadata).isNotNull();
+            softly.assertThat(entityMetadata.getTableName()).isEqualTo("WithColumnNonInsertable");
+            softly.assertThat(entityMetadata.getIdColumnName()).isEqualTo("id");
+            softly.assertThat(entityMetadata.getInsertableColumnNames()).containsExactly("insertableColumn");
+        });
+    }
+
+    @Test
+    @DisplayName("getColumnNames 를 통해 column 들의 이름들을 반환 받을 수 있다.")
+    void entityMetadataGetColumnNamesTest() {
+        mockClass = FixtureEntity.WithColumn.class;
+        final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
+        assertSoftly(softly -> {
+            softly.assertThat(entityMetadata).isNotNull();
+            softly.assertThat(entityMetadata.getTableName()).isEqualTo("WithColumn");
+            softly.assertThat(entityMetadata.getIdColumnName()).isEqualTo("id");
+            softly.assertThat(entityMetadata.getColumnNames()).containsExactly("id", "test_column", "notNullColumn");
+        });
+    }
+
+    @Test
+    @DisplayName("getEntityValues 를 통해 id 를 제외한 entity 들의 value 들을 반환 받을 수 있다.")
+    void entityMetadataGetEntityValuesTest() {
+        mockClass = FixtureEntity.WithColumn.class;
+        final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
+        final FixtureEntity.WithColumn entity = new FixtureEntity.WithColumn(1L, "test", "notNullTest");
+        assertSoftly(softly -> {
+            softly.assertThat(entityMetadata).isNotNull();
+            softly.assertThat(entityMetadata.getTableName()).isEqualTo("WithColumn");
+            softly.assertThat(entityMetadata.getIdColumnName()).isEqualTo("id");
+            softly.assertThat(entityMetadata.getEntityValues(entity)).containsExactly( "test", "notNullTest");
+        });
     }
 
     private void assertResult(final EntityMetadata<?> entityMetadata, final String withId, final String id) {
