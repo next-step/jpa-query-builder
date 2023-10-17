@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import persistence.exception.PersistenceException;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,5 +59,23 @@ public class EntityMetadata<T> {
         return this.columns.stream()
                 .map(EntityColumn::getName)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<Object> getEntityValues(final Object entity) {
+        return this.getColumns()
+                .stream()
+                .filter(EntityColumn::isInsertable)
+                .map(entityColumn -> getValueForColumn(entity, entityColumn))
+                .collect(Collectors.toList());
+    }
+
+    private Object getValueForColumn(final Object entity, final EntityColumn entityColumn) {
+        try {
+            final Field field = entity.getClass().getDeclaredField(entityColumn.getFieldName());
+            field.setAccessible(true);
+            return field.get(entity);
+        } catch (final IllegalAccessException | NoSuchFieldException e) {
+            throw new PersistenceException(e);
+        }
     }
 }
