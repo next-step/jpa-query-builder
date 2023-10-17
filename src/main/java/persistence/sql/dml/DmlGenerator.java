@@ -6,23 +6,26 @@ import persistence.core.EntityMetadataCache;
 import persistence.exception.PersistenceException;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class DmlGenerator {
 
     private final EntityMetadataCache entityMetadataCache;
+    private final InsertQueryBuilder insertQueryBuilder;
 
     public DmlGenerator() {
         this.entityMetadataCache = EntityMetadataCache.getInstance();
+        this.insertQueryBuilder = new InsertQueryBuilder();
     }
 
     public String generateInsertDml(final Object entity) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(entity.getClass());
 
-        final String columns = columnsClause(entityMetadata);
-        final String values = valueClause(entity, entityMetadata);
-
-        return String.format("insert into %s %s values %s", entityMetadata.getTableName(), columns, values);
+        return insertQueryBuilder
+                .table(entityMetadata.getTableName())
+                .addData(entityMetadata.getInsertableColumnNames(), getEntityValues(entity, entityMetadata))
+                .build();
     }
 
     public String generateFindAllDml(final Class<?> clazz) {
@@ -63,28 +66,13 @@ public class DmlGenerator {
                 .collect(Collectors.joining(", "));
     }
 
-    private String columnsClause(final EntityMetadata<?> entityMetadata) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("(");
-        builder.append(String.join(", ", entityMetadata.getInsertableColumnNames()));
-        builder.append(")");
-        return builder.toString();
-    }
 
-    private String valueClause(final Object entity, final EntityMetadata<?> entityMetadata) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("(");
-        builder.append(buildValuesClause(entity, entityMetadata));
-        builder.append(")");
-        return builder.toString();
-    }
-
-    private String buildValuesClause(final Object entity, final EntityMetadata<?> entityMetadata) {
+    private List<String> getEntityValues(final Object entity, final EntityMetadata<?> entityMetadata) {
         return entityMetadata.getColumns()
                 .stream()
                 .filter(EntityColumn::isInsertable)
                 .map(entityColumn -> buildValueForColumn(entity, entityColumn))
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.toList());
     }
 
     private String buildValueForColumn(final Object entity, final EntityColumn entityColumn) {
