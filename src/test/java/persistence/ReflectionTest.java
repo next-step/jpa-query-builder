@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +42,7 @@ public class ReflectionTest {
         List<java.lang.String> startsWithTest = Arrays.stream(methods)
             .filter(method -> method.getName().startsWith("test"))
             .map(Method::getName)
-            .toList();
+            .collect(Collectors.toList());
 
         logger.debug(startsWithTest.toString());
     }
@@ -52,9 +53,8 @@ public class ReflectionTest {
         Method[] declaredMethods = carClass.getDeclaredMethods();
 
         Arrays.stream(declaredMethods)
-            .filter(method -> {
-                return method.isAnnotationPresent(PrintView.class);
-            }).forEach(this::testAnnotationMethodRun);
+            .filter(method -> method.isAnnotationPresent(PrintView.class))
+            .forEach(this::testAnnotationMethodRun);
 
     }
 
@@ -81,10 +81,6 @@ public class ReflectionTest {
 
             name.setAccessible(true);
             name.set(car, carName);
-
-
-            logger.debug(car.testGetName());
-            logger.debug(car.testGetPrice());
 
             assertAll(
                 () -> Assertions.assertThat(car.testGetName()).isEqualTo("test : " + carName),
