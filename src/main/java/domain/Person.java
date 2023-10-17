@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 @Entity
 public class Person {
 
+    protected Person() {}
+
     public Person(String name, Integer age, String email, Integer index) {
         this.name = name;
         this.age = age;
@@ -28,5 +30,4 @@ public class Person {
 
     @Transient
     private Integer index;
-
 }
