@@ -15,10 +15,9 @@ public class QueryBuilder {
     public QueryBuilder() {
     }
 
-    public String generateCreateQueries() {
-        Class<Person> personClass = Person.class;
-        String className = personClass.getSimpleName();
-        String columns = fieldsToQueryColumn(personClass.getDeclaredFields());
+    public String generateCreateQueries(final Class<?> clazz) {
+        String className = clazz.getSimpleName();
+        String columns = fieldsToQueryColumn(clazz.getDeclaredFields());
         return String.format(CREATE_TABLE_QUERY, className, columns);
     }
 

@@ -1,5 +1,6 @@
 package hibernate;
 
+import domain.Person;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +19,7 @@ class QueryBuilderTest {
         List<String> expectedColumn = List.of("id bigint", "age integer", "name varchar");
 
         // when
-        String actual = queryBuilder.generateCreateQueries()
+        String actual = queryBuilder.generateCreateQueries(Person.class)
                 .toLowerCase();
 
         // then
