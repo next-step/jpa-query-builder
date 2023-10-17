@@ -53,4 +53,10 @@ public class EntityMetadata<T> {
     public String getIdColumnName() {
         return this.idColumn.getName();
     }
+
+    public List<String> getColumnNames() {
+        return this.columns.stream()
+                .map(EntityColumn::getName)
+                .collect(Collectors.toUnmodifiableList());
+    }
 }

@@ -13,15 +13,16 @@ public class DmlGenerator {
 
     private final EntityMetadataCache entityMetadataCache;
     private final InsertQueryBuilder insertQueryBuilder;
+    private final SelectQueryBuilder selectQueryBuilder;
 
     public DmlGenerator() {
         this.entityMetadataCache = EntityMetadataCache.getInstance();
         this.insertQueryBuilder = new InsertQueryBuilder();
+        this.selectQueryBuilder = new SelectQueryBuilder();
     }
 
     public String generateInsertDml(final Object entity) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(entity.getClass());
-
         return insertQueryBuilder
                 .table(entityMetadata.getTableName())
                 .addData(entityMetadata.getInsertableColumnNames(), getEntityValues(entity, entityMetadata))
@@ -30,8 +31,10 @@ public class DmlGenerator {
 
     public String generateFindAllDml(final Class<?> clazz) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
-        final String selectClause = selectClause(entityMetadata);
-        return String.format("select %s from %s", selectClause, entityMetadata.getTableName());
+        return selectQueryBuilder
+                .table(entityMetadata.getTableName())
+                .column(entityMetadata.getColumnNames())
+                .build();
     }
 
     public String generateFindByIdDml(final Class<?> clazz, final Object id) {
@@ -58,14 +61,6 @@ public class DmlGenerator {
                 .append(id);
         return builder.toString();
     }
-
-    private String selectClause(final EntityMetadata<?> entityMetadata) {
-        return entityMetadata.getColumns()
-                .stream()
-                .map(EntityColumn::getName)
-                .collect(Collectors.joining(", "));
-    }
-
 
     private List<String> getEntityValues(final Object entity, final EntityMetadata<?> entityMetadata) {
         return entityMetadata.getColumns()
