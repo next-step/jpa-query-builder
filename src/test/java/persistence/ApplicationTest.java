@@ -61,7 +61,6 @@ class ApplicationTest {
     @Test
     @DisplayName("findById 를 통해 원하는 row 를 찾을 수 있다.")
     void findByIdTest() {
-        // FIXME 정완님 DM 답장 오면 다시 보기
         final Person result =
                 jdbcTemplate.queryForObject(dmlGenerator.findById(Person.class, 1L), personRowMapper());
 
