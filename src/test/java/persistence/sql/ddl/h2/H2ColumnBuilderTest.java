@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.h2;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ColumnBuilderTest {
+class H2ColumnBuilderTest {
+
+    private static final H2ColumnBuilder columnBuilder = H2ColumnBuilder.getInstance();
 
     @Entity
     private static class TestDomain {
@@ -19,9 +21,9 @@ class ColumnBuilderTest {
     }
 
     @Test
-    @DisplayName("컬럼목록 빌드 정상 테스트")
+    @DisplayName("H2 컬럼목록 빌드 정상 테스트")
     void getColumnDefinition() {
-        String columnDefinition = ColumnBuilder.getColumnDefinition(TestDomain.class.getDeclaredFields());
+        String columnDefinition = columnBuilder.getColumnDefinition(TestDomain.class.getDeclaredFields());
         assertAll(
                 () -> assertThat(columnDefinition).isEqualTo("a BIGINT PRIMARY KEY, b INT, c VARCHAR"),
                 () -> assertThat(columnDefinition.split(",").length).isEqualTo(3)
