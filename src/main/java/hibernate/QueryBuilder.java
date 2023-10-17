@@ -21,7 +21,7 @@ public class QueryBuilder {
         return String.format(CREATE_TABLE_QUERY, className, columns);
     }
 
-    private String fieldsToQueryColumn(Field[] fields) {
+    private String fieldsToQueryColumn(final Field[] fields) {
         return Arrays.stream(fields)
                 .map(this::fieldToQueryColumn)
                 .collect(Collectors.joining(CREATE_COLUMN_QUERY_DELIMITER));
