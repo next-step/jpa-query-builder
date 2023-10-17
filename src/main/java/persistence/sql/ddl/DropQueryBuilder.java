@@ -1,13 +1,13 @@
 package persistence.sql.ddl;
 
 public class DropQueryBuilder<T> extends QueryBuilder<T>{
-    private final Direct direct;
+    private final Dialect direct;
 
     public DropQueryBuilder(Class<T> entityClass) {
-        this(entityClass, new H2Direct());
+        this(entityClass, new H2Dialect());
 
     }
-    public DropQueryBuilder(Class<T> entityClass, Direct direct) {
+    public DropQueryBuilder(Class<T> entityClass, Dialect direct) {
         super(entityClass);
         this.direct = direct;
     }

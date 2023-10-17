@@ -44,7 +44,7 @@ public class ColumnType {
         return createVarchar(DEFAULT_VARCHAR_LENGTH);
     }
 
-    public String getColumType(Direct direct) {
+    public String getColumType(Dialect direct) {
         if (jdbcType == JDBCType.VARCHAR) {
             return String.format(VARCHAR_FORMAT, direct.getVarchar(), length);
         }
@@ -58,7 +58,7 @@ public class ColumnType {
     }
 
     public String getColumType() {
-        return getColumType(new H2Direct());
+        return getColumType(new H2Dialect());
     }
 
 }

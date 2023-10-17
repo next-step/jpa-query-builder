@@ -9,18 +9,18 @@ import persistence.exception.FiledEmptyException;
 
 public class EntityColumns {
     private final List<EntityColumn> entityColumns;
-    private final Direct direct;
+    private final Dialect direct;
 
     public EntityColumns(Field[] fields) {
         if (fields == null) {
             throw new FiledEmptyException();
         }
-        this.direct = new H2Direct();
+        this.direct = new H2Dialect();
         this.entityColumns = extractColumns(fields);
 
     }
 
-    public EntityColumns(Field[] fields, Direct direct) {
+    public EntityColumns(Field[] fields, Dialect direct) {
         this.direct = direct;
         this.entityColumns = extractColumns(fields);
 

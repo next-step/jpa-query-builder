@@ -7,13 +7,13 @@ public class CreateQueryBuilder<T> extends QueryBuilder<T> {
     private static final String DEFAULT_CREATE_TABLE_COLUMNS_FORMAT = "(%s)";
 
     private final EntityColumns entityColumns;
-    private final Direct direct;
+    private final Dialect direct;
 
     public CreateQueryBuilder(Class<T> entityClass) {
-       this(entityClass, new H2Direct());
+       this(entityClass, new H2Dialect());
     }
 
-    public CreateQueryBuilder(Class<T> entityClass, Direct direct) {
+    public CreateQueryBuilder(Class<T> entityClass, Dialect direct) {
         super(entityClass);
         this.direct = direct;
         entityColumns = new EntityColumns(entityFields, direct);

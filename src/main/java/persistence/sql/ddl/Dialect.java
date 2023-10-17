@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.GenerationType;
 
-public abstract class Direct {
+public abstract class Dialect {
     public abstract String getVarchar();
     public abstract String getInteger();
     public abstract String getBigInt();

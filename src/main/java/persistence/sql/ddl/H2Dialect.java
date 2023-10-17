@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.GenerationType;
 
-public class H2Direct extends Direct {
+public class H2Dialect extends Dialect {
     @Override
     public String getVarchar() {
         return "varchar";

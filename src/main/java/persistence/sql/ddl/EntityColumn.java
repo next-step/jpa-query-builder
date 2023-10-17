@@ -11,13 +11,13 @@ public class EntityColumn {
     private final String name;
     private final ColumnType columType;
     private final EntityColumnOption option;
-    private final Direct direct;
+    private final Dialect direct;
 
     public EntityColumn(Field field) {
-        this(field, new H2Direct());
+        this(field, new H2Dialect());
 
     }
-    public EntityColumn(Field field, Direct direct) {
+    public EntityColumn(Field field, Dialect direct) {
         if (field == null) {
             throw new FiledEmptyException();
         }

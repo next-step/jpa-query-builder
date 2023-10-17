@@ -1,9 +1,9 @@
 package persistence.fake;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.H2Direct;
+import persistence.sql.ddl.H2Dialect;
 
-public class FakeDirect extends H2Direct {
+public class FakeDirect extends H2Dialect {
     @Override
     public String getBigInt() {
         return super.getBigInt().toUpperCase();
