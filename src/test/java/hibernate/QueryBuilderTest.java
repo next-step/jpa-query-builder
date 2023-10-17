@@ -95,4 +95,17 @@ class QueryBuilderTest {
         // then
         assertThat(actual).startsWith(expected);
     }
+
+    @Test
+    void Transient_어노테이션이_달린_필드는_create_쿼리에서_제외한다() {
+        // given
+        String expected = "index integer";
+
+        // when
+        String actual = queryBuilder.generateCreateQueries(Person3.class)
+                .toLowerCase();
+
+        // then
+        assertThat(actual).doesNotContain(expected);
+    }
 }

@@ -37,6 +37,7 @@ public class QueryBuilder {
 
     private String fieldsToQueryColumn(final Field[] fields) {
         return Arrays.stream(fields)
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::fieldToQueryColumn)
                 .collect(Collectors.joining(CREATE_COLUMN_QUERY_DELIMITER));
     }
