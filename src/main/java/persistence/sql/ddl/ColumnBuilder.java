@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static persistence.sql.util.StringConstant.BLANK;
+import static persistence.sql.util.StringConstant.COLUMN_JOIN;
 
 public abstract class ColumnBuilder {
-
-    private static final String COLUMN_JOIN = ", ";
 
     public String getColumnDefinition(Field[] fields) {
         return String.join(COLUMN_JOIN, toSql(fields));
