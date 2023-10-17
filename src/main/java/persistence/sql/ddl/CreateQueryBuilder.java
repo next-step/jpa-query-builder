@@ -6,31 +6,22 @@ import persistence.sql.meta.EntityMeta;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import static persistence.sql.meta.EntityMeta.getTableName;
+public abstract class CreateQueryBuilder {
 
-public class CreateQueryBuilder {
+    public abstract String getQuery(Class<?> clazz);
 
-    private static final String CREATE_HEADER = "CREATE TABLE ";
-
-    public static String getQuery(Class<?> clazz) {
-
-        validateEntity(clazz);
-
-        return buildQuery(clazz);
-    }
-
-    private static void validateEntity(Class<?> clazz) {
+    protected void validateEntity(Class<?> clazz) {
         validateEntityAnnotation(clazz);
         validatePkAnnotation(clazz);
     }
 
-    private static void validateEntityAnnotation(Class<?> clazz) {
+    private void validateEntityAnnotation(Class<?> clazz) {
         if (!EntityMeta.isEntity(clazz)) {
             throw new IllegalArgumentException("Create Query 빌드 대상이 아닙니다.");
         }
     }
 
-    private static void validatePkAnnotation(Class<?> clazz) {
+    private void validatePkAnnotation(Class<?> clazz) {
         Field[] declaredFields = clazz.getDeclaredFields();
         boolean isPkPresent = Arrays.stream(declaredFields)
                 .anyMatch(declaredField -> declaredField.getDeclaredAnnotation(Id.class) != null);
@@ -39,17 +30,4 @@ public class CreateQueryBuilder {
         }
     }
 
-    private static String buildQuery(Class<?> clazz) {
-        return new StringBuilder()
-                .append(CREATE_HEADER)
-                .append(getTableName(clazz))
-                .append(" (")
-                .append(buildColumns(clazz.getDeclaredFields()))
-                .append(");")
-                .toString();
-    }
-
-    private static String buildColumns(Field[] fields) {
-        return ColumnBuilder.getColumnDefinition(fields);
-    }
 }
