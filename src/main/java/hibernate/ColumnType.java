@@ -1,0 +1,26 @@
+package hibernate;
+
+import java.util.Arrays;
+
+public enum ColumnType {
+
+    BIG_INT("bigint", Long.class),
+    INTEGER("integer", Integer.class),
+    VAR_CHAR("varchar", String.class),
+    ;
+
+    private final String h2ColumnType;
+    private final Class<?> javaColumnClass;
+
+    ColumnType(String h2ColumnType, Class<?> javaColumnClass) {
+        this.h2ColumnType = h2ColumnType;
+        this.javaColumnClass = javaColumnClass;
+    }
+
+    public static ColumnType valueOf(final Class<?> javaColumnClass) {
+        return Arrays.stream(values())
+                .filter(columnType -> columnType.javaColumnClass == javaColumnClass)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("호환되는 컬럼을 찾을 수 없습니다."));
+    }
+}
