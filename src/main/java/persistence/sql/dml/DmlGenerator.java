@@ -23,7 +23,7 @@ public class DmlGenerator {
         this.deleteQueryBuilder = new DeleteQueryBuilder();
     }
 
-    public String generateInsertDml(final Object entity) {
+    public String insert(final Object entity) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(entity.getClass());
         return insertQueryBuilder
                 .table(entityMetadata.getTableName())
@@ -31,7 +31,7 @@ public class DmlGenerator {
                 .build();
     }
 
-    public String generateFindAllDml(final Class<?> clazz) {
+    public String findAll(final Class<?> clazz) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
         return selectQueryBuilder
                 .table(entityMetadata.getTableName())
@@ -39,7 +39,7 @@ public class DmlGenerator {
                 .build();
     }
 
-    public String generateFindByIdDml(final Class<?> clazz, final Object id) {
+    public String findById(final Class<?> clazz, final Object id) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
         return selectQueryBuilder
                 .table(entityMetadata.getTableName())
@@ -48,7 +48,7 @@ public class DmlGenerator {
                 .build();
     }
 
-    public String generateDeleteDml(final Class<?> clazz) {
+    public String delete(final Class<?> clazz) {
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
         return deleteQueryBuilder
                 .table(entityMetadata.getTableName())

@@ -39,7 +39,7 @@ class ApplicationTest {
         final String createDdl = ddlGenerator.generateCreateDdl(entityMetadata);
         jdbcTemplate.execute(createDdl);
         people = createDummyUsers();
-        people.forEach(person -> jdbcTemplate.execute(dmlGenerator.generateInsertDml(person)));
+        people.forEach(person -> jdbcTemplate.execute(dmlGenerator.insert(person)));
     }
 
     @AfterEach
@@ -53,7 +53,7 @@ class ApplicationTest {
     @DisplayName("쿼리 실행을 통해 데이터를 여러 row 를 넣어 정상적으로 나오는지 확인할 수 있다.")
     void findAllTest() {
         final List<Person> result =
-                jdbcTemplate.query(dmlGenerator.generateFindAllDml(Person.class), personRowMapper());
+                jdbcTemplate.query(dmlGenerator.findAll(Person.class), personRowMapper());
 
         assertThat(result).hasSize(people.size());
     }
@@ -63,7 +63,7 @@ class ApplicationTest {
     void findByIdTest() {
         // FIXME 정완님 DM 답장 오면 다시 보기
         final Person result =
-                jdbcTemplate.queryForObject(dmlGenerator.generateFindByIdDml(Person.class, 1L), personRowMapper());
+                jdbcTemplate.queryForObject(dmlGenerator.findById(Person.class, 1L), personRowMapper());
 
         assertThat(result).isNotNull();
     }

@@ -25,7 +25,7 @@ class DmlGeneratorTest {
         final String email = "jongmin4943@gmail.com";
         final Person person = new Person(name, age, email);
 
-        final String query = generator.generateInsertDml(person);
+        final String query = generator.insert(person);
 
         assertThat(query).isEqualToIgnoringCase(String.format("insert into users (nick_name, old, email) values ('%s', %d, '%s')", name, age, email));
     }
@@ -33,21 +33,21 @@ class DmlGeneratorTest {
     @Test
     @DisplayName("Person 클래스 정보로 select ddl 을 생성할 수 있다.")
     void findAllTest() {
-        final String query = generator.generateFindAllDml(Person.class);
+        final String query = generator.findAll(Person.class);
         assertThat(query).isEqualToIgnoringCase("select id, nick_name, old, email from users");
     }
 
     @Test
     @DisplayName("Person 클래스 정보로 select ddl 을 생성할 수 있다.")
     void findByIdTest() {
-        final String query = generator.generateFindByIdDml(Person.class, 1L);
+        final String query = generator.findById(Person.class, 1L);
         assertThat(query).isEqualToIgnoringCase("select id, nick_name, old, email from users where id=1");
     }
 
     @Test
     @DisplayName("Person 클래스 정보로 delete ddl 을 생성할 수 있다.")
     void generateDeleteDmlTest() {
-        final String query = generator.generateDeleteDml(Person.class);
+        final String query = generator.delete(Person.class);
         assertThat(query).isEqualToIgnoringCase("delete from users");
     }
 
