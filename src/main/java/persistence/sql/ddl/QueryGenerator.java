@@ -1,106 +1,40 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class QueryGenerator {
 
-	public String createQuery() {
+	private static final String CREATE_TABLE = "CREATE TABLE %s (%s\n);";
+	private static final String DROP_TABLE = "DROP TABLE %s;";
+
+	public String getCreateQuery() {
 		Class<Person> personClass = Person.class;
-		StringBuilder query = new StringBuilder();
-		Table table = personClass.getAnnotation(Table.class);
-		if (table.name().isBlank()) {
-			query.append("CREATE TABLE ");
-			query.append(personClass.getName()).append(" ");
-			query.append("(\n");
-		}
-		if (!table.name().isBlank()) {
-			query.append("CREATE TABLE ");
-			query.append(table.name()).append(" ");
-			query.append("(\n");
-		}
-
-		Field[] declaredFields = personClass.getDeclaredFields();
-		for (Field field : declaredFields) {
-			if (field.isAnnotationPresent(Transient.class)) {
-				continue;
-			}
-			Annotation[] annotations = field.getAnnotations();
-			for (Annotation annotation : annotations) {
-				query.append(addPrimaryKeyQuery(field, annotation));
-				query.append(addColumnQuery(field, annotation));
-			}
-			query.append(",\n");
-		}
-		query.append(");");
-		return query.toString();
+		String tableName = getTableName(personClass);
+		getColumn(personClass);
+		return String.format(CREATE_TABLE, tableName, getColumn(personClass));
 	}
 
-	private String addColumnQuery(Field field, Annotation annotation) {
-		StringBuilder stringBuilder = new StringBuilder();
-		if (annotation.annotationType().equals(Column.class)) {
-			if (!field.getAnnotation(Column.class).name().isBlank()) {
-				String name = field.getAnnotation(Column.class).name();
-				stringBuilder.append(name).append(" ");
-			}
-			if (field.getAnnotation(Column.class).name().isBlank()) {
-				stringBuilder.append(field.getName()).append(" ");
-			}
-
-			if (field.getType().equals(String.class)) {
-				stringBuilder.append("VARCHAR(")
-					.append(field.getAnnotation(Column.class).length())
-					.append(")");
-				return stringBuilder.toString();
-			}
-			if (annotation.annotationType().equals(Column.class) && (field.getType().equals(Integer.class))) {
-				stringBuilder.append("INT");
-			}
-			if (annotation.annotationType().equals(Column.class) && (field.getType().equals(Long.class))) {
-				stringBuilder.append("BIGINT");
-			}
+	private String getTableName(Class<Person> aClass) {
+		String tableName = aClass.getAnnotation(Table.class).name();
+		if (tableName.isEmpty()) {
+			return aClass.getSimpleName();
 		}
-		return stringBuilder.toString();
+		return tableName;
 	}
 
-	// 메서드명 수정해야함.
-	private String addPrimaryKeyQuery(Field field, Annotation annotation) {
-		StringBuilder stringBuilder = new StringBuilder();
-		if (annotation.annotationType().equals(Id.class)) {
-			if (!field.isAnnotationPresent(Column.class)) {
-				stringBuilder.append("id BIGINT ");
-			}
-			if (field.isAnnotationPresent(Column.class)) {
-				String name = field.getAnnotation(Column.class).name();
-				stringBuilder.append(name);
-			}
-			if (field.isAnnotationPresent(GeneratedValue.class)) {
-				stringBuilder.append("AUTO_INCREMENT ");
-			}
-			stringBuilder.append("PRIMARY KEY");
-		}
-		return stringBuilder.toString();
+	public String getColumn(Class<Person> aClass) {
+		return Arrays.stream(aClass.getDeclaredFields())
+			.filter(field -> !field.isAnnotationPresent(Transient.class))
+			.map(field -> "\n" + new EntityColumn(field).getColumnQuery())
+			.collect(Collectors.joining(","));
 	}
 
-	public String dropQuery() {
+	public String getDropQuery() {
 		Class<Person> personClass = Person.class;
-		StringBuilder query = new StringBuilder();
-		Table table = personClass.getAnnotation(Table.class);
-		if (table.name().isBlank()) {
-			query.append("DROP TABLE ");
-			query.append(personClass.getName());
-			query.append(";");
-		}
-		if (!table.name().isBlank()) {
-			query.append("DROP TABLE ");
-			query.append(table.name());
-			query.append(";");
-		}
-		return query.toString();
+		String tableName = getTableName(personClass);
+		return String.format(DROP_TABLE, tableName);
 	}
 }
