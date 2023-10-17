@@ -13,9 +13,17 @@ import static persistence.sql.util.StringConstant.EMPTY_STRING;
 
 public class H2ColumnBuilder extends ColumnBuilder {
 
+    private static final H2ColumnBuilder INSTANCE = new H2ColumnBuilder();
+
     private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
     private static final String PRIMARY_KEY = "PRIMARY KEY";
     private static final String NOT_NULL = "NOT NULL";
+
+    private H2ColumnBuilder() {}
+
+    public static H2ColumnBuilder getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     protected String getSqlType(Class<?> type) {
