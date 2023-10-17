@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Transient;
 import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -9,23 +10,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static persistence.sql.util.StringConstant.BLANK;
-import static persistence.sql.util.StringConstant.EMPTY_STRING;
 
-public class ColumnBuilder {
+public abstract class ColumnBuilder {
 
-    private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
-    private static final String PRIMARY_KEY = "PRIMARY KEY";
-    private static final String NOT_NULL = "NOT NULL";
     private static final String COLUMN_JOIN = ", ";
 
-    public static String getColumnDefinition(Field[] fields) {
+    public String getColumnDefinition(Field[] fields) {
         return String.join(COLUMN_JOIN, toSql(fields));
     }
 
-    private static List<String> toSql(Field[] fields) {
+    private List<String> toSql(Field[] fields) {
         return Arrays.stream(fields)
                 .filter(field -> !isTransient(field))
-                .map(ColumnBuilder::toSql)
+                .map(this::toSql)
                 .collect(Collectors.toList());
     }
 
@@ -33,7 +30,7 @@ public class ColumnBuilder {
         return field.getDeclaredAnnotation(Transient.class) != null;
     }
 
-    private static String toSql(Field field) {
+    private String toSql(Field field) {
         return new StringBuilder()
                 .append(getColumnName(field))
                 .append(BLANK)
@@ -52,35 +49,12 @@ public class ColumnBuilder {
         return columnAnnotation.name();
     }
 
-    private static String getSqlType(Class<?> type) {
-        return ColumnType.getSqlType(type);
-    }
+    protected abstract String getSqlType(Class<?> type);
 
-    private static String getGenerationStrategy(Field field) {
-        GeneratedValue generatedValue = field.getDeclaredAnnotation(GeneratedValue.class);
-        if (generatedValue == null) {
-            return EMPTY_STRING;
-        }
-        if (generatedValue.strategy() == GenerationType.IDENTITY) {
-            return BLANK + AUTO_INCREMENT;
-        }
-        return EMPTY_STRING;
-    }
+    protected abstract String getGenerationStrategy(Field field);
 
-    private static String getPrimaryKey(Field field) {
-        Id pkAnnotation = field.getDeclaredAnnotation(Id.class);
-        if (pkAnnotation != null) {
-            return BLANK + PRIMARY_KEY;
-        }
-        return EMPTY_STRING;
-    }
+    protected abstract String getPrimaryKey(Field field);
 
-    private static String getNullable(Field field) {
-        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-        if (columnAnnotation != null && !columnAnnotation.nullable()) {
-            return BLANK + NOT_NULL;
-        }
-        return EMPTY_STRING;
-    }
+    protected abstract String getNullable(Field field);
 
 }
