@@ -19,11 +19,11 @@ public class QueryBuilderTest {
 
         String query = queryBuilder.create(Person.class);
 
-        logger.debug(query);
-        assertThat(query).isEqualTo("CREATE TABLE Person (" +
-                "id BIGINT PRIMARY KEY," +
-                "name VARCHAR(255)," +
-                "age INT);");
+        assertThat(query).isEqualTo("CREATE TABLE users (" +
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
+                "nick_name VARCHAR(255)," +
+                "old INT," +
+                "email VARCHAR(255) NOT NULL);");
     }
 
 }
