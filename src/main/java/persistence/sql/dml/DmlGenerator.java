@@ -14,11 +14,13 @@ public class DmlGenerator {
     private final EntityMetadataCache entityMetadataCache;
     private final InsertQueryBuilder insertQueryBuilder;
     private final SelectQueryBuilder selectQueryBuilder;
+    private final DeleteQueryBuilder deleteQueryBuilder;
 
     public DmlGenerator() {
         this.entityMetadataCache = EntityMetadataCache.getInstance();
         this.insertQueryBuilder = new InsertQueryBuilder();
         this.selectQueryBuilder = new SelectQueryBuilder();
+        this.deleteQueryBuilder = new DeleteQueryBuilder();
     }
 
     public String generateInsertDml(final Object entity) {
@@ -47,11 +49,10 @@ public class DmlGenerator {
     }
 
     public String generateDeleteDml(final Class<?> clazz) {
-        final StringBuilder builder = new StringBuilder();
         final EntityMetadata<?> entityMetadata = entityMetadataCache.getEntityMetadata(clazz);
-        builder.append("delete from ")
-                .append(entityMetadata.getTableName());
-        return builder.toString();
+        return deleteQueryBuilder
+                .table(entityMetadata.getTableName())
+                .build();
     }
 
     private List<String> getEntityValues(final Object entity, final EntityMetadata<?> entityMetadata) {
