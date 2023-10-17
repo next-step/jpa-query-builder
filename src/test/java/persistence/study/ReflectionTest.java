@@ -2,6 +2,9 @@ package persistence.study;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +21,8 @@ public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
     private final Class<Car> carClass = Car.class;
-    private final String name = "테슬라";
-    private final int price = 99999;
+    private static final String name = "테슬라";
+    private static final int price = 99999;
 
     @Test
     @DisplayName("Car 객체 정보 가져오기")
@@ -58,7 +61,6 @@ public class ReflectionTest {
     void testAnnotationMethodRun() throws Exception {
         final Car car = carClass.getConstructor().newInstance();
 
-        PrintStream originalStream = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
         Stream.of(carClass.getDeclaredMethods())
@@ -71,19 +73,26 @@ public class ReflectionTest {
         assertThat(outputStream.toString()).contains("자동차 정보를 출력 합니다.");
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("provideFields")
     @DisplayName("private field에 값 할당")
-    void privateFieldAccess() throws Exception {
+    void privateFieldAccess(String fieldName, Object expected) throws Exception {
         final Car car = carClass.getConstructor().newInstance();
 
-        for (Field field : carClass.getDeclaredFields()) {
-            field.setAccessible(true);
-            field.set(car, getValue(field));
-        }
+        Field field = carClass.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(car, getValue(field));
+        String getterMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+        Method getterMethod = car.getClass().getMethod(getterMethodName);
+        Object result = getterMethod.invoke(car);
 
-        assertAll(
-                () -> assertThat(car.getName()).isEqualTo(name),
-                () -> assertThat(car.getPrice()).isEqualTo(price)
+        assertThat(result).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> provideFields() {
+        return Stream.of(
+                Arguments.of("name", name),
+                Arguments.of("price", price)
         );
     }
 
