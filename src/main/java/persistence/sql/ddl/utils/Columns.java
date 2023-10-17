@@ -1,7 +1,5 @@
 package persistence.sql.ddl.utils;
 
-import jakarta.persistence.Id;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +21,7 @@ public class Columns {
         Map<String, Column> columns = new HashMap<>();
         Field[] fields = entity.getDeclaredFields();
         for (Field field : fields) {
-            Column column = new Column();
-            column.setName(field.getName());
-            column.setPrimaryKey(field.isAnnotationPresent(Id.class));
+            Column column = new Column(field);
             columns.put(column.getName(), column);
         }
         return columns;
@@ -41,4 +37,5 @@ public class Columns {
                 .filter(Column::isPrimaryKey)
                 .collect(toMap(Column::getName, column -> column)));
     }
+
 }
