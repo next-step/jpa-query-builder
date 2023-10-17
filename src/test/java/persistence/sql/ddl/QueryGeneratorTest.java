@@ -14,10 +14,10 @@ class QueryGeneratorTest {
 		String result = queryGenerator.createQuery();
 
 		String expected = "CREATE TABLE users (\n"
-			+ "    id BIGINT AUTO_INCREMENT PRIMARY KEY,\n"
-			+ "    nick_name VARCHAR(255),\n"
-			+ "    old INT,\n"
-			+ "    email VARCHAR(255) NOT NULL\n"
+			+ "id BIGINT AUTO_INCREMENT PRIMARY KEY,\n"
+			+ "nick_name VARCHAR(255),\n"
+			+ "old INT,\n"
+			+ "email VARCHAR(255),\n"
 			+ ");";
 		assertThat(result).isEqualTo(expected);
 	}
