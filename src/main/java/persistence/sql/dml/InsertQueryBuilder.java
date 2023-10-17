@@ -3,6 +3,7 @@ package persistence.sql.dml;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Transient;
+import persistence.sql.meta.ColumnMeta;
 import persistence.sql.meta.EntityMeta;
 import persistence.sql.util.StringConstant;
 
@@ -15,22 +16,22 @@ public abstract class InsertQueryBuilder {
     private static final String INSERT_HEADER = "INSERT INTO ";
     private static final String VALUES = "VALUES";
 
-    public String getQuery(Class<?> clazz) {
-        validateEntityAnnotation(clazz);
-        return buildQuery(clazz);
+    public String getQuery(Object object) {
+        validateEntityAnnotation(object.getClass());
+        return buildQuery(object);
     }
 
     private void validateEntityAnnotation(Class<?> clazz) {
         if (!EntityMeta.isEntity(clazz)) {
-            throw new IllegalArgumentException("Create Query 빌드 대상이 아닙니다.");
+            throw new IllegalArgumentException("Insert Query 빌드 대상이 아닙니다.");
         }
     }
 
-    private String buildQuery(Class<?> clazz) {
-        Map<String, String> insertKeyValueMap = buildInsertKeyValueMap(clazz);
+    private String buildQuery(Object object) {
+        Map<String, String> insertKeyValueMap = buildInsertKeyValueMap(object);
         return new StringBuilder()
                 .append(INSERT_HEADER)
-                .append(EntityMeta.getTableName(clazz))
+                .append(EntityMeta.getTableName(object.getClass()))
                 .append(" (")
                 .append(columnsClause(insertKeyValueMap))
                 .append(") ")
@@ -41,19 +42,20 @@ public abstract class InsertQueryBuilder {
                 .toString();
     }
 
-    private Map<String, String> buildInsertKeyValueMap(Class<?> clazz) {
+    private Map<String, String> buildInsertKeyValueMap(Object object) {
         Map<String, String> insertKeyValueMap = new LinkedHashMap<>();
+        Class<?> clazz = object.getClass();
         for (Field field : clazz.getDeclaredFields()) {
-            put(insertKeyValueMap, field);
+            put(insertKeyValueMap, object, field);
         }
         return insertKeyValueMap;
     }
 
-    private void put(Map<String, String> insertKeyValueMap, Field field) {
+    private void put(Map<String, String> insertKeyValueMap, Object object, Field field) {
         if (isInsertSkipTarget(field)) {
             return;
         }
-        insertKeyValueMap.put(getColumnClause(field), getValueClause(field));
+        insertKeyValueMap.put(getColumnClause(field), getValueClause(object, field));
     }
 
     private boolean isInsertSkipTarget(Field field) {
@@ -69,13 +71,24 @@ public abstract class InsertQueryBuilder {
     }
 
     private String getColumnClause(Field field) {
-
-        return null;
+        return ColumnMeta.getColumnName(field);
     }
 
-    private String getValueClause(Field field) {
-
-        return null;
+    private String getValueClause(Object object, Field field) {
+        field.setAccessible(true);
+        Object fieldValue = null;
+        try {
+            fieldValue = field.get(object);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("데이터 삽입이 불가능한 속성입니다.");
+        }
+        if (fieldValue == null) {
+            return StringConstant.NULL;
+        }
+        if (field.getType() == String.class) {
+            return StringConstant.SINGLE_QUOTATION + fieldValue + StringConstant.SINGLE_QUOTATION;
+        }
+        return fieldValue.toString();
     }
 
     private String columnsClause(Map<String, String> insertKeyValueMap) {
