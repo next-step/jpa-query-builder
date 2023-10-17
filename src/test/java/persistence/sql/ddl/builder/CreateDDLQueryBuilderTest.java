@@ -28,7 +28,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
             @Test
             @DisplayName("CREATE DDL을 리턴한다.")
             void returnDDL() {
-                String ddl = DDLQueryBuilder.build()
+                String ddl = DDLQueryBuilder.newBuilder()
                         .ddlType(DDLType.CREATE)
                         .database(DatabaseType.H2)
                         .build()
@@ -76,7 +76,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
             @DisplayName("예외를 반환한다.")
             void throwException() {
                 IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                        () -> DDLQueryBuilder.build()
+                        () -> DDLQueryBuilder.newBuilder()
                                 .ddlType(DDLType.CREATE)
                                 .database(DatabaseType.H2)
                                 .build()
@@ -93,7 +93,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
             @DisplayName("예외를 반환한다.")
             void throwException() {
                 IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                        () -> DDLQueryBuilder.build()
+                        () -> DDLQueryBuilder.newBuilder()
                                 .ddlType(DDLType.CREATE)
                                 .database(DatabaseType.H2)
                                 .build()

@@ -7,7 +7,7 @@ import persistence.sql.ddl.model.DatabaseType;
 
 public abstract class DDLQueryBuilder {
 
-    public static Builder build() {
+    public static Builder newBuilder() {
         return new Builder();
     }
 

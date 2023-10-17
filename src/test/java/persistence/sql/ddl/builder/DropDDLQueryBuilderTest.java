@@ -21,7 +21,7 @@ public class DropDDLQueryBuilderTest {
             @Test
             @DisplayName("DROP DDL을 리턴한다.")
             void returnDDL() {
-                String ddl = DDLQueryBuilder.build()
+                String ddl = DDLQueryBuilder.newBuilder()
                         .ddlType(DDLType.DROP)
                         .database(DatabaseType.H2)
                         .build()
