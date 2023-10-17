@@ -1,13 +1,11 @@
 package persistence.study;
 
 
-
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -35,10 +33,23 @@ public class ReflectionTest {
 
         Car car = carClass.getDeclaredConstructor().newInstance();
 
+        Arrays.stream(carClass.getDeclaredMethods())
+                .filter(it-> it.getName().startsWith("test"))
+                .forEach(it -> executeMethodInvoke(it, car));
+
+
         for (Method method : carClass.getDeclaredMethods()) {
             if (method.getName().startsWith("test")) {
                 logger.debug("메소드 호출 {}", method.invoke(car));
             }
+        }
+    }
+
+    private static void executeMethodInvoke(Method method, Car car) {
+        try {
+            logger.debug("메소드 호출 {}", method.invoke(car));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -49,11 +60,9 @@ public class ReflectionTest {
 
         Car car = carClass.getDeclaredConstructor().newInstance();
 
-        for (Method method : carClass.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(PrintView.class)) {
-                logger.debug("메소드 호출 {}", method.invoke(car));
-            }
-        }
+        Arrays.stream(carClass.getDeclaredMethods())
+                .filter(it-> it.isAnnotationPresent(PrintView.class))
+                .forEach(it -> executeMethodInvoke(it, car));
     }
 
     @Test
