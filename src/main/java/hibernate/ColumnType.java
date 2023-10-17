@@ -23,4 +23,8 @@ public enum ColumnType {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("호환되는 컬럼을 찾을 수 없습니다."));
     }
+
+    public String getH2ColumnType() {
+        return h2ColumnType;
+    }
 }
