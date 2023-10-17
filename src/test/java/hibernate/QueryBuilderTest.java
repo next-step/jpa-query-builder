@@ -68,4 +68,17 @@ class QueryBuilderTest {
         // then
         assertThat(actual).contains(expectedColumn);
     }
+
+    @Test
+    void Id의_생성전략이_IDENTITY인_경우_auto_increment_create_쿼리가_생성된다() {
+        // given
+        String expectedColumn = "id bigint primary key auto_increment";
+
+        // when
+        String actual = queryBuilder.generateCreateQueries(Person2.class)
+                .toLowerCase();
+
+        // then
+        assertThat(actual).contains(expectedColumn);
+    }
 }

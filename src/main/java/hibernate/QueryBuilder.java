@@ -1,6 +1,8 @@
 package hibernate;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -14,6 +16,7 @@ public class QueryBuilder {
     private static final String CREATE_COLUMN_QUERY_DELIMITER = ", ";
 
     private static final String CREATE_COLUMN_PRIMARY_KEY = " primary key";
+    private static final String CREATE_COLUMN_AUTO_INCREMENT = " auto_increment";
     private static final String CREATE_COLUMN_NOT_NULL = " not null";
 
     public QueryBuilder() {
@@ -39,6 +42,9 @@ public class QueryBuilder {
         String query = String.format(CREATE_COLUMN_QUERY, columnName, columnType);
         if (field.isAnnotationPresent(Id.class)) {
             query += CREATE_COLUMN_PRIMARY_KEY;
+            if (field.isAnnotationPresent(GeneratedValue.class) && field.getAnnotation(GeneratedValue.class).strategy() == GenerationType.IDENTITY) {
+                query += CREATE_COLUMN_AUTO_INCREMENT;
+            }
         }
         if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).nullable()) {
             query += CREATE_COLUMN_NOT_NULL;
