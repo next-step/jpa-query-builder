@@ -2,6 +2,7 @@ package hibernate;
 
 import domain.Person;
 import domain.Person2;
+import domain.Person3;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -80,5 +81,18 @@ class QueryBuilderTest {
 
         // then
         assertThat(actual).contains(expectedColumn);
+    }
+
+    @Test
+    void Table_어노테이션에_name이_있는_경우_테이블의_이름이_해당_값으로_create_쿼리가_생성된다() {
+        // given
+        String expected = "create table users";
+
+        // when
+        String actual = queryBuilder.generateCreateQueries(Person3.class)
+                .toLowerCase();
+
+        // then
+        assertThat(actual).startsWith(expected);
     }
 }

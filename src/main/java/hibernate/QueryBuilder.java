@@ -1,9 +1,6 @@
 package hibernate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -23,9 +20,19 @@ public class QueryBuilder {
     }
 
     public String generateCreateQueries(final Class<?> clazz) {
-        String className = clazz.getSimpleName();
+        String className = parseTableName(clazz);
         String columns = fieldsToQueryColumn(clazz.getDeclaredFields());
         return String.format(CREATE_TABLE_QUERY, className, columns);
+    }
+
+    private String parseTableName(Class<?> clazz) {
+        if (clazz.isAnnotationPresent(Table.class)) {
+             String tableName = clazz.getAnnotation(Table.class).name();
+             if (!tableName.isEmpty()) {
+                 return tableName;
+             }
+        }
+        return clazz.getSimpleName();
     }
 
     private String fieldsToQueryColumn(final Field[] fields) {
