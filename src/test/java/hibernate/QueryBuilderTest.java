@@ -1,6 +1,7 @@
 package hibernate;
 
 import domain.Person;
+import domain.Person2;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,7 +18,7 @@ class QueryBuilderTest {
     void Entity가_걸린_클래스의_create_쿼리를_생성한다() {
         // given
         Pattern expectedPattern = Pattern.compile("create table person \\(([^)]+(?:,\\s*[^)]+)*)\\);");
-        List<String> expectedColumn = List.of("id bigint", "age integer", "name varchar");
+        List<String> expectedColumns = List.of("id bigint", "age integer", "name varchar");
 
         // when
         String actual = queryBuilder.generateCreateQueries(Person.class)
@@ -26,7 +27,7 @@ class QueryBuilderTest {
         // then
         assertAll(
                 () -> assertThat(actual).matches(expectedPattern),
-                () -> assertThat(actual).contains(expectedColumn)
+                () -> assertThat(actual).contains(expectedColumns)
         );
     }
 
@@ -40,5 +41,18 @@ class QueryBuilderTest {
 
         // then
         assertThat(actual).contains(expectedColumn);
+    }
+
+    @Test
+    void Column이_걸린_필드는_컬럼명이_해당값으로_create_쿼리가_생성된다() {
+        // given
+        List<String> expectedColumns = List.of("nick_name varchar", "old integer", "email varchar");
+
+        // when
+        String actual = queryBuilder.generateCreateQueries(Person2.class)
+                .toLowerCase();
+
+        // then
+        assertThat(actual).contains(expectedColumns);
     }
 }

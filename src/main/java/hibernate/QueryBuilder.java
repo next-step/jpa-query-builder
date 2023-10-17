@@ -1,5 +1,6 @@
 package hibernate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -30,7 +31,7 @@ public class QueryBuilder {
     }
 
     private String fieldToQueryColumn(final Field field) {
-        String columnName = field.getName();
+        String columnName = parseFieldName(field);
         String columnType = ColumnType.valueOf(field.getType())
                 .getH2ColumnType();
 
@@ -39,5 +40,15 @@ public class QueryBuilder {
             query += CREATE_COLUMN_PRIMARY_KEY;
         }
         return query;
+    }
+
+    private static String parseFieldName(Field field) {
+        if (field.isAnnotationPresent(Column.class)) {
+            String name = field.getAnnotation(Column.class).name();
+            if (!name.isEmpty()) {
+                return name;
+            }
+        }
+        return field.getName();
     }
 }
