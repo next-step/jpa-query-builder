@@ -1,7 +1,7 @@
 package persistence.fake;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.H2Dialect;
+import persistence.vender.dialect.H2Dialect;
 
 public class FakeDirect extends H2Dialect {
     @Override

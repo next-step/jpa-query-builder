@@ -1,6 +1,7 @@
-package persistence.sql.ddl;
+package persistence.vender.dialect;
 
 import jakarta.persistence.GenerationType;
+import persistence.dialect.Dialect;
 
 public class H2Dialect extends Dialect {
     @Override

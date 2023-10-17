@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
 import java.sql.JDBCType;
+import persistence.dialect.Dialect;
+import persistence.vender.dialect.H2Dialect;
 import persistence.exception.NotSupertypeException;
 import persistence.exception.NumberRangeException;
 

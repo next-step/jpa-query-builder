@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import persistence.dialect.Dialect;
+import persistence.vender.dialect.H2Dialect;
+
 public class DropQueryBuilder<T> extends QueryBuilder<T>{
     private final Dialect direct;
 

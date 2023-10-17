@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import persistence.dialect.Dialect;
+import persistence.vender.dialect.H2Dialect;
 import persistence.exception.FiledEmptyException;
 
 public class EntityColumns {

@@ -5,6 +5,8 @@ import static persistence.sql.ddl.JavaToJdbcFiledMapper.convert;
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
+import persistence.dialect.Dialect;
+import persistence.vender.dialect.H2Dialect;
 import persistence.exception.FiledEmptyException;
 
 public class EntityColumn {
