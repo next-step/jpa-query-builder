@@ -1,7 +1,9 @@
 package persistence.sql.ddl.utils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
@@ -27,7 +29,6 @@ public class Columns {
         return columns;
     }
 
-
     public Column getColumn(String name) {
         return columns.get(name);
     }
@@ -38,4 +39,7 @@ public class Columns {
                 .collect(toMap(Column::getName, column -> column)));
     }
 
+    public List<Column> getColumns() {
+        return new ArrayList<>(columns.values());
+    }
 }

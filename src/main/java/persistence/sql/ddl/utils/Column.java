@@ -6,6 +6,7 @@ import persistence.sql.ddl.type.DataTypeMapper;
 import persistence.sql.ddl.type.H2DataTypeMapper;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 public class Column {
     private String name;
@@ -13,14 +14,14 @@ public class Column {
     private DataType dataType;
     private Integer length;
 
-    private DataTypeMapper dataTypeMapper;
+    private final DataTypeMapper dataTypeMapper;
 
     public Column(final Field field) {
-        this.dataTypeMapper = new H2DataTypeMapper();
+        this.dataTypeMapper = H2DataTypeMapper.getInstance();
         setName(field);
         setPrimaryKey(field);
         setDataType(field);
-        setLength(field);
+        setLength();
     }
 
     public String getName() {
@@ -51,7 +52,11 @@ public class Column {
         return length;
     }
 
-    public void setLength(final Field field) {
+    public void setLength() {
         this.length = this.dataType.getDefaultLength();
+    }
+
+    public String getTypeName() {
+        return this.dataType.getName();
     }
 }
