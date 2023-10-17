@@ -8,10 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import domain.Person;
-import persistence.person.NotEntityPerson;
-import persistence.person.ExistTablePerson;
+import persistence.person.CreatePerson;
 import persistence.person.NonExistentTablePerson;
+import persistence.person.NotEntityPerson;
 
 import java.sql.SQLException;
 
@@ -69,7 +68,7 @@ class QueryDdlTest {
         @DisplayName("정상적으로 Class 정보를 읽어 CREATE QUERY 생성하여 실행 성공")
         void success() {
             //given
-            Class<ExistTablePerson> personClass = ExistTablePerson.class;
+            Class<CreatePerson> personClass = CreatePerson.class;
 
             //when
             String query = QueryDdl.create(personClass);
@@ -86,7 +85,7 @@ class QueryDdlTest {
         @DisplayName("정상적으로 Person 테이블 삭제")
         void success() {
             //given
-            Class<Person> personClass = Person.class;
+            Class<NonExistentTablePerson> personClass = NonExistentTablePerson.class;
             createTable(personClass);
 
             //when

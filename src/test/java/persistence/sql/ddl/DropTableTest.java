@@ -40,7 +40,7 @@ class DropTableTest {
     void notExistentTable() {
         //given
         final Class<ExistTablePerson> personClass = ExistTablePerson.class;
-        final String expectedSql = "DROP TABLE users";
+        final String expectedSql = "DROP TABLE userss";
 
         //when
         final String result = DropTable.drop(personClass);

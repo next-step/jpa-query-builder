@@ -31,4 +31,20 @@ public class NonExistentTablePerson {
     public NonExistentTablePerson() {
 
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }

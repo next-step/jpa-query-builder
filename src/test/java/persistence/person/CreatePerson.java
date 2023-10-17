@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "userss")
-public class ExistTablePerson {
+@Table(name = "create_person")
+public class CreatePerson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,7 @@ public class ExistTablePerson {
     @Transient
     private Integer index;
 
-    public ExistTablePerson(Long id, String name, Integer age, String email, Integer index) {
+    public CreatePerson(Long id, String name, Integer age, String email, Integer index) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -35,7 +35,6 @@ public class ExistTablePerson {
         this.index = index;
     }
 
-    public ExistTablePerson() {
-
+    public CreatePerson() {
     }
 }
