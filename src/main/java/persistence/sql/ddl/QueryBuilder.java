@@ -5,10 +5,10 @@ import sources.MetaData;
 
 import java.util.Map;
 
-public class QueryBuilderV3 {
+public class QueryBuilder {
 
     Dialect dialect;
-    public QueryBuilderV3(Dialect dialect) {
+    public QueryBuilder(Dialect dialect) {
         this.dialect = dialect;
     }
 
@@ -17,7 +17,7 @@ public class QueryBuilderV3 {
                 .append(metaData.getEntity())
                 .append(" (")
                 .append(metaData.getId())
-                .append(" int not null auto_increment, ")
+                .append(" int , ")
                 .append(columnTypeName(metaData.getColumns()))
                 .append("primary key(")
                 .append(metaData.getId())
