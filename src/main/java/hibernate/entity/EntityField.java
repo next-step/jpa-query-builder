@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public class EntityField {
+public class EntityField implements EntityColumn {
 
     private final String fieldName;
     private final ColumnType columnType;
@@ -34,15 +34,23 @@ public class EntityField {
         return field.getAnnotation(Column.class).nullable();
     }
 
+    @Override
     public String getFieldName() {
         return fieldName;
     }
 
+    @Override
     public ColumnType getColumnType() {
         return columnType;
     }
 
+    @Override
     public boolean isNullable() {
         return isNullable;
+    }
+
+    @Override
+    public boolean isId() {
+        return false;
     }
 }

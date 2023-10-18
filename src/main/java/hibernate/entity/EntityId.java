@@ -6,15 +6,17 @@ import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 
-public class EntityId {
+public class EntityId implements EntityColumn {
 
     private final GenerationType generationType;
+    private final EntityField entityField;
 
     public EntityId(final Field field) {
         if (!field.isAnnotationPresent(Id.class)) {
             throw new IllegalArgumentException("Id 어노테이션이 없습니다.");
         }
         this.generationType = parseGenerationType(field);
+        this.entityField = new EntityField(field);
     }
 
     private static GenerationType parseGenerationType(Field field) {
@@ -26,5 +28,26 @@ public class EntityId {
 
     public GenerationType getGenerationType() {
         return generationType;
+    }
+
+
+    @Override
+    public String getFieldName() {
+        return entityField.getFieldName();
+    }
+
+    @Override
+    public ColumnType getColumnType() {
+        return entityField.getColumnType();
+    }
+
+    @Override
+    public boolean isNullable() {
+        return entityField.isNullable();
+    }
+
+    @Override
+    public boolean isId() {
+        return true;
     }
 }
