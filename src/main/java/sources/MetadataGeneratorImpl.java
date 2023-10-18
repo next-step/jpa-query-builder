@@ -23,7 +23,7 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
         String idName = findIdFieldName(entity);
         Map<String, String> fields = Arrays.stream(entity.getDeclaredFields())
                 .filter(field -> !field.getName().equals(idName))
-                .collect(Collectors.toMap(field -> field.getType().getSimpleName(), Field::getName));
+                .collect(Collectors.toMap(field -> field.getType().getSimpleName(), annotationBinder::columnBinder));
 
         return new MetaData(entityName, idName, fields);
     }
