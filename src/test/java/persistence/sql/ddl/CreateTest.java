@@ -3,7 +3,6 @@ package persistence.sql.ddl;
 import domain.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.core.EntityManager;
 
 public class CreateTest {
     @Test

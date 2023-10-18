@@ -1,6 +1,8 @@
 package persistence.dialect;
 
-public abstract class Dialect {
+import javax.lang.model.type.TypeKind;
 
+public interface Dialect {
 
+    String getPrimitiveTypeName(TypeKind typeKind);
 }
