@@ -31,13 +31,13 @@ class EntityClassTest {
 
     @Entity
     @Table(name = "new_table")
-    class TableEntity {
+    static class TableEntity {
         @Id
         private Long id;
     }
 
     @Entity
-    class NoTableEntity {
+    static class NoTableEntity {
         @Id
         private Long id;
     }
