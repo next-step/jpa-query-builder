@@ -41,7 +41,7 @@ public class EntityColumnOption {
         return generationType;
     }
 
-    public boolean hasGenerationType() {
+    public boolean hasGenerationValue() {
         return generationType != null;
     }
 }

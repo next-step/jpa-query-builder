@@ -19,7 +19,6 @@ public class EntityColumn {
     private final String filedName;
     private Integer length;
 
-
     public EntityColumn(Field field) {
         if (field == null) {
             throw new FiledEmptyException();
@@ -68,7 +67,6 @@ public class EntityColumn {
             throw new NotFoundException("해당 필드를 찾을 수 없습니다.");
         }
     }
-
     public String getName() {
         return name;
     }
@@ -95,6 +93,10 @@ public class EntityColumn {
 
     public GenerationType getGenerationType() {
         return option.getGenerationType();
+    }
+
+    public boolean hasGeneratedValue() {
+        return option.hasGenerationValue();
     }
 
 }

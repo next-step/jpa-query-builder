@@ -33,4 +33,9 @@ public class FakeDirect extends H2Dialect {
     public String primaryKey(String columnName) {
         return super.primaryKey(columnName).toUpperCase();
     }
+
+    @Override
+    public String insert(String tableName) {
+        return super.insert(tableName).toUpperCase();
+    }
 }
