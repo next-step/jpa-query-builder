@@ -9,7 +9,6 @@ public class DropQueryBuilder implements QueryBuilder {
     public DropQueryBuilder() {
     }
 
-
     @Override
     public String generateCreateQuery(Class<?> clazz) {
         EntityClass entity = new EntityClass(clazz);
