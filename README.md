@@ -85,6 +85,5 @@ public class Person {
     - Column nullable을 가진다.
   - Field의 타입을 받아 ColumnType으로 변환하여 받을 수 있다.
 - EntityId
-  - EntityField를 가진다.
   - @Id 어노테이션이 없는 경우 예외가 발생한다.
   - @GeneratedValue 어노테이션을 받아 저장한다.
