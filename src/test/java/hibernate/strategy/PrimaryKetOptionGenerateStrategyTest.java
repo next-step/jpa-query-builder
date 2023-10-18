@@ -1,7 +1,7 @@
-package hibernate.entity.strategy;
+package hibernate.strategy;
 
-import hibernate.entity.EntityField;
-import hibernate.entity.EntityId;
+import hibernate.entity.column.EntityField;
+import hibernate.entity.column.EntityId;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.Test;
 

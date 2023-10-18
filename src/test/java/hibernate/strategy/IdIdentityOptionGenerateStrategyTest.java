@@ -1,6 +1,6 @@
-package hibernate.entity.strategy;
+package hibernate.strategy;
 
-import hibernate.entity.EntityId;
+import hibernate.entity.column.EntityId;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;

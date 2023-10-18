@@ -1,6 +1,6 @@
-package hibernate.entity.strategy;
+package hibernate.strategy;
 
-import hibernate.entity.EntityColumn;
+import hibernate.entity.column.EntityColumn;
 
 public interface ColumnOptionGenerateStrategy {
 
