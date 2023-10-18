@@ -1,35 +1,25 @@
 package persistence.sql.ddl.dialect;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import persistence.sql.ddl.exception.NotSupportedTypeException;
 
 /**
  * @http://www.h2database.com/html/datatypes.html
  */
 public class H2ColumnType implements ColumnType {
 
-    @Override
-    public String longType() {
-        return "bigint";
-    }
+    private final Map<Class<?>, String> typeMap = new HashMap<>();
 
-    @Override
-    public String stringType() {
-        return "varchar";
-    }
+    private static final HashMap.Entry<Class<?>, String> longType = Map.entry(Long.class, "bigint");
+    private static final HashMap.Entry<Class<?>, String> stringType = Map.entry(String.class, "varchar");
+    private static final HashMap.Entry<Class<?>, String> integerType = Map.entry(Integer.class, "integer");
 
-    @Override
-    public String intType() {
-        return "integer";
-    }
-
-    @Override
-    public String booleanType() {
-        return "boolean";
-    }
-
-    @Override
-    public String shortType() {
-        return "smallint";
+    public H2ColumnType() {
+        typeMap.put(longType.getKey(), longType.getValue());
+        typeMap.put(stringType.getKey(), stringType.getValue());
+        typeMap.put(integerType.getKey(), integerType.getValue());
     }
 
     @Override
@@ -38,15 +28,12 @@ public class H2ColumnType implements ColumnType {
     }
 
     @Override
-    public String getType(Field field) {
-        if (field.getType().equals(String.class)) {
-            return this.stringType();
-        } else if (field.getType().equals(Long.class)) {
-            return this.longType();
-        } else if (field.getType().equals(Integer.class)) {
-            return this.intType();
-        } else {
-            throw new RuntimeException("Incompatible field type");
+    public String getFieldType(Field field) {
+        final String fieldType = typeMap.get(field.getType());
+        if (fieldType == null) {
+            throw new NotSupportedTypeException(String.format("%s type is not supported", field.getType()));
         }
+
+        return fieldType;
     }
 }
