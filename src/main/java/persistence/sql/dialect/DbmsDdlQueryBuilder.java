@@ -8,7 +8,7 @@ import persistence.sql.ddl.h2.H2DropQueryBuilder;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public enum DbmsQueryBuilder {
+public enum DbmsDdlQueryBuilder {
 
     H2("H2", H2CreateQueryBuilder.getInstance(), H2DropQueryBuilder.getInstance())
     ;
@@ -17,13 +17,13 @@ public enum DbmsQueryBuilder {
     private final CreateQueryBuilder createQueryBuilder;
     private final DropQueryBuilder dropQueryBuilder;
 
-    DbmsQueryBuilder(String dbmsType, CreateQueryBuilder createQueryBuilder, DropQueryBuilder dropQueryBuilder) {
+    DbmsDdlQueryBuilder(String dbmsType, CreateQueryBuilder createQueryBuilder, DropQueryBuilder dropQueryBuilder) {
         this.dbmsType = dbmsType;
         this.createQueryBuilder = createQueryBuilder;
         this.dropQueryBuilder = dropQueryBuilder;
     }
 
-    public static DbmsQueryBuilder findByDbmsType(String dbmsType) {
+    public static DbmsDdlQueryBuilder findByDbmsType(String dbmsType) {
         return Arrays.stream(values())
                 .filter(builder -> builder.dbmsType.equals(dbmsType))
                 .findFirst()

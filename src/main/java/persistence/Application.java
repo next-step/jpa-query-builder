@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
-import persistence.sql.dialect.DbmsQueryBuilder;
+import persistence.sql.dialect.DbmsDdlQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -20,7 +20,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            DbmsQueryBuilder queryBuilder = DbmsQueryBuilder.findByDbmsType(H2.class.getSimpleName());
+            DbmsDdlQueryBuilder queryBuilder = DbmsDdlQueryBuilder.findByDbmsType(H2.class.getSimpleName());
 
             CreateQueryBuilder createQueryBuilder = queryBuilder.getCreateQueryBuilder();
             jdbcTemplate.execute(createQueryBuilder.getQuery(Person.class));
