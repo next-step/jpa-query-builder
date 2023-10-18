@@ -14,7 +14,7 @@ class CreateQueryBuilderTest {
 
     @DisplayName("Person 객체로 CREATE 쿼리 생성 테스트")
     @Test
-    void test_getQuery() {
+    void test_bulidQuery() {
         String query = createQueryBuilder.bulidQuery(Person.class);
         logger.info(query);
         assertEquals(query, "CREATE TABLE Person(id BIGINT PRIMARY KEY, name VARCHAR(255), age INTEGER);");
