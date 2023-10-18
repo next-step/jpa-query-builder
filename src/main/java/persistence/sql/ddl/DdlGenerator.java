@@ -3,13 +3,14 @@ package persistence.sql.ddl;
 import persistence.core.EntityColumn;
 import persistence.core.EntityMetadata;
 import persistence.dialect.DBColumnTypeMapper;
+import persistence.dialect.PersistenceEnvironment;
 
 public class DdlGenerator {
 
     private final DBColumnTypeMapper columnTypeMapper;
 
-    public DdlGenerator(final DBColumnTypeMapper columnTypeMapper) {
-        this.columnTypeMapper = columnTypeMapper;
+    public DdlGenerator() {
+        this.columnTypeMapper = PersistenceEnvironment.getDialect().getColumnTypeMapper();
     }
 
     public String generateCreateDdl(final EntityMetadata<?> entityMetadata) {

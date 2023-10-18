@@ -7,7 +7,6 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.core.EntityMetadata;
-import persistence.dialect.H2ColumnTypeMapper;
 import persistence.sql.ddl.DdlGenerator;
 
 public class Application {
@@ -20,7 +19,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final DdlGenerator generator = new DdlGenerator(H2ColumnTypeMapper.getInstance());
+            final DdlGenerator generator = new DdlGenerator();
 
             final EntityMetadata<Person> personEntityMetadata = new EntityMetadata<>(Person.class);
 

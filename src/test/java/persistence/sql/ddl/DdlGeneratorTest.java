@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
 import domain.FixtureEntity;
 import persistence.dialect.DBColumnTypeMapper;
-import persistence.dialect.H2ColumnTypeMapper;
+import persistence.dialect.PersistenceEnvironment;
 
 import java.util.stream.Stream;
 
@@ -23,8 +23,8 @@ class DdlGeneratorTest {
 
     @BeforeEach
     void setUp() {
-        columnTypeMapper = H2ColumnTypeMapper.getInstance();
-        generator = new DdlGenerator(columnTypeMapper);
+        columnTypeMapper = PersistenceEnvironment.getDialect().getColumnTypeMapper();
+        generator = new DdlGenerator();
     }
 
     @Test
