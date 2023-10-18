@@ -3,21 +3,21 @@ package persistence.sql.ddl.builder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import persistence.sql.ddl.DDLQueryValidator;
 import persistence.sql.ddl.converter.JavaToSqlConverter;
+import persistence.sql.infra.QueryValidator;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class CreateDDLQueryBuilder extends DDLQueryBuilder {
-    private final DDLQueryValidator validator;
+public class CreateDDLQueryBuilder implements DDLQueryBuilder {
+    private final QueryValidator validator;
     private final JavaToSqlConverter javaToSqlConverter;
 
-    protected CreateDDLQueryBuilder(Builder builder) {
-        this.validator = builder.validator;
-        this.javaToSqlConverter = builder.javaToSqlConverter;
+    protected CreateDDLQueryBuilder(QueryValidator validator, JavaToSqlConverter javaToSqlConverter) {
+        this.validator = validator;
+        this.javaToSqlConverter = javaToSqlConverter;
     }
 
     public String prepareStatement(Class<?> tClass) {

@@ -1,4 +1,4 @@
-package persistence.sql.ddl.infra;
+package persistence.sql.infra;
 
 import jakarta.persistence.GenerationType;
 import persistence.sql.ddl.converter.JavaToSqlMapper;

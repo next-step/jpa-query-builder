@@ -1,22 +1,21 @@
 package persistence.sql.ddl.builder;
 
 import jakarta.persistence.Table;
-import persistence.sql.ddl.DDLQueryValidator;
-import persistence.sql.ddl.converter.JavaToSqlMapper;
+import persistence.sql.ddl.converter.JavaToSqlConverter;
+import persistence.sql.infra.QueryValidator;
 
 import java.util.Optional;
 
-public class DropDDLQueryBuilder extends DDLQueryBuilder {
+public class DropDDLQueryBuilder implements DDLQueryBuilder {
 
-    private final JavaToSqlMapper javaToSqlMapper;
-    private final DDLQueryValidator validator;
+    private final JavaToSqlConverter javaToSqlConverter;
+    private final QueryValidator validator;
 
-    public DropDDLQueryBuilder(Builder builder) {
-        this.javaToSqlMapper = builder.javaToSqlMapper;
-        this.validator = builder.validator;
+    public DropDDLQueryBuilder(QueryValidator validator, JavaToSqlConverter javaToSqlConverter) {
+        this.validator = validator;
+        this.javaToSqlConverter = javaToSqlConverter;
     }
 
-    @Override
     public String prepareStatement(Class<?> tClass) {
         validator.validate(tClass);
         return prepareHeaderStatement(tClass);

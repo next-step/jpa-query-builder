@@ -6,10 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.DatabaseTest;
-import persistence.sql.ddl.model.DDLType;
-import persistence.sql.ddl.model.DatabaseType;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static persistence.sql.ddl.model.DDLType.DROP;
+import static persistence.sql.ddl.model.DatabaseType.H2;
 
 @Nested
 @DisplayName("DropDDLQueryBuilder 클래스의")
@@ -23,10 +23,7 @@ public class DropDDLQueryBuilderTest extends DatabaseTest {
             @Test
             @DisplayName("DROP DDL을 리턴한다.")
             void returnDDL() {
-                String drop = DDLQueryBuilder.newBuilder()
-                        .ddlType(DDLType.DROP)
-                        .database(DatabaseType.H2)
-                        .build()
+                String drop = DDLQueryBuilderFactory.createQueryBuilder(DROP, H2)
                         .prepareStatement(Person.class);
 
                 String message = Assertions.assertThrows(RuntimeException.class, () -> jdbcTemplate.execute(drop)).getMessage();

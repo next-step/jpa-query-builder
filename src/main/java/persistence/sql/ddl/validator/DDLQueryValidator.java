@@ -1,12 +1,23 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.validator;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import persistence.sql.infra.QueryValidator;
 
 import java.util.Arrays;
 
-public class DDLQueryValidator {
+public class DDLQueryValidator implements QueryValidator {
 
+    private static final DDLQueryValidator INSTANCE = new DDLQueryValidator();
+
+    private DDLQueryValidator() {
+    }
+
+    public static DDLQueryValidator getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
     public void validate(Class<?> tClass) {
         validateEntityAnnotation(tClass);
         validateIdAnnotation(tClass);

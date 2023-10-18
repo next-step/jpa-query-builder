@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import persistence.fixture.TestEntityFixture;
 import persistence.sql.ddl.DatabaseTest;
 import persistence.sql.ddl.PersonRowMapper;
-import persistence.sql.ddl.model.DDLType;
-import persistence.sql.ddl.model.DatabaseType;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static persistence.sql.ddl.model.DDLType.CREATE;
+import static persistence.sql.ddl.model.DatabaseType.H2;
 import static persistence.study.TestUtils.assertDoesNotThrowException;
 
 @Nested
@@ -28,10 +28,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
             @Test
             @DisplayName("CREATE DDL을 리턴한다.")
             void returnDDL() {
-                String ddl = DDLQueryBuilder.newBuilder()
-                        .ddlType(DDLType.CREATE)
-                        .database(DatabaseType.H2)
-                        .build()
+                String ddl = DDLQueryBuilderFactory.createQueryBuilder(CREATE, H2)
                         .prepareStatement(Person.class);
 
                 assertDoesNotThrowException(() -> {
@@ -76,10 +73,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
             @DisplayName("예외를 반환한다.")
             void throwException() {
                 IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                        () -> DDLQueryBuilder.newBuilder()
-                                .ddlType(DDLType.CREATE)
-                                .database(DatabaseType.H2)
-                                .build()
+                        () -> DDLQueryBuilderFactory.createQueryBuilder(CREATE, H2)
                                 .prepareStatement(TestEntityFixture.EntityWithMultiIdAnnotation.class));
 
                 assertThat(e.getMessage()).contains("@Id 어노테이션이 정확히 1개 존재해야합니다.");
@@ -93,10 +87,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
             @DisplayName("예외를 반환한다.")
             void throwException() {
                 IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                        () -> DDLQueryBuilder.newBuilder()
-                                .ddlType(DDLType.CREATE)
-                                .database(DatabaseType.H2)
-                                .build()
+                        () -> DDLQueryBuilderFactory.createQueryBuilder(CREATE, H2)
                                 .prepareStatement(TestEntityFixture.EntityWithOutEntityAnnotation.class));
 
                 assertThat(e.getMessage()).contains("엔티티 어노테이션이 없습니다.");
