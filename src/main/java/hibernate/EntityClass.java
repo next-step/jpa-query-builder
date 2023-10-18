@@ -15,10 +15,14 @@ public class EntityClass {
     }
 
     private String parseTableName(Class<?> clazz) {
-        if (clazz.isAnnotationPresent(Table.class)) {
-            return clazz.getAnnotation(Table.class).name();
+        if (!clazz.isAnnotationPresent(Table.class)) {
+            return clazz.getSimpleName();
         }
-        return clazz.getSimpleName();
+        String tableName = clazz.getAnnotation(Table.class).name();
+        if (tableName.isEmpty()) {
+            return clazz.getSimpleName();
+        }
+        return tableName;
     }
 
     public String tableName() {
