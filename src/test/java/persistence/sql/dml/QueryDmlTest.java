@@ -39,6 +39,11 @@ class QueryDmlTest {
     @DisplayName("insert query")
     class insert {
         Class<InsertPerson> aClass = InsertPerson.class;
+
+        @BeforeEach
+        void init() {
+            createTable(aClass);
+        }
                 
         @Test
         @DisplayName("@Entity가 설정되어 있지 않은 경우 Query를 생성하지 않음")
@@ -51,14 +56,16 @@ class QueryDmlTest {
         }
 
         @Test
-        @DisplayName("@Entity가 설정되어 있지 않은 경우 Query를 생성하지 않음")
+        @DisplayName("성공적으로 insert 쿼리 생성하여 실행")
         void Success() {
             //given
             final Long id = 33L;
             final String name = "name";
             final int age = 22;
+            final String email = "zz";
+            final Integer index = 3;
 
-            NotEntityPerson person = new NotEntityPerson(id, name, age);
+            InsertPerson person = new InsertPerson(id, name, age, email, index);
 
             //when
             String query = QueryDml.insert(person);
@@ -138,6 +145,11 @@ class QueryDmlTest {
             //when & then
             assertThrows(InvalidEntityException.class,
                     () -> jdbcTemplate.query(getSelectQuery(aClass, methodName), new ResultMapper<>(SelectPerson.class)));
+        }
+
+        @AfterEach
+        void after() {
+            dropTable(selectPersonClass);
         }
     }
 
