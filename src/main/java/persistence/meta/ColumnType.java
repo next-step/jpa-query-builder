@@ -1,66 +1,49 @@
 package persistence.meta;
 
 import java.sql.JDBCType;
-import persistence.dialect.Dialect;
-import persistence.vender.dialect.H2Dialect;
-import persistence.exception.NotSupertypeException;
-import persistence.exception.NumberRangeException;
+import java.util.Objects;
 
 public class ColumnType {
-    private static final String VARCHAR_FORMAT = "%s(%d)";
-    private static final String INTEGER = "%s";
-    private static final String BIGINT = "%s";
-    private static final Integer DEFAULT_VARCHAR_LENGTH = 255;
-    private static final Integer VARCHAR_MIN_LENGTH = 1;
     private final JDBCType jdbcType;
-    private final Integer length;
-
-
-    private ColumnType(JDBCType jdbcType, Integer length) {
-        if (length < VARCHAR_MIN_LENGTH) {
-            throw new NumberRangeException("길이는 1보다 작을 수 없습니다.");
-        }
-        this.jdbcType = jdbcType;
-        this.length = length;
-    }
 
     private ColumnType(JDBCType jdbcType) {
         this.jdbcType = jdbcType;
-
-        if (jdbcType == JDBCType.VARCHAR) {
-            this.length = DEFAULT_VARCHAR_LENGTH;
-            return;
-        }
-        length = null;
     }
 
     public static ColumnType createColumn(JDBCType jdbcType) {
         return new ColumnType(jdbcType);
     }
 
-    public static ColumnType createVarchar(int length) {
-        return new ColumnType(JDBCType.VARCHAR, length);
-    }
-
     public static ColumnType createVarchar() {
-        return createVarchar(DEFAULT_VARCHAR_LENGTH);
+        return new ColumnType(JDBCType.VARCHAR);
     }
 
-    public String getColumType(Dialect direct) {
-        if (jdbcType == JDBCType.VARCHAR) {
-            return String.format(VARCHAR_FORMAT, direct.getVarchar(), length);
-        }
-        if (jdbcType == JDBCType.INTEGER) {
-            return String.format(INTEGER, direct.getInteger());
-        }
-        if (jdbcType == JDBCType.BIGINT) {
-            return String.format(BIGINT, direct.getBigInt());
-        }
-        throw new NotSupertypeException();
+    public boolean isVarchar() {
+        return jdbcType == JDBCType.VARCHAR;
     }
 
-    public String getColumType() {
-        return getColumType(new H2Dialect());
+    public boolean isInteger() {
+        return jdbcType == JDBCType.INTEGER;
     }
 
+    public boolean isBigInt() {
+        return jdbcType == JDBCType.BIGINT;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ColumnType)) {
+            return false;
+        }
+        ColumnType that = (ColumnType) o;
+        return jdbcType == that.jdbcType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(jdbcType);
+    }
 }

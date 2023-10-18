@@ -3,30 +3,27 @@ package persistence.meta;
 import static persistence.meta.JavaToJdbcFiledMapper.convert;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GenerationType;
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
-import persistence.dialect.Dialect;
-import persistence.vender.dialect.H2Dialect;
 import persistence.exception.FiledEmptyException;
+import persistence.exception.NumberRangeException;
 
 public class EntityColumn {
+    private static final Integer DEFAULT_VARCHAR_LENGTH = 255;
+    private static final Integer VARCHAR_MIN_LENGTH = 1;
     private final String name;
     private final ColumnType columType;
     private final EntityColumnOption option;
-    private final Dialect direct;
+    private Integer length;
 
     public EntityColumn(Field field) {
-        this(field, new H2Dialect());
-
-    }
-    public EntityColumn(Field field, Dialect direct) {
         if (field == null) {
             throw new FiledEmptyException();
         }
         this.name = initName(field);
         this.columType = initColumType(field);
         this.option = new EntityColumnOption(field);
-        this.direct = direct;
     }
 
     private String initName(Field field) {
@@ -42,37 +39,20 @@ public class EntityColumn {
         if (jdbcType != JDBCType.VARCHAR) {
             return ColumnType.createColumn(jdbcType);
         }
-        return generateVarchar(field);
+        return createVarcharType(field);
     }
 
-    private ColumnType generateVarchar(Field field) {
+    private ColumnType createVarcharType(Field field) {
         final Column column = field.getAnnotation(Column.class);
-        if (column != null && column.length() > 0) {
-            return ColumnType.createVarchar(column.length());
+        if (column != null && column.length() < VARCHAR_MIN_LENGTH) {
+            throw new NumberRangeException("길이는 1보다 작을 수 없습니다.");
         }
+        if (column == null) {
+            length = DEFAULT_VARCHAR_LENGTH;
+            return ColumnType.createVarchar();
+        }
+        length = column.length();
         return ColumnType.createVarchar();
-    }
-
-    public String createColumQuery() {
-        return new StringBuilder(name)
-                .append(" ")
-                .append(columType.getColumType(direct))
-                .append(getNullAble(option))
-                .append(getGeneratedType(option))
-                .toString();
-    }
-
-    private String getNullAble(EntityColumnOption option){
-        if (!option.isNullable()) {
-            return " " + direct.notNull();
-        }
-        return "";
-    }
-    private String getGeneratedType(EntityColumnOption option) {
-        if (option.hasGenerationType()) {
-            return " " + direct.getGeneratedType(option.getGenerationType());
-        }
-        return "";
     }
 
     public String getName() {
@@ -82,4 +62,25 @@ public class EntityColumn {
     public boolean isPk() {
         return option.isPk();
     }
+
+    public ColumnType getColumType() {
+        return columType;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public boolean isVarchar() {
+        return columType.isVarchar();
+    }
+
+    public boolean isNotNull() {
+        return !option.isNullable();
+    }
+
+    public GenerationType getGenerationType() {
+        return option.getGenerationType();
+    }
+
 }

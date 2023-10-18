@@ -3,7 +3,7 @@ package persistence.meta;
 import java.sql.JDBCType;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import persistence.exception.NotSupertypeException;
+import persistence.exception.NotSupportTypeException;
 
 public final class JavaToJdbcFiledMapper {
     private static final Map<Class<?>, JDBCType> classTypeMapper = new ConcurrentHashMap<>();
@@ -20,7 +20,7 @@ public final class JavaToJdbcFiledMapper {
     public static JDBCType convert(Class<?> javaType) {
         final JDBCType type = classTypeMapper.get(javaType);
         if (type == null) {
-            throw new NotSupertypeException();
+            throw new NotSupportTypeException();
         }
         return type;
     }

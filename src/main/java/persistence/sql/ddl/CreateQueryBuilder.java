@@ -1,30 +1,87 @@
 package persistence.sql.ddl;
 
-import static java.lang.String.format;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import persistence.dialect.Dialect;
-import persistence.meta.EntityColumns;
-import persistence.vender.dialect.H2Dialect;
+import persistence.meta.ColumnType;
+import persistence.meta.EntityColumn;
+import persistence.meta.EntityMeta;
+
 
 public class CreateQueryBuilder<T> extends QueryBuilder<T> {
+    private static final String DEFAULT_COLUMNS_BRACE = " (%s)";
 
-    private static final String DEFAULT_CREATE_TABLE_COLUMNS_FORMAT = "(%s)";
-
-    private final EntityColumns entityColumns;
-    private final Dialect direct;
-
-    public CreateQueryBuilder(Class<T> entityClass) {
-       this(entityClass, new H2Dialect());
+    public CreateQueryBuilder(EntityMeta entityMeta) {
+        super(entityMeta);
     }
 
-    public CreateQueryBuilder(Class<T> entityClass, Dialect direct) {
-        super(entityClass);
-        this.direct = direct;
-        entityColumns = new EntityColumns(entityFields, direct);
+    public CreateQueryBuilder(EntityMeta entityMeta, Dialect dialect) {
+        super(entityMeta, dialect);
     }
 
     public String create() {
-        return format(direct.createTablePreFix(tableName))
-                + format(DEFAULT_CREATE_TABLE_COLUMNS_FORMAT, entityColumns.createColumnsQuery());
+        return queryCreate(entityMeta.getTableName())
+                + brace(
+                        columnsCreateQuery(entityMeta.getEntityColumns())
+                , primaryKeyConcentrate(entityMeta.getEntityColumns())
+                );
     }
+
+    private String queryCreate(String tableName) {
+        return dialect.createTablePreFix(tableName);
+    }
+
+    private String brace(String ...query) {
+        return String.format(DEFAULT_COLUMNS_BRACE, combinedQuery(query));
+    }
+
+    private String columnQuery(EntityColumn entityColumn) {
+        return combinedQuery(
+                entityColumn.getName(),
+                columnTypeQuery(entityColumn),
+                notNullQuery(entityColumn),
+                generatedTypeQuery(entityColumn)
+        );
+    }
+
+    private String columnTypeQuery(EntityColumn entityColumn) {
+        final ColumnType columType = entityColumn.getColumType();
+        if (columType.isVarchar()) {
+            return dialect.getVarchar(entityColumn.getLength());
+        }
+        return dialect.getColumnType(columType);
+    }
+
+    private String notNullQuery(EntityColumn entityColumn) {
+        if (entityColumn.isNotNull()) {
+            return dialect.notNull();
+        }
+        return "";
+    }
+
+    private String generatedTypeQuery(EntityColumn entityColumn) {
+        return dialect.getGeneratedType(entityColumn.getGenerationType());
+    }
+
+    private String primaryKeyConcentrate(List<EntityColumn> entityColumns) {
+        return dialect.primaryKey(entityColumns.stream()
+                .filter(EntityColumn::isPk)
+                .map(EntityColumn::getName)
+                .collect(Collectors.joining(", ")));
+    }
+
+    private String columnsCreateQuery(List<EntityColumn> entityColumns) {
+        return entityColumns
+                .stream()
+                .map(this::columnQuery)
+                .collect(Collectors.joining(", ", "", ","));
+    }
+
+    private String combinedQuery(String ...queries) {
+        return Arrays.stream(queries)
+                .filter(it -> !it.isBlank())
+                .collect(Collectors.joining(" "));
+    }
+
 }

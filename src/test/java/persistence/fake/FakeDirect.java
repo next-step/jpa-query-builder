@@ -10,8 +10,8 @@ public class FakeDirect extends H2Dialect {
     }
 
     @Override
-    public String getVarchar() {
-        return super.getVarchar().toUpperCase();
+    public String getVarchar(int length) {
+        return super.getVarchar(length).toUpperCase();
     }
 
     @Override
