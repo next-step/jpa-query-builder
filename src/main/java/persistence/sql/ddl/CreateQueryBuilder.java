@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 public class CreateQueryBuilder{
-    private final static String CREATE_COMMAND = "CREATE TABLE %s";
+    private final static String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
 
     public CreateQueryBuilder() {
     }
@@ -18,7 +18,7 @@ public class CreateQueryBuilder{
     public String bulidQuery(Class<?> clazz) {
         checkIsEntity(clazz);
 
-        return format(CREATE_COMMAND, findTableName(clazz)) +
+        return format(CREATE_TABLE_COMMAND, findTableName(clazz)) +
                 "(" +
                 buildColumnList(convertClassToColumnList(clazz)) +
                 ");";
