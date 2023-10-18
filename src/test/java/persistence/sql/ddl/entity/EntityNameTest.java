@@ -1,4 +1,4 @@
-package persistence.sql.ddl.component;
+package persistence.sql.ddl.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
