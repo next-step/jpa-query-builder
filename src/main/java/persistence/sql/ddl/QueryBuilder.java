@@ -25,6 +25,11 @@ public class QueryBuilder {
 
     }
 
+    public StringBuilder drop(MetaData metaData, StringBuilder sb) {
+        return sb.append("drop table ")
+                .append(metaData.getEntity());
+    }
+
     private String columnTypeName(List<ColumnMetaData> columns) {
         StringBuilder columnQuery = new StringBuilder();
         for (ColumnMetaData column : columns) {

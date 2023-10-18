@@ -18,7 +18,7 @@ import sources.MetadataGeneratorImpl;
 import java.sql.SQLException;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CreateTest {
+public class DDLTest {
     DatabaseServer server;
     final Dialect dialect = new H2Dialect();
     final QueryBuilder queryBuilder = new QueryBuilder(dialect);
@@ -66,6 +66,18 @@ public class CreateTest {
         System.out.println(String.valueOf(createQuery));
         Assertions.assertThat("create table users (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
                 .isEqualTo(String.valueOf(createQuery));
+    }
+
+    @Test
+    @DisplayName("요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기")
+    void dropTest() {
+        MetaData personv3 = metadataGenerator.generator(PersonV3.class);
+        StringBuilder sb = new StringBuilder();
+        StringBuilder dropQuery = queryBuilder.drop(personv3, sb);
+        jdbcTemplate.execute(String.valueOf(dropQuery));
+        System.out.println(String.valueOf(dropQuery));
+        Assertions.assertThat("drop table users")
+                .isEqualTo(String.valueOf(dropQuery));
     }
 
     @AfterAll
