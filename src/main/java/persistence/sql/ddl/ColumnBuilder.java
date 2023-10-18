@@ -11,12 +11,7 @@ public class ColumnBuilder {
                 .append(column.getName() + " " + column.getType())
                 .append(constraintBuilder.buildNullable(column.getConstraint()))
                 .append(constraintBuilder.bulidGeneratedType(column.getConstraint()))
+                .append(constraintBuilder.buildPrimaryKey(column.getConstraint()))
                 .toString();
-    }
-
-    public String buildPKColumnToCreate(Column column) {
-        ConstraintBuilder constraintBuilder = new ConstraintBuilder();
-
-        return constraintBuilder.buildPrimaryKey(column.getConstraint());
     }
 }

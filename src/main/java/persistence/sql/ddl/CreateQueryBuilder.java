@@ -20,10 +20,9 @@ public class CreateQueryBuilder{
     }
 
     private String buildColumnList(List<Column> columns) {
-        ColumnBuilder columnBuilder = new ColumnBuilder();
-
         return columns.stream()
-                .map(x -> columnBuilder.buildColumnToCreate(x) + columnBuilder.buildPKColumnToCreate(x))
+                .filter(x -> !x.isTransient())
+                .map(new ColumnBuilder()::buildColumnToCreate)
                 .collect(Collectors.joining(", ")).toString();
     }
 
