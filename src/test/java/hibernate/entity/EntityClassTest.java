@@ -1,7 +1,8 @@
 package hibernate.entity;
 
-import domain.Person;
-import domain.Person3;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,13 +19,26 @@ class EntityClassTest {
 
     @Test
     void Table_어노테이션의_name이_있으면_생성_시_tableName이_된다() {
-        String actual = new EntityClass(Person3.class).tableName();
-        assertThat(actual).isEqualTo("users");
+        String actual = new EntityClass(TableEntity.class).tableName();
+        assertThat(actual).isEqualTo("new_table");
     }
 
     @Test
     void Table_어노테이션의_name이_없으면_tableName은_클래스명이_된다() {
-        String actual = new EntityClass(Person.class).tableName();
-        assertThat(actual).isEqualTo("Person");
+        String actual = new EntityClass(NoTableEntity.class).tableName();
+        assertThat(actual).isEqualTo("NoTableEntity");
+    }
+
+    @Entity
+    @Table(name = "new_table")
+    class TableEntity {
+        @Id
+        private Long id;
+    }
+
+    @Entity
+    class NoTableEntity {
+        @Id
+        private Long id;
     }
 }
