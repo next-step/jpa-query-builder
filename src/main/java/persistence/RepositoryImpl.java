@@ -21,7 +21,7 @@ public abstract class RepositoryImpl<T extends RowMapper<T>> implements Reposito
     }
 
     @Override
-    public List<T> findAll() throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public List<T> findAll() {
         String query = SelectQuery.create(t.getClass(), new Object() {
         }.getClass().getEnclosingMethod().getName());
 
