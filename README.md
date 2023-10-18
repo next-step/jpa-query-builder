@@ -91,3 +91,5 @@ public class Person {
   - EntityColumn을 생성할 수 있는 지 확인한다.
     - @Transient이 걸린 필드는 생성할 수 없다.
   - @Id 어노테이션이 달린 경우 EntityId를, 아닌 경우 EntityField 구현체를 생성한다.
+- ColumnOptionGenerateStrategy
+  - 컬럼 옵션 전략에 맞는지 확인하고, 컬럼 옵션을 생성한다.
