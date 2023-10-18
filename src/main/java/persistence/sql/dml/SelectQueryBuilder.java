@@ -33,6 +33,7 @@ public abstract class SelectQueryBuilder {
 
     private String getColumnsClause(Field[] fields) {
         List<String> columnNames = Arrays.stream(fields)
+                .filter(field -> !ColumnMeta.isTransient(field))
                 .map(ColumnMeta::getColumnName)
                 .collect(Collectors.toList());
         return String.join(StringConstant.COLUMN_JOIN, columnNames);
