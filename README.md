@@ -140,3 +140,42 @@ CREATE TABLE users
 - [X] 정보를 바탕으로 drop 쿼리 만들어보기
   - [X] @Entity 어노테이션이 안 붙어있으면 예외가 발생한다.
   - [X] @Table 어노테이션에 이름이 있으면 테이블 이름을 변경한다.
+
+---
+
+## 3단계 - QueryBuilder DML
+
+* Person 객체 
+```java 
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+```
+
+
+요구사항 1 - insert 구현해보기
+- [X] 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
+      위의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
+      @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자
+- [ ] @Transient 어노테이션이 있으면 인설트 쿼리에 제외 된다.
+- [ ] @Id 전략이 generate면 쿼리에 제외 된다.
+- [ ] insert into table (column1, column2, column3) values (value1, value2, value3) 형식으로 구현한다.
+ 
