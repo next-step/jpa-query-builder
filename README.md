@@ -83,3 +83,4 @@ public class Person {
   - @Column 어노테이션에서 정보를 받을 수 있다.
     - Column name이 있는 경우 해당 이름이 field 명이 된다.
     - Column nullable을 가진다.
+  - Field의 타입을 받아 ColumnType으로 변환하여 받을 수 있다.

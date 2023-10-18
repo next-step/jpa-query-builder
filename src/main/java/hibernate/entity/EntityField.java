@@ -7,10 +7,12 @@ import java.lang.reflect.Field;
 public class EntityField {
 
     private final String fieldName;
+    private final ColumnType columnType;
     private final boolean isNullable;
 
     public EntityField(final Field field) {
         this.fieldName = parseFieldName(field);
+        this.columnType = ColumnType.valueOf(field.getType());
         this.isNullable = parseNullable(field);
     }
 
@@ -34,6 +36,10 @@ public class EntityField {
 
     public String getFieldName() {
         return fieldName;
+    }
+
+    public ColumnType getColumnType() {
+        return columnType;
     }
 
     public boolean isNullable() {
