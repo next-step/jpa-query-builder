@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Transient;
+
 import java.lang.reflect.Field;
 
 public class Column {
@@ -9,10 +11,13 @@ public class Column {
 
     private Constraint constraint;
 
+    private boolean isTransient;
+
     public Column(Field field) {
         this.name = findName(field);
         this.type = convertTypeToString(field.getType());
         this.constraint = new Constraint(field);
+        this.isTransient = field.isAnnotationPresent(Transient.class);
     }
 
     public String getName() {
@@ -25,6 +30,10 @@ public class Column {
 
     public Constraint getConstraint() {
         return constraint;
+    }
+
+    public boolean isTransient() {
+        return isTransient;
     }
 
     private String findName(Field field) {

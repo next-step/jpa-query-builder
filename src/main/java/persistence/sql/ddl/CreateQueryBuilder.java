@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Table;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,10 +15,18 @@ public class CreateQueryBuilder{
     }
 
     public String bulidQuery(Class<?> clazz) {
-        return format(CREATE_COMMAND, clazz.getSimpleName()) +
+        return format(CREATE_COMMAND, findTableName(clazz)) +
                 "(" +
                 buildColumnList(convertClassToColumnList(clazz)) +
                 ");";
+    }
+
+    private String findTableName(Class<?> clazz) {
+        if(clazz.isAnnotationPresent(Table.class)) {
+            return clazz.getDeclaredAnnotation(Table.class).name();
+        }
+
+        return clazz.getSimpleName();
     }
 
     private String buildColumnList(List<Column> columns) {
