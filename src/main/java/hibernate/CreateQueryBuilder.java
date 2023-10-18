@@ -20,7 +20,6 @@ public class CreateQueryBuilder implements QueryBuilder {
     private static final String CREATE_COLUMN_OPTION_DELIMITER = " ";
     private static final String CREATE_COLUMN_QUERY_DELIMITER = ", ";
 
-
     private final List<ColumnOptionGenerateStrategy> strategies = List.of(
             new NotNullOptionGenerateStrategy(),
             new PrimaryKetOptionGenerateStrategy(),
