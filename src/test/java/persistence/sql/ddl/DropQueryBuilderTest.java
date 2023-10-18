@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.exception.NoEntityException;
+import persistence.sql.QueryGenerator;
 import persistence.testFixtures.NoHasEntity;
 import persistence.testFixtures.Person;
 import persistence.testFixtures.PkHasPerson;

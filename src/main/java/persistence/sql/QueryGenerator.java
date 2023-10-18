@@ -1,8 +1,11 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 import persistence.dialect.Dialect;
 import persistence.exception.NoEntityException;
 import persistence.meta.EntityMeta;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
 import persistence.vender.dialect.H2Dialect;
 
 public class QueryGenerator<T> {
@@ -34,5 +37,9 @@ public class QueryGenerator<T> {
 
     public String drop() {
         return new DropQueryBuilder<>(entityTable, dialect).drop();
+    }
+
+    public String insert(T object) {
+        return new InsertQueryBuilder<>(entityTable, dialect).insert(object);
     }
 }

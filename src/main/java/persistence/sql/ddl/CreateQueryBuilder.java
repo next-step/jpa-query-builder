@@ -1,6 +1,5 @@
 package persistence.sql.ddl;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import persistence.dialect.Dialect;
@@ -10,7 +9,6 @@ import persistence.meta.EntityMeta;
 
 
 public class CreateQueryBuilder<T> extends QueryBuilder<T> {
-    private static final String DEFAULT_COLUMNS_BRACE = " (%s)";
 
     public CreateQueryBuilder(EntityMeta entityMeta) {
         super(entityMeta);
@@ -22,7 +20,7 @@ public class CreateQueryBuilder<T> extends QueryBuilder<T> {
 
     public String create() {
         return queryCreate(entityMeta.getTableName())
-                + brace(
+                + brace("",
                         columnsCreateQuery(entityMeta.getEntityColumns())
                 , primaryKeyConcentrate(entityMeta.getEntityColumns())
                 );
@@ -32,12 +30,8 @@ public class CreateQueryBuilder<T> extends QueryBuilder<T> {
         return dialect.createTablePreFix(tableName);
     }
 
-    private String brace(String ...query) {
-        return String.format(DEFAULT_COLUMNS_BRACE, combinedQuery(query));
-    }
-
     private String columnQuery(EntityColumn entityColumn) {
-        return combinedQuery(
+        return combinedQuery(" ",
                 entityColumn.getName(),
                 columnTypeQuery(entityColumn),
                 notNullQuery(entityColumn),
@@ -75,13 +69,6 @@ public class CreateQueryBuilder<T> extends QueryBuilder<T> {
         return entityColumns
                 .stream()
                 .map(this::columnQuery)
-                .collect(Collectors.joining(", ", "", ","));
+                .collect(Collectors.joining(", ", "", ", "));
     }
-
-    private String combinedQuery(String ...queries) {
-        return Arrays.stream(queries)
-                .filter(it -> !it.isBlank())
-                .collect(Collectors.joining(" "));
-    }
-
 }

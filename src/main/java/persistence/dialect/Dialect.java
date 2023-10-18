@@ -36,6 +36,14 @@ public abstract class Dialect {
         return "DROP TABLE " + tableName;
     }
 
+    public String insert(String tableName) {
+        return "INSERT INTO " + tableName;
+    }
+
+    public String values(String value) {
+        return " VALUES (" + value + ")";
+    }
+
     public String createTablePreFix(String tableName) {
         return "CREATE TABLE " + tableName;
     }

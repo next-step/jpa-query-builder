@@ -4,10 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.fake.FakeDirect;
+import persistence.sql.QueryGenerator;
 import persistence.testFixtures.ChangColumNamePerson;
 import persistence.testFixtures.Person;
 import persistence.testFixtures.PkHasPerson;
-import persistence.vender.dialect.H2Dialect;
 
 @DisplayName("CreateQueryBuilder 테스트")
 class CreateQueryBuilderTest {
@@ -72,7 +73,7 @@ class CreateQueryBuilderTest {
     @DisplayName("Create 쿼리가 방언이 바뀌면 이에 맞게 바뀐다.")
     void dialectChange() {
         //given
-        QueryGenerator<Person> ddl = QueryGenerator.of(Person.class, new H2Dialect());
+        QueryGenerator<Person> ddl = QueryGenerator.of(Person.class, new FakeDirect());
 
         //when
         String sql = ddl.create();
