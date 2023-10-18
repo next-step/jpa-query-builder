@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
+import persistence.util.ReflectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +17,11 @@ public class DmlGenerator {
 
     public String insert(final Object entity) {
         final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(entity.getClass());
+        final List<String> columnNames = entityMetadata.getInsertableColumnNames();
+        final List<Object> values = ReflectionUtils.getFieldValues(entity, entityMetadata.getInsertableColumnFieldNames());
         return InsertQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
-                .addData(entityMetadata.getInsertableColumnNames(), convertToString(entityMetadata.getEntityValues(entity)))
+                .addData(columnNames, convertToString(values))
                 .build();
     }
 

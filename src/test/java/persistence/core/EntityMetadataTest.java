@@ -62,20 +62,6 @@ class EntityMetadataTest {
         });
     }
 
-    @Test
-    @DisplayName("getEntityValues 를 통해 id 를 제외한 entity 들의 value 들을 반환 받을 수 있다.")
-    void entityMetadataGetEntityValuesTest() {
-        mockClass = FixtureEntity.WithColumn.class;
-        final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
-        final FixtureEntity.WithColumn entity = new FixtureEntity.WithColumn(1L, "test", "notNullTest");
-        assertSoftly(softly -> {
-            softly.assertThat(entityMetadata).isNotNull();
-            softly.assertThat(entityMetadata.getTableName()).isEqualTo("WithColumn");
-            softly.assertThat(entityMetadata.getIdColumnName()).isEqualTo("id");
-            softly.assertThat(entityMetadata.getEntityValues(entity)).containsExactly( "test", "notNullTest");
-        });
-    }
-
     private void assertResult(final EntityMetadata<?> entityMetadata, final String withId, final String id) {
         assertSoftly(softly -> {
             softly.assertThat(entityMetadata).isNotNull();
