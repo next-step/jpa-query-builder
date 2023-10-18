@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class QueryBuilderTest {
+class CreateQueryBuilderTest {
 
-    private QueryBuilder queryBuilder = new QueryBuilder();
+    private CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
 
     @Test
     void Entity가_걸린_클래스의_create_쿼리를_생성한다() {
@@ -22,7 +22,7 @@ class QueryBuilderTest {
         List<String> expectedColumns = List.of("id bigint", "age integer", "name varchar");
 
         // when
-        String actual = queryBuilder.generateCreateQueries(Person.class)
+        String actual = createQueryBuilder.generateCreateQuery(Person.class)
                 .toLowerCase();
 
         // then
@@ -38,7 +38,7 @@ class QueryBuilderTest {
         String expectedColumn = "id bigint primary key";
 
         // when
-        String actual = queryBuilder.generateCreateQueries(Person.class);
+        String actual = createQueryBuilder.generateCreateQuery(Person.class);
 
         // then
         assertThat(actual).contains(expectedColumn);
@@ -50,7 +50,7 @@ class QueryBuilderTest {
         List<String> expectedColumns = List.of("nick_name varchar", "old integer", "email varchar");
 
         // when
-        String actual = queryBuilder.generateCreateQueries(Person2.class)
+        String actual = createQueryBuilder.generateCreateQuery(Person2.class)
                 .toLowerCase();
 
         // then
@@ -63,7 +63,7 @@ class QueryBuilderTest {
         String expectedColumn = "email varchar not null";
 
         // when
-        String actual = queryBuilder.generateCreateQueries(Person2.class)
+        String actual = createQueryBuilder.generateCreateQuery(Person2.class)
                 .toLowerCase();
 
         // then
@@ -76,7 +76,7 @@ class QueryBuilderTest {
         String expectedColumn = "id bigint primary key auto_increment";
 
         // when
-        String actual = queryBuilder.generateCreateQueries(Person2.class)
+        String actual = createQueryBuilder.generateCreateQuery(Person2.class)
                 .toLowerCase();
 
         // then
@@ -89,7 +89,7 @@ class QueryBuilderTest {
         String expected = "create table users";
 
         // when
-        String actual = queryBuilder.generateCreateQueries(Person3.class)
+        String actual = createQueryBuilder.generateCreateQuery(Person3.class)
                 .toLowerCase();
 
         // then
@@ -102,7 +102,7 @@ class QueryBuilderTest {
         String expected = "index integer";
 
         // when
-        String actual = queryBuilder.generateCreateQueries(Person3.class)
+        String actual = createQueryBuilder.generateCreateQuery(Person3.class)
                 .toLowerCase();
 
         // then
