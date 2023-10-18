@@ -5,10 +5,10 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import persistence.sql.ddl.dialect.ColumnType;
 import persistence.sql.ddl.schema.constraint.Constraint;
 import persistence.sql.ddl.schema.constraint.NotNullConstraint;
 import persistence.sql.ddl.schema.constraint.PrimaryKeyConstraint;
+import persistence.sql.dialect.ColumnType;
 
 public class ColumnMeta {
 

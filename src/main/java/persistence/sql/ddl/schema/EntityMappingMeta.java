@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.dialect.ColumnType;
 import persistence.sql.ddl.exception.RequiredAnnotationException;
 import persistence.sql.ddl.schema.constraint.PrimaryKeyConstraint;
+import persistence.sql.dialect.ColumnType;
 
 public class EntityMappingMeta {
 

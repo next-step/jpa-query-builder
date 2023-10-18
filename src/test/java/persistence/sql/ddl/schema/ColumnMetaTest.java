@@ -9,7 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.dialect.H2ColumnType;
+import persistence.sql.dialect.H2ColumnType;
+
 
 @DisplayName("ColumnMeta 테스트")
 class ColumnMetaTest {

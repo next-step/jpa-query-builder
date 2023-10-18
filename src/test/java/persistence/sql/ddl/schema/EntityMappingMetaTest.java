@@ -7,8 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.dialect.H2ColumnType;
 import persistence.sql.ddl.exception.RequiredAnnotationException;
+import persistence.sql.dialect.H2ColumnType;
 
 @DisplayName("EntityMeta 테스트")
 class EntityMappingMetaTest {
