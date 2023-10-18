@@ -3,12 +3,15 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import domain.Person;
+import fixture.PersonFixtureFactory;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dialect.DbmsDdlQueryBuilder;
+import persistence.sql.dialect.DbmsDmlQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -20,12 +23,19 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            DbmsDdlQueryBuilder queryBuilder = DbmsDdlQueryBuilder.findByDbmsType(H2.class.getSimpleName());
+            DbmsDdlQueryBuilder ddlbuilder = DbmsDdlQueryBuilder.findByDbmsType(H2.class.getSimpleName());
+            DbmsDmlQueryBuilder dmlbuilder = DbmsDmlQueryBuilder.findByDbmsType(H2.class.getSimpleName());
 
-            CreateQueryBuilder createQueryBuilder = queryBuilder.getCreateQueryBuilder();
+            CreateQueryBuilder createQueryBuilder = ddlbuilder.getCreateQueryBuilder();
             jdbcTemplate.execute(createQueryBuilder.getQuery(Person.class));
 
-            DropQueryBuilder dropQueryBuilder = queryBuilder.getDropQueryBuilder();
+            InsertQueryBuilder insertQueryBuilder = dmlbuilder.getInsertQueryBuilder();
+            for (Person personFixture : PersonFixtureFactory.getFixtures()) {
+                String insertPersonQuery = insertQueryBuilder.getQuery(personFixture);
+                jdbcTemplate.execute(insertPersonQuery);
+            }
+
+            DropQueryBuilder dropQueryBuilder = ddlbuilder.getDropQueryBuilder();
             jdbcTemplate.execute(dropQueryBuilder.getQuery(Person.class));
 
             server.stop();
