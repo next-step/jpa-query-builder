@@ -12,6 +12,6 @@ class DropQueryBuilderTest {
     @DisplayName("Person 객체로 DROP 쿼리 생성 테스트")
     @Test
     void test_buildQuery() {
-        assertEquals(dropQueryBuilder.buildQuery(Person.class), "DROP TABLE users");
+        assertEquals(dropQueryBuilder.buildQuery(Person.class), "DROP TABLE users;");
     }
 }

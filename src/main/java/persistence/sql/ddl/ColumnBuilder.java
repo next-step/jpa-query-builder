@@ -1,17 +1,28 @@
 package persistence.sql.ddl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ColumnBuilder {
-    public ColumnBuilder() {
+    private List<Column> columns;
+
+    public ColumnBuilder(List<Column> columns) {
+        this.columns = columns;
     }
 
-    public String buildColumnToCreate(Column column) {
-        ConstraintBuilder constraintBuilder = new ConstraintBuilder();
+    public String buildColumnList() {
+        return columns.stream()
+                .filter(x -> !x.isTransient())
+                .map(this::buildColumnToCreate)
+                .collect(Collectors.joining(", "));
+    }
 
+    private String buildColumnToCreate(Column column) {
         return new StringBuilder()
                 .append(column.getName() + " " + column.getType())
-                .append(constraintBuilder.buildNullable(column.getConstraint()))
-                .append(constraintBuilder.bulidGeneratedType(column.getConstraint()))
-                .append(constraintBuilder.buildPrimaryKey(column.getConstraint()))
+                .append(column.getConstraint().buildNullable())
+                .append(column.getConstraint().bulidGeneratedType())
+                .append(column.getConstraint().buildPrimaryKey())
                 .toString();
     }
 }

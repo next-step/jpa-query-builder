@@ -17,15 +17,8 @@ public class CreateQueryBuilder extends QueryBuilder{
 
         return format(CREATE_TABLE_COMMAND, findTableName(clazz)) +
                 "(" +
-                buildColumnList(convertClassToColumnList(clazz)) +
+                new ColumnBuilder((convertClassToColumnList(clazz))).buildColumnList() +
                 ");";
-    }
-
-    private String buildColumnList(List<Column> columns) {
-        return columns.stream()
-                .filter(x -> !x.isTransient())
-                .map(new ColumnBuilder()::buildColumnToCreate)
-                .collect(Collectors.joining(", ")).toString();
     }
 
     private List<Column> convertClassToColumnList(Class<?> clazz) {
