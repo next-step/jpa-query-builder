@@ -10,14 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CreateQueryBuilderTest {
     private static final Logger logger = LoggerFactory.getLogger(CreateQueryBuilderTest.class);
-    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
+    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
 
     @DisplayName("Person 객체로 CREATE 쿼리 생성 테스트")
     @Test
     void test_getQuery() {
-        String query = createQueryBuilder.getQuery(Person.class);
+        String query = createQueryBuilder.bulidQuery(Person.class);
         logger.info(query);
-        assertEquals(query, "CREATE TABLE Person( id BIGINT, name VARCHAR(255), age INTEGER, PRIMARY KEY (id) );");
+        assertEquals(query, "CREATE TABLE Person(id BIGINT PRIMARY KEY, name VARCHAR(255), age INTEGER);");
     }
 
 }
