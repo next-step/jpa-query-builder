@@ -1,9 +1,10 @@
 package persistence.sql.ddl.schema;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import persistence.sql.ddl.dialect.ColumnType;
 import persistence.sql.ddl.schema.constraint.Constraint;
 import persistence.sql.ddl.schema.constraint.NotNullConstraint;
@@ -20,20 +21,19 @@ public class ColumnMeta {
     private static final String COLUMN_FORMAT = "%s %s";
     private static final String COLUMN_FORMAT_WITH_CONSTRAINT = "%s %s %s";
 
-    private ColumnMeta(String columnName, String columnTypeName, List<Constraint> constraintList) {
+    private ColumnMeta(String columnName, String columnTypeName, String columnConstraint) {
         this.columnName = columnName;
         this.columnType = columnTypeName;
-        this.columnConstraint = constraintList.stream()
-            .map(Constraint::getConstraint)
-            .filter(constraint -> !constraint.isEmpty())
-            .collect(Collectors.joining(" "));
+        this.columnConstraint = columnConstraint;
     }
 
     public static ColumnMeta of(Field field, ColumnType columnType) {
         return new ColumnMeta(
             getColumnName(field),
-            columnType.getType(field),
-            List.of(new PrimaryKeyConstraint(field, columnType), new NotNullConstraint(field))
+            columnType.getFieldType(field),
+            joiningConstraint(
+                new PrimaryKeyConstraint(field, columnType), new NotNullConstraint(field)
+            )
         );
     }
 
@@ -45,14 +45,34 @@ public class ColumnMeta {
         return String.format(COLUMN_FORMAT_WITH_CONSTRAINT, columnName, columnType, columnConstraint);
     }
 
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public static boolean isTransient(Field field) {
+        return field.isAnnotationPresent(Transient.class);
+    }
+
     private static String getColumnName(Field field) {
-        if (field.isAnnotationPresent(Column.class)) {
-            final Column columnAnnotation = field.getAnnotation(Column.class);
-            if (!columnAnnotation.name().isEmpty()) {
-                return columnAnnotation.name();
-            }
+        if (!hasColumnAnnotationPresent(field)) {
+            return field.getName().toLowerCase();
         }
 
-        return field.getName().toLowerCase();
+        if (hasColumnAnnotationPresent(field) && field.getAnnotation(Column.class).name().isEmpty()) {
+            return field.getName().toLowerCase();
+        }
+
+        return field.getAnnotation(Column.class).name();
+    }
+
+    private static boolean hasColumnAnnotationPresent(Field field) {
+        return field.isAnnotationPresent(Column.class);
+    }
+
+    private static String joiningConstraint(Constraint... constraintArray) {
+        return Stream.of(constraintArray)
+            .map(Constraint::getConstraint)
+            .filter(constraint -> !constraint.isEmpty())
+            .collect(Collectors.joining(" "));
     }
 }

@@ -2,9 +2,9 @@ package persistence.sql.ddl.schema.constraint;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Objects;
-import persistence.sql.ddl.ColumnAnnotationHelper;
 import persistence.sql.ddl.dialect.ColumnType;
 import persistence.sql.ddl.exception.UnrecognizedGeneratedValueException;
 
@@ -24,7 +24,7 @@ public class PrimaryKeyConstraint implements Constraint {
     }
 
     private String extractGeneratedValueStrategy(Field field, ColumnType columnType) {
-        if (!ColumnAnnotationHelper.isPrimaryKey(field)) {
+        if (!isPrimaryKey(field)) {
             return "";
         }
 
@@ -41,4 +41,7 @@ public class PrimaryKeyConstraint implements Constraint {
         throw new UnrecognizedGeneratedValueException("Unexpected value: " + generatedValue.strategy());
     }
 
+    public static boolean isPrimaryKey(Field field) {
+        return field.isAnnotationPresent(Id.class);
+    }
 }
