@@ -97,3 +97,4 @@ public class Person {
 
 ### 요구사항 4
 - drop 쿼리를 생성한다.
+  - Table이 있는 경우 name에 맞게 쿼리를 생성한다.
