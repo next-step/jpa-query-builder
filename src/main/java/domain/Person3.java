@@ -21,5 +21,4 @@ public class Person3 {
 
     @Transient
     private Integer index;
-
 }
