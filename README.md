@@ -87,3 +87,7 @@ public class Person {
 - EntityId
   - @Id 어노테이션이 없는 경우 예외가 발생한다.
   - @GeneratedValue 어노테이션을 받아 저장한다.
+- EntityColumnFactory
+  - EntityColumn을 생성할 수 있는 지 확인한다.
+    - @Transient이 걸린 필드는 생성할 수 없다.
+  - @Id 어노테이션이 달린 경우 EntityId를, 아닌 경우 EntityField 구현체를 생성한다.
