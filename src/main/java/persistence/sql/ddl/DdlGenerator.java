@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import persistence.core.EntityColumn;
 import persistence.core.EntityMetadata;
+import persistence.dialect.DBColumnTypeMapper;
 
 public class DdlGenerator {
 

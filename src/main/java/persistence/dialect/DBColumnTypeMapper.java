@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.dialect;
 
 public interface DBColumnTypeMapper {
     String getColumnName(Class<?> clazz);

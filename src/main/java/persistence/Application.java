@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.core.EntityMetadata;
 import persistence.sql.ddl.DdlGenerator;
-import persistence.sql.ddl.DefaultDBColumnTypeMapper;
+import persistence.dialect.DefaultDBColumnTypeMapper;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

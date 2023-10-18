@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
 import persistence.sql.ddl.DdlGenerator;
-import persistence.sql.ddl.DefaultDBColumnTypeMapper;
+import persistence.dialect.DefaultDBColumnTypeMapper;
 import persistence.sql.dml.DmlGenerator;
 
 import java.sql.SQLException;

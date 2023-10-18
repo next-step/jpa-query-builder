@@ -9,6 +9,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
 import domain.FixtureEntity;
+import persistence.dialect.DBColumnTypeMapper;
+import persistence.dialect.DefaultDBColumnTypeMapper;
 
 import java.util.stream.Stream;
 
