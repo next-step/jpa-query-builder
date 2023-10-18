@@ -79,3 +79,7 @@ public class Person {
   - @Entity 어노테이션이 없는 경우 생성 시 예외가 발생한다.
   - 테이블 이름을 반환할 수 있다.
     - 테이블 이름은 요구사항과 동일하게 @Table의 name이 있는 경우 해당 이름을 반환한다.
+- EntityField
+  - @Column 어노테이션에서 정보를 받을 수 있다.
+    - Column name이 있는 경우 해당 이름이 field 명이 된다.
+    - Column nullable을 가진다.
