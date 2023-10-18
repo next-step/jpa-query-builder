@@ -15,6 +15,7 @@ public abstract class SelectQueryBuilder {
     private static final String FROM = " FROM ";
 
     public String getSelectAllQuery(Class<?> clazz) {
+        validateEntityAnnotation(clazz);
         return new StringBuilder()
                 .append(SELECT)
                 .append(getColumnsClause(clazz.getDeclaredFields()))
@@ -22,6 +23,12 @@ public abstract class SelectQueryBuilder {
                 .append(EntityMeta.getTableName(clazz))
                 .append(";")
                 .toString();
+    }
+
+    private void validateEntityAnnotation(Class<?> clazz) {
+        if (!EntityMeta.isEntity(clazz)) {
+            throw new IllegalArgumentException("Select Query 빌드 대상이 아닙니다.");
+        }
     }
 
     private String getColumnsClause(Field[] fields) {
