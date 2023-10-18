@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class CreateQueryBuilder {
+public class CreateQueryBuilder implements QueryBuilder{
     private final static String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
 
     private QueryValidator queryValidator;
@@ -15,6 +15,7 @@ public class CreateQueryBuilder {
         this.queryValidator = queryValidator;
     }
 
+    @Override
     public String buildQuery(Class<?> clazz) {
         queryValidator.checkIsEntity(clazz);
 

@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import static java.lang.String.format;
 
-public class DropQueryBuilder{
+public class DropQueryBuilder implements QueryBuilder{
     private final static String DROP_TABLE_COMMAND = "DROP TABLE %s;";
 
     private QueryValidator queryValidator;
@@ -11,6 +11,7 @@ public class DropQueryBuilder{
         this.queryValidator = queryValidator;
     }
 
+    @Override
     public String buildQuery(Class<?> clazz) {
         queryValidator.checkIsEntity(clazz);
 
