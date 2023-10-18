@@ -18,11 +18,13 @@ public class EntityColumns {
     }
 
     /**
-     * entity에서 EntityColumn으로 변환하여 entityColumns에 add
+     * 저장할 컬럼들을  entity에서 EntityColumn으로 변환하여 entityColumns에 add (Transient 제외)
      */
     private void generateEntityColumns(Class<?> entityClass) {
         Arrays.stream(entityClass.getDeclaredFields())
-                .forEach(field -> entityColumns.add(new EntityColumn(field)));
+                .map(EntityColumn::new)
+                .filter(entityColumn -> !entityColumn.isTransient())
+                .forEach(entityColumns::add);
     }
 
     /**

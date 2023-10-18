@@ -2,6 +2,7 @@ package persistence.sql.ddl.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 
@@ -32,6 +33,13 @@ public class EntityColumn {
      */
     public boolean isString() {
         return type.equals(String.class);
+    }
+
+    /**
+     * `@Transient` 컬럼인지 확인
+     */
+    public boolean isTransient() {
+        return field.isAnnotationPresent(Transient.class);
     }
 
     public Field getField() {
