@@ -2,7 +2,6 @@ package hibernate.entity;
 
 import domain.Person;
 import domain.Person2;
-import hibernate.entity.EntityField;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,5 +36,11 @@ class EntityFieldTest {
     void Column_어노테이션의_nullable이_없는_경우_isNullable은_default값이_된다() throws NoSuchFieldException {
         boolean actual = new EntityField(Person.class.getDeclaredField("name")).isNullable();
         assertThat(actual).isTrue();
+    }
+
+    @Test
+    void isId는_false이다() throws NoSuchFieldException {
+        boolean actual = new EntityField(Person.class.getDeclaredField("name")).isId();
+        assertThat(actual).isFalse();
     }
 }

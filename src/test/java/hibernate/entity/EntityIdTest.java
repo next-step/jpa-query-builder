@@ -31,6 +31,12 @@ class EntityIdTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @Test
+    void isId는_true이다() throws NoSuchFieldException {
+        boolean actual = new EntityId(IdField.class.getDeclaredField("id")).isId();
+        assertThat(actual).isTrue();
+    }
+
     class NoIdField {
         private String field;
     }
