@@ -1,9 +1,6 @@
 package persistence.study;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -174,8 +171,10 @@ public class ReflectionTest {
             void constructorWithArgs() throws Exception {
                 Car car = carClass.getConstructor(String.class, int.class).newInstance("아반떼", 100);
 
-                assertThat(car.testGetName()).contains("아반떼");
-                assertThat(car.testGetPrice()).contains("100");
+                Assertions.assertAll(
+                        () -> assertThat(car.testGetName()).contains("아반떼"),
+                        () -> assertThat(car.testGetPrice()).contains("100")
+                );
             }
         }
     }
