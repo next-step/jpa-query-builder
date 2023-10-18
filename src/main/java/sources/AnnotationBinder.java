@@ -47,7 +47,6 @@ public class AnnotationBinder {
             Column column = field.getDeclaredAnnotation(Column.class);
             return new ColumnMetaData(!column.name().isEmpty() ? column.name() : field.getName(), field.getType().getSimpleName(), column.nullable());
         }
-        System.out.println(field.getName());
         return new ColumnMetaData(field.getName(), field.getType().getSimpleName());
     }
 

@@ -2,6 +2,7 @@ package sources;
 
 import exception.AnnotationException;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
         String idName = annotationBinder.entityIdBinder(idField);
         List<ColumnMetaData> columns = Arrays.stream(entity.getDeclaredFields())
                 .filter(field -> !field.equals(idField))
+                .filter(this::isTransientField)
                 .map(annotationBinder::columnBinder)
                 .collect(Collectors.toList());
 
@@ -38,5 +40,8 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
         return Arrays.stream(fromClass.getDeclaredFields()).collect(Collectors.toList());
     }
 
+    private boolean isTransientField(Field field) {
+        return !field.isAnnotationPresent(Transient.class);
+    }
 
 }

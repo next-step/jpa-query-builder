@@ -30,6 +30,10 @@ public class ColumnMetaData {
         this.nullable = nullable;
     }
 
+    public ColumnMetaData() {
+
+    }
+
     public ColumnMetaData(String name, String type) {
         this.name = name;
         this.type = type;

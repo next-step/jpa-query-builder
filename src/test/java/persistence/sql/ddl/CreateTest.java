@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import domain.PersonV1;
 import domain.PersonV2;
+import domain.PersonV3;
 import jdbc.JdbcTemplate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -52,6 +53,18 @@ public class CreateTest {
         jdbcTemplate.execute(String.valueOf(createQuery));
         System.out.println(String.valueOf(createQuery));
         Assertions.assertThat("create table PersonV2 (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
+                .isEqualTo(String.valueOf(createQuery));
+    }
+
+    @Test
+    @DisplayName("요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기")
+    void createTest3() {
+        MetaData personv3 = metadataGenerator.generator(PersonV3.class);
+        StringBuilder sb = new StringBuilder();
+        StringBuilder createQuery = queryBuilder.create(personv3, sb);
+        jdbcTemplate.execute(String.valueOf(createQuery));
+        System.out.println(String.valueOf(createQuery));
+        Assertions.assertThat("create table users (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
                 .isEqualTo(String.valueOf(createQuery));
     }
 
