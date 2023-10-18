@@ -1,5 +1,6 @@
 package persistence.sql.ddl.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -37,8 +38,11 @@ public class EntityColumn {
         return field;
     }
 
-    public String getName() {
-        return name;
+    public String getColumnName() {
+        if (!field.isAnnotationPresent(Column.class) || field.getAnnotation(Column.class).name().isEmpty()) {
+            return name;
+        }
+        return field.getAnnotation(Column.class).name();
     }
 
     public Class<?> getType() {
