@@ -6,16 +6,19 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class CreateQueryBuilder extends QueryBuilder{
+public class CreateQueryBuilder {
     private final static String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
 
-    public CreateQueryBuilder() {
+    private QueryValidator queryValidator;
+
+    public CreateQueryBuilder(QueryValidator queryValidator) {
+        this.queryValidator = queryValidator;
     }
 
     public String buildQuery(Class<?> clazz) {
-        checkIsEntity(clazz);
+        queryValidator.checkIsEntity(clazz);
 
-        return format(CREATE_TABLE_COMMAND, findTableName(clazz)) +
+        return format(CREATE_TABLE_COMMAND, new Table(clazz).getName()) +
                 "(" +
                 new ColumnBuilder((convertClassToColumnList(clazz))).buildColumnList() +
                 ");";
