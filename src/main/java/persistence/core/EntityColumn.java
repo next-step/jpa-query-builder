@@ -28,6 +28,8 @@ public class EntityColumn {
     private int length;
 
     public EntityColumn(Field columnField) {
+        assert columnField != null;
+
         this.type = columnField.getType();
         this.name = getColumnName(columnField);
 

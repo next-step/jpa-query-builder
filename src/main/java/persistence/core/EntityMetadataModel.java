@@ -16,6 +16,10 @@ public class EntityMetadataModel {
     public EntityMetadataModel(
             String tableName,
             Set<EntityColumn> columns) {
+
+        assert tableName != null;
+        assert columns != null;
+
         this.columns = new HashSet<>(columns);
         this.tableName = tableName;
 
