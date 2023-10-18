@@ -6,7 +6,7 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-class Column {
+public class Column {
     private final ColumnName name;
     private final ColumnType type;
     private final Constraint constraints;
