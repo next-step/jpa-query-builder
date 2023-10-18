@@ -26,10 +26,6 @@ public class EntityId implements EntityColumn {
         return field.getAnnotation(GeneratedValue.class).strategy();
     }
 
-    public GenerationType getGenerationType() {
-        return generationType;
-    }
-
 
     @Override
     public String getFieldName() {
@@ -49,5 +45,10 @@ public class EntityId implements EntityColumn {
     @Override
     public boolean isId() {
         return true;
+    }
+
+    @Override
+    public GenerationType getGenerationType() {
+        return generationType;
     }
 }

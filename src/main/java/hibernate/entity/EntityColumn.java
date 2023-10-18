@@ -1,5 +1,7 @@
 package hibernate.entity;
 
+import jakarta.persistence.GenerationType;
+
 public interface EntityColumn {
 
     String getFieldName();
@@ -9,4 +11,6 @@ public interface EntityColumn {
     boolean isNullable();
 
     boolean isId();
+
+    GenerationType getGenerationType();
 }

@@ -1,6 +1,7 @@
 package hibernate.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
 
@@ -52,5 +53,10 @@ public class EntityField implements EntityColumn {
     @Override
     public boolean isId() {
         return false;
+    }
+
+    @Override
+    public GenerationType getGenerationType() {
+        throw new IllegalStateException("일반 Field는 GenerationType을 호출할 수 없습니다.");
     }
 }

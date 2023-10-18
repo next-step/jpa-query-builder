@@ -5,6 +5,7 @@ import domain.Person2;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EntityFieldTest {
 
@@ -42,5 +43,12 @@ class EntityFieldTest {
     void isId는_false이다() throws NoSuchFieldException {
         boolean actual = new EntityField(Person.class.getDeclaredField("name")).isId();
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void GenerationType을_반환하려하면_예외가_발생한다() {
+        assertThatThrownBy(() -> new EntityField(Person.class.getDeclaredField("name")).getGenerationType())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("일반 Field는 GenerationType을 호출할 수 없습니다.");
     }
 }
