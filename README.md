@@ -79,3 +79,58 @@ public class Person {
 - 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
 - [x] @Table(name) 을 고려해 drop 쿼리 작성
 
+### 2단계 - QueryBuilder DML
+Person 객체 정보
+```java
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+```
+
+- 요구사항 1 - 아래 정보를 바탕으로 create 쿼리 만들어보기
+
+columns 과 values 를 나누어서 구현해보자
+insert into table (column1, column2, column3) values (value1, value2, value3)
+- [x] Person EntityMetadata 를 이용해 만들어질 columnsClause 구성
+- [x] Person 인스턴스를 이용해 valueClause 구성
+- [x] 두 Clause 를 알맞게 연결
+
+- 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
+
+쿼리 실행을 통해 데이터를 여러 row 를 넣어 정상적으로 나오는지 확인해보자
+- [x] Person EntityMetadata 를 이용해 findAll 쿼리 생성.
+- [x] Database 에 연결 후 쿼리를 실행 및 검증.
+
+- 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
+```java
+private String whereClause(String selectQuery, Class<?> clazz) {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(selectQuery);
+    stringBuilder.append(" where ");
+    ...
+}
+```
+- [x] 위의 whereClause 를 통해 정상적인 where 구문 생성
+- [x] select 구문과 연결해 쿼리 생성
+- [x] Database 에 연결 후 쿼리 실행 및 검증
+
+- 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
+- [x] Person EntityMetadata 를 이용해 쿼리 생성

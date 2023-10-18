@@ -2,11 +2,10 @@ package persistence.core;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.domain.FixtureEntity;
+import domain.FixtureEntity;
 import persistence.exception.ColumnNotExistException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 class EntityColumnsTest {
 
@@ -35,6 +34,15 @@ class EntityColumnsTest {
         final EntityColumns columns = new EntityColumns(mockClass);
         final EntityColumn idColumn = new EntityColumn(mockClass.getDeclaredField("id"));
         assertThat(columns.getId()).isEqualTo(idColumn);
+    }
+
+    @Test
+    @DisplayName("@Transient 를 가진 필드는 EntityColumns 에 포함되지 않는다.")
+    void entityColumnsWithTransientNotExistTest() throws Exception {
+        mockClass = FixtureEntity.WithTransient.class;
+        final EntityColumns columns = new EntityColumns(mockClass);
+        final EntityColumn idColumn = new EntityColumn(mockClass.getDeclaredField("column"));
+        assertThatIterable(columns).doesNotContain(idColumn);
     }
 
 }

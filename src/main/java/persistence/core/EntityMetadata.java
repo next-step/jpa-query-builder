@@ -4,7 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import persistence.exception.PersistenceException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EntityMetadata<T> {
 
@@ -20,7 +22,7 @@ public class EntityMetadata<T> {
     }
 
     private void validate(final Class<T> clazz) {
-        if(!clazz.isAnnotationPresent(Entity.class)) {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new PersistenceException(clazz.getName() + "은 Entity 클래스가 아닙니다.");
         }
     }
@@ -41,7 +43,28 @@ public class EntityMetadata<T> {
         return this.columns;
     }
 
+    public List<String> getInsertableColumnNames() {
+        return this.columns.stream()
+                .filter(EntityColumn::isInsertable)
+                .map(EntityColumn::getName)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<String> getInsertableColumnFieldNames() {
+        return this.columns.stream()
+                .filter(EntityColumn::isInsertable)
+                .map(EntityColumn::getFieldName)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
     public String getIdColumnName() {
         return this.idColumn.getName();
     }
+
+    public List<String> getColumnNames() {
+        return this.columns.stream()
+                .map(EntityColumn::getName)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
 }

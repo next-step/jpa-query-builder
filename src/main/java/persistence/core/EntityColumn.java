@@ -1,6 +1,9 @@
 package persistence.core;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -8,28 +11,28 @@ import java.util.Optional;
 
 public class EntityColumn {
     private final String name;
+    private final String fieldName;
     private final Class<?> type;
     private final boolean isId;
     private final boolean isNotNull;
     private final boolean isAutoIncrement;
-    private final boolean isTransient;
     private final boolean isStringValued;
     private final int stringLength;
+    private final boolean isInsertable;
 
 
     public EntityColumn(final Field field) {
         field.setAccessible(true);
         this.name = initName(field);
+        this.fieldName = field.getName();
         this.type = field.getType();
         this.isId = initIsId(field);
-        this.isNotNull = this.isId || initIsNotNull(field);
+        this.isNotNull = initIsNotNull(field);
         this.isAutoIncrement = initIsAutoIncrement(field);
-        this.isTransient = initIsTransient(field);
         this.isStringValued = this.type.isAssignableFrom(String.class);
         this.stringLength = initStringLength(field);
+        this.isInsertable = initIsInsertable(field);
     }
-
-
 
     private String initName(final Field field) {
         final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
@@ -44,6 +47,10 @@ public class EntityColumn {
     }
 
     private boolean initIsNotNull(final Field field) {
+        if (this.isId) {
+            return true;
+        }
+
         final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
         return Optional.ofNullable(columnMetadata)
                 .map(column -> !column.nullable())
@@ -57,16 +64,22 @@ public class EntityColumn {
                 .isPresent();
     }
 
-
-    private boolean initIsTransient(final Field field) {
-        return field.isAnnotationPresent(Transient.class);
-    }
-
     private int initStringLength(final Field field) {
         final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
         return Optional.ofNullable(columnMetadata)
                 .map(Column::length)
                 .orElse(255);
+    }
+
+    private boolean initIsInsertable(final Field field) {
+        if (this.isId) {
+            return false;
+        }
+
+        final Column columnMetadata = field.getDeclaredAnnotation(Column.class);
+        return Optional.ofNullable(columnMetadata)
+                .map(Column::insertable)
+                .orElse(true);
     }
 
     public String getName() {
@@ -85,10 +98,6 @@ public class EntityColumn {
         return this.isAutoIncrement;
     }
 
-    public boolean isTransient() {
-        return this.isTransient;
-    }
-
     public Class<?> getType() {
         return this.type;
     }
@@ -101,16 +110,24 @@ public class EntityColumn {
         return this.stringLength;
     }
 
+    public String getFieldName() {
+        return this.fieldName;
+    }
+
+    public boolean isInsertable() {
+        return this.isInsertable;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final EntityColumn that = (EntityColumn) o;
-        return isId == that.isId && isNotNull == that.isNotNull && isAutoIncrement == that.isAutoIncrement && isTransient == that.isTransient && Objects.equals(name, that.name) && Objects.equals(type, that.type);
+        return isId == that.isId && isNotNull == that.isNotNull && isAutoIncrement == that.isAutoIncrement && Objects.equals(name, that.name) && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, isId, isNotNull, isAutoIncrement, isTransient);
+        return Objects.hash(name, type, isId, isNotNull, isAutoIncrement);
     }
 }

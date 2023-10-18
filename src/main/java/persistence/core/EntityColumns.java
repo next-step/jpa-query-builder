@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class EntityColumns implements Iterable<EntityColumn> {
     private final List<EntityColumn> columns;
@@ -19,7 +21,7 @@ public class EntityColumns implements Iterable<EntityColumn> {
     private List<EntityColumn> generateColumns(final Class<?> clazz) {
         this.validate(clazz);
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !clazz.isAnnotationPresent(Transient.class))
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(EntityColumn::new)
                 .collect(Collectors.toUnmodifiableList());
     }
@@ -38,6 +40,10 @@ public class EntityColumns implements Iterable<EntityColumn> {
     @Override
     public Iterator<EntityColumn> iterator() {
         return this.columns.iterator();
+    }
+
+    public Stream<EntityColumn> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
     public EntityColumn getId() {

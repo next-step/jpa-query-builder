@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
-import persistence.domain.FixtureEntity;
+import domain.FixtureEntity;
 
 import java.util.stream.Stream;
 

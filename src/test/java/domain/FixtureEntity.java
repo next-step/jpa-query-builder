@@ -1,4 +1,4 @@
-package persistence.domain;
+package domain;
 
 import jakarta.persistence.*;
 
@@ -44,6 +44,15 @@ public class FixtureEntity {
         private String column;
         @Column(nullable = false)
         private String notNullColumn;
+
+        public WithColumn() {
+        }
+
+        public WithColumn(final Long id, final String column, final String notNullColumn) {
+            this.id = id;
+            this.column = column;
+            this.notNullColumn = notNullColumn;
+        }
     }
 
     @Entity
@@ -78,6 +87,23 @@ public class FixtureEntity {
         private String column;
 
         private String defaultLength;
+    }
+    @Entity
+    public static class WithColumnNonInsertable {
+        @Id
+        @Column(insertable = false)
+        private Long id;
+        @Column(insertable = false)
+        private String notInsertableColumn;
+
+        private String insertableColumn;
+    }
+
+    @Entity
+    public static class WithIdInsertable {
+        @Id
+        @Column(insertable = true)
+        private Long id;
     }
 
     @Table(name = "users")
