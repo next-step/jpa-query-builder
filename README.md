@@ -73,3 +73,9 @@ public class Person {
 - @Table 어노테이션이 붙는 경우 테이블의 이름이 name으로 지정된다.
   - name이 지정되지 않는 경우 기존대로 클래스명을 따른다.
 - @Transient 어노테이션이 붙는 경우 column에서 제외한다.
+
+### refactor
+- EntityClass
+  - @Entity 어노테이션이 없는 경우 생성 시 예외가 발생한다.
+  - 테이블 이름을 반환할 수 있다.
+    - 테이블 이름은 요구사항과 동일하게 @Table의 name이 있는 경우 해당 이름을 반환한다.
