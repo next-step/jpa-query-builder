@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
 import persistence.exception.FiledEmptyException;
+import persistence.exception.NotFoundException;
 import persistence.exception.NumberRangeException;
 
 public class EntityColumn {
@@ -15,13 +16,16 @@ public class EntityColumn {
     private final String name;
     private final ColumnType columType;
     private final EntityColumnOption option;
+    private final String filedName;
     private Integer length;
+
 
     public EntityColumn(Field field) {
         if (field == null) {
             throw new FiledEmptyException();
         }
         this.name = initName(field);
+        this.filedName = field.getName();
         this.columType = initColumType(field);
         this.option = new EntityColumnOption(field);
     }
@@ -33,7 +37,6 @@ public class EntityColumn {
         }
         return column.name();
     }
-
     private ColumnType initColumType(Field field) {
         JDBCType jdbcType = convert(field.getType());
         if (jdbcType != JDBCType.VARCHAR) {
@@ -53,6 +56,17 @@ public class EntityColumn {
         }
         length = column.length();
         return ColumnType.createVarchar();
+    }
+
+    public Object getFieldValue(Object object) {
+        try {
+            final Class<?> clazz = object.getClass();
+            final Field field = clazz.getDeclaredField(filedName);
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (NoSuchFieldException | IllegalAccessException e ) {
+            throw new NotFoundException("해당 필드를 찾을 수 없습니다.");
+        }
     }
 
     public String getName() {
