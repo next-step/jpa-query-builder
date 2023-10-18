@@ -1,9 +1,12 @@
 package hibernate;
 
-import hibernate.entity.ColumnType;
 import hibernate.entity.EntityClass;
-import hibernate.entity.EntityField;
-import jakarta.persistence.*;
+import hibernate.entity.EntityColumn;
+import hibernate.entity.EntityColumnFactory;
+import hibernate.entity.strategy.ColumnOptionGenerateStrategy;
+import hibernate.entity.strategy.IdIdentityOptionGenerateStrategy;
+import hibernate.entity.strategy.NotNullOptionGenerateStrategy;
+import hibernate.entity.strategy.PrimaryKetOptionGenerateStrategy;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -14,11 +17,15 @@ public class QueryBuilder {
 
     private static final String CREATE_TABLE_QUERY = "create table %s (%s);";
     private static final String CREATE_COLUMN_QUERY = "%s %s";
+    private static final String CREATE_COLUMN_OPTION_DELIMITER = " ";
     private static final String CREATE_COLUMN_QUERY_DELIMITER = ", ";
 
-    private static final String CREATE_COLUMN_PRIMARY_KEY = " primary key";
-    private static final String CREATE_COLUMN_AUTO_INCREMENT = " auto_increment";
-    private static final String CREATE_COLUMN_NOT_NULL = " not null";
+
+    private final List<ColumnOptionGenerateStrategy> strategies = List.of(
+            new NotNullOptionGenerateStrategy(),
+            new PrimaryKetOptionGenerateStrategy(),
+            new IdIdentityOptionGenerateStrategy()
+    );
 
     public QueryBuilder() {
     }
@@ -29,45 +36,19 @@ public class QueryBuilder {
         return String.format(CREATE_TABLE_QUERY, entity.tableName(), columns);
     }
 
-    private String fieldsToQueryColumn2(final Field[] fields) {
-        return Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(this::fieldToQueryColumn)
-                .collect(Collectors.joining(CREATE_COLUMN_QUERY_DELIMITER));
-    }
-
     private String fieldsToQueryColumn(final Field[] fields) {
         return Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(this::fieldToQueryColumn)
+                .filter(EntityColumnFactory::isAvailableCreateEntityColumn)
+                .map(EntityColumnFactory::create)
+                .map(this::parseColumnQuery)
                 .collect(Collectors.joining(CREATE_COLUMN_QUERY_DELIMITER));
     }
 
-    private String fieldToQueryColumn(final Field field) {
-        String columnName = parseFieldName(field);
-        String columnType = ColumnType.valueOf(field.getType())
-                .getH2ColumnType();
-
-        String query = String.format(CREATE_COLUMN_QUERY, columnName, columnType);
-        if (field.isAnnotationPresent(Id.class)) {
-            query += CREATE_COLUMN_PRIMARY_KEY;
-            if (field.isAnnotationPresent(GeneratedValue.class) && field.getAnnotation(GeneratedValue.class).strategy() == GenerationType.IDENTITY) {
-                query += CREATE_COLUMN_AUTO_INCREMENT;
-            }
-        }
-        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).nullable()) {
-            query += CREATE_COLUMN_NOT_NULL;
-        }
-        return query;
-    }
-
-    private String parseFieldName(Field field) {
-        if (field.isAnnotationPresent(Column.class)) {
-            String name = field.getAnnotation(Column.class).name();
-            if (!name.isEmpty()) {
-                return name;
-            }
-        }
-        return field.getName();
+    private String parseColumnQuery(final EntityColumn entityColumn) {
+        String query = String.format(CREATE_COLUMN_QUERY, entityColumn.getFieldName(), entityColumn.getColumnType().getH2ColumnType());
+        return strategies.stream()
+                .filter(strategy -> strategy.acceptable(entityColumn))
+                .map(ColumnOptionGenerateStrategy::generateColumnOption)
+                .collect(Collectors.joining(CREATE_COLUMN_OPTION_DELIMITER, query + CREATE_COLUMN_OPTION_DELIMITER, ""));
     }
 }
