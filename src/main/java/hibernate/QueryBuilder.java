@@ -1,5 +1,7 @@
 package hibernate;
 
+import hibernate.entity.ColumnType;
+import hibernate.entity.EntityClass;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;

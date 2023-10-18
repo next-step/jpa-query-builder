@@ -1,4 +1,4 @@
-package hibernate;
+package hibernate.entity;
 
 import java.util.Arrays;
 

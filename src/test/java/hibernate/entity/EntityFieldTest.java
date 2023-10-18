@@ -1,7 +1,8 @@
-package hibernate;
+package hibernate.entity;
 
 import domain.Person;
 import domain.Person2;
+import hibernate.entity.EntityField;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

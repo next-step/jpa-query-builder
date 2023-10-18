@@ -1,4 +1,4 @@
-package hibernate;
+package hibernate.entity;
 
 import jakarta.persistence.Column;
 
