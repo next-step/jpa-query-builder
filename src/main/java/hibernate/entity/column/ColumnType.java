@@ -12,7 +12,7 @@ public enum ColumnType {
     private final String h2ColumnType;
     private final Class<?> javaColumnClass;
 
-    ColumnType(String h2ColumnType, Class<?> javaColumnClass) {
+    ColumnType(final String h2ColumnType, final Class<?> javaColumnClass) {
         this.h2ColumnType = h2ColumnType;
         this.javaColumnClass = javaColumnClass;
     }

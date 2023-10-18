@@ -10,7 +10,7 @@ public class DropQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String generateCreateQuery(Class<?> clazz) {
+    public String generateCreateQuery(final Class<?> clazz) {
         EntityClass entity = new EntityClass(clazz);
         return String.format(DROP_TABLE_QUERY, entity.tableName());
     }

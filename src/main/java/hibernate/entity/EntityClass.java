@@ -14,7 +14,7 @@ public class EntityClass {
         this.tableName = parseTableName(clazz);
     }
 
-    private String parseTableName(Class<?> clazz) {
+    private String parseTableName(final Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Table.class)) {
             return clazz.getSimpleName();
         }

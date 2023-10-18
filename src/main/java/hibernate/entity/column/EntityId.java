@@ -19,7 +19,7 @@ public class EntityId implements EntityColumn {
         this.entityField = new EntityField(field);
     }
 
-    private static GenerationType parseGenerationType(Field field) {
+    private static GenerationType parseGenerationType(final Field field) {
         if (!field.isAnnotationPresent(GeneratedValue.class)) {
             return GenerationType.AUTO;
         }
