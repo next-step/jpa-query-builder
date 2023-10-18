@@ -1,6 +1,5 @@
 package hibernate.entity.column;
 
-import hibernate.entity.column.ColumnType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

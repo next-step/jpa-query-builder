@@ -1,9 +1,5 @@
 package hibernate.entity.column;
 
-import hibernate.entity.column.EntityColumn;
-import hibernate.entity.column.EntityColumnFactory;
-import hibernate.entity.column.EntityField;
-import hibernate.entity.column.EntityId;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import org.junit.jupiter.api.Test;
