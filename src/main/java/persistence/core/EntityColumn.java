@@ -81,14 +81,6 @@ public class EntityColumn {
         return type;
     }
 
-    public boolean hasGeneratedValue() {
-        return generatedValue != null;
-    }
-
-    public GeneratedValue getGeneratedValue() {
-        return generatedValue;
-    }
-
     public String getName() {
         return this.name;
     }
