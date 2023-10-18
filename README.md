@@ -94,3 +94,6 @@ public class Person {
   - @Id 어노테이션이 달린 경우 EntityId를, 아닌 경우 EntityField 구현체를 생성한다.
 - ColumnOptionGenerateStrategy
   - 컬럼 옵션 전략에 맞는지 확인하고, 컬럼 옵션을 생성한다.
+
+### 요구사항 4
+- drop 쿼리를 생성한다.
