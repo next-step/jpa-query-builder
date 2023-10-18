@@ -20,19 +20,9 @@ public class QueryBuilder {
     }
 
     public String generateCreateQueries(final Class<?> clazz) {
-        String className = parseTableName(clazz);
+        EntityClass entity = new EntityClass(clazz);
         String columns = fieldsToQueryColumn(clazz.getDeclaredFields());
-        return String.format(CREATE_TABLE_QUERY, className, columns);
-    }
-
-    private String parseTableName(Class<?> clazz) {
-        if (clazz.isAnnotationPresent(Table.class)) {
-             String tableName = clazz.getAnnotation(Table.class).name();
-             if (!tableName.isEmpty()) {
-                 return tableName;
-             }
-        }
-        return clazz.getSimpleName();
+        return String.format(CREATE_TABLE_QUERY, entity.tableName(), columns);
     }
 
     private String fieldsToQueryColumn(final Field[] fields) {
