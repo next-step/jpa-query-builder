@@ -39,10 +39,10 @@ public class ColumnMeta {
 
     public String getColumn() {
         if (columnConstraint.isEmpty()) {
-            return COLUMN_FORMAT.formatted(columnName, columnType);
+            return String.format(COLUMN_FORMAT, columnName, columnType);
         }
 
-        return COLUMN_FORMAT_WITH_CONSTRAINT.formatted(columnName, columnType, columnConstraint);
+        return String.format(COLUMN_FORMAT_WITH_CONSTRAINT, columnName, columnType, columnConstraint);
     }
 
     private static String getColumnName(Field field) {

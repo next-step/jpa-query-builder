@@ -9,15 +9,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.dialect.H2ColumnType;
 import persistence.sql.ddl.exception.RequiredAnnotationException;
-import persistence.sql.ddl.generator.example.PersonV1;
-import persistence.sql.ddl.generator.example.PersonV1WithNoEntityAnnotation;
-import persistence.sql.ddl.generator.example.PersonV2;
-import persistence.sql.ddl.generator.example.PersonV2WithColumnName;
-import persistence.sql.ddl.generator.example.PersonV2WithGeneratedValue;
-import persistence.sql.ddl.generator.example.PersonV2WithNotNullConstraint;
-import persistence.sql.ddl.generator.example.PersonV3;
-import persistence.sql.ddl.generator.example.PersonV3WithTable;
-import persistence.sql.ddl.generator.example.PersonV3WithTransient;
+import persistence.sql.ddl.generator.fixture.PersonV1;
+import persistence.sql.ddl.generator.fixture.PersonV1WithNoEntityAnnotation;
+import persistence.sql.ddl.generator.fixture.PersonV2;
+import persistence.sql.ddl.generator.fixture.PersonV2WithColumnName;
+import persistence.sql.ddl.generator.fixture.PersonV2WithGeneratedValue;
+import persistence.sql.ddl.generator.fixture.PersonV2WithNotNullConstraint;
+import persistence.sql.ddl.generator.fixture.PersonV3;
+import persistence.sql.ddl.generator.fixture.PersonV3WithTable;
+import persistence.sql.ddl.generator.fixture.PersonV3WithTransient;
 
 @DisplayName("CREATE DDL 생성 테스트")
 class CreateDDLQueryGeneratorTest {

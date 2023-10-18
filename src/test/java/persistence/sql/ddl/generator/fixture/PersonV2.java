@@ -1,16 +1,13 @@
-package persistence.sql.ddl.generator.example;
+package persistence.sql.ddl.generator.fixture;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
-@Table(name = "users")
 @Entity
-public class PersonV3 {
+public class PersonV2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +21,5 @@ public class PersonV3 {
 
     @Column(nullable = false)
     private String email;
-
-    @Transient
-    private Integer index;
 
 }

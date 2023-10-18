@@ -1,9 +1,7 @@
-package persistence.sql.ddl.generator.example;
+package persistence.sql.ddl.generator.fixture;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity

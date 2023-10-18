@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import persistence.sql.ddl.ColumnAnnotationHelper;
 import persistence.sql.ddl.dialect.ColumnType;
 import persistence.sql.ddl.exception.RequiredAnnotationException;
@@ -23,7 +22,7 @@ public class CreateDDLQueryGenerator {
     }
 
     public String create(Class<?> entityClazz) {
-        return CREATE_TABLE_FORMAT.formatted(
+        return String.format(CREATE_TABLE_FORMAT,
             TableMeta.of(entityClazz).getTableName(),
             appendField(entityClazz)
         );
@@ -32,7 +31,7 @@ public class CreateDDLQueryGenerator {
     private String appendField(Class<?> entityClazz) {
         final List<Field> createDDlTargetFieldList = Arrays.stream(entityClazz.getDeclaredFields())
             .filter(field -> !ColumnAnnotationHelper.isTransient(field))
-            .toList();
+            .collect(Collectors.toList());
 
         validateHasIdAnnotation(createDDlTargetFieldList);
 

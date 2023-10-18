@@ -1,7 +1,9 @@
 package persistence.sql.ddl.schema.constraint;
 
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import java.lang.reflect.Field;
+import java.util.Objects;
 import persistence.sql.ddl.ColumnAnnotationHelper;
 import persistence.sql.ddl.dialect.ColumnType;
 import persistence.sql.ddl.exception.UnrecognizedGeneratedValueException;
@@ -31,12 +33,12 @@ public class PrimaryKeyConstraint implements Constraint {
         }
 
         final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-        switch (generatedValue.strategy()) {
-            case IDENTITY -> {
-                return PRIMARY_KEY_FORMAT.formatted(PRIMARY_KEY, columnType.generationIdentity());
-            }
-            default -> throw new UnrecognizedGeneratedValueException("Unexpected value: " + generatedValue.strategy());
+
+        if (Objects.requireNonNull(generatedValue.strategy()) == GenerationType.IDENTITY) {
+            return String.format(PRIMARY_KEY_FORMAT, PRIMARY_KEY, columnType.generationIdentity());
         }
+
+        throw new UnrecognizedGeneratedValueException("Unexpected value: " + generatedValue.strategy());
     }
 
 }

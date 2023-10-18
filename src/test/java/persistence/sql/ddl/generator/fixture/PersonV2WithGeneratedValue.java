@@ -1,18 +1,15 @@
-package persistence.sql.ddl.generator.example;
+package persistence.sql.ddl.generator.fixture;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
-@Table(name = "users")
 @Entity
-public class PersonV3WithTable {
+public class PersonV2WithGeneratedValue {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -20,4 +17,5 @@ public class PersonV3WithTable {
     private Integer age;
 
     private String email;
+
 }

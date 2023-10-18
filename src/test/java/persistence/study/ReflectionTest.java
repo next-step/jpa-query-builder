@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,12 +39,12 @@ class ReflectionTest {
         //given
         final List<Method> testStartWithMethodList = Arrays.stream(carClass.getDeclaredMethods())
             .filter(method -> method.getName().startsWith(containWord))
-            .toList();
+            .collect(Collectors.toList());
 
         //when
         final List<Object> invokedResultList = testStartWithMethodList.stream()
             .map((Method method) -> tryMethodInvoke(method, carClass))
-            .toList();
+            .collect(Collectors.toList());
 
         //then
         assertThat(invokedResultList).contains("test : null", "test : 0");
@@ -60,7 +61,7 @@ class ReflectionTest {
         //when
         final List<Method> testStartWithMethodList = Arrays.stream(carClass.getDeclaredMethods())
             .filter(method -> method.isAnnotationPresent(containAnnotation))
-            .toList();
+            .collect(Collectors.toList());
 
         testStartWithMethodList
             .forEach((Method method) -> tryMethodInvoke(method, carClass));

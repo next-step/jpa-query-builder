@@ -11,6 +11,6 @@ public class DropDDLQueryGenerator {
     }
 
     public String drop(Class<?> entityClazz) {
-        return DROP_TABLE_FORMAT.formatted(TableMeta.of(entityClazz).getTableName());
+        return String.format(DROP_TABLE_FORMAT, TableMeta.of(entityClazz).getTableName());
     }
 }

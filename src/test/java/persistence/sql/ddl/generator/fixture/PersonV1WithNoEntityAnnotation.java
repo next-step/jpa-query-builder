@@ -1,6 +1,5 @@
-package persistence.sql.ddl.generator.example;
+package persistence.sql.ddl.generator.fixture;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 public class PersonV1WithNoEntityAnnotation {
