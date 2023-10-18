@@ -9,12 +9,12 @@ public class MetaData {
 
     private String entity;
     private String id;
-    private Map<String, String> column; // 컬럼의 형, 이름
+    private Map<String, String> columns; // 컬럼의 형, 이름
 
-    public MetaData(String entity, String id, Map<String, String> column) {
+    public MetaData(String entity, String id, Map<String, String> columns) {
         this.entity = entity;
         this.id = id;
-        this.column = column;
+        this.columns = columns;
     }
 
     public String getEntity() {
@@ -25,8 +25,7 @@ public class MetaData {
         return id;
     }
 
-    public Map<String, String> getColumn() {
-        return column;
+    public Map<String, String> getColumns() {
+        return columns;
     }
-
 }

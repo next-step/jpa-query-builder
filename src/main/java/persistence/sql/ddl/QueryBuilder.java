@@ -12,17 +12,27 @@ public class QueryBuilder {
         this.dialect = dialect;
     }
 
-    public void create(MetaData metaData, StringBuilder sb) {
-        sb.append("create table ")
+    public StringBuilder create(MetaData metaData, StringBuilder sb) {
+        return sb.append("create table ")
                 .append(metaData.getEntity())
-                .append(" ")
+                .append(" (")
                 .append(metaData.getId())
-                .append(" int not null auto_increment, ");
+                .append(" int not null auto_increment, ")
+                .append(columnTypeName(metaData.getColumns()))
+                .append("primary key(")
+                .append(metaData.getId())
+                .append("))")
+        ;
 
     }
 
-    private StringBuilder columnTypeName(StringBuilder sb, Map<String, String> columns) {
-        columns.forEach((s, s2) -> sb.append(" ").append(s2).append(" ").append(dialect.getPrimitiveTypeName(s1)));
-
+    private StringBuilder columnTypeName(Map<String, String> columns) {
+        StringBuilder sb = new StringBuilder();
+        columns.forEach((type, name) -> sb.append(" ")
+                .append(name)
+                .append(" ")
+                .append(dialect.transferType(type))
+                .append(", "));
+        return sb;
     }
 }

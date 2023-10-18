@@ -12,7 +12,7 @@ public class AnnotationBinder {
     }
 
     public String entityBinder(Class<?> entityClass) {
-        if ( entityClass.isAnnotationPresent( Entity.class ) ) {
+        if (!entityClass.isAnnotationPresent(Entity.class) ) {
             throw new AnnotationException( "Type '" + entityClass.getName()
                     + "@Entity 가 아닙니다." );
         }
@@ -21,7 +21,7 @@ public class AnnotationBinder {
     }
 
     public String entityIdBinder(Field field) {
-        if(field.isAnnotationPresent(Id.class)) {
+        if(!field.isAnnotationPresent(Id.class)) {
             throw new AnnotationException( "Type '" + field.getName()
                     + "@id 가 아닙니다." );
         }
