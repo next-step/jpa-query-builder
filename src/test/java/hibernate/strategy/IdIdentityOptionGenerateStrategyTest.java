@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.lang.reflect.Field;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IdIdentityOptionGenerateStrategyTest {
@@ -16,7 +18,9 @@ class IdIdentityOptionGenerateStrategyTest {
 
     @Test
     void id이고_GenerationType이_IDENTITY인_경우_acceptable하다() throws NoSuchFieldException {
-        EntityId entityId = new EntityId(TestEntity.class.getDeclaredField("id1"));
+        Field givenField = TestEntity.class.getDeclaredField("id1");
+        EntityId entityId = new EntityId(givenField);
+
         boolean actual = strategy.acceptable(entityId);
         assertThat(actual).isTrue();
     }
@@ -24,7 +28,9 @@ class IdIdentityOptionGenerateStrategyTest {
     @ParameterizedTest
     @ValueSource(strings = {"id2", "id3"})
     void id가_아니거나_IDENTITY가_아닌_경우_acceptable하지_않다(final String input) throws NoSuchFieldException {
-        EntityId entityId = new EntityId(TestEntity.class.getDeclaredField(input));
+        Field givenField = TestEntity.class.getDeclaredField(input);
+        EntityId entityId = new EntityId(givenField);
+
         boolean actual = strategy.acceptable(entityId);
         assertThat(actual).isFalse();
     }
@@ -35,7 +41,7 @@ class IdIdentityOptionGenerateStrategyTest {
         assertThat(actual).isEqualTo("auto_increment");
     }
 
-    class TestEntity {
+    static class TestEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id1;

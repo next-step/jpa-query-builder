@@ -30,14 +30,14 @@ class DropQueryBuilderTest {
     }
 
     @Entity
-    class TestEntity {
+    static class TestEntity {
         @Id
         private Long id;
     }
 
     @Entity
     @Table(name = "table_option")
-    class TestEntity2 {
+    static class TestEntity2 {
         @Id
         private Long id;
     }

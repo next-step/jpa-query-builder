@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.lang.reflect.Field;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class NotNullOptionGenerateStrategyTest {
@@ -14,7 +16,9 @@ class NotNullOptionGenerateStrategyTest {
 
     @Test
     void nullable이_false인_경우_acceptable하다() throws NoSuchFieldException {
-        EntityField entityField = new EntityField(TestEntity.class.getDeclaredField("name1"));
+        Field givenField = TestEntity.class.getDeclaredField("name1");
+        EntityField entityField = new EntityField(givenField);
+
         boolean actual = strategy.acceptable(entityField);
         assertThat(actual).isTrue();
     }
@@ -22,7 +26,9 @@ class NotNullOptionGenerateStrategyTest {
     @ParameterizedTest
     @ValueSource(strings = {"name2", "name3"})
     void nullable이_false가_아닌_경우_acceptable하지_않다(final String input) throws NoSuchFieldException {
-        EntityField entityField = new EntityField(TestEntity.class.getDeclaredField(input));
+        Field givenField = TestEntity.class.getDeclaredField(input);
+        EntityField entityField = new EntityField(givenField);
+
         boolean actual = strategy.acceptable(entityField);
         assertThat(actual).isFalse();
     }
@@ -33,7 +39,7 @@ class NotNullOptionGenerateStrategyTest {
         assertThat(actual).isEqualTo("not null");
     }
 
-    class TestEntity {
+    static class TestEntity {
         @Column(nullable = false)
         private String name1;
 
