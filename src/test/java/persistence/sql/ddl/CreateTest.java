@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class CreateTest {
     DatabaseServer server;
     final Dialect dialect = new H2Dialect();
-    final QueryBuilder queryBuilder = new QueryBuilder(dialect);
+    final QueryBuilderV1 queryBuilder = new QueryBuilderV1(dialect);
     final AnnotationBinder annotationBinder = new AnnotationBinder();
     final MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     JdbcTemplate jdbcTemplate;

@@ -5,10 +5,10 @@ import sources.MetaData;
 
 import java.util.Map;
 
-public class QueryBuilder {
+public class QueryBuilderV3 {
 
     Dialect dialect;
-    public QueryBuilder(Dialect dialect) {
+    public QueryBuilderV3(Dialect dialect) {
         this.dialect = dialect;
     }
 
