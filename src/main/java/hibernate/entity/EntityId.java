@@ -6,9 +6,12 @@ import java.lang.reflect.Field;
 
 public class EntityId {
 
+    private final EntityField entityField;
+
     public EntityId(final Field field) {
         if (!field.isAnnotationPresent(Id.class)) {
             throw new IllegalArgumentException("Id 어노테이션이 없습니다.");
         }
+        this.entityField = new EntityField(field);
     }
 }
