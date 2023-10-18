@@ -17,18 +17,16 @@ public class QueryBuilder {
                 .append(metaData.getEntity())
                 .append(" (")
                 .append(metaData.getId())
-                .append(" int , ")
+                .append(", ")
                 .append(columnTypeName(metaData.getColumns()))
-                .append("primary key(")
-                .append(metaData.getId())
-                .append("))")
+                .append(")")
         ;
 
     }
 
     private StringBuilder columnTypeName(Map<String, String> columns) {
         StringBuilder sb = new StringBuilder();
-        columns.forEach((type, name) -> sb.append(" ")
+        columns.forEach((name, type) -> sb.append(" ")
                 .append(name)
                 .append(" ")
                 .append(dialect.transferType(type))

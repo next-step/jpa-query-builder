@@ -20,18 +20,18 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
     public MetaData generator(Class<?> entity) {
         //엔티티 이름(테이블 이름)
         String entityName = annotationBinder.entityBinder(entity);
-        String idName = findIdFieldName(entity);
+        Field idField = findIdField(entity);
+        String idName = annotationBinder.entityIdBinder(idField);
         Map<String, String> fields = Arrays.stream(entity.getDeclaredFields())
-                .filter(field -> !field.getName().equals(idName))
-                .collect(Collectors.toMap(field -> field.getType().getSimpleName(), annotationBinder::columnBinder));
+                .filter(field -> !field.equals(idField))
+                .collect(Collectors.toMap( annotationBinder::columnBinder, field -> field.getType().getSimpleName()));
 
         return new MetaData(entityName, idName, fields);
     }
 
-    private String findIdFieldName(Class<?> fromClass) {
+    private Field findIdField(Class<?> fromClass) {
         List<Field> fields = getFieldsInClass(fromClass);
-        Field idField = fields.stream().filter(field -> field.isAnnotationPresent(Id.class)).findFirst().orElseThrow(() -> new AnnotationException("id 필드가 없습니다."));
-        return annotationBinder.entityIdBinder(idField);
+        return fields.stream().filter(field -> field.isAnnotationPresent(Id.class)).findFirst().orElseThrow(() -> new AnnotationException("id 필드가 없습니다."));
     }
 
     private List<Field> getFieldsInClass(Class<?> fromClass) {

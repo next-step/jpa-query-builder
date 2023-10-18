@@ -41,16 +41,21 @@ public class AnnotationBinder {
 
     // 컬럼 어노테이션이 설정되어 있으면 컬럼 어노테이션의 이름 사용, 아니면 필드 이름 사용
     public String columnBinder(Field field) {
+        String columnName = "";
+        boolean nullable = true;
         if(field.isAnnotationPresent(Column.class)) {
             Column column = field.getDeclaredAnnotation(Column.class);
-            return column.name();
+            columnName = column.name();
+            nullable = column.nullable();
         }
         return field.getName();
     }
 
     private String registerGenerators(GenerationType type) {
         switch (type) {
-            case IDENTITY, AUTO:
+            case IDENTITY:
+                return " INT AUTO_INCREMENT PRIMARY KEY";
+            case AUTO:
                 return " INT AUTO_INCREMENT PRIMARY KEY";
             case UUID:
                 return "";

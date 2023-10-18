@@ -12,9 +12,9 @@ public class H2Dialect implements Dialect {
             case "int":
                 return "int";
             case "String":
-                return "varchar(100)";
-            default:
                 return "varchar";
+            default:
+                return "";
         }
     }
 
