@@ -1,17 +1,17 @@
 package sources;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * 테이블의 기본 정보ㄴㄴㄴㄴㄴ
+ * 테이블의 기본 정보
  */
 public class MetaData {
 
     private String entity;
     private String id;
-    private Map<String, String> columns; // 컬럼의 형, 이름
+    private List<ColumnMetaData> columns; // 컬럼의 형, 이름
 
-    public MetaData(String entity, String id, Map<String, String> columns) {
+    public MetaData(String entity, String id, List<ColumnMetaData> columns) {
         this.entity = entity;
         this.id = id;
         this.columns = columns;
@@ -25,7 +25,7 @@ public class MetaData {
         return id;
     }
 
-    public Map<String, String> getColumns() {
+    public List<ColumnMetaData> getColumns() {
         return columns;
     }
 }

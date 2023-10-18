@@ -11,6 +11,8 @@ public class H2Dialect implements Dialect {
                 return "bigint";
             case "int":
                 return "int";
+            case "Integer":
+                return "int";
             case "String":
                 return "varchar";
             default:

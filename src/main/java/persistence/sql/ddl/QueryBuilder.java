@@ -1,9 +1,10 @@
 package persistence.sql.ddl;
 
 import persistence.dialect.Dialect;
+import sources.ColumnMetaData;
 import sources.MetaData;
 
-import java.util.Map;
+import java.util.List;
 
 public class QueryBuilder {
 
@@ -17,20 +18,25 @@ public class QueryBuilder {
                 .append(metaData.getEntity())
                 .append(" (")
                 .append(metaData.getId())
-                .append(", ")
+                .append(" ")
                 .append(columnTypeName(metaData.getColumns()))
-                .append(")")
+                .append(" )")
         ;
 
     }
 
-    private StringBuilder columnTypeName(Map<String, String> columns) {
-        StringBuilder sb = new StringBuilder();
-        columns.forEach((name, type) -> sb.append(" ")
-                .append(name)
-                .append(" ")
-                .append(dialect.transferType(type))
-                .append(", "));
-        return sb;
+    private String columnTypeName(List<ColumnMetaData> columns) {
+        StringBuilder columnQuery = new StringBuilder();
+        for (ColumnMetaData column : columns) {
+            columnQuery.append(columnQueryBuilder(column));
+        }
+        return columnQuery.toString();
+    }
+
+    private String columnQueryBuilder(ColumnMetaData columnMetaData) {
+        if(columnMetaData.isNullable()) {
+            return ", "+ columnMetaData.getName() + " "+ dialect.transferType(columnMetaData.getType()) + " ";
+        }
+        return ", "+columnMetaData.getName() + " " + dialect.transferType(columnMetaData.getType()) + " not null";
     }
 }

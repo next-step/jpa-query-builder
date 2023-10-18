@@ -10,6 +10,7 @@ public class AnnotationBinder {
     public AnnotationBinder() {
     }
 
+    //엔티티 어노테이션 바인더(필수)
     public String entityBinder(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class) ) {
             throw new AnnotationException( "Type '" + entityClass.getName()
@@ -24,6 +25,7 @@ public class AnnotationBinder {
         return entityClass.getSimpleName();
     }
 
+    //엔티티의 아이디를 찾는 바인더(필수)
     public String entityIdBinder(Field field) {
         if(!field.isAnnotationPresent(Id.class)) {
             throw new AnnotationException( "Type '" + field.getName()
@@ -36,19 +38,17 @@ public class AnnotationBinder {
             return field.getName() + generator;
             // not null auto_increment
         }
-        return field.getName();
+        return field.getName() + registerGenerators(GenerationType.AUTO);
     }
 
     // 컬럼 어노테이션이 설정되어 있으면 컬럼 어노테이션의 이름 사용, 아니면 필드 이름 사용
-    public String columnBinder(Field field) {
-        String columnName = "";
-        boolean nullable = true;
+    public ColumnMetaData columnBinder(Field field) {
         if(field.isAnnotationPresent(Column.class)) {
             Column column = field.getDeclaredAnnotation(Column.class);
-            columnName = column.name();
-            nullable = column.nullable();
+            return new ColumnMetaData(!column.name().isEmpty() ? column.name() : field.getName(), field.getType().getSimpleName(), column.nullable());
         }
-        return field.getName();
+        System.out.println(field.getName());
+        return new ColumnMetaData(field.getName(), field.getType().getSimpleName());
     }
 
     private String registerGenerators(GenerationType type) {
@@ -59,7 +59,8 @@ public class AnnotationBinder {
                 return " INT AUTO_INCREMENT PRIMARY KEY";
             case UUID:
                 return "";
+            default:
+                return " INT AUTO_INCREMENT PRIMARY KEY";
         }
-        return null;
     }
 }
