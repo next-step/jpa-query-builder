@@ -2,6 +2,8 @@ package persistence.sql.dml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.dialect.OracleDialect;
+import persistence.dialect.PersistenceEnvironment;
 import persistence.exception.PersistenceException;
 
 import java.util.List;
@@ -22,6 +24,35 @@ class SelectQueryBuilderTest {
                 .build();
 
         assertThat(query).isEqualToIgnoringCase("select column, column2 from test where column=1");
+    }
+
+    @Test
+    @DisplayName("주어진 column 들을 이용해 페이징 Select Query 을 생성 할 수 있다.")
+    void pagingQueryTest() {
+        final String limitQuery = SelectQueryBuilder.builder()
+                .table("test")
+                .column("column")
+                .column("column2")
+                .where("column", "1")
+                .limit(0)
+                .offset(10)
+                .build();
+
+        assertThat(limitQuery)
+                .isEqualToIgnoringCase("select column, column2 from test where column=1 limit 0 offset 10");
+
+        PersistenceEnvironment.setStrategy(OracleDialect::new);
+        final String rownumQuery = SelectQueryBuilder.builder()
+                .table("test")
+                .column("column")
+                .column("column2")
+                .where("column", "1")
+                .limit(0)
+                .offset(10)
+                .build();
+
+        assertThat(rownumQuery)
+                .isEqualToIgnoringCase("select * from (select row.*, rownum as rnum from (select column, column2 from test where column=1) row) where rnum > 10 and rnum <= 10");
     }
 
     @Test

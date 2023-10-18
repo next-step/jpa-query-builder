@@ -4,7 +4,7 @@ public class OracleDialect implements Dialect {
     private final PagingStrategy pagingStrategy;
     private final DBColumnTypeMapper dbColumnTypeMapper;
 
-    public OracleDialect(final PagingStrategy pagingStrategy, final DBColumnTypeMapper dbColumnTypeMapper) {
+    public OracleDialect() {
         this.pagingStrategy = RownumPagingStrategy.getInstance();
         // 임시
         this.dbColumnTypeMapper = OracleColumnTypeMapper.getInstance();
