@@ -1,20 +1,21 @@
 package persistence.dialect;
 
-import javax.lang.model.type.TypeKind;
-
 public class H2Dialect implements Dialect {
 
     public static final String QUOTE = "`\"[";
     public static final String CLOSED_QUOTE = "`\"]";
 
-    public String getPrimitiveTypeName(TypeKind kind) {
-        switch ( kind ) {
-            case LONG:
+    public String transferType(String type) {
+        switch ( type ) {
+            case "Long":
                 return "bigint";
-            case INT:
+            case "int":
                 return "int";
+            case "String":
+                return "varchar(100)";
             default:
                 return "varchar";
         }
     }
+
 }
