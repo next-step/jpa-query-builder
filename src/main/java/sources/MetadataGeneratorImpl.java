@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MetadataGeneratorImpl implements MetadataGenerator {
@@ -20,15 +21,11 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
         //엔티티 이름(테이블 이름)
         String entityName = annotationBinder.entityBinder(entity);
         String idName = findIdFieldName(entity);
-        List<String> fieldsName = Arrays.stream(entity.getDeclaredFields())
-                .map(Field::getName)
-                .filter(fieldName -> !fieldName.equals(idName)).collect(Collectors.toList());
+        Map<String, String> fields = Arrays.stream(entity.getDeclaredFields())
+                .filter(field -> !field.getName().equals(idName))
+                .collect(Collectors.toMap(field -> field.getType().getSimpleName(), Field::getName));
 
-        return new MetaData(entityName, idName, fieldsName);
-    }
-    // 엔티티 클래스로 메타데이터를 만드는 메소드
-    public MetaData generate() {
-
+        return new MetaData(entityName, idName, fields);
     }
 
     private String findIdFieldName(Class<?> fromClass) {
