@@ -11,7 +11,7 @@ public class EntityField {
 
     public EntityField(final Field field) {
         this.fieldName = parseFieldName(field);
-        this.isNullable = false;
+        this.isNullable = parseNullable(field);
     }
 
     private String parseFieldName(final Field field) {
@@ -23,6 +23,13 @@ public class EntityField {
             return field.getName();
         }
         return fieldName;
+    }
+
+    private boolean parseNullable(final Field field) {
+        if (!field.isAnnotationPresent(Column.class)) {
+            return true;
+        }
+        return field.getAnnotation(Column.class).nullable();
     }
 
     public String getFieldName() {

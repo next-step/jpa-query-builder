@@ -19,4 +19,16 @@ class EntityFieldTest {
         String actual = new EntityField(Person.class.getDeclaredField("name")).getFieldName();
         assertThat(actual).isEqualTo("name");
     }
+
+    @Test
+    void Column_어노테이션의_nullable이_있는_경우_isNullable이_된다() throws NoSuchFieldException {
+        boolean actual = new EntityField(Person2.class.getDeclaredField("email")).isNullable();
+        assertThat(actual).isFalse();
+    }
+
+    @Test
+    void Column_어노테이션의_nullable이_없는_경우_isNullable은_default값이_된다() throws NoSuchFieldException {
+        boolean actual = new EntityField(Person.class.getDeclaredField("name")).isNullable();
+        assertThat(actual).isTrue();
+    }
 }
