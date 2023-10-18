@@ -5,7 +5,13 @@ public class ColumnBuilder {
     }
 
     public String buildColumnToCreate(Column column) {
-        return column.getName() + " " + column.getType();
+        ConstraintBuilder constraintBuilder = new ConstraintBuilder();
+
+        return new StringBuilder()
+                .append(column.getName() + " " + column.getType())
+                .append(constraintBuilder.buildNullable(column.getConstraint()))
+                .append(constraintBuilder.bulidGeneratedType(column.getConstraint()))
+                .toString();
     }
 
     public String buildPKColumnToCreate(Column column) {
