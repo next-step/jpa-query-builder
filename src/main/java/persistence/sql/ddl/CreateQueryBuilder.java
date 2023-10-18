@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import java.util.Arrays;
@@ -15,10 +16,18 @@ public class CreateQueryBuilder{
     }
 
     public String bulidQuery(Class<?> clazz) {
+        checkIsEntity(clazz);
+
         return format(CREATE_COMMAND, findTableName(clazz)) +
                 "(" +
                 buildColumnList(convertClassToColumnList(clazz)) +
                 ");";
+    }
+
+    private void checkIsEntity(Class<?> clazz) {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("Entity 클래스가 아닙니다.");
+        }
     }
 
     private String findTableName(Class<?> clazz) {
