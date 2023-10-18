@@ -85,6 +85,7 @@ public class Person {
     - Column nullable을 가진다.
   - Field의 타입을 받아 ColumnType으로 변환하여 받을 수 있다.
   - GenerationType을 반환하려하면 예외가 발생한다.
+  - @Transient 어노테이션이 있는 경우 생성 시 예외가 발생한다.
 - EntityId
   - @Id 어노테이션이 없는 경우 예외가 발생한다.
   - @GeneratedValue 어노테이션을 받아 저장한다.

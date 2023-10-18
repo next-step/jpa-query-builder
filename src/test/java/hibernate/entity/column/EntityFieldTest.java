@@ -1,12 +1,20 @@
 package hibernate.entity.column;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Transient;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EntityFieldTest {
+
+    @Test
+    void 생성_시_Transient_어노테이션이_있는_경우_예외가_발생한다() {
+        assertThatThrownBy(() -> new EntityField(TestEntity.class.getDeclaredField("transientField")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Transient이 붙은 필드는 생성될 수 없습니다.");
+    }
 
     @Test
     void Column_어노테이션의_name이_있는_경우_fieldName이_된다() throws NoSuchFieldException {
@@ -61,5 +69,8 @@ class EntityFieldTest {
         private String email;
 
         private String noNullableEmail;
+
+        @Transient
+        private String transientField;
     }
 }

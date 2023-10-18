@@ -2,6 +2,7 @@ package hibernate.entity.column;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 
@@ -12,6 +13,9 @@ public class EntityField implements EntityColumn {
     private final boolean isNullable;
 
     public EntityField(final Field field) {
+        if (field.isAnnotationPresent(Transient.class)) {
+            throw new IllegalArgumentException("Transient이 붙은 필드는 생성될 수 없습니다.");
+        }
         this.fieldName = parseFieldName(field);
         this.columnType = ColumnType.valueOf(field.getType());
         this.isNullable = parseNullable(field);
