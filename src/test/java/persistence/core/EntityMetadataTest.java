@@ -3,7 +3,7 @@ package persistence.core;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.domain.FixtureEntity;
+import domain.FixtureEntity;
 import persistence.exception.PersistenceException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

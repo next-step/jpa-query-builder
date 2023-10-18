@@ -2,7 +2,7 @@ package persistence.core;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.domain.FixtureEntity;
+import domain.FixtureEntity;
 import persistence.exception.ColumnNotExistException;
 
 import static org.assertj.core.api.Assertions.*;
