@@ -11,8 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
+import persistence.dialect.H2ColumnTypeMapper;
 import persistence.sql.ddl.DdlGenerator;
-import persistence.dialect.DefaultDBColumnTypeMapper;
 import persistence.sql.dml.DmlGenerator;
 
 import java.sql.SQLException;
@@ -33,7 +33,7 @@ class ApplicationTest {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
-        ddlGenerator = new DdlGenerator(DefaultDBColumnTypeMapper.getInstance());
+        ddlGenerator = new DdlGenerator(H2ColumnTypeMapper.getInstance());
         dmlGenerator = new DmlGenerator();
         entityMetadata = EntityMetadataProvider.getInstance().getEntityMetadata(Person.class);
         final String createDdl = ddlGenerator.generateCreateDdl(entityMetadata);
