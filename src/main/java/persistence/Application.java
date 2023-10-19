@@ -12,6 +12,7 @@ import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dialect.DbmsDdlQueryBuilder;
 import persistence.sql.dialect.DbmsDmlQueryBuilder;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
@@ -45,7 +46,20 @@ public class Application {
             logger.info("personList size = {}", personList.size());
 
             String selectByPkQuery = selectQueryBuilder.getSelectByPkQuery(Person.class, 1L);
-            Person person = jdbcTemplate.queryForObject(selectByPkQuery, new EntityRowMapper<>(Person.class));
+            jdbcTemplate.queryForObject(selectByPkQuery, new EntityRowMapper<>(Person.class));
+
+            DeleteQueryBuilder deleteQueryBuilder = dmlbuilder.getDeleteQueryBuilder();
+            String deleteByPkQuery = deleteQueryBuilder.getDeleteByPkQuery(Person.class, 1L);
+            jdbcTemplate.execute(deleteByPkQuery);
+
+            personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
+            logger.info("personList size = {}", personList.size());
+
+            String deleteAllQuery = deleteQueryBuilder.getDeleteAllQuery(Person.class);
+            jdbcTemplate.execute(deleteAllQuery);
+
+            personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
+            logger.info("personList size = {}", personList.size());
 
             DropQueryBuilder dropQueryBuilder = ddlbuilder.getDropQueryBuilder();
             jdbcTemplate.execute(dropQueryBuilder.getQuery(Person.class));
