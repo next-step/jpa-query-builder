@@ -1,4 +1,4 @@
-package persistence.vender.dialect;
+package persistence.dialect.h2;
 
 import jakarta.persistence.GenerationType;
 import persistence.dialect.Dialect;
