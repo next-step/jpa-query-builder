@@ -6,14 +6,14 @@ import persistence.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class QueryBuilderTest {
+public class EntityQueryBuilderTest {
 
     @Test
     @DisplayName("Person 엔터티 create 쿼리 만들기")
     public void createQueryTest() {
-        QueryBuilder queryBuilder = new QueryBuilder();
+        EntityQueryBuilder entityQueryBuilder = new EntityQueryBuilder(Person.class);
 
-        String query = queryBuilder.create(Person.class);
+        String query = entityQueryBuilder.create();
 
         assertThat(query).isEqualTo("CREATE TABLE users (" +
                 "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
@@ -24,10 +24,10 @@ public class QueryBuilderTest {
 
     @Test
     @DisplayName("Person 엔터티 drop쿼리 만들기")
-public void dropQueryTest() {
-        QueryBuilder queryBuilder = new QueryBuilder();
+    public void dropQueryTest() {
+        EntityQueryBuilder entityQueryBuilder = new EntityQueryBuilder(Person.class);
 
-        String query = queryBuilder.drop(Person.class);
+        String query = entityQueryBuilder.drop();
 
         assertThat(query).isEqualTo("DROP TABLE users;");
     }
