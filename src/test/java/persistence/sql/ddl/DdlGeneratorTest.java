@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
 import domain.FixtureEntity;
 import persistence.dialect.H2Dialect;
-import persistence.dialect.PersistenceEnvironment;
 
 import java.util.stream.Stream;
 
@@ -22,8 +21,8 @@ class DdlGeneratorTest {
 
     @BeforeEach
     void setUp() {
-        final PersistenceEnvironment persistenceEnvironment = new PersistenceEnvironment(H2Dialect::new);
-        generator = new DdlGenerator(persistenceEnvironment.getDialect());
+        final H2Dialect dialect = new H2Dialect();
+        generator = new DdlGenerator(dialect);
     }
 
     @Test

@@ -20,7 +20,7 @@ class SelectQueryBuilderTest {
 
     @BeforeEach
     void setUp() {
-        this.dialect = new PersistenceEnvironment(H2Dialect::new).getDialect();
+        this.dialect = new H2Dialect();
     }
 
     @Test
@@ -55,7 +55,7 @@ class SelectQueryBuilderTest {
     @Test
     @DisplayName("주어진 column 들을 이용해 페이징 rownum Select Query 을 생성 할 수 있다.")
     void rownumPagingQueryTest() {
-        final Dialect oracleDialect = new PersistenceEnvironment(OracleDialect::new).getDialect();
+        final Dialect oracleDialect = new OracleDialect();
         final String rownumQuery = new SelectQueryBuilder(oracleDialect)
                 .table("test")
                 .column("column")

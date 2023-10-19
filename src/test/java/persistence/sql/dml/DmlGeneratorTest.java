@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.dialect.Dialect;
 import persistence.dialect.H2Dialect;
-import persistence.dialect.PersistenceEnvironment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +16,7 @@ class DmlGeneratorTest {
 
     @BeforeEach
     void setUp() {
-        final Dialect dialect = new PersistenceEnvironment(H2Dialect::new).getDialect();
+        final Dialect dialect = new H2Dialect();
         this.generator = new DmlGenerator(dialect);
     }
 
