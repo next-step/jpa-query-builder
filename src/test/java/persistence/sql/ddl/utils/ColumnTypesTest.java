@@ -11,6 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ColumnTypesTest {
 
+    private final String ID = "id";
+    private final String NAME = "nick_name";
+    private final String AGE = "old";
+
     @Test
     @DisplayName("column들의 이름을 가져온다.")
     void getColumnsName() {
@@ -18,14 +22,14 @@ class ColumnTypesTest {
         ColumnTypes columnTypes = new ColumnTypes(Person.class);
 
         //When
-        String id = columnTypes.getColumn("id").getName();
-        String name = columnTypes.getColumn("name").getName();
-        String age = columnTypes.getColumn("age").getName();
+        String id = columnTypes.getColumn(ID).getName();
+        String name = columnTypes.getColumn(NAME).getName();
+        String age = columnTypes.getColumn(AGE).getName();
 
         //Then
         assertAll(() -> assertThat(id).isEqualTo("id"),
-                () -> assertThat(name).isEqualTo("name"),
-                () -> assertThat(age).isEqualTo("age"));
+                () -> assertThat(name).isEqualTo("nick_name"),
+                () -> assertThat(age).isEqualTo("old"));
     }
 
     @Test
@@ -36,9 +40,9 @@ class ColumnTypesTest {
         ColumnTypes idColumnTypes = columnTypes.getIdColumns();
 
         //When
-        ColumnType id = idColumnTypes.getColumn("id");
-        ColumnType name = idColumnTypes.getColumn("name");
-        ColumnType age = idColumnTypes.getColumn("age");
+        ColumnType id = idColumnTypes.getColumn(ID);
+        ColumnType name = idColumnTypes.getColumn(NAME);
+        ColumnType age = idColumnTypes.getColumn(AGE);
 
         //Then
         assertAll(() -> assertThat(id.getName()).isEqualTo("id"),
@@ -53,9 +57,9 @@ class ColumnTypesTest {
         ColumnTypes columnTypes = new ColumnTypes(Person.class);
 
         //When
-        DataType id = columnTypes.getColumn("id").getDataType();
-        DataType name = columnTypes.getColumn("name").getDataType();
-        DataType age = columnTypes.getColumn("age").getDataType();
+        DataType id = columnTypes.getColumn(ID).getDataType();
+        DataType name = columnTypes.getColumn(NAME).getDataType();
+        DataType age = columnTypes.getColumn(AGE).getDataType();
 
         //Then
         assertAll(() -> assertThat(id.getName()).isEqualTo("BIGINT"),
@@ -70,15 +74,13 @@ class ColumnTypesTest {
         ColumnTypes columnTypes = new ColumnTypes(Person.class);
 
         //When
-        Integer id = columnTypes.getColumn("id").getLength();
-        Integer name = columnTypes.getColumn("nick_name").getLength();
-        Integer age = columnTypes.getColumn("old").getLength();
+        Integer id = columnTypes.getColumn(ID).getLength();
+        Integer name = columnTypes.getColumn(NAME).getLength();
+        Integer age = columnTypes.getColumn(AGE).getLength();
 
         //Then
         assertAll(() -> assertThat(id).isNull(),
                 () -> assertThat(name).isEqualTo(255),
                 () -> assertThat(age).isNull());
     }
-
-
 }

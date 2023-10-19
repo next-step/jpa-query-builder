@@ -12,6 +12,6 @@ class EntityMetaDataExtractorTest {
     void getTableName() {
         TableType tableType = entityMetaDataExtractor.getTable();
         String name = tableType.getName();
-        assertThat(name).isEqualTo("person");
+        assertThat(name).isEqualTo("users");
     }
 }

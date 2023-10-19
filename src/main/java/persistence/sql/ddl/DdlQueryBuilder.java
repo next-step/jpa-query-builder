@@ -19,6 +19,13 @@ public class DdlQueryBuilder {
         return sb.toString();
     }
 
+    public String dropTable() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("drop table ");
+        sb.append(entityMetaDataExtractor.getTable().getName());
+        return sb.toString();
+    }
+
     public String createColumnsDdl() {
         return String.join(", ", ColumnQueryBuilder.generateDdlQueryRows(entityMetaDataExtractor.getColumns()));
     }

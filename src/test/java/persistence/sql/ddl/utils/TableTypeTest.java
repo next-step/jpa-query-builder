@@ -12,6 +12,6 @@ class TableTypeTest {
     void getNameTest() {
         TableType tableType = new TableType(Person.class);
         String name = tableType.getName();
-        Assertions.assertThat(name).isEqualToIgnoringCase("person");
+        Assertions.assertThat(name).isEqualToIgnoringCase("users");
     }
 }

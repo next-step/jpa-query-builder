@@ -19,8 +19,8 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(Person.class);
-            String columnsDdl = ddlQueryBuilder.createTable();
-            jdbcTemplate.execute(columnsDdl);
+            jdbcTemplate.execute(ddlQueryBuilder.createTable());
+            jdbcTemplate.execute(ddlQueryBuilder.dropTable());
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
