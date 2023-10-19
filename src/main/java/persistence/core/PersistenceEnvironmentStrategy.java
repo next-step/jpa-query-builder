@@ -1,11 +1,10 @@
-package persistence.dialect;
+package persistence.core;
 
-import persistence.sql.dml.DmlGenerator;
+import persistence.dialect.Dialect;
 
 import java.sql.Connection;
 
 public interface PersistenceEnvironmentStrategy {
     Dialect getDialect();
-    DmlGenerator getDmlGenerator();
     Connection getConnection();
 }

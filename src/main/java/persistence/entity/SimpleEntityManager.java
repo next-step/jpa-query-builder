@@ -4,7 +4,7 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
-import persistence.dialect.PersistenceEnvironment;
+import persistence.core.PersistenceEnvironment;
 import persistence.exception.PersistenceException;
 import persistence.sql.dml.DmlGenerator;
 import persistence.util.ReflectionUtils;

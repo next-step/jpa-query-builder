@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import persistence.dialect.Dialect;
 import persistence.dialect.H2Dialect;
 import persistence.dialect.OracleDialect;
-import persistence.dialect.PersistenceEnvironment;
 import persistence.exception.PersistenceException;
 
 import java.util.List;

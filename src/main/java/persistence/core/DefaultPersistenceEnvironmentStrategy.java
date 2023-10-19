@@ -1,8 +1,8 @@
-package persistence.dialect;
+package persistence.core;
 
 import database.DatabaseServer;
+import persistence.dialect.Dialect;
 import persistence.exception.PersistenceException;
-import persistence.sql.dml.DmlGenerator;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,12 +10,10 @@ import java.sql.SQLException;
 public class DefaultPersistenceEnvironmentStrategy implements PersistenceEnvironmentStrategy {
     private final DatabaseServer server;
     private final Dialect dialect;
-    private final DmlGenerator dmlGenerator;
 
     public DefaultPersistenceEnvironmentStrategy(final DatabaseServer server, final Dialect dialect) {
         this.server = server;
         this.dialect = dialect;
-        this.dmlGenerator = new DmlGenerator(dialect);
     }
 
     @Override
@@ -24,15 +22,10 @@ public class DefaultPersistenceEnvironmentStrategy implements PersistenceEnviron
     }
 
     @Override
-    public DmlGenerator getDmlGenerator() {
-        return this.dmlGenerator;
-    }
-
-    @Override
     public Connection getConnection() {
         try {
             return this.server.getConnection();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new PersistenceException("커넥션 연결을 실패했습니다.", e);
         }
     }

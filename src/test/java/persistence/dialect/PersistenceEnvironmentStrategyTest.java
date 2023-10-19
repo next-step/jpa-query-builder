@@ -5,6 +5,8 @@ import database.MockDatabaseServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.core.DefaultPersistenceEnvironmentStrategy;
+import persistence.core.PersistenceEnvironment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
