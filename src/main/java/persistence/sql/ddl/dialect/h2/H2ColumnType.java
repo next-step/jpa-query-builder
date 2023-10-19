@@ -1,25 +1,30 @@
 package persistence.sql.ddl.dialect.h2;
 
-import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Java Type과 H2 컬럼 타입을 매핑하는 Enum
  */
 public enum H2ColumnType {
-    LONG(Long.class, "bigint", null),
-    INTEGER(Integer.class, "integer", null),
-    STRING(String.class, "varchar", H2ColumnTypeProperties::getVarcharLength),
-
+    LONG(Long.class, "bigint"),
+    INTEGER(Integer.class, "integer"),
+    STRING(String.class, "varchar"),
     ;
 
     public final Class<?> fieldType;
     public final String dbType;
-    public final Function<Field, String> properties;
 
-    H2ColumnType(Class<?> fieldType, String dbType, Function<Field, String> properties) {
+    H2ColumnType(Class<?> fieldType, String dbType) {
         this.fieldType = fieldType;
         this.dbType = dbType;
-        this.properties = properties;
     }
+
+    static final Map<Class<?>, H2ColumnType> typeMap = Arrays.stream(H2ColumnType.values())
+            .collect(Collectors.toMap(
+                    columnTypeEnum -> columnTypeEnum.fieldType,
+                    Function.identity()));
+
 }
