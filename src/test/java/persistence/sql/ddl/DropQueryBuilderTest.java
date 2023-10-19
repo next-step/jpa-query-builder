@@ -1,8 +1,9 @@
 package persistence.sql.ddl;
 
+import entity.Person;
+import fixture.PersonFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +13,7 @@ class DropQueryBuilderTest {
     @Test
     void build() {
         //given
-        Person changgunyee = new Person(1L, "changgunyee", 30, "minyoung403@naver.com");
+        Person changgunyee = PersonFixture.changgunyee();
 
         //when
         DropQueryBuilder builder = new DropQueryBuilder();

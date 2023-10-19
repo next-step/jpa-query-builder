@@ -1,4 +1,4 @@
-package persistence.entity;
+package entity;
 
 import persistence.annotations.*;
 
@@ -19,10 +19,14 @@ public class Person {
     @Column(nullable = false)
     private String email;
 
-    public Person(Long id, String name, Integer age, String email) {
+    @Transient
+    private Integer index;
+
+    public Person(Long id, String name, Integer age, String email, Integer index) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
+        this.index = index;
     }
 }
