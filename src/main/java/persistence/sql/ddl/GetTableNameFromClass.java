@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import persistence.sql.ddl.exception.CannotCreateTableException;
 import persistence.sql.ddl.vo.TableName;
 
@@ -9,6 +10,13 @@ public class GetTableNameFromClass {
         if (!cls.isAnnotationPresent(Entity.class)) {
             throw new CannotCreateTableException("Class is not annotated with @Entity");
         }
-        return TableName.of(cls.getSimpleName());
+        String tableName = cls.getSimpleName();
+        if (cls.isAnnotationPresent(Table.class)) {
+            Table annotation = cls.getAnnotation(Table.class);
+            if (annotation.name() != null && !annotation.name().isEmpty()) {
+                tableName = annotation.name();
+            }
+        }
+        return TableName.of(tableName);
     }
 }
