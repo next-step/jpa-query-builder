@@ -50,8 +50,9 @@ public class SimpleEntityManager implements EntityManager {
     }
 
     @Override
-    public Object persist(final Object entity) {
-        return null;
+    public void persist(final Object entity) {
+        final String insert = dmlGenerator.insert(entity);
+        jdbcTemplate.execute(insert);
     }
 
     @Override

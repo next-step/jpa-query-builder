@@ -5,10 +5,7 @@ import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
 import persistence.dialect.DefaultPersistenceEnvironmentStrategy;
@@ -24,6 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class ApplicationTest {
     private DatabaseServer server;
@@ -87,6 +85,17 @@ class ApplicationTest {
             softly.assertThat(person.isName("test00")).isTrue();
             softly.assertThat(person.isAge(0)).isTrue();
             softly.assertThat(person.isEmail("test00@gmail.com")).isTrue();
+        });
+    }
+
+    @Test
+    @DisplayName("entityManager.persist 를 이용해 특정 객체를 DB 에 저장할 수 있다.")
+    void entityManagerPersistTest() {
+        final EntityManager entityManager = new SimpleEntityManager(persistenceEnvironment);
+        final Person newPerson = new Person("min", 30, "jongmin4943@gmail.com");
+
+        assertDoesNotThrow(() -> {
+            entityManager.persist(newPerson);
         });
     }
 
