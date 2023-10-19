@@ -29,13 +29,6 @@ public class EntityColumn {
     }
 
     /**
-     * String 컬럼인지 확인
-     */
-    public boolean isString() {
-        return type.equals(String.class);
-    }
-
-    /**
      * `@Transient` 컬럼인지 확인
      */
     public boolean isTransient() {
