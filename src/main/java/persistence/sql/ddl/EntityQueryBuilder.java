@@ -1,16 +1,15 @@
-package persistence.common;
+package persistence.sql.ddl;
 
 import persistence.annotations.Entity;
 import persistence.annotations.Table;
-import persistence.sql.ddl.NoEntityException;
 
 import java.util.Optional;
 
-public class EntityClazz {
+public class EntityQueryBuilder {
 
     private String name;
 
-    public EntityClazz(Class<?> clazz) {
+    public EntityQueryBuilder(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new NoEntityException(clazz.getName());
         }

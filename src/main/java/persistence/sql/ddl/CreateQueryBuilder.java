@@ -1,7 +1,5 @@
 package persistence.sql.ddl;
 
-import persistence.common.EntityClazz;
-import persistence.common.EntityField;
 import persistence.sql.QueryBuilder;
 
 import java.util.Arrays;
@@ -13,13 +11,13 @@ public class CreateQueryBuilder implements QueryBuilder {
     @Override
     public String build(Object obj) {
         Class<?> clazz = obj.getClass();
-        EntityClazz entityClazz = new EntityClazz(clazz);
+        EntityQueryBuilder entityQueryBuilder = new EntityQueryBuilder(clazz);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(entityClazz.getCreateQuery());
+        sb.append(entityQueryBuilder.getCreateQuery());
 
-        List<EntityField> efs = Arrays.stream(clazz.getDeclaredFields())
-                .map(EntityField::new)
+        List<FieldQueryBuilder> efs = Arrays.stream(clazz.getDeclaredFields())
+                .map(FieldQueryBuilder::new)
                 .collect(Collectors.toList());
 
         efs.stream().forEach(ef -> sb.append(ef.getCreateFieldQuery()));

@@ -1,4 +1,4 @@
-package persistence.common;
+package persistence.sql.ddl;
 
 import persistence.annotations.Column;
 import persistence.annotations.GeneratedValue;
@@ -8,7 +8,7 @@ import persistence.annotations.Id;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
-public class EntityField {
+public class FieldQueryBuilder {
 
     private String name;
     private String type;
@@ -16,7 +16,7 @@ public class EntityField {
     private GenerationType generationType;
     private boolean nullable;
 
-    public EntityField(Field field) {
+    public FieldQueryBuilder(Field field) {
         if (field.getType().equals(Long.class)) {
             this.type = "BIGINT";
         } else if (field.getType().equals(Integer.class)) {
