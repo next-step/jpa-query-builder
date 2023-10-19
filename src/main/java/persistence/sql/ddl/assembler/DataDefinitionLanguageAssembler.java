@@ -2,6 +2,7 @@ package persistence.sql.ddl.assembler;
 
 import persistence.sql.ddl.DataDefinitionLanguageGenerator;
 import persistence.sql.ddl.TableCreator;
+import persistence.sql.ddl.TableRemover;
 import persistence.sql.ddl.vo.DatabaseField;
 
 public class DataDefinitionLanguageAssembler {
@@ -30,7 +31,17 @@ public class DataDefinitionLanguageAssembler {
             }
             sb.append(System.lineSeparator());
         }
-        sb.append(')');
+        sb.append(");");
+        return sb.toString();
+    }
+
+    public String assembleDropTableQuery(Class<?> cls) {
+        TableRemover tableRemover = dataDefinitionLanguageGenerator.generateTableRemoverWithClass(cls);
+        StringBuilder sb = new StringBuilder();
+        sb.append("drop table ");
+        sb.append(" ");
+        sb.append(tableRemover.getTableName());
+        sb.append(" if exists;");
         return sb.toString();
     }
 

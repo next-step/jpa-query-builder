@@ -21,9 +21,12 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            String query = createQuery();
-            jdbcTemplate.execute(query);
-            System.out.println(query);
+            String createQuery = generateCreateQuery();
+            String dropQuery = generateDropQuery();
+            jdbcTemplate.execute(createQuery);
+            jdbcTemplate.execute(dropQuery);
+            System.out.println(createQuery);
+            System.out.println(dropQuery);
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
@@ -32,7 +35,7 @@ public class Application {
         }
     }
 
-    public static String createQuery() {
+    public static String generateCreateQuery() {
         GetTableNameFromClass getTableNameFromClass = new GetTableNameFromClass();
         GetFieldFromClass getFieldFromClass = new GetFieldFromClass();
         DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
@@ -40,5 +43,15 @@ public class Application {
         );
         DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = new DataDefinitionLanguageAssembler(dataDefinitionLanguageGenerator);
         return dataDefinitionLanguageAssembler.assembleCreateTableQuery(Person.class);
+    }
+
+    public static String generateDropQuery() {
+        GetTableNameFromClass getTableNameFromClass = new GetTableNameFromClass();
+        GetFieldFromClass getFieldFromClass = new GetFieldFromClass();
+        DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
+            getTableNameFromClass, getFieldFromClass
+        );
+        DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = new DataDefinitionLanguageAssembler(dataDefinitionLanguageGenerator);
+        return dataDefinitionLanguageAssembler.assembleDropTableQuery(Person.class);
     }
 }

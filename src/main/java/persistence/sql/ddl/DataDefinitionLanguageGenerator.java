@@ -13,8 +13,12 @@ public class DataDefinitionLanguageGenerator {
 
     public TableCreator generateTableCreatorWithClass(Class<?> dbClass) {
         return TableCreator.builder()
-            .tableName(getTableNameFromClass.execute(dbClass))
-            .fields(getFieldFromClass.execute(dbClass))
-            .build();
+                           .tableName(getTableNameFromClass.execute(dbClass))
+                           .fields(getFieldFromClass.execute(dbClass))
+                           .build();
+    }
+
+    public TableRemover generateTableRemoverWithClass(Class<?> dbClass) {
+        return TableRemover.builder().tableName(getTableNameFromClass.execute(dbClass)).build();
     }
 }
