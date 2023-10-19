@@ -28,18 +28,21 @@ public class ColumnMeta {
 
     public static String getColumnValue(Object object, Field field) {
         field.setAccessible(true);
-        Object fieldValue = null;
         try {
-            fieldValue = field.get(object);
+            return parseColumnValue(field.get(object));
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException("데이터 처리가 불가능한 속성입니다.");
         }
+    }
+
+    public static String parseColumnValue(Object fieldValue) {
         if (fieldValue == null) {
             return StringConstant.NULL;
         }
-        if (field.getType() == String.class) {
+        if (fieldValue.getClass() == String.class) {
             return StringConstant.SINGLE_QUOTATION + fieldValue + StringConstant.SINGLE_QUOTATION;
         }
         return fieldValue.toString();
     }
+
 }

@@ -24,12 +24,12 @@ public abstract class SelectQueryBuilder {
                 .toString();
     }
 
-    public String getSelectByPkQuery(Class<?> clazz, Object object) {
+    public String getSelectByPkQuery(Class<?> clazz, Object pkObject) {
         validateEntityAnnotation(clazz);
         return new StringBuilder()
                 .append(getSelectHeaderQuery(clazz))
                 .append(WHERE)
-                .append(getPkWhereClause(clazz.getDeclaredFields(), object))
+                .append(getPkWhereClause(clazz.getDeclaredFields(), pkObject))
                 .append(";")
                 .toString();
     }
@@ -57,15 +57,15 @@ public abstract class SelectQueryBuilder {
         return String.join(StringConstant.COLUMN_JOIN, columnNames);
     }
 
-    private String getPkWhereClause(Field[] fields, Object object) {
+    private String getPkWhereClause(Field[] fields, Object pkObject) {
         List<String> valueConditions = Arrays.stream(fields)
                 .filter(ColumnMeta::isId)
-                .map(field -> getValueCondition(field, object))
+                .map(field -> getValueCondition(field, pkObject))
                 .collect(Collectors.toList());
         return String.join(AND, valueConditions);
     }
 
-    private String getValueCondition(Field field, Object object) {
-        return ColumnMeta.getColumnName(field) + StringConstant.EQUAL + ColumnMeta.getColumnValue(object, field);
+    private String getValueCondition(Field field, Object pkObject) {
+        return ColumnMeta.getColumnName(field) + StringConstant.EQUAL + ColumnMeta.parseColumnValue(pkObject);
     }
 }
