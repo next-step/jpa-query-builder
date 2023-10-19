@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import domain.Person;
 import fixture.PersonFixtureFactory;
+import jdbc.EntityRowMapper;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import persistence.sql.dialect.DbmsDdlQueryBuilder;
 import persistence.sql.dialect.DbmsDmlQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+
+import java.util.List;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -38,7 +41,8 @@ public class Application {
 
             SelectQueryBuilder selectQueryBuilder = dmlbuilder.getSelectQueryBuilder();
             String selectAllQuery = selectQueryBuilder.getSelectAllQuery(Person.class);
-            // TODO : RowMapper 구현체 연결
+            List<Person> personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
+            logger.info("personList size = {}", personList.size());
 
             DropQueryBuilder dropQueryBuilder = ddlbuilder.getDropQueryBuilder();
             jdbcTemplate.execute(dropQueryBuilder.getQuery(Person.class));
