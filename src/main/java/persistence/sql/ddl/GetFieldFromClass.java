@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -24,7 +26,14 @@ public class GetFieldFromClass {
                     isNullable = annotation.nullable();
                 }
                 boolean isPrimary = it.isAnnotationPresent(Id.class);
-                return new DatabaseField(name, TypeConverter.convert(it), isPrimary, isNullable);
+                GenerationType type = null;
+                if(it.isAnnotationPresent(GeneratedValue.class)) {
+                    GeneratedValue annotation = it.getAnnotation(GeneratedValue.class);
+                    if (annotation.strategy() == GenerationType.IDENTITY) {
+                        type = GenerationType.IDENTITY;
+                    }
+                }
+                return new DatabaseField(name, TypeConverter.convert(it), isPrimary, type, isNullable);
             }
         ).collect(Collectors.toList()));
     }
