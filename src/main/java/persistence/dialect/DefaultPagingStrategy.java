@@ -1,6 +1,6 @@
 package persistence.dialect;
 
-public class DefaultPagingStrategy implements PagingStrategy {
+public class DefaultPagingStrategy extends PagingStrategy {
 
     private DefaultPagingStrategy() {
     }
@@ -10,9 +10,7 @@ public class DefaultPagingStrategy implements PagingStrategy {
     }
 
     @Override
-    public String renderPagingQuery(final String query, final int offset, final int limit) {
-        validateOffset(offset);
-        validateLimit(limit);
+    public String doPaging(final String query, final int offset, final int limit) {
         final StringBuilder pagingBuilder = new StringBuilder();
         pagingBuilder.append(query)
                 .append(" limit ")
