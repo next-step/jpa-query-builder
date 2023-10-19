@@ -5,8 +5,9 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.H2Dialect;
-import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.H2Dialect;
+import persistence.sql.ddl.TableCreateQueryBuilder;
+import persistence.sql.ddl.TableDropQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -18,11 +19,11 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            String sql = new QueryBuilder(new H2Dialect()).generateTableCreateDDL(Person.class);
+            String sql = new TableCreateQueryBuilder(new H2Dialect()).generateSQLQuery(Person.class);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
-            sql = new QueryBuilder(new H2Dialect()).generateTableDropDDL(Person.class);
+            sql = new TableDropQueryBuilder(new H2Dialect()).generateSQLQuery(Person.class);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 

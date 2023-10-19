@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 import java.util.HashMap;
 import java.util.Map;
