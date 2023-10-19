@@ -160,3 +160,5 @@ public interface EntityManager {
 
 - 요구사항 3 - remove (delete)
 
+- [ ] `SimpleEntityManager` 를 이용해 객체를 삭제한다.
+- [ ] `dmlGenerator` 의 delete 쿼리를 생성해 사용한다.
