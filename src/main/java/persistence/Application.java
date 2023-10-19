@@ -23,7 +23,7 @@ public class Application {
             final Executions executions = new Executions(jdbcTemplate, new H2Dialect(), List.of(Person.class));
             executions.execute();
 
-            server.stop(); // runtime 유지하고 싶으면 코드 주석 필요
+//            server.stop(); // runtime 유지하고 싶으면 코드 주석 필요
         } catch (Exception e) {
             logger.error("Error occurred", e);
         } finally {

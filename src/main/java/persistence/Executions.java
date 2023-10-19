@@ -3,8 +3,10 @@ package persistence;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entity.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.ddl.InsertQueryBuilder;
 import persistence.sql.ddl.dialect.Dialect;
 
 import java.util.List;
@@ -26,13 +28,14 @@ public class Executions {
         createEntities();
 
         // save
+        saveEntities();
 
         // findAll
 
         // delete
 
         // drop
-        dropEntities();
+//        dropEntities();
     }
 
     private void createEntities() {
@@ -40,6 +43,12 @@ public class Executions {
             CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(dialect, entity);
             jdbcTemplate.execute(createQueryBuilder.getQuery());
         }
+    }
+
+    private void saveEntities() {
+        Person test1 = new Person("test1", 10, "test1@gmail.com", 0);
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(dialect, test1);
+        jdbcTemplate.execute(insertQueryBuilder.getQuery());
     }
 
     private void dropEntities() {

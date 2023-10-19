@@ -10,6 +10,7 @@ public class H2Dialect implements Dialect {
 
     private final H2CreateQuery createQuery = new H2CreateQuery();
     private final H2DropQuery dropQuery = new H2DropQuery();
+    private final H2InsertQuery insertQuery = new H2InsertQuery();
 
 
     @Override
@@ -20,6 +21,11 @@ public class H2Dialect implements Dialect {
     @Override
     public String getDropQuery(EntityData entityData) {
         return dropQuery.generateQuery(entityData);
+    }
+
+    @Override
+    public String getInsertQuery(EntityData entityData, Object entity) {
+        return insertQuery.generateQuery(entityData, entity);
     }
 
 }

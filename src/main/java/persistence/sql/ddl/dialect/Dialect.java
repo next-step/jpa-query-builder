@@ -11,4 +11,6 @@ public interface Dialect {
 
     String getDropQuery(EntityData entityData);
 
+    String getInsertQuery(EntityData entityData, Object entity);
+
 }

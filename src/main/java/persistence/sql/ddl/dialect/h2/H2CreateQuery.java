@@ -12,12 +12,10 @@ import java.util.List;
  */
 public class H2CreateQuery implements H2Query {
 
-    @Override
     public String generateQuery(EntityData entityData) {
         StringBuilder query = new StringBuilder();
         // "create table "
         query.append(CREATE_QUERY);
-        query.append(SPACE);
 
         // 테이블 명
         appendTableName(entityData, query);
@@ -38,7 +36,7 @@ public class H2CreateQuery implements H2Query {
     }
 
     private void appendColumns(EntityData entityData, StringBuilder query) {
-        List<EntityColumn> entityColumns = entityData.getEntityColumns().getEntityColumns();
+        List<EntityColumn> entityColumns = entityData.getEntityColumns().getEntityColumnList();
         for (EntityColumn entityColumn : entityColumns) {
             query.append(getColumnPartInCreateQuery(entityColumn));
         }
@@ -123,8 +121,6 @@ public class H2CreateQuery implements H2Query {
     private String getPrimaryKeyInCreateQuery(EntityColumn primaryKey) {
         StringBuilder primaryKeyPart = new StringBuilder();
         primaryKeyPart.append(PRIMARY_KEY);
-        primaryKeyPart.append(SPACE);
-
         primaryKeyPart.append(OPEN_PARENTHESIS);
         primaryKeyPart.append(primaryKey.getColumnName());
         primaryKeyPart.append(CLOSE_PARENTHESIS);

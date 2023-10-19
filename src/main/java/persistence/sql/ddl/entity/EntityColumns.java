@@ -10,7 +10,7 @@ import java.util.List;
 public class EntityColumns {
 
     private final EntityColumn idColumn;
-    private final List<EntityColumn> entityColumns = new ArrayList<>();
+    private final List<EntityColumn> entityColumnList = new ArrayList<>();
 
     public EntityColumns(Class<?> entityClass) {
         generateEntityColumns(entityClass);
@@ -24,14 +24,14 @@ public class EntityColumns {
         Arrays.stream(entityClass.getDeclaredFields())
                 .map(EntityColumn::new)
                 .filter(entityColumn -> !entityColumn.isTransient())
-                .forEach(entityColumns::add);
+                .forEach(entityColumnList::add);
     }
 
     /**
      * ID 컬럼을 찾는다
      */
     private EntityColumn findIdColumn() {
-        return entityColumns.stream()
+        return entityColumnList.stream()
                 .filter(EntityColumn::isId)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("@Entity는 @Id 지정이 필수입니다."));
@@ -41,8 +41,8 @@ public class EntityColumns {
         return idColumn;
     }
 
-    public List<EntityColumn> getEntityColumns() {
-        return entityColumns;
+    public List<EntityColumn> getEntityColumnList() {
+        return entityColumnList;
     }
 
 }
