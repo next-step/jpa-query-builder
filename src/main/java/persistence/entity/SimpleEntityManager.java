@@ -18,16 +18,19 @@ public class SimpleEntityManager implements EntityManager {
     private final JdbcTemplate jdbcTemplate;
     private final DmlGenerator dmlGenerator;
     private final Connection connection;
+    private boolean closed;
 
 
     public SimpleEntityManager(final PersistenceEnvironment persistenceEnvironment) {
         this.connection = persistenceEnvironment.getConnection();
         this.jdbcTemplate = new JdbcTemplate(connection);
+        this.closed = false;
         this.dmlGenerator = persistenceEnvironment.getDmlGenerator();
     }
 
     @Override
     public <T> T find(final Class<T> clazz, final Long Id) {
+        checkConnectionOpen();
         final String query = dmlGenerator.findById(clazz, Id);
         return jdbcTemplate.queryForObject(query, getObjectRowMapper(clazz));
     }
@@ -51,12 +54,14 @@ public class SimpleEntityManager implements EntityManager {
 
     @Override
     public void persist(final Object entity) {
+        checkConnectionOpen();
         final String insert = dmlGenerator.insert(entity);
         jdbcTemplate.execute(insert);
     }
 
     @Override
     public void remove(final Object entity) {
+        checkConnectionOpen();
         final String delete = dmlGenerator.delete(entity);
         jdbcTemplate.execute(delete);
     }
@@ -65,8 +70,16 @@ public class SimpleEntityManager implements EntityManager {
     public void close() {
         try {
             connection.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new PersistenceException("커넥션 닫기를 실패했습니다.", e);
+        } finally {
+            this.closed = true;
+        }
+    }
+
+    private void checkConnectionOpen() {
+        if(this.closed) {
+            throw new PersistenceException("DB와의 커넥션이 끊어졌습니다.");
         }
     }
 }

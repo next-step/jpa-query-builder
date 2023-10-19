@@ -5,14 +5,18 @@ import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import persistence.core.DefaultPersistenceEnvironmentStrategy;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
-import persistence.core.DefaultPersistenceEnvironmentStrategy;
-import persistence.dialect.H2Dialect;
 import persistence.core.PersistenceEnvironment;
+import persistence.dialect.H2Dialect;
 import persistence.entity.EntityManager;
 import persistence.entity.SimpleEntityManager;
+import persistence.exception.PersistenceException;
 import persistence.sql.ddl.DdlGenerator;
 import persistence.sql.dml.DmlGenerator;
 
@@ -20,6 +24,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -94,9 +99,7 @@ class ApplicationTest {
         final EntityManager entityManager = new SimpleEntityManager(persistenceEnvironment);
         final Person newPerson = new Person("min", 30, "jongmin4943@gmail.com");
 
-        assertDoesNotThrow(() -> {
-            entityManager.persist(newPerson);
-        });
+        assertDoesNotThrow(() -> entityManager.persist(newPerson));
     }
 
     @Test
@@ -104,9 +107,29 @@ class ApplicationTest {
     void entityManagerRemoveTest() {
         final EntityManager entityManager = new SimpleEntityManager(persistenceEnvironment);
 
-        assertDoesNotThrow(() -> {
+        assertDoesNotThrow(() -> entityManager.remove(people.get(0)));
+    }
+
+    @Test
+    @DisplayName("entityManager.close 를 이용해 DB Connection 을 닫을 수 있다.")
+    void connectionCloseTest() {
+        final EntityManager entityManager = new SimpleEntityManager(persistenceEnvironment);
+
+        assertDoesNotThrow(entityManager::close);
+    }
+
+    @Test
+    @DisplayName("entityManager.close 를 이용해 DB Connection 을 닫힌 후 에는 아무 작업을 할 수 없다.")
+    void connectionAlreadyCloseTest() {
+        final EntityManager entityManager = new SimpleEntityManager(persistenceEnvironment);
+
+        entityManager.close();
+
+        assertThatThrownBy(() -> {
+            entityManager.find(Person.class, 1L);
+            entityManager.persist(people.get(0));
             entityManager.remove(people.get(0));
-        });
+        }).isInstanceOf(PersistenceException.class);
     }
 
     private RowMapper<Person> personRowMapper() {
