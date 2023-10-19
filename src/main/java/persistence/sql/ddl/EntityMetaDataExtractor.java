@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.utils.Column;
-import persistence.sql.ddl.utils.Columns;
+import persistence.sql.ddl.utils.ColumnType;
+import persistence.sql.ddl.utils.ColumnTypes;
 import persistence.sql.ddl.utils.Table;
 
 import java.util.List;
@@ -9,19 +9,19 @@ import java.util.List;
 public class EntityMetaDataExtractor {
     final private Class<?> entity;
     final private Table table;
-    final private Columns columns;
+    final private ColumnTypes columnTypes;
 
     public EntityMetaDataExtractor(final Class<?> entity) {
         this.entity = entity;
         this.table = new Table(entity);
-        this.columns = new Columns(entity);
+        this.columnTypes = new ColumnTypes(entity);
     }
 
     public Table getTable() {
         return this.table;
     }
 
-    public List<Column> getColumns() {
-        return columns.getColumns();
+    public List<ColumnType> getColumns() {
+        return columnTypes.getColumns();
     }
 }

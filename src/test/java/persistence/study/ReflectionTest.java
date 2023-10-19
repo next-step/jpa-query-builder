@@ -1,9 +1,11 @@
 package persistence.study;
 
+import jakarta.persistence.Column;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.Person;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -119,6 +121,16 @@ public class ReflectionTest {
 
     private boolean hasParameters(final Parameter[] parameters) {
         return parameters.length > 0;
+    }
+
+    @Test
+    @DisplayName("어노테이션 필드값 가져오기")
+    void getAnnotationFiled() throws Exception {
+        Class<Person> personClass = Person.class;
+        Field name = personClass.getDeclaredField("name");
+        Column annotation = name.getAnnotation(Column.class);
+
+        assertThat(annotation.name()).isEqualTo("nick_name");
     }
 
 }
