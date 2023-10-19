@@ -142,7 +142,7 @@ public interface EntityManager {
 
     <T> T find(Class<T> clazz, Long Id);
 
-    Object persist(Object entity);
+    void persist(Object entity);
 
     void remove(Object entity);
 }
@@ -154,6 +154,9 @@ public interface EntityManager {
 - [x] 테스트는 db 연결 환경이 갖춰진 `ApplicationTest`과 같은 환경에서 진행한다.
 
 - 요구사항 2 - persist (insert)
+
+- [ ] `SimpleEntityManager` 를 이용해 객체를 저장한다.
+- [ ] `dmlGenerator` 의 insert 쿼리를 생성해 사용한다.
 
 - 요구사항 3 - remove (delete)
 
