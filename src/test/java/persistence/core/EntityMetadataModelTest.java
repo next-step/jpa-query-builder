@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,9 +20,9 @@ class EntityMetadataModelTest {
         // given
         Class<DepthPersonFixtureEntity> personFixtureEntityClass = DepthPersonFixtureEntity.class;
 
-        Set<EntityColumn> entityColumns = Arrays.stream(personFixtureEntityClass.getDeclaredFields())
+        List<EntityColumn> entityColumns = Arrays.stream(personFixtureEntityClass.getDeclaredFields())
                 .map(EntityColumn::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableList());
 
         // when
         EntityMetadataModel entityMetadataModel = new EntityMetadataModel(

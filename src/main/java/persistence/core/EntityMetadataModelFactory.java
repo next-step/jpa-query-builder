@@ -29,9 +29,9 @@ public class EntityMetadataModelFactory {
     }
 
     private EntityMetadataModel createEntityMetadataModel(Class<?> target) {
-        Set<EntityColumn> entityColumns = Arrays.stream(target.getDeclaredFields())
+        List<EntityColumn> entityColumns = Arrays.stream(target.getDeclaredFields())
                 .map(this::createEntityColumn)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toUnmodifiableList());
 
         return new EntityMetadataModel(getTableName(target), entityColumns);
     }

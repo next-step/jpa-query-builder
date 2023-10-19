@@ -2,8 +2,11 @@ package persistence.core;
 
 import persistence.exception.NotHavePrimaryKeyException;
 
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EntityMetadataModel {
 
@@ -15,25 +18,18 @@ public class EntityMetadataModel {
 
     public EntityMetadataModel(
             String tableName,
-            Set<EntityColumn> columns) {
+            Collection<EntityColumn> columns) {
 
         assert tableName != null;
         assert columns != null;
 
-        this.columns = new HashSet<>(columns);
         this.tableName = tableName;
+        this.columns = new LinkedHashSet<>(columns);
 
         EntityColumn primaryKeyColumn = findPrimaryKey();
 
         this.primaryKeyColumn = primaryKeyColumn;
         this.columns.remove(primaryKeyColumn);
-    }
-
-    private EntityColumn findPrimaryKey() {
-        return this.columns.stream()
-                .filter(EntityColumn::isPrimaryKey)
-                .findFirst()
-                .orElseThrow(NotHavePrimaryKeyException::new);
     }
 
     public String getTableName() {
@@ -46,5 +42,18 @@ public class EntityMetadataModel {
 
     public Set<EntityColumn> getColumns() {
         return this.columns;
+    }
+
+    public List<String> getColumnNames() {
+        return this.columns.stream()
+                .map(EntityColumn::getName)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private EntityColumn findPrimaryKey() {
+        return this.columns.stream()
+                .filter(EntityColumn::isPrimaryKey)
+                .findFirst()
+                .orElseThrow(NotHavePrimaryKeyException::new);
     }
 }
