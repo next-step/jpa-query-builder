@@ -44,6 +44,9 @@ public class Application {
             List<Person> personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
             logger.info("personList size = {}", personList.size());
 
+            String selectByPkQuery = selectQueryBuilder.getSelectByPkQuery(Person.class, 1L);
+            Person person = jdbcTemplate.queryForObject(selectByPkQuery, new EntityRowMapper<>(Person.class));
+
             DropQueryBuilder dropQueryBuilder = ddlbuilder.getDropQueryBuilder();
             jdbcTemplate.execute(dropQueryBuilder.getQuery(Person.class));
 
