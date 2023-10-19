@@ -5,13 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
 
-class TableTest {
+class TableTypeTest {
 
     @Test
     @DisplayName("테이블 이름을 가져온다.")
     void getNameTest() {
-        Table table = new Table(Person.class);
-        String name = table.getName();
+        TableType tableType = new TableType(Person.class);
+        String name = tableType.getName();
         Assertions.assertThat(name).isEqualToIgnoringCase("person");
     }
 }

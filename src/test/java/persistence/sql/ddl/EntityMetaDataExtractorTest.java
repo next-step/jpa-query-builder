@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.utils.Table;
+import persistence.sql.ddl.utils.TableType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,8 +10,8 @@ class EntityMetaDataExtractorTest {
 
     @Test
     void getTableName() {
-        Table table = entityMetaDataExtractor.getTable();
-        String name = table.getName();
+        TableType tableType = entityMetaDataExtractor.getTable();
+        String name = tableType.getName();
         assertThat(name).isEqualTo("person");
     }
 }

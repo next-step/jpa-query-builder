@@ -1,9 +1,6 @@
 package persistence.sql.ddl.utils;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import persistence.sql.ddl.type.DataType;
 import persistence.sql.ddl.type.DataTypeMapper;
 import persistence.sql.ddl.type.H2DataTypeMapper;
@@ -19,6 +16,7 @@ public class ColumnType {
     private Class<?> type;
     private boolean isNullable;
     private GenerationType generationType;
+    public boolean isTransient;
 
     private final DataTypeMapper dataTypeMapper;
 
@@ -30,6 +28,7 @@ public class ColumnType {
         setLength();
         setIsNullable(field);
         setGenerationType(field);
+        setTransient(field);
     }
 
     private Column getColumnAnnotation(final Field field) {
@@ -102,5 +101,18 @@ public class ColumnType {
 
     public GenerationType getGenerationType() {
         return generationType;
+    }
+
+    public boolean notTransient() {
+        return !isTransient;
+    }
+
+
+    private void setTransient(final Field field) {
+        if(field.isAnnotationPresent(Transient.class)) {
+            this.isTransient = true;
+            return;
+        }
+        isTransient = false;
     }
 }
