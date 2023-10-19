@@ -62,6 +62,19 @@ class EntityMetadataTest {
         });
     }
 
+    @Test
+    @DisplayName("getColumnFieldNames 를 통해 column 들의 field 이름들을 반환 받을 수 있다.")
+    void entityMetadataGetColumnFieldNamesTest() {
+        mockClass = FixtureEntity.WithColumn.class;
+        final EntityMetadata<?> entityMetadata = new EntityMetadata<>(mockClass);
+        assertSoftly(softly -> {
+            softly.assertThat(entityMetadata).isNotNull();
+            softly.assertThat(entityMetadata.getTableName()).isEqualTo("WithColumn");
+            softly.assertThat(entityMetadata.getIdColumnName()).isEqualTo("id");
+            softly.assertThat(entityMetadata.getColumnFieldNames()).containsExactly("id", "column", "notNullColumn");
+        });
+    }
+
     private void assertResult(final EntityMetadata<?> entityMetadata, final String withId, final String id) {
         assertSoftly(softly -> {
             softly.assertThat(entityMetadata).isNotNull();

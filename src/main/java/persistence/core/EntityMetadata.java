@@ -67,4 +67,10 @@ public class EntityMetadata<T> {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    public List<String> getColumnFieldNames() {
+        return this.columns.stream()
+                .map(EntityColumn::getFieldName)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
 }
