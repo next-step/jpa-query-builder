@@ -9,4 +9,8 @@ public class QueryDml {
     public static <T> String select(Class<T> tClass, String methodName) {
         return SelectQuery.create(tClass, methodName);
     }
+
+    public static <T> String select(Class<T> tClass, String methodName, Object... args) {
+        return SelectQuery.create(tClass, methodName, args);
+    }
 }

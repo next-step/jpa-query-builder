@@ -7,18 +7,21 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 public abstract class Table {
-
     private final TableName name;
     private final Column[] columns;
     private final Value[] values;
 
     protected <T> Table(T t) {
+        isEntity(t.getClass());
+
         this.name = TableName.of(t.getClass());
         this.columns = Column.of(t.getClass().getDeclaredFields());
         this.values = Value.of(t);
     }
 
     protected <T> Table(Class<T> tClass) {
+        isEntity(tClass);
+
         this.name = TableName.of(tClass);
         this.columns = Column.of(tClass.getDeclaredFields());
         this.values = null;
@@ -84,5 +87,13 @@ public abstract class Table {
 
     private String withComma(String[] input) {
         return String.join(", ", input);
+    }
+
+    protected String getIdName() {
+        return Arrays.stream(columns)
+            .filter(Column::isPrimaryKey)
+            .findFirst()
+            .get()
+            .getName();
     }
 }

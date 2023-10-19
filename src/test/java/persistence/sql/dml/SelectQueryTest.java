@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import persistence.exception.InvalidEntityException;
 import persistence.person.NonExistentTablePerson;
 import persistence.person.NotEntityPerson;
+import persistence.person.SelectPerson;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,6 +51,19 @@ class SelectQueryTest {
         //when
         String query = SelectQuery.create(aClass, new Object() {
         }.getClass().getEnclosingMethod().getName());
+
+        //then
+        assertThat(query).isEqualTo(expectedQuery);
+    }
+
+    @Test
+    @DisplayName("findById 쿼리를 성공적으로 생성")
+    void findById() {
+        //given
+        String expectedQuery = "SELECT select_person_id, nick_name, old, email FROM selectPerson WHERE select_person_id = 1";
+
+        //when
+        String query = SelectQuery.create(SelectPerson.class, "findById", 1L);
 
         //then
         assertThat(query).isEqualTo(expectedQuery);

@@ -5,9 +5,7 @@ import jdbc.RowMapper;
 import org.h2.tools.SimpleResultSet;
 import persistence.sql.dml.SelectQuery;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public abstract class RepositoryImpl<T extends RowMapper<T>> implements Repository<T> {
@@ -16,7 +14,7 @@ public abstract class RepositoryImpl<T extends RowMapper<T>> implements Reposito
     private JdbcTemplate jdbcTemplate;
 
     public RepositoryImpl(RowMapper<? extends T> t, Connection connection) {
-        this.t = t;
+        this.t = mapRow(new SimpleResultSet());
         this.jdbcTemplate = new JdbcTemplate(connection);
     }
 
@@ -25,8 +23,14 @@ public abstract class RepositoryImpl<T extends RowMapper<T>> implements Reposito
         String query = SelectQuery.create(t.getClass(), new Object() {
         }.getClass().getEnclosingMethod().getName());
 
-        RowMapper<T> rowMapper = mapRow(new SimpleResultSet());
+        return (List<T>) jdbcTemplate.query(query, t);
+    }
 
-        return jdbcTemplate.query(query, rowMapper);
+    @Override
+    public <R> T findById(R r) {
+        String query = SelectQuery.create(t.getClass(), new Object() {
+        }.getClass().getEnclosingMethod().getName());
+
+        return jdbcTemplate.queryForObject(query, t);
     }
 }

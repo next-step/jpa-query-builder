@@ -12,6 +12,7 @@ import jakarta.persistence.Transient;
 @Table(name = "selectPerson")
 public class SelectPerson {
     @Id
+    @Column(name = "select_person_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
