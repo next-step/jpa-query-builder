@@ -5,6 +5,9 @@ import domain.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.dialect.Dialect;
+import persistence.dialect.H2Dialect;
+import persistence.dialect.PersistenceEnvironment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +17,8 @@ class DmlGeneratorTest {
 
     @BeforeEach
     void setUp() {
-        this.generator = new DmlGenerator();
+        final Dialect dialect = new PersistenceEnvironment(H2Dialect::new).getDialect();
+        this.generator = new DmlGenerator(dialect);
     }
 
     @Test

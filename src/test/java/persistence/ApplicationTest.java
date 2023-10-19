@@ -11,6 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
+import persistence.dialect.H2Dialect;
+import persistence.dialect.PersistenceEnvironment;
 import persistence.sql.ddl.DdlGenerator;
 import persistence.sql.dml.DmlGenerator;
 
@@ -32,8 +34,9 @@ class ApplicationTest {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
-        ddlGenerator = new DdlGenerator();
-        dmlGenerator = new DmlGenerator();
+        final PersistenceEnvironment persistenceEnvironment = new PersistenceEnvironment(H2Dialect::new);
+        ddlGenerator = new DdlGenerator(persistenceEnvironment.getDialect());
+        dmlGenerator = new DmlGenerator(persistenceEnvironment.getDialect());
         entityMetadata = EntityMetadataProvider.getInstance().getEntityMetadata(Person.class);
         final String createDdl = ddlGenerator.generateCreateDdl(entityMetadata);
         jdbcTemplate.execute(createDdl);

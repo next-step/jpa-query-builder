@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
+import persistence.dialect.Dialect;
 import persistence.util.ReflectionUtils;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.stream.Collectors;
 public class DmlGenerator {
 
     private final EntityMetadataProvider entityMetadataProvider;
+    private final Dialect dialect;
 
-    public DmlGenerator() {
+    public DmlGenerator(final Dialect dialect) {
         this.entityMetadataProvider = EntityMetadataProvider.getInstance();
+        this.dialect = dialect;
     }
 
     public String insert(final Object entity) {
@@ -27,7 +30,7 @@ public class DmlGenerator {
 
     public String findAll(final Class<?> clazz) {
         final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(clazz);
-        return SelectQueryBuilder.builder()
+        return new SelectQueryBuilder(dialect)
                 .table(entityMetadata.getTableName())
                 .column(entityMetadata.getColumnNames())
                 .build();
@@ -35,7 +38,7 @@ public class DmlGenerator {
 
     public String findById(final Class<?> clazz, final Object id) {
         final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(clazz);
-        return SelectQueryBuilder.builder()
+        return new SelectQueryBuilder(dialect)
                 .table(entityMetadata.getTableName())
                 .column(entityMetadata.getColumnNames())
                 .where(entityMetadata.getIdColumnName(), String.valueOf(id))

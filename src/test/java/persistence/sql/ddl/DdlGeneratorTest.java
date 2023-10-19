@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
 import domain.FixtureEntity;
-import persistence.dialect.DBColumnTypeMapper;
+import persistence.dialect.H2Dialect;
 import persistence.dialect.PersistenceEnvironment;
 
 import java.util.stream.Stream;
@@ -17,14 +17,13 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DdlGeneratorTest {
-    DBColumnTypeMapper columnTypeMapper;
     DdlGenerator generator;
     EntityMetadata<?> entityMetadata;
 
     @BeforeEach
     void setUp() {
-        columnTypeMapper = PersistenceEnvironment.getDialect().getColumnTypeMapper();
-        generator = new DdlGenerator();
+        final PersistenceEnvironment persistenceEnvironment = new PersistenceEnvironment(H2Dialect::new);
+        generator = new DdlGenerator(persistenceEnvironment.getDialect());
     }
 
     @Test

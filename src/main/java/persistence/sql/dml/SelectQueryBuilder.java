@@ -1,7 +1,6 @@
 package persistence.sql.dml;
 
 import persistence.dialect.Dialect;
-import persistence.dialect.PersistenceEnvironment;
 import persistence.exception.PersistenceException;
 
 import java.util.ArrayList;
@@ -16,14 +15,10 @@ public class SelectQueryBuilder {
     private Integer limit;
     private int offset;
 
-    private SelectQueryBuilder() {
+    public SelectQueryBuilder(final Dialect dialect) {
         this.data = new ArrayList<>();
         this.whereClauseBuilder = WhereClauseBuilder.builder();
-        this.dialect = PersistenceEnvironment.getDialect();
-    }
-
-    public static SelectQueryBuilder builder() {
-        return new SelectQueryBuilder();
+        this.dialect = dialect;
     }
 
     public SelectQueryBuilder table(final String tableName) {
