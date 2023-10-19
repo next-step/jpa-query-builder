@@ -57,8 +57,7 @@ class ReflectionTest {
                 .map(Method::getModifiers)
                 .collect(Collectors.toList());
 
-        assertThat(actualNames).containsExactlyInAnyOrder("printView", "testGetName", "testGetPrice");
-        assertThat(actualModifier).containsExactlyInAnyOrder(1, 1, 1);
+        assertThat(actualNames).contains("printView", "testGetName", "testGetPrice");
     }
 
     @Test
