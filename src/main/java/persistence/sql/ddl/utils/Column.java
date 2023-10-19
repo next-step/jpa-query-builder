@@ -6,13 +6,13 @@ import persistence.sql.ddl.type.DataTypeMapper;
 import persistence.sql.ddl.type.H2DataTypeMapper;
 
 import java.lang.reflect.Field;
-import java.util.Optional;
 
 public class Column {
     private String name;
     private boolean primaryKey;
     private DataType dataType;
     private Integer length;
+    private Class<?> type;
 
     private final DataTypeMapper dataTypeMapper;
 
@@ -22,6 +22,7 @@ public class Column {
         setPrimaryKey(field);
         setDataType(field);
         setLength();
+
     }
 
     public String getName() {
@@ -59,4 +60,9 @@ public class Column {
     public String getTypeName() {
         return this.dataType.getName();
     }
+
+    public void setType(final Field field) {
+        this.type = field.getType();
+    }
+
 }
