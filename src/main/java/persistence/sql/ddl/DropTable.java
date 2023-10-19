@@ -10,8 +10,6 @@ public class DropTable extends Table {
     }
 
     public static <T> String drop(Class<T> tClass) {
-        isEntity(tClass);
-
         return new DropTable(tClass).combineQuery();
     }
 

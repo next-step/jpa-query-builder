@@ -12,8 +12,6 @@ class CreateTable extends Table {
     }
 
     public static <T> String create(Class<T> tClass) {
-        isEntity(tClass);
-
         return new CreateTable(tClass).join();
     }
 

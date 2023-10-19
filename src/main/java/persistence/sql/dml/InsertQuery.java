@@ -11,8 +11,6 @@ public class InsertQuery extends Table {
     }
 
     public static <T> String create(T t) {
-        isEntity(t.getClass());
-
         return new InsertQuery(t).combineQuery();
     }
 
