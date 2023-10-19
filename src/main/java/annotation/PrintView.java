@@ -1,4 +1,4 @@
-package persistence.study;
+package annotation;
 
 public @interface PrintView {
 }

@@ -1,4 +1,6 @@
-package persistence.study;
+package domain;
+
+import annotation.PrintView;
 
 public class Car {
 
