@@ -79,7 +79,7 @@ public class Person {
 - 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
 - [x] @Table(name) 을 고려해 drop 쿼리 작성
 
-### 2단계 - QueryBuilder DML
+### 3단계 - QueryBuilder DML
 Person 객체 정보
 ```java
 @Table(name = "users")
@@ -134,3 +134,26 @@ private String whereClause(String selectQuery, Class<?> clazz) {
 
 - 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
 - [x] Person EntityMetadata 를 이용해 쿼리 생성
+
+### 4단계 - Simple Entity Object
+#### 정보(간이 EntityManage 인터페이스)
+```java
+public interface EntityManager {
+
+    <T> T find(Class<T> clazz, Long Id);
+
+    Object persist(Object entity);
+
+    void remove(Object entity);
+}
+```
+- 요구사항 1 - find
+
+- [ ] `jdbcTemplate`과 `dmlGenerator` 를 연결 한 뒤 특정 객체를 찾는 쿼리를 실행한다. 
+- [ ] clazz 를 통해 RowMapper 를 생성하기 위해 EntityMetadata 를 사용한다.
+- [ ] 테스트는 db 연결 환경이 갖춰진 `ApplicationTest`과 같은 환경에서 진행한다.
+
+- 요구사항 2 - persist (insert)
+
+- 요구사항 3 - remove (delete)
+
