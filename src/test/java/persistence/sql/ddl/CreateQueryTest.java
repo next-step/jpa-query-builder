@@ -11,7 +11,7 @@ import persistence.person.ExistTablePerson;
 import persistence.person.NonExistentEntityPerson;
 import persistence.person.NonExistentTablePerson;
 
-class CreateTableTest {
+class CreateQueryTest {
 
     @Test
     @DisplayName("Person Entity를 이용한 CREATE QUERY가 정확히 생성 되었는지 검증")
@@ -25,7 +25,7 @@ class CreateTableTest {
             + ")";
 
         //when
-        final String result = CreateTable.create(Person.class);
+        final String result = CreateQuery.create(Person.class);
 
         //then
         assertThat(result).isEqualTo(expectedSql);
@@ -38,7 +38,7 @@ class CreateTableTest {
         Class<NonExistentEntityPerson> personClass = NonExistentEntityPerson.class;
 
         //when & then
-        assertThrows(InvalidEntityException.class, () -> CreateTable.create(personClass));
+        assertThrows(InvalidEntityException.class, () -> CreateQuery.create(personClass));
     }
 
     @Test
@@ -56,7 +56,7 @@ class CreateTableTest {
             + ")", classNAme);
 
         //when
-        final String result = CreateTable.create(personClass);
+        final String result = CreateQuery.create(personClass);
 
         //then
         assertThat(result).isEqualTo(expectedSql);
@@ -76,7 +76,7 @@ class CreateTableTest {
             + ")";
 
         //when
-        final String result = CreateTable.create(personClass);
+        final String result = CreateQuery.create(personClass);
 
         //then
         assertThat(result).isEqualTo(expectedSql);

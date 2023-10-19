@@ -10,7 +10,7 @@ import persistence.exception.InvalidEntityException;
 import persistence.person.ExistTablePerson;
 import persistence.person.NonExistentEntityPerson;
 
-class DropTableTest {
+class DropQueryTest {
 
     @Test
     @DisplayName("Person Entity를 이용한 DROP QUERY가 정확히 생성 되었는지 검증")
@@ -19,7 +19,7 @@ class DropTableTest {
         final String expectedSql = "DROP TABLE users";
 
         //when
-        final String result = DropTable.drop(Person.class);
+        final String result = DropQuery.drop(Person.class);
 
         //then
         assertThat(result).isEqualTo(expectedSql);
@@ -32,7 +32,7 @@ class DropTableTest {
         Class<NonExistentEntityPerson> personClass = NonExistentEntityPerson.class;
 
         //when & then
-        assertThrows(InvalidEntityException.class, () -> DropTable.drop(personClass));
+        assertThrows(InvalidEntityException.class, () -> DropQuery.drop(personClass));
     }
 
     @Test
@@ -43,7 +43,7 @@ class DropTableTest {
         final String expectedSql = "DROP TABLE users";
 
         //when
-        final String result = DropTable.drop(personClass);
+        final String result = DropQuery.drop(personClass);
 
         //then
         assertThat(result).isEqualTo(expectedSql);

@@ -2,15 +2,15 @@ package persistence.sql.ddl;
 
 import persistence.sql.common.Table;
 
-public class DropTable extends Table {
+public class DropQuery extends Table {
     private static final String DEFAULT_DROP_QUERY = "DROP TABLE %s";
 
-    private <T> DropTable(Class<T> tClass) {
+    private <T> DropQuery(Class<T> tClass) {
         super(tClass);
     }
 
     public static <T> String drop(Class<T> tClass) {
-        return new DropTable(tClass).combineQuery();
+        return new DropQuery(tClass).combineQuery();
     }
 
     private String combineQuery() {

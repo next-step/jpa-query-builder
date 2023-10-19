@@ -2,17 +2,17 @@ package persistence.sql.ddl;
 
 import persistence.sql.common.Table;
 
-class CreateTable extends Table {
+class CreateQuery extends Table {
 
     private static final String DEFAULT_CREATE_QUERY = "CREATE TABLE %s (%s)";
     private static final String DEFAULT_PRIMARY_KEY_QUERY = ", PRIMARY KEY (%s)";
 
-    private <T> CreateTable(Class<T> tClass) {
+    private <T> CreateQuery(Class<T> tClass) {
         super(tClass);
     }
 
     public static <T> String create(Class<T> tClass) {
-        return new CreateTable(tClass).join();
+        return new CreateQuery(tClass).join();
     }
 
     private String join() {
