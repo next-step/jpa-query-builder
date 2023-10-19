@@ -11,8 +11,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
+import persistence.dialect.DefaultPersistenceEnvironmentStrategy;
 import persistence.dialect.H2Dialect;
 import persistence.dialect.PersistenceEnvironment;
+import persistence.entity.EntityManager;
+import persistence.entity.SimpleEntityManager;
 import persistence.sql.ddl.DdlGenerator;
 import persistence.sql.dml.DmlGenerator;
 
@@ -20,10 +23,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class ApplicationTest {
     private DatabaseServer server;
     private JdbcTemplate jdbcTemplate;
+    private PersistenceEnvironment persistenceEnvironment;
     private DdlGenerator ddlGenerator;
     private DmlGenerator dmlGenerator;
     private EntityMetadata<?> entityMetadata;
@@ -34,7 +39,7 @@ class ApplicationTest {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
-        final PersistenceEnvironment persistenceEnvironment = new PersistenceEnvironment(H2Dialect::new);
+        persistenceEnvironment = new PersistenceEnvironment(new DefaultPersistenceEnvironmentStrategy(server, new H2Dialect()));
         ddlGenerator = new DdlGenerator(persistenceEnvironment.getDialect());
         dmlGenerator = new DmlGenerator(persistenceEnvironment.getDialect());
         entityMetadata = EntityMetadataProvider.getInstance().getEntityMetadata(Person.class);
@@ -67,6 +72,22 @@ class ApplicationTest {
                 jdbcTemplate.queryForObject(dmlGenerator.findById(Person.class, 1L), personRowMapper());
 
         assertThat(result).isNotNull();
+    }
+
+    @Test
+    @DisplayName("entityManager.find 를 이용해 특정 객체를 DB 에서 조회할 수 있다.")
+    void entityManagerFindTest() {
+        final EntityManager entityManager = new SimpleEntityManager(persistenceEnvironment);
+
+        final Person person = entityManager.find(Person.class, 1L);
+
+        assertSoftly(softly -> {
+            softly.assertThat(person).isNotNull();
+            softly.assertThat(person.isId(1L)).isTrue();
+            softly.assertThat(person.isName("test00")).isTrue();
+            softly.assertThat(person.isAge(0)).isTrue();
+            softly.assertThat(person.isEmail("test00@gmail.com")).isTrue();
+        });
     }
 
     private RowMapper<Person> personRowMapper() {
