@@ -46,6 +46,10 @@ public class EntityColumns implements Iterable<EntityColumn> {
         return StreamSupport.stream(spliterator(), false);
     }
 
+    public int size() {
+        return this.columns.size();
+    }
+
     public EntityColumn getId() {
         return this.columns.stream()
                 .filter(EntityColumn::isId)

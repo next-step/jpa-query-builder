@@ -35,4 +35,21 @@ public class Person {
     public Person(final String name, final Integer age, final String email) {
         this(null, name, age, email);
     }
+
+    public boolean isId(final Long id) {
+        return id.equals(this.id);
+    }
+
+    public boolean isName(final String name) {
+        return name.equals(this.name);
+    }
+
+    public boolean isAge(final Integer age) {
+        return age.equals(this.age);
+    }
+
+    public boolean isEmail(final String email) {
+        return email.equals(this.email);
+    }
+
 }

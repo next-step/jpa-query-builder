@@ -149,9 +149,9 @@ public interface EntityManager {
 ```
 - 요구사항 1 - find
 
-- [ ] `jdbcTemplate`과 `dmlGenerator` 를 연결 한 뒤 특정 객체를 찾는 쿼리를 실행한다. 
-- [ ] clazz 를 통해 RowMapper 를 생성하기 위해 EntityMetadata 를 사용한다.
-- [ ] 테스트는 db 연결 환경이 갖춰진 `ApplicationTest`과 같은 환경에서 진행한다.
+- [x] `jdbcTemplate`과 `dmlGenerator` 를 연결 한 뒤 특정 객체를 찾는 쿼리를 실행한다. 
+- [x] clazz 를 통해 RowMapper 를 생성하기 위해 EntityMetadata 를 사용한다.
+- [x] 테스트는 db 연결 환경이 갖춰진 `ApplicationTest`과 같은 환경에서 진행한다.
 
 - 요구사항 2 - persist (insert)
 
