@@ -75,20 +75,7 @@ public abstract class InsertQueryBuilder {
     }
 
     private String getValueClause(Object object, Field field) {
-        field.setAccessible(true);
-        Object fieldValue = null;
-        try {
-            fieldValue = field.get(object);
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("데이터 삽입이 불가능한 속성입니다.");
-        }
-        if (fieldValue == null) {
-            return StringConstant.NULL;
-        }
-        if (field.getType() == String.class) {
-            return StringConstant.SINGLE_QUOTATION + fieldValue + StringConstant.SINGLE_QUOTATION;
-        }
-        return fieldValue.toString();
+        return ColumnMeta.getColumnValue(object, field);
     }
 
     private String columnsClause(Map<String, String> insertKeyValueMap) {
