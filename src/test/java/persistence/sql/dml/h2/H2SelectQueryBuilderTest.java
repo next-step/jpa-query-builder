@@ -24,4 +24,11 @@ class H2SelectQueryBuilderTest {
         String query = selectQueryBuilder.getSelectAllQuery(Person.class);
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users;");
     }
+
+    @Test
+    @DisplayName("PK 기반 조회쿼리 정상빌드 테스트")
+    void getSelectByPkQuery() {
+        String query = selectQueryBuilder.getSelectByPkQuery(Person.class, 1L);
+        assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id=1;");
+    }
 }
