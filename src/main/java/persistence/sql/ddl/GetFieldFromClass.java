@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -14,8 +15,16 @@ public class GetFieldFromClass {
         return DatabaseFields.of(Arrays.stream(declaredFields).map(
             it -> {
                 String name = it.getName();
+                boolean isNullable = true;
+                if(it.isAnnotationPresent(Column.class)) {
+                    Column annotation = it.getAnnotation(Column.class);
+                    if(annotation.name() != null && !annotation.name().isEmpty()) {
+                        name = annotation.name();
+                    }
+                    isNullable = annotation.nullable();
+                }
                 boolean isPrimary = it.isAnnotationPresent(Id.class);
-                return new DatabaseField(name, TypeConverter.convert(it), isPrimary);
+                return new DatabaseField(name, TypeConverter.convert(it), isPrimary, isNullable);
             }
         ).collect(Collectors.toList()));
     }
