@@ -18,7 +18,8 @@ class EntityNameTest {
     @ParameterizedTest
     @MethodSource("getTableNameTestParams")
     void getTableNameTest(Class<?> testClass, String expected) {
-        assertThat(EntityName.getTableName(testClass)).isEqualTo(expected);
+        EntityName entityName = new EntityName(testClass);
+        assertThat(entityName.getTableName()).isEqualTo(expected);
     }
 
     private static Stream<Arguments> getTableNameTestParams() {

@@ -7,30 +7,36 @@ import jakarta.persistence.Table;
  */
 public class EntityName {
 
+    private final Class<?> entityClass;
+
+    public EntityName(Class<?> entityClass) {
+        this.entityClass = entityClass;
+    }
+
     /**
      * 테이블 이름을 추출
      */
-    public static String getTableName(Class<?> entityClass) {
+    public String getTableName() {
         if (entityClass.isAnnotationPresent(Table.class)) {
-            return getTableNameFromTableAnnotation(entityClass);
+            return getTableNameFromTableAnnotation();
         }
-        return getTableNameFromClassName(entityClass);
+        return getTableNameFromClassName();
     }
 
     /**
      * 클래스명에서 테이블 이름 추출
      */
-    private static String getTableNameFromClassName(Class<?> entityClass) {
+    private String getTableNameFromClassName() {
         return entityClass.getSimpleName().toLowerCase();
     }
 
     /**
      * `@Table`에서 이름 추출
      */
-    private static String getTableNameFromTableAnnotation(Class<?> entityClass) {
+    private String getTableNameFromTableAnnotation() {
         String tableName = entityClass.getAnnotation(Table.class).name();
         if (tableName == null || tableName.isBlank()) {
-            return getTableNameFromClassName(entityClass);
+            return getTableNameFromClassName();
         }
         return tableName;
     }
