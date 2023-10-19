@@ -44,7 +44,7 @@ class QueryDmlTest {
         void init() {
             createTable(aClass);
         }
-                
+
         @Test
         @DisplayName("@Entity가 설정되어 있지 않은 경우 Query를 생성하지 않음")
         void notEntity() {
@@ -153,8 +153,52 @@ class QueryDmlTest {
         }
     }
 
+    @Nested
+    @DisplayName("delete query")
+    class delete {
+        Class<SelectPerson> selectPersonClass = SelectPerson.class;
+
+        @BeforeEach
+        void init() {
+            createTable(selectPersonClass);
+        }
+
+        @Test
+        @DisplayName("id를 가지고 데이터를 삭제합니다")
+        void success() {
+            //given
+            final Long id = 3L;
+            final String name = "name";
+            final int age = 30;
+            final String email = "zz";
+            final Integer index = 1;
+
+            final SelectPerson person = new SelectPerson(id, name, age, email, index);
+
+            insert(person);
+
+            //when
+            String query = DeleteQuery.create(selectPersonClass, id);
+            jdbcTemplate.execute(query);
+
+            //then
+            assertThrows(RuntimeException.class
+                    , () -> jdbcTemplate.queryForObject(getSelectQuery(selectPersonClass, "findById", id)
+                            , new ResultMapper<>(SelectPerson.class)), "No data is available [2000-214]");
+        }
+
+        @AfterEach
+        void after() {
+            dropTable(selectPersonClass);
+        }
+    }
+
     private <T> String getSelectQuery(Class<T> tClass, String methodName) {
         return QueryDml.select(tClass, methodName);
+    }
+
+    private <T> String getSelectQuery(Class<T> tClass, String methodName, Object... args) {
+        return QueryDml.select(tClass, methodName, args);
     }
 
     private <T> void createTable(Class<T> tClass) {
