@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 /**
  * 엔티티 컬럼 정다
@@ -48,6 +49,19 @@ public class EntityColumn {
 
     public Class<?> getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EntityColumn that = (EntityColumn) o;
+        return Objects.equals(field, that.field) && Objects.equals(name, that.name) && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(field, name, type);
     }
 
 }
