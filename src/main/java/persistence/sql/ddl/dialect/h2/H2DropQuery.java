@@ -2,6 +2,9 @@ package persistence.sql.ddl.dialect.h2;
 
 import persistence.sql.ddl.entity.EntityData;
 
+/**
+ * H2 Drop Query 생성 클래스
+ */
 public class H2DropQuery implements H2Query {
 
     @Override

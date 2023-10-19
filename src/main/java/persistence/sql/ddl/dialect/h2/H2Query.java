@@ -2,6 +2,9 @@ package persistence.sql.ddl.dialect.h2;
 
 import persistence.sql.ddl.dialect.Query;
 
+/**
+ * H2 표현식 모음
+ */
 public interface H2Query extends Query {
 
     String SPACE = " ";

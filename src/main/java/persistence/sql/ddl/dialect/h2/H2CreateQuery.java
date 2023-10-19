@@ -7,6 +7,9 @@ import persistence.sql.ddl.entity.EntityData;
 
 import java.util.List;
 
+/**
+ * H2 CreateQuery 생성 클래스
+ */
 public class H2CreateQuery implements H2Query {
 
     @Override
