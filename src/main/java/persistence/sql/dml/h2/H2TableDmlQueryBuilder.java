@@ -1,8 +1,9 @@
-package persistence.sql.dml;
+package persistence.sql.dml.h2;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import persistence.core.EntityMetadataModel;
+import persistence.sql.dml.TableDmlQueryBuilder;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -20,12 +21,12 @@ public class H2TableDmlQueryBuilder implements TableDmlQueryBuilder {
 
 
     @Override
-    public String createInsertQuery(EntityMetadataModel entityMetadataModel, Object object) {
+    public String createInsertQuery(EntityMetadataModel entityMetadataModel, Object entity) {
         return "insert into " +
                 entityMetadataModel.getTableName() +
                 columnsClause(entityMetadataModel) +
                 " values " +
-                valuesClause(object);
+                valuesClause(entity);
     }
 
 

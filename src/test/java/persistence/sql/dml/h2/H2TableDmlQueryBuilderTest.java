@@ -1,35 +1,22 @@
-package persistence.sql.dml;
+package persistence.sql.dml.h2;
 
 import entityloaderfixture.depth.DepthPersonFixtureEntity;
-import org.assertj.core.api.Assertions;
+import fixture.EntityMetadataModelFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.core.EntityColumn;
 import persistence.core.EntityMetadataModel;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import persistence.sql.dml.TableDmlQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class H2TableDmlQueryBuilderTest {
 
 
-    @DisplayName("")
+    @DisplayName("EntityMetadataModel과 Entity를 받아 insert 쿼리를 생성한다")
     @Test
     void createInsertQuery () {
         // given
-        Class<DepthPersonFixtureEntity> personFixtureEntityClass = DepthPersonFixtureEntity.class;
-
-        List<EntityColumn> entityColumns = Arrays.stream(personFixtureEntityClass.getDeclaredFields())
-                .map(EntityColumn::new)
-                .collect(Collectors.toUnmodifiableList());
-
-        EntityMetadataModel entityMetadataModel = new EntityMetadataModel(
-                personFixtureEntityClass.getSimpleName(),
-                entityColumns
-        );
+        EntityMetadataModel entityMetadataModel = EntityMetadataModelFixture.getEntityMetadataModel(DepthPersonFixtureEntity.class);
 
         // when
         DepthPersonFixtureEntity depthPersonFixtureEntity = new DepthPersonFixtureEntity("리리미", 30);

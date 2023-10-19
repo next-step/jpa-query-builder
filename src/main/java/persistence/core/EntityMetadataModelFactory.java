@@ -33,7 +33,7 @@ public class EntityMetadataModelFactory {
                 .map(this::createEntityColumn)
                 .collect(Collectors.toUnmodifiableList());
 
-        return new EntityMetadataModel(getTableName(target), entityColumns);
+        return new EntityMetadataModel(getTableName(target), target, entityColumns);
     }
 
     private String getTableName(Class<?> target) {

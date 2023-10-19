@@ -2,15 +2,14 @@ package persistence.core;
 
 import persistence.exception.NotHavePrimaryKeyException;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityMetadataModel {
 
     private final String tableName;
+
+    private final Class<?> type;
 
     private final EntityColumn primaryKeyColumn;
 
@@ -18,12 +17,14 @@ public class EntityMetadataModel {
 
     public EntityMetadataModel(
             String tableName,
+            Class<?> type,
             Collection<EntityColumn> columns) {
 
         assert tableName != null;
         assert columns != null;
 
         this.tableName = tableName;
+        this.type = type;
         this.columns = new LinkedHashSet<>(columns);
 
         EntityColumn primaryKeyColumn = findPrimaryKey();
@@ -48,6 +49,23 @@ public class EntityMetadataModel {
         return this.columns.stream()
                 .map(EntityColumn::getName)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public Class<?> getType() {
+        return this.type;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        EntityMetadataModel that = (EntityMetadataModel) object;
+        return Objects.equals(tableName, that.tableName) && Objects.equals(type, that.type) && Objects.equals(primaryKeyColumn, that.primaryKeyColumn) && Objects.equals(columns, that.columns);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableName, type, primaryKeyColumn, columns);
     }
 
     private EntityColumn findPrimaryKey() {

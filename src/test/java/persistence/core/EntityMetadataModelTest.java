@@ -27,6 +27,7 @@ class EntityMetadataModelTest {
         // when
         EntityMetadataModel entityMetadataModel = new EntityMetadataModel(
                 personFixtureEntityClass.getSimpleName(),
+                personFixtureEntityClass,
                 entityColumns
         );
 
