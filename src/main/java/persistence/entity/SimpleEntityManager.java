@@ -57,7 +57,8 @@ public class SimpleEntityManager implements EntityManager {
 
     @Override
     public void remove(final Object entity) {
-
+        final String delete = dmlGenerator.delete(entity);
+        jdbcTemplate.execute(delete);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class DmlGenerator {
         final List<Object> values = ReflectionUtils.getFieldValues(entity, entityMetadata.getInsertableColumnFieldNames());
         return InsertQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
-                .addData(columnNames, convertToString(values))
+                .addData(columnNames, convertToStrings(values))
                 .build();
     }
 
@@ -45,17 +45,24 @@ public class DmlGenerator {
                 .build();
     }
 
-    public String delete(final Class<?> clazz) {
-        final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(clazz);
+    public String delete(final Object entity) {
+        final EntityMetadata<?> entityMetadata = entityMetadataProvider.getEntityMetadata(entity.getClass());
+        final Object value = ReflectionUtils.getFieldValue(entity, entityMetadata.getIdColumnFieldName());
         return DeleteQueryBuilder.builder()
                 .table(entityMetadata.getTableName())
+                .where(entityMetadata.getIdColumnName(), convertToString(value))
                 .build();
     }
 
-    private List<String> convertToString(final List<Object> data) {
+    private String convertToString(final Object object) {
+        return object instanceof String ?
+                addSingleQuote(object) : String.valueOf(object);
+    }
+
+    private List<String> convertToStrings(final List<Object> data) {
         return data.stream()
-                .map(object -> object instanceof String ?
-                        addSingleQuote(object) : String.valueOf(object)).collect(Collectors.toList());
+                .map(this::convertToString)
+                .collect(Collectors.toList());
     }
 
     private String addSingleQuote(final Object value) {

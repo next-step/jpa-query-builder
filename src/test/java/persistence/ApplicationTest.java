@@ -99,6 +99,16 @@ class ApplicationTest {
         });
     }
 
+    @Test
+    @DisplayName("entityManager.remove 를 이용해 특정 객체를 DB 에서 삭제할 수 있다.")
+    void entityManagerRemoveTest() {
+        final EntityManager entityManager = new SimpleEntityManager(persistenceEnvironment);
+
+        assertDoesNotThrow(() -> {
+            entityManager.remove(people.get(0));
+        });
+    }
+
     private RowMapper<Person> personRowMapper() {
         return rs -> new Person(rs.getLong("id"), rs.getString("nick_name"), rs.getInt("old"), rs.getString("email"));
     }
