@@ -24,6 +24,7 @@ public class DataDefinitionLanguageAssembler {
             DatabaseField databaseField = tableCreator.getFields().getDatabaseFields().get(i);
             sb.append(databaseField);
             if(databaseField.isPrimary()) {
+                sb.append(" ");
                 sb.append(getPrimaryKeyStrategy(databaseField));
             }
             if (i != fieldSize - 1) {
@@ -38,7 +39,7 @@ public class DataDefinitionLanguageAssembler {
     public String assembleDropTableQuery(Class<?> cls) {
         TableRemover tableRemover = dataDefinitionLanguageGenerator.generateTableRemoverWithClass(cls);
         StringBuilder sb = new StringBuilder();
-        sb.append("drop table ");
+        sb.append("drop table");
         sb.append(" ");
         sb.append(tableRemover.getTableName());
         sb.append(" if exists;");

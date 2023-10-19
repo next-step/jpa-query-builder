@@ -27,6 +27,6 @@ public class DatabaseField {
 
     @Override
     public String toString() {
-        return name + " " + databaseType + " " + (isNullable ? "" : "not null");
+        return name + " " + databaseType + (isNullable ? "" : " not null");
     }
 }
