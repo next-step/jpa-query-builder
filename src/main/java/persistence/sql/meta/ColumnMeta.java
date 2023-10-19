@@ -1,6 +1,7 @@
 package persistence.sql.meta;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import persistence.sql.util.StringConstant;
 import persistence.sql.util.StringUtils;
@@ -8,6 +9,10 @@ import persistence.sql.util.StringUtils;
 import java.lang.reflect.Field;
 
 public class ColumnMeta {
+
+    public static boolean isId(Field field) {
+        return field.getDeclaredAnnotation(Id.class) != null;
+    }
 
     public static boolean isTransient(Field field) {
         return field.getDeclaredAnnotation(Transient.class) != null;
