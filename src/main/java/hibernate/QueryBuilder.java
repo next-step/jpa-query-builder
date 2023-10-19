@@ -2,5 +2,5 @@ package hibernate;
 
 public interface QueryBuilder {
 
-    String generateCreateQuery(Class<?> clazz);
+    String generateQuery(Class<?> clazz);
 }
