@@ -1,4 +1,9 @@
-package persistence.dialect;
+package persistence.dialect.oracle;
+
+import persistence.dialect.DBColumnTypeMapper;
+import persistence.dialect.Dialect;
+import persistence.dialect.PagingStrategy;
+import persistence.dialect.RownumPagingStrategy;
 
 public class OracleDialect implements Dialect {
     private final PagingStrategy pagingStrategy;

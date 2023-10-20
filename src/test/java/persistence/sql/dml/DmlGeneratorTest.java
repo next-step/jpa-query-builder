@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.dialect.Dialect;
-import persistence.dialect.H2Dialect;
+import persistence.dialect.h2.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

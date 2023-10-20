@@ -1,4 +1,9 @@
-package persistence.dialect;
+package persistence.dialect.h2;
+
+import persistence.dialect.DBColumnTypeMapper;
+import persistence.dialect.DefaultPagingStrategy;
+import persistence.dialect.Dialect;
+import persistence.dialect.PagingStrategy;
 
 public class H2Dialect implements Dialect {
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
 import domain.FixtureEntity;
-import persistence.dialect.H2Dialect;
+import persistence.dialect.h2.H2Dialect;
 
 import java.util.stream.Stream;
 

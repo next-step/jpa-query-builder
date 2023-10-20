@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
 import persistence.core.PersistenceEnvironment;
-import persistence.dialect.H2Dialect;
+import persistence.dialect.h2.H2Dialect;
 import persistence.entity.EntityManager;
 import persistence.entity.SimpleEntityManager;
 import persistence.exception.PersistenceException;

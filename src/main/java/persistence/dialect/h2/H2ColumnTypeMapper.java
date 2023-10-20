@@ -1,5 +1,6 @@
-package persistence.dialect;
+package persistence.dialect.h2;
 
+import persistence.dialect.DBColumnTypeMapper;
 import persistence.exception.NoSuchTypeException;
 
 import java.util.HashMap;
