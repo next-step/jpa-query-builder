@@ -21,6 +21,13 @@ public class EntityColumns {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
+    public EntityColumn getEntityId() {
+        return values.stream()
+                .filter(EntityColumn::isId)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("id field가 없습니다."));
+    }
+
     public List<EntityColumn> getValues() {
         return values;
     }

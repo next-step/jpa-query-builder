@@ -127,3 +127,5 @@ select column1, column2 from table;
 ```sql
 select column1, column2 from table where id = ?;
 ```
+- EntityClass
+  - EntityId를 반환할 수 있다.
