@@ -7,17 +7,15 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdInfo implements AnnotationInfo {
-
-    private Id id;
+public class IdInfo extends AnnotationInfo {
 
     public IdInfo(Field field) {
-        initialize(field);
+        super(field);
     }
 
     @Override
-    public void initialize(Field field) {
-        this.id = field.getAnnotation(Id.class);
+    protected Class<Id> getAnnotationType() {
+        return Id.class;
     }
 
     @Override

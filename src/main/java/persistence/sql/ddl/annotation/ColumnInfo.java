@@ -7,22 +7,21 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColumnInfo implements AnnotationInfo {
-
-    private Column column;
+public class ColumnInfo extends AnnotationInfo {
 
     public ColumnInfo(Field field) {
-        initialize(field);
+        super(field);
     }
 
     @Override
-    public void initialize(Field field) {
-        // TODO Field에 어노테이션 없는 케이스 테스트
-        this.column = field.getAnnotation(Column.class);
+    protected Class<Column> getAnnotationType() {
+        return Column.class;
     }
 
     @Override
     public List<ColumnOption> metaInfos() {
+        Column column = (Column) super.annotation;
+
         List<ColumnOption> result = new ArrayList<>();
         if (!column.nullable()) {
             result.add(ColumnOption.NOT_NULL);

@@ -8,21 +8,21 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GeneratedValueInfo implements AnnotationInfo {
-
-    private GeneratedValue generatedValue;
+public class GeneratedValueInfo extends AnnotationInfo {
 
     public GeneratedValueInfo(Field field) {
-        initialize(field);
+        super(field);
     }
 
     @Override
-    public void initialize(Field field) {
-        this.generatedValue = field.getAnnotation(GeneratedValue.class);
+    protected Class<GeneratedValue> getAnnotationType() {
+        return GeneratedValue.class;
     }
 
     @Override
     public List<ColumnOption> metaInfos() {
+        GeneratedValue generatedValue = (GeneratedValue) super.annotation;
+
         List<ColumnOption> result = new ArrayList<>();
         if (generatedValue.strategy().name().equals(GenerationType.IDENTITY.name())) {
             result.add(ColumnOption.AUTO_INCREMENT);
