@@ -35,6 +35,26 @@ classDiagram
         - int priority
         + ColumnMetaInfo(annotation: Annotation)
     }
+    class AnnotationInfo {
+        # initialize(Field field)
+        + getColumnMetaInfos(): List<ColumnMetaInfo>
+    }
+    class ColumnInfo {
+        - Column column
+        + initialize(Field field)
+        + getColumnMetaInfos(): List<ColumnMetaInfo>
+
+    }
+    class GeneratedValueInfo {
+        - GeneratedValue generatedValue
+        + initialize(Field field)
+        + getColumnMetaInfos(): List<ColumnMetaInfo>
+    }
+    class IdInfo {
+        - Id id
+        + initialize(Field field)
+        + getColumnMetaInfos(): List<ColumnMetaInfo>
+    }
 
     EntityQueryBuilder --* EntityMetadata
     EntityMetadata --* TableInfo
@@ -43,4 +63,10 @@ classDiagram
     GeneralColumnInfo --|> ColumnMetaInfoFactory : uses
     GeneralColumnInfo --* ColumnMetaInfo : has
     ColumnMetaInfoFactory --* ColumnMetaInfo : returns
+    AnnotationInfo <|-- ColumnInfo : implements
+    AnnotationInfo <|-- GeneratedValueInfo : implements
+    AnnotationInfo <|-- IdInfo : implements
+    ColumnInfo --* ColumnMetaInfo : has
+    GeneratedValueInfo --* ColumnMetaInfo : has
+    IdInfo --* ColumnMetaInfo : has
 ```
