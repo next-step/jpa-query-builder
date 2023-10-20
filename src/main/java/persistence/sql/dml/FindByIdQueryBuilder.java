@@ -11,18 +11,18 @@ public class FindByIdQueryBuilder implements QueryBuilder {
 
     private final EntityData entityData;
     private final Query query;
-    private final Object entity;
+    private final Object id;
 
-    public FindByIdQueryBuilder(Query query, Object entity) {
-        validateEntityClass(entity.getClass());
-        this.entityData = new EntityData(entity.getClass());
+    public FindByIdQueryBuilder(Query query, Class<?> entityClass, Object id) {
+        validateEntityClass(entityClass);
+        this.entityData = new EntityData(entityClass);
         this.query = query;
-        this.entity = entity;
+        this.id = id;
     }
 
     @Override
     public String getQuery() {
-        return query.getFindByIdQuery(entityData, entity);
+        return query.getFindByIdQuery(entityData, id);
     }
 
 }

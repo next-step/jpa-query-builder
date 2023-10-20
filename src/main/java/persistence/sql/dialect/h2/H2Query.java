@@ -12,6 +12,7 @@ public class H2Query implements Query {
     private final H2DropQuery dropQuery = new H2DropQuery();
     private final H2InsertQuery insertQuery = new H2InsertQuery();
     private final H2FindAllQuery findAllQuery = new H2FindAllQuery();
+    private final H2FindByIdQuery findByIdQuery = new H2FindByIdQuery();
 
     @Override
     public String getCreateQuery(EntityData entityData) {
@@ -34,8 +35,8 @@ public class H2Query implements Query {
     }
 
     @Override
-    public String getFindByIdQuery(EntityData entityData, Object entity) {
-        return null;
+    public String getFindByIdQuery(EntityData entityData, Object id) {
+        return findByIdQuery.generateQuery(entityData, id);
     }
 
 }

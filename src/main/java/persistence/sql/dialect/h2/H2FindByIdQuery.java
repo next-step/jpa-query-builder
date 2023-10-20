@@ -1,12 +1,8 @@
 package persistence.sql.dialect.h2;
 
-import jakarta.persistence.Column;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import persistence.sql.entity.EntityColumn;
 import persistence.sql.entity.EntityData;
 
-import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 
 /**
@@ -14,13 +10,11 @@ import java.util.stream.Collectors;
  */
 public class H2FindByIdQuery implements H2Dialect {
 
-    private static final Logger log = LoggerFactory.getLogger(H2FindByIdQuery.class);
-
-    public String generateQuery(EntityData entityData, Object entity) {
+    public String generateQuery(EntityData entityData, Object id) {
         return String.format(FIND_BY_TEMPLATE,
-                entityData.getTableName(),
                 columnsClause(entityData),
-                valueClause(entityData, entity));
+                entityData.getTableName(),
+                valueClause(entityData, id));
     }
 
     private String columnsClause(EntityData entityData) {
@@ -30,38 +24,22 @@ public class H2FindByIdQuery implements H2Dialect {
     }
 
     private String valueClause(EntityData entityData, Object object) {
-        return entityData.getEntityColumns().getEntityColumnList().stream()
-                .map(column -> getEachValue(column, object))
-                .collect(Collectors.joining(COMMA + SPACE));
+        return getIdName(entityData)
+                + SPACE
+                + EQUALS
+                + SPACE
+                + getIdValue(object);
     }
 
-    private String getEachValue(EntityColumn column, Object object) {
-        Field field = column.getField();
-        field.setAccessible(true);
+    private String getIdName(EntityData entityData) {
+        return entityData.getEntityColumns().getIdColumn().getColumnName();
+    }
 
-        Object value;
-        try {
-            value = field.get(object);
-        } catch (Exception e) {
-            log.error("Entity의 필드를 읽어오는데 실패함", e);
-            throw new RuntimeException(e);
+    private String getIdValue(Object id) {
+        if (id instanceof String) {
+            return APOSTROPHE + id + APOSTROPHE;
         }
-
-        if (column.isId() && value == null) {
-            return DEFAULT;
-        }
-
-        if (column.getField().isAnnotationPresent(Column.class)
-                && !column.getField().getAnnotation(Column.class).nullable()
-                && value == null) {
-            throw new IllegalArgumentException("null 가능하지 않은 필드에 null이 할당되었습니다.");
-        }
-
-        if (value instanceof String) {
-            return APOSTROPHE + value + APOSTROPHE;
-        }
-
-        return String.valueOf(value);
+        return String.valueOf(id);
     }
 
 }

@@ -15,6 +15,6 @@ public interface Query {
 
     String getFindAllQuery(EntityData entityData);
 
-    String getFindByIdQuery(EntityData entityData, Object entity);
+    String getFindByIdQuery(EntityData entityData, Object id);
 
 }

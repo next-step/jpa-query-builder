@@ -12,6 +12,7 @@ public interface H2Dialect extends Dialect {
     String CLOSE_PARENTHESIS = ")";
     String COMMA = ",";
     String APOSTROPHE = "'";
+    String EQUALS = "=";
 
     String CREATE_QUERY = "create table ";
     String DROP_QUERY = "drop table ";
