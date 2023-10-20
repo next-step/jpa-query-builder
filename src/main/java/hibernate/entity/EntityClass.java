@@ -35,6 +35,10 @@ public class EntityClass {
         return tableName;
     }
 
+    public EntityColumn getEntityId() {
+        return entityColumns.getEntityId();
+    }
+
     public List<EntityColumn> getEntityColumns() {
         return entityColumns.getValues();
     }
