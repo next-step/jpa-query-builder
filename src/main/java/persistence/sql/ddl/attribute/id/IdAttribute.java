@@ -1,0 +1,13 @@
+package persistence.sql.ddl.attribute.id;
+
+import persistence.sql.ddl.converter.SqlConverter;
+
+public abstract class IdAttribute {
+    protected SqlConverter sqlConverter;
+
+    public IdAttribute(SqlConverter sqlConverter) {
+        this.sqlConverter = sqlConverter;
+    }
+
+    abstract public String makeComponent();
+}

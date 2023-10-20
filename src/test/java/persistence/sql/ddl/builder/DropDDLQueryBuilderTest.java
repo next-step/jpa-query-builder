@@ -6,14 +6,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.DatabaseTest;
+import persistence.sql.ddl.attribute.EntityAttribute;
+import persistence.sql.ddl.converter.SqlConverter;
+import persistence.sql.ddl.parser.AttributeParser;
+import persistence.sql.infra.H2SqlConverter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static persistence.sql.ddl.model.DDLType.DROP;
-import static persistence.sql.ddl.model.DatabaseType.H2;
 
 @Nested
 @DisplayName("DropDDLQueryBuilder 클래스의")
 public class DropDDLQueryBuilderTest extends DatabaseTest {
+    private final SqlConverter sqlConverter = new H2SqlConverter();
+    private final AttributeParser parser = new AttributeParser(sqlConverter);
+
     @Nested
     @DisplayName("prepareStatement 메소드는")
     class prepareStatement {
@@ -23,12 +29,16 @@ public class DropDDLQueryBuilderTest extends DatabaseTest {
             @Test
             @DisplayName("DROP DDL을 리턴한다.")
             void returnDDL() {
-                String drop = DDLQueryBuilderFactory.createQueryBuilder(DROP, H2)
-                        .prepareStatement(Person.class);
+                EntityAttribute entityAttribute = EntityAttribute.of(Person.class, parser);
 
-                String message = Assertions.assertThrows(RuntimeException.class, () -> jdbcTemplate.execute(drop)).getMessage();
+                String dropDDL = DDLQueryBuilderFactory.createQueryBuilder(DROP)
+                        .prepareStatement(entityAttribute);
+
+                String message = Assertions.assertThrows(RuntimeException.class, () -> jdbcTemplate.execute(dropDDL))
+                        .getMessage();
+
                 assertThat(message).contains("Table \"USERS\" not found; SQL statement");
-                assertThat(drop).isEqualTo("DROP TABLE users;");
+                assertThat(dropDDL).isEqualTo("DROP TABLE users;");
             }
         }
     }

@@ -1,6 +1,6 @@
 package persistence.sql.ddl.converter;
 
-public interface JavaToSqlMapper {
+public interface SqlConverter {
 
     String convert(Class<?> tclass);
 }
