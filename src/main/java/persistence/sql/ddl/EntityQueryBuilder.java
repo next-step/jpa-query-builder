@@ -4,8 +4,8 @@ public class EntityQueryBuilder {
 
     private final EntityMetadata entityMetadata;
 
-    public EntityQueryBuilder(Class<?> clazz) {
-        this.entityMetadata = new EntityMetadata(clazz);
+    public EntityQueryBuilder(Class<?> type) {
+        this.entityMetadata = new EntityMetadata(type);
     }
 
     public String create() {
