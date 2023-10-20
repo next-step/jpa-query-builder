@@ -129,3 +129,10 @@ select column1, column2 from table where id = ?;
 ```
 - EntityClass
   - EntityId를 반환할 수 있다.
+
+### 요구사항 4
+- delete 쿼리를 생성한다.
+```sql
+delete from table where id = ?;
+```
+- delete할 EntityObject를 받아서 쿼리를 실행한다.
