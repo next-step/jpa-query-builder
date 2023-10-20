@@ -2,7 +2,6 @@ package persistence.sql.ddl.vo;
 
 import jakarta.persistence.GenerationType;
 import java.util.Objects;
-import lombok.Getter;
 import persistence.sql.ddl.vo.type.DatabaseType;
 
 public class DatabaseField {
