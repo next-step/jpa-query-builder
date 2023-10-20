@@ -5,7 +5,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
-import java.util.Objects;
 
 public class EntityId implements EntityColumn {
 

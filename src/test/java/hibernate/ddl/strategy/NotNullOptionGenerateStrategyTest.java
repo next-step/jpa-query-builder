@@ -1,6 +1,5 @@
 package hibernate.ddl.strategy;
 
-import hibernate.ddl.strategy.NotNullOptionGenerateStrategy;
 import hibernate.entity.column.EntityField;
 import jakarta.persistence.Column;
 import org.junit.jupiter.api.Test;

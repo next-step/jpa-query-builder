@@ -1,6 +1,5 @@
 package hibernate.entity;
 
-import hibernate.entity.EntityClass;
 import hibernate.entity.column.EntityColumn;
 
 import java.util.LinkedHashMap;

@@ -1,17 +1,16 @@
 package hibernate.ddl;
 
-import hibernate.QueryBuilder;
-import hibernate.entity.EntityClass;
-import hibernate.entity.column.EntityColumn;
 import hibernate.ddl.strategy.ColumnOptionGenerateStrategy;
 import hibernate.ddl.strategy.IdIdentityOptionGenerateStrategy;
 import hibernate.ddl.strategy.NotNullOptionGenerateStrategy;
 import hibernate.ddl.strategy.PrimaryKetOptionGenerateStrategy;
+import hibernate.entity.EntityClass;
+import hibernate.entity.column.EntityColumn;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateQueryBuilder implements QueryBuilder {
+public class CreateQueryBuilder {
 
     private static final String CREATE_TABLE_QUERY = "create table %s (%s);";
     private static final String CREATE_COLUMN_QUERY = "%s %s";
@@ -27,7 +26,6 @@ public class CreateQueryBuilder implements QueryBuilder {
     public CreateQueryBuilder() {
     }
 
-    @Override
     public String generateQuery(final EntityClass entity) {
         String columns = parseColumnQueries(entity.getEntityColumns());
         return String.format(CREATE_TABLE_QUERY, entity.tableName(), columns);

@@ -3,7 +3,6 @@ package hibernate.ddl;
 import domain.Person;
 import domain.Person2;
 import domain.Person3;
-import hibernate.ddl.CreateQueryBuilder;
 import hibernate.entity.EntityClass;
 import org.junit.jupiter.api.Test;
 

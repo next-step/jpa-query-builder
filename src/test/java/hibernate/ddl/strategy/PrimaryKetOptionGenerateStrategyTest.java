@@ -1,6 +1,5 @@
 package hibernate.ddl.strategy;
 
-import hibernate.ddl.strategy.PrimaryKetOptionGenerateStrategy;
 import hibernate.entity.column.EntityField;
 import hibernate.entity.column.EntityId;
 import jakarta.persistence.Id;

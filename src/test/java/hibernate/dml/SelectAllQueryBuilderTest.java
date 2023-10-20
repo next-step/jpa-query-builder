@@ -1,6 +1,5 @@
 package hibernate.dml;
 
-import hibernate.dml.SelectAllQueryBuilder;
 import hibernate.entity.EntityClass;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.Test;
