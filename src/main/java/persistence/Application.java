@@ -6,10 +6,10 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DataDefinitionLanguageGenerator;
-import persistence.sql.ddl.GetFieldFromClass;
-import persistence.sql.ddl.GetTableNameFromClass;
+import persistence.sql.ddl.GetFieldFromClassUseCase;
+import persistence.sql.ddl.GetTableNameFromClassUseCase;
 import persistence.sql.ddl.assembler.DataDefinitionLanguageAssembler;
-import persistence.sql.ddl.cls.Person;
+import persistence.sql.ddl.entity.Person;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -36,20 +36,20 @@ public class Application {
     }
 
     public static String generateCreateQuery() {
-        GetTableNameFromClass getTableNameFromClass = new GetTableNameFromClass();
-        GetFieldFromClass getFieldFromClass = new GetFieldFromClass();
+        GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
+        GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
         DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
-            getTableNameFromClass, getFieldFromClass
+                getTableNameFromClassUseCase, getFieldFromClassUseCase
         );
         DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = new DataDefinitionLanguageAssembler(dataDefinitionLanguageGenerator);
         return dataDefinitionLanguageAssembler.assembleCreateTableQuery(Person.class);
     }
 
     public static String generateDropQuery() {
-        GetTableNameFromClass getTableNameFromClass = new GetTableNameFromClass();
-        GetFieldFromClass getFieldFromClass = new GetFieldFromClass();
+        GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
+        GetFieldFromClassUseCase getFieldFromClass = new GetFieldFromClassUseCase();
         DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
-            getTableNameFromClass, getFieldFromClass
+                getTableNameFromClassUseCase, getFieldFromClass
         );
         DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = new DataDefinitionLanguageAssembler(dataDefinitionLanguageGenerator);
         return dataDefinitionLanguageAssembler.assembleDropTableQuery(Person.class);

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.cls.ClassWithTableAndName;
@@ -21,10 +23,10 @@ import persistence.sql.ddl.vo.type.Int;
 import persistence.sql.ddl.vo.type.VarChar;
 
 class DataDefinitionLanguageGeneratorTest {
-    private final GetTableNameFromClass getTableNameFromClass = new GetTableNameFromClass();
-    private final GetFieldFromClass getFieldFromClass = new GetFieldFromClass();
+    private final GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
+    private final GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
     private final DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
-        getTableNameFromClass, getFieldFromClass
+            getTableNameFromClassUseCase, getFieldFromClassUseCase
     );
 
 
@@ -113,7 +115,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTestClass.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "defaultNullableColumn".equals(it.getName())).toList();
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "defaultNullableColumn".equals(it.getName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.isNullable()).isTrue();
@@ -125,7 +127,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTestClass.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "nonNullableColumn".equals(it.getName())).toList();
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "nonNullableColumn".equals(it.getName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.isNullable()).isFalse();
@@ -137,7 +139,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTestClass.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeLong".equals(it.getName())).toList();
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeLong".equals(it.getName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.getDatabaseType() == BigInt.getInstance()).isTrue();
@@ -149,7 +151,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTestClass.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeInteger".equals(it.getName())).toList();
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeInteger".equals(it.getName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.getDatabaseType() == Int.getInstance()).isTrue();
@@ -161,7 +163,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTestClass.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeString".equals(it.getName())).toList();
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeString".equals(it.getName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
         assertAll(
             () -> assertThat(databaseField.getDatabaseType() instanceof VarChar).isTrue(),

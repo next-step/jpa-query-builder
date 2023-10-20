@@ -12,7 +12,7 @@ import persistence.sql.ddl.vo.DatabaseField;
 import persistence.sql.ddl.vo.DatabaseFields;
 import persistence.sql.ddl.vo.type.TypeConverter;
 
-public class GetFieldFromClass {
+public class GetFieldFromClassUseCase {
     public DatabaseFields execute(Class<?> cls) {
         Field[] declaredFields = cls.getDeclaredFields();
         return DatabaseFields.of(Arrays.stream(declaredFields)

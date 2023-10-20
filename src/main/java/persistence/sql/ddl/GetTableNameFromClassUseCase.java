@@ -5,7 +5,7 @@ import jakarta.persistence.Table;
 import persistence.sql.ddl.exception.CannotCreateTableException;
 import persistence.sql.ddl.vo.TableName;
 
-public class GetTableNameFromClass {
+public class GetTableNameFromClassUseCase {
     public TableName execute(Class<?> cls) {
         if (!cls.isAnnotationPresent(Entity.class)) {
             throw new CannotCreateTableException("Class is not annotated with @Entity");

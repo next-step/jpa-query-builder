@@ -5,7 +5,6 @@ import java.util.Objects;
 import lombok.Getter;
 import persistence.sql.ddl.vo.type.DatabaseType;
 
-@Getter
 public class DatabaseField {
     private final String name;
     private final DatabaseType databaseType;
@@ -23,6 +22,22 @@ public class DatabaseField {
 
     public boolean isPrimary() {
         return isPrimary;
+    }
+
+    public GenerationType getPrimaryKeyGenerationType() {
+        return primaryKeyGenerationType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public DatabaseType getDatabaseType() {
+        return databaseType;
+    }
+
+    public boolean isNullable() {
+        return isNullable;
     }
 
     @Override

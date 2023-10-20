@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -55,7 +57,7 @@ class ReflectionTest {
         // when
         Method[] declaredMethods = Car.class.getDeclaredMethods();
         List<Method> methods = Arrays.stream(declaredMethods)
-                                     .filter(method -> method.getName().startsWith(PREFIX)).toList();
+                                     .filter(method -> method.getName().startsWith(PREFIX)).collect(Collectors.toList());
         methods.forEach(method -> invokeMethod(method, car));
 
         // then
@@ -75,13 +77,13 @@ class ReflectionTest {
 
         Method[] declaredMethods = Car.class.getDeclaredMethods();
         List<Method> methods = Arrays.stream(declaredMethods)
-                                     .filter(method -> method.isAnnotationPresent(PrintView.class)).toList();
+                                     .filter(method -> method.isAnnotationPresent(PrintView.class)).collect(Collectors.toList());
         methods.forEach(method -> invokeMethod(method, car));
 
         // then
         assertAll(
             () -> assertThat(methods).hasSize(1),
-            () -> assertThat(methods.stream().map(Method::getName).toList()).containsExactly(
+            () -> assertThat(methods.stream().map(Method::getName).collect(Collectors.toList())).containsExactly(
                 "printView"
             )
         );
@@ -99,7 +101,7 @@ class ReflectionTest {
         Field[] declaredFields = Car.class.getDeclaredFields();
         List<Field> privateFields = Arrays.stream(declaredFields)
                                           .filter(it -> it.getModifiers() == Modifier.PRIVATE)
-                                          .toList();
+                                          .collect(Collectors.toList());
         privateFields.forEach(
             field -> {
                 field.setAccessible(true);
