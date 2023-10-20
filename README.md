@@ -108,3 +108,7 @@ public class Person {
 ```sql
 insert into table (column1, column2, column3) values (value1, value2, value3)
 ```
+
+- EntityObject
+  - Entity 클래스정보가 담긴 EntityClass와 객체를 가지고 있다.
+  - 필드의 명과 데이터가 담긴 map을 반환할 수 있다.
