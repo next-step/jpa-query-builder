@@ -6,7 +6,7 @@ import persistence.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ColumnInfoCollectionTest {
+class GeneralColumnInfoCollectionTest {
 
     @Test
     @DisplayName("Person 엔터티 컬럼 정보 가져오기")

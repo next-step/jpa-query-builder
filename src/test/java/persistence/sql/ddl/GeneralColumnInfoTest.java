@@ -13,17 +13,17 @@ import java.lang.reflect.Field;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ColumnInfoTest {
+class GeneralColumnInfoTest {
 
     @Test
     @DisplayName("map() 메소드 익셉션 테스트")
     public void mapExceptionTest() throws NoSuchFieldException {
         Field name = Person.class.getDeclaredField("name");
 
-        ColumnInfo columnInfo = new ColumnInfo(name);
+        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(name);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            columnInfo.map(Person.class);
+            generalColumnInfo.map(Person.class);
         });
     }
 
@@ -32,9 +32,9 @@ class ColumnInfoTest {
     public void getDefinitionTest() throws NoSuchFieldException {
         Field id = Person.class.getDeclaredField("id");
 
-        ColumnInfo columnInfo = new ColumnInfo(id);
+        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(id);
 
-        assertThat(columnInfo.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
+        assertThat(generalColumnInfo.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
     }
 
     @Test
@@ -42,9 +42,9 @@ class ColumnInfoTest {
     public void getDefinitionTestWithNoOptions() throws NoSuchFieldException {
         Field name = Person.class.getDeclaredField("name");
 
-        ColumnInfo columnInfo = new ColumnInfo(name);
+        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(name);
 
-        assertThat(columnInfo.getDefinition()).isEqualTo("nick_name VARCHAR(255)");
+        assertThat(generalColumnInfo.getDefinition()).isEqualTo("nick_name VARCHAR(255)");
     }
 
     @Test
@@ -52,9 +52,9 @@ class ColumnInfoTest {
     public void getColumnMetaInfosValueTest() throws NoSuchFieldException {
         Field name = ColumnMetaInfosValueTest.class.getDeclaredField("id");
 
-        ColumnInfo columnInfo = new ColumnInfo(name);
+        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(name);
 
-        assertThat(columnInfo.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL");
+        assertThat(generalColumnInfo.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL");
     }
 
 

@@ -3,22 +3,19 @@ package persistence.sql.ddl;
 import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColumnInfo {
+public class GeneralColumnInfo {
 
     private final String name;
     private final String dataType;
     private final List<ColumnMetaInfo> columnMetaInfos;
 
-    public ColumnInfo(Field field) {
+    public GeneralColumnInfo(Field field) {
         name = getFieldName(field);
         dataType = map(field.getType());
-        columnMetaInfos = Arrays.stream(field.getAnnotations())
-                .map(ColumnMetaInfo::new)
-                .collect(Collectors.toList());
+        columnMetaInfos = ColumnMetaInfoFactory.createColumnMetaInfo(field);
     }
 
     public String getDefinition() {
