@@ -115,3 +115,9 @@ insert into table (column1, column2, column3) values (value1, value2, value3)
 - EntityField
   - Entity 객체를 받아 해당 객체의 필드 값을 반환할 수 있다.
   - 가진 field가 Entity 객체에 없는 경우 예외가 발생한다.
+
+### 요구사항 2
+- findAll 쿼리를 생성한다.
+```sql
+select column1, column2 from table;
+```
