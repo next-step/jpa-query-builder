@@ -36,6 +36,15 @@ public class Column {
         return isTransient;
     }
 
+    public String buildColumnToCreate() {
+        return new StringBuilder()
+                .append(name + " " + type)
+                .append(constraint.buildNullable())
+                .append(constraint.bulidGeneratedType())
+                .append(constraint.buildPrimaryKey())
+                .toString();
+    }
+
     private String findName(Field field) {
         if(!field.isAnnotationPresent(jakarta.persistence.Column.class)) {
             return field.getName();

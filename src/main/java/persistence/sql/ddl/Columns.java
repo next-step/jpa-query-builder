@@ -10,19 +10,10 @@ public class Columns {
         this.columns = columns;
     }
 
-    public String buildColumnList() {
+    public String buildColumnsToCreate() {
         return columns.stream()
                 .filter(x -> !x.isTransient())
-                .map(this::buildColumnToCreate)
+                .map(Column::buildColumnToCreate)
                 .collect(Collectors.joining(", "));
-    }
-
-    private String buildColumnToCreate(Column column) {
-        return new StringBuilder()
-                .append(column.getName() + " " + column.getType())
-                .append(column.getConstraint().buildNullable())
-                .append(column.getConstraint().bulidGeneratedType())
-                .append(column.getConstraint().buildPrimaryKey())
-                .toString();
     }
 }

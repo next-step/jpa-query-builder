@@ -28,10 +28,4 @@ public class CreateQueryBuilder implements QueryBuilder{
                 columns.buildColumnsToCreate() +
                 ");";
     }
-
-    private List<Column> convertClassToColumnList(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .map(Column::new)
-                .collect(Collectors.toList());
-    }
 }
