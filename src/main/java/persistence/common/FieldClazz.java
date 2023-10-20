@@ -9,7 +9,7 @@ public class FieldClazz {
 
     private String name;
     private Class<?> clazz;
-    private boolean isPk;
+    private boolean isId;
     private GenerationType generationType;
     private boolean nullable;
     private boolean isTransient;
@@ -25,15 +25,15 @@ public class FieldClazz {
         this.nullable = Optional.ofNullable(field.getAnnotation(Column.class))
                 .map(Column::nullable)
                 .orElse(true);
-        this.isPk = field.isAnnotationPresent(Id.class);
+        this.isId = field.isAnnotationPresent(Id.class);
         this.generationType = Optional.ofNullable(field.getAnnotation(GeneratedValue.class))
                 .map(GeneratedValue::strategy)
                 .orElse(null);
         this.isTransient = field.isAnnotationPresent(Transient.class);
     }
 
-    public boolean isPk() {
-        return isPk;
+    public boolean isId() {
+        return isId;
     }
 
     public String getName() {
@@ -50,9 +50,5 @@ public class FieldClazz {
 
     public GenerationType getGenerationType() {
         return generationType;
-    }
-
-    public boolean notTransient() {
-        return !isTransient;
     }
 }

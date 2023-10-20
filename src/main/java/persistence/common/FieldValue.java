@@ -23,7 +23,4 @@ public class FieldValue {
         return this.fieldClazz.getClazz();
     }
 
-    public boolean notTransient() {
-        return this.fieldClazz.notTransient();
-    }
 }

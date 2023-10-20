@@ -3,10 +3,7 @@ package persistence.sql.ddl;
 import persistence.annotations.GenerationType;
 import persistence.common.EntityClazz;
 import persistence.common.FieldClazz;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import persistence.common.FieldClazzList;
 
 public class CreateQueryBuilder {
 
@@ -16,15 +13,11 @@ public class CreateQueryBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append(getCreateEntityQuery(entityClazz));
 
-        List<FieldClazz> efs = Arrays.stream(clazz.getDeclaredFields())
-                .map(FieldClazz::new)
-                .collect(Collectors.toList());
-
-        efs.stream().filter(FieldClazz::notTransient)
-                .forEach(ef -> sb.append(getCreateFieldQuery(ef)));
+        FieldClazzList fieldClazzList = new FieldClazzList(clazz);
+        fieldClazzList.getFieldClazzList().stream().forEach(ef -> sb.append(getCreateFieldQuery(ef)));
 
         sb.append("PRIMARY KEY(");
-        efs.stream().filter(ef -> ef.isPk()).forEach(ef -> sb.append(ef.getName()));
+        fieldClazzList.getIdFieldList().forEach(ef -> sb.append(ef.getName()));
         sb.append(")\n");
         sb.append(");\n");
 

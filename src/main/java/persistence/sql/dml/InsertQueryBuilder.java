@@ -2,9 +2,8 @@ package persistence.sql.dml;
 
 import persistence.common.EntityClazz;
 import persistence.common.FieldValue;
+import persistence.common.FieldValueList;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,17 +14,7 @@ public class InsertQueryBuilder {
         EntityClazz entityClazz = new EntityClazz(clazz);
         String insertQuery = "INSERT INTO " + entityClazz.getName() + " ";
 
-        List<FieldValue> fieldValueList = new ArrayList<>();
-        for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            try {
-                FieldValue fieldValue = new FieldValue(field, field.get(obj).toString());
-                fieldValueList.add(fieldValue);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
+        List<FieldValue> fieldValueList = new FieldValueList(obj).getFieldValueList();
         insertQuery += getColumnClause(fieldValueList);
         insertQuery += getValueClause(fieldValueList);
         insertQuery += ";";
@@ -34,7 +23,6 @@ public class InsertQueryBuilder {
 
     private String getValueClause(List<FieldValue> fieldValueList) {
         String values = fieldValueList.stream()
-                .filter(FieldValue::notTransient)
                 .map(fv -> {
                     if (fv.getClazz().equals(String.class)) {
                         return "'" + fv.getValue() + "'";
@@ -48,11 +36,9 @@ public class InsertQueryBuilder {
 
     private String getColumnClause(List<FieldValue> fieldValueList) {
         String fieldNames = fieldValueList.stream()
-                .filter(FieldValue::notTransient)
                 .map(fv -> fv.getFieldName())
                 .collect(Collectors.joining(","));
 
         return "(" + fieldNames + ") ";
     }
-
 }
