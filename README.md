@@ -136,3 +136,4 @@ select column1, column2 from table where id = ?;
 delete from table where id = ?;
 ```
 - delete할 EntityObject를 받아서 쿼리를 실행한다.
+- EntityObject가 Id에 해당하는 값을 반한할 수 있다.

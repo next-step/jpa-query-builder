@@ -21,6 +21,14 @@ public class EntityObject {
         return entityClass.tableName();
     }
 
+    public EntityColumn getEntityId() {
+        return entityClass.getEntityId();
+    }
+
+    public Object getEntityIdValue() {
+        return getEntityId().getFieldValue(object);
+    }
+
     public Map<EntityColumn, Object> getFieldValues() {
         return entityClass.getEntityColumns()
                 .stream()
