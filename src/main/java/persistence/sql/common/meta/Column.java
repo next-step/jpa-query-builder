@@ -1,4 +1,4 @@
-package persistence.sql.common;
+package persistence.sql.common.meta;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;

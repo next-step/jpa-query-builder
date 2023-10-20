@@ -1,4 +1,4 @@
-package persistence.sql.common;
+package persistence.sql.common.meta;
 
 import jakarta.persistence.Entity;
 import persistence.exception.InvalidEntityException;
@@ -6,25 +6,22 @@ import persistence.exception.InvalidEntityException;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-public abstract class Table {
+public abstract class EntityManager {
     private final TableName name;
     private final Column[] columns;
-    private final Value[] values;
 
-    protected <T> Table(T t) {
+    protected <T> EntityManager(T t) {
         isEntity(t.getClass());
 
         this.name = TableName.of(t.getClass());
         this.columns = Column.of(t.getClass().getDeclaredFields());
-        this.values = Value.of(t);
     }
 
-    protected <T> Table(Class<T> tClass) {
+    protected <T> EntityManager(Class<T> tClass) {
         isEntity(tClass);
 
         this.name = TableName.of(tClass);
         this.columns = Column.of(tClass.getDeclaredFields());
-        this.values = null;
     }
 
     /**
@@ -60,16 +57,6 @@ public abstract class Table {
                 .toArray(String[]::new));
     }
 
-    /**
-     * 값을 ','으로 이어 한 문자열로 반환합니다.
-     * 예) "홍길동, 13, F"
-     */
-    protected String getValuesWithComma() {
-        return withComma(Arrays.stream(values)
-                .map(Value::getValue)
-                .toArray(String[]::new));
-    }
-
     protected String getPrimaryKeyWithComma() {
         return withComma(Arrays.stream(columns).filter(Column::isPrimaryKey)
                 .map(Column::getName)
@@ -85,7 +72,7 @@ public abstract class Table {
                 .toArray(String[]::new));
     }
 
-    private String withComma(String[] input) {
+    public String withComma(String[] input) {
         return String.join(", ", input);
     }
 
@@ -95,5 +82,9 @@ public abstract class Table {
             .findFirst()
             .get()
             .getName();
+    }
+
+    public EntityManager getTable() {
+        return this;
     }
 }

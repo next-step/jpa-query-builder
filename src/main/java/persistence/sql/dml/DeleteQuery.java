@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
-import persistence.sql.common.Table;
+import persistence.sql.common.meta.EntityManager;
 
-public class DeleteQuery extends Table {
+public class DeleteQuery extends EntityManager {
 
     private static final String DEFAULT_DELETE_QUERY = "DELETE FROM %s";
     private final Object arg;

@@ -1,7 +1,7 @@
 package jdbc;
 
 import jakarta.persistence.Transient;
-import persistence.sql.common.ColumnName;
+import persistence.sql.common.meta.ColumnName;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
