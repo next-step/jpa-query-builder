@@ -15,7 +15,7 @@ class InsertQueryBuilderTest {
     void insert() {
         //given
         QueryGenerator<Person> query = QueryGenerator.from(Person.class);
-        Person person = new Person(1L, "name", 3, "kbh@gm.com");
+        Person person = new Person("name", 3, "kbh@gm.com");
 
         //when
         String sql = query.insert(person);
@@ -29,7 +29,7 @@ class InsertQueryBuilderTest {
     void insertDirect() {
         //given
         QueryGenerator<Person> query = QueryGenerator.of(Person.class, new FakeDirect());
-        Person person = new Person(1L, "name", 3, "kbh@gm.com");
+        Person person = new Person("name", 3, "kbh@gm.com");
 
         //when
         String sql = query.insert(person);

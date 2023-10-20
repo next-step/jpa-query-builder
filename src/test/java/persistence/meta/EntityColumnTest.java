@@ -137,15 +137,13 @@ class EntityColumnTest {
     @Test
     @DisplayName("객체의 필드 값을 가져온다.")
     void getFiledValue() throws Exception {
-        Person person = new Person(1L, "name", 3, "kbh@gm.com");
+        Person person = new Person("name", 3, "kbh@gm.com");
 
-        Field id =  Person.class.getDeclaredField("id");
         Field name =  Person.class.getDeclaredField("name");
         Field age =  Person.class.getDeclaredField("age");
         Field email =  Person.class.getDeclaredField("email");
 
         assertSoftly((it) -> {
-            it.assertThat(new EntityColumn(id).getFieldValue(person)).isEqualTo(1L);
             it.assertThat(new EntityColumn(name).getFieldValue(person)).isEqualTo("name");
             it.assertThat(new EntityColumn(age).getFieldValue(person)).isEqualTo(3);
             it.assertThat(new EntityColumn(email).getFieldValue(person)).isEqualTo("kbh@gm.com");

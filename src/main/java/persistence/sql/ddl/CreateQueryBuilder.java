@@ -6,6 +6,7 @@ import persistence.dialect.Dialect;
 import persistence.meta.ColumnType;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityMeta;
+import persistence.sql.QueryBuilder;
 
 
 public class CreateQueryBuilder<T> extends QueryBuilder<T> {
@@ -20,8 +21,7 @@ public class CreateQueryBuilder<T> extends QueryBuilder<T> {
 
     public String create() {
         return queryCreate(entityMeta.getTableName())
-                + brace("",
-                        columnsCreateQuery(entityMeta.getEntityColumns())
+                + brace(columnsCreateQuery(entityMeta.getEntityColumns())
                 , primaryKeyConcentrate(entityMeta.getEntityColumns())
                 );
     }

@@ -1,6 +1,7 @@
 package persistence.sql;
 
 import persistence.dialect.Dialect;
+import persistence.dialect.h2.H2Dialect;
 import persistence.exception.NoEntityException;
 import persistence.meta.EntityMeta;
 import persistence.sql.ddl.CreateQueryBuilder;

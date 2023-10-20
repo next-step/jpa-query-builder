@@ -40,6 +40,11 @@ public abstract class Dialect {
         return "INSERT INTO " + tableName;
     }
 
+    public String select(String fileNames) {
+        return "SELECT " + fileNames  + " FROM ";
+    }
+
+
     public String values(String value) {
         return " VALUES (" + value + ")";
     }

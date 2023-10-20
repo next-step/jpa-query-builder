@@ -1,11 +1,12 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import persistence.dialect.Dialect;
+import persistence.dialect.h2.H2Dialect;
 import persistence.meta.EntityMeta;
-import persistence.vender.dialect.H2Dialect;
+
 
 public abstract class QueryBuilder<T> {
     protected static final String DEFAULT_COLUMNS_BRACE = " (%s)";
@@ -30,6 +31,7 @@ public abstract class QueryBuilder<T> {
     protected String brace(Collection<String> query) {
         return String.format(DEFAULT_COLUMNS_BRACE, combinedString(query));
     }
+
     protected String braceWithComma(Collection<String> values) {
         return String.format(DEFAULT_COLUMNS_BRACE, String.join(", ", values));
     }
