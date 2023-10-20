@@ -16,6 +16,10 @@ public class EntityObject {
         this.object = object;
     }
 
+    public String getTableName() {
+        return entityClass.tableName();
+    }
+
     public Map<EntityColumn, Object> getFieldValues() {
         return entityClass.getEntityColumns()
                 .stream()
