@@ -121,3 +121,9 @@ insert into table (column1, column2, column3) values (value1, value2, value3)
 ```sql
 select column1, column2 from table;
 ```
+
+### 요구사항 3
+- findById 쿼리를 생성한다.
+```sql
+select column1, column2 from table where id = ?;
+```
