@@ -42,10 +42,6 @@ public class H2CreateQuery implements H2Dialect {
         }
     }
 
-    private void appendPrimaryKey(EntityData entityData, StringBuilder query) {
-        query.append(getPrimaryKeyInCreateQuery(entityData.getPrimaryKey()));
-    }
-
     /**
      * Create 문의 컬럼 부분을 생성
      */
@@ -56,8 +52,7 @@ public class H2CreateQuery implements H2Dialect {
         appendColumnName(entityColumn, columnQueryPart);
 
         // 컬럼타입
-        H2ColumnType h2ColumnType = H2ColumnType.typeMap.get(entityColumn.getType());
-        appendColumnType(entityColumn, h2ColumnType, columnQueryPart);
+        appendColumnType(entityColumn, columnQueryPart);
 
         // id인 경우 생성 방법 명시
         appendIdPropertiesIfId(entityColumn, columnQueryPart);
@@ -76,7 +71,8 @@ public class H2CreateQuery implements H2Dialect {
         columnQueryPart.append(SPACE);
     }
 
-    private void appendColumnType(EntityColumn entityColumn, H2ColumnType h2ColumnType, StringBuilder columnQueryPart) {
+    private void appendColumnType(EntityColumn entityColumn, StringBuilder columnQueryPart) {
+        H2ColumnType h2ColumnType = H2ColumnType.typeMap.get(entityColumn.getType());
         columnQueryPart.append(h2ColumnType.dbType);
         if (H2ColumnType.STRING.equals(h2ColumnType)) {
             columnQueryPart.append(H2ColumnTypeProperties.getVarcharLength(entityColumn.getField()));
@@ -113,6 +109,10 @@ public class H2CreateQuery implements H2Dialect {
     private void appendForNext(StringBuilder columnQueryPart) {
         columnQueryPart.append(COMMA);
         columnQueryPart.append(SPACE);
+    }
+
+    private void appendPrimaryKey(EntityData entityData, StringBuilder query) {
+        query.append(getPrimaryKeyInCreateQuery(entityData.getPrimaryKey()));
     }
 
     /**
