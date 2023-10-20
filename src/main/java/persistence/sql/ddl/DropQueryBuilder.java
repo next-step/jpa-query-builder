@@ -20,7 +20,7 @@ public class DropQueryBuilder implements QueryBuilder {
 
     @Override
     public String getQuery() {
-        return query.getDropQuery(entityData);
+        return query.dropTable(entityData);
     }
 
 }

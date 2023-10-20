@@ -22,7 +22,7 @@ public class FindByIdQueryBuilder implements QueryBuilder {
 
     @Override
     public String getQuery() {
-        return query.getFindByIdQuery(entityData, id);
+        return query.findById(entityData, id);
     }
 
 }

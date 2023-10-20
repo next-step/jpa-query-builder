@@ -22,7 +22,7 @@ public class InsertQueryBuilder implements QueryBuilder {
 
     @Override
     public String getQuery() {
-        return query.getInsertQuery(entityData, entity);
+        return query.insertInto(entityData, entity);
     }
 
 }

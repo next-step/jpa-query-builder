@@ -20,7 +20,7 @@ public class FindAllQueryBuilder implements QueryBuilder {
 
     @Override
     public String getQuery() {
-        return query.getFindAllQuery(entityData);
+        return query.findAll(entityData);
     }
 
 }

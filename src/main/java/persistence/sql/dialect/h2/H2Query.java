@@ -15,27 +15,27 @@ public class H2Query implements Query {
     private final H2FindByIdQuery findByIdQuery = new H2FindByIdQuery();
 
     @Override
-    public String getCreateQuery(EntityData entityData) {
+    public String createTable(EntityData entityData) {
         return createQuery.generateQuery(entityData);
     }
 
     @Override
-    public String getDropQuery(EntityData entityData) {
+    public String dropTable(EntityData entityData) {
         return dropQuery.generateQuery(entityData);
     }
 
     @Override
-    public String getInsertQuery(EntityData entityData, Object entity) {
+    public String insertInto(EntityData entityData, Object entity) {
         return insertQuery.generateQuery(entityData, entity);
     }
 
     @Override
-    public String getFindAllQuery(EntityData entityData) {
+    public String findAll(EntityData entityData) {
         return findAllQuery.generateQuery(entityData);
     }
 
     @Override
-    public String getFindByIdQuery(EntityData entityData, Object id) {
+    public String findById(EntityData entityData, Object id) {
         return findByIdQuery.generateQuery(entityData, id);
     }
 
