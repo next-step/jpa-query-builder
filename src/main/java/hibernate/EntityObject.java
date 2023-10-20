@@ -3,6 +3,7 @@ package hibernate;
 import hibernate.entity.EntityClass;
 import hibernate.entity.column.EntityColumn;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,11 @@ public class EntityObject {
     public Map<EntityColumn, Object> getFieldValues() {
         return entityClass.getEntityColumns()
                 .stream()
-                .collect(Collectors.toMap(entityColumn -> entityColumn, entityColumn -> entityColumn.getFieldValue(object)));
+                .collect(Collectors.toMap(
+                        entityColumn -> entityColumn,
+                        entityColumn -> entityColumn.getFieldValue(object),
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new
+                ));
     }
 }
