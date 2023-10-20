@@ -1,6 +1,5 @@
 package persistence.dialect;
 
-
 import database.MockDatabaseServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +23,8 @@ class PersistenceEnvironmentStrategyTest {
     void persistenceEnvironmentH2DialectStrategyTest() {
         final PersistenceEnvironment persistenceEnvironment = new PersistenceEnvironment(new DefaultPersistenceEnvironmentStrategy(databaseServer, new H2Dialect()));
 
-        assertThat(persistenceEnvironment.getDialect()).isInstanceOf(H2Dialect.class);
+        assertThat(persistenceEnvironment.getDialect())
+                .isInstanceOf(H2Dialect.class);
     }
 
     @Test
@@ -32,7 +32,8 @@ class PersistenceEnvironmentStrategyTest {
     void persistenceEnvironmentOracleDialectStrategyTest() {
         final PersistenceEnvironment persistenceEnvironment = new PersistenceEnvironment(new DefaultPersistenceEnvironmentStrategy(databaseServer, new OracleDialect()));
 
-        assertThat(persistenceEnvironment.getDialect()).isInstanceOf(H2Dialect.class);
+        assertThat(persistenceEnvironment.getDialect())
+                .isInstanceOf(OracleDialect.class);
     }
 
 }
