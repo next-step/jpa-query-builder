@@ -1,6 +1,8 @@
 package hibernate;
 
+import hibernate.entity.EntityClass;
+
 public interface QueryBuilder {
 
-    String generateQuery(Class<?> clazz);
+    String generateQuery(EntityClass entityClass);
 }

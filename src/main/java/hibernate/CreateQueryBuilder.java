@@ -27,8 +27,7 @@ public class CreateQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String generateQuery(final Class<?> clazz) {
-        EntityClass entity = new EntityClass(clazz);
+    public String generateQuery(final EntityClass entity) {
         String columns = parseColumnQueries(entity.getEntityColumns());
         return String.format(CREATE_TABLE_QUERY, entity.tableName(), columns);
     }
