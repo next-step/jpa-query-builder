@@ -21,16 +21,7 @@ public class DataDefinitionLanguageAssembler {
         sb.append(System.lineSeparator());
         int fieldSize = tableCreator.getFields().getDatabaseFields().size();
         for (int i = 0; i < fieldSize; i++) {
-            DatabaseField databaseField = tableCreator.getFields().getDatabaseFields().get(i);
-            sb.append(databaseField);
-            if(databaseField.isPrimary()) {
-                sb.append(" ");
-                sb.append(getPrimaryKeyStrategy(databaseField));
-            }
-            if (i != fieldSize - 1) {
-                sb.append(',');
-            }
-            sb.append(System.lineSeparator());
+            fillQueryWithField(sb, tableCreator.getFields().getDatabaseFields().get(i), i == fieldSize - 1);
         }
         sb.append(");");
         return sb.toString();
@@ -44,6 +35,18 @@ public class DataDefinitionLanguageAssembler {
         sb.append(tableRemover.getTableName());
         sb.append(" if exists;");
         return sb.toString();
+    }
+
+    private void fillQueryWithField(StringBuilder sb, DatabaseField databaseField, boolean isLast) {
+        sb.append(databaseField);
+        if(databaseField.isPrimary()) {
+            sb.append(" ");
+            sb.append(getPrimaryKeyStrategy(databaseField));
+        }
+        if (!isLast) {
+            sb.append(',');
+        }
+        sb.append(System.lineSeparator());
     }
 
 
