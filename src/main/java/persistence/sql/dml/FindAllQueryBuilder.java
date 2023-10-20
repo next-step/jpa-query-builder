@@ -9,18 +9,15 @@ import persistence.sql.entity.EntityData;
  */
 public class FindAllQueryBuilder implements QueryBuilder {
 
-    private final EntityData entityData;
     private final Query query;
 
-    public FindAllQueryBuilder(Query query, Class<?> entityClass) {
-        validateEntityClass(entityClass);
-        this.entityData = new EntityData(entityClass);
+    public FindAllQueryBuilder(Query query) {
         this.query = query;
     }
 
-    @Override
-    public String getQuery() {
-        return query.findAll(entityData);
+    public String getQuery(Class<?> entityClass) {
+        validateEntityClass(entityClass);
+        return query.findAll(new EntityData(entityClass));
     }
 
 }

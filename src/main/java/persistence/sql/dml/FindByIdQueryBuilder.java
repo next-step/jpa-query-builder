@@ -9,20 +9,15 @@ import persistence.sql.entity.EntityData;
  */
 public class FindByIdQueryBuilder implements QueryBuilder {
 
-    private final EntityData entityData;
     private final Query query;
-    private final Object id;
 
-    public FindByIdQueryBuilder(Query query, Class<?> entityClass, Object id) {
-        validateEntityClass(entityClass);
-        this.entityData = new EntityData(entityClass);
+    public FindByIdQueryBuilder(Query query) {
         this.query = query;
-        this.id = id;
     }
 
-    @Override
-    public String getQuery() {
-        return query.findById(entityData, id);
+    public String getQuery(Class<?> entityClass, Object id) {
+        validateEntityClass(entityClass);
+        return query.findById(new EntityData(entityClass), id);
     }
 
 }

@@ -21,9 +21,9 @@ class DropQueryBuilderTest {
     @DisplayName("@Entity 애노테이션이 붙은 클래스만 쿼리를 생성할 수 있다.")
     @Test
     void shouldFailWhenEntityIsNotAnnotated() {
-        assertThatThrownBy(() -> {
-            new CreateQueryBuilder(new H2Query(), DropQueryBuilderTest.TestWithNoEntityAnnotation.class);
-        }).isInstanceOf(IllegalArgumentException.class);
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(new H2Query());
+        assertThatThrownBy(() -> dropQueryBuilder.getQuery(TestWithNoEntityAnnotation.class))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static class TestWithNoEntityAnnotation {
@@ -33,8 +33,8 @@ class DropQueryBuilderTest {
     @ParameterizedTest
     @MethodSource("dropQueryTestParam")
     void dropQueryTest(Query query, Class<?> entityClass, String expectedQuery) {
-        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(query, entityClass);
-        String actualQuery = dropQueryBuilder.getQuery();
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(query);
+        String actualQuery = dropQueryBuilder.getQuery(entityClass);
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 

@@ -19,9 +19,9 @@ class FindByIdQueryBuilderTest {
     @DisplayName("@Entity 애노테이션이 붙은 클래스만 쿼리를 생성할 수 있다.")
     @Test
     void shouldFailWhenEntityIsNotAnnotated() {
-        assertThatThrownBy(() -> {
-            new FindAllQueryBuilder(new H2Query(), FindByIdQueryBuilderTest.TestWithNoEntityAnnotation.class);
-        }).isInstanceOf(IllegalArgumentException.class);
+        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(new H2Query());
+        assertThatThrownBy(() -> findByIdQueryBuilder.getQuery(TestWithNoEntityAnnotation.class, 0L))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static class TestWithNoEntityAnnotation {
@@ -31,8 +31,8 @@ class FindByIdQueryBuilderTest {
     @ParameterizedTest
     @MethodSource("selectQueryTestParam")
     void insertQueryTest(Query query, Class<?> entityClass, Object id, String expectedQuery) {
-        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(query, entityClass, id);
-        String actualQuery = findByIdQueryBuilder.getQuery();
+        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(query);
+        String actualQuery = findByIdQueryBuilder.getQuery(entityClass, id);
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 

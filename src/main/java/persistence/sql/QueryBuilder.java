@@ -10,6 +10,4 @@ public interface QueryBuilder {
         }
     }
 
-    String getQuery();
-
 }

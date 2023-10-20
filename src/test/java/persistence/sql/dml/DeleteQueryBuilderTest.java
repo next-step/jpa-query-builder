@@ -19,9 +19,9 @@ class DeleteQueryBuilderTest {
     @DisplayName("@Entity 애노테이션이 붙은 클래스만 쿼리를 생성할 수 있다.")
     @Test
     void shouldFailWhenEntityIsNotAnnotated() {
-        assertThatThrownBy(() -> {
-            new DeleteQueryBuilder(new H2Query(), DeleteQueryBuilderTest.TestWithNoEntityAnnotation.class);
-        }).isInstanceOf(IllegalArgumentException.class);
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(new H2Query());
+        assertThatThrownBy(() -> deleteQueryBuilder.getQuery(new TestWithNoEntityAnnotation()))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static class TestWithNoEntityAnnotation {
@@ -31,8 +31,8 @@ class DeleteQueryBuilderTest {
     @ParameterizedTest
     @MethodSource("deleteQueryTestParam")
     void deleteQueryTest(Query query, Object entity, String expectedQuery) {
-        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(query, entity);
-        String actualQuery = deleteQueryBuilder.getQuery();
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(query);
+        String actualQuery = deleteQueryBuilder.getQuery(entity);
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 

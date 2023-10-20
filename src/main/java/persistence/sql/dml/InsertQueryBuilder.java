@@ -9,20 +9,15 @@ import persistence.sql.entity.EntityData;
  */
 public class InsertQueryBuilder implements QueryBuilder {
 
-    private final EntityData entityData;
     private final Query query;
-    private final Object entity;
 
-    public InsertQueryBuilder(Query query, Object entity) {
-        validateEntityClass(entity.getClass());
-        this.entityData = new EntityData(entity.getClass());
+    public InsertQueryBuilder(Query query) {
         this.query = query;
-        this.entity = entity;
     }
 
-    @Override
-    public String getQuery() {
-        return query.insert(entityData, entity);
+    public String getQuery(Object entity) {
+        validateEntityClass(entity.getClass());
+        return query.insert(new EntityData(entity.getClass()), entity);
     }
 
 }

@@ -9,18 +9,15 @@ import persistence.sql.entity.EntityData;
  */
 public class DropQueryBuilder implements QueryBuilder {
 
-    private final EntityData entityData;
     private final Query query;
 
-    public DropQueryBuilder(Query query, Class<?> entityClass) {
-        validateEntityClass(entityClass);
-        this.entityData = new EntityData(entityClass);
+    public DropQueryBuilder(Query query) {
         this.query = query;
     }
 
-    @Override
-    public String getQuery() {
-        return query.drop(entityData);
+    public String getQuery(Class<?> entityClass) {
+        validateEntityClass(entityClass);
+        return query.drop(new EntityData(entityClass));
     }
 
 }

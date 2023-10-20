@@ -21,9 +21,9 @@ class CreateQueryBuilderTest {
     @DisplayName("@Entity 애노테이션이 붙은 클래스만 쿼리를 생성할 수 있다.")
     @Test
     void shouldFailWhenEntityIsNotAnnotated() {
-        assertThatThrownBy(() -> {
-            new CreateQueryBuilder(new H2Query(), TestWithNoEntityAnnotation.class);
-        }).isInstanceOf(IllegalArgumentException.class);
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Query());
+        assertThatThrownBy(() -> createQueryBuilder.getQuery(TestWithNoEntityAnnotation.class))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static class TestWithNoEntityAnnotation {
@@ -33,8 +33,8 @@ class CreateQueryBuilderTest {
     @ParameterizedTest
     @MethodSource("createQueryTestParam")
     void createQueryTest(Query query, Class<?> entityClass, String expectedQuery) {
-        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(query, entityClass);
-        String actualQuery = createQueryBuilder.getQuery();
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(query);
+        String actualQuery = createQueryBuilder.getQuery(entityClass);
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 
