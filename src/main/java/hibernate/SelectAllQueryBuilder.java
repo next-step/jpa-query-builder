@@ -15,7 +15,7 @@ public class SelectAllQueryBuilder {
         return String.format(SELECT_ALL_QUERY, parseColumnQueries(entityClass), entityClass.tableName());
     }
 
-    private String parseColumnQueries(EntityClass entityClass) {
+    private String parseColumnQueries(final EntityClass entityClass) {
         return entityClass.getEntityColumns()
                 .stream()
                 .map(EntityColumn::getFieldName)

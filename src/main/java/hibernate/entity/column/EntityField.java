@@ -80,17 +80,4 @@ public class EntityField implements EntityColumn {
     public GenerationType getGenerationType() {
         throw new IllegalStateException("일반 Field는 GenerationType을 호출할 수 없습니다.");
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityField that = (EntityField) o;
-        return isNullable == that.isNullable && Objects.equals(fieldName, that.fieldName) && columnType == that.columnType && Objects.equals(field, that.field);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fieldName, columnType, isNullable, field);
-    }
 }

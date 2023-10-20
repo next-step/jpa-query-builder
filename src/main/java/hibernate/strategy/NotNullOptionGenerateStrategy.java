@@ -7,7 +7,7 @@ public class NotNullOptionGenerateStrategy implements ColumnOptionGenerateStrate
     private static final String NOT_NULL_COLUMN_OPTION = "not null";
 
     @Override
-    public boolean acceptable(EntityColumn entityColumn) {
+    public boolean acceptable(final EntityColumn entityColumn) {
         return !entityColumn.isNullable();
     }
 

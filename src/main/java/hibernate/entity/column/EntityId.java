@@ -57,17 +57,4 @@ public class EntityId implements EntityColumn {
     public GenerationType getGenerationType() {
         return generationType;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityId entityId = (EntityId) o;
-        return generationType == entityId.generationType && Objects.equals(entityField, entityId.entityField);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(generationType, entityField);
-    }
 }

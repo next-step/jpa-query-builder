@@ -14,7 +14,7 @@ public class EntityColumns {
         this.values = parseToEntityColumns(fields);
     }
 
-    private static List<EntityColumn> parseToEntityColumns(Field[] fields) {
+    private static List<EntityColumn> parseToEntityColumns(final Field[] fields) {
         return Arrays.stream(fields)
                 .filter(EntityColumn::isAvailableCreateEntityColumn)
                 .map(EntityColumn::create)

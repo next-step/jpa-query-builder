@@ -12,7 +12,7 @@ public class EntityObject {
     private final EntityClass entityClass;
     private final Object object;
 
-    public EntityObject(Object object) {
+    public EntityObject(final Object object) {
         this.entityClass = new EntityClass(object.getClass());
         this.object = object;
     }

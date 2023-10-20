@@ -8,7 +8,7 @@ public class IdIdentityOptionGenerateStrategy implements ColumnOptionGenerateStr
     private static final String AUTO_INCREMENT_COLUMN_OPTION = "auto_increment";
 
     @Override
-    public boolean acceptable(EntityColumn entityColumn) {
+    public boolean acceptable(final EntityColumn entityColumn) {
         return entityColumn.isId() && entityColumn.getGenerationType() == GenerationType.IDENTITY;
     }
 
