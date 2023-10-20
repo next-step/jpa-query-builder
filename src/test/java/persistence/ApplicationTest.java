@@ -86,10 +86,10 @@ class ApplicationTest {
 
         assertSoftly(softly -> {
             softly.assertThat(person).isNotNull();
-            softly.assertThat(person.isId(1L)).isTrue();
-            softly.assertThat(person.isName("test00")).isTrue();
-            softly.assertThat(person.isAge(0)).isTrue();
-            softly.assertThat(person.isEmail("test00@gmail.com")).isTrue();
+            softly.assertThat(person.getId()).isEqualTo(1L);
+            softly.assertThat(person.getName()).isEqualTo("test00");
+            softly.assertThat(person.getAge()).isEqualTo(0);
+            softly.assertThat(person.getEmail()).isEqualTo("test00@gmail.com");
         });
     }
 

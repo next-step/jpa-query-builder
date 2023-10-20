@@ -36,20 +36,19 @@ public class Person {
         this(null, name, age, email);
     }
 
-    public boolean isId(final Long id) {
-        return id.equals(this.id);
+    public Long getId() {
+        return id;
     }
 
-    public boolean isName(final String name) {
-        return name.equals(this.name);
+    public String getName() {
+        return name;
     }
 
-    public boolean isAge(final Integer age) {
-        return age.equals(this.age);
+    public Integer getAge() {
+        return age;
     }
 
-    public boolean isEmail(final String email) {
-        return email.equals(this.email);
+    public String getEmail() {
+        return email;
     }
-
 }
