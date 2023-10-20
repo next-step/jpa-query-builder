@@ -1,7 +1,6 @@
 package persistence.sql.ddl;
 
 import entity.Person;
-import fixture.PersonFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,12 +11,9 @@ class CreateQueryBuilderTest {
     @DisplayName("Person객체를 통해 테이블 create 쿼리 생성")
     @Test
     void build() {
-        //given
-        Person changgunyee = PersonFixture.changgunyee();
-
         //when
         CreateQueryBuilder builder = new CreateQueryBuilder();
-        String query = builder.build(changgunyee);
+        String query = builder.getQuery(Person.class);
 
         //then
         assertThat(query).isEqualToIgnoringWhitespace("" +

@@ -17,7 +17,7 @@ class InsertQueryBuilderTest {
 
         //when
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
-        String insertQuery = insertQueryBuilder.build(changgunyee);
+        String insertQuery = insertQueryBuilder.getQuery(changgunyee);
 
         //then
         assertThat(insertQuery).isEqualToIgnoringWhitespace("" +

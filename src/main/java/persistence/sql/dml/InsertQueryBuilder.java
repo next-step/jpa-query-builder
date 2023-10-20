@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class InsertQueryBuilder {
 
-    public String build(Object obj) {
+    public String getQuery(Object obj) {
         Class<?> clazz = obj.getClass();
         EntityClazz entityClazz = new EntityClazz(clazz);
         String insertQuery = "INSERT INTO " + entityClazz.getName() + " ";

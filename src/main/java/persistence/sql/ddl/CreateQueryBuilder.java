@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
 
-    public String build(Object obj) {
-        Class<?> clazz = obj.getClass();
+    public String getQuery(Class<?> clazz) {
         EntityClazz entityClazz = new EntityClazz(clazz);
 
         StringBuilder sb = new StringBuilder();
