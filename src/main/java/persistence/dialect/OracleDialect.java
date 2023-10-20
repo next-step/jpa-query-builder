@@ -6,7 +6,6 @@ public class OracleDialect implements Dialect {
 
     public OracleDialect() {
         this.pagingStrategy = RownumPagingStrategy.getInstance();
-        // 임시
         this.dbColumnTypeMapper = OracleColumnTypeMapper.getInstance();
     }
 
