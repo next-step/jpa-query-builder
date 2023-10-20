@@ -1,4 +1,4 @@
-package hibernate.strategy;
+package hibernate.ddl.strategy;
 
 import hibernate.entity.column.EntityColumn;
 import jakarta.persistence.GenerationType;
