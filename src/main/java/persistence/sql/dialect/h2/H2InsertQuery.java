@@ -1,10 +1,10 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
 import jakarta.persistence.Column;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.entity.EntityColumn;
-import persistence.sql.ddl.entity.EntityData;
+import persistence.sql.entity.EntityColumn;
+import persistence.sql.entity.EntityData;
 
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;

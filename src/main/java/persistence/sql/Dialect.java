@@ -1,6 +1,6 @@
-package persistence.sql.ddl.dialect;
+package persistence.sql;
 
-import persistence.sql.ddl.entity.EntityData;
+import persistence.sql.entity.EntityData;
 
 /**
  * 각 DB 종류별 쿼리를 생성하는 클래스

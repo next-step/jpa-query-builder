@@ -1,6 +1,6 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
-import persistence.sql.ddl.dialect.Query;
+import persistence.sql.Query;
 
 /**
  * H2 표현식 모음

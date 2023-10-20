@@ -4,10 +4,10 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.entity.Person;
+import persistence.sql.Dialect;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
-import persistence.sql.ddl.InsertQueryBuilder;
-import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.dml.InsertQueryBuilder;
 
 import java.util.List;
 

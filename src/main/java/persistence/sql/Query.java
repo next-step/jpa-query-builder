@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect;
+package persistence.sql;
 
 /**
  * 쿼리를 생성하는 인터페이스

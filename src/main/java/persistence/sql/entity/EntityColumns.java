@@ -1,4 +1,4 @@
-package persistence.sql.ddl.entity;
+package persistence.sql.entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

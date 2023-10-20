@@ -1,8 +1,9 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.entity.EntityData;
+import persistence.sql.Dialect;
+import persistence.sql.QueryBuilder;
+import persistence.sql.entity.EntityData;
 
 /**
  * CREATE 쿼리 생성

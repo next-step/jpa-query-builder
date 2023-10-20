@@ -1,4 +1,4 @@
-package persistence.sql.ddl.entity;
+package persistence.sql.entity;
 
 /**
  * 엔티티 정보 모음

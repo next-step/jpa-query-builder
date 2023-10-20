@@ -6,7 +6,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.entity.Person;
-import persistence.sql.ddl.dialect.h2.H2Dialect;
+import persistence.sql.dialect.h2.H2Dialect;
 
 import java.util.List;
 

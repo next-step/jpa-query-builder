@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.dml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -6,8 +6,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.entity.Person;
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.h2.H2Dialect;
+import persistence.sql.Dialect;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.dialect.h2.H2Dialect;
 
 import java.util.stream.Stream;
 

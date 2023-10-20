@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
 import java.util.Arrays;
 import java.util.Map;

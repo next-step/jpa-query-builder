@@ -8,8 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import persistence.entity.Person_Week1_Step2_Demand1;
 import persistence.entity.Person_Week1_Step2_Demand2;
 import persistence.entity.Person_Week1_Step2_Demand3;
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.h2.H2Dialect;
+import persistence.sql.Dialect;
+import persistence.sql.dialect.h2.H2Dialect;
 
 import java.util.stream.Stream;
 

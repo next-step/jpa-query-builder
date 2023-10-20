@@ -1,6 +1,6 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
-import persistence.sql.ddl.entity.EntityData;
+import persistence.sql.entity.EntityData;
 
 /**
  * H2 Drop Query 생성 클래스
