@@ -18,14 +18,17 @@ classDiagram
         + TableInfo(type: Class<?>)
     }
     class ColumnInfoCollection {
-        - List<ColumnInfo> columnInfos
+        - List<GeneralColumnInfo> columnInfos
         + ColumnInfoCollection(type: Class<?>)
     }
-    class ColumnInfo {
+    class GeneralColumnInfo {
         - String name
         - String dataType
         - List<ColumnMetaInfo> columnMetaInfos
         + ColumnInfo(field: Field)
+    }
+    class ColumnMetaInfoFactory {
+        + createColumnMetaInfo(Field field): List<ColumnMetaInfo>
     }
     class ColumnMetaInfo {
         - String value
@@ -36,6 +39,8 @@ classDiagram
     EntityQueryBuilder --* EntityMetadata
     EntityMetadata --* TableInfo
     EntityMetadata --* ColumnInfoCollection
-    ColumnInfoCollection --* ColumnInfo
-    ColumnInfo --* ColumnMetaInfo
+    ColumnInfoCollection --* GeneralColumnInfo
+    GeneralColumnInfo --|> ColumnMetaInfoFactory : uses
+    GeneralColumnInfo --* ColumnMetaInfo : has
+    ColumnMetaInfoFactory --* ColumnMetaInfo : returns
 ```
