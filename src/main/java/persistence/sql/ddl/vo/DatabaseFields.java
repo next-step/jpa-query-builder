@@ -2,7 +2,7 @@ package persistence.sql.ddl.vo;
 
 import java.util.Collections;
 import java.util.List;
-import persistence.sql.ddl.exception.FieldContainsMultiplePrimaryKeyException;
+import persistence.sql.ddl.exception.FieldShouldHaveOnlyOnePrimaryKeyException;
 import persistence.sql.ddl.exception.FieldNotEnoughException;
 
 public class DatabaseFields {
@@ -26,7 +26,7 @@ public class DatabaseFields {
         }
         long primaryCount = databaseFields.stream().filter(DatabaseField::isPrimary).count();
         if(primaryCount != 1) {
-            throw new FieldContainsMultiplePrimaryKeyException("여러개의 pk가 정의되었습니다");
+            throw new FieldShouldHaveOnlyOnePrimaryKeyException("여러개의 pk가 정의되었습니다");
         }
         return Collections.unmodifiableList(databaseFields);
     }

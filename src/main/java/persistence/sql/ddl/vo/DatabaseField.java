@@ -10,14 +10,14 @@ public class DatabaseField {
     private final String name;
     private final DatabaseType databaseType;
     private final boolean isPrimary;
-    private final GenerationType type;
+    private final GenerationType primaryKeyGenerationType;
     private final boolean isNullable;
 
-    public DatabaseField(String name, DatabaseType databaseType, boolean isPrimary, GenerationType type, boolean isNullable) {
+    public DatabaseField(String name, DatabaseType databaseType, boolean isPrimary, GenerationType primaryKeyGenerationType, boolean isNullable) {
         this.name = Objects.requireNonNull(name);
         this.databaseType = Objects.requireNonNull(databaseType);
         this.isPrimary = isPrimary;
-        this.type = type;
+        this.primaryKeyGenerationType = primaryKeyGenerationType;
         this.isNullable = isNullable;
     }
 

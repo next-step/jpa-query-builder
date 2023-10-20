@@ -48,7 +48,7 @@ public class DataDefinitionLanguageAssembler {
 
 
     private String getPrimaryKeyStrategy(DatabaseField databaseField) {
-        if(databaseField.isPrimary() && databaseField.getType() == null) {
+        if(databaseField.isPrimary() && databaseField.getPrimaryKeyGenerationType() == null) {
             return "primary key";
         }
         // Todo Mysql 등 database dialect 에 따라 바뀌도록 수정
