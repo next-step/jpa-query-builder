@@ -99,3 +99,12 @@ public class Person {
 ### 요구사항 4
 - drop 쿼리를 생성한다.
   - Table이 있는 경우 name에 맞게 쿼리를 생성한다.
+
+
+## 3단계 - QueryBuilder DML
+
+### 요구사항 1
+- insert 쿼리를 생성한다.
+```sql
+insert into table (column1, column2, column3) values (value1, value2, value3)
+```
