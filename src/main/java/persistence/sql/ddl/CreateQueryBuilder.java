@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 public class CreateQueryBuilder implements QueryBuilder{
-    private final static String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
+    private static final String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
+
+    private final QueryValidator queryValidator;
 
     private QueryValidator queryValidator;
 

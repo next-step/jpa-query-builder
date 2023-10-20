@@ -3,9 +3,9 @@ package persistence.sql.ddl;
 import static java.lang.String.format;
 
 public class DropQueryBuilder implements QueryBuilder{
-    private final static String DROP_TABLE_COMMAND = "DROP TABLE %s;";
+    private static final String DROP_TABLE_COMMAND = "DROP TABLE %s;";
 
-    private QueryValidator queryValidator;
+    private final QueryValidator queryValidator;
 
     public DropQueryBuilder(QueryValidator queryValidator) {
         this.queryValidator = queryValidator;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ColumnBuilder {
-    private List<Column> columns;
+    private final List<Column> columns;
 
     public ColumnBuilder(List<Column> columns) {
         this.columns = columns;

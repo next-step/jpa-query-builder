@@ -5,13 +5,13 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 
 public class Column {
-    private String name;
+    private final String name;
 
-    private String type;
+    private final String type;
 
-    private Constraint constraint;
+    private final Constraint constraint;
 
-    private boolean isTransient;
+    private final boolean isTransient;
 
     public Column(Field field) {
         this.name = findName(field);
