@@ -1,5 +1,6 @@
-package hibernate;
+package hibernate.entity;
 
+import hibernate.entity.EntityObject;
 import hibernate.entity.column.EntityColumn;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

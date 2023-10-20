@@ -1,22 +1,23 @@
-package hibernate;
+package hibernate.dml;
 
+import hibernate.dml.SelectAllQueryBuilder;
 import hibernate.entity.EntityClass;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SelectQueryBuilderTest {
+class SelectAllQueryBuilderTest {
 
-    private final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+    private final SelectAllQueryBuilder selectAllQueryBuilder = new SelectAllQueryBuilder();
 
     @Test
-    void select쿼리를_생성한다() {
+    void select_all쿼리를_생성한다() {
         // given
-        String expected = "select id, nick_name from test_entity where id = 1;";
+        String expected = "select id, nick_name from test_entity;";
 
         // when
-        String actual = selectQueryBuilder.generateQuery(new EntityClass(TestEntity.class), 1L)
+        String actual = selectAllQueryBuilder.generateQuery(new EntityClass(TestEntity.class))
                 .toLowerCase();
 
         // then

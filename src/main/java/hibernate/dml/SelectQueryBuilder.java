@@ -1,4 +1,4 @@
-package hibernate;
+package hibernate.dml;
 
 import hibernate.entity.EntityClass;
 import hibernate.entity.column.EntityColumn;

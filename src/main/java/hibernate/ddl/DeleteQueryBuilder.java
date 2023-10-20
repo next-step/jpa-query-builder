@@ -1,4 +1,6 @@
-package hibernate;
+package hibernate.ddl;
+
+import hibernate.entity.EntityObject;
 
 public class DeleteQueryBuilder {
 

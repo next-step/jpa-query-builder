@@ -1,5 +1,6 @@
-package hibernate;
+package hibernate.dml;
 
+import hibernate.entity.EntityObject;
 import hibernate.entity.column.EntityColumn;
 
 import java.util.ArrayList;

@@ -1,5 +1,6 @@
-package hibernate;
+package hibernate.ddl;
 
+import hibernate.QueryBuilder;
 import hibernate.entity.EntityClass;
 import hibernate.entity.column.EntityColumn;
 import hibernate.strategy.ColumnOptionGenerateStrategy;

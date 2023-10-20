@@ -1,22 +1,23 @@
-package hibernate;
+package hibernate.dml;
 
-import hibernate.entity.EntityClass;
+import hibernate.entity.EntityObject;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SelectAllQueryBuilderTest {
+class InsertQueryBuilderTest {
 
-    private final SelectAllQueryBuilder selectAllQueryBuilder = new SelectAllQueryBuilder();
+    private final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
 
     @Test
-    void select_all쿼리를_생성한다() {
+    void insert쿼리를_생성한다() {
         // given
-        String expected = "select id, nick_name from test_entity;";
+        TestEntity givenEntity = new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com");
+        String expected = "insert into test_entity (id, nick_name) values (1, 최진영);";
 
         // when
-        String actual = selectAllQueryBuilder.generateQuery(new EntityClass(TestEntity.class))
+        String actual = insertQueryBuilder.generateQuery(new EntityObject(givenEntity))
                 .toLowerCase();
 
         // then

@@ -1,5 +1,6 @@
-package hibernate;
+package hibernate.dml;
 
+import hibernate.QueryBuilder;
 import hibernate.entity.EntityClass;
 
 public class DropQueryBuilder implements QueryBuilder {
