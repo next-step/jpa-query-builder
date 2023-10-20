@@ -7,8 +7,6 @@ import hibernate.strategy.IdIdentityOptionGenerateStrategy;
 import hibernate.strategy.NotNullOptionGenerateStrategy;
 import hibernate.strategy.PrimaryKetOptionGenerateStrategy;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,14 +29,12 @@ public class CreateQueryBuilder implements QueryBuilder {
     @Override
     public String generateQuery(final Class<?> clazz) {
         EntityClass entity = new EntityClass(clazz);
-        String columns = fieldsToQueryColumn(clazz.getDeclaredFields());
+        String columns = parseColumnQueries(entity.getEntityColumns());
         return String.format(CREATE_TABLE_QUERY, entity.tableName(), columns);
     }
 
-    private String fieldsToQueryColumn(final Field[] fields) {
-        return Arrays.stream(fields)
-                .filter(EntityColumn::isAvailableCreateEntityColumn)
-                .map(EntityColumn::create)
+    private String parseColumnQueries(final List<EntityColumn> entityColumns) {
+        return entityColumns.stream()
                 .map(this::parseColumnQuery)
                 .collect(Collectors.joining(CREATE_COLUMN_QUERY_DELIMITER));
     }
