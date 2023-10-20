@@ -1,5 +1,5 @@
 package persistence.sql.cls;
 
-public class NoEntityClass {
+public class NoEntity {
     private Long id;
 }

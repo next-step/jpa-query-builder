@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 @Entity
-public class ColumnTestClass {
+public class ColumnTest {
     @Id
     private Long id;
 

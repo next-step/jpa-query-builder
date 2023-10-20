@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class MultipleIdClass {
+public class MultipleId {
     @Id
     private Long id;
     @Id
