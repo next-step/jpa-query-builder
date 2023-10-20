@@ -11,6 +11,7 @@ public class EntityField implements EntityColumn {
     private final String fieldName;
     private final ColumnType columnType;
     private final boolean isNullable;
+    private final Field field;
 
     public EntityField(final Field field) {
         if (field.isAnnotationPresent(Transient.class)) {
@@ -19,6 +20,7 @@ public class EntityField implements EntityColumn {
         this.fieldName = parseFieldName(field);
         this.columnType = ColumnType.valueOf(field.getType());
         this.isNullable = parseNullable(field);
+        this.field = field;
     }
 
     private String parseFieldName(final Field field) {
@@ -42,6 +44,20 @@ public class EntityField implements EntityColumn {
     @Override
     public String getFieldName() {
         return fieldName;
+    }
+
+    @Override
+    public Object getFieldValue(final Object entity) {
+        try {
+            field.setAccessible(true);
+            return field.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("필드값에 접근할 수 없습니다.");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Entity 객체에 필드값이 없습니다.");
+        } finally {
+            field.setAccessible(false);
+        }
     }
 
     @Override

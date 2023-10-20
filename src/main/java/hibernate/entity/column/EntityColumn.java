@@ -10,6 +10,8 @@ public interface EntityColumn {
 
     String getFieldName();
 
+    Object getFieldValue(Object entity);
+
     ColumnType getColumnType();
 
     boolean isNullable();
