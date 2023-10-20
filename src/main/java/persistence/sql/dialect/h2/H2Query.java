@@ -25,6 +25,8 @@ public interface H2Query extends Query {
 
     String INSERT_TEMPLATE = "insert into %s (%s) values (%s)";
     String DEFAULT = "default";
+
+    String FIND_ALL_TEMPLATE = "select %s from %s";
     int VARCHAR_DEFAULT_LENGTH = 255;
 
 }

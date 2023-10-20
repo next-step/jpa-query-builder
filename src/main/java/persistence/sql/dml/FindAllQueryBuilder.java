@@ -1,18 +1,18 @@
-package persistence.sql.ddl;
+package persistence.sql.dml;
 
 import persistence.sql.Dialect;
 import persistence.sql.QueryBuilder;
 import persistence.sql.entity.EntityData;
 
 /**
- * CREATE 쿼리 생성
+ * SELECT 쿼리 생성
  */
-public class CreateQueryBuilder implements QueryBuilder {
+public class FindAllQueryBuilder implements QueryBuilder {
 
     private final EntityData entityData;
     private final Dialect dialect;
 
-    public CreateQueryBuilder(Dialect dialect, Class<?> entityClass) {
+    public FindAllQueryBuilder(Dialect dialect, Class<?> entityClass) {
         validateEntityClass(entityClass);
         this.entityData = new EntityData(entityClass);
         this.dialect = dialect;
@@ -20,7 +20,7 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     @Override
     public String getQuery() {
-        return dialect.getCreateQuery(entityData);
+        return dialect.getFindAllQuery(entityData);
     }
 
 }

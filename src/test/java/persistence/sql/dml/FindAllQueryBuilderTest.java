@@ -14,34 +14,34 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class InsertQueryBuilderTest {
+class FindAllQueryBuilderTest {
 
     @DisplayName("@Entity 애노테이션이 붙은 클래스만 쿼리를 생성할 수 있다.")
     @Test
     void shouldFailWhenEntityIsNotAnnotated() {
         assertThatThrownBy(() -> {
-            new InsertQueryBuilder(new H2Dialect(), InsertQueryBuilderTest.TestWithNoEntityAnnotation.class);
+            new FindAllQueryBuilder(new H2Dialect(), FindAllQueryBuilderTest.TestWithNoEntityAnnotation.class);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
     private static class TestWithNoEntityAnnotation {
     }
 
-    @DisplayName("엔티티에 알맞는 Insert 쿼리를 생성한다.")
+    @DisplayName("엔티티에 알맞는 findAll (select) 쿼리를 생성한다.")
     @ParameterizedTest
-    @MethodSource("insertQueryTestParam")
-    void insertQueryTest(Dialect dialect, Object entity, String expectedQuery) {
-        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(dialect, entity);
-        String actualQuery = insertQueryBuilder.getQuery();
+    @MethodSource("selectQueryTestParam")
+    void insertQueryTest(Dialect dialect, Class<?> entityClass, String expectedQuery) {
+        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(dialect, entityClass);
+        String actualQuery = findAllQueryBuilder.getQuery();
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 
-    private static Stream<Arguments> insertQueryTestParam() {
+    private static Stream<Arguments> selectQueryTestParam() {
         return Stream.of(
                 Arguments.of(
                         new H2Dialect(),
-                        new Person("test1", 10, "test1@gmail.com", 0),
-                        "insert into users (id, nick_name, old, email) values (default, 'test1', 10, 'test1@gmail.com')"
+                        Person.class,
+                        "select id, nick_name, old, email from users"
                 )
         );
     }

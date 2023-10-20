@@ -13,4 +13,6 @@ public interface Dialect {
 
     String getInsertQuery(EntityData entityData, Object entity);
 
+    String getFindAllQuery(EntityData entityData);
+
 }
