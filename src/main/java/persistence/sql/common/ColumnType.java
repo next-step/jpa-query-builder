@@ -1,32 +1,34 @@
 package persistence.sql.common;
 
-class ColumnType {
-    private final String type;
+enum ColumnType {
+    INT(null),
+    INTEGER(null),
+    BIGINT(null),
+    VARCHAR(255),
+    NULL(null)
+    ;
 
-    private <T> ColumnType(Class<T> tClass) {
-        this.type = parse(tClass.getSimpleName());
+    private Integer defaultSize;
+
+    ColumnType(Integer defaultSize) {
+        this.defaultSize = defaultSize;
     }
 
-    protected static <T> ColumnType of(Class<T> tClass) {
-        return new ColumnType(tClass);
+    public static <T> ColumnType of(Class<T> tClass) {
+        return switch (tClass.getSimpleName()) {
+            case "int" -> INT;
+            case "Integer" -> INTEGER;
+            case "Long" -> BIGINT;
+            case "String" -> VARCHAR;
+            default -> NULL;
+        };
     }
 
-    private String parse(String type) {
-        switch (type) {
-            case "int":
-                return "INT";
-            case "Integer":
-                return "INTEGER";
-            case "Long":
-                return "BIGINT";
-            case "String":
-                return "VARCHAR(255)";
-            default:
-                return null;
+    protected String getType() {
+        String type = " " + this;
+        if (defaultSize != null) {
+            type = type + String.format("(%s)", this.defaultSize);
         }
-    }
-
-    public String getType() {
-        return " " + type;
+        return type;
     }
 }
