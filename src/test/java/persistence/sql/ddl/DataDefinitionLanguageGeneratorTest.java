@@ -83,7 +83,9 @@ class DataDefinitionLanguageGeneratorTest {
             ColumnTest.class);
 
         List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields();
-        assertThat(databaseFields.stream().filter(it -> "noColumn".equals(it.getName())).count()).isEqualTo(1L);
+        assertThat(databaseFields.stream()
+                                 .filter(it -> "noColumn".equals(it.getName()))
+                                 .count()).isEqualTo(1L);
     }
 
     @Test
@@ -93,8 +95,9 @@ class DataDefinitionLanguageGeneratorTest {
             ColumnTest.class);
 
         List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields();
-        assertThat(databaseFields.stream().filter(it -> "columnWithoutName".equals(it.getName())).count()).isEqualTo(
-            1L);
+        assertThat(databaseFields.stream()
+                                 .filter(it -> "columnWithoutName".equals(it.getName()))
+                                 .count()).isEqualTo(1L);
     }
 
     @Test
@@ -105,8 +108,12 @@ class DataDefinitionLanguageGeneratorTest {
 
         List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields();
         assertAll(
-            () -> assertThat(databaseFields.stream().filter(it -> "columnWithName".equals(it.getName())).count()).isEqualTo(0L),
-            () -> assertThat(databaseFields.stream().filter(it -> "column".equals(it.getName())).count()).isEqualTo(1L)
+            () -> assertThat(databaseFields.stream()
+                                           .filter(it -> "columnWithName".equals(it.getName()))
+                                           .count()).isEqualTo(0L),
+            () -> assertThat(databaseFields.stream()
+                                           .filter(it -> "column".equals(it.getName()))
+                                           .count()).isEqualTo(1L)
         );
     }
 
