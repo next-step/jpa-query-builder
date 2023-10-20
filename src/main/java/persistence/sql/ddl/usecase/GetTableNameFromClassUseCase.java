@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.usecase;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

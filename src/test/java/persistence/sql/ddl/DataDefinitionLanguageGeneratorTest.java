@@ -17,6 +17,8 @@ import persistence.sql.cls.MultipleIdClass;
 import persistence.sql.cls.NoEntityClass;
 import persistence.sql.ddl.exception.CannotCreateTableException;
 import persistence.sql.ddl.exception.FieldShouldHaveOnlyOnePrimaryKeyException;
+import persistence.sql.ddl.usecase.GetFieldFromClassUseCase;
+import persistence.sql.ddl.usecase.GetTableNameFromClassUseCase;
 import persistence.sql.ddl.vo.DatabaseField;
 import persistence.sql.ddl.vo.type.BigInt;
 import persistence.sql.ddl.vo.type.Int;
@@ -52,7 +54,7 @@ class DataDefinitionLanguageGeneratorTest {
     void TestClassNameWithoutTable() {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ClassWithoutTable.class);
-        assertThat(tableCreator.getTableName().getName()).isEqualTo("ClassWithoutTable");
+        assertThat(tableCreator.getTableName().toString()).isEqualTo("ClassWithoutTable");
     }
 
     @Test
@@ -60,7 +62,7 @@ class DataDefinitionLanguageGeneratorTest {
     void TestClassNameWithTableButNoName() {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ClassWithTableButEmptyName.class);
-        assertThat(tableCreator.getTableName().getName()).isEqualTo("ClassWithTableButEmptyName");
+        assertThat(tableCreator.getTableName().toString()).isEqualTo("ClassWithTableButEmptyName");
     }
 
     @Test
@@ -69,8 +71,8 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ClassWithTableAndName.class);
         assertAll(
-            () -> assertThat(tableCreator.getTableName().getName()).isNotEqualTo("ClassWithTableAndName"),
-            () -> assertThat(tableCreator.getTableName().getName()).isEqualTo("testClass")
+            () -> assertThat(tableCreator.getTableName().toString()).isNotEqualTo("ClassWithTableAndName"),
+            () -> assertThat(tableCreator.getTableName().toString()).isEqualTo("testClass")
         );
     }
 
