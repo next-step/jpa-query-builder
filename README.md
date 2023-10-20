@@ -4,69 +4,56 @@
 
 ```mermaid
 classDiagram
+classDiagram
     class EntityQueryBuilder {
-        - EntityMetadata entityMetadata
+        - EntityMetadataExtractor entityMetadataExtractor
         + EntityQueryBuilder(type: Class<?>)
     }
-    class EntityMetadata {
-        - TableInfo tableInfo
-        - ColumnInfoCollection columnInfoCollection
-        + EntityMetadata(type: Class<?>)
+    class EntityMetadataExtractor {
+        - TableMetadataExtractor tableMetaDataExtractor
+        - FieldMetadataExtractors fieldMetaDatas
+        + EntityMetadataExtractor(type: Class<?>)
     }
-    class TableInfo {
-        - String name
-        + TableInfo(type: Class<?>)
+    class TableMetadataExtractor {
+        - Class<?> type
+        + TableMetadataExtractor(type: Class<?>)
     }
-    class ColumnInfoCollection {
-        - List<GeneralColumnInfo> columnInfos
-        + ColumnInfoCollection(type: Class<?>)
+    class FieldMetadataExtractors {
+        - List<FieldMetadataExtractor> fieldMetadataExtractorList
+        + FieldMetadataExtractors(type: Class<?>)
     }
-    class GeneralColumnInfo {
-        - String name
-        - String dataType
-        - List<ColumnMetaInfo> columnMetaInfos
-        + ColumnInfo(field: Field)
+    class FieldMetadataExtractor {
+        - Field field
+        + FieldMetadataExtractor(field: Field)
     }
-    class ColumnMetaInfoFactory {
-        + createColumnMetaInfo(Field field): List<ColumnMetaInfo>
+    class ColumnOptionFactory {
+        + createColumnOption(Field field): String
     }
-    class ColumnMetaInfo {
-        - String value
-        - int priority
-        + ColumnMetaInfo(annotation: Annotation)
+    class AnnotationHandler {
+        - T annotation
+        + AnnotationHandler(field: Field, annotationType: Class<T>)
+        + metaInfos(): List<ColumnOption>
     }
-    class AnnotationInfo {
-        # initialize(Field field)
-        + getColumnMetaInfos(): List<ColumnMetaInfo>
+    class ColumnAnnotationHandler {
+        + ColumnAnnotationHandler(field: Field)
+        + metaInfos(): List<ColumnOption>
     }
-    class ColumnInfo {
-        - Column column
-        + initialize(Field field)
-        + getColumnMetaInfos(): List<ColumnMetaInfo>
-
+    class GeneratedValueAnnotationHandler {
+        + GeneratedValueAnnotationHandler(field: Field)
+        + metaInfos(): List<ColumnOption>
     }
-    class GeneratedValueInfo {
-        - GeneratedValue generatedValue
-        + initialize(Field field)
-        + getColumnMetaInfos(): List<ColumnMetaInfo>
+    class IdAnnotationHandler {
+        + IdAnnotationHandler(field: Field)
+        + metaInfos(): List<ColumnOption>
     }
-    class IdInfo {
-        - Id id
-        + initialize(Field field)
-        + getColumnMetaInfos(): List<ColumnMetaInfo>
-    }
-
-    EntityQueryBuilder --* EntityMetadata
-    EntityMetadata --* TableInfo
-    EntityMetadata --* ColumnInfoCollection
-    ColumnInfoCollection --* GeneralColumnInfo
-    GeneralColumnInfo --|> ColumnMetaInfoFactory : uses
-    GeneralColumnInfo --* ColumnMetaInfo : has
-    ColumnMetaInfoFactory --* ColumnMetaInfo : returns
-    AnnotationInfo <|-- ColumnInfo : implements
-    AnnotationInfo <|-- GeneratedValueInfo : implements
-    AnnotationInfo <|-- IdInfo : implements
-    ColumnInfo --* ColumnMetaInfo : has
-    GeneratedValueInfo --* ColumnMetaInfo : has
-    IdInfo --* ColumnMetaInfo : has
+    
+    EntityQueryBuilder --* EntityMetadataExtractor
+    EntityMetadataExtractor --* TableMetadataExtractor
+    EntityMetadataExtractor --* FieldMetadataExtractors
+    FieldMetadataExtractors --* FieldMetadataExtractor
+    FieldMetadataExtractor --|> ColumnOptionFactory : uses
+    ColumnOptionFactory --* AnnotationHandler : uses
+    AnnotationHandler <|-- ColumnAnnotationHandler : implements
+    AnnotationHandler <|-- GeneratedValueAnnotationHandler : implements
+    AnnotationHandler <|-- IdAnnotationHandler : implements
 ```
