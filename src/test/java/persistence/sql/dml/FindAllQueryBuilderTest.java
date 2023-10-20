@@ -6,8 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.entity.Person;
-import persistence.sql.Dialect;
-import persistence.sql.dialect.h2.H2Dialect;
+import persistence.sql.Query;
+import persistence.sql.dialect.h2.H2Query;
 
 import java.util.stream.Stream;
 
@@ -20,7 +20,7 @@ class FindAllQueryBuilderTest {
     @Test
     void shouldFailWhenEntityIsNotAnnotated() {
         assertThatThrownBy(() -> {
-            new FindAllQueryBuilder(new H2Dialect(), FindAllQueryBuilderTest.TestWithNoEntityAnnotation.class);
+            new FindAllQueryBuilder(new H2Query(), FindAllQueryBuilderTest.TestWithNoEntityAnnotation.class);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -30,8 +30,8 @@ class FindAllQueryBuilderTest {
     @DisplayName("엔티티에 알맞는 findAll (select) 쿼리를 생성한다.")
     @ParameterizedTest
     @MethodSource("selectQueryTestParam")
-    void insertQueryTest(Dialect dialect, Class<?> entityClass, String expectedQuery) {
-        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(dialect, entityClass);
+    void insertQueryTest(Query query, Class<?> entityClass, String expectedQuery) {
+        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(query, entityClass);
         String actualQuery = findAllQueryBuilder.getQuery();
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
@@ -39,7 +39,7 @@ class FindAllQueryBuilderTest {
     private static Stream<Arguments> selectQueryTestParam() {
         return Stream.of(
                 Arguments.of(
-                        new H2Dialect(),
+                        new H2Query(),
                         Person.class,
                         "select id, nick_name, old, email from users"
                 )

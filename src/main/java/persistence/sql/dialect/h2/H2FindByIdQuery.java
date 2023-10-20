@@ -10,14 +10,14 @@ import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 
 /**
- * H2 CreateQuery 생성 클래스
+ * H2 FindById 생성 클래스
  */
-public class H2InsertQuery implements H2Dialect {
+public class H2FindByIdQuery implements H2Dialect {
 
-    private static final Logger log = LoggerFactory.getLogger(H2InsertQuery.class);
+    private static final Logger log = LoggerFactory.getLogger(H2FindByIdQuery.class);
 
     public String generateQuery(EntityData entityData, Object entity) {
-        return String.format(INSERT_TEMPLATE,
+        return String.format(FIND_BY_TEMPLATE,
                 entityData.getTableName(),
                 columnsClause(entityData),
                 valueClause(entityData, entity));

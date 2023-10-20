@@ -6,7 +6,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.entity.Person;
-import persistence.sql.dialect.h2.H2Dialect;
+import persistence.sql.dialect.h2.H2Query;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final Executions executions = new Executions(jdbcTemplate, new H2Dialect(), List.of(Person.class));
+            final Executions executions = new Executions(jdbcTemplate, new H2Query(), List.of(Person.class));
             executions.execute();
 
 //            server.stop(); // runtime 유지하고 싶으면 코드 주석 필요

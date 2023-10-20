@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.sql.Dialect;
+import persistence.sql.Query;
 import persistence.sql.QueryBuilder;
 import persistence.sql.entity.EntityData;
 
@@ -10,17 +10,17 @@ import persistence.sql.entity.EntityData;
 public class CreateQueryBuilder implements QueryBuilder {
 
     private final EntityData entityData;
-    private final Dialect dialect;
+    private final Query query;
 
-    public CreateQueryBuilder(Dialect dialect, Class<?> entityClass) {
+    public CreateQueryBuilder(Query query, Class<?> entityClass) {
         validateEntityClass(entityClass);
         this.entityData = new EntityData(entityClass);
-        this.dialect = dialect;
+        this.query = query;
     }
 
     @Override
     public String getQuery() {
-        return dialect.getCreateQuery(entityData);
+        return query.getCreateQuery(entityData);
     }
 
 }

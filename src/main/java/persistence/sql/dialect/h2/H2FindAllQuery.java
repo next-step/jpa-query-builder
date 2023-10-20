@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /**
  * H2 CreateQuery 생성 클래스
  */
-public class H2FindAllQuery implements H2Query {
+public class H2FindAllQuery implements H2Dialect {
 
     public String generateQuery(EntityData entityData) {
         return String.format(FIND_ALL_TEMPLATE,

@@ -8,8 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import persistence.entity.Person_Week1_Step2_Demand1;
 import persistence.entity.Person_Week1_Step2_Demand2;
 import persistence.entity.Person_Week1_Step2_Demand3;
-import persistence.sql.Dialect;
-import persistence.sql.dialect.h2.H2Dialect;
+import persistence.sql.Query;
+import persistence.sql.dialect.h2.H2Query;
 
 import java.util.stream.Stream;
 
@@ -22,7 +22,7 @@ class DropQueryBuilderTest {
     @Test
     void shouldFailWhenEntityIsNotAnnotated() {
         assertThatThrownBy(() -> {
-            new CreateQueryBuilder(new H2Dialect(), DropQueryBuilderTest.TestWithNoEntityAnnotation.class);
+            new CreateQueryBuilder(new H2Query(), DropQueryBuilderTest.TestWithNoEntityAnnotation.class);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -32,17 +32,17 @@ class DropQueryBuilderTest {
     @DisplayName("엔티티에 알맞는 drop 쿼리를 생성한다.")
     @ParameterizedTest
     @MethodSource("dropQueryTestParam")
-    void dropQueryTest(Dialect dialect, Class<?> entityClass, String expectedQuery) {
-        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(dialect, entityClass);
+    void dropQueryTest(Query query, Class<?> entityClass, String expectedQuery) {
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(query, entityClass);
         String actualQuery = dropQueryBuilder.getQuery();
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 
     private static Stream<Arguments> dropQueryTestParam() {
         return Stream.of(
-                Arguments.of(new H2Dialect(), Person_Week1_Step2_Demand1.class, "drop table if exists person_week1_step2_demand1 CASCADE"),
-                Arguments.of(new H2Dialect(), Person_Week1_Step2_Demand2.class, "drop table if exists person_week1_step2_demand2 CASCADE"),
-                Arguments.of(new H2Dialect(), Person_Week1_Step2_Demand3.class, "drop table if exists users CASCADE")
+                Arguments.of(new H2Query(), Person_Week1_Step2_Demand1.class, "drop table if exists person_week1_step2_demand1 CASCADE"),
+                Arguments.of(new H2Query(), Person_Week1_Step2_Demand2.class, "drop table if exists person_week1_step2_demand2 CASCADE"),
+                Arguments.of(new H2Query(), Person_Week1_Step2_Demand3.class, "drop table if exists users CASCADE")
         );
     }
 

@@ -5,7 +5,7 @@ import persistence.sql.entity.EntityData;
 /**
  * H2 Drop Query 생성 클래스
  */
-public class H2DropQuery implements H2Query {
+public class H2DropQuery implements H2Dialect {
 
     public String generateQuery(EntityData entityData) {
         StringBuilder dropQuery = new StringBuilder();
