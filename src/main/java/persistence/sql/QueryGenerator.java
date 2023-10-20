@@ -7,7 +7,7 @@ import persistence.meta.EntityMeta;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
-import persistence.vender.dialect.H2Dialect;
+import persistence.sql.dml.SelectQueryBuilder;
 
 public class QueryGenerator<T> {
     private final static Dialect DEFAULT_DIALECT = new H2Dialect();
@@ -42,5 +42,9 @@ public class QueryGenerator<T> {
 
     public String insert(T object) {
         return new InsertQueryBuilder<>(entityTable, dialect).insert(object);
+    }
+
+    public SelectQueryBuilder<T> select() {
+        return new SelectQueryBuilder<>(entityTable, dialect);
     }
 }

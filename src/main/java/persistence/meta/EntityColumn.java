@@ -67,6 +67,7 @@ public class EntityColumn {
             throw new NotFoundException("해당 필드를 찾을 수 없습니다.");
         }
     }
+
     public String getName() {
         return name;
     }
@@ -99,4 +100,7 @@ public class EntityColumn {
         return option.hasGenerationValue();
     }
 
+    public String getFiledName() {
+        return filedName;
+    }
 }
