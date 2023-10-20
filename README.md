@@ -171,12 +171,12 @@ public class Person {
 ```
 
 요구사항 1 - insert 구현해보기
-- [X] 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
-      위의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
-      @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자
-- [X] @Transient 어노테이션이 있으면 인설트 쿼리에 제외 된다.
-- [X] @Id 전략이 generate면 쿼리에 제외 된다.
-- [X] insert into table (column1, column2, column3) values (value1, value2, value3) 형식으로 구현한다.
+  - [X] 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
+        위의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
+        @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자
+  - [X] @Transient 어노테이션이 있으면 인설트 쿼리에 제외 된다.
+  - [X] @Id 전략이 generate면 쿼리에 제외 된다.
+  - [X] insert into table (column1, column2, column3) values (value1, value2, value3) 형식으로 구현한다.
 
 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
 - [X] 저장된 엔티티 데이터가 조회 된다 
@@ -188,4 +188,7 @@ public class Person {
 - [X] 실제 테이블 id 으로 엔티티를 조회한다.
   - [X] 통합테스트 작성 하여 검증하기.
 
+요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
+- [x] id를 기준으로 엔티티를 삭제한다.
+  - [x] 통합테스트 작성 하여 검증하기.
  

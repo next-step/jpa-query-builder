@@ -40,8 +40,8 @@ public abstract class Dialect {
         return "INSERT INTO " + tableName;
     }
 
-    public String select(String fileNames) {
-        return "SELECT " + fileNames  + " FROM ";
+    public String select(String filedNames) {
+        return "SELECT " + filedNames;
     }
 
     public String whereId(String name, String id) {
@@ -55,5 +55,13 @@ public abstract class Dialect {
 
     public String createTablePreFix(String tableName) {
         return "CREATE TABLE " + tableName;
+    }
+
+    public String from(String tableName) {
+        return " FROM " + tableName;
+    }
+
+    public String delete() {
+        return "DELETE";
     }
 }

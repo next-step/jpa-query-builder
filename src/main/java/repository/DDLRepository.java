@@ -14,4 +14,9 @@ public class DDLRepository {
         final String sql = QueryGenerator.from(entity).create();
         jdbcTemplate.execute(sql);
     }
+
+    public <T> void dropTable(Class<T> entity) {
+        final String sql = QueryGenerator.from(entity).drop();
+        jdbcTemplate.execute(sql);
+    }
 }

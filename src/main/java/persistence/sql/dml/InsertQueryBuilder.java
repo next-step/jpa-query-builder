@@ -6,9 +6,8 @@ import persistence.dialect.Dialect;
 import persistence.meta.ColumnType;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityMeta;
-import persistence.sql.QueryBuilder;
 
-public class InsertQueryBuilder<T> extends QueryBuilder<T> {
+public class InsertQueryBuilder<T> extends DMLQueryBuilder<T> {
     public InsertQueryBuilder(EntityMeta entityMeta, Dialect dialect) {
         super(entityMeta, dialect);
     }

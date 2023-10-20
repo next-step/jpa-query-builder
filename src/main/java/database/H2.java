@@ -1,13 +1,12 @@
 package database;
 
-import org.h2.tools.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
+import org.h2.tools.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class H2 implements DatabaseServer {
     private static final Logger logger = LoggerFactory.getLogger(H2.class);

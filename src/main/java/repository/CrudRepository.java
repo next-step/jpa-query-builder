@@ -27,7 +27,7 @@ public class CrudRepository {
                 .findAll();
 
         return jdbcTemplate.query(query,
-                (ResultSet rs) ->  new EntityRowsMapper<>(tClass).mapRow(rs));
+                (ResultSet rs) -> new EntityRowsMapper<>(tClass).mapRow(rs));
     }
 
     public <T> T findById(Class<T> tClass, Object id) {
@@ -37,6 +37,11 @@ public class CrudRepository {
 
         return jdbcTemplate.queryForObject(query,
                 (ResultSet rs) -> new EntitySingleMapper<>(tClass).mapRow(rs));
+    }
+
+    public <T> void delete(Class<T> tClass, Object id) {
+        final String query = QueryGenerator.from(tClass).delete(id);
+        jdbcTemplate.execute(query);
     }
 
 }

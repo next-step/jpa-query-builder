@@ -6,6 +6,7 @@ import persistence.exception.NoEntityException;
 import persistence.meta.EntityMeta;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
@@ -42,6 +43,10 @@ public class QueryGenerator<T> {
 
     public String insert(T object) {
         return new InsertQueryBuilder<>(entityTable, dialect).insert(object);
+    }
+
+    public String delete(Object id) {
+        return new DeleteQueryBuilder<>(entityTable, dialect).delete(id);
     }
 
     public SelectQueryBuilder<T> select() {
