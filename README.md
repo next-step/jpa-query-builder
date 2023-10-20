@@ -112,3 +112,6 @@ insert into table (column1, column2, column3) values (value1, value2, value3)
 - EntityObject
   - Entity 클래스정보가 담긴 EntityClass와 객체를 가지고 있다.
   - 필드의 명과 데이터가 담긴 map을 반환할 수 있다.
+- EntityField
+  - Entity 객체를 받아 해당 객체의 필드 값을 반환할 수 있다.
+  - 가진 field가 Entity 객체에 없는 경우 예외가 발생한다.
