@@ -9,7 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.core.DefaultPersistenceEnvironmentStrategy;
 import persistence.core.EntityMetadata;
 import persistence.core.EntityMetadataProvider;
 import persistence.core.PersistenceEnvironment;
@@ -42,7 +41,7 @@ class ApplicationTest {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
-        persistenceEnvironment = new PersistenceEnvironment(new DefaultPersistenceEnvironmentStrategy(server, new H2Dialect()));
+        persistenceEnvironment = new PersistenceEnvironment(server, new H2Dialect());
         ddlGenerator = new DdlGenerator(persistenceEnvironment.getDialect());
         dmlGenerator = new DmlGenerator(persistenceEnvironment.getDialect());
         entityMetadata = EntityMetadataProvider.getInstance().getEntityMetadata(Person.class);
