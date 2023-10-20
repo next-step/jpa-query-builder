@@ -44,6 +44,10 @@ public abstract class Dialect {
         return "SELECT " + fileNames  + " FROM ";
     }
 
+    public String whereId(String name, String id) {
+        return " WHERE " + name + " = " + id;
+    }
+
 
     public String values(String value) {
         return " VALUES (" + value + ")";

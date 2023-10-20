@@ -1,5 +1,7 @@
 package repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
@@ -18,55 +20,84 @@ import org.junit.jupiter.api.TestFactory;
 import persistence.testFixtures.Person;
 
 
-@DisplayName("테이블이 ")
+
+@DisplayName("레포지토리를 관리 한다.")
 public class RepositoryTest {
 
     private static DatabaseServer server;
     private static JdbcTemplate jdbcTemplate;
+    private Person person = new Person("이름", 30, "email@odna");
+    private Person person2 = new Person("이름2", 32, "email2@odna");
     @BeforeAll
     static void setUp() throws SQLException {
         final DatabaseServer server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
-
     }
 
 
     @TestFactory
-    @DisplayName("데이터 베이스를 관리한다.")
+    @DisplayName("테이블이")
     Stream<DynamicNode> testFactory() {
         final DDLRepository ddlRepository = new DDLRepository(jdbcTemplate);
-        final CrudRepository repository = new CrudRepository(jdbcTemplate);
-
-        Person person = new Person("이름", 30, "email@odna");
-        Person person2 = new Person("이름2", 32, "email2@odna");
+        final CrudRepository crudRepository = new CrudRepository(jdbcTemplate);
 
         return Stream.of(
+                dynamicTest("존재하지 않으면 예외가 발생한다.", () ->{
+                    assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
+                        crudRepository.findAll(Person.class);
+                    });
+                }),
                 dynamicContainer("테이블을 생성하면", Stream.of(
                         dynamicTest("테이블을 생성된다.", () -> {
                             assertDoesNotThrow(() -> ddlRepository.createTable(Person.class));
-                        }))
-                ),
-                dynamicTest("2건이 저장된다.", () -> {
+                        })
+                )),
+                dynamicContainer("데이터가 존재하지 않으면", Stream.of(
+                        dynamicTest("다건 조회시 null을 반환 한다",() -> {
+                            assertThat(crudRepository.findAll(Person.class)).hasSize(0);
+                        }),
+                        dynamicTest("단건 조회시 null을 반환 한다",() -> {
+                            assertThat(crudRepository.findById(Person.class, -999)).isNull();
+                        })
+                )),
+                dynamicTest("2건을 저장을 하고.", () -> {
                     assertDoesNotThrow(() -> {
-                        repository.save(Person.class, person);
-                        repository.save(Person.class, person2);
+                        crudRepository.save(Person.class, person);
+                        crudRepository.save(Person.class, person2);
                     });
                 }),
                 dynamicContainer("전체를 조회하면", Stream.of(
-                        dynamicTest("2건이 조회된다.", () -> {
+                    dynamicTest("2건이 조회된다.", () -> {
+                        //when
+                        final List<Person> persons = crudRepository.findAll(Person.class);
+
+                        //then
+                        assertSoftly((it) -> {
+                            it.assertThat(persons).hasSize(2);
+                            it.assertThat(persons.get(0).getName()).isEqualTo(person.getName());
+                            it.assertThat(persons.get(0).getAge()).isEqualTo(person.getAge());
+                            it.assertThat(persons.get(0).getEmail()).isEqualTo(person.getEmail());
+                            it.assertThat(persons.get(1).getName()).isEqualTo(person2.getName());
+                            it.assertThat(persons.get(1).getAge()).isEqualTo(person2.getAge());
+                            it.assertThat(persons.get(1).getEmail()).isEqualTo(person2.getEmail());
+                        });
+                    }))
+                ),
+                dynamicContainer("전체를 조회 하고 조회한 결과의 아이디로 조회하면", Stream.of(
+                        dynamicTest("해당건을 조회한다.", () -> {
+                            //given
+                            final List<Person> persons = crudRepository.findAll(Person.class);
+                            final Long id = persons.get(0).getId();
+
                             //when
-                            final List<Person> persons = repository.findAll(Person.class);
+                            final Person result = crudRepository.findById(Person.class, id);
 
                             //then
                             assertSoftly((it) -> {
-                                it.assertThat(persons).hasSize(2);
-                                it.assertThat(persons.get(0).getName()).isEqualTo(person.getName());
-                                it.assertThat(persons.get(0).getAge()).isEqualTo(person.getAge());
-                                it.assertThat(persons.get(0).getEmail()).isEqualTo(person.getEmail());
-                                it.assertThat(persons.get(1).getName()).isEqualTo(person2.getName());
-                                it.assertThat(persons.get(1).getAge()).isEqualTo(person2.getAge());
-                                it.assertThat(persons.get(1).getEmail()).isEqualTo(person2.getEmail());
+                                it.assertThat(persons.get(0).getName()).isEqualTo(result.getName());
+                                it.assertThat(persons.get(0).getAge()).isEqualTo(result.getAge());
+                                it.assertThat(persons.get(0).getEmail()).isEqualTo(result.getEmail());
                             });
                         }))
                 )

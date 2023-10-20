@@ -3,7 +3,8 @@ package repository;
 
 import java.sql.ResultSet;
 import java.util.List;
-import jdbc.EntityRowMapper;
+import jdbc.EntityRowsMapper;
+import jdbc.EntitySingleMapper;
 import jdbc.JdbcTemplate;
 import persistence.sql.QueryGenerator;
 
@@ -26,7 +27,16 @@ public class CrudRepository {
                 .findAll();
 
         return jdbcTemplate.query(query,
-                (ResultSet rs) ->  new EntityRowMapper<>(tClass).mapRow(rs));
+                (ResultSet rs) ->  new EntityRowsMapper<>(tClass).mapRow(rs));
+    }
+
+    public <T> T findById(Class<T> tClass, Object id) {
+        String query = QueryGenerator.from(tClass)
+                .select()
+                .findById(id);
+
+        return jdbcTemplate.queryForObject(query,
+                (ResultSet rs) -> new EntitySingleMapper<>(tClass).mapRow(rs));
     }
 
 }

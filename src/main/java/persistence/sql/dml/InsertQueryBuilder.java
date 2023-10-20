@@ -16,7 +16,7 @@ public class InsertQueryBuilder<T> extends QueryBuilder<T> {
     public String insert(T queryValue) {
         return queryInsert(entityMeta.getTableName())
                 + braceWithComma(
-                        columnsClause(entityMeta.getEntityColumns())
+                    columnsClause(entityMeta.getEntityColumns())
                 )
                 + values(valueClause(queryValue));
     }
