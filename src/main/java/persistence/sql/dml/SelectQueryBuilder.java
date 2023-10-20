@@ -13,7 +13,7 @@ public class SelectQueryBuilder {
         return "SELECT * FROM " + entityClazz.getName() + ";";
     }
 
-    public String findById(Class<?> clazz, List<String> ids) {
+    public String findById(Class<?> clazz, List<Object> ids) {
         EntityClazz entityClazz = new EntityClazz(clazz);
         FieldClazzList fieldClazzList = new FieldClazzList(clazz);
 
@@ -21,7 +21,7 @@ public class SelectQueryBuilder {
         sb.append("SELECT * FROM ");
         sb.append(entityClazz.getName());
         sb.append(" WHERE ");
-        Iterator<String> idIter = ids.iterator();
+        Iterator<Object> idIter = ids.iterator();
         fieldClazzList.getIdFieldList()
                 .forEach(fc -> sb.append(fc.getName())
                         .append("=")
