@@ -75,8 +75,8 @@ class ReflectionTest {
         priceField.set(car, price);
 
         Assertions.assertAll(
-                () -> assertTrue(car.getName().equals(name))
-                , () -> assertTrue(car.getPrice() == price)
+                () -> assertTrue(car.getName().equals(name)),
+                () -> assertTrue(car.getPrice() == price)
         );
     }
 
@@ -93,8 +93,8 @@ class ReflectionTest {
         Car car = (Car) constructor.newInstance(name, price);
 
         Assertions.assertAll(
-                () -> assertTrue(car.getName().equals(name))
-                , () -> assertTrue(car.getPrice() == price)
+                () -> assertTrue(car.getName().equals(name)),
+                () -> assertTrue(car.getPrice() == price)
         );
     }
 
