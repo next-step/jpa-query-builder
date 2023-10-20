@@ -7,14 +7,16 @@ import persistence.sql.entity.EntityData;
  */
 public interface Query {
 
-    String createTable(EntityData entityData);
+    String create(EntityData entityData);
 
-    String dropTable(EntityData entityData);
+    String drop(EntityData entityData);
 
-    String insertInto(EntityData entityData, Object entity);
+    String insert(EntityData entityData, Object entity);
 
     String findAll(EntityData entityData);
 
     String findById(EntityData entityData, Object id);
+
+    String delete(EntityData entityData, Object entity);
 
 }

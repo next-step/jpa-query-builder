@@ -29,6 +29,7 @@ public interface H2Dialect extends Dialect {
 
     String FIND_ALL_TEMPLATE = "select %s from %s";
     String FIND_BY_TEMPLATE = "select %s from %s where %s";
+    String DELETE_TEMPLATE = "delete from %s where %s";
 
     int VARCHAR_DEFAULT_LENGTH = 255;
 

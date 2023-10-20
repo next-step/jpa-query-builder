@@ -20,7 +20,7 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     @Override
     public String getQuery() {
-        return query.createTable(entityData);
+        return query.create(entityData);
     }
 
 }

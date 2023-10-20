@@ -5,15 +5,15 @@ import persistence.sql.QueryBuilder;
 import persistence.sql.entity.EntityData;
 
 /**
- * INSERT 쿼리 생성
+ * delete 쿼리 생성
  */
-public class InsertQueryBuilder implements QueryBuilder {
+public class DeleteQueryBuilder implements QueryBuilder {
 
     private final EntityData entityData;
     private final Query query;
     private final Object entity;
 
-    public InsertQueryBuilder(Query query, Object entity) {
+    public DeleteQueryBuilder(Query query, Object entity) {
         validateEntityClass(entity.getClass());
         this.entityData = new EntityData(entity.getClass());
         this.query = query;
@@ -22,7 +22,7 @@ public class InsertQueryBuilder implements QueryBuilder {
 
     @Override
     public String getQuery() {
-        return query.insert(entityData, entity);
+        return query.delete(entityData, entity);
     }
 
 }
