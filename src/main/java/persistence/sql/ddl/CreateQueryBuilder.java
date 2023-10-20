@@ -11,19 +11,23 @@ public class CreateQueryBuilder implements QueryBuilder{
 
     private final QueryValidator queryValidator;
 
-    private QueryValidator queryValidator;
+    private final ColumnBuilder columnBuilder;
 
-    public CreateQueryBuilder(QueryValidator queryValidator) {
+    private final Table table;
+
+    public CreateQueryBuilder(QueryValidator queryValidator, Class<?> clazz) {
         this.queryValidator = queryValidator;
+        this.columnBuilder = new ColumnBuilder(convertClassToColumnList(clazz));
+        this.table = new Table(clazz);
     }
 
     @Override
     public String buildQuery(Class<?> clazz) {
         queryValidator.checkIsEntity(clazz);
 
-        return format(CREATE_TABLE_COMMAND, new Table(clazz).getName()) +
+        return format(CREATE_TABLE_COMMAND, table.getName()) +
                 "(" +
-                new ColumnBuilder((convertClassToColumnList(clazz))).buildColumnList() +
+                columnBuilder.buildColumnList() +
                 ");";
     }
 

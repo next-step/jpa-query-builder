@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CreateQueryBuilderTest {
-    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new QueryValidator());
+    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new QueryValidator(), Person.class);
 
     @DisplayName("Person 객체로 CREATE 쿼리 생성 테스트")
     @Test
