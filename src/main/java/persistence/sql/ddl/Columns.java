@@ -3,10 +3,10 @@ package persistence.sql.ddl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColumnBuilder {
+public class Columns {
     private final List<Column> columns;
 
-    public ColumnBuilder(List<Column> columns) {
+    public Columns(List<Column> columns) {
         this.columns = columns;
     }
 
