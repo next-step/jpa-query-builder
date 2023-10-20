@@ -2,7 +2,6 @@ package hibernate;
 
 import hibernate.entity.EntityClass;
 import hibernate.entity.column.EntityColumn;
-import hibernate.entity.column.EntityColumnFactory;
 import hibernate.strategy.ColumnOptionGenerateStrategy;
 import hibernate.strategy.IdIdentityOptionGenerateStrategy;
 import hibernate.strategy.NotNullOptionGenerateStrategy;
@@ -38,8 +37,8 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     private String fieldsToQueryColumn(final Field[] fields) {
         return Arrays.stream(fields)
-                .filter(EntityColumnFactory::isAvailableCreateEntityColumn)
-                .map(EntityColumnFactory::create)
+                .filter(EntityColumn::isAvailableCreateEntityColumn)
+                .map(EntityColumn::create)
                 .map(this::parseColumnQuery)
                 .collect(Collectors.joining(CREATE_COLUMN_QUERY_DELIMITER));
     }
