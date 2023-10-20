@@ -5,9 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
-public class NonExistentTablePerson {
+@Table(name = "insert_person")
+public class InsertPerson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,14 +24,17 @@ public class NonExistentTablePerson {
     @Column(nullable = false)
     private String email;
 
-    public NonExistentTablePerson(Long id, String name, Integer age, String email) {
+    @Transient
+    private Integer index;
+
+    public InsertPerson(Long id, String name, Integer age, String email, Integer index) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
+        this.index = index;
     }
 
-    public NonExistentTablePerson() {
-
+    public InsertPerson() {
     }
 }

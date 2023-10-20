@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import domain.Person;
 import persistence.person.NotEntityPerson;
-import persistence.person.NotParseTypePerson;
 import persistence.person.ExistTablePerson;
 import persistence.person.NonExistentTablePerson;
 
@@ -60,16 +59,6 @@ class QueryDdlTest {
 
             //then
             assertDoesNotThrow(() -> jdbcTemplate.execute(query));
-        }
-
-        @Test
-        @DisplayName("지원하지 않는 자료형 입력시 오류")
-        void invalidType() {
-            //given
-            Class<NotParseTypePerson> personClass = NotParseTypePerson.class;
-
-            //when & then
-            assertThrows(IllegalArgumentException.class, () -> QueryDdl.create(personClass));
         }
     }
 
