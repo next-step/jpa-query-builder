@@ -1,7 +1,6 @@
 package hibernate.dml;
 
 import hibernate.entity.EntityObject;
-import hibernate.ddl.DeleteQueryBuilder;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,5 @@
 package hibernate.ddl;
 
-import hibernate.dml.DropQueryBuilder;
 import hibernate.entity.EntityClass;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

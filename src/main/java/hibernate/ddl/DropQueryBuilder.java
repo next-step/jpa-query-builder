@@ -1,4 +1,4 @@
-package hibernate.dml;
+package hibernate.ddl;
 
 import hibernate.QueryBuilder;
 import hibernate.entity.EntityClass;

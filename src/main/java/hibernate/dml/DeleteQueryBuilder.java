@@ -1,4 +1,4 @@
-package hibernate.ddl;
+package hibernate.dml;
 
 import hibernate.entity.EntityObject;
 
