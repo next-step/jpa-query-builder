@@ -4,11 +4,11 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public class FieldMetaData {
+public class FieldMetadataExtractor {
 
     private final Field field;
 
-    public FieldMetaData(Field field) {
+    public FieldMetadataExtractor(Field field) {
         this.field = field;
     }
 

@@ -13,17 +13,17 @@ import java.lang.reflect.Field;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class FieldMetaDataTest {
+class FieldMetadataExtractorTest {
 
     @Test
     @DisplayName("map() 메소드 익셉션 테스트")
     public void mapExceptionTest() throws NoSuchFieldException {
         Field name = Person.class.getDeclaredField("name");
 
-        FieldMetaData fieldMetaData = new FieldMetaData(name);
+        FieldMetadataExtractor fieldMetaDataExtractor = new FieldMetadataExtractor(name);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            fieldMetaData.map(Person.class);
+            fieldMetaDataExtractor.map(Person.class);
         });
     }
 
@@ -32,9 +32,9 @@ class FieldMetaDataTest {
     public void getDefinitionTest() throws NoSuchFieldException {
         Field id = Person.class.getDeclaredField("id");
 
-        FieldMetaData fieldMetaData = new FieldMetaData(id);
+        FieldMetadataExtractor fieldMetaDataExtractor = new FieldMetadataExtractor(id);
 
-        assertThat(fieldMetaData.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
+        assertThat(fieldMetaDataExtractor.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
     }
 
     @Test
@@ -42,9 +42,9 @@ class FieldMetaDataTest {
     public void getDefinitionTestWithNoOptions() throws NoSuchFieldException {
         Field name = Person.class.getDeclaredField("name");
 
-        FieldMetaData fieldMetaData = new FieldMetaData(name);
+        FieldMetadataExtractor fieldMetaDataExtractor = new FieldMetadataExtractor(name);
 
-        assertThat(fieldMetaData.getDefinition()).isEqualTo("nick_name VARCHAR(255)");
+        assertThat(fieldMetaDataExtractor.getDefinition()).isEqualTo("nick_name VARCHAR(255)");
     }
 
     @Test
@@ -52,9 +52,9 @@ class FieldMetaDataTest {
     public void getColumnMetaInfosValueTest() throws NoSuchFieldException {
         Field name = ColumnMetaInfosValueTest.class.getDeclaredField("id");
 
-        FieldMetaData fieldMetaData = new FieldMetaData(name);
+        FieldMetadataExtractor fieldMetaDataExtractor = new FieldMetadataExtractor(name);
 
-        assertThat(fieldMetaData.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL");
+        assertThat(fieldMetaDataExtractor.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL");
     }
 
 

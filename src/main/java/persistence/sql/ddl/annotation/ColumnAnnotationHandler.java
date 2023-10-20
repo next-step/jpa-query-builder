@@ -1,27 +1,25 @@
 package persistence.sql.ddl.annotation;
 
-import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import persistence.sql.ddl.ColumnOption;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdInfo extends AnnotationInfo {
+public class ColumnAnnotationHandler extends AnnotationHandler<Column> {
 
-    public IdInfo(Field field) {
-        super(field);
-    }
-
-    @Override
-    protected Class<Id> getAnnotationType() {
-        return Id.class;
+    public ColumnAnnotationHandler(Field field) {
+        super(field, Column.class);
     }
 
     @Override
     public List<ColumnOption> metaInfos() {
+
         List<ColumnOption> result = new ArrayList<>();
-        result.add(ColumnOption.PRIMARY_KEY);
+        if (!annotation.nullable()) {
+            result.add(ColumnOption.NOT_NULL);
+        }
 
         return result;
     }

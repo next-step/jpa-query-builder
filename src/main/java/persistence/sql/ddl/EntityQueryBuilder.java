@@ -2,18 +2,18 @@ package persistence.sql.ddl;
 
 public class EntityQueryBuilder {
 
-    private final EntityMetaData entityMetadata;
+    private final EntityMetadataExtractor entityMetadataExtractor;
 
     public EntityQueryBuilder(Class<?> type) {
-        this.entityMetadata = new EntityMetaData(type);
+        this.entityMetadataExtractor = new EntityMetadataExtractor(type);
     }
 
     public String create() {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE ");
-        sb.append(entityMetadata.getTableName());
+        sb.append(entityMetadataExtractor.getTableName());
         sb.append(" (");
-        sb.append(entityMetadata.getColumnInfo());
+        sb.append(entityMetadataExtractor.getColumnInfo());
         sb.append(");");
 
         return sb.toString();
@@ -22,7 +22,7 @@ public class EntityQueryBuilder {
     public String drop() {
         StringBuilder sb = new StringBuilder();
         sb.append("DROP TABLE ");
-        sb.append(entityMetadata.getTableName());
+        sb.append(entityMetadataExtractor.getTableName());
         sb.append(";");
 
         return sb.toString();

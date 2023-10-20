@@ -28,7 +28,7 @@ class ColumnOptionFactoryTest {
 
         assertThatThrownBy(() -> ColumnOptionFactory.createColumnOption(field))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("지원하지 않는 어노테이션입니다.");
+                .hasMessage("해당하는 AnnotationHandler가 없습니다.");
     }
 
     private class notSupportedAnnotation {

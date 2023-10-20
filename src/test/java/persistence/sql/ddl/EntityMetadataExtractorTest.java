@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class EntityMetadataTest {
+class EntityMetadataExtractorTest {
 
     @Test
     @DisplayName("@Entity 없으면 Exception")
     public void noEntityAnnotation() {
 
         assertThatThrownBy(() -> {
-            new EntityMetaData(NoEntityAnnotation.class);
+            new EntityMetadataExtractor(NoEntityAnnotation.class);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("No @Entity annotation");
     }
