@@ -6,13 +6,11 @@ import persistence.sql.ddl.utils.TableType;
 
 import java.util.List;
 
-public class EntityMetaDataExtractor {
-    final private Class<?> entity;
+public class EntityMetaData {
     final private TableType tableType;
     final private ColumnTypes columnTypes;
 
-    public EntityMetaDataExtractor(final Class<?> entity) {
-        this.entity = entity;
+    public EntityMetaData(final Class<?> entity) {
         this.tableType = new TableType(entity);
         this.columnTypes = new ColumnTypes(entity);
     }
@@ -23,5 +21,9 @@ public class EntityMetaDataExtractor {
 
     public List<ColumnType> getColumns() {
         return columnTypes.getColumns();
+    }
+
+    public String getTableName() {
+        return this.tableType.getName();
     }
 }
