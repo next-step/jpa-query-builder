@@ -4,7 +4,6 @@
 
 ```mermaid
 classDiagram
-classDiagram
     class EntityQueryBuilder {
         - EntityMetadataExtractor entityMetadataExtractor
         + EntityQueryBuilder(type: Class<?>)
