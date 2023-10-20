@@ -5,7 +5,6 @@ import persistence.sql.common.Table;
 public class DeleteQuery extends Table {
 
     private static final String DEFAULT_DELETE_QUERY = "DELETE FROM %s";
-    private static final String DEFAULT_DELETE_CONDITION = "WHERE %s = %s";
     private final Object arg;
 
     private <T> DeleteQuery(Class<T> tClass, Object arg) {
@@ -26,6 +25,6 @@ public class DeleteQuery extends Table {
     }
 
     private String getCondition() {
-        return String.format(DEFAULT_DELETE_CONDITION, getIdName(), arg);
+        return ConditionBuilder.getCondition(getIdName(), arg);
     }
 }
