@@ -3,31 +3,22 @@ package persistence.sql.ddl;
 import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.stream.Collectors;
 
-public class GeneralColumnInfo {
+public class FieldMetaData {
 
-    private final String name;
-    private final String dataType;
-    private final List<ColumnMetaInfo> columnMetaInfos;
+    private final Field field;
 
-    public GeneralColumnInfo(Field field) {
-        name = getFieldName(field);
-        dataType = map(field.getType());
-        columnMetaInfos = ColumnMetaInfoFactory.createColumnMetaInfo(field);
+    public FieldMetaData(Field field) {
+        this.field = field;
     }
 
     public String getDefinition() {
         StringBuilder sb = new StringBuilder();
-        sb.append(name);
+        sb.append(getFieldName(field));
         sb.append(" ");
-        sb.append(dataType);
+        sb.append(map(field.getType()));
         sb.append(" ");
-
-        if (columnMetaInfos != null && !columnMetaInfos.isEmpty()) {
-            sb.append(getColumnMetaInfosValue());
-        }
+        sb.append(getColumnOptionValue());
 
         if (sb.lastIndexOf(" ") == sb.length() - 1) {
             sb.deleteCharAt(sb.length() - 1);
@@ -36,16 +27,14 @@ public class GeneralColumnInfo {
         return sb.toString();
     }
 
-    private String getColumnMetaInfosValue() {
-        return columnMetaInfos.stream()
-                .filter(ColumnMetaInfo::isValuePresent)
-                .sorted(ColumnMetaInfo::compareTo)
-                .map(ColumnMetaInfo::getValue)
-                .collect(Collectors.joining(" "));
-    }
+    private String getColumnOptionValue() {
+        String columnOption = ColumnOptionFactory.createColumnOption(field);
 
-    public String getName() {
-        return name;
+        if (columnOption.equals("")) {
+            return "";
+        }
+
+        return columnOption;
     }
 
     String map(Class<?> type) {

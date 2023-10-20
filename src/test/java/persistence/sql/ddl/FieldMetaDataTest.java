@@ -13,17 +13,17 @@ import java.lang.reflect.Field;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class GeneralColumnInfoTest {
+class FieldMetaDataTest {
 
     @Test
     @DisplayName("map() 메소드 익셉션 테스트")
     public void mapExceptionTest() throws NoSuchFieldException {
         Field name = Person.class.getDeclaredField("name");
 
-        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(name);
+        FieldMetaData fieldMetaData = new FieldMetaData(name);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            generalColumnInfo.map(Person.class);
+            fieldMetaData.map(Person.class);
         });
     }
 
@@ -32,9 +32,9 @@ class GeneralColumnInfoTest {
     public void getDefinitionTest() throws NoSuchFieldException {
         Field id = Person.class.getDeclaredField("id");
 
-        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(id);
+        FieldMetaData fieldMetaData = new FieldMetaData(id);
 
-        assertThat(generalColumnInfo.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
+        assertThat(fieldMetaData.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
     }
 
     @Test
@@ -42,9 +42,9 @@ class GeneralColumnInfoTest {
     public void getDefinitionTestWithNoOptions() throws NoSuchFieldException {
         Field name = Person.class.getDeclaredField("name");
 
-        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(name);
+        FieldMetaData fieldMetaData = new FieldMetaData(name);
 
-        assertThat(generalColumnInfo.getDefinition()).isEqualTo("nick_name VARCHAR(255)");
+        assertThat(fieldMetaData.getDefinition()).isEqualTo("nick_name VARCHAR(255)");
     }
 
     @Test
@@ -52,9 +52,9 @@ class GeneralColumnInfoTest {
     public void getColumnMetaInfosValueTest() throws NoSuchFieldException {
         Field name = ColumnMetaInfosValueTest.class.getDeclaredField("id");
 
-        GeneralColumnInfo generalColumnInfo = new GeneralColumnInfo(name);
+        FieldMetaData fieldMetaData = new FieldMetaData(name);
 
-        assertThat(generalColumnInfo.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL");
+        assertThat(fieldMetaData.getDefinition()).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL");
     }
 
 

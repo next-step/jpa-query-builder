@@ -12,7 +12,7 @@ class EntityMetadataTest {
     public void noEntityAnnotation() {
 
         assertThatThrownBy(() -> {
-            new EntityMetadata(NoEntityAnnotation.class);
+            new EntityMetaData(NoEntityAnnotation.class);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("No @Entity annotation");
     }

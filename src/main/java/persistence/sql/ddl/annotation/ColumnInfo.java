@@ -1,7 +1,7 @@
 package persistence.sql.ddl.annotation;
 
 import jakarta.persistence.Column;
-import persistence.sql.ddl.ColumnMetaInfo;
+import persistence.sql.ddl.ColumnOption;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -22,14 +22,13 @@ public class ColumnInfo implements AnnotationInfo {
     }
 
     @Override
-    public List<ColumnMetaInfo> getColumnMetaInfos() {
-        List<ColumnMetaInfo> columnMetaInfos = new ArrayList<>();
-
+    public List<ColumnOption> metaInfos() {
+        List<ColumnOption> result = new ArrayList<>();
         if (!column.nullable()) {
-            columnMetaInfos.add(new ColumnMetaInfo("NOT NULL", 3));
+            result.add(ColumnOption.NOT_NULL);
         }
 
-        return columnMetaInfos;
+        return result;
     }
 
 }

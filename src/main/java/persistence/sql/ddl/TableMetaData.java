@@ -2,18 +2,21 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Table;
 
-public class TableInfo {
+public class TableMetaData {
 
-    private final String name;
+    private final Class<?> type;
 
-    public TableInfo(Class<?> type) {
+    public TableMetaData(Class<?> type) {
+        this.type = type;
+    }
+
+    public String getTableName() {
         if (type.isAnnotationPresent(Table.class)) {
             Table table = type.getAnnotation(Table.class);
-            name = getTableName(type, table);
-            return;
+            return getTableName(type, table);
         }
 
-        name = type.getSimpleName();
+        return type.getSimpleName();
     }
 
     private String getTableName(Class<?> type, Table table) {
@@ -22,10 +25,6 @@ public class TableInfo {
         }
 
         return table.name();
-    }
-
-    public String getTableName() {
-        return name;
     }
 
 }

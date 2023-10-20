@@ -2,10 +2,10 @@ package persistence.sql.ddl;
 
 public class EntityQueryBuilder {
 
-    private final EntityMetadata entityMetadata;
+    private final EntityMetaData entityMetadata;
 
     public EntityQueryBuilder(Class<?> type) {
-        this.entityMetadata = new EntityMetadata(type);
+        this.entityMetadata = new EntityMetaData(type);
     }
 
     public String create() {

@@ -7,12 +7,12 @@ import persistence.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TableInfoTest {
+class TableMetaDataTest {
 
     @Test
     @DisplayName("@Table 어노테이션 있는 경우")
     public void tableAnnotation() {
-        TableInfo tableInfo = new TableInfo(Person.class);
+        TableMetaData tableInfo = new TableMetaData(Person.class);
 
         assertThat(tableInfo.getTableName()).isEqualTo("users");
     }
@@ -20,7 +20,7 @@ class TableInfoTest {
     @Test
     @DisplayName("@Table 어노테이션 있는데 name이 빈 값인 경우")
     public void tableAnnotationNameEmptyString() {
-        TableInfo tableInfo = new TableInfo(TableAnnotationNameEmpty.class);
+        TableMetaData tableInfo = new TableMetaData(TableAnnotationNameEmpty.class);
 
         assertThat(tableInfo.getTableName()).isEqualTo("TableAnnotationNameEmpty");
     }

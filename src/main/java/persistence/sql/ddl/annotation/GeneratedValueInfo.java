@@ -2,7 +2,7 @@ package persistence.sql.ddl.annotation;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.ColumnMetaInfo;
+import persistence.sql.ddl.ColumnOption;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -22,14 +22,13 @@ public class GeneratedValueInfo implements AnnotationInfo {
     }
 
     @Override
-    public List<ColumnMetaInfo> getColumnMetaInfos() {
-        List<ColumnMetaInfo> columnMetaInfos = new ArrayList<>();
-
+    public List<ColumnOption> metaInfos() {
+        List<ColumnOption> result = new ArrayList<>();
         if (generatedValue.strategy().name().equals(GenerationType.IDENTITY.name())) {
-            columnMetaInfos.add(new ColumnMetaInfo("AUTO_INCREMENT", 1));
+            result.add(ColumnOption.AUTO_INCREMENT);
         }
 
-        return columnMetaInfos;
+        return result;
     }
 
 }

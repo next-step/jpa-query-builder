@@ -1,7 +1,7 @@
 package persistence.sql.ddl.annotation;
 
 import jakarta.persistence.Id;
-import persistence.sql.ddl.ColumnMetaInfo;
+import persistence.sql.ddl.ColumnOption;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,11 +21,11 @@ public class IdInfo implements AnnotationInfo {
     }
 
     @Override
-    public List<ColumnMetaInfo> getColumnMetaInfos() {
-        List<ColumnMetaInfo> columnMetaInfos = new ArrayList<>();
-        columnMetaInfos.add(new ColumnMetaInfo("PRIMARY KEY", 2));
+    public List<ColumnOption> metaInfos() {
+        List<ColumnOption> result = new ArrayList<>();
+        result.add(ColumnOption.PRIMARY_KEY);
 
-        return columnMetaInfos;
+        return result;
     }
 
 }
