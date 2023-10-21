@@ -11,13 +11,6 @@ public class EntityMeta {
     private final TableName name;
     private final Column[] columns;
 
-    protected <T> EntityMeta(T t) {
-        isEntity(t.getClass());
-
-        this.name = TableName.of(t.getClass());
-        this.columns = Column.of(t.getClass().getDeclaredFields());
-    }
-
     protected <T> EntityMeta(Class<T> tClass) {
         isEntity(tClass);
 
@@ -32,7 +25,7 @@ public class EntityMeta {
     /**
      * 해당 클래스에 @Entity가 존재하는지 확인
      */
-    protected static <T> boolean isEntity(Class<T> tClass) {
+    protected <T> boolean isEntity(Class<T> tClass) {
         if (!isAnnotation(tClass, Entity.class)) {
             throw new InvalidEntityException();
         }
