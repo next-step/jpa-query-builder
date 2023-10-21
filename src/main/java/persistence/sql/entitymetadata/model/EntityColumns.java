@@ -3,7 +3,10 @@ package persistence.sql.entitymetadata.model;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class EntityColumns<E> extends EntityValidatable<E> implements Iterable<EntityColumn<E, ?>> {
     private EntityColumn<E, ?> idColumn;
@@ -41,5 +44,9 @@ public class EntityColumns<E> extends EntityValidatable<E> implements Iterable<E
     @Override
     public Iterator<EntityColumn<E, ?>> iterator() {
         return columns.iterator();
+    }
+
+    public Stream<EntityColumn<E, ?>> stream() {
+        return columns.stream();
     }
 }

@@ -15,11 +15,10 @@ public class CreateDDLQueryBuilderIntegrationTest extends TestQueryExecuteSuppor
     @Test
     void executeDdlQuery() {
         // given
-        EntityTable<Person> entityTable = new EntityTable<>(Person.class);
-        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2);
+        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
 
         // when
-        String createQuery = createDDLQueryBuilder.build(entityTable);
+        String createQuery = createDDLQueryBuilder.build();
         jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE PUBLIC.USERS"));
 
         // then

@@ -18,13 +18,12 @@ class DropDDLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
 
         // given
         jdbcTemplate.execute("DROP TABLE IF EXISTS PUBLIC.USERS;");
-        EntityTable<Person> entityTable = new EntityTable<>(Person.class);
-        createPersonTableAndAssertion(entityTable);
+        createPersonTableAndAssertion();
 
-        DropDDLQueryBuilder<Person> dropDDLQueryBuilder = new DropDDLQueryBuilder<>(DbmsStrategy.H2);
+        DropDDLQueryBuilder<Person> dropDDLQueryBuilder = new DropDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
 
         // when
-        String dropQuery = dropDDLQueryBuilder.build(entityTable);
+        String dropQuery = dropDDLQueryBuilder.build();
         jdbcTemplate.execute(dropQuery.replace("DROP TABLE USERS", "DROP TABLE PUBLIC.USERS"));
 
         List<H2TableMetaResultRow> results = jdbcTemplate.query("SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE \n" +
@@ -39,9 +38,9 @@ class DropDDLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
         assertThat(results).isEmpty();
     }
 
-    private void createPersonTableAndAssertion(EntityTable<Person> personEntityTable) {
-        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2);
-        String createQuery = createDDLQueryBuilder.build(personEntityTable);
+    private void createPersonTableAndAssertion() {
+        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        String createQuery = createDDLQueryBuilder.build();
         jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE PUBLIC.USERS"));
 
         List<H2TableMetaResultRow> results = jdbcTemplate.query("SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE \n" +

@@ -18,20 +18,20 @@ public class CreateDDLQueryBuilder<E> extends DbmsQueryBuilder<E> {
     private static final String NOT_NULL = "NOT NULL";
     private static final String LINE_BREAK = "\n";
 
-    public CreateDDLQueryBuilder(DbmsStrategy dbmsStrategy) {
-        super(dbmsStrategy);
+    public CreateDDLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass) {
+        super(dbmsStrategy, entityClass);
     }
 
     @Override
-    public String build(EntityTable<E> e) {
-        String tableName = createTableNameDefinition(e);
+    public String build() {
+        String tableName = createTableNameDefinition();
 
         StringBuilder nativeQuery = new StringBuilder();
         nativeQuery
                 .append("CREATE TABLE ")
                 .append(tableName)
                 .append(" (")
-                .append(createColumnsQuery(e.getColumns()))
+                .append(createColumnsQuery(entityTable.getColumns()))
                 .append(LINE_BREAK)
                 .append(")")
                 .append(";");

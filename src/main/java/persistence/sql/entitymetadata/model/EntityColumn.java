@@ -16,6 +16,7 @@ public class EntityColumn<E, T> {
     private String name;
     private Integer length;
     private boolean nullable;
+    private Field columnField;
 
     public EntityColumn(Class<E> entityClass, Field entityColumnField) {
         this.entityClass = entityClass;
@@ -25,6 +26,7 @@ public class EntityColumn<E, T> {
         this.name = createColumnName(entityColumnField);
         this.length = createColumnLength(entityColumnField);
         this.nullable = createColumnNullable(entityColumnField);
+        this.columnField = entityColumnField;
     }
 
     private GenerationType createIdGenerateType(Field entityColumnField) {
@@ -111,5 +113,21 @@ public class EntityColumn<E, T> {
 
     public GenerationType getIdGenerateType() {
         return idGenerateType;
+    }
+
+    public T getValue(E entityInstance) {
+        try {
+            columnField.setAccessible(true);
+            T columnValue = (T) columnField.get(entityInstance);
+            columnField.setAccessible(false);
+
+            return columnValue;
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Cannot get value from field " +
+                    columnField.getName() +
+                    " of entity " +
+                    entityClass.getName(),
+                    e);
+        }
     }
 }
