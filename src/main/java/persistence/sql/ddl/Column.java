@@ -45,6 +45,10 @@ public class Column {
                 .toString();
     }
 
+    public boolean checkPossibleToAddValue() {
+        return !isTransient && !constraint.isPrimaryKey();
+    }
+
     private String findName(Field field) {
         if(!field.isAnnotationPresent(jakarta.persistence.Column.class)) {
             return field.getName();
