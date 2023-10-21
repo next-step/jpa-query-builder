@@ -81,4 +81,25 @@ public class ReflectionTest {
     }
   }
 
+  @Test
+  @DisplayName("3. @PrintView 애노테이션 메소드 실행")
+  void testAnnotationMethodRun() throws Exception {
+    //GIVEN
+    Car car = null;
+    car = carClass.getConstructor().newInstance();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputStream));
+
+    List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
+            .filter(method -> method.isAnnotationPresent(PrintView.class))
+            .collect(Collectors.toList());
+
+    //WHEN
+    for (Method method : methods) {
+      method.invoke(car);
+      //THEN
+      assertThat(outputStream.toString()).startsWith("자동차 정보를 출력 합니다.");
+    }
+  }
+
 }
