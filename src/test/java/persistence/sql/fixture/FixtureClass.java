@@ -1,9 +1,10 @@
-package persistence.sql.ddl.metadata;
+package persistence.sql.fixture;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Table(name = "fixture")
 public class FixtureClass {
@@ -23,4 +24,7 @@ public class FixtureClass {
 
 	@Column(unique = true, nullable = false)
 	private String uniqueNotNullColumn;
+
+	@Transient
+	private Integer transientColumn;
 }

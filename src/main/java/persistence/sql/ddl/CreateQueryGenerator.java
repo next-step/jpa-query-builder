@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import persistence.sql.ddl.metadata.EntityTable;
 
 public class CreateQueryGenerator<T> {
 
@@ -8,21 +10,19 @@ public class CreateQueryGenerator<T> {
 	private final EntityColumns entityColumns;
 	private final String tableName;
 
-	public CreateQueryGenerator(Class<T> aClass) {
-		this.entityColumns = new EntityColumns(aClass);
-		this.tableName = getTableName(aClass);
+	public CreateQueryGenerator(EntityColumns entityColumns, String tableName) {
+		this.entityColumns = entityColumns;
+		this.tableName = tableName;
+	}
+
+	public static <T> CreateQueryGenerator of(Class<T> aClass) {
+		EntityColumns entityColumns = new EntityColumns(aClass);
+		String tableName = EntityTable.getTableName(aClass);
+		return new CreateQueryGenerator(entityColumns, tableName);
 	}
 
 	public String getCreateQuery() {
 		return String.format(CREATE_TABLE, tableName, getColumn());
-	}
-
-	private String getTableName(Class<T> aClass) {
-		String tableName = aClass.getAnnotation(Table.class).name();
-		if (tableName.isEmpty()) {
-			return aClass.getSimpleName();
-		}
-		return tableName;
 	}
 
 	private String getColumn() {
