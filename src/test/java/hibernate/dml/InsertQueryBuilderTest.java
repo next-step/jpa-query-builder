@@ -14,7 +14,7 @@ class InsertQueryBuilderTest {
     void insert쿼리를_생성한다() {
         // given
         TestEntity givenEntity = new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com");
-        String expected = "insert into test_entity (id, nick_name) values (1, 최진영);";
+        String expected = "insert into test_entity (id, nick_name) values (1, '최진영');";
 
         // when
         String actual = insertQueryBuilder.generateQuery(new EntityObject(givenEntity))
