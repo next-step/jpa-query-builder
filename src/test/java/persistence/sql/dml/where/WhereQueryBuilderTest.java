@@ -25,12 +25,12 @@ class WhereQueryBuilderTest {
 
         // when
         WhereQueryBuilder whereQueryBuilder = WhereQueryBuilder.builder();
-        FetchWhereQueries fetchWhereQueries = whereQueryBuilder.and(List.of(idEqual, nameEqual)).build();
+        FetchWhereQuery fetchWhereQueries = whereQueryBuilder.and(List.of(idEqual, nameEqual));
 
-        List<String> queries = fetchWhereQueries.getQueries(entityMetadataModel);
+        String queries = fetchWhereQueries.getQueries(entityMetadataModel);
 
         // then
-        assertThat(queries).containsExactly("id = 1 and name = 'ok'");
+        assertThat(queries).isEqualTo("id = 1 and name = 'ok'");
     }
 
     @DisplayName("WhereQueryBuilder로 부터 or 조건의 FetchWhereQueries를 생성하여 or 조건의 where query를 반환한다")
@@ -45,11 +45,11 @@ class WhereQueryBuilderTest {
 
         // when
         WhereQueryBuilder whereQueryBuilder = WhereQueryBuilder.builder();
-        FetchWhereQueries fetchWhereQueries = whereQueryBuilder.or(List.of(idEqual, nameEqual)).build();
+        FetchWhereQuery fetchWhereQueries = whereQueryBuilder.or(List.of(idEqual, nameEqual));
 
-        List<String> queries = fetchWhereQueries.getQueries(entityMetadataModel);
+        String queries = fetchWhereQueries.getQueries(entityMetadataModel);
 
         // then
-        assertThat(queries).containsExactly("id = 1 or name = 'ok'");
+        assertThat(queries).isEqualTo("id = 1 or name = 'ok'");
     }
 }

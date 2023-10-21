@@ -32,6 +32,10 @@ public class FetchWhereQuery {
         this.whereClauseType = whereClauseType;
     }
 
+    public String getQueries(EntityMetadataModel entityMetadataModel) {
+        return makeWhereQuery(entityMetadataModel);
+    }
+
     public String makeWhereQuery(EntityMetadataModel entityMetadataModel) {
         if (!entityMetadataModel.isSameEntityType(entityType)) {
             throw new NotEqualEntityTypeException(entityType, entityMetadataModel.getEntityType());

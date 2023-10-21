@@ -4,27 +4,13 @@ import persistence.core.EntityColumn;
 import persistence.core.EntityMetadataModel;
 import persistence.core.EntityMetadataModelHolder;
 import persistence.exception.NotFoundEntityException;
-import persistence.sql.dml.SelectQueryBuilder;
-import persistence.sql.dml.where.FetchWhereQueries;
+import persistence.sql.dml.AbstractSelectQueryBuilder;
+import persistence.sql.dml.where.FetchWhereQuery;
 
-import java.util.List;
-
-public class H2SelectQueryBuilder implements SelectQueryBuilder {
-
-    private static final String SELECT = "select";
-
-    private static final String FROM = "from";
-
-    private static final String WHERE = "where";
-
-    private static final String BLANK_SPACE = " ";
-
-    private static final String COMMA = ", ";
-
-    private final EntityMetadataModelHolder entityMetadataModelHolder;
+public class H2SelectQueryBuilder extends AbstractSelectQueryBuilder {
 
     public H2SelectQueryBuilder(EntityMetadataModelHolder entityMetadataModelHolder) {
-        this.entityMetadataModelHolder = entityMetadataModelHolder;
+        super(entityMetadataModelHolder);
     }
 
     @Override
@@ -33,7 +19,7 @@ public class H2SelectQueryBuilder implements SelectQueryBuilder {
     }
 
     @Override
-    public String findBy(Class<?> entity, FetchWhereQueries fetchWhereQueries) {
+    public String findBy(Class<?> entity, FetchWhereQuery fetchWhereQueries) {
         String selectQuery = createSelectQuery(entity);
         return whereClause(selectQuery, entity, fetchWhereQueries);
     }
@@ -61,9 +47,8 @@ public class H2SelectQueryBuilder implements SelectQueryBuilder {
         return builder.toString();
     }
 
-    @Override
-    public String whereClause(String selectQuery, Class<?> entity, FetchWhereQueries fetchWhereQueries) {
-        List<String> whereQueries = fetchWhereQueries.getQueries(entityMetadataModelHolder.getEntityMetadataModel(entity));
+    public String whereClause(String selectQuery, Class<?> entity, FetchWhereQuery fetchWhereQuery) {
+        String whereQueries = fetchWhereQuery.getQueries(entityMetadataModelHolder.getEntityMetadataModel(entity));
 
         StringBuilder builder = new StringBuilder();
         builder.append(selectQuery)
