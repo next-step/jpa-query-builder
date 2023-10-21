@@ -1,7 +1,10 @@
 package persistence.sql.ddl;
 
 import persistence.sql.QueryBuilder;
-import persistence.sql.common.ColumnUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -17,7 +20,7 @@ public class CreateQueryBuilder implements QueryBuilder {
     public CreateQueryBuilder(QueryValidator queryValidator, Class<?> clazz) {
         this.queryValidator = queryValidator;
         queryValidator.checkIsEntity(clazz);
-        this.columns = new Columns(ColumnUtils.convertClassToColumnList(clazz));
+        this.columns = new Columns(convertClassToColumnList(clazz));
         this.table = new Table(clazz);
     }
 
@@ -27,5 +30,11 @@ public class CreateQueryBuilder implements QueryBuilder {
                 "(" +
                 columns.buildColumnsToCreate() +
                 ");";
+    }
+
+    private List<Column> convertClassToColumnList(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .map(Column::new)
+                .collect(Collectors.toList());
     }
 }
