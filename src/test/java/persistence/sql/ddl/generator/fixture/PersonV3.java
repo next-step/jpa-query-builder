@@ -28,4 +28,14 @@ public class PersonV3 {
     @Transient
     private Integer index;
 
+    public PersonV3(String name, Integer age, String email, Integer index) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
+
+    protected PersonV3() {
+
+    }
 }
