@@ -64,10 +64,7 @@ public abstract class InsertQueryBuilder {
             return true;
         }
         Transient transientAnnotation = field.getDeclaredAnnotation(Transient.class);
-        if (transientAnnotation != null) {
-            return true;
-        }
-        return false;
+        return transientAnnotation != null;
     }
 
     private String getColumnClause(Field field) {
