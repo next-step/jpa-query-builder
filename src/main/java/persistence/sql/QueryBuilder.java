@@ -2,5 +2,5 @@ package persistence.sql;
 
 public interface QueryBuilder {
 
-    String build(Object obj);
+    public String buildQuery(Object entity);
 }

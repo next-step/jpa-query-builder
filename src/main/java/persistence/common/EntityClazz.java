@@ -20,17 +20,7 @@ public class EntityClazz {
                 .orElse(clazz.getSimpleName());
     }
 
-    public String getCreateQuery() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("CREATE TABLE ");
-        sb.append(this.name + "(\n");
-        return sb.toString();
-    }
-
-    public String getDropQuery() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("DROP TABLE ");
-        sb.append(this.name);
-        return sb.toString();
+    public String getName() {
+        return name;
     }
 }

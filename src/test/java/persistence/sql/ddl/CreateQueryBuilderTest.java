@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
+import entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,12 +11,9 @@ class CreateQueryBuilderTest {
     @DisplayName("Person객체를 통해 테이블 create 쿼리 생성")
     @Test
     void build() {
-        //given
-        Person changgunyee = new Person(1L, "changgunyee", 29, "minyoung403@naver.com");
-
         //when
         CreateQueryBuilder builder = new CreateQueryBuilder();
-        String query = builder.build(changgunyee);
+        String query = builder.getQuery(Person.class);
 
         //then
         assertThat(query).isEqualToIgnoringWhitespace("" +

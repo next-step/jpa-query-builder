@@ -1,12 +1,18 @@
 package persistence.sql.ddl;
 
 import persistence.common.EntityClazz;
-import persistence.sql.QueryBuilder;
 
-public class DropQueryBuilder implements QueryBuilder {
-    @Override
-    public String build(Object obj) {
-        EntityClazz entityClazz = new EntityClazz(obj.getClass());
-        return entityClazz.getDropQuery() + ";";
+public class DropQueryBuilder {
+
+    public String getQuery(Class<?> clazz) {
+        EntityClazz entityClazz = new EntityClazz(clazz);
+        return getQuery(entityClazz) + ";";
+    }
+
+    private String getQuery(EntityClazz entityClazz) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("DROP TABLE ");
+        sb.append(entityClazz.getName());
+        return sb.toString();
     }
 }
