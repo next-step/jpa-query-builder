@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import utils.CustomStringBuilder;
 
 import java.lang.reflect.Field;
 
@@ -13,28 +14,15 @@ public class FieldMetadataExtractor {
     }
 
     public String getDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getFieldName(field));
-        sb.append(" ");
-        sb.append(map(field.getType()));
-        sb.append(" ");
-        sb.append(getColumnOptionValue());
-
-        if (sb.lastIndexOf(" ") == sb.length() - 1) {
-            sb.deleteCharAt(sb.length() - 1);
-        }
-
-        return sb.toString();
+        return new CustomStringBuilder()
+                .append(getFieldName(field))
+                .append(map(field.getType()))
+                .append(getColumnOptionValue())
+                .toString();
     }
 
     private String getColumnOptionValue() {
-        String columnOption = ColumnOptionFactory.createColumnOption(field);
-
-        if (columnOption.equals("")) {
-            return "";
-        }
-
-        return columnOption;
+        return ColumnOptionFactory.createColumnOption(field);
     }
 
     String map(Class<?> type) {

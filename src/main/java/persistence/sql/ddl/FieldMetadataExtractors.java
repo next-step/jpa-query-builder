@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class FieldMetadataExtractors {
 
-    List<FieldMetadataExtractor> fieldMetadataExtractorList;
+    private final List<FieldMetadataExtractor> fieldMetadataExtractorList;
 
     public FieldMetadataExtractors(Class<?> type) {
         fieldMetadataExtractorList = Arrays.stream(type.getDeclaredFields())

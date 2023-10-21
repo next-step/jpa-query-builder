@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 
 public enum AnnotationMap {
 
@@ -21,13 +22,19 @@ public enum AnnotationMap {
     }
 
     public static Class<? extends AnnotationHandler<?>> getInfoClassByAnnotationClass(Class<? extends Annotation> annotationClass) {
-        for (AnnotationMap annotationMap : AnnotationMap.values()) {
-            if (annotationMap.annotationClass.equals(annotationClass)) {
-                return annotationMap.infoClass;
-            }
-        }
+        return Arrays.stream(AnnotationMap.values())
+                .filter(annotationMap -> annotationMap.annotationClass.equals(annotationClass))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 AnnotationHandler가 없습니다."))
+                .getInfoClass();
+    }
 
-        throw new IllegalArgumentException("해당하는 AnnotationHandler가 없습니다.");
+    public Class<? extends AnnotationHandler<?>> getInfoClass() {
+        return infoClass;
+    }
+
+    public Class<? extends Annotation> getAnnotationClass() {
+        return annotationClass;
     }
 
 }

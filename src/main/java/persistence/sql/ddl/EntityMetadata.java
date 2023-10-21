@@ -2,12 +2,12 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 
-public class EntityMetadataExtractor {
+public class EntityMetadata {
 
     private final TableMetadataExtractor tableMetaDataExtractor;
     private final FieldMetadataExtractors fieldMetaDatas;
 
-    public EntityMetadataExtractor(Class<?> type) {
+    public EntityMetadata(Class<?> type) {
         if (!type.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("No @Entity annotation");
         }

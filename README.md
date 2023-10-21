@@ -5,13 +5,13 @@
 ```mermaid
 classDiagram
     class EntityQueryBuilder {
-        - EntityMetadataExtractor entityMetadataExtractor
+        - EntityMetadata EntityMetadata
         + EntityQueryBuilder(type: Class<?>)
     }
-    class EntityMetadataExtractor {
+    class EntityMetadata {
         - TableMetadataExtractor tableMetaDataExtractor
         - FieldMetadataExtractors fieldMetaDatas
-        + EntityMetadataExtractor(type: Class<?>)
+        + EntityMetadata(type: Class<?>)
     }
     class TableMetadataExtractor {
         - Class<?> type
@@ -46,9 +46,9 @@ classDiagram
         + metaInfos(): List<ColumnOption>
     }
     
-    EntityQueryBuilder --* EntityMetadataExtractor
-    EntityMetadataExtractor --* TableMetadataExtractor
-    EntityMetadataExtractor --* FieldMetadataExtractors
+    EntityQueryBuilder --* EntityMetadata
+    EntityMetadata --* TableMetadataExtractor
+    EntityMetadata --* FieldMetadataExtractors
     FieldMetadataExtractors --* FieldMetadataExtractor
     FieldMetadataExtractor --|> ColumnOptionFactory : uses
     ColumnOptionFactory --* AnnotationHandler : uses
