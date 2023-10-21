@@ -2,11 +2,9 @@ package persistence.sql.ddl.metadata;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import jakarta.persistence.GeneratedValue;
 import java.lang.reflect.Field;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.Person;
 
 class H2EntityGeneratedValueMetaDataTest {
 
