@@ -35,7 +35,7 @@ public class H2DeleteQueryBuilder extends AbstractQueryBuilder implements Delete
                 .append(BLANK_SPACE)
                 .append(entityMetadataModel.getTableName())
                 .append(BLANK_SPACE)
-                .append(WHERE)
+                .append("where")
                 .append(BLANK_SPACE)
                 .append(String.join(BLANK_SPACE, whereQueries));
 

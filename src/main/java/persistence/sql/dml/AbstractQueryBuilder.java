@@ -6,8 +6,6 @@ import persistence.sql.dml.where.FetchWhereQuery;
 
 public class AbstractQueryBuilder implements WhereQueryFetcher {
 
-    protected static final String WHERE = "where";
-
     protected static final String BLANK_SPACE = " ";
 
     protected static final String COMMA = ", ";
@@ -25,7 +23,7 @@ public class AbstractQueryBuilder implements WhereQueryFetcher {
         StringBuilder builder = new StringBuilder();
         builder.append(selectQuery)
                 .append(BLANK_SPACE)
-                .append(WHERE)
+                .append("where")
                 .append(BLANK_SPACE)
                 .append(String.join(BLANK_SPACE, whereQueries));
 

@@ -47,6 +47,7 @@ public class EntityMetadataModel {
 
     public List<String> getColumnNames() {
         return this.columns.stream()
+                .filter(column -> !column.hasTransient())
                 .map(EntityColumn::getName)
                 .collect(Collectors.toUnmodifiableList());
     }

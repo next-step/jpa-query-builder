@@ -20,7 +20,7 @@ public abstract class AbstractSelectQueryBuilder extends AbstractQueryBuilder im
         StringBuilder builder = new StringBuilder();
         builder.append(selectQuery)
                 .append(BLANK_SPACE)
-                .append(WHERE)
+                .append("where")
                 .append(BLANK_SPACE)
                 .append(String.join(BLANK_SPACE, whereQueries));
 

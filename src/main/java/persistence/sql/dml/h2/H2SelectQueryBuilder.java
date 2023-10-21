@@ -46,17 +46,4 @@ public class H2SelectQueryBuilder extends AbstractSelectQueryBuilder {
 
         return builder.toString();
     }
-
-    public String whereClause(String selectQuery, Class<?> entity, FetchWhereQuery fetchWhereQuery) {
-        String whereQueries = fetchWhereQuery.getQueries(entityMetadataModelHolder.getEntityMetadataModel(entity));
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(selectQuery)
-                .append(BLANK_SPACE)
-                .append(WHERE)
-                .append(BLANK_SPACE)
-                .append(String.join(BLANK_SPACE, whereQueries));
-
-        return builder.toString();
-    }
 }

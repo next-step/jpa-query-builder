@@ -40,4 +40,8 @@ public class JdbcTemplate {
             throw new RuntimeException(e);
         }
     }
+
+    public static void main(String[] args) {
+
+    }
 }
