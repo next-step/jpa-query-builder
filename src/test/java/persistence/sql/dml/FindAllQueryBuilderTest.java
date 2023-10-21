@@ -2,14 +2,8 @@ package persistence.sql.dml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import persistence.entity.Person;
-import persistence.sql.Query;
 import persistence.sql.dialect.h2.H2Query;
-
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,22 +22,13 @@ class FindAllQueryBuilderTest {
     }
 
     @DisplayName("엔티티에 알맞는 findAll (select) 쿼리를 생성한다.")
-    @ParameterizedTest
-    @MethodSource("selectQueryTestParam")
-    void insertQueryTest(Query query, Class<?> entityClass, String expectedQuery) {
-        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(query);
-        String actualQuery = findAllQueryBuilder.getQuery(entityClass);
-        assertThat(actualQuery).isEqualTo(expectedQuery);
-    }
+    @Test
+    void insertQueryTest() {
+        Class<?> entityClass = Person.class;
+        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(new H2Query());
 
-    private static Stream<Arguments> selectQueryTestParam() {
-        return Stream.of(
-                Arguments.of(
-                        new H2Query(),
-                        Person.class,
-                        "select id, nick_name, old, email from users"
-                )
-        );
+        String actualQuery = findAllQueryBuilder.getQuery(entityClass);
+        assertThat(actualQuery).isEqualTo("select id, nick_name, old, email from users");
     }
 
 }
