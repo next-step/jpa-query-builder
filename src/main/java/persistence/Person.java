@@ -12,6 +12,14 @@ import jakarta.persistence.Transient;
 @Entity
 public class Person {
 
+    public Person() {}
+    public Person(Long id, String name, Integer age, String email) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,5 +38,16 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Person(" +
+            "id: " + this.id +
+            ", name: " + this.name +
+            ", age: " + this.age +
+            ", email: " + this.email +
+            ", index: " + this.index +
+            ")";
     }
 }

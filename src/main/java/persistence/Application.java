@@ -9,6 +9,7 @@ import persistence.sql.H2Dialect;
 import persistence.sql.ddl.TableCreateQueryBuilder;
 import persistence.sql.ddl.TableDropQueryBuilder;
 import persistence.sql.dml.ColumnInsertQueryGenerator;
+import persistence.sql.dml.RowFindAllQueryGenerator;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -24,15 +25,29 @@ public class Application {
 
             final H2Dialect h2Dialect = new H2Dialect();
             final Person person = new Person();
-            person.setEmail("a");
 
             String sql = new TableCreateQueryBuilder(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
+            person.setEmail("a");
             sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
+
+            person.setEmail("b");
+            sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.execute(sql);
+
+            sql = new RowFindAllQueryGenerator(h2Dialect).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.query(sql, resultSet -> new Person(
+                resultSet.getLong("id"),
+                resultSet.getString("nick_name"),
+                resultSet.getInt("old"),
+                resultSet.getString("email")
+            )).forEach(x -> logger.info("{}", x));
 
             sql = new TableDropQueryBuilder(h2Dialect).generateSQLQuery(person);
             logger.info(sql);

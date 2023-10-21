@@ -27,6 +27,14 @@ public class TableFieldUtil {
         return columnName;
     }
 
+    static public String[] getColumnNames(Field[] fields) {
+        return Arrays
+            .stream(fields)
+            .map(TableFieldUtil::getColumnName)
+            .map(TableFieldUtil::replaceNameByBacktick)
+            .toArray(String[]::new);
+    }
+
     static public Field[] getAvailableFields(Class<?> clazz) {
         return Arrays
             .stream(clazz.getDeclaredFields())

@@ -22,6 +22,7 @@ public class ColumnInsertQueryGenerator extends QueryBuilder {
 
         return "INSERT INTO " +
             TableQueryUtil.getTableName(object.getClass()) +
+            " " +
             columnsClause(object) +
             " VALUES " +
             valueClause(object) +
