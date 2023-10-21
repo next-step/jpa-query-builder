@@ -4,5 +4,5 @@ import persistence.core.EntityMetadataModel;
 
 public interface InsertQueryBuilder {
 
-    String createInsertQuery(EntityMetadataModel entityMetadataModel, Object entity);
+    String createInsertQuery(Object entity);
 }
