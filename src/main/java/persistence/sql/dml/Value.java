@@ -11,7 +11,17 @@ public class Value {
 
 	public Value(Field field, Object object) {
 		this.column = new Column(field);
-		this.value = findValue(this.column, field, object);
+		try {
+			this.value = convertValueToString(field, String.valueOf(field.get(object)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	public Value(Field field, String value) {
+		this.column = new Column(field);
+		this.value = convertValueToString(field, value);
 	}
 
 	public Column getColumn() {
@@ -26,18 +36,11 @@ public class Value {
 		return column.checkPossibleToInsert();
 	}
 
-	private String findValue(Column column, Field field, Object object) {
-		try {
-			String value = String.valueOf(field.get(object));
-
-			if(field.getType().equals(String.class) && !"null".equals(value)) {
-				value = "'" + value + "'";
-			}
-
-			return value;
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException(e);
+	private String convertValueToString(Field field, String value) {
+		if(field.getType().equals(String.class) && !"null".equals(value)) {
+			value = "'" + value + "'";
 		}
+
+		return value;
 	}
 }
