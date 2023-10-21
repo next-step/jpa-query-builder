@@ -1,8 +1,10 @@
 package persistence.sql.ddl;
 
+import persistence.sql.QueryBuilder;
+
 import static java.lang.String.format;
 
-public class DropQueryBuilder implements QueryBuilder{
+public class DropQueryBuilder implements QueryBuilder {
     private static final String DROP_TABLE_COMMAND = "DROP TABLE %s;";
 
     private final QueryValidator queryValidator;

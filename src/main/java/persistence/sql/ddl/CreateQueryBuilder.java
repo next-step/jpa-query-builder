@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import persistence.sql.QueryBuilder;
 import persistence.sql.common.ColumnUtils;
 
 import static java.lang.String.format;
