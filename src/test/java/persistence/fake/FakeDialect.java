@@ -1,17 +1,17 @@
 package persistence.fake;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.H2Direct;
+import persistence.dialect.h2.H2Dialect;
 
-public class FakeDirect extends H2Direct {
+public class FakeDialect extends H2Dialect {
     @Override
     public String getBigInt() {
         return super.getBigInt().toUpperCase();
     }
 
     @Override
-    public String getVarchar() {
-        return super.getVarchar().toUpperCase();
+    public String getVarchar(int length) {
+        return super.getVarchar(length).toUpperCase();
     }
 
     @Override
@@ -32,5 +32,10 @@ public class FakeDirect extends H2Direct {
     @Override
     public String primaryKey(String columnName) {
         return super.primaryKey(columnName).toUpperCase();
+    }
+
+    @Override
+    public String insert(String tableName) {
+        return super.insert(tableName).toUpperCase();
     }
 }

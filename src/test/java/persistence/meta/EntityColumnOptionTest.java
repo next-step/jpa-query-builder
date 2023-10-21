@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,7 +59,7 @@ class EntityColumnOptionTest {
         //then
         assertSoftly(it -> {
             it.assertThat(option.isPk()).isTrue();
-            it.assertThat(option.hasGenerationType()).isTrue();
+            it.assertThat(option.hasGenerationValue()).isTrue();
             it.assertThat(option.getGenerationType()).isEqualTo(GenerationType.IDENTITY);
         });
     }
@@ -80,7 +80,7 @@ class EntityColumnOptionTest {
         //then
         assertSoftly(it -> {
             it.assertThat(option.isPk()).isFalse();
-            it.assertThat(option.hasGenerationType()).isFalse();
+            it.assertThat(option.hasGenerationValue()).isFalse();
         });
     }
 

@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.meta;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -41,7 +41,7 @@ public class EntityColumnOption {
         return generationType;
     }
 
-    public boolean hasGenerationType() {
+    public boolean hasGenerationValue() {
         return generationType != null;
     }
 }

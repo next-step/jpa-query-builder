@@ -1,18 +1,15 @@
 package persistence.sql.ddl;
 
-public class DropQueryBuilder<T> extends QueryBuilder<T>{
-    private final Direct direct;
+import persistence.dialect.Dialect;
+import persistence.meta.EntityMeta;
+import persistence.sql.QueryBuilder;
 
-    public DropQueryBuilder(Class<T> entityClass) {
-        this(entityClass, new H2Direct());
-
-    }
-    public DropQueryBuilder(Class<T> entityClass, Direct direct) {
-        super(entityClass);
-        this.direct = direct;
+public class DropQueryBuilder<T> extends QueryBuilder<T> {
+    public DropQueryBuilder(EntityMeta entityMeta, Dialect dialect) {
+        super(entityMeta, dialect);
     }
 
     public String drop() {
-        return direct.dropTable(tableName);
+        return dialect.dropTable(entityMeta.getTableName());
     }
 }

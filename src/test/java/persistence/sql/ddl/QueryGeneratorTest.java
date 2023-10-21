@@ -5,16 +5,14 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.exception.NoEntityException;
-import persistence.testFixtures.NoHasEntity;
+import persistence.sql.QueryGenerator;
 
-@DisplayName("QueryBuilder 테스트")
-class QueryBuilderTest {
-
+class QueryGeneratorTest {
     @Test
-    @DisplayName("엔티티가 없으면 예외가 발생한다")
-    void noEntity() {
+    @DisplayName("엔티티가 비어 있으면 예외가 발생한다.")
+    void emptyEntity() {
         assertThatExceptionOfType(NoEntityException.class)
-                .isThrownBy(() -> new QueryBuilder<>(NoHasEntity.class));
+                .isThrownBy(() -> QueryGenerator.from(null));
     }
 
 }

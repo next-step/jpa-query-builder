@@ -1,0 +1,5 @@
+package jdbc;
+
+class EntityRowMapperTest {
+
+}

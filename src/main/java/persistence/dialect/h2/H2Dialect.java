@@ -1,11 +1,12 @@
-package persistence.sql.ddl;
+package persistence.dialect.h2;
 
 import jakarta.persistence.GenerationType;
+import persistence.dialect.Dialect;
 
-public class H2Direct extends Direct {
+public class H2Dialect extends Dialect {
     @Override
-    public String getVarchar() {
-        return "varchar";
+    public String getVarchar(int length) {
+        return String.format("varchar(%d)", length);
     }
 
     @Override
