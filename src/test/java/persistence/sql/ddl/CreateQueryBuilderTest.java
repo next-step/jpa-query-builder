@@ -9,11 +9,6 @@ class CreateQueryBuilderTest {
     void createQueryString() {
         String queryString = CreateQueryBuilder.createQueryString(new MyEntity(Person.class));
 
-        Assertions.assertThat(queryString).isEqualTo("CREATE TABLE users ( \n"
-            + " id BIGINT PRIMARY KEY,\n"
-            + "name VARCHAR,\n"
-            + "age INT,\n"
-            + "email VARCHAR \n"
-            + " );");
+        Assertions.assertThat(queryString).isEqualTo("CREATE TABLE users (id BIGINT PRIMARY KEY, name VARCHAR, age INTEGER, email VARCHAR);");
     }
 }
