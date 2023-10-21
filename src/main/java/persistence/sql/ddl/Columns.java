@@ -16,4 +16,11 @@ public class Columns {
                 .map(Column::buildColumnToCreate)
                 .collect(Collectors.joining(", "));
     }
+
+    public String buildColumnsToInsert() {
+        return columns.stream()
+                .map(Column::getName)
+                .collect(Collectors.joining(", "));
+    }
+
 }
