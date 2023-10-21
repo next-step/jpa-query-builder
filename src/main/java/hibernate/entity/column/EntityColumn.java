@@ -12,6 +12,8 @@ public interface EntityColumn {
 
     Object getFieldValue(Object entity);
 
+    void assignFieldValue(Object instance, Object value);
+
     ColumnType getColumnType();
 
     boolean isNullable();

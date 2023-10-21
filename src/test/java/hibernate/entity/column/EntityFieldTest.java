@@ -85,7 +85,25 @@ class EntityFieldTest {
 
         assertThatThrownBy(() -> entityField.getFieldValue(givenEntity))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Entity 객체에 필드값이 없습니다.");
+                .hasMessage("Entity 객체에 일치하는 필드값이 없습니다.");
+    }
+
+    @Test
+    void Entity객체의_필드값을_변경한다() throws NoSuchFieldException {
+        TestEntity givenEntity = new TestEntity("최진영");
+        new EntityField(TestEntity.class.getDeclaredField("id"))
+                .assignFieldValue(givenEntity, 1L);
+        assertThat(givenEntity.id).isEqualTo(1L);
+    }
+
+    @Test
+    void Entity객체의_없는_필드값을_변경하려하는_경우_예외가_발생한다() throws NoSuchFieldException {
+        TestEntity2 givenEntity = new TestEntity2(1L);
+        EntityField entityField = new EntityField(TestEntity.class.getDeclaredField("name"));
+
+        assertThatThrownBy(() -> entityField.assignFieldValue(givenEntity, 1L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Entity 객체에 일치하는 필드값이 없습니다.");
     }
 
     static class TestEntity {
