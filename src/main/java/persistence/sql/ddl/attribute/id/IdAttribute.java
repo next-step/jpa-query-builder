@@ -14,4 +14,6 @@ public abstract class IdAttribute {
     abstract public String getColumName();
 
     abstract public String getFieldName();
+
+    abstract public String getStrategy();
 }

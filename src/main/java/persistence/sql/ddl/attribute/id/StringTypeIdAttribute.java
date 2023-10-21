@@ -61,4 +61,9 @@ public class StringTypeIdAttribute extends IdAttribute {
     public String getFieldName() {
         return this.fieldName;
     }
+
+    @Override
+    public String getStrategy() {
+        return this.generateValueStrategy;
+    }
 }

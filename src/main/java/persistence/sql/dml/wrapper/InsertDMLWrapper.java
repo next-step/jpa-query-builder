@@ -10,6 +10,14 @@ public class InsertDMLWrapper implements DMLWrapper {
 
     @Override
     public String wrap(String tableName, IdValue idValue, List<GeneralValue> generalValues) {
+        if (idValue.getValue() == null) {
+            return "INSERT INTO " + tableName + "( " +
+                    generalValues.stream().map(GeneralValue::getColumnName).collect(Collectors.joining(", ")) +
+                    " ) VALUES ( " +
+                    generalValues.stream().map(GeneralValue::getValue).collect(Collectors.joining(", ")) +
+                    " )";
+        }
+
         return "INSERT INTO " + tableName + "( " +
                 idValue.getColumnName() + ", " +
                 generalValues.stream().map(GeneralValue::getColumnName).collect(Collectors.joining(", ")) +

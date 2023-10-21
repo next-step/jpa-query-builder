@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import persistence.sql.ddl.attribute.id.IdAttribute;
 import persistence.sql.ddl.parser.AttributeParser;
+import persistence.sql.ddl.wrapper.DDLWrapper;
 import persistence.sql.dml.value.EntityValue;
 
 import java.util.Arrays;
@@ -38,24 +39,6 @@ public class EntityAttribute {
         return new EntityAttribute(tableName, idAttribute, generalAttributes);
     }
 
-    private static void validate(Class<?> clazz) {
-        long idAnnotatedFieldCount = Arrays.stream((clazz.getDeclaredFields()))
-                .filter(it -> it.isAnnotationPresent(Id.class))
-                .count();
-
-        if (idAnnotatedFieldCount != 1) {
-            throw new IllegalStateException(String.format("[%s] @Id 어노테이션이 1개가 아닙니다.", clazz.getSimpleName()));
-        }
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalStateException(String.format("[%s] @Entity 어노테이션이 없습니다.", clazz.getSimpleName()));
-
-        }
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
     public String prepareDDL() {
         return idAttribute.prepareDDL() + ", " + generalAttributes.stream()
                 .map(GeneralAttribute::prepareDDL)
@@ -73,5 +56,26 @@ public class EntityAttribute {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void validate(Class<?> clazz) {
+        long idAnnotatedFieldCount = Arrays.stream((clazz.getDeclaredFields()))
+                .filter(it -> it.isAnnotationPresent(Id.class))
+                .count();
+
+        if (idAnnotatedFieldCount != 1) {
+            throw new IllegalStateException(String.format("[%s] @Id 어노테이션이 1개가 아닙니다.", clazz.getSimpleName()));
+        }
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new IllegalStateException(String.format("[%s] @Entity 어노테이션이 없습니다.", clazz.getSimpleName()));
+        }
+    }
+
+    public String prepareDDL(DDLWrapper ddlWrapper) {
+        return ddlWrapper.wrap(tableName, idAttribute, generalAttributes);
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 }

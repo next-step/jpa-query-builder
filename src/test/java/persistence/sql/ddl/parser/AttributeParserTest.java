@@ -54,8 +54,10 @@ public class AttributeParserTest {
 
                 Assertions.assertAll(
                         () -> assertThat(generalAttributeList.size()).isEqualTo(2),
-                        () -> assertThat(generalAttributeList.get(0).prepareDDL()).isEqualTo("name VARCHAR(200)"),
-                        () -> assertThat(generalAttributeList.get(1).prepareDDL()).isEqualTo("old INTEGER NOT NULL")
+                        () -> assertThat(generalAttributeList.get(0).prepareDDL())
+                                .isEqualTo("name VARCHAR(200)"),
+                        () -> assertThat(generalAttributeList.get(1).prepareDDL())
+                                .isEqualTo("old INTEGER NOT NULL")
                 );
             }
         }

@@ -28,11 +28,13 @@ public class EntityValue {
         Field idField = instance.getClass().getDeclaredField(idAttribute.getFieldName());
         idField.setAccessible(true);
 
-        IdValue idValue = new IdValue(idAttribute.getColumName(), idField.get(instance).toString());
+        Object idFieldValue = (idAttribute.getStrategy() != null) ? null : idField.get(instance);
 
-        List<GeneralValue> generalValues = generalAttributes.stream().map(generalAttribute ->
-                getGeneralValue(instance, generalAttribute)
-        ).collect(Collectors.toList());
+        IdValue idValue = new IdValue(idAttribute.getColumName(), (idFieldValue != null) ? idFieldValue.toString() : null, idAttribute.getStrategy());
+
+        List<GeneralValue> generalValues = generalAttributes.stream()
+                .map(generalAttribute -> getGeneralValue(instance, generalAttribute))
+                .collect(Collectors.toList());
 
         return new EntityValue(tableName, idValue, generalValues);
     }
