@@ -1,30 +1,54 @@
 package persistence.sql.dml;
 
-import jakarta.persistence.Entity;
-import persistence.sql.Query;
-import persistence.sql.QueryBuilder;
+import persistence.sql.Dialect;
+import persistence.sql.entity.EntityColumn;
 import persistence.sql.entity.EntityData;
+import util.ReflectionUtil;
+
+import java.util.stream.Collectors;
 
 /**
  * INSERT 쿼리 생성
  */
-public class InsertQueryBuilder implements QueryBuilder {
+public class InsertQueryBuilder {
 
-    private final Query query;
+    private final Dialect dialect;
 
-    public InsertQueryBuilder(Query query) {
-        this.query = query;
+    public InsertQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
-    public String getQuery(Object entity) {
-        validateEntityClass(entity.getClass());
-        return query.insert(new EntityData(entity.getClass()), entity);
+    public String generateQuery(EntityData entityData, Object entity) {
+        return String.format(dialect.INSERT_TEMPLATE,
+                entityData.getTableName(),
+                columnsClause(entityData),
+                valueClause(entityData, entity));
     }
 
-    private void validateEntityClass(Class<?> entityClass) {
-        if (!entityClass.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("@Entity 애노테이션이 붙은 클래스에 대해서만 쿼리를 수행할 수 있습니다.");
+    private String columnsClause(EntityData entityData) {
+        return entityData.getEntityColumns().getEntityColumnList().stream()
+                .map(EntityColumn::getColumnName)
+                .collect(Collectors.joining(", "));
+    }
+
+    private String valueClause(EntityData entityData, Object object) {
+        return entityData.getEntityColumns().getEntityColumnList().stream()
+                .map(column -> getEachValue(column, object))
+                .collect(Collectors.joining(", "));
+    }
+
+    private String getEachValue(EntityColumn column, Object object) {
+        Object value = ReflectionUtil.getValueFrom(column.getField(), object);
+
+        if (column.isId() && value == null) {
+            return "default";
         }
+
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+
+        return String.valueOf(value);
     }
 
 }

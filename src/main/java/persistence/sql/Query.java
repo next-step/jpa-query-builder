@@ -1,22 +1,20 @@
 package persistence.sql;
 
-import persistence.sql.entity.EntityData;
-
 /**
  * 쿼리를 생성하는 인터페이스
  */
-public interface Query {
+public interface Query<T, K> {
 
-    String create(EntityData entityData);
+    String create(Class<T> entityClass);
 
-    String drop(EntityData entityData);
+    String drop(Class<T> entityClass);
 
-    String insert(EntityData entityData, Object entity);
+    String insert(T entity);
 
-    String findAll(EntityData entityData);
+    String findAll(Class<T> entityClass);
 
-    String findById(EntityData entityData, Object id);
+    String findById(Class<T> entityClass, K id);
 
-    String delete(EntityData entityData, Object entity);
+    String delete(T entity);
 
 }

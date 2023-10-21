@@ -1,48 +1,53 @@
 package persistence.sql.dialect.h2;
 
 import persistence.sql.Query;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.dml.DeleteQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
+import persistence.sql.dml.SelectQueryBuilder;
 import persistence.sql.entity.EntityData;
 
-/**
- * H2 DB 쿼리 생성
- */
-public class H2Query implements Query {
+public class H2Query<T, K> implements Query<T, K> {
 
-    private final H2CreateQuery createQuery = new H2CreateQuery();
-    private final H2DropQuery dropQuery = new H2DropQuery();
-    private final H2InsertQuery insertQuery = new H2InsertQuery();
-    private final H2FindAllQuery findAllQuery = new H2FindAllQuery();
-    private final H2FindByIdQuery findByIdQuery = new H2FindByIdQuery();
-    private final H2DeleteQuery deleteQuery = new H2DeleteQuery();
+    private static final H2Dialect dialect = new H2Dialect();
 
     @Override
-    public String create(EntityData entityData) {
-        return createQuery.generateQuery(entityData);
+    public String create(Class<T> entityClass) {
+        EntityData entityData = new EntityData(entityClass);
+        return new CreateQueryBuilder(dialect).generateQuery(entityData);
     }
 
     @Override
-    public String drop(EntityData entityData) {
-        return dropQuery.generateQuery(entityData);
+    public String drop(Class<T> entityClass) {
+        EntityData entityData = new EntityData(entityClass);
+        return new DropQueryBuilder().generateQuery(entityData);
     }
 
     @Override
-    public String insert(EntityData entityData, Object entity) {
-        return insertQuery.generateQuery(entityData, entity);
+    public String insert(T entity) {
+        EntityData entityData = new EntityData(entity.getClass());
+        return new InsertQueryBuilder(dialect).generateQuery(entityData, entity);
     }
 
     @Override
-    public String findAll(EntityData entityData) {
-        return findAllQuery.generateQuery(entityData);
+    public String findAll(Class<T> entityClass) {
+        EntityData entityData = new EntityData(entityClass);
+        return new SelectQueryBuilder().generateQuery(entityData);
     }
 
     @Override
-    public String findById(EntityData entityData, Object id) {
-        return findByIdQuery.generateQuery(entityData, id);
+    public String findById(Class<T> entityClass, K id) {
+        EntityData entityData = new EntityData(entityClass);
+        return new SelectQueryBuilder()
+                .appendWhereClause(entityData.getEntityColumns().getIdColumn().getColumnName(), id)
+                .generateQuery(entityData);
     }
 
     @Override
-    public String delete(EntityData entityData, Object entity) {
-        return deleteQuery.generateQuery(entityData, entity);
+    public String delete(T entity) {
+        EntityData entityData = new EntityData(entity.getClass());
+        return new DeleteQueryBuilder().generateQuery(entityData, entity);
     }
 
 }

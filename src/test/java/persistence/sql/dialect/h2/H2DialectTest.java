@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2ColumnTypePropertiesTest {
+class H2DialectTest {
 
 
     private static final int TEST_LENGTH = 300;
@@ -32,7 +32,7 @@ class H2ColumnTypePropertiesTest {
     @ParameterizedTest
     @CsvSource("withoutLength,withoutColumn")
     void h2VarcharLengthTestWithoutDeclaredLength(String fieldName) throws Exception {
-        assertThat(H2ColumnTypeProperties.getVarcharLength(ColumnTestClass.class.getDeclaredField(fieldName)))
+        assertThat(new H2Dialect().getStringLength(ColumnTestClass.class.getDeclaredField(fieldName)))
                 .isEqualTo("(255)");
     }
 
@@ -40,7 +40,7 @@ class H2ColumnTypePropertiesTest {
     @ParameterizedTest
     @CsvSource("withColumnAndLength")
     void h2VarcharLengthTestWithDeclaredLength(String fieldName) throws Exception {
-        assertThat(H2ColumnTypeProperties.getVarcharLength(ColumnTestClass.class.getDeclaredField(fieldName)))
+        assertThat(new H2Dialect().getStringLength(ColumnTestClass.class.getDeclaredField(fieldName)))
                 .isEqualTo("(" + TEST_LENGTH + ")");
     }
 

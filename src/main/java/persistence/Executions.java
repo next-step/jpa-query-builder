@@ -3,25 +3,21 @@ package persistence;
 import jdbc.JdbcTemplate;
 import persistence.entity.Person;
 import persistence.sql.Query;
-import persistence.sql.ddl.CreateQueryBuilder;
-import persistence.sql.ddl.DropQueryBuilder;
-import persistence.sql.dml.DeleteQueryBuilder;
-import persistence.sql.dml.InsertQueryBuilder;
+import persistence.sql.dialect.h2.H2Query;
 
 import java.util.List;
 
 public class Executions {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Query query;
+    private final Query<Person, Long> query = new H2Query<>();
 
-    public Executions(JdbcTemplate jdbcTemplate, Query query) {
+    public Executions(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.query = query;
     }
 
     public void execute() {
-        Class<?> testEntityClass = Person.class;
+        Class<Person> testEntityClass = Person.class;
         List<Person> testEntities = makeTestEntities();
 
         // create
@@ -42,26 +38,22 @@ public class Executions {
                 new Person("test2", 11, "test2@gmail.com", 1));
     }
 
-    private void create(Class<?> entityClass) {
-        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(query);
-        jdbcTemplate.execute(createQueryBuilder.getQuery(entityClass));
+    private void create(Class<Person> entityClass) {
+        jdbcTemplate.execute(query.create(entityClass));
     }
 
-    private void save(List<?> entities) {
-        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(query);
-        for (Object testEntity : entities) {
-            jdbcTemplate.execute(insertQueryBuilder.getQuery(testEntity));
+    private void save(List<Person> entities) {
+        for (Person testEntity : entities) {
+            jdbcTemplate.execute(query.insert(testEntity));
         }
     }
 
-    private void delete(Object entity) {
-        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(query);
-        jdbcTemplate.execute(deleteQueryBuilder.getQuery(entity));
+    private void delete(Person entity) {
+        jdbcTemplate.execute(query.delete(entity));
     }
 
-    private void drop(Class<?> entityClass) {
-        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(query);
-        jdbcTemplate.execute(dropQueryBuilder.getQuery(entityClass));
+    private void drop(Class<Person> entityClass) {
+        jdbcTemplate.execute(query.drop(entityClass));
     }
 
 }

@@ -5,7 +5,6 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.dialect.h2.H2Query;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -17,7 +16,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final Executions executions = new Executions(jdbcTemplate, new H2Query());
+            final Executions executions = new Executions(jdbcTemplate);
             executions.execute();
 
 //            server.stop(); // runtime 유지하고 싶으면 코드 주석 필요
