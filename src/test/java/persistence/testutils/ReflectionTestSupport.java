@@ -13,4 +13,15 @@ public class ReflectionTestSupport {
             throw new RuntimeException(e);
         }
     }
+
+    public static <T> Object getFieldValue(T instance, String fieldName){
+        Field field;
+        try {
+            field = instance.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(instance);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
