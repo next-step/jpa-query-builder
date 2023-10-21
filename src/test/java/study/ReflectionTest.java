@@ -121,4 +121,19 @@ public class ReflectionTest {
     assertThat(car.testGetPrice()).isEqualTo("test : " + value);
   }
 
+  @Test
+  @DisplayName("5. 인자를 가진 생성자의 인스턴스 생성")
+  void constructorWithArgs() throws Exception {
+    //GIVEN
+    logger.debug(carClass.getName());
+    final String sonata = "sonata";
+    int value = 300;
+
+    //WHEN
+    Car car = carClass.getConstructor(String.class, int.class).newInstance("sonata", value);
+
+    //THEN
+    assertThat(car.testGetPrice()).isEqualTo("test : " + value);
+  }
+
 }
