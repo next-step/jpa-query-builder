@@ -1,16 +1,21 @@
 package persistence.sql.dml;
 
 import persistence.core.EntityMetadataModelHolder;
+import persistence.sql.dml.where.WhereQueryFetcher;
 import persistence.sql.dml.where.FetchWhereQuery;
 
-public abstract class AbstractSelectQueryBuilder extends AbstractQueryBuilder implements SelectQueryBuilder {
+public class AbstractQueryBuilder implements WhereQueryFetcher {
 
-    protected static final String SELECT = "select";
+    protected static final String WHERE = "where";
 
-    protected static final String FROM = "from";
+    protected static final String BLANK_SPACE = " ";
 
-    public AbstractSelectQueryBuilder(EntityMetadataModelHolder entityMetadataModelHolder) {
-        super(entityMetadataModelHolder);
+    protected static final String COMMA = ", ";
+
+    protected final EntityMetadataModelHolder entityMetadataModelHolder;
+
+    public AbstractQueryBuilder(EntityMetadataModelHolder entityMetadataModelHolder) {
+        this.entityMetadataModelHolder = entityMetadataModelHolder;
     }
 
     @Override
