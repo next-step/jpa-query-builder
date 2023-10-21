@@ -31,4 +31,9 @@ public class EntityMeta {
     public List<EntityColumn> getEntityColumns() {
         return entityColumns.getEntityColumns();
     }
+
+    public Object getPkValue(Object entity) {
+        return entityColumns.pkColumn()
+                .getFieldValue(entity);
+    }
 }

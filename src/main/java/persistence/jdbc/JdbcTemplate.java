@@ -1,10 +1,11 @@
-package jdbc;
+package persistence.jdbc;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import persistence.mapper.RowMapper;
 
 public class JdbcTemplate {
     private final Connection connection;

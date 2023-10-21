@@ -2,7 +2,7 @@ package persistence;
 
 import database.DatabaseServer;
 import database.H2;
-import jdbc.JdbcTemplate;
+import persistence.jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

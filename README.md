@@ -192,3 +192,13 @@ public class Person {
 - [x] id를 기준으로 엔티티를 삭제한다.
   - [x] 통합테스트 작성 하여 검증하기.
  
+---
+### 4단계 - Simple Entity Object
+- [X] 요구사항1 - find
+> src/main/java > persistence/entity 하위의 EntityManager 인터페이스를 생성 후 구현
+- [X] 요구사항2 - persist (insert)
+> src/main/java > persistence/entity 하위의 EntityManager 인터페이스를 생성 후 구현
+- [X]  요구사항3 - remove (delete)
+> src/main/java > persistence/entity 하위의 EntityManager 인터페이스를 생성 후 구현
+
+

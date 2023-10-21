@@ -1,6 +1,6 @@
 package repository;
 
-import jdbc.JdbcTemplate;
+import persistence.jdbc.JdbcTemplate;
 import persistence.sql.QueryGenerator;
 
 public class DDLRepository {

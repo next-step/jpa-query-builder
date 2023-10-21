@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.fake.FakeDialect;
+import persistence.meta.EntityMeta;
 import persistence.sql.QueryGenerator;
 import persistence.testFixtures.Person;
 
@@ -14,7 +15,8 @@ class InsertQueryBuilderTest {
     @DisplayName("insert 쿼리를 생성한다.")
     void insert() {
         //given
-        QueryGenerator<Person> query = QueryGenerator.from(Person.class);
+        EntityMeta entityMeta = new EntityMeta(Person.class);
+        QueryGenerator<Person> query = QueryGenerator.from(entityMeta);
         Person person = new Person("name", 3, "kbh@gm.com");
 
         //when
@@ -28,7 +30,8 @@ class InsertQueryBuilderTest {
     @DisplayName("다른 방언으로 insert 쿼리를 생성한다.")
     void insertDirect() {
         //given
-        QueryGenerator<Person> query = QueryGenerator.of(Person.class, new FakeDialect());
+        EntityMeta entityMeta = new EntityMeta(Person.class);
+        QueryGenerator<Person> query = QueryGenerator.of(entityMeta, new FakeDialect());
         Person person = new Person("name", 3, "kbh@gm.com");
 
         //when

@@ -30,5 +30,13 @@ public class EntityColumns {
         return Collections.unmodifiableList(entityColumns);
     }
 
+    public EntityColumn pkColumn() {
+        return getEntityColumns()
+                .stream()
+                .filter(EntityColumn::isPk)
+                .findFirst()
+                .orElseThrow(() -> new FieldEmptyException("pk가 없습니다."));
+    }
+
 
 }

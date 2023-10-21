@@ -15,6 +15,7 @@ class DeleteQueryBuilderTest {
     @DisplayName("삭제하는 구문을 생성한다.")
     void delete() {
         //given
+
         QueryGenerator<Person> query = QueryGenerator.from(Person.class);
 
         //when

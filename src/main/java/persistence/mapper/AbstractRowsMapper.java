@@ -1,4 +1,4 @@
-package jdbc;
+package persistence.mapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -10,7 +10,7 @@ import persistence.meta.ColumnType;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityMeta;
 
-public  abstract class AbstractRowsMapper<T> implements RowMapper<T> {
+public abstract class AbstractRowsMapper<T> implements RowMapper<T> {
     protected final Class<T> tClass;
 
     public AbstractRowsMapper(Class<T> tClass) {

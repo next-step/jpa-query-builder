@@ -12,11 +12,12 @@ import database.H2;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Stream;
-import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.TestFactory;
+import persistence.entity.DefaultEntityManager;
+import persistence.jdbc.JdbcTemplate;
 import persistence.testFixtures.Person;
 
 
@@ -38,7 +39,9 @@ public class RepositoryTest {
     @DisplayName("레포지토리를 관리 한다.")
     Stream<DynamicNode> testFactory() {
         final DDLRepository ddlRepository = new DDLRepository(jdbcTemplate);
-        final CrudRepository crudRepository = new CrudRepository(jdbcTemplate);
+        final DefaultEntityManager entityManager = new DefaultEntityManager(jdbcTemplate);
+        final CrudRepository<Person> crudRepository = new CrudRepository<>(entityManager);
+
 
         return Stream.of(
                 dynamicContainer("테이블이", Stream.of(
@@ -64,8 +67,8 @@ public class RepositoryTest {
                 dynamicContainer("2건을 저장을 하고.", Stream.of(
                     dynamicTest("저장을 하고", () -> {
                         assertDoesNotThrow(() -> {
-                            crudRepository.save(Person.class, person);
-                            crudRepository.save(Person.class, person2);
+                            crudRepository.save(person);
+                            crudRepository.save(person2);
                         });
                     }),
                     dynamicContainer("전체를 조회하면", Stream.of(
@@ -107,10 +110,9 @@ public class RepositoryTest {
                         dynamicTest("해당건을 삭제한다.", () -> {
                             //given
                             final List<Person> persons = crudRepository.findAll(Person.class);
-                            final Long id = persons.get(0).getId();
 
                             //when
-                            crudRepository.delete(Person.class, id);
+                            crudRepository.delete(persons.get(0));
 
                             //then
                             assertThat(crudRepository.findAll(Person.class)).hasSize(1);

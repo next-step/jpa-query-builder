@@ -1,47 +1,38 @@
 package repository;
 
-
-import java.sql.ResultSet;
 import java.util.List;
-import jdbc.EntityRowsMapper;
-import jdbc.EntitySingleMapper;
-import jdbc.JdbcTemplate;
+import persistence.entity.DefaultEntityManager;
 import persistence.sql.QueryGenerator;
 
+public class CrudRepository<T> {
+    private DefaultEntityManager entityManager;
 
-public class CrudRepository {
-    private final JdbcTemplate jdbcTemplate;
-
-    public CrudRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CrudRepository(DefaultEntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
-    public <T> void save(Class<T> tClass, T entity) {
-        final String query = QueryGenerator.from(tClass).insert(entity);
-        jdbcTemplate.execute(query);
+    public T save(T entity) {
+        return (T) entityManager.persist(entity);
     }
 
-    public <T> List<T> findAll(Class<T> tClass) {
+    public void delete(T entity) {
+        entityManager.remove(entity);
+    }
+
+    public List<T> findAll(Class<T> tClass) {
         String query = QueryGenerator.from(tClass)
                 .select()
                 .findAll();
 
-        return jdbcTemplate.query(query,
-                (ResultSet rs) -> new EntityRowsMapper<>(tClass).mapRow(rs));
+        return entityManager.findList(query, tClass);
     }
 
-    public <T> T findById(Class<T> tClass, Object id) {
+    public T findById(Class<T> tClass, Object id) {
         String query = QueryGenerator.from(tClass)
                 .select()
                 .findById(id);
 
-        return jdbcTemplate.queryForObject(query,
-                (ResultSet rs) -> new EntitySingleMapper<>(tClass).mapRow(rs));
-    }
-
-    public <T> void delete(Class<T> tClass, Object id) {
-        final String query = QueryGenerator.from(tClass).delete(id);
-        jdbcTemplate.execute(query);
+        return entityManager.find(query, tClass);
     }
 
 }
