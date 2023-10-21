@@ -1,4 +1,4 @@
-package persistence.sql.ddl.schema;
+package persistence.sql.schema;
 
 import jakarta.persistence.Entity;
 import java.lang.reflect.Field;
@@ -6,12 +6,13 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import persistence.sql.ddl.exception.RequiredAnnotationException;
-import persistence.sql.ddl.schema.constraint.PrimaryKeyConstraint;
 import persistence.sql.dialect.ColumnType;
+import persistence.sql.schema.constraint.PrimaryKeyConstraint;
 
-public class EntityMappingMeta {
+public class EntityClassMappingMeta {
 
     private static final String COMMA = ",";
     private static final String SPACE = " ";
@@ -20,16 +21,16 @@ public class EntityMappingMeta {
 
     private final Map<Field, ColumnMeta> columnMetaMap = new LinkedHashMap<>();
 
-    private EntityMappingMeta(TableMeta tableMeta, Map<Field, ColumnMeta> columnMetaMap) {
+    private EntityClassMappingMeta(TableMeta tableMeta, Map<Field, ColumnMeta> columnMetaMap) {
         this.tableMeta = tableMeta;
         this.columnMetaMap.putAll(columnMetaMap);
     }
 
-    public static EntityMappingMeta of(Class<?> entityClazz, ColumnType columnType) {
+    public static EntityClassMappingMeta of(Class<?> entityClazz, ColumnType columnType) {
         validateEntityAnnotationIsPresent(entityClazz);
         validateHasIdAnnotation(entityClazz);
 
-        return new EntityMappingMeta(TableMeta.of(entityClazz), getColumnMetasFromEntity(entityClazz, columnType));
+        return new EntityClassMappingMeta(TableMeta.of(entityClazz), getColumnMetasFromEntity(entityClazz, columnType));
     }
 
     public String tableClause() {
@@ -44,10 +45,22 @@ public class EntityMappingMeta {
             .collect(Collectors.joining(COMMA + SPACE));
     }
 
-    private List<Field> getMappingFieldList() {
+    public List<Field> getMappingFieldList() {
         return columnMetaMap.keySet().stream()
             .filter(field -> !ColumnMeta.isTransient(field))
             .collect(Collectors.toList());
+    }
+
+    public ColumnMeta getColumnMeta(Field field) {
+        return columnMetaMap.get(field);
+    }
+
+    public ColumnMeta getIdFieldColumnMeta() {
+        return columnMetaMap.entrySet().stream()
+            .filter(entry -> PrimaryKeyConstraint.isPrimaryKey(entry.getKey()))
+            .map(Entry::getValue)
+            .findAny()
+            .orElseThrow(() -> new RequiredAnnotationException("@Id annotation is required in entity"));
     }
 
     private static Map<Field, ColumnMeta> getColumnMetasFromEntity(Class<?> entityClazz, ColumnType columnType) {
