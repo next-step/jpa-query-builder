@@ -99,3 +99,41 @@ public class Person {
 ### 요구사항 4
 - drop 쿼리를 생성한다.
   - Table이 있는 경우 name에 맞게 쿼리를 생성한다.
+
+
+## 3단계 - QueryBuilder DML
+
+### 요구사항 1
+- insert 쿼리를 생성한다.
+```sql
+insert into table (column1, column2, column3) values (value1, value2, value3)
+```
+
+- EntityObject
+  - Entity 클래스정보가 담긴 EntityClass와 객체를 가지고 있다.
+  - 필드의 명과 데이터가 담긴 map을 반환할 수 있다.
+- EntityField
+  - Entity 객체를 받아 해당 객체의 필드 값을 반환할 수 있다.
+  - 가진 field가 Entity 객체에 없는 경우 예외가 발생한다.
+
+### 요구사항 2
+- findAll 쿼리를 생성한다.
+```sql
+select column1, column2 from table;
+```
+
+### 요구사항 3
+- findById 쿼리를 생성한다.
+```sql
+select column1, column2 from table where id = ?;
+```
+- EntityClass
+  - EntityId를 반환할 수 있다.
+
+### 요구사항 4
+- delete 쿼리를 생성한다.
+```sql
+delete from table where id = ?;
+```
+- delete할 EntityObject를 받아서 쿼리를 실행한다.
+- EntityObject가 Id에 해당하는 값을 반한할 수 있다.

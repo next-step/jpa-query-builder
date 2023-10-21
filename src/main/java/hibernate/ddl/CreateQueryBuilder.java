@@ -1,19 +1,16 @@
-package hibernate;
+package hibernate.ddl;
 
+import hibernate.ddl.strategy.ColumnOptionGenerateStrategy;
+import hibernate.ddl.strategy.IdIdentityOptionGenerateStrategy;
+import hibernate.ddl.strategy.NotNullOptionGenerateStrategy;
+import hibernate.ddl.strategy.PrimaryKetOptionGenerateStrategy;
 import hibernate.entity.EntityClass;
 import hibernate.entity.column.EntityColumn;
-import hibernate.entity.column.EntityColumnFactory;
-import hibernate.strategy.ColumnOptionGenerateStrategy;
-import hibernate.strategy.IdIdentityOptionGenerateStrategy;
-import hibernate.strategy.NotNullOptionGenerateStrategy;
-import hibernate.strategy.PrimaryKetOptionGenerateStrategy;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateQueryBuilder implements QueryBuilder {
+public class CreateQueryBuilder {
 
     private static final String CREATE_TABLE_QUERY = "create table %s (%s);";
     private static final String CREATE_COLUMN_QUERY = "%s %s";
@@ -29,17 +26,13 @@ public class CreateQueryBuilder implements QueryBuilder {
     public CreateQueryBuilder() {
     }
 
-    @Override
-    public String generateQuery(final Class<?> clazz) {
-        EntityClass entity = new EntityClass(clazz);
-        String columns = fieldsToQueryColumn(clazz.getDeclaredFields());
+    public String generateQuery(final EntityClass entity) {
+        String columns = parseColumnQueries(entity.getEntityColumns());
         return String.format(CREATE_TABLE_QUERY, entity.tableName(), columns);
     }
 
-    private String fieldsToQueryColumn(final Field[] fields) {
-        return Arrays.stream(fields)
-                .filter(EntityColumnFactory::isAvailableCreateEntityColumn)
-                .map(EntityColumnFactory::create)
+    private String parseColumnQueries(final List<EntityColumn> entityColumns) {
+        return entityColumns.stream()
                 .map(this::parseColumnQuery)
                 .collect(Collectors.joining(CREATE_COLUMN_QUERY_DELIMITER));
     }

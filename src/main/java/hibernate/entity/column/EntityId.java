@@ -26,10 +26,14 @@ public class EntityId implements EntityColumn {
         return field.getAnnotation(GeneratedValue.class).strategy();
     }
 
-
     @Override
     public String getFieldName() {
         return entityField.getFieldName();
+    }
+
+    @Override
+    public Object getFieldValue(final Object entity) {
+        return entityField.getFieldValue(entity);
     }
 
     @Override

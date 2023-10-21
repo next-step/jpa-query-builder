@@ -70,7 +70,27 @@ class EntityFieldTest {
                 .hasMessage("일반 Field는 GenerationType을 호출할 수 없습니다.");
     }
 
+    @Test
+    void Entity객체의_필드값을_반환한다() throws NoSuchFieldException {
+        TestEntity givenEntity = new TestEntity("최진영");
+        Object actual = new EntityField(TestEntity.class.getDeclaredField("name"))
+                .getFieldValue(givenEntity);
+        assertThat(actual).isEqualTo("최진영");
+    }
+
+    @Test
+    void Entity객체의_없는_필드값인_경우_예외가_발생한다() throws NoSuchFieldException {
+        TestEntity2 givenEntity = new TestEntity2(1L);
+        EntityField entityField = new EntityField(TestEntity.class.getDeclaredField("name"));
+
+        assertThatThrownBy(() -> entityField.getFieldValue(givenEntity))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Entity 객체에 필드값이 없습니다.");
+    }
+
     static class TestEntity {
+
+        private Long id;
         @Column(name = "nick_name")
         private String name;
 
@@ -83,5 +103,17 @@ class EntityFieldTest {
 
         @Transient
         private String transientField;
+
+        public TestEntity(String name) {
+            this.name = name;
+        }
+    }
+
+    static class TestEntity2 {
+        private Long non;
+
+        public TestEntity2(Long non) {
+            this.non = non;
+        }
     }
 }

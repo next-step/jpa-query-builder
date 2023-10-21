@@ -1,4 +1,4 @@
-package hibernate.strategy;
+package hibernate.ddl.strategy;
 
 import hibernate.entity.column.EntityColumn;
 
@@ -7,7 +7,7 @@ public class PrimaryKetOptionGenerateStrategy implements ColumnOptionGenerateStr
     private static final String PRIMARY_KEY_COLUMN_OPTION = "primary key";
 
     @Override
-    public boolean acceptable(EntityColumn entityColumn) {
+    public boolean acceptable(final EntityColumn entityColumn) {
         return entityColumn.isId();
     }
 

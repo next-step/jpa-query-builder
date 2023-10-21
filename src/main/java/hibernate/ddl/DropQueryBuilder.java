@@ -1,17 +1,15 @@
-package hibernate;
+package hibernate.ddl;
 
 import hibernate.entity.EntityClass;
 
-public class DropQueryBuilder implements QueryBuilder {
+public class DropQueryBuilder {
 
     private static final String DROP_TABLE_QUERY = "drop table %s";
 
     public DropQueryBuilder() {
     }
 
-    @Override
-    public String generateQuery(final Class<?> clazz) {
-        EntityClass entity = new EntityClass(clazz);
+    public String generateQuery(final EntityClass entity) {
         return String.format(DROP_TABLE_QUERY, entity.tableName());
     }
 }
