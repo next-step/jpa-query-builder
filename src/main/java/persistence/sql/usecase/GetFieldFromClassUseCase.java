@@ -1,4 +1,4 @@
-package persistence.sql.ddl.usecase;
+package persistence.sql.usecase;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -8,9 +8,9 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.vo.DatabaseField;
-import persistence.sql.ddl.vo.DatabaseFields;
-import persistence.sql.ddl.vo.type.TypeConverter;
+import persistence.sql.vo.DatabaseField;
+import persistence.sql.vo.DatabaseFields;
+import persistence.sql.vo.type.TypeConverter;
 
 public class GetFieldFromClassUseCase {
     public DatabaseFields execute(Class<?> cls) {

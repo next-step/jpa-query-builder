@@ -1,4 +1,4 @@
-package persistence.sql.ddl.vo.type;
+package persistence.sql.vo.type;
 
 public class Int implements DatabaseType {
     private static final Int instance = new Int();

@@ -1,4 +1,4 @@
-package persistence.sql.ddl.vo.type;
+package persistence.sql.vo.type;
 
 import java.lang.reflect.Field;
 

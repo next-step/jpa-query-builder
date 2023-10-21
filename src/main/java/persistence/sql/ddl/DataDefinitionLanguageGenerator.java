@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.usecase.GetFieldFromClassUseCase;
-import persistence.sql.ddl.usecase.GetTableNameFromClassUseCase;
+import persistence.sql.usecase.GetFieldFromClassUseCase;
+import persistence.sql.usecase.GetTableNameFromClassUseCase;
 
 public class DataDefinitionLanguageGenerator {
     private final GetTableNameFromClassUseCase getTableNameFromClassUseCase;

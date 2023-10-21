@@ -1,8 +1,8 @@
-package persistence.sql.ddl.vo;
+package persistence.sql.vo;
 
 import jakarta.persistence.GenerationType;
 import java.util.Objects;
-import persistence.sql.ddl.vo.type.DatabaseType;
+import persistence.sql.vo.type.DatabaseType;
 
 public class DatabaseField {
     private final String name;

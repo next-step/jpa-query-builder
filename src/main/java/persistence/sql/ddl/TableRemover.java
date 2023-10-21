@@ -1,8 +1,7 @@
 package persistence.sql.ddl;
 
 import lombok.Builder;
-import lombok.Getter;
-import persistence.sql.ddl.vo.TableName;
+import persistence.sql.vo.TableName;
 
 public class TableRemover {
     private final TableName tableName;

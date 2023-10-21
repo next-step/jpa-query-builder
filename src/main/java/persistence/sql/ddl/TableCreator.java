@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
 import lombok.Builder;
-import persistence.sql.ddl.vo.DatabaseFields;
-import persistence.sql.ddl.vo.TableName;
+import persistence.sql.vo.DatabaseFields;
+import persistence.sql.vo.TableName;
 
 public class TableCreator {
     private final TableName tableName;

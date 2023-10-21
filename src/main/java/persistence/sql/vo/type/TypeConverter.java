@@ -1,4 +1,4 @@
-package persistence.sql.ddl.vo.type;
+package persistence.sql.vo.type;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

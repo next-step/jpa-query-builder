@@ -6,8 +6,8 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DataDefinitionLanguageGenerator;
-import persistence.sql.ddl.usecase.GetFieldFromClassUseCase;
-import persistence.sql.ddl.usecase.GetTableNameFromClassUseCase;
+import persistence.sql.usecase.GetFieldFromClassUseCase;
+import persistence.sql.usecase.GetTableNameFromClassUseCase;
 import persistence.sql.ddl.assembler.DataDefinitionLanguageAssembler;
 import persistence.entity.Person;
 
