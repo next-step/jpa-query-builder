@@ -1,9 +1,12 @@
 package persistence.sql.schema;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import persistence.sql.exception.AccessRequiredException;
 
 public class EntityObjectMappingMeta {
 
@@ -35,17 +38,26 @@ public class EntityObjectMappingMeta {
         return objectValueMap.keySet();
     }
 
-    public ColumnMeta getIdColumnMeta() {
-        return entityClassMappingMeta.getIdFieldColumnMeta();
+    public Map<String, Object> getValueMapByColumnName() {
+        Map<String, Object> map = new HashMap<>();
+        for (Entry<ColumnMeta, Object> entry : objectValueMap.entrySet()) {
+            map.put(entry.getKey().getColumnName(), entry.getValue());
+        }
+
+        return map;
     }
 
-    public String getValueAsString(ColumnMeta columnMeta) {
+    public String getFormattedValue(ColumnMeta columnMeta) {
         final Object value = objectValueMap.get(columnMeta);
 
         return formatValueAsString(value);
     }
 
     public static String formatValueAsString(Object object) {
+        if (object == null) {
+            return null;
+        }
+
         if (object instanceof String) {
             return String.format(STRING_TYPE_FORMAT, object);
         }
@@ -58,7 +70,7 @@ public class EntityObjectMappingMeta {
         try {
             return field.get(object);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new AccessRequiredException(e);
         }
     }
 }

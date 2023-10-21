@@ -38,7 +38,7 @@ public class InsertStatementBuilder {
     private String valueClause(EntityObjectMappingMeta entityObjectMappingMeta) {
         return entityObjectMappingMeta.getColumnMetaSet().stream()
             .filter(isNotPrimaryKeyPredicate())
-            .map(entityObjectMappingMeta::getValueAsString)
+            .map(entityObjectMappingMeta::getFormattedValue)
             .collect(Collectors.joining(DELIMITER));
     }
 

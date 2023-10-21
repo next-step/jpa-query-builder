@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.exception.RequiredAnnotationException;
 import persistence.sql.dialect.ColumnType;
+import persistence.sql.exception.RequiredAnnotationException;
 import persistence.sql.schema.constraint.PrimaryKeyConstraint;
 
 public class EntityClassMappingMeta {

@@ -1,4 +1,4 @@
-package persistence.sql.ddl.exception;
+package persistence.sql.exception;
 
 public class NotSupportedTypeException extends RuntimeException {
 

@@ -3,7 +3,7 @@ package persistence.sql.dialect;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import persistence.sql.ddl.exception.NotSupportedTypeException;
+import persistence.sql.exception.NotSupportedTypeException;
 
 /**
  * @http://www.h2database.com/html/datatypes.html

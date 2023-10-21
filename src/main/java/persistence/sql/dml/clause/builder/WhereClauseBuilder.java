@@ -7,6 +7,7 @@ import persistence.sql.dml.clause.WherePredicate;
 import persistence.sql.dml.clause.operator.AndOperator;
 import persistence.sql.dml.clause.operator.OrOperator;
 import persistence.sql.dml.clause.operator.SqlOperator;
+import persistence.sql.exception.PreconditionRequiredException;
 
 public class WhereClauseBuilder {
 
@@ -24,7 +25,7 @@ public class WhereClauseBuilder {
 
     private WhereClauseBuilder(WhereClause whereClause) {
         if (whereClause == null) {
-            throw new RuntimeException("WhereClause required");
+            throw new PreconditionRequiredException("WhereClause required");
         }
         this.whereClauseList = new ArrayList<>(List.of(whereClause));
     }
@@ -37,12 +38,14 @@ public class WhereClauseBuilder {
         return new WhereClauseBuilder(new WhereClause(null, wherePredicate));
     }
 
-    public void and(WherePredicate predicate) {
+    public WhereClauseBuilder and(WherePredicate predicate) {
         this.whereClauseList.add(new WhereClause(andOperator, predicate));
+        return this;
     }
 
-    public void or(WherePredicate predicate) {
+    public WhereClauseBuilder or(WherePredicate predicate) {
         this.whereClauseList.add(new WhereClause(orOperator, predicate));
+        return this;
     }
 
     public String build() {

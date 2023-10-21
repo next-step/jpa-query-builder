@@ -5,8 +5,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Objects;
-import persistence.sql.ddl.exception.UnrecognizedGeneratedValueException;
 import persistence.sql.dialect.ColumnType;
+import persistence.sql.exception.UnrecognizedGeneratedValueException;
 
 public class PrimaryKeyConstraint implements Constraint {
 

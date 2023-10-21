@@ -3,6 +3,7 @@ package persistence.sql.dml;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import persistence.sql.exception.JdbcTemplateException;
 
 public class JdbcTemplate implements Database {
 
@@ -17,7 +18,7 @@ public class JdbcTemplate implements Database {
         try {
             return connection.prepareStatement(sql).executeQuery();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new JdbcTemplateException(e);
         }
     }
 
@@ -26,7 +27,7 @@ public class JdbcTemplate implements Database {
         try {
             return connection.prepareStatement(sql).execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new JdbcTemplateException(e);
         }
     }
 }

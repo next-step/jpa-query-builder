@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.exception.RequiredAnnotationException;
 import persistence.sql.ddl.generator.fixture.PersonV1;
 import persistence.sql.ddl.generator.fixture.PersonV1WithNoEntityAnnotation;
 import persistence.sql.ddl.generator.fixture.PersonV2;
@@ -18,6 +17,7 @@ import persistence.sql.ddl.generator.fixture.PersonV3;
 import persistence.sql.ddl.generator.fixture.PersonV3WithTable;
 import persistence.sql.ddl.generator.fixture.PersonV3WithTransient;
 import persistence.sql.dialect.H2ColumnType;
+import persistence.sql.exception.RequiredAnnotationException;
 
 @DisplayName("CREATE DDL 생성 테스트")
 class CreateDDLQueryGeneratorTest {

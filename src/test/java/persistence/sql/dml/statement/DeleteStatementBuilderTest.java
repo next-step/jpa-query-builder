@@ -16,7 +16,7 @@ class DeleteStatementBuilderTest {
     @DisplayName("Where절을 통해 조건이 있는 DELETE 문을 생성할 수 있다.")
     void canBuildSelectStatementWhere() {
         PersonV3 personV3 = new PersonV3("test_person", 25, "test@test.com", 5);
-
+        
         final String selectStatement = DeleteStatementBuilder.builder()
             .delete(personV3, new H2ColumnType())
             .where(WherePredicate.of("id", 1L, new EqualOperator()))

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import persistence.sql.dialect.ColumnType;
 import persistence.sql.dml.clause.WherePredicate;
 import persistence.sql.dml.clause.builder.WhereClauseBuilder;
+import persistence.sql.exception.PreconditionRequiredException;
 import persistence.sql.schema.ColumnMeta;
 import persistence.sql.schema.EntityClassMappingMeta;
 import persistence.sql.schema.EntityObjectMappingMeta;
@@ -33,7 +34,7 @@ public class SelectStatementBuilder {
         );
 
         if (selectStatementBuilder.length() > 0) {
-            throw new RuntimeException("select() method must be called only once");
+            throw new PreconditionRequiredException("select() method must be called only once");
         }
 
         if (targetFieldNames.length == 0) {
@@ -53,7 +54,7 @@ public class SelectStatementBuilder {
 
     public SelectStatementBuilder and(WherePredicate predicate) {
         if (this.whereClauseBuilder == null) {
-            throw new RuntimeException("where() method must be called");
+            throw new PreconditionRequiredException("where() method must be called");
         }
 
         this.whereClauseBuilder.and(predicate);
@@ -62,7 +63,7 @@ public class SelectStatementBuilder {
 
     public SelectStatementBuilder or(WherePredicate predicate) {
         if (this.whereClauseBuilder == null) {
-            throw new RuntimeException("where() method must be called");
+            throw new PreconditionRequiredException("where() method must be called");
         }
 
         this.whereClauseBuilder.or(predicate);
@@ -71,7 +72,7 @@ public class SelectStatementBuilder {
 
     public String build() {
         if (selectStatementBuilder.length() == 0) {
-            throw new RuntimeException("SelectStatement must start with select()");
+            throw new PreconditionRequiredException("SelectStatement must start with select()");
         }
 
         if (this.whereClauseBuilder == null) {
@@ -91,7 +92,7 @@ public class SelectStatementBuilder {
             .collect(Collectors.toList());
 
         if (!undefinedTargetField.isEmpty()) {
-            throw new RuntimeException(String.format("%s 필드는 정의되지 않은 필드입니다.", undefinedTargetField));
+            throw new PreconditionRequiredException(String.format("%s 필드는 정의되지 않은 필드입니다.", undefinedTargetField));
         }
     }
 }
