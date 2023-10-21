@@ -2,6 +2,7 @@ package jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class EntitySingleMapper<T> extends AbstractRowsMapper<T> {
 
@@ -15,6 +16,10 @@ public class EntitySingleMapper<T> extends AbstractRowsMapper<T> {
             return mapEntity(tClass, resultSet);
         }
         return null;
+    }
+
+    public Optional<T> mapToRowOptional(ResultSet resultSet) {
+        return Optional.ofNullable(mapRow(resultSet));
     }
 
     private boolean hasNext(ResultSet resultSet) {
