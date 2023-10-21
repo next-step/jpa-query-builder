@@ -1,4 +1,4 @@
-package persistence.sql.ddl.schema.constraint;
+package persistence.sql.schema.constraint;
 
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;

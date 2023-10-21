@@ -1,4 +1,4 @@
-package persistence.sql.ddl.schema;
+package persistence.sql.schema;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

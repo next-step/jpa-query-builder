@@ -1,4 +1,4 @@
-package persistence.sql.ddl.schema.constraint;
+package persistence.sql.schema.constraint;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,7 +35,7 @@ public class PrimaryKeyConstraint implements Constraint {
         final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
 
         if (Objects.requireNonNull(generatedValue.strategy()) == GenerationType.IDENTITY) {
-            return String.format(PRIMARY_KEY_FORMAT, PRIMARY_KEY, columnType.generationIdentity());
+            return String.format(PRIMARY_KEY_FORMAT, columnType.generationIdentity(), PRIMARY_KEY);
         }
 
         throw new UnrecognizedGeneratedValueException("Unexpected value: " + generatedValue.strategy());

@@ -1,4 +1,4 @@
-package persistence.sql.ddl.schema.constraint;
+package persistence.sql.schema.constraint;
 
 public interface Constraint {
 
