@@ -59,4 +59,26 @@ public class ReflectionTest {
     }
   }
 
+  @Test
+  @DisplayName("2. test로 시작하는 메소드 시작하기")
+  void runAutomaticRun() throws Exception {
+    //GIVEN
+    Car car = carClass.getConstructor().newInstance();
+    logger.debug("객체 메서드 목록");
+
+    List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
+            .filter(method -> method.getName().startsWith("test"))
+            .collect(Collectors.toList());
+
+    //WHEN
+    for (Method method : methods) {
+      logger.debug(method.getName());
+      String output = String.valueOf(method.invoke(car));
+
+      // THEN
+      assertThat(method.getName()).startsWith("test");
+      assertThat(output).startsWith("test :");
+    }
+  }
+
 }
