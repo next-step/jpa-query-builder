@@ -13,8 +13,7 @@ public class CreateQueryBuilder extends BaseQueryBuilder {
      *     email VARCHAR NOT NULL
      * );
      */
-    public static String createQueryString(Class<?> clazz) {
-        MyEntity myEntity = new MyEntity(clazz);
+    public static String createQueryString(MyEntity myEntity) {
         List<MyField> myFields = myEntity.getMyFields();
 
         String columnDefinitions = myFields.stream()

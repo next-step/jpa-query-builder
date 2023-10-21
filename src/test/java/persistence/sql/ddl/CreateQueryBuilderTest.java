@@ -7,7 +7,7 @@ class CreateQueryBuilderTest {
 
     @Test
     void createQueryString() {
-        String queryString = CreateQueryBuilder.createQueryString(Person.class);
+        String queryString = CreateQueryBuilder.createQueryString(new MyEntity(Person.class));
 
         Assertions.assertThat(queryString).isEqualTo("CREATE TABLE users ( \n"
             + " id BIGINT PRIMARY KEY,\n"

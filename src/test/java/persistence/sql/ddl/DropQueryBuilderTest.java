@@ -7,7 +7,7 @@ class DropQueryBuilderTest {
 
     @Test
     void dropQueryString() {
-        String dropQueryString = DropQueryBuilder.dropQueryString(Person.class);
+        String dropQueryString = DropQueryBuilder.dropQueryString(new MyEntity(Person.class));
 
         Assertions.assertThat(dropQueryString).isEqualTo("DROP TABLE users");
     }
