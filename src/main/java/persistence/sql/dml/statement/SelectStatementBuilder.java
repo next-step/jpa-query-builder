@@ -17,7 +17,7 @@ public class SelectStatementBuilder {
     private WhereClauseBuilder whereClauseBuilder;
     private static final String SELECT_FORMAT = "SELECT %s FROM %s";
     private static final String SELECT_ALL_FIELD = "*";
-    private static final String SELECT_WHERE_FORMAT = "%s %s";
+    private static final String SELECT_WHERE_FORMAT = "%s %s;";
 
     private SelectStatementBuilder() {
         this.selectStatementBuilder = new StringBuilder();
@@ -76,7 +76,7 @@ public class SelectStatementBuilder {
         }
 
         if (this.whereClauseBuilder == null) {
-            return selectStatementBuilder.toString();
+            return selectStatementBuilder.toString() + ";";
         }
 
         return String.format(SELECT_WHERE_FORMAT, selectStatementBuilder, this.whereClauseBuilder.build());
