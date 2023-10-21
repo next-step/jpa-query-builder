@@ -1,5 +1,6 @@
 package persistence.sql.dml;
 
+import jakarta.persistence.Entity;
 import persistence.sql.Query;
 import persistence.sql.QueryBuilder;
 import persistence.sql.entity.EntityData;
@@ -18,6 +19,12 @@ public class DeleteQueryBuilder implements QueryBuilder {
     public String getQuery(Object entity) {
         validateEntityClass(entity.getClass());
         return query.delete(new EntityData(entity.getClass()), entity);
+    }
+
+    private void validateEntityClass(Class<?> entityClass) {
+        if (!entityClass.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("@Entity 애노테이션이 붙은 클래스에 대해서만 쿼리를 수행할 수 있습니다.");
+        }
     }
 
 }
