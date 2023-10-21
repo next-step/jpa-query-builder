@@ -2,6 +2,7 @@ package persistence.sql.schema;
 
 import jakarta.persistence.Entity;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,6 +50,10 @@ public class EntityClassMappingMeta {
         return columnMetaMap.keySet().stream()
             .filter(field -> !ColumnMeta.isTransient(field))
             .collect(Collectors.toList());
+    }
+
+    public List<ColumnMeta> getMappingColumnMetaList() {
+        return new ArrayList<>(columnMetaMap.values());
     }
 
     public ColumnMeta getColumnMeta(Field field) {

@@ -9,7 +9,6 @@ import persistence.sql.dml.clause.builder.WhereClauseBuilder;
 import persistence.sql.exception.PreconditionRequiredException;
 import persistence.sql.schema.ColumnMeta;
 import persistence.sql.schema.EntityClassMappingMeta;
-import persistence.sql.schema.EntityObjectMappingMeta;
 
 public class SelectStatementBuilder {
 
@@ -27,23 +26,20 @@ public class SelectStatementBuilder {
         return new SelectStatementBuilder();
     }
 
-    public SelectStatementBuilder select(Object object, ColumnType columnType, String... targetFieldNames) {
-        final EntityObjectMappingMeta objectMappingMeta = EntityObjectMappingMeta.of(
-            object,
-            EntityClassMappingMeta.of(object.getClass(), columnType)
-        );
+    public SelectStatementBuilder select(Class<?> clazz, ColumnType columnType, String... targetFieldNames) {
+        final EntityClassMappingMeta classMappingMeta = EntityClassMappingMeta.of(clazz, columnType);
 
         if (selectStatementBuilder.length() > 0) {
             throw new PreconditionRequiredException("select() method must be called only once");
         }
 
         if (targetFieldNames.length == 0) {
-            selectStatementBuilder.append(String.format(SELECT_FORMAT, SELECT_ALL_FIELD, objectMappingMeta.getTableName()));
+            selectStatementBuilder.append(String.format(SELECT_FORMAT, SELECT_ALL_FIELD, classMappingMeta.tableClause()));
             return this;
         }
 
-        validateSelectTargetField(objectMappingMeta, targetFieldNames);
-        selectStatementBuilder.append(String.format(SELECT_FORMAT, String.join(", ", targetFieldNames), objectMappingMeta.getTableName()));
+        validateSelectTargetField(classMappingMeta, targetFieldNames);
+        selectStatementBuilder.append(String.format(SELECT_FORMAT, String.join(", ", targetFieldNames), classMappingMeta.tableClause()));
         return this;
     }
 
@@ -76,14 +72,14 @@ public class SelectStatementBuilder {
         }
 
         if (this.whereClauseBuilder == null) {
-            return selectStatementBuilder.toString() + ";";
+            return selectStatementBuilder + ";";
         }
 
         return String.format(SELECT_WHERE_FORMAT, selectStatementBuilder, this.whereClauseBuilder.build());
     }
 
-    private static void validateSelectTargetField(EntityObjectMappingMeta objectMappingMeta, String[] targetFieldNames) {
-        final List<String> definedFieldNameList = objectMappingMeta.getColumnMetaSet().stream()
+    private static void validateSelectTargetField(EntityClassMappingMeta entityClassMappingMeta, String[] targetFieldNames) {
+        final List<String> definedFieldNameList = entityClassMappingMeta.getMappingColumnMetaList().stream()
             .map(ColumnMeta::getColumnName)
             .collect(Collectors.toList());
 

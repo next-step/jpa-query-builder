@@ -17,35 +17,29 @@ class SelectStatementBuilderTest {
     @Test
     @DisplayName("Select 문을 생성할 수 있다.")
     void canBuildSelectStatement() {
-        PersonV3 personV3 = new PersonV3("test_person", 25, "test@test.com", 5);
-
         final String selectStatement = SelectStatementBuilder.builder()
-            .select(personV3, new H2ColumnType())
+            .select(PersonV3.class, new H2ColumnType())
             .build();
 
-        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS");
+        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS;");
     }
 
     @Test
     @DisplayName("원하는 필드만 갖고 오는 Select 문을 생성할 수 있다.")
     void canBuildSelectStatementSpecificField() {
-        PersonV3 personV3 = new PersonV3("test_person", 25, "test@test.com", 5);
-
         final String selectStatement = SelectStatementBuilder.builder()
-            .select(personV3, new H2ColumnType(), "id")
+            .select(PersonV3.class, new H2ColumnType(), "id")
             .build();
 
-        assertThat(selectStatement).isEqualTo("SELECT id FROM USERS");
+        assertThat(selectStatement).isEqualTo("SELECT id FROM USERS;");
     }
 
     @Test
     @DisplayName("정의되지 않은 필드를 갖고 오는 Select 문을 생성할 수 없다.")
     void cannotBuildSelectStatementUndefinedField() {
-        PersonV3 personV3 = new PersonV3("test_person", 25, "test@test.com", 5);
-
         assertThatThrownBy(() -> {
             SelectStatementBuilder.builder()
-                .select(personV3, new H2ColumnType(), "phone_number")
+                .select(PersonV3.class, new H2ColumnType(), "phone_number")
                 .build();
         }).isInstanceOf(RuntimeException.class)
             .hasMessage(String.format("%s 필드는 정의되지 않은 필드입니다.", "[phone_number]"));
@@ -54,41 +48,35 @@ class SelectStatementBuilderTest {
     @Test
     @DisplayName("Where절을 통해 조건이 있는 Select 문을 생성할 수 있다.")
     void canBuildSelectStatementWhere() {
-        PersonV3 personV3 = new PersonV3("test_person", 25, "test@test.com", 5);
-
         final String selectStatement = SelectStatementBuilder.builder()
-            .select(personV3, new H2ColumnType())
+            .select(PersonV3.class, new H2ColumnType())
             .where(WherePredicate.of("id", 1L, new EqualOperator()))
             .build();
 
-        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS WHERE id = 1");
+        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS WHERE id = 1;");
     }
 
     @Test
     @DisplayName("Where절에 AND 조건으로 Select 문을 생성할 수 있다.")
     void canBuildSelectStatementWhereWithAnd() {
-        PersonV3 personV3 = new PersonV3("test_person", 25, "test@test.com", 5);
-
         final String selectStatement = SelectStatementBuilder.builder()
-            .select(personV3, new H2ColumnType())
+            .select(PersonV3.class, new H2ColumnType())
             .where(WherePredicate.of("id", 1L, new EqualOperator()))
             .and(WherePredicate.of("nick_name", "test_person", new EqualOperator()))
             .build();
 
-        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS WHERE id = 1 AND nick_name = 'test_person'");
+        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS WHERE id = 1 AND nick_name = 'test_person';");
     }
 
     @Test
     @DisplayName("Where절에 OR 조건으로 Select 문을 생성할 수 있다.")
     void canBuildSelectStatementWhereWithOr() {
-        PersonV3 personV3 = new PersonV3("test_person", 25, "test@test.com", 5);
-
         final String selectStatement = SelectStatementBuilder.builder()
-            .select(personV3, new H2ColumnType())
+            .select(PersonV3.class, new H2ColumnType())
             .where(WherePredicate.of("id", 1L, new EqualOperator()))
             .or(WherePredicate.of("nick_name", "test_person", new EqualOperator()))
             .build();
 
-        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS WHERE id = 1 OR nick_name = 'test_person'");
+        assertThat(selectStatement).isEqualTo("SELECT * FROM USERS WHERE id = 1 OR nick_name = 'test_person';");
     }
 }

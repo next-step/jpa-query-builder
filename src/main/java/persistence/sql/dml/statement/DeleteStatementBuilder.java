@@ -5,7 +5,6 @@ import persistence.sql.dml.clause.WherePredicate;
 import persistence.sql.dml.clause.builder.WhereClauseBuilder;
 import persistence.sql.exception.PreconditionRequiredException;
 import persistence.sql.schema.EntityClassMappingMeta;
-import persistence.sql.schema.EntityObjectMappingMeta;
 
 public class DeleteStatementBuilder {
 
@@ -23,17 +22,14 @@ public class DeleteStatementBuilder {
         return new DeleteStatementBuilder();
     }
 
-    public DeleteStatementBuilder delete(Object object, ColumnType columnType) {
-        final EntityObjectMappingMeta objectMappingMeta = EntityObjectMappingMeta.of(
-            object,
-            EntityClassMappingMeta.of(object.getClass(), columnType)
-        );
+    public DeleteStatementBuilder delete(Class<?> clazz, ColumnType columnType) {
+        final EntityClassMappingMeta classMappingMeta = EntityClassMappingMeta.of(clazz, columnType);
 
         if (deleteStatementBuilder.length() > 0) {
             throw new PreconditionRequiredException("delete() method must be called only once");
         }
 
-        deleteStatementBuilder.append(String.format(DELETE_FORMAT, objectMappingMeta.getTableName()));
+        deleteStatementBuilder.append(String.format(DELETE_FORMAT, classMappingMeta.tableClause()));
         return this;
     }
 

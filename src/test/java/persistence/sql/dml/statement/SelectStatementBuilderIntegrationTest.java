@@ -66,7 +66,7 @@ class SelectStatementBuilderIntegrationTest {
         //when
         int totalRowCount;
         final String selectStatement = SelectStatementBuilder.builder()
-            .select(fixture1, new H2ColumnType())
+            .select(SelectStatementBuilderFixture.class, new H2ColumnType())
             .build();
 
         try (final ResultSet resultSet = jdbcTemplate.executeQuery(selectStatement)) {
@@ -102,7 +102,7 @@ class SelectStatementBuilderIntegrationTest {
         final int conditionValue = 1;
 
         final String selectStatementById = SelectStatementBuilder.builder()
-            .select(fixture1, new H2ColumnType())
+            .select(SelectStatementBuilderFixture.class, new H2ColumnType())
             .where(WherePredicate.of(conditionColumnName, conditionValue, new EqualOperator()))
             .build();
 
