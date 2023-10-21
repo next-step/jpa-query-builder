@@ -26,7 +26,6 @@ public class EntityId implements EntityColumn {
         return field.getAnnotation(GeneratedValue.class).strategy();
     }
 
-
     @Override
     public String getFieldName() {
         return entityField.getFieldName();
