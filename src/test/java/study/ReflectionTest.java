@@ -102,4 +102,23 @@ public class ReflectionTest {
     }
   }
 
+
+  @Test
+  @DisplayName("4. private field에 값 할당")
+  public void privateFieldAccess() throws Exception {
+    //GIVEN
+    logger.debug(carClass.getName());
+    Car car = carClass.getConstructor().newInstance();
+    final String price = "price";
+
+    //WHEN
+    Field field = carClass.getDeclaredField(price);
+    field.setAccessible(true);
+    int value = 30;
+    field.set(car, value);
+
+    //THEN
+    assertThat(car.testGetPrice()).isEqualTo("test : " + value);
+  }
+
 }
