@@ -17,8 +17,8 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final TestExecutions testExecutions = new TestExecutions(jdbcTemplate, new H2Query());
-            testExecutions.execute();
+            final Executions executions = new Executions(jdbcTemplate, new H2Query());
+            executions.execute();
 
 //            server.stop(); // runtime 유지하고 싶으면 코드 주석 필요
         } catch (Exception e) {

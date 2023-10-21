@@ -10,12 +10,12 @@ import persistence.sql.dml.InsertQueryBuilder;
 
 import java.util.List;
 
-public class TestExecutions {
+public class Executions {
 
     private final JdbcTemplate jdbcTemplate;
     private final Query query;
 
-    public TestExecutions(JdbcTemplate jdbcTemplate, Query query) {
+    public Executions(JdbcTemplate jdbcTemplate, Query query) {
         this.jdbcTemplate = jdbcTemplate;
         this.query = query;
     }
