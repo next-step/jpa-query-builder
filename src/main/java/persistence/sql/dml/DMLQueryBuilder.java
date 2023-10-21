@@ -1,7 +1,7 @@
 package persistence.sql.dml;
 
 import persistence.dialect.Dialect;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityMeta;
 import persistence.sql.QueryBuilder;
@@ -27,6 +27,6 @@ public class DMLQueryBuilder<T> extends QueryBuilder<T>{
                 .stream()
                 .filter(EntityColumn::isPk)
                 .findFirst()
-                .orElseThrow(() -> new FiledEmptyException("pk가 없습니다."));
+                .orElseThrow(() -> new FieldEmptyException("pk가 없습니다."));
     }
 }

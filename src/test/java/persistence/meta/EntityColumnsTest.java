@@ -6,7 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.testFixtures.Person;
 
 class EntityColumnsTest {
@@ -14,7 +14,7 @@ class EntityColumnsTest {
     @Test
     @DisplayName("필드 없으면 예외가 발생한다.")
     void empty() {
-        assertThatExceptionOfType(FiledEmptyException.class)
+        assertThatExceptionOfType(FieldEmptyException.class)
                 .isThrownBy(() -> new EntityColumns(null));
 
     }

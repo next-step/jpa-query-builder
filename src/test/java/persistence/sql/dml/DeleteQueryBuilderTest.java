@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.sql.QueryGenerator;
 import persistence.testFixtures.Person;
 
@@ -31,7 +31,7 @@ class DeleteQueryBuilderTest {
         QueryGenerator<Person> query = QueryGenerator.from(Person.class);
 
         //when & then
-        assertThatExceptionOfType(FiledEmptyException.class)
+        assertThatExceptionOfType(FieldEmptyException.class)
                 .isThrownBy(() -> query.delete(null));
     }
 

@@ -48,7 +48,7 @@ public  abstract class AbstractRowsMapper<T> implements RowMapper<T> {
 
     private Field getFiled(Class<T> tClass, EntityColumn entityColumn) {
         try {
-            return tClass.getDeclaredField(entityColumn.getFiledName());
+            return tClass.getDeclaredField(entityColumn.getFieldName());
         } catch (NoSuchFieldException e) {
             throw new NotFoundException("필드를 찾을수 없습니다.");
         }
