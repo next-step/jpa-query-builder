@@ -155,3 +155,8 @@ public interface EntityManager {
 <T> T find(Class<T> clazz, Object Id);
 ```
 - 데이터베이스에서 find 쿼리를 전달하여 생성한 object를 반환한다. 
+
+- EntityColumn
+  - 인스턴스를 받아 field값을 변경할 수 있다.
+- ReflectionRawMapper
+  - T 타입의 인스턴스를 만들어 ResultSet값을 매핑한다.
