@@ -9,6 +9,10 @@ abstract public class GeneralAttribute {
         this.sqlConverter = sqlConverter;
     }
 
-    abstract public String makeComponent();
+    abstract public String prepareDDL();
+
+    abstract public String getColumnName();
+
+    abstract public String getFieldName();
 
 }

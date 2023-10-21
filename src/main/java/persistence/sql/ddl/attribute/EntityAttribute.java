@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import persistence.sql.ddl.attribute.id.IdAttribute;
 import persistence.sql.ddl.parser.AttributeParser;
+import persistence.sql.dml.value.EntityValue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,9 +56,22 @@ public class EntityAttribute {
         return tableName;
     }
 
-    public String getAttributeComponents() {
-        return idAttribute.makeComponent() + ", " + generalAttributes.stream()
-                .map(GeneralAttribute::makeComponent)
+    public String prepareDDL() {
+        return idAttribute.prepareDDL() + ", " + generalAttributes.stream()
+                .map(GeneralAttribute::prepareDDL)
                 .collect(Collectors.joining(", "));
+    }
+
+    public <T> EntityValue makeEntityValue(T instance) {
+        try {
+            return EntityValue.of(
+                    this.tableName,
+                    this.idAttribute,
+                    this.generalAttributes,
+                    instance
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

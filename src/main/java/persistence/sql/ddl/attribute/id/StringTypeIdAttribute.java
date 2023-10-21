@@ -44,11 +44,21 @@ public class StringTypeIdAttribute extends IdAttribute {
     }
 
     @Override
-    public String makeComponent() {
+    public String prepareDDL() {
         String component = (columnName.isBlank() ? fieldName : columnName) +
                 " " + sqlConverter.convert(String.class) +
                 String.format("(%s)", length) +
                 " " + generateValueStrategy;
         return component.trim();
+    }
+
+    @Override
+    public String getColumName() {
+        return this.columnName;
+    }
+
+    @Override
+    public String getFieldName() {
+        return this.fieldName;
     }
 }

@@ -29,7 +29,7 @@ public class LongTypeIdAttribute extends IdAttribute {
     public static LongTypeIdAttribute of(Field field, SqlConverter sqlConverter) {
         return new LongTypeIdAttribute(
                 field.getName(),
-                Optional.ofNullable(field.getAnnotation(Column.class)).map(Column::name).orElse(""),
+                Optional.ofNullable(field.getAnnotation(Column.class)).map(Column::name).orElse(field.getName()),
                 Optional.ofNullable(field.getAnnotation(GeneratedValue.class))
                         .map(it -> sqlConverter.convert(it.strategy().getClass()))
                         .orElse(""),
@@ -38,10 +38,20 @@ public class LongTypeIdAttribute extends IdAttribute {
     }
 
     @Override
-    public String makeComponent() {
+    public String prepareDDL() {
         String component = (columnName.isBlank() ? fieldName : columnName) + " " +
                 sqlConverter.convert(Long.class) + " " +
                 generateValueStrategy;
         return component.trim();
+    }
+
+    @Override
+    public String getColumName() {
+        return this.columnName;
+    }
+
+    @Override
+    public String getFieldName() {
+        return this.fieldName;
     }
 }

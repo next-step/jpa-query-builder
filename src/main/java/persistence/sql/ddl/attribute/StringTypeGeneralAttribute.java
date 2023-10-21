@@ -26,17 +26,27 @@ public class StringTypeGeneralAttribute extends GeneralAttribute {
         return new StringTypeGeneralAttribute(
                 column.length(),
                 field.getName(),
-                column.name(),
+                column.name().isBlank() ? field.getName() : column.name(),
                 column.nullable(),
                 sqlConverter
         );
     }
 
     @Override
-    public String makeComponent() {
+    public String prepareDDL() {
         String component = (columnName.isBlank() ? fieldName : columnName) + " " +
                 sqlConverter.convert(String.class) +
                 String.format("(%s)", length) + (!nullable ? " NOT NULL" : "");
         return component.trim();
+    }
+
+    @Override
+    public String getColumnName() {
+        return this.columnName;
+    }
+
+    @Override
+    public String getFieldName() {
+        return this.fieldName;
     }
 }

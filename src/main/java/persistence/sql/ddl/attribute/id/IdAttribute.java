@@ -9,5 +9,9 @@ public abstract class IdAttribute {
         this.sqlConverter = sqlConverter;
     }
 
-    abstract public String makeComponent();
+    abstract public String prepareDDL();
+
+    abstract public String getColumName();
+
+    abstract public String getFieldName();
 }

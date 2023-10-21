@@ -7,6 +7,6 @@ public class CreateDDLQueryBuilder implements DDLQueryBuilder {
     }
 
     public String prepareStatement(EntityAttribute entityAttribute) {
-        return String.format("CREATE TABLE %s ( %s );", entityAttribute.getTableName(), entityAttribute.getAttributeComponents());
+        return String.format("CREATE TABLE %s ( %s );", entityAttribute.getTableName(), entityAttribute.prepareDDL());
     }
 }

@@ -37,7 +37,7 @@ public class LongTypeGeneralAttribute extends GeneralAttribute {
     }
 
     @Override
-    public String makeComponent() {
+    public String prepareDDL() {
         StringBuilder component = new StringBuilder();
 
         component.append(columnName.isBlank() ? fieldName : columnName).append(" ");
@@ -49,5 +49,15 @@ public class LongTypeGeneralAttribute extends GeneralAttribute {
             component.append(" NOT NULL");
         }
         return component.toString().trim();
+    }
+
+    @Override
+    public String getColumnName() {
+        return this.columnName;
+    }
+
+    @Override
+    public String getFieldName() {
+        return this.fieldName;
     }
 }
