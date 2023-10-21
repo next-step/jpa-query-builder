@@ -130,7 +130,7 @@ public class ReflectionTest {
     int value = 300;
 
     //WHEN
-    Car car = carClass.getConstructor(String.class, int.class).newInstance("sonata", value);
+    Car car = carClass.getConstructor(String.class, int.class).newInstance(sonata, value);
 
     //THEN
     assertThat(car.testGetPrice()).isEqualTo("test : " + value);
