@@ -22,7 +22,7 @@ class EntityMetadataModelTest {
 
         List<EntityColumn> entityColumns = Arrays.stream(personFixtureEntityClass.getDeclaredFields())
                 .map(EntityColumn::new)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
 
         // when
         EntityMetadataModel entityMetadataModel = new EntityMetadataModel(
