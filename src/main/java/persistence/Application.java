@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import persistence.core.EntityMetadataModelFactory;
 import persistence.core.EntityMetadataModelHolder;
 import persistence.core.EntityMetadataModels;
+import persistence.sql.ddl.TableDdlQueryBuilder;
 import persistence.sql.ddl.h2.H2Dialect;
 import persistence.sql.ddl.h2.H2TableDdlQueryBuilder;
 import persistence.sql.dml.DmlGenerator;
@@ -30,7 +31,7 @@ public class Application {
             EntityMetadataModelFactory entityMetadataModelFactory = new EntityMetadataModelFactory();
             EntityMetadataModels entityMetadataModels = entityMetadataModelFactory.createEntityMetadataModels(List.of(Person.class));
 
-            H2TableDdlQueryBuilder h2TableDdlQueryBuilder = new H2TableDdlQueryBuilder(new H2Dialect());
+            TableDdlQueryBuilder h2TableDdlQueryBuilder = new H2TableDdlQueryBuilder(new H2Dialect());
             String createTableQuery = h2TableDdlQueryBuilder.createDdlQuery(entityMetadataModels.getMetadataModels()
                     .stream()
                     .findFirst()
