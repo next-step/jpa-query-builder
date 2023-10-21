@@ -13,7 +13,13 @@ public class Values {
 	}
 
 	public void addValue(Value value) {
-		if (value.checkPossibleToAdd()) {
+		if(!value.getColumn().isTransient()) {
+			values.add(value);
+		}
+	}
+
+	public void addInsertValue(Value value) {
+		if (value.checkPossibleToInsert()) {
 			values.add(value);
 		}
 	}
@@ -32,4 +38,9 @@ public class Values {
 			).buildColumnsToInsert();
 	}
 
+	public String whereClause() {
+		return values.stream()
+				.map(x -> x.getColumn().getName() + " = " + x.getValue())
+				.collect(Collectors.joining(" AND "));
+	}
 }

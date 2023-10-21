@@ -22,20 +22,16 @@ public class Value {
 		return value;
 	}
 
-	public boolean checkPossibleToAdd() {
-		return column.checkPossibleToAddValue();
+	public boolean checkPossibleToInsert() {
+		return column.checkPossibleToInsert();
 	}
 
 	private String findValue(Column column, Field field, Object object) {
 		try {
 			String value = String.valueOf(field.get(object));
 
-			if(field.getType().equals(String.class)) {
+			if(field.getType().equals(String.class) && !"null".equals(value)) {
 				value = "'" + value + "'";
-			}
-
-			if(column.getConstraint().isNullable() && value.isEmpty()) {
-				value = "NULL";
 			}
 
 			return value;

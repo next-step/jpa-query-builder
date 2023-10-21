@@ -45,7 +45,7 @@ public class Column {
                 .toString();
     }
 
-    public boolean checkPossibleToAddValue() {
+    public boolean checkPossibleToInsert() {
         return !isTransient && !constraint.isPrimaryKey();
     }
 
