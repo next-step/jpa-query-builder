@@ -3,7 +3,7 @@ package persistence.sql.dml.h2;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import persistence.core.EntityMetadataModel;
-import persistence.sql.dml.TableDmlQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class H2TableDmlQueryBuilder implements TableDmlQueryBuilder {
+public class H2InsertQueryBuilder implements InsertQueryBuilder {
 
     private static final String COMMA = ", ";
 
