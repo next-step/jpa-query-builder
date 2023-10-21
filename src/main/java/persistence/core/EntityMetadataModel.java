@@ -55,6 +55,14 @@ public class EntityMetadataModel {
         return this.type;
     }
 
+    public Class<?> getEntityType() {
+        return this.getType();
+    }
+
+    public boolean isSameEntityType(Class<?> entityType) {
+        return this.type.equals(entityType);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

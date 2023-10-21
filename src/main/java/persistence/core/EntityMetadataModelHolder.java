@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class EntityMetadataModelHolder {
 
-    private Map<Class<?>, EntityMetadataModel> cachedEntityMetadataModels = new HashMap<>();
+    private final Map<Class<?>, EntityMetadataModel> cachedEntityMetadataModels = new HashMap<>();
 
     public EntityMetadataModelHolder(EntityMetadataModels entityMetadataModels) {
         assert entityMetadataModels != null;
