@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadataModel;
 import persistence.core.EntityMetadataModelHolder;
 import persistence.core.EntityMetadataModels;
+import persistence.sql.dml.SelectQueryBuilder;
 
 import java.util.Set;
 
@@ -24,10 +25,10 @@ class H2SelectQueryBuilderTest {
         EntityMetadataModels entityMetadataModels = new EntityMetadataModels(Set.of(entityMetadataModel));
         EntityMetadataModelHolder entityMetadataModelHolder = new EntityMetadataModelHolder(entityMetadataModels);
 
-        H2SelectQueryBuilder h2SelectQueryBuilder = new H2SelectQueryBuilder(entityMetadataModelHolder);
+        SelectQueryBuilder selectQueryBuilder = new H2SelectQueryBuilder(entityMetadataModelHolder);
 
         // when
-        String findAllSelectQuery = h2SelectQueryBuilder.findAll(DepthPersonFixtureEntity.class);
+        String findAllSelectQuery = selectQueryBuilder.findAll(DepthPersonFixtureEntity.class);
 
         // then
         assertThat(findAllSelectQuery).isEqualTo("select id, name, age from DepthPersonFixtureEntity");
