@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
-import persistence.sql.common.meta.EntityManager;
+import persistence.sql.common.meta.EntityMeta;
 
-class CreateQuery extends EntityManager {
+class CreateQuery extends EntityMeta {
 
     private static final String DEFAULT_CREATE_QUERY = "CREATE TABLE %s (%s)";
     private static final String DEFAULT_PRIMARY_KEY_QUERY = ", PRIMARY KEY (%s)";

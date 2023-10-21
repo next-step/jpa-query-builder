@@ -2,10 +2,10 @@ package persistence.sql.dml;
 
 import java.util.List;
 
-import persistence.sql.common.meta.EntityManager;
+import persistence.sql.common.meta.EntityMeta;
 import utils.ConditionUtils;
 
-public class SelectQuery extends EntityManager {
+public class SelectQuery extends EntityMeta {
 
     private static final String DEFAULT_SELECT_COLUMN_QUERY = "SELECT %s FROM %s";
     private static final String CONDITION_AND = " AND ";

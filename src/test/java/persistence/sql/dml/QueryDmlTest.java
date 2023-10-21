@@ -178,7 +178,7 @@ class QueryDmlTest {
             insert(person);
 
             //when
-            String query = DeleteQuery.create(selectPersonClass, id);
+            String query = DeleteQuery.create(person, id);
             jdbcTemplate.execute(query);
 
             //then

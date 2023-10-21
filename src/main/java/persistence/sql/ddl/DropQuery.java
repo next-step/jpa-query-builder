@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
-import persistence.sql.common.meta.EntityManager;
+import persistence.sql.common.meta.EntityMeta;
 
-public class DropQuery extends EntityManager {
+public class DropQuery extends EntityMeta {
     private static final String DEFAULT_DROP_QUERY = "DROP TABLE %s";
 
     private <T> DropQuery(Class<T> tClass) {
