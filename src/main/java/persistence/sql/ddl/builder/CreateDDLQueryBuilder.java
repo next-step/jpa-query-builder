@@ -1,6 +1,7 @@
 package persistence.sql.ddl.builder;
 
-import persistence.sql.ddl.attribute.EntityAttribute;
+import persistence.sql.attribute.EntityAttribute;
+import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.ddl.wrapper.CreateDDLWrapper;
 import persistence.sql.ddl.wrapper.DDLWrapper;
 
@@ -8,8 +9,9 @@ public class CreateDDLQueryBuilder implements DDLQueryBuilder {
     public CreateDDLQueryBuilder() {
     }
 
-    public String prepareStatement(EntityAttribute entityAttribute) {
-        DDLWrapper ddlWrapper = new CreateDDLWrapper();
+    @Override
+    public String prepareStatement(EntityAttribute entityAttribute, SqlConverter sqlConverter) {
+        DDLWrapper ddlWrapper = new CreateDDLWrapper(sqlConverter);
         return entityAttribute.prepareDDL(ddlWrapper);
     }
 }

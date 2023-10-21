@@ -1,7 +1,7 @@
 package persistence.sql.ddl.wrapper;
 
-import persistence.sql.ddl.attribute.GeneralAttribute;
-import persistence.sql.ddl.attribute.id.IdAttribute;
+import persistence.sql.attribute.GeneralAttribute;
+import persistence.sql.attribute.id.IdAttribute;
 
 import java.util.List;
 

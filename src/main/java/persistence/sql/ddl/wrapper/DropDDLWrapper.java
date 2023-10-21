@@ -1,11 +1,18 @@
 package persistence.sql.ddl.wrapper;
 
-import persistence.sql.ddl.attribute.GeneralAttribute;
-import persistence.sql.ddl.attribute.id.IdAttribute;
+import persistence.sql.attribute.GeneralAttribute;
+import persistence.sql.attribute.id.IdAttribute;
+import persistence.sql.ddl.converter.SqlConverter;
 
 import java.util.List;
 
 public class DropDDLWrapper implements DDLWrapper {
+
+    private final SqlConverter sqlConverter;
+
+    public DropDDLWrapper(SqlConverter sqlConverter) {
+        this.sqlConverter = sqlConverter;
+    }
 
     @Override
     public String wrap(String tableName, IdAttribute idAttribute, List<GeneralAttribute> generalAttributes) {

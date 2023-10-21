@@ -1,6 +1,6 @@
 package persistence.sql.ddl.builder;
 
-import persistence.sql.ddl.model.DDLType;
+import persistence.sql.common.DDLType;
 
 import java.util.HashMap;
 import java.util.Map;

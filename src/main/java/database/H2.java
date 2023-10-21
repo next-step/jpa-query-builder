@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -39,11 +38,6 @@ public class H2 implements DatabaseServer {
     public H2(final Server server, final DataSourceProperties properties) {
         this.server = server;
         this.properties = properties;
-    }
-
-    @Override
-    public ResultSet executeQuery(String sql) {
-        return null;
     }
 
     @Override

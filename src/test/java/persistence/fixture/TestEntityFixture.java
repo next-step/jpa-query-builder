@@ -21,6 +21,24 @@ public class TestEntityFixture {
             this.name = name;
             this.age = age;
         }
+
+        public EntityWithValidAnnotation(long id, String nickName, int age) {
+            this.id = id;
+            this.name = nickName;
+            this.age = age;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getAge() {
+            return age;
+        }
     }
 
     @Entity
@@ -60,6 +78,12 @@ public class TestEntityFixture {
 
         public EntityWithOutEntityAnnotation(String name, Integer age) {
             this.name = name;
+            this.age = age;
+        }
+
+        public EntityWithOutEntityAnnotation(long id, String nickName, int age) {
+            this.id = id;
+            this.name = nickName;
             this.age = age;
         }
     }

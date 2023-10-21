@@ -5,22 +5,22 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.DatabaseTest;
-import persistence.sql.ddl.PersonRowMapper;
-import persistence.sql.ddl.attribute.EntityAttribute;
+import persistence.DatabaseTest;
+import persistence.mapper.PersonRowMapper;
+import persistence.sql.attribute.EntityAttribute;
 import persistence.sql.ddl.converter.SqlConverter;
-import persistence.sql.ddl.parser.AttributeParser;
 import persistence.sql.infra.H2SqlConverter;
+import persistence.sql.parser.AttributeParser;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static persistence.sql.ddl.model.DDLType.CREATE;
+import static persistence.sql.common.DDLType.CREATE;
 import static persistence.study.TestUtils.assertDoesNotThrowException;
 
 @Nested
 @DisplayName("CreateDDLQueryBuilder 클래스의")
 public class CreateDDLQueryBuilderTest extends DatabaseTest {
     private final SqlConverter sqlConverter = new H2SqlConverter();
-    private final AttributeParser parser = new AttributeParser(sqlConverter);
+    private final AttributeParser parser = new AttributeParser();
 
     @Nested
     @DisplayName("prepareStatement 메소드는")
@@ -34,7 +34,7 @@ public class CreateDDLQueryBuilderTest extends DatabaseTest {
                 EntityAttribute entityAttribute = EntityAttribute.of(Person.class, parser);
 
                 String ddl = DDLQueryBuilderFactory.createQueryBuilder(CREATE)
-                        .prepareStatement(entityAttribute);
+                        .prepareStatement(entityAttribute, new H2SqlConverter());
 
                 assertDoesNotThrowException(() -> {
                     jdbcTemplate.execute(ddl);
