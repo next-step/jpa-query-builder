@@ -28,4 +28,7 @@ public class Person {
     @Transient
     private Integer index;
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

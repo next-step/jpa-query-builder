@@ -2,11 +2,13 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import persistence.sql.Dialect;
+import persistence.sql.QueryBuilder;
+import persistence.sql.TableFieldUtil;
+import persistence.sql.TableQueryUtil;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class TableCreateQueryBuilder extends QueryBuilder {
@@ -15,7 +17,9 @@ public class TableCreateQueryBuilder extends QueryBuilder {
         super(dialect);
     }
 
-    public String generateSQLQuery(Class<?> clazz) {
+    @Override
+    public String generateSQLQuery(Object object) {
+        Class<?> clazz = object.getClass();
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new RuntimeException("clazz is not @Entity");
         }
@@ -25,14 +29,13 @@ public class TableCreateQueryBuilder extends QueryBuilder {
         queryBuilder.append("CREATE TABLE ").append(tableName);
         queryBuilder.append(" (");
 
-        final Field[] fields = clazz.getDeclaredFields();
+        final Field[] fields = TableFieldUtil.getAvailableFields(clazz);
 
-        final TableFieldGenerator tableFieldGenerator = new TableFieldGenerator(this.dialect, this.mappings);
+        final TableFieldGenerator tableFieldGenerator = new TableFieldGenerator(this.dialect);
         queryBuilder.append(
             Arrays
                 .stream(fields)
                 .map(tableFieldGenerator::generate)
-                .filter(Objects::nonNull)
                 .filter(x -> !x.isEmpty())
                 .collect(Collectors.joining(", "))
         );
@@ -41,7 +44,6 @@ public class TableCreateQueryBuilder extends QueryBuilder {
         List<String> constraints = Arrays
             .stream(fields)
             .map(fieldConstraintsGenerator::generate)
-            .filter(Objects::nonNull)
             .filter(x -> !x.isEmpty())
             .collect(Collectors.toList());
         if (!constraints.isEmpty()) {

@@ -1,13 +1,18 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class TableFieldUtil {
-    static public String getColumnNameBySingleQuote(String columnName) {
+    static public String replaceNameByBacktick(String columnName) {
         return "`" + columnName + "`";
+    }
+
+    static public String replaceNameBySingleQuote(String columnName) {
+        return "'" + columnName + "'";
     }
 
     static public String getColumnName(Field field) {
@@ -22,7 +27,10 @@ public class TableFieldUtil {
         return columnName;
     }
 
-    static public boolean skip(Field field) {
-        return field.isAnnotationPresent(Transient.class);
+    static public Field[] getAvailableFields(Class<?> clazz) {
+        return Arrays
+            .stream(clazz.getDeclaredFields())
+            .filter(x -> !x.isAnnotationPresent(Transient.class))
+            .toArray(Field[]::new);
     }
 }

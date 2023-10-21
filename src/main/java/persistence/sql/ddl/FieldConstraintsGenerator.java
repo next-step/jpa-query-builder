@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
+import persistence.sql.TableFieldUtil;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
