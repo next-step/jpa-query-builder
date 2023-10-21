@@ -137,3 +137,21 @@ delete from table where id = ?;
 ```
 - delete할 EntityObject를 받아서 쿼리를 실행한다.
 - EntityObject가 Id에 해당하는 값을 반한할 수 있다.
+
+## 4단계 - Simple Entity Object
+### 간이 EntityManager interface
+```java
+public interface EntityManager {
+
+    <T> T find(Class<T> clazz, Long Id);
+
+    Object persist(Object entity);
+
+    void remove(Object entity);
+}
+```
+### 요구사항 1
+```java
+<T> T find(Class<T> clazz, Object Id);
+```
+- 데이터베이스에서 find 쿼리를 전달하여 생성한 object를 반환한다. 
