@@ -4,7 +4,7 @@ import persistence.sql.common.ColumnUtils;
 
 import static java.lang.String.format;
 
-public class CreateQueryBuilder implements QueryBuilder{
+public class CreateQueryBuilder implements QueryBuilder {
     private static final String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
 
     private final QueryValidator queryValidator;
@@ -15,14 +15,13 @@ public class CreateQueryBuilder implements QueryBuilder{
 
     public CreateQueryBuilder(QueryValidator queryValidator, Class<?> clazz) {
         this.queryValidator = queryValidator;
+        queryValidator.checkIsEntity(clazz);
         this.columns = new Columns(ColumnUtils.convertClassToColumnList(clazz));
         this.table = new Table(clazz);
     }
 
     @Override
-    public String buildQuery(Class<?> clazz) {
-        queryValidator.checkIsEntity(clazz);
-
+    public String buildQuery() {
         return format(CREATE_TABLE_COMMAND, table.getName()) +
                 "(" +
                 columns.buildColumnsToCreate() +
