@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.ddl.ColumnBuilder;
+import persistence.sql.dialect.h2.H2ColumnDialect;
 
 import java.lang.reflect.Field;
 
@@ -27,7 +28,7 @@ public class H2ColumnBuilder extends ColumnBuilder {
 
     @Override
     protected String getSqlType(Class<?> type) {
-        return H2ColumnType.getSqlType(type);
+        return H2ColumnDialect.getSqlType(type);
     }
 
     @Override
