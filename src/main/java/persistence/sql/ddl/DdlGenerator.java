@@ -2,13 +2,14 @@ package persistence.sql.ddl;
 
 import persistence.core.EntityColumn;
 import persistence.core.EntityMetadata;
+import persistence.dialect.Dialect;
 
 public class DdlGenerator {
 
-    private final DBColumnTypeMapper columnTypeMapper;
+    private final Dialect dialect;
 
-    public DdlGenerator(final DBColumnTypeMapper columnTypeMapper) {
-        this.columnTypeMapper = columnTypeMapper;
+    public DdlGenerator(final Dialect dialect) {
+        this.dialect = dialect;
     }
 
     public String generateCreateDdl(final EntityMetadata<?> entityMetadata) {
@@ -50,7 +51,7 @@ public class DdlGenerator {
 
     private String generateColumnTypeClause(final EntityColumn column) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(columnTypeMapper.getColumnName(column.getType()));
+        builder.append(dialect.getColumnTypeMapper().getColumnName(column.getType()));
         if (column.isStringValued()) {
             builder.append("(")
                     .append(column.getStringLength())

@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.dialect;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import persistence.dialect.h2.H2ColumnTypeMapper;
 import persistence.exception.NoSuchTypeException;
 
 import java.util.stream.Stream;
@@ -13,13 +14,13 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DefaultDBColumnTypeMapperTest {
+class H2ColumnTypeMapperTest {
 
-    private DefaultDBColumnTypeMapper columnTypeMapper;
+    private H2ColumnTypeMapper columnTypeMapper;
 
     @BeforeEach
     void setUp() {
-        columnTypeMapper = DefaultDBColumnTypeMapper.getInstance();
+        columnTypeMapper = H2ColumnTypeMapper.getInstance();
     }
 
     @ParameterizedTest(name = "{0} - {1}")

@@ -1,21 +1,22 @@
-package persistence.sql.ddl;
+package persistence.dialect.h2;
 
+import persistence.dialect.DBColumnTypeMapper;
 import persistence.exception.NoSuchTypeException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class DefaultDBColumnTypeMapper implements DBColumnTypeMapper {
+public class H2ColumnTypeMapper implements DBColumnTypeMapper {
     private final Map<Class<?>, String> info = new HashMap<>();
 
-    private DefaultDBColumnTypeMapper() {
+    private H2ColumnTypeMapper() {
         info.put(Long.class, "bigint");
         info.put(String.class, "varchar");
         info.put(Integer.class, "int");
     }
 
-    public static DefaultDBColumnTypeMapper getInstance() {
+    public static H2ColumnTypeMapper getInstance() {
         return InstanceHolder.INSTANCE;
     }
 
@@ -26,6 +27,6 @@ public class DefaultDBColumnTypeMapper implements DBColumnTypeMapper {
     }
 
     private static class InstanceHolder {
-        private static final DefaultDBColumnTypeMapper INSTANCE = new DefaultDBColumnTypeMapper();
+        private static final H2ColumnTypeMapper INSTANCE = new H2ColumnTypeMapper();
     }
 }

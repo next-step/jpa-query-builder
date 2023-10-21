@@ -9,20 +9,20 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.core.EntityMetadata;
 import domain.FixtureEntity;
+import persistence.dialect.h2.H2Dialect;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DdlGeneratorTest {
-    DBColumnTypeMapper columnTypeMapper;
     DdlGenerator generator;
     EntityMetadata<?> entityMetadata;
 
     @BeforeEach
     void setUp() {
-        columnTypeMapper = DefaultDBColumnTypeMapper.getInstance();
-        generator = new DdlGenerator(columnTypeMapper);
+        final H2Dialect dialect = new H2Dialect();
+        generator = new DdlGenerator(dialect);
     }
 
     @Test

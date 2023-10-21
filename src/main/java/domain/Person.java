@@ -35,4 +35,20 @@ public class Person {
     public Person(final String name, final Integer age, final String email) {
         this(null, name, age, email);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
