@@ -3,7 +3,7 @@ package persistence.fake;
 import jakarta.persistence.GenerationType;
 import persistence.dialect.h2.H2Dialect;
 
-public class FakeDirect extends H2Dialect {
+public class FakeDialect extends H2Dialect {
     @Override
     public String getBigInt() {
         return super.getBigInt().toUpperCase();
