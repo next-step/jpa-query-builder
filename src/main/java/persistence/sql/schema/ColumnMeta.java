@@ -1,14 +1,14 @@
-package persistence.sql.ddl.schema;
+package persistence.sql.schema;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import persistence.sql.ddl.schema.constraint.Constraint;
-import persistence.sql.ddl.schema.constraint.NotNullConstraint;
-import persistence.sql.ddl.schema.constraint.PrimaryKeyConstraint;
 import persistence.sql.dialect.ColumnType;
+import persistence.sql.schema.constraint.Constraint;
+import persistence.sql.schema.constraint.NotNullConstraint;
+import persistence.sql.schema.constraint.PrimaryKeyConstraint;
 
 public class ColumnMeta {
 
@@ -18,13 +18,16 @@ public class ColumnMeta {
 
     private final String columnConstraint;
 
+    private final boolean isPrimaryKey;
+
     private static final String COLUMN_FORMAT = "%s %s";
     private static final String COLUMN_FORMAT_WITH_CONSTRAINT = "%s %s %s";
 
-    private ColumnMeta(String columnName, String columnTypeName, String columnConstraint) {
+    private ColumnMeta(String columnName, String columnTypeName, String columnConstraint, boolean isPrimaryKey) {
         this.columnName = columnName;
         this.columnType = columnTypeName;
         this.columnConstraint = columnConstraint;
+        this.isPrimaryKey = isPrimaryKey;
     }
 
     public static ColumnMeta of(Field field, ColumnType columnType) {
@@ -33,8 +36,8 @@ public class ColumnMeta {
             columnType.getFieldType(field),
             joiningConstraint(
                 new PrimaryKeyConstraint(field, columnType), new NotNullConstraint(field)
-            )
-        );
+            ),
+            PrimaryKeyConstraint.isPrimaryKey(field));
     }
 
     public String getColumn() {
@@ -51,6 +54,10 @@ public class ColumnMeta {
 
     public static boolean isTransient(Field field) {
         return field.isAnnotationPresent(Transient.class);
+    }
+
+    public boolean isPrimaryKey() {
+        return this.isPrimaryKey;
     }
 
     private static String getColumnName(Field field) {
