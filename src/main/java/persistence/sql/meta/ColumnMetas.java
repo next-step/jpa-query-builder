@@ -1,5 +1,7 @@
 package persistence.sql.meta;
 
+import persistence.sql.util.StringConstant;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -25,6 +27,20 @@ public class ColumnMetas implements Iterable<ColumnMeta> {
                 .filter(columnMeta -> !columnMeta.isTransient())
                 .collect(Collectors.toList());
         return new ColumnMetas(exceptTransient);
+    }
+
+    public ColumnMetas idColumns() {
+        List<ColumnMeta> exceptTransient = values.stream()
+                .filter(ColumnMeta::isId)
+                .collect(Collectors.toList());
+        return new ColumnMetas(exceptTransient);
+    }
+
+    public String getColumnsClause() {
+        List<String> columnNames = values.stream()
+                .map(ColumnMeta::getColumnName)
+                .collect(Collectors.toList());
+        return String.join(StringConstant.COLUMN_JOIN, columnNames);
     }
 
     @Override
