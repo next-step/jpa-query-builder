@@ -1,4 +1,4 @@
-package persistence.sql.attribute.id;
+package persistence.entitiy.attribute.id;
 
 import jakarta.persistence.GenerationType;
 import persistence.sql.ddl.converter.SqlConverter;

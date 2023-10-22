@@ -2,13 +2,13 @@ package persistence.sql.parser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import persistence.sql.attribute.GeneralAttribute;
-import persistence.sql.attribute.IntegerTypeGeneralAttribute;
-import persistence.sql.attribute.LongTypeGeneralAttribute;
-import persistence.sql.attribute.StringTypeGeneralAttribute;
-import persistence.sql.attribute.id.IdAttribute;
-import persistence.sql.attribute.id.LongTypeIdAttribute;
-import persistence.sql.attribute.id.StringTypeIdAttribute;
+import persistence.entitiy.attribute.GeneralAttribute;
+import persistence.entitiy.attribute.IntegerTypeGeneralAttribute;
+import persistence.entitiy.attribute.LongTypeGeneralAttribute;
+import persistence.entitiy.attribute.StringTypeGeneralAttribute;
+import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.entitiy.attribute.id.LongTypeIdAttribute;
+import persistence.entitiy.attribute.id.StringTypeIdAttribute;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

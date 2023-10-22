@@ -1,7 +1,7 @@
-package persistence.sql.context;
+package persistence.entitiy.context;
 
-import persistence.sql.attribute.GeneralAttribute;
-import persistence.sql.attribute.id.IdAttribute;
+import persistence.entitiy.attribute.GeneralAttribute;
+import persistence.entitiy.attribute.id.IdAttribute;
 import persistence.sql.parser.ValueParser;
 
 import java.util.List;

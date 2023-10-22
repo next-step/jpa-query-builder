@@ -1,15 +1,14 @@
 package persistence.sql.dml.builder;
 
-import persistence.sql.attribute.GeneralAttribute;
-import persistence.sql.attribute.id.IdAttribute;
-import persistence.sql.context.EntityContext;
+import persistence.entitiy.attribute.GeneralAttribute;
+import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.entitiy.context.EntityContext;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder {
-
     public InsertQueryBuilder() {
     }
 

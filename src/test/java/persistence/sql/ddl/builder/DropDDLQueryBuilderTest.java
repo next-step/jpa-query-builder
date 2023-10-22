@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
-import persistence.sql.attribute.EntityAttribute;
+import persistence.entitiy.attribute.EntityAttribute;
 import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.infra.H2SqlConverter;
 import persistence.sql.parser.AttributeParser;

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import persistence.entitiy.attribute.EntityAttribute;
 import persistence.fixture.TestEntityFixture;
 import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.ddl.wrapper.CreateDDLWrapper;

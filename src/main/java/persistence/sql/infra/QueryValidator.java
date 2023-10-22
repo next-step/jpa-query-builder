@@ -1,6 +1,6 @@
 package persistence.sql.infra;
 
-import persistence.sql.attribute.EntityAttribute;
+import persistence.entitiy.attribute.EntityAttribute;
 
 public interface QueryValidator {
 

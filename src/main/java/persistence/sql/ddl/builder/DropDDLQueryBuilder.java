@@ -1,6 +1,6 @@
 package persistence.sql.ddl.builder;
 
-import persistence.sql.attribute.EntityAttribute;
+import persistence.entitiy.attribute.EntityAttribute;
 import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.ddl.wrapper.DDLWrapper;
 import persistence.sql.ddl.wrapper.DropDDLWrapper;

@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.sql.attribute.GeneralAttribute;
-import persistence.sql.attribute.StringTypeGeneralAttribute;
-import persistence.sql.attribute.id.IdAttribute;
-import persistence.sql.attribute.id.LongTypeIdAttribute;
+import persistence.entitiy.attribute.GeneralAttribute;
+import persistence.entitiy.attribute.StringTypeGeneralAttribute;
+import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.entitiy.attribute.id.LongTypeIdAttribute;
+import persistence.entitiy.context.EntityContext;
 import persistence.sql.parser.ValueParser;
 
 import java.util.List;

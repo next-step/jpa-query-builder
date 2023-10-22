@@ -1,4 +1,4 @@
-package persistence.sql.attribute;
+package persistence.entitiy.attribute;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;

@@ -1,7 +1,8 @@
 package persistence.sql.parser;
 
-import persistence.sql.attribute.GeneralAttribute;
-import persistence.sql.attribute.id.IdAttribute;
+import persistence.entitiy.attribute.GeneralAttribute;
+import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.exception.ParseAttributeException;
 
 import java.lang.reflect.Field;
 import java.util.AbstractMap;
@@ -11,11 +12,15 @@ import java.util.stream.Collectors;
 
 public class ValueParser {
     public <T> Map.Entry<IdAttribute, String> parseIdAttributeWithValuePair(
-            IdAttribute idAttribute, T instance) throws NoSuchFieldException, IllegalAccessException {
-        Field idField = instance.getClass().getDeclaredField(idAttribute.getFieldName());
-        idField.setAccessible(true);
-        return new AbstractMap.SimpleEntry<>(idAttribute,
-                idField.get(instance) == null ? null : String.valueOf(idField.get(instance)));
+            IdAttribute idAttribute, T instance) {
+        try {
+            Field idField = instance.getClass().getDeclaredField(idAttribute.getFieldName());
+            idField.setAccessible(true);
+            return new AbstractMap.SimpleEntry<>(idAttribute,
+                    idField.get(instance) == null ? null : String.valueOf(idField.get(instance)));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new ParseAttributeException("ID 어트리뷰트 파싱 중 에러 발생", e);
+        }
     }
 
     public <T> Map<GeneralAttribute, String> parseAttributeWithValueMap(List<GeneralAttribute> generalAttributes, T instance) {
@@ -34,7 +39,7 @@ public class ValueParser {
             generalField.setAccessible(true);
             return generalField.get(instance) == null ? null : String.valueOf(generalField.get(instance));
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new ParseAttributeException("일반 어트리뷰트 파싱 중 에러 발생", e);
         }
     }
 }
