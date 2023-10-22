@@ -1,4 +1,4 @@
-package persistence.sql.dml;
+package persistence.sql.dml.builder;
 
 import persistence.sql.meta.ColumnMeta;
 import persistence.sql.meta.EntityMeta;
@@ -9,25 +9,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class SelectQueryBuilder {
+public abstract class DeleteQueryBuilder {
 
-    private static final String SELECT = "SELECT ";
+    private static final String DELETE = "DELETE";
     private static final String FROM = " FROM ";
     private static final String WHERE = " WHERE ";
     private static final String AND = " AND ";
 
-    public String getSelectAllQuery(Class<?> clazz) {
+    public String getDeleteAllQuery(Class<?> clazz) {
         validateEntityAnnotation(clazz);
         return new StringBuilder()
-                .append(getSelectHeaderQuery(clazz))
+                .append(getDeleteHeaderQuery(clazz))
                 .append(";")
                 .toString();
     }
 
-    public String getSelectByPkQuery(Class<?> clazz, Object pkObject) {
+    public String getDeleteByPkQuery(Class<?> clazz, Object pkObject) {
         validateEntityAnnotation(clazz);
         return new StringBuilder()
-                .append(getSelectHeaderQuery(clazz))
+                .append(getDeleteHeaderQuery(clazz))
                 .append(WHERE)
                 .append(getPkWhereClause(clazz.getDeclaredFields(), pkObject))
                 .append(";")
@@ -36,25 +36,16 @@ public abstract class SelectQueryBuilder {
 
     private void validateEntityAnnotation(Class<?> clazz) {
         if (!EntityMeta.isEntity(clazz)) {
-            throw new IllegalArgumentException("Select Query 빌드 대상이 아닙니다.");
+            throw new IllegalArgumentException("Delete Query 빌드 대상이 아닙니다.");
         }
     }
 
-    private String getSelectHeaderQuery(Class<?> clazz) {
+    private String getDeleteHeaderQuery(Class<?> clazz) {
         return new StringBuilder()
-                .append(SELECT)
-                .append(getColumnsClause(clazz.getDeclaredFields()))
+                .append(DELETE)
                 .append(FROM)
                 .append(EntityMeta.getTableName(clazz))
                 .toString();
-    }
-
-    private String getColumnsClause(Field[] fields) {
-        List<String> columnNames = Arrays.stream(fields)
-                .filter(field -> !ColumnMeta.isTransient(field))
-                .map(ColumnMeta::getColumnName)
-                .collect(Collectors.toList());
-        return String.join(StringConstant.COLUMN_JOIN, columnNames);
     }
 
     private String getPkWhereClause(Field[] fields, Object pkObject) {
