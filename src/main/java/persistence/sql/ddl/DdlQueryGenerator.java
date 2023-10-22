@@ -1,29 +1,23 @@
-package persistence.sql.dialect;
+package persistence.sql.ddl;
 
-import persistence.sql.ddl.CreateQueryBuilder;
-import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.ddl.builder.CreateQueryBuilder;
+import persistence.sql.ddl.builder.DropQueryBuilder;
 import persistence.sql.ddl.h2.H2CreateQueryBuilder;
-import persistence.sql.ddl.h2.H2DropQueryBuilder;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public enum DbmsDdlQueryBuilder {
+public class DdlQueryGenerator {
 
-    H2("H2", H2CreateQueryBuilder.getInstance(), H2DropQueryBuilder.getInstance())
-    ;
-
-    private final String dbmsType;
     private final CreateQueryBuilder createQueryBuilder;
     private final DropQueryBuilder dropQueryBuilder;
 
-    DbmsDdlQueryBuilder(String dbmsType, CreateQueryBuilder createQueryBuilder, DropQueryBuilder dropQueryBuilder) {
-        this.dbmsType = dbmsType;
+    private DdlQueryGenerator(CreateQueryBuilder createQueryBuilder, DropQueryBuilder dropQueryBuilder) {
         this.createQueryBuilder = createQueryBuilder;
         this.dropQueryBuilder = dropQueryBuilder;
     }
 
-    public static DbmsDdlQueryBuilder findByDbmsType(String dbmsType) {
+    public static DdlQueryGenerator findByDbmsType(String dbmsType) {
         return Arrays.stream(values())
                 .filter(builder -> builder.dbmsType.equals(dbmsType))
                 .findFirst()
