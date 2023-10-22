@@ -60,6 +60,9 @@ public class EntityClass<T> {
     }
 
     public Map<EntityColumn, Object> getFieldValues(final Object object) {
+        if (clazz != object.getClass()) {
+            throw new IllegalArgumentException("EntityClass와 일치하지 않는 객체입니다.");
+        }
         return entityColumns.getValues()
                 .stream()
                 .collect(Collectors.toMap(

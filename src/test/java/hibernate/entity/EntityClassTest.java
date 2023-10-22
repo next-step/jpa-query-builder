@@ -57,6 +57,15 @@ class EntityClassTest {
         );
     }
 
+    @Test
+    void 다른_타입의_인스턴스_필드값을_반환하려하는_경우_예외가_발생한다() {
+        TestEntity givenObject = new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com");
+        EntityClass<TableEntity> givenEntityClass = new EntityClass<>(TableEntity.class);
+        assertThatThrownBy(() -> givenEntityClass.getFieldValues(givenObject))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("EntityClass와 일치하지 않는 객체입니다.");
+    }
+
     private Object parseEntityColumnValue(final Map<EntityColumn, Object> entityColumns, final String key) {
         return entityColumns.entrySet()
                 .stream()
