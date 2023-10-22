@@ -1,62 +1,52 @@
 package persistence.sql.dml.builder;
 
-import persistence.sql.meta.ColumnMeta;
 import persistence.sql.meta.EntityMeta;
-import persistence.sql.util.StringConstant;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public abstract class DeleteQueryBuilder {
+public class DeleteQueryBuilder {
 
     private static final String DELETE = "DELETE";
     private static final String FROM = " FROM ";
-    private static final String WHERE = " WHERE ";
-    private static final String AND = " AND ";
 
-    public String getDeleteAllQuery(Class<?> clazz) {
-        validateEntityAnnotation(clazz);
-        return new StringBuilder()
-                .append(getDeleteHeaderQuery(clazz))
-                .append(";")
-                .toString();
+    private final EntityMeta entityMeta;
+    private final WhereClauseBuilder whereClauseBuilder;
+
+    private DeleteQueryBuilder(EntityMeta entityMeta) {
+        validateEntityAnnotation(entityMeta);
+        this.entityMeta = entityMeta;
+        this.whereClauseBuilder = WhereClauseBuilder.builder(entityMeta);
     }
 
-    public String getDeleteByPkQuery(Class<?> clazz, Object pkObject) {
-        validateEntityAnnotation(clazz);
-        return new StringBuilder()
-                .append(getDeleteHeaderQuery(clazz))
-                .append(WHERE)
-                .append(getPkWhereClause(clazz.getDeclaredFields(), pkObject))
-                .append(";")
-                .toString();
-    }
-
-    private void validateEntityAnnotation(Class<?> clazz) {
-        if (!EntityMeta.isEntity(clazz)) {
+    private void validateEntityAnnotation(EntityMeta entityMeta) {
+        if (!entityMeta.isEntity()) {
             throw new IllegalArgumentException("Delete Query 빌드 대상이 아닙니다.");
         }
     }
 
-    private String getDeleteHeaderQuery(Class<?> clazz) {
+    public static DeleteQueryBuilder of(EntityMeta entityMeta) {
+        return new DeleteQueryBuilder(entityMeta);
+    }
+
+    public String buildDeleteAllQuery() {
         return new StringBuilder()
-                .append(DELETE)
-                .append(FROM)
-                .append(EntityMeta.getTableName(clazz))
+                .append(getDeleteHeaderQuery())
+                .append(";")
                 .toString();
     }
 
-    private String getPkWhereClause(Field[] fields, Object pkObject) {
-        List<String> valueConditions = Arrays.stream(fields)
-                .filter(ColumnMeta::isId)
-                .map(field -> getValueCondition(field, pkObject))
-                .collect(Collectors.toList());
-        return String.join(AND, valueConditions);
+    public String buildDeleteByPkQuery(Object pkObject) {
+        return new StringBuilder()
+                .append(getDeleteHeaderQuery())
+                .append(whereClauseBuilder.buildPkClause(pkObject))
+                .append(";")
+                .toString();
     }
 
-    private String getValueCondition(Field field, Object pkObject) {
-        return ColumnMeta.getColumnName(field) + StringConstant.EQUAL + ColumnMeta.parseColumnValue(pkObject);
+    private String getDeleteHeaderQuery() {
+        return new StringBuilder()
+                .append(DELETE)
+                .append(FROM)
+                .append(entityMeta.getTableName())
+                .toString();
     }
+
 }

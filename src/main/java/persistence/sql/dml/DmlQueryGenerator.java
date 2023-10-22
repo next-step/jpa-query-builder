@@ -1,36 +1,45 @@
 package persistence.sql.dml;
 
-import java.util.Arrays;
-import java.util.NoSuchElementException;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.dml.builder.DeleteQueryBuilder;
+import persistence.sql.dml.builder.InsertQueryBuilder;
+import persistence.sql.dml.builder.SelectQueryBuilder;
+import persistence.sql.meta.EntityMeta;
 
 public class DmlQueryGenerator {
-    private final InsertQueryBuilder insertQueryBuilder;
-    private final SelectQueryBuilder selectQueryBuilder;
-    private final DeleteQueryBuilder deleteQueryBuilder;
 
-    DmlQueryGenerator(String dbmsType, InsertQueryBuilder insertQueryBuilder, SelectQueryBuilder selectQueryBuilder, DeleteQueryBuilder deleteQueryBuilder) {
-        this.dbmsType = dbmsType;
-        this.insertQueryBuilder = insertQueryBuilder;
-        this.selectQueryBuilder = selectQueryBuilder;
-        this.deleteQueryBuilder = deleteQueryBuilder;
+    private final Dialect dialect;
+
+    private DmlQueryGenerator(Dialect dialect) {
+        this.dialect = dialect;
     }
 
-    public static DmlQueryGenerator findByDbmsType(String dbmsType) {
-        return Arrays.stream(values())
-                .filter(builder -> builder.dbmsType.equals(dbmsType))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("지원하지 않는 DBMS 유형입니다."));
+    public static DmlQueryGenerator of(Dialect dialect) {
+        return new DmlQueryGenerator(dialect);
     }
 
-    public InsertQueryBuilder getInsertQueryBuilder() {
-        return insertQueryBuilder;
+    public String generateInsertQuery(Object object) {
+        return InsertQueryBuilder.of(object).build();
     }
 
-    public SelectQueryBuilder getSelectQueryBuilder() {
-        return selectQueryBuilder;
+    public String generateSelectAllQuery(Class<?> clazz) {
+        EntityMeta entityMeta = EntityMeta.of(clazz);
+        return SelectQueryBuilder.of(entityMeta).buildSelectAllQuery();
     }
 
-    public DeleteQueryBuilder getDeleteQueryBuilder() {
-        return deleteQueryBuilder;
+    public String generateSelectByPkQuery(Class<?> clazz, Object pkObject) {
+        EntityMeta entityMeta = EntityMeta.of(clazz);
+        return SelectQueryBuilder.of(entityMeta).buildSelectByPkQuery(pkObject);
     }
+
+    public String generateDeleteAllQuery(Class<?> clazz) {
+        EntityMeta entityMeta = EntityMeta.of(clazz);
+        return DeleteQueryBuilder.of(entityMeta).buildDeleteAllQuery();
+    }
+
+    public String generateDeleteByPkQuery(Class<?> clazz, Object pkObject) {
+        EntityMeta entityMeta = EntityMeta.of(clazz);
+        return DeleteQueryBuilder.of(entityMeta).buildDeleteByPkQuery(pkObject);
+    }
+
 }
