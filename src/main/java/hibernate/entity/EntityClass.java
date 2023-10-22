@@ -6,7 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import java.lang.reflect.Constructor;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EntityClass<T> {
 
@@ -54,6 +57,17 @@ public class EntityClass<T> {
         } catch (NoSuchMethodException e) {
             throw new IllegalStateException("기본 생성자가 존재하지 않습니다.");
         }
+    }
+
+    public Map<EntityColumn, Object> getFieldValues(final Object object) {
+        return entityColumns.getValues()
+                .stream()
+                .collect(Collectors.toMap(
+                        entityColumn -> entityColumn,
+                        entityColumn -> entityColumn.getFieldValue(object),
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new
+                ));
     }
 
     public String tableName() {

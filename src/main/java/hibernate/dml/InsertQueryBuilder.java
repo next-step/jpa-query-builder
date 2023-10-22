@@ -1,6 +1,6 @@
 package hibernate.dml;
 
-import hibernate.entity.EntityObject;
+import hibernate.entity.EntityClass;
 import hibernate.entity.column.ColumnType;
 import hibernate.entity.column.EntityColumn;
 
@@ -16,11 +16,11 @@ public class InsertQueryBuilder {
     private static final String INSERT_COLUMN_QUERY_DELIMITER = ", ";
     private static final String INSERT_COLUMN_STRING_VALUE_FORMAT = "'%s'";
 
-    public String generateQuery(final EntityObject<?> entity) {
-        Map<EntityColumn, Object> fieldValues = entity.getFieldValues();
+    public String generateQuery(final EntityClass<?> entityClass, Object object) {
+        Map<EntityColumn, Object> fieldValues = entityClass.getFieldValues(object);
         List<EntityColumn> entityColumns = new ArrayList<>(fieldValues.keySet());
         return String.format(INSERT_QUERY,
-                entity.getTableName(), parseColumnQueries(entityColumns), parseColumnValueQueries(entityColumns, fieldValues));
+                entityClass.tableName(), parseColumnQueries(entityColumns), parseColumnValueQueries(entityColumns, fieldValues));
     }
 
     private String parseColumnQueries(final List<EntityColumn> entityColumns) {

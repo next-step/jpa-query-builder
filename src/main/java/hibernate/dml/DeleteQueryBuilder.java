@@ -1,6 +1,6 @@
 package hibernate.dml;
 
-import hibernate.entity.EntityObject;
+import hibernate.entity.EntityClass;
 
 public class DeleteQueryBuilder {
 
@@ -9,7 +9,7 @@ public class DeleteQueryBuilder {
     public DeleteQueryBuilder() {
     }
 
-    public String generateQuery(final EntityObject<?> entityObject) {
-        return String.format(DELETE_QUERY, entityObject.getTableName(), entityObject.getEntityId().getFieldName(), entityObject.getEntityIdValue());
+    public String generateQuery(final EntityClass<?> entityClass, final Object id) {
+        return String.format(DELETE_QUERY, entityClass.tableName(), entityClass.getEntityId().getFieldName(), id);
     }
 }
