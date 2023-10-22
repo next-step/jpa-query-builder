@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import java.lang.reflect.Constructor;
+import java.util.AbstractMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,15 +60,15 @@ public class EntityClass<T> {
         }
     }
 
-    // TODO: 하드코딩 리팩터링
     public Map<EntityColumn, Object> getFieldValues(final Object entity) {
         validateEntityType(entity);
         return entityColumns.getValues()
                 .stream()
-                .filter(entityColumn -> entityColumn.getFieldValue(entity) != null)
+                .map(entityColumn -> new AbstractMap.SimpleEntry<>(entityColumn, entityColumn.getFieldValue(entity)))
+                .filter(entry -> entry.getValue() != null)
                 .collect(Collectors.toMap(
-                        entityColumn -> entityColumn,
-                        entityColumn -> entityColumn.getFieldValue(entity),
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
                         (existing, replacement) -> existing,
                         LinkedHashMap::new
                 ));
