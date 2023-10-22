@@ -18,6 +18,11 @@ public class CustomStringBuilder {
         return this;
     }
 
+    public CustomStringBuilder appendWithoutSpace(String str) {
+        sb.append(str);
+        return this;
+    }
+
     // TODO 공백 핸들링 하는 부분 좀 더 깔끔하게 구현 해보자.
     public String toString() {
         if (sb.lastIndexOf(" ") == sb.length() - 1) {
