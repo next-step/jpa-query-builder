@@ -12,11 +12,12 @@ import persistence.sql.schema.EntityClassMappingMeta;
 
 public class SelectStatementBuilder {
 
-    private final StringBuilder selectStatementBuilder;
-    private WhereClauseBuilder whereClauseBuilder;
     private static final String SELECT_FORMAT = "SELECT %s FROM %s";
     private static final String SELECT_ALL_FIELD = "*";
     private static final String SELECT_WHERE_FORMAT = "%s %s;";
+    
+    private final StringBuilder selectStatementBuilder;
+    private WhereClauseBuilder whereClauseBuilder;
 
     private SelectStatementBuilder() {
         this.selectStatementBuilder = new StringBuilder();
@@ -27,18 +28,18 @@ public class SelectStatementBuilder {
     }
 
     public SelectStatementBuilder select(Class<?> clazz, ColumnType columnType, String... targetFieldNames) {
-        final EntityClassMappingMeta classMappingMeta = EntityClassMappingMeta.of(clazz, columnType);
-
         if (selectStatementBuilder.length() > 0) {
             throw new PreconditionRequiredException("select() method must be called only once");
         }
+
+        final EntityClassMappingMeta classMappingMeta = EntityClassMappingMeta.of(clazz, columnType);
+        validateSelectTargetField(classMappingMeta, targetFieldNames);
 
         if (targetFieldNames.length == 0) {
             selectStatementBuilder.append(String.format(SELECT_FORMAT, SELECT_ALL_FIELD, classMappingMeta.tableClause()));
             return this;
         }
 
-        validateSelectTargetField(classMappingMeta, targetFieldNames);
         selectStatementBuilder.append(String.format(SELECT_FORMAT, String.join(", ", targetFieldNames), classMappingMeta.tableClause()));
         return this;
     }
@@ -78,7 +79,7 @@ public class SelectStatementBuilder {
         return String.format(SELECT_WHERE_FORMAT, selectStatementBuilder, this.whereClauseBuilder.build());
     }
 
-    private static void validateSelectTargetField(EntityClassMappingMeta entityClassMappingMeta, String[] targetFieldNames) {
+    private void validateSelectTargetField(EntityClassMappingMeta entityClassMappingMeta, String[] targetFieldNames) {
         final List<String> definedFieldNameList = entityClassMappingMeta.getMappingColumnMetaList().stream()
             .map(ColumnMeta::getColumnName)
             .collect(Collectors.toList());

@@ -13,25 +13,17 @@ public class WhereClauseBuilder {
 
     private static final String WHERE_FORMAT = "WHERE %s";
     private static final String WHERE_PREDICATE_FORMAT = "%s %s";
-    private final List<WhereClause> whereClauseList;
-
     private static final AndOperator andOperator = new AndOperator();
     private static final OrOperator orOperator = new OrOperator();
     private static final String EMPTY_STRING = "";
 
-    private WhereClauseBuilder() {
-        this.whereClauseList = new ArrayList<>();
-    }
+    private final List<WhereClause> whereClauseList;
 
     private WhereClauseBuilder(WhereClause whereClause) {
         if (whereClause == null) {
             throw new PreconditionRequiredException("WhereClause required");
         }
         this.whereClauseList = new ArrayList<>(List.of(whereClause));
-    }
-
-    public static WhereClauseBuilder builder() {
-        return new WhereClauseBuilder();
     }
 
     public static WhereClauseBuilder builder(WherePredicate wherePredicate) {
@@ -61,7 +53,7 @@ public class WhereClauseBuilder {
     }
 
     private static String formatPredicate(WhereClause whereClause) {
-        if (whereClause.getOperatorSql() == null) {
+        if (whereClause.getOperatorSql().isEmpty()) {
             return whereClause.getPredicateCondition();
         }
 
@@ -84,8 +76,9 @@ public class WhereClauseBuilder {
 
         public String getOperatorSql() {
             if (operator == null) {
-                return null;
+                return EMPTY_STRING;
             }
+
             return operator.getOperatorSql();
         }
 
@@ -93,6 +86,7 @@ public class WhereClauseBuilder {
             if (predicate == null) {
                 return null;
             }
+
             return predicate.toCondition();
         }
     }

@@ -8,11 +8,11 @@ import persistence.sql.schema.EntityClassMappingMeta;
 
 public class DeleteStatementBuilder {
 
-    private final StringBuilder deleteStatementBuilder;
-    private WhereClauseBuilder whereClauseBuilder;
-
     private static final String DELETE_FORMAT = "DELETE FROM %s";
     private static final String DELETE_WHERE_FORMAT = "%s %s";
+
+    private final StringBuilder deleteStatementBuilder;
+    private WhereClauseBuilder whereClauseBuilder;
 
     private DeleteStatementBuilder() {
         this.deleteStatementBuilder = new StringBuilder();

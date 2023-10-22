@@ -12,6 +12,9 @@ import persistence.sql.schema.constraint.PrimaryKeyConstraint;
 
 public class ColumnMeta {
 
+    private static final String COLUMN_FORMAT = "%s %s";
+    private static final String COLUMN_FORMAT_WITH_CONSTRAINT = "%s %s %s";
+
     private final String columnName;
 
     private final String columnType;
@@ -20,8 +23,6 @@ public class ColumnMeta {
 
     private final boolean isPrimaryKey;
 
-    private static final String COLUMN_FORMAT = "%s %s";
-    private static final String COLUMN_FORMAT_WITH_CONSTRAINT = "%s %s %s";
 
     private ColumnMeta(String columnName, String columnTypeName, String columnConstraint, boolean isPrimaryKey) {
         this.columnName = columnName;
