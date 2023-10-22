@@ -14,7 +14,11 @@ public class QueryDml {
         return SelectQuery.create(tClass, methodName, args);
     }
 
-    public static <T> String delete(Class<T> tClass, Object args) {
-        return DeleteQuery.create(tClass, args);
+    public static <T> String delete(T t, Object args) {
+        return DeleteQuery.create(t, args);
+    }
+
+    public static <T> String delete(T t) {
+        return DeleteQuery.create(t);
     }
 }

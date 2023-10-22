@@ -1,13 +1,18 @@
 package persistence.sql.dml;
 
-import persistence.sql.common.Table;
+import persistence.sql.common.instance.InstanceManager;
+import persistence.sql.common.meta.EntityMeta;
 
-public class InsertQuery extends Table {
+public class InsertQuery {
     private static final String DEFAULT_INSERT_COLUMN_QUERY = "INSERT INTO %s (%s)";
     private static final String DEFAULT_INSERT_VALUE_QUERY = "VALUES(%s)";
 
+    private EntityMeta entityMeta;
+    private InstanceManager instanceManager;
+
     protected <T> InsertQuery(T t) {
-        super(t);
+        this.entityMeta = EntityMeta.of(t.getClass());
+        this.instanceManager = InstanceManager.of(t);
     }
 
     public static <T> String create(T t) {
@@ -22,10 +27,10 @@ public class InsertQuery extends Table {
     }
 
     private String parseColumns() {
-        return String.format(DEFAULT_INSERT_COLUMN_QUERY, getTableName(), getColumnsWithComma());
+        return String.format(DEFAULT_INSERT_COLUMN_QUERY, entityMeta.getTableName(), entityMeta.getColumnsWithComma());
     }
 
     private String parseValues() {
-        return String.format(DEFAULT_INSERT_VALUE_QUERY, getValuesWithComma());
+        return String.format(DEFAULT_INSERT_VALUE_QUERY, instanceManager.getValuesWithComma());
     }
 }

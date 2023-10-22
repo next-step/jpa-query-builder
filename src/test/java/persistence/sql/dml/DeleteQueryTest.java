@@ -15,10 +15,10 @@ class DeleteQueryTest {
         final Long id = 3L;
         final String expectedQuery = String.format("DELETE FROM users WHERE id = %s", id);
 
-        Class<Person> aClass = Person.class;
+        Person person = new Person(3L, "zz", 30, "zz", 1);
 
         //when
-        String query = DeleteQuery.create(aClass, 3L);
+        String query = DeleteQuery.create(person, 3L);
 
         //then
         assertThat(query).isEqualTo(expectedQuery);
@@ -31,10 +31,10 @@ class DeleteQueryTest {
         final Long id = 3L;
         final String expectedQuery = String.format("DELETE FROM selectPerson WHERE select_person_id = %s", id);
 
-        Class<SelectPerson> aClass = SelectPerson.class;
+        SelectPerson person = new SelectPerson(3L, "zz", 30, "zz", 1);
 
         //when
-        String query = DeleteQuery.create(aClass, 3L);
+        String query = DeleteQuery.create(person, 3L);
 
         //then
         assertThat(query).isEqualTo(expectedQuery);

@@ -1,36 +1,31 @@
-package persistence.sql.common;
+package persistence.sql.common.meta;
 
 import jakarta.persistence.Entity;
 import persistence.exception.InvalidEntityException;
+import utils.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-public abstract class Table {
+public class EntityMeta {
     private final TableName name;
     private final Column[] columns;
-    private final Value[] values;
 
-    protected <T> Table(T t) {
-        isEntity(t.getClass());
-
-        this.name = TableName.of(t.getClass());
-        this.columns = Column.of(t.getClass().getDeclaredFields());
-        this.values = Value.of(t);
-    }
-
-    protected <T> Table(Class<T> tClass) {
+    protected <T> EntityMeta(Class<T> tClass) {
         isEntity(tClass);
 
         this.name = TableName.of(tClass);
         this.columns = Column.of(tClass.getDeclaredFields());
-        this.values = null;
+    }
+
+    public static <T> EntityMeta of(Class<T> tClass) {
+        return new EntityMeta(tClass);
     }
 
     /**
      * 해당 클래스에 @Entity가 존재하는지 확인
      */
-    protected static <T> boolean isEntity(Class<T> tClass) {
+    protected <T> boolean isEntity(Class<T> tClass) {
         if (!isAnnotation(tClass, Entity.class)) {
             throw new InvalidEntityException();
         }
@@ -46,7 +41,7 @@ public abstract class Table {
         return tClass.isAnnotationPresent(annotation);
     }
 
-    protected String getTableName() {
+    public String getTableName() {
         return name.getValue();
     }
 
@@ -54,30 +49,20 @@ public abstract class Table {
      * 칼럼명을 ','으로 이어 한 문자열로 반환합니다.
      * 예) "name, age, gender"
      */
-    protected String getColumnsWithComma() {
-        return withComma(Arrays.stream(columns)
+    public String getColumnsWithComma() {
+        return StringUtils.withComma(Arrays.stream(columns)
                 .map(Column::getName)
                 .toArray(String[]::new));
     }
 
-    /**
-     * 값을 ','으로 이어 한 문자열로 반환합니다.
-     * 예) "홍길동, 13, F"
-     */
-    protected String getValuesWithComma() {
-        return withComma(Arrays.stream(values)
-                .map(Value::getValue)
-                .toArray(String[]::new));
-    }
-
     protected String getPrimaryKeyWithComma() {
-        return withComma(Arrays.stream(columns).filter(Column::isPrimaryKey)
+        return StringUtils.withComma(Arrays.stream(columns).filter(Column::isPrimaryKey)
                 .map(Column::getName)
                 .toArray(String[]::new));
     }
 
     protected String getConstraintsWithColumns() {
-        return withComma(Arrays.stream(columns)
+        return StringUtils.withComma(Arrays.stream(columns)
                 .map(column -> column.getName()
                     + column.getType()
                     + column.getConstraints().getNotNull()
@@ -85,15 +70,15 @@ public abstract class Table {
                 .toArray(String[]::new));
     }
 
-    private String withComma(String[] input) {
-        return String.join(", ", input);
-    }
-
-    protected String getIdName() {
+    public String getIdName() {
         return Arrays.stream(columns)
             .filter(Column::isPrimaryKey)
             .findFirst()
             .get()
             .getName();
+    }
+
+    public EntityMeta getTable() {
+        return this;
     }
 }

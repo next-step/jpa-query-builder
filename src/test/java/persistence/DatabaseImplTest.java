@@ -97,11 +97,12 @@ class DatabaseImplTest {
     void delete() throws SQLException {
         //given
         final Long id = 9999L;
+        DatabasePerson person = new DatabasePerson(id, "name", 30, "email", 1);
 
-        insert(new DatabasePerson(id, "name", 30, "email", 1));
+        insert(person);
 
         //when & then
-        assertDoesNotThrow(() -> delete(tClass, id));
+        assertDoesNotThrow(() -> delete(person, id));
     }
 
     @AfterEach
@@ -121,8 +122,8 @@ class DatabaseImplTest {
         database.execute(QueryDml.insert(t));
     }
 
-    private <T> void delete(Class<T> tClass, Object args) throws SQLException {
-        database.execute(QueryDml.delete(tClass, args));
+    private <T> void delete(T t, Object args) throws SQLException {
+        database.execute(QueryDml.delete(t, args));
     }
 
     private <T> ResultSet findAll(Class<T> tClass, String methodName) throws SQLException {
