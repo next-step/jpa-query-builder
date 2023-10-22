@@ -8,13 +8,14 @@ import jdbc.EntityRowMapper;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.CreateQueryBuilder;
-import persistence.sql.ddl.DropQueryBuilder;
-import persistence.sql.dialect.DbmsDdlQueryBuilder;
-import persistence.sql.dialect.DbmsDmlQueryBuilder;
+import persistence.sql.ddl.DdlQueryGenerator;
+import persistence.sql.dialect.h2.H2Dialect;
 import persistence.sql.dml.DeleteQueryBuilder;
+import persistence.sql.dml.DmlQueryGenerator;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.meta.EntityMeta;
+import persistence.sql.meta.MetaFactory;
 
 import java.util.List;
 
@@ -28,11 +29,11 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            DbmsDdlQueryBuilder ddlbuilder = DbmsDdlQueryBuilder.findByDbmsType(H2.class.getSimpleName());
-            DbmsDmlQueryBuilder dmlbuilder = DbmsDmlQueryBuilder.findByDbmsType(H2.class.getSimpleName());
+            DdlQueryGenerator ddlGenerator = DdlQueryGenerator.of(new H2Dialect());
+            DmlQueryGenerator dmlbuilder = DmlQueryGenerator.findByDbmsType(H2.class.getSimpleName());
 
-            CreateQueryBuilder createQueryBuilder = ddlbuilder.getCreateQueryBuilder();
-            jdbcTemplate.execute(createQueryBuilder.getQuery(Person.class));
+            EntityMeta personMeta = MetaFactory.get(Person.class);
+            jdbcTemplate.execute(ddlGenerator.generateCreateQuery(personMeta));
 
             InsertQueryBuilder insertQueryBuilder = dmlbuilder.getInsertQueryBuilder();
             for (Person personFixture : PersonFixtureFactory.getFixtures()) {
@@ -61,8 +62,7 @@ public class Application {
             personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
             logger.info("personList size = {}", personList.size());
 
-            DropQueryBuilder dropQueryBuilder = ddlbuilder.getDropQueryBuilder();
-            jdbcTemplate.execute(dropQueryBuilder.getQuery(Person.class));
+            jdbcTemplate.execute(ddlGenerator.generateDropQuery(personMeta));
 
             server.stop();
         } catch (Exception e) {
