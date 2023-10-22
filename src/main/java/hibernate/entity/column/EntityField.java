@@ -61,7 +61,7 @@ public class EntityField implements EntityColumn {
     }
 
     @Override
-    public void assignFieldValue(Object entity, Object value) {
+    public void assignFieldValue(final Object entity, final Object value) {
         try {
             field.setAccessible(true);
             field.set(entity, value);

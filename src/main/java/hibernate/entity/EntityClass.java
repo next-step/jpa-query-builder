@@ -79,7 +79,7 @@ public class EntityClass<T> {
         return getEntityId().getFieldValue(entity);
     }
 
-    private void validateEntityType(Object entity) {
+    private void validateEntityType(final Object entity) {
         if (clazz != entity.getClass()) {
             throw new IllegalArgumentException("EntityClass와 일치하지 않는 객체입니다.");
         }

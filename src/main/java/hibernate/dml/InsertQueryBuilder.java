@@ -16,7 +16,7 @@ public class InsertQueryBuilder {
     private static final String INSERT_COLUMN_QUERY_DELIMITER = ", ";
     private static final String INSERT_COLUMN_STRING_VALUE_FORMAT = "'%s'";
 
-    public String generateQuery(final EntityClass<?> entityClass, Object entity) {
+    public String generateQuery(final EntityClass<?> entityClass, final Object entity) {
         Map<EntityColumn, Object> fieldValues = entityClass.getFieldValues(entity);
         List<EntityColumn> entityColumns = new ArrayList<>(fieldValues.keySet());
         return String.format(INSERT_QUERY,
