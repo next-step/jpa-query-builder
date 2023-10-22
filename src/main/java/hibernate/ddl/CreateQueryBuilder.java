@@ -26,7 +26,7 @@ public class CreateQueryBuilder {
     public CreateQueryBuilder() {
     }
 
-    public String generateQuery(final EntityClass entity) {
+    public String generateQuery(final EntityClass<?> entity) {
         String columns = parseColumnQueries(entity.getEntityColumns());
         return String.format(CREATE_TABLE_QUERY, entity.tableName(), columns);
     }

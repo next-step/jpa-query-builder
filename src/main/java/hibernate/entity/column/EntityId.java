@@ -37,6 +37,11 @@ public class EntityId implements EntityColumn {
     }
 
     @Override
+    public void assignFieldValue(final Object instance, final Object value) {
+        entityField.assignFieldValue(instance, value);
+    }
+
+    @Override
     public ColumnType getColumnType() {
         return entityField.getColumnType();
     }

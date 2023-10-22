@@ -1,6 +1,6 @@
 package hibernate.dml;
 
-import hibernate.entity.EntityObject;
+import hibernate.entity.EntityClass;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.Test;
 
@@ -14,10 +14,10 @@ class DeleteQueryBuilderTest {
     void delete쿼리를_생성한다() {
         // given
         String expected = "delete from test_entity where id = 1;";
-        EntityObject givenEntityObject = new EntityObject(new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com"));
+        TestEntity givenEntity = new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com");
 
         // when
-        String actual = deleteQueryBuilder.generateQuery(givenEntityObject)
+        String actual = deleteQueryBuilder.generateQuery(new EntityClass<>(TestEntity.class), givenEntity)
                 .toLowerCase();
 
         // then

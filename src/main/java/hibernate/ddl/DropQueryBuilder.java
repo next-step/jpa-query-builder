@@ -9,7 +9,7 @@ public class DropQueryBuilder {
     public DropQueryBuilder() {
     }
 
-    public String generateQuery(final EntityClass entity) {
+    public String generateQuery(final EntityClass<?> entity) {
         return String.format(DROP_TABLE_QUERY, entity.tableName());
     }
 }

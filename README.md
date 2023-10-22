@@ -137,3 +137,47 @@ delete from table where id = ?;
 ```
 - delete할 EntityObject를 받아서 쿼리를 실행한다.
 - EntityObject가 Id에 해당하는 값을 반한할 수 있다.
+
+## 4단계 - Simple Entity Object
+### 간이 EntityManager interface
+```java
+public interface EntityManager {
+
+    <T> T find(Class<T> clazz, Long Id);
+
+    Object persist(Object entity);
+
+    void remove(Object entity);
+}
+```
+### 요구사항 1
+```java
+<T> T find(Class<T> clazz, Object Id);
+```
+- 데이터베이스에서 find 쿼리를 전달하여 생성한 object를 반환한다. 
+
+- EntityClass
+  - 새로운 인스턴스를 생성할 수 있다.
+  - 기본생성자가 없는 경우 생성 시 예외가 발생한다.
+- EntityColumn
+  - 인스턴스를 받아 field값을 변경할 수 있다.
+- ReflectionRawMapper
+  - T 타입의 인스턴스를 만들어 ResultSet값을 매핑한다.
+
+### 요구사항 2
+```java
+void persist(Object entity);
+```
+- EntityClass
+  - EntityObject 기능 이관
+  - getFieldValues에서 다른 타입의 클래스 객체가 입력될 경우 예외가 발생한다.
+- 데이터베이스에 insert 쿼리를 전달하여 저장한다.
+
+### 요구사항 3
+```java
+void remove(Object entity);
+```
+- 데이터베이스에 delete 쿼리를 전달하여 제거한다.
+- EntityClass
+  - entity 객체에서 id를 추출해서 반환한다.
+    - entity 객체가 EntityClass와 다른 타입인 경우 예외가 발생한다.
