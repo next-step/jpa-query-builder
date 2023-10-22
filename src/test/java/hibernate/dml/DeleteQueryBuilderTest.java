@@ -17,7 +17,7 @@ class DeleteQueryBuilderTest {
         TestEntity givenEntity = new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com");
 
         // when
-        String actual = deleteQueryBuilder.generateQuery(new EntityClass<>(TestEntity.class), givenEntity.id)
+        String actual = deleteQueryBuilder.generateQuery(new EntityClass<>(TestEntity.class), givenEntity)
                 .toLowerCase();
 
         // then

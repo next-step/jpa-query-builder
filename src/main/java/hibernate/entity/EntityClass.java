@@ -75,6 +75,13 @@ public class EntityClass<T> {
                 ));
     }
 
+    public Object extractEntityId(final Object object) {
+        if (clazz != object.getClass()) {
+            throw new IllegalArgumentException("EntityClass와 일치하지 않는 객체입니다.");
+        }
+        return getEntityId().getFieldValue(object);
+    }
+
     public String tableName() {
         return tableName;
     }

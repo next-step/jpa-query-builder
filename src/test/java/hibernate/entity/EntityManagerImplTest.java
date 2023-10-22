@@ -6,10 +6,13 @@ import hibernate.ddl.CreateQueryBuilder;
 import jakarta.persistence.*;
 import jdbc.JdbcTemplate;
 import jdbc.ReflectionRowMapper;
+import jdbc.RowMapper;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 class EntityManagerImplTest {
 
-    private DatabaseServer server;
-    private JdbcTemplate jdbcTemplate;
-    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
-    private EntityManagerImpl entityManager;
+    private static DatabaseServer server;
+    private static JdbcTemplate jdbcTemplate;
+    private static EntityManagerImpl entityManager;
+    private static final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
 
-    @BeforeEach
-    void beforeEach() throws SQLException {
+    @BeforeAll
+    static void beforeAll() throws SQLException {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
@@ -35,6 +38,10 @@ class EntityManagerImplTest {
     @AfterEach
     void afterEach() {
         jdbcTemplate.execute("truncate table test_entity;");
+    }
+
+    @AfterAll
+    static void afterAll() {
         server.stop();
     }
 
@@ -69,7 +76,30 @@ class EntityManagerImplTest {
                 () -> assertThat(actual.name).isEqualTo(givenEntity.name),
                 () -> assertThat(actual.age).isEqualTo(givenEntity.age)
         );
+    }
 
+    @Test
+    void 객체를_제거한다() {
+        // given
+        TestEntity givenEntity = new TestEntity(1L, "최진영", 19, "jinyoungchoi95@gmail.com");
+        entityManager.persist(givenEntity);
+
+        // when
+        entityManager.remove(givenEntity);
+        Integer actual = jdbcTemplate.queryForObject("select count(*) from test_entity", new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet resultSet) {
+                try {
+                    resultSet.next();
+                    return resultSet.getInt(1);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        // then
+        assertThat(actual).isEqualTo(0);
     }
 
     @Entity
@@ -88,6 +118,13 @@ class EntityManagerImplTest {
         private String email;
 
         public TestEntity() {
+        }
+
+        public TestEntity(Long id, String name, Integer age, String email) {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+            this.email = email;
         }
 
         public TestEntity(String name, Integer age, String email) {

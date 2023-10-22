@@ -75,12 +75,34 @@ class EntityClassTest {
                 .get();
     }
 
+    @Test
+    void entity객체에서_id를_추출한다() {
+        TestEntity givenEntity = new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com");
+        Object actual = new EntityClass<>(TestEntity.class).extractEntityId(givenEntity);
+        assertThat(actual).isEqualTo(givenEntity.id);
+    }
+
+    @Test
+    void 다른_타입의_entity객체에서_id추출_시_예외가_발생한다() {
+        TableEntity givenEntity = new TableEntity(1L);
+        assertThatThrownBy(() -> new EntityClass<>(TestEntity.class).extractEntityId(givenEntity))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("EntityClass와 일치하지 않는 객체입니다.");
+    }
+
 
     @Entity
     @Table(name = "new_table")
     static class TableEntity {
         @Id
         private Long id;
+
+        public TableEntity() {
+        }
+
+        public TableEntity(Long id) {
+            this.id = id;
+        }
     }
 
     @Entity

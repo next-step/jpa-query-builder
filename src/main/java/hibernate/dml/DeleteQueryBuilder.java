@@ -9,7 +9,7 @@ public class DeleteQueryBuilder {
     public DeleteQueryBuilder() {
     }
 
-    public String generateQuery(final EntityClass<?> entityClass, final Object id) {
-        return String.format(DELETE_QUERY, entityClass.tableName(), entityClass.getEntityId().getFieldName(), id);
+    public String generateQuery(final EntityClass<?> entityClass, final Object entity) {
+        return String.format(DELETE_QUERY, entityClass.tableName(), entityClass.getEntityId().getFieldName(), entityClass.extractEntityId(entity));
     }
 }

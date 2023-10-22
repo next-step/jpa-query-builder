@@ -1,5 +1,6 @@
 package hibernate.entity;
 
+import hibernate.dml.DeleteQueryBuilder;
 import hibernate.dml.InsertQueryBuilder;
 import hibernate.dml.SelectQueryBuilder;
 import jdbc.JdbcTemplate;
@@ -10,6 +11,7 @@ public class EntityManagerImpl implements EntityManager {
     private final JdbcTemplate jdbcTemplate;
     private final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
     private final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+    private final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
 
     public EntityManagerImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -24,6 +26,12 @@ public class EntityManagerImpl implements EntityManager {
     @Override
     public void persist(Object entity) {
         final String query = insertQueryBuilder.generateQuery(new EntityClass<>(entity.getClass()), entity);
+        jdbcTemplate.execute(query);
+    }
+
+    @Override
+    public void remove(Object entity) {
+        final String query = deleteQueryBuilder.generateQuery(new EntityClass<>(entity.getClass()), entity);
         jdbcTemplate.execute(query);
     }
 }

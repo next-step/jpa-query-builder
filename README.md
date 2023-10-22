@@ -179,3 +179,6 @@ void persist(Object entity);
 void remove(Object entity);
 ```
 - 데이터베이스에 delete 쿼리를 전달하여 제거한다.
+- EntityClass
+  - entity 객체에서 id를 추출해서 반환한다.
+    - entity 객체가 EntityClass와 다른 타입인 경우 예외가 발생한다.
