@@ -21,12 +21,21 @@ public class ReflectionRowMapper<T> implements RowMapper<T> {
     }
 
     private T generateMappedInstance(ResultSet resultSet, EntityClass<T> entityClass) {
+        moveToNextRow(resultSet);
         T instance = entityClass.newInstance();
         List<EntityColumn> entityColumns = entityClass.getEntityColumns();
         for (EntityColumn entityColumn : entityColumns) {
             entityColumn.assignFieldValue(instance, getResultSetColumn(resultSet, entityColumn));
         }
         return instance;
+    }
+
+    private void moveToNextRow(ResultSet resultSet) {
+        try {
+            resultSet.next();
+        } catch (SQLException e) {
+            throw new IllegalStateException("쿼리 실행 결과 추출에 문제가 발생했습니다.", e);
+        }
     }
 
     private Object getResultSetColumn(ResultSet resultSet, EntityColumn entityColumn) {

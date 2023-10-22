@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 class EntityManagerImplTest {
 
     private DatabaseServer server;
@@ -36,16 +39,17 @@ class EntityManagerImplTest {
     @Test
     void 저장된_객채를_찾는다() {
         // given
-        jdbcTemplate.execute("insert into test_entity (nick_name) values ('최진영')");
+        jdbcTemplate.execute("insert into test_entity (id, nick_name, age) values (1, '최진영', 19)");
 
         // when
         TestEntity actual = entityManager.find(TestEntity.class, 1L);
 
         // then
-//        assertAll(
-//                () -> assertThat(actual.id).isEqualTo(1L),
-//                () -> assertThat(actual.name).isEqualTo("최진영")
-//        );
+        assertAll(
+                () -> assertThat(actual.id).isEqualTo(1L),
+                () -> assertThat(actual.name).isEqualTo("최진영"),
+                () -> assertThat(actual.age).isEqualTo(19)
+        );
     }
 
     @Entity
