@@ -1,73 +1,47 @@
 package persistence.sql.dml.builder;
 
+import persistence.entitiy.attribute.EntityAttribute;
 import persistence.entitiy.attribute.GeneralAttribute;
 import persistence.entitiy.attribute.id.IdAttribute;
-import persistence.entitiy.context.EntityContext;
 
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder {
-    public InsertQueryBuilder() {
+
+    public <T> String prepareStatement(EntityAttribute entityAttribute, T instance) {
+        String tableName = entityAttribute.getTableName();
+
+        List<Map.Entry<String, String>> columnNameAndValues = new ArrayList<>();
+
+        IdAttribute idAttribute = entityAttribute.getIdAttribute();
+        Optional<String> idValue = getFieldValue(instance, idAttribute.getFieldName());
+        idValue.ifPresent(value -> columnNameAndValues.add(new AbstractMap.SimpleEntry<>(idAttribute.getColumnName(), value)));
+
+        List<GeneralAttribute> generalAttributes = entityAttribute.getGeneralAttributes();
+        generalAttributes.forEach(attribute -> {
+            Optional<String> fieldValue = getFieldValue(instance, attribute.getFieldName());
+            fieldValue.ifPresent(value -> columnNameAndValues.add(new AbstractMap.SimpleEntry<>(attribute.getColumnName(), value)));
+        });
+
+        return formatInsertStatement(tableName, columnNameAndValues);
     }
 
-    public String prepareStatement(EntityContext entityContext) {
-        String tableName = entityContext.getTableName();
-
-        List<Map.Entry<GeneralAttribute, String>> attributeWithValues = getFilteredAttributeWithValues(entityContext);
-
-        List<String> columnNames = extractColumnNames(attributeWithValues);
-        List<String> values = formatValues(attributeWithValues);
-
-        Map.Entry<IdAttribute, String> idAttributeWithValuePair = entityContext.getIdAttributeWithValuePair();
-        addIdAttributeToColumnsAndValues(idAttributeWithValuePair, columnNames, values);
-
-        return formatInsertStatement(tableName, columnNames, values);
-    }
-
-    private List<Map.Entry<GeneralAttribute, String>> getFilteredAttributeWithValues(EntityContext entityContext) {
-        return entityContext.getAttributeWithValueMap()
-                .entrySet().stream()
-                .filter(entry -> {
-                    boolean isNull = entry.getValue() == null;
-                    if (!entry.getKey().isNullable() && isNull) {
-                        throw new IllegalArgumentException(String.format("[%s] null 값이 들어올 수 없습니다.", entry.getKey()));
-                    }
-                    return entry.getValue() != null;
-                })
-                .collect(Collectors.toList());
-    }
-
-    private List<String> extractColumnNames(List<Map.Entry<GeneralAttribute, String>> attributeWithValues) {
-        return attributeWithValues.stream()
-                .map(Map.Entry::getKey)
-                .map(generalAttribute -> generalAttribute.getColumnName().isBlank()
-                        ? generalAttribute.getFieldName() : generalAttribute.getColumnName())
-                .collect(Collectors.toList());
-    }
-
-    private List<String> formatValues(List<Map.Entry<GeneralAttribute, String>> attributeWithValues) {
-        return attributeWithValues.stream()
-                .map(Map.Entry::getValue)
-                .map(value -> String.format("'%s'", value))
-                .collect(Collectors.toList());
-    }
-
-    private void addIdAttributeToColumnsAndValues(Map.Entry<IdAttribute, String> idAttributeWithValuePair,
-                                                  List<String> columnNames, List<String> values) {
-        IdAttribute idAttribute = idAttributeWithValuePair.getKey();
-        String idValue = (idAttributeWithValuePair.getValue() == null ? null :
-                String.format("'%s'", idAttributeWithValuePair.getValue()));
-
-        if (idValue != null) {
-            columnNames.add(0, idAttribute.getColumnName());
-            values.add(0, idValue);
+    private <T> Optional<String> getFieldValue(T instance, String fieldName) {
+        try {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            Object value = field.get(instance);
+            return value == null ? Optional.empty() : Optional.of(String.valueOf(value));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private String formatInsertStatement(String tableName, List<String> columnNames, List<String> values) {
+    private String formatInsertStatement(String tableName, List<Map.Entry<String, String>> columnNameAndValues) {
         return String.format("INSERT INTO %s( %s ) VALUES ( %s )", tableName,
-                String.join(", ", columnNames), String.join(", ", values));
+                columnNameAndValues.stream().map(Map.Entry::getKey).collect(Collectors.joining(", ")),
+                columnNameAndValues.stream().map(value -> String.format("'%s'", value.getValue())).collect(Collectors.joining(", ")));
     }
 }

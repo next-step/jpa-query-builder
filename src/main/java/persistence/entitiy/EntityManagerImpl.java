@@ -4,7 +4,6 @@ import persistence.entitiy.context.PersistencContext;
 import persistence.persister.EntityPersister;
 
 public class EntityManagerImpl implements EntityManager {
-    private static volatile EntityManagerImpl INSTANCE;
     private final PersistencContext persistencContext;
     private final EntityPersister entityPersister;
 
@@ -14,36 +13,29 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     public static EntityManagerImpl of(PersistencContext persistencContext, EntityPersister entityPersister) {
-        if (INSTANCE == null) {
-            synchronized (EntityManagerImpl.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new EntityManagerImpl(persistencContext, entityPersister);
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-    public static EntityManagerImpl getInstance() {
-        return INSTANCE;
+        return new EntityManagerImpl(persistencContext, entityPersister);
     }
 
     @Override
     public <T> T findById(Class<T> clazz, String id) {
         T entity = persistencContext.findById(clazz, id);
-        if (entity == null) {
-            T retrieved = entityPersister.findById(clazz, id);
-
-            persistencContext.manage(clazz, retrieved, id);
-
-            return retrieved;
+        if (entity != null) {
+            return entity;
         }
-        return entity;
+        return loadAndManageEntity(clazz, id);
+    }
+
+    private <T> T loadAndManageEntity(Class<T> clazz, String id) {
+        T retrieved = entityPersister.findById(clazz, id);
+        persistencContext.manage(retrieved);
+        return retrieved;
     }
 
     @Override
-    public Object persist(Object entity) {
-        return null;
+    public <T> T persist(T entity) {
+        T inserted = entityPersister.insert(entity);
+        persistencContext.manage(inserted);
+        return inserted;
     }
 
     @Override

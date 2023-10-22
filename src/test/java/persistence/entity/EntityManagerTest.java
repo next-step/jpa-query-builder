@@ -40,10 +40,10 @@ public class EntityManagerTest extends DatabaseTest {
                 Person person = new Person(1L, "민준", 29, "minjoon.com");
 
                 String insertDML
-                        = new InsertQueryBuilder().prepareStatement(entityAttribute.createEntityContext(person));
+                        = new InsertQueryBuilder().prepareStatement(entityAttribute, person);
                 jdbcTemplate.execute(insertDML);
 
-                PersistencContext persistencContext = PersistencContext.getInstance();
+                PersistencContext persistencContext = new PersistencContext();
                 EntityPersister entityPersister = new EntityPersister(jdbcTemplate);
                 EntityManagerImpl entityManager = EntityManagerImpl.of(persistencContext, entityPersister);
 
@@ -67,10 +67,10 @@ public class EntityManagerTest extends DatabaseTest {
                         new TestEntityFixture.SampleOneWithValidAnnotation(1L, "민준", 29);
 
                 String insertDML
-                        = new InsertQueryBuilder().prepareStatement(entityAttribute.createEntityContext(sample));
+                        = new InsertQueryBuilder().prepareStatement(entityAttribute, sample);
                 jdbcTemplate.execute(insertDML);
 
-                PersistencContext persistencContext = PersistencContext.getInstance();
+                PersistencContext persistencContext = new PersistencContext();
                 EntityPersister entityPersister = new EntityPersister(jdbcTemplate);
                 EntityManagerImpl entityManager = EntityManagerImpl.of(persistencContext, entityPersister);
 
@@ -96,10 +96,10 @@ public class EntityManagerTest extends DatabaseTest {
                         new TestEntityFixture.SampleTwoWithValidAnnotation(1L, "민준", 29);
 
                 String insertDML
-                        = new InsertQueryBuilder().prepareStatement(entityAttribute.createEntityContext(sample));
+                        = new InsertQueryBuilder().prepareStatement(entityAttribute, sample);
                 jdbcTemplate.execute(insertDML);
 
-                PersistencContext persistencContext = PersistencContext.getInstance();
+                PersistencContext persistencContext = new PersistencContext();
                 EntityPersister entityPersister = new EntityPersister(jdbcTemplate);
                 EntityManagerImpl entityManager = EntityManagerImpl.of(persistencContext, entityPersister);
 

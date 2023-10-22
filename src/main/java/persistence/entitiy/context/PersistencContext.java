@@ -1,24 +1,47 @@
 package persistence.entitiy.context;
 
+import jakarta.persistence.Id;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PersistencContext {
-    private static final PersistencContext INSTANCE = new PersistencContext();
-
     private static final Map<Class<?>, Map<String, Object>> FIRST_CACHE = new HashMap<>();
 
-    private PersistencContext() {
-    }
+    public <T> void manage(T entity) {
+        Class<?> clazz = entity.getClass();
+        Map<String, Object> entityMap = getOrCreateEntityMap(clazz);
 
-    public static PersistencContext getInstance() {
-        return INSTANCE;
-    }
+        String entityId = getEntityId(entity);
 
-    public <T> void manage(Class<T> clazz, T entity, String entityId) {
-        Map<String, Object> entityMap = FIRST_CACHE.getOrDefault(clazz, new HashMap<>());
         entityMap.put(entityId, entity);
+
         FIRST_CACHE.put(clazz, entityMap);
+    }
+
+    private <T> Map<String, Object> getOrCreateEntityMap(Class<T> clazz) {
+        return FIRST_CACHE.computeIfAbsent(clazz, k -> new HashMap<>());
+    }
+
+    private <T> String getEntityId(T entity) {
+        Field idField = Arrays.stream(entity.getClass().getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("ID 필드를 찾을 수 없습니다."));
+
+        idField.setAccessible(true);
+
+        try {
+            Object idValue = idField.get(entity);
+
+            assert idValue != null;
+
+            return String.valueOf(idValue);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public <T> T findById(Class<T> clazz, String id) {

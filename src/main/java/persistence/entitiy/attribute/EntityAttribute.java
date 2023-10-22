@@ -4,10 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import persistence.entitiy.attribute.id.IdAttribute;
-import persistence.entitiy.context.EntityContext;
 import persistence.sql.ddl.wrapper.DDLWrapper;
 import persistence.sql.parser.AttributeParser;
-import persistence.sql.parser.ValueParser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,26 +50,19 @@ public class EntityAttribute {
         }
     }
 
-    public <T> EntityContext createEntityContext(T instance) {
-        try {
-            ValueParser valueParser = new ValueParser();
-            return EntityContext.of(
-                    this.tableName,
-                    this.idAttribute,
-                    this.generalAttributes,
-                    valueParser,
-                    instance
-            );
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public String prepareDDL(DDLWrapper ddlWrapper) {
         return ddlWrapper.wrap(tableName, idAttribute, generalAttributes);
     }
 
     public String getTableName() {
         return tableName;
+    }
+
+    public List<GeneralAttribute> getGeneralAttributes() {
+        return generalAttributes;
+    }
+
+    public IdAttribute getIdAttribute() {
+        return idAttribute;
     }
 }
