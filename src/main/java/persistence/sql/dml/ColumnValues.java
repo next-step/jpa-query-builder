@@ -6,10 +6,7 @@ import persistence.sql.meta.EntityMeta;
 import persistence.sql.util.StringConstant;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ColumnValues {
@@ -26,7 +23,7 @@ public class ColumnValues {
 
     public static ColumnValues ofFilteredAutoGenType(Object object) {
         Map<ColumnMeta, String> elements = buildElements(object);
-        elements.keySet().stream()
+        Set.copyOf(elements.keySet()).stream()
                 .filter(ColumnMeta::isGenerationTypeIdentity)
                 .forEach(elements::remove);
         return new ColumnValues(elements);
