@@ -1,9 +1,13 @@
 package persistence.entity;
 
-public interface EntityManager {
-    <T> T find(Class<T> clazz, Long Id);
+import java.util.List;
 
+public interface EntityManager {
     Object persist(Object entity);
 
     void remove(Object entity);
+
+    <T> T find(Class<T> clazz, Object id);
+
+    <T> List<T> findAll(Class<T> tClass);
 }

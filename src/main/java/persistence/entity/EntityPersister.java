@@ -1,4 +1,4 @@
-package persistence.mapper;
+package persistence.entity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -6,24 +6,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import persistence.exception.NotFoundException;
 import persistence.exception.QueryException;
+import persistence.mapper.RowMapper;
 import persistence.meta.ColumnType;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityMeta;
 
 
-public class EntityRowsMapper<T> implements RowMapper<T> {
-    protected final Class<T> tClass;
+public class EntityPersister<T> implements RowMapper<T> {
+    private final Class<T> tClass;
 
-    public EntityRowsMapper(Class<T> tClass) {
+    public EntityPersister(Class<T> tClass) {
         this.tClass = tClass;
     }
 
-    @Override
+
+
     public T mapRow(ResultSet resultSet) {
         return mapEntity(tClass, resultSet);
     }
 
-    protected T mapEntity(Class<T> tClass, ResultSet resultSet) {
+    public T mapEntity(Class<T> tClass, ResultSet resultSet) {
         final T instance = getInstance(tClass);
         final EntityMeta entityMeta = new EntityMeta(instance.getClass());
 
@@ -82,6 +84,4 @@ public class EntityRowsMapper<T> implements RowMapper<T> {
         }
         return null;
     }
-
-
 }
