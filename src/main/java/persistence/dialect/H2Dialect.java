@@ -1,23 +1,16 @@
 package persistence.dialect;
 
-public class H2Dialect implements Dialect {
+public class H2Dialect extends Dialect {
 
-    public static final String QUOTE = "`\"[";
-    public static final String CLOSED_QUOTE = "`\"]";
-
-    public String transferType(String type) {
-        switch ( type ) {
-            case "Long":
-                return "bigint";
-            case "int":
-                return "int";
-            case "Integer":
-                return "int";
-            case "String":
-                return "varchar";
-            default:
-                return "";
-        }
+    public H2Dialect() {
+    }
+    @Override
+    public int javaTypeToJdbcType(Class javaType) {
+        return super.javaTypeToJdbcType(javaType);
     }
 
+    @Override
+    public String castType(int sqlType) {
+        return super.castType(sqlType);
+    }
 }
