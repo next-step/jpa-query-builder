@@ -3,46 +3,36 @@ package persistence.sql.meta;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.util.StringConstant;
 import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
 
 public class ColumnMeta {
 
-    public static boolean isId(Field field) {
-        return field.getDeclaredAnnotation(Id.class) != null;
+    private final Field field;
+
+    private ColumnMeta(Field field) {
+        this.field = field;
     }
 
-    public static boolean isTransient(Field field) {
-        return field.getDeclaredAnnotation(Transient.class) != null;
+    public static ColumnMeta of(Field field) {
+        return new ColumnMeta(field);
     }
 
-    public static String getColumnName(Field field) {
+    public boolean isId() {
+        return field.isAnnotationPresent(Id.class);
+    }
+
+    public boolean isTransient() {
+        return field.isAnnotationPresent(Transient.class);
+    }
+
+    public String getColumnName() {
         Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
         if (columnAnnotation == null || StringUtils.isNullOrEmpty(columnAnnotation.name())) {
             return field.getName().toLowerCase();
         }
         return columnAnnotation.name();
-    }
-
-    public static String getColumnValue(Object object, Field field) {
-        field.setAccessible(true);
-        try {
-            return parseColumnValue(field.get(object));
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("데이터 처리가 불가능한 속성입니다.");
-        }
-    }
-
-    public static String parseColumnValue(Object fieldValue) {
-        if (fieldValue == null) {
-            return StringConstant.NULL;
-        }
-        if (fieldValue.getClass() == String.class) {
-            return StringConstant.SINGLE_QUOTATION + fieldValue + StringConstant.SINGLE_QUOTATION;
-        }
-        return fieldValue.toString();
     }
 
 }

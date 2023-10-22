@@ -32,12 +32,13 @@ public class EntityRowMapper<T> implements RowMapper<T> {
     }
 
     private void setFieldValue(T entityInstance, ResultSet resultSet, Field field) {
-        if (ColumnMeta.isTransient(field)) {
+        ColumnMeta columnMeta = ColumnMeta.of(field);
+        if (columnMeta.isTransient()) {
             return;
         }
         field.setAccessible(true);
         try {
-            Object fieldValue = resultSet.getObject(ColumnMeta.getColumnName(field));
+            Object fieldValue = resultSet.getObject(columnMeta.getColumnName());
             field.set(entityInstance, fieldValue);
         } catch (Exception e) {
             throw new RuntimeException(e);
