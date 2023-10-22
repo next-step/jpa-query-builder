@@ -7,18 +7,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import persistence.sql.exception.AccessRequiredException;
 
 public class EntityObjectMappingMeta {
 
-    private static final String DELIMITER = ", ";
-
-    private final EntityClassMappingMeta entityClassMappingMeta;
     private final Map<ColumnMeta, ValueMeta> objectValueMap = new LinkedHashMap<>();
 
-    private EntityObjectMappingMeta(Map<ColumnMeta, ValueMeta> valueMap, EntityClassMappingMeta entityClassMappingMeta) {
-        this.entityClassMappingMeta = entityClassMappingMeta;
+    private EntityObjectMappingMeta(Map<ColumnMeta, ValueMeta> valueMap) {
         this.objectValueMap.putAll(valueMap);
     }
 
@@ -29,15 +24,7 @@ public class EntityObjectMappingMeta {
             valueMap.put(entityClassMappingMeta.getColumnMeta(field), getFieldValueAsObject(field, instance))
         );
 
-        return new EntityObjectMappingMeta(valueMap, entityClassMappingMeta);
-    }
-
-    public String getTableName() {
-        return entityClassMappingMeta.tableClause();
-    }
-
-    public Set<ColumnMeta> getColumnMetaSet() {
-        return objectValueMap.keySet();
+        return new EntityObjectMappingMeta(valueMap);
     }
 
     public List<ColumnMeta> getColumnMetaList() {

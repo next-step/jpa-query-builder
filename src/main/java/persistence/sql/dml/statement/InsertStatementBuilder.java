@@ -22,7 +22,7 @@ public class InsertStatementBuilder {
         final EntityObjectMappingMeta entityObjectMappingMeta = EntityObjectMappingMeta.of(object, entityClassMappingMeta);
 
         return String.format(INSERT_FORMAT,
-            entityObjectMappingMeta.getTableName(),
+            entityClassMappingMeta.tableClause(),
             columnClause(entityObjectMappingMeta),
             valueClause(entityObjectMappingMeta)
         );
