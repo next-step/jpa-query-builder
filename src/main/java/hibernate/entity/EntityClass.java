@@ -61,9 +61,7 @@ public class EntityClass<T> {
 
     // TODO: 하드코딩 리팩터링
     public Map<EntityColumn, Object> getFieldValues(final Object object) {
-        if (clazz != object.getClass()) {
-            throw new IllegalArgumentException("EntityClass와 일치하지 않는 객체입니다.");
-        }
+        validateEntityType(object);
         return entityColumns.getValues()
                 .stream()
                 .filter(entityColumn -> entityColumn.getFieldValue(object) != null)
@@ -76,10 +74,14 @@ public class EntityClass<T> {
     }
 
     public Object extractEntityId(final Object object) {
+        validateEntityType(object);
+        return getEntityId().getFieldValue(object);
+    }
+
+    private void validateEntityType(Object object) {
         if (clazz != object.getClass()) {
             throw new IllegalArgumentException("EntityClass와 일치하지 않는 객체입니다.");
         }
-        return getEntityId().getFieldValue(object);
     }
 
     public String tableName() {
