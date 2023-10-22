@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DdlQueryGenerator;
 import persistence.sql.dialect.h2.H2Dialect;
-import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.DmlQueryGenerator;
-import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
 import persistence.sql.meta.EntityMeta;
 import persistence.sql.meta.MetaFactory;
 
@@ -30,33 +27,30 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             DdlQueryGenerator ddlGenerator = DdlQueryGenerator.of(new H2Dialect());
-            DmlQueryGenerator dmlbuilder = DmlQueryGenerator.findByDbmsType(H2.class.getSimpleName());
+            DmlQueryGenerator dmlGenerator = DmlQueryGenerator.of(new H2Dialect());
 
             EntityMeta personMeta = MetaFactory.get(Person.class);
             jdbcTemplate.execute(ddlGenerator.generateCreateQuery(personMeta));
 
-            InsertQueryBuilder insertQueryBuilder = dmlbuilder.getInsertQueryBuilder();
             for (Person personFixture : PersonFixtureFactory.getFixtures()) {
-                String insertPersonQuery = insertQueryBuilder.getQuery(personFixture);
+                String insertPersonQuery = dmlGenerator.generateInsertQuery(personFixture);
                 jdbcTemplate.execute(insertPersonQuery);
             }
 
-            SelectQueryBuilder selectQueryBuilder = dmlbuilder.getSelectQueryBuilder();
-            String selectAllQuery = selectQueryBuilder.getSelectAllQuery(Person.class);
+            String selectAllQuery = dmlGenerator.generateSelectAllQuery(Person.class);
             List<Person> personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
             logger.info("personList size = {}", personList.size());
 
-            String selectByPkQuery = selectQueryBuilder.getSelectByPkQuery(Person.class, 1L);
+            String selectByPkQuery = dmlGenerator.generateSelectByPkQuery(Person.class, 1L);
             jdbcTemplate.queryForObject(selectByPkQuery, new EntityRowMapper<>(Person.class));
 
-            DeleteQueryBuilder deleteQueryBuilder = dmlbuilder.getDeleteQueryBuilder();
-            String deleteByPkQuery = deleteQueryBuilder.getDeleteByPkQuery(Person.class, 1L);
+            String deleteByPkQuery = dmlGenerator.generateDeleteByPkQuery(Person.class, 1L);
             jdbcTemplate.execute(deleteByPkQuery);
 
             personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
             logger.info("personList size = {}", personList.size());
 
-            String deleteAllQuery = deleteQueryBuilder.getDeleteAllQuery(Person.class);
+            String deleteAllQuery = dmlGenerator.generateDeleteAllQuery(Person.class);
             jdbcTemplate.execute(deleteAllQuery);
 
             personList = jdbcTemplate.query(selectAllQuery, new EntityRowMapper<>(Person.class));
