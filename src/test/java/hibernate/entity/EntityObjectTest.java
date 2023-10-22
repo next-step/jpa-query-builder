@@ -16,7 +16,7 @@ class EntityObjectTest {
 
     @Test
     void EntityId의_Value를_반환한다() {
-        EntityObject givenEntityObject = new EntityObject(new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com"));
+        EntityObject<TestEntity> givenEntityObject = new EntityObject<>(new EntityClass<>(TestEntity.class), new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com"));
         Object actual = givenEntityObject.getEntityIdValue();
         assertThat(actual).isEqualTo(1L);
     }
@@ -24,7 +24,7 @@ class EntityObjectTest {
     @Test
     void 필드명과_데이터가_담긴_Map을_반환한다() {
         TestEntity givenObject = new TestEntity(1L, "최진영", "jinyoungchoi95@gmail.com");
-        Map<EntityColumn, Object> actual = new EntityObject(givenObject).getFieldValues();
+        Map<EntityColumn, Object> actual = new EntityObject<>(new EntityClass<>(TestEntity.class), givenObject).getFieldValues();
 
         assert actual != null;
         assertAll(

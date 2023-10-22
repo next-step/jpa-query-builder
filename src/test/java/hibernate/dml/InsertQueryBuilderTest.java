@@ -1,5 +1,6 @@
 package hibernate.dml;
 
+import hibernate.entity.EntityClass;
 import hibernate.entity.EntityObject;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class InsertQueryBuilderTest {
         String expected = "insert into test_entity (id, nick_name) values (1, '최진영');";
 
         // when
-        String actual = insertQueryBuilder.generateQuery(new EntityObject(givenEntity))
+        String actual = insertQueryBuilder.generateQuery(new EntityObject<>(new EntityClass<>(TestEntity.class), givenEntity))
                 .toLowerCase();
 
         // then

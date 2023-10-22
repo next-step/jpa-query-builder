@@ -16,7 +16,7 @@ class SelectQueryBuilderTest {
         String expected = "select id, nick_name from test_entity where id = 1;";
 
         // when
-        String actual = selectQueryBuilder.generateQuery(new EntityClass(TestEntity.class), 1L)
+        String actual = selectQueryBuilder.generateQuery(new EntityClass<>(TestEntity.class), 1L)
                 .toLowerCase();
 
         // then

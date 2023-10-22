@@ -23,7 +23,7 @@ class CreateQueryBuilderTest {
         List<String> expectedColumns = List.of("id bigint", "age integer", "name varchar");
 
         // when
-        String actual = createQueryBuilder.generateQuery(new EntityClass(Person.class))
+        String actual = createQueryBuilder.generateQuery(new EntityClass<>(Person.class))
                 .toLowerCase();
 
         // then
@@ -39,7 +39,7 @@ class CreateQueryBuilderTest {
         String expectedColumn = "id bigint primary key";
 
         // when
-        String actual = createQueryBuilder.generateQuery((new EntityClass(Person.class)));
+        String actual = createQueryBuilder.generateQuery((new EntityClass<>(Person.class)));
 
         // then
         assertThat(actual).contains(expectedColumn);
@@ -51,7 +51,7 @@ class CreateQueryBuilderTest {
         List<String> expectedColumns = List.of("nick_name varchar", "old integer", "email varchar");
 
         // when
-        String actual = createQueryBuilder.generateQuery(new EntityClass(Person2.class))
+        String actual = createQueryBuilder.generateQuery(new EntityClass<>(Person2.class))
                 .toLowerCase();
 
         // then
@@ -64,7 +64,7 @@ class CreateQueryBuilderTest {
         String expectedColumn = "email varchar not null";
 
         // when
-        String actual = createQueryBuilder.generateQuery(new EntityClass(Person2.class))
+        String actual = createQueryBuilder.generateQuery(new EntityClass<>(Person2.class))
                 .toLowerCase();
 
         // then
@@ -77,7 +77,7 @@ class CreateQueryBuilderTest {
         String expectedColumn = "id bigint primary key auto_increment";
 
         // when
-        String actual = createQueryBuilder.generateQuery(new EntityClass(Person2.class))
+        String actual = createQueryBuilder.generateQuery(new EntityClass<>(Person2.class))
                 .toLowerCase();
 
         // then
@@ -90,7 +90,7 @@ class CreateQueryBuilderTest {
         String expected = "create table users";
 
         // when
-        String actual = createQueryBuilder.generateQuery(new EntityClass(Person3.class))
+        String actual = createQueryBuilder.generateQuery(new EntityClass<>(Person3.class))
                 .toLowerCase();
 
         // then
@@ -103,7 +103,7 @@ class CreateQueryBuilderTest {
         String expected = "index integer";
 
         // when
-        String actual = createQueryBuilder.generateQuery(new EntityClass(Person3.class))
+        String actual = createQueryBuilder.generateQuery(new EntityClass<>(Person3.class))
                 .toLowerCase();
 
         // then

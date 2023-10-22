@@ -156,6 +156,9 @@ public interface EntityManager {
 ```
 - 데이터베이스에서 find 쿼리를 전달하여 생성한 object를 반환한다. 
 
+- EntityClass
+  - 새로운 인스턴스를 생성할 수 있다.
+  - 기본생성자가 없는 경우 생성 시 예외가 발생한다.
 - EntityColumn
   - 인스턴스를 받아 field값을 변경할 수 있다.
 - ReflectionRawMapper

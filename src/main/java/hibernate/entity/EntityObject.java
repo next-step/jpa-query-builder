@@ -6,13 +6,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class EntityObject {
+public class EntityObject<T> {
 
-    private final EntityClass entityClass;
-    private final Object object;
+    private final EntityClass<T> entityClass;
+    private final T object;
 
-    public EntityObject(final Object object) {
-        this.entityClass = new EntityClass(object.getClass());
+    public EntityObject(final EntityClass<T> entityClass, final T object) {
+        this.entityClass = entityClass;
         this.object = object;
     }
 
