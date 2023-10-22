@@ -20,7 +20,7 @@ public class AttributeParser {
     public AttributeParser() {
     }
 
-    private static IdAttribute createIdAttribute(Field field) {
+    public IdAttribute parseIdAttribute(Field field) {
         if (field.getType().equals(String.class)) {
             return StringTypeIdAttribute.of(field);
         }
@@ -35,18 +35,18 @@ public class AttributeParser {
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(String.format("[%s] 엔티티에 @Id가 없습니다", clazz.getSimpleName())));
-        return createIdAttribute(id);
+        return parseIdAttribute(id);
     }
 
     public List<GeneralAttribute> parseGeneralAttributes(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Column.class)
                         && !field.isAnnotationPresent(Id.class))
-                .map(this::makeGeneralAttribute)
+                .map(this::parseGeneralAttribute)
                 .collect(Collectors.toList());
     }
 
-    private GeneralAttribute makeGeneralAttribute(
+    public GeneralAttribute parseGeneralAttribute(
             Field field
     ) {
         if (field.getType().equals(String.class)) {

@@ -3,8 +3,6 @@ package persistence.entitiy.attribute;
 import persistence.sql.ddl.converter.SqlConverter;
 
 abstract public class GeneralAttribute {
-    protected SqlConverter sqlConverter;
-
     abstract public String prepareDDL(SqlConverter sqlConverter);
 
     abstract public String getColumnName();

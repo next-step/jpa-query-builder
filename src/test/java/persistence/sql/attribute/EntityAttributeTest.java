@@ -30,7 +30,7 @@ public class EntityAttributeTest {
             @DisplayName("EntityAttribute를 반환한다.")
             void returnEntityAttribute() {
                 EntityAttribute entityAttribute =
-                        EntityAttribute.of(TestEntityFixture.EntityWithValidAnnotation.class, attributeParser);
+                        EntityAttribute.of(TestEntityFixture.SampleOneWithValidAnnotation.class, attributeParser);
 
                 Assertions.assertAll(
                         () -> assertThat(entityAttribute.getTableName())

@@ -2,7 +2,7 @@ package persistence.entitiy;
 
 public interface EntityManager {
 
-    <T> T find(Class<T> clazz, Long Id);
+    <T> T findById(Class<T> clazz, String Id);
 
     Object persist(Object entity);
 

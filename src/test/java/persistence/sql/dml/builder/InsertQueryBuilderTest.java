@@ -26,7 +26,7 @@ public class InsertQueryBuilderTest {
             @DisplayName("적절한 statement를 반환한다.")
             void returnStatement() {
                 EntityAttribute entityAttribute =
-                        EntityAttribute.of(TestEntityFixture.EntityWithValidAnnotation.class, attributeParser);
+                        EntityAttribute.of(TestEntityFixture.SampleOneWithValidAnnotation.class, attributeParser);
                 InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
                 String statement = insertQueryBuilder.prepareStatement(entityAttribute.createEntityContext(person));
                 assertThat(statement)

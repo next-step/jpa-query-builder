@@ -8,13 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestEntityRowMapper implements RowMapper<List<TestEntityFixture.EntityWithValidAnnotation>> {
+public class TestEntityRowMapper implements RowMapper<List<TestEntityFixture.SampleOneWithValidAnnotation>> {
     @Override
-    public List<TestEntityFixture.EntityWithValidAnnotation> mapRow(ResultSet rs) throws SQLException {
-        List<TestEntityFixture.EntityWithValidAnnotation> entities = new ArrayList<>();
+    public List<TestEntityFixture.SampleOneWithValidAnnotation> mapRow(ResultSet rs) throws SQLException {
+        List<TestEntityFixture.SampleOneWithValidAnnotation> entities = new ArrayList<>();
 
         while (rs.next()) {
-            entities.add(new TestEntityFixture.EntityWithValidAnnotation(
+            entities.add(new TestEntityFixture.SampleOneWithValidAnnotation(
                     rs.getLong("ID"),
                     rs.getString("NAME"),
                     rs.getInt("OLD")

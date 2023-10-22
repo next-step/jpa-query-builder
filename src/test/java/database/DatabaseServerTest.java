@@ -8,13 +8,8 @@ import persistence.DatabaseTest;
 import persistence.entitiy.attribute.EntityAttribute;
 import persistence.fixture.TestEntityFixture;
 import persistence.mapper.TestEntityRowMapper;
-import persistence.sql.common.DDLType;
-import persistence.sql.ddl.builder.DDLQueryBuilder;
-import persistence.sql.ddl.builder.DDLQueryBuilderFactory;
-import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.dml.builder.InsertQueryBuilder;
 import persistence.sql.infra.H2SqlConverter;
-import persistence.sql.parser.AttributeParser;
 
 import java.util.List;
 
@@ -23,14 +18,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Nested
 @DisplayName("DatabaseServer 클래스의")
 public class DatabaseServerTest extends DatabaseTest {
-    DDLQueryBuilder queryBuilder = DDLQueryBuilderFactory.createQueryBuilder(DDLType.CREATE);
-    SqlConverter sqlConverter = new H2SqlConverter();
-    AttributeParser parser = new AttributeParser();
-    EntityAttribute entityAttribute = EntityAttribute.of(TestEntityFixture.EntityWithValidAnnotation.class, parser);
 
-    private void setUpFixtureTable() {
-        jdbcTemplate.execute(queryBuilder.prepareStatement(entityAttribute, sqlConverter));
-    }
+    EntityAttribute entityAttribute;
+
 
     @Nested
     @DisplayName("executeQuery 메소드는")
@@ -41,16 +31,16 @@ public class DatabaseServerTest extends DatabaseTest {
             @Test
             @DisplayName("예외를 던지지않고 종료한다.")
             void doseNotThrowException() {
-                setUpFixtureTable();
+                setUpFixtureTable(TestEntityFixture.SampleOneWithValidAnnotation.class, new H2SqlConverter());
 
                 InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
 
-                TestEntityFixture.EntityWithValidAnnotation entityOne =
-                        new TestEntityFixture.EntityWithValidAnnotation("민준", 29);
-                TestEntityFixture.EntityWithValidAnnotation entityTwo =
-                        new TestEntityFixture.EntityWithValidAnnotation("민준", 29);
-                TestEntityFixture.EntityWithValidAnnotation entityThree =
-                        new TestEntityFixture.EntityWithValidAnnotation("민준", 29);
+                TestEntityFixture.SampleOneWithValidAnnotation entityOne =
+                        new TestEntityFixture.SampleOneWithValidAnnotation("민준", 29);
+                TestEntityFixture.SampleOneWithValidAnnotation entityTwo =
+                        new TestEntityFixture.SampleOneWithValidAnnotation("민준", 29);
+                TestEntityFixture.SampleOneWithValidAnnotation entityThree =
+                        new TestEntityFixture.SampleOneWithValidAnnotation("민준", 29);
 
                 String insertDMLOne = insertQueryBuilder.prepareStatement(entityAttribute.createEntityContext(entityOne));
                 String insertDMLTwo = insertQueryBuilder.prepareStatement(entityAttribute.createEntityContext(entityTwo));
@@ -62,7 +52,7 @@ public class DatabaseServerTest extends DatabaseTest {
                         () -> Assertions.assertDoesNotThrow(() -> jdbcTemplate.execute(insertDMLThree))
                 );
 
-                List<TestEntityFixture.EntityWithValidAnnotation> entities =
+                List<TestEntityFixture.SampleOneWithValidAnnotation> entities =
                         jdbcTemplate.queryForObject("SELECT * FROM ENTITY_NAME;", new TestEntityRowMapper());
 
                 assertThat(entities.size()).isEqualTo(3);

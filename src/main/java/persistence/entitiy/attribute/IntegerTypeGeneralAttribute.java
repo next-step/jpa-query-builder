@@ -29,7 +29,7 @@ public class IntegerTypeGeneralAttribute extends GeneralAttribute {
         return new IntegerTypeGeneralAttribute(
                 column.scale(),
                 field.getName(),
-                column.name(),
+                column.name().isBlank() ? field.getName() : column.name(),
                 field.isAnnotationPresent(Id.class)
         );
     }

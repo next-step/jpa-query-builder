@@ -9,7 +9,6 @@ public class PersistencContext {
     private static final Map<Class<?>, Map<String, Object>> FIRST_CACHE = new HashMap<>();
 
     private PersistencContext() {
-
     }
 
     public static PersistencContext getInstance() {
@@ -20,5 +19,13 @@ public class PersistencContext {
         Map<String, Object> entityMap = FIRST_CACHE.getOrDefault(clazz, new HashMap<>());
         entityMap.put(entityId, entity);
         FIRST_CACHE.put(clazz, entityMap);
+    }
+
+    public <T> T findById(Class<T> clazz, String id) {
+        Map<String, Object> entityMap = FIRST_CACHE.get(clazz);
+        if (entityMap == null) {
+            return null;
+        }
+        return clazz.cast(entityMap.get(id));
     }
 }

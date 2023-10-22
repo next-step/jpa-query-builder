@@ -42,7 +42,8 @@ public class InsertQueryBuilder {
     private List<String> extractColumnNames(List<Map.Entry<GeneralAttribute, String>> attributeWithValues) {
         return attributeWithValues.stream()
                 .map(Map.Entry::getKey)
-                .map(GeneralAttribute::getColumnName)
+                .map(generalAttribute -> generalAttribute.getColumnName().isBlank()
+                        ? generalAttribute.getFieldName() : generalAttribute.getColumnName())
                 .collect(Collectors.toList());
     }
 

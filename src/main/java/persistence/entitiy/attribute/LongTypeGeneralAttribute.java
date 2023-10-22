@@ -25,10 +25,13 @@ public class LongTypeGeneralAttribute extends GeneralAttribute {
 
     public static LongTypeGeneralAttribute of(Field field) {
         Column column = field.getDeclaredAnnotation(Column.class);
+
+        assert column != null;
+
         return new LongTypeGeneralAttribute(
                 column.scale(),
                 field.getName(),
-                column.name(),
+                column.name().isBlank() ? field.getName() : column.name(),
                 column.nullable()
         );
     }
