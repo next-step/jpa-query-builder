@@ -65,12 +65,13 @@ public class EntityClassMappingMeta {
         return columnMetaMap.get(field).getColumnName();
     }
 
-    public ColumnMeta getIdFieldColumnMeta() {
+    public String getIdFieldColumnName() {
         return columnMetaMap.entrySet().stream()
             .filter(entry -> PrimaryKeyConstraint.isPrimaryKey(entry.getKey()))
             .map(Entry::getValue)
             .findAny()
-            .orElseThrow(() -> new RequiredAnnotationException("@Id annotation is required in entity"));
+            .orElseThrow(() -> new RequiredAnnotationException("@Id annotation is required in entity"))
+            .getColumnName();
     }
 
     public Constructor<?> getDefaultConstructor() {
