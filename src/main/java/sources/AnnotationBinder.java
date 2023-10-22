@@ -16,7 +16,7 @@ public class AnnotationBinder {
             throw new AnnotationException( "Type '" + entityClass.getName()
                     + "@Entity 가 아닙니다." );
         }
-        //요구사항 3. @Table 어노테이션이 있을 경우에는 해당 네임을 테이블 이름으로 지정해준다.
+
         if (entityClass.isAnnotationPresent(Table.class) ) {
             Table table = entityClass.getDeclaredAnnotation(Table.class);
             return table.name();
@@ -45,9 +45,20 @@ public class AnnotationBinder {
     public ColumnMetaData columnBinder(Field field) {
         if(field.isAnnotationPresent(Column.class)) {
             Column column = field.getDeclaredAnnotation(Column.class);
-            return new ColumnMetaData(!column.name().isEmpty() ? column.name() : field.getName(), field.getType().getSimpleName(), column.nullable());
+            String name = column.name();
+            int length = column.length();
+            boolean nullable = column.nullable();
+            String type = field.getType().getSimpleName();
+            return new ColumnMetaData()
+                    .name(name)
+                    .type(type)
+                    .length(length)
+                    .nullable(nullable)
+                    .build();
         }
-        return new ColumnMetaData(field.getName(), field.getType().getSimpleName());
+        return new ColumnMetaData()
+                .name(field.getName())
+                .type(field.getType().getSimpleName());
     }
 
     private String registerGenerators(GenerationType type) {

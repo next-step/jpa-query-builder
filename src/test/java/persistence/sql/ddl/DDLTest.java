@@ -21,7 +21,8 @@ import java.sql.SQLException;
 public class DDLTest {
     DatabaseServer server;
     final Dialect dialect = new H2Dialect();
-    final QueryBuilder queryBuilder = new QueryBuilder(dialect);
+    final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(dialect);
+    final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(dialect);
     final AnnotationBinder annotationBinder = new AnnotationBinder();
     final MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     JdbcTemplate jdbcTemplate;
@@ -38,10 +39,10 @@ public class DDLTest {
     void createTest1() {
         MetaData personv1 = metadataGenerator.generator(PersonV1.class);
         StringBuilder sb = new StringBuilder();
-        StringBuilder createQuery = queryBuilder.create(personv1, sb);
-        jdbcTemplate.execute(String.valueOf(createQuery));
+        Query query = createQueryBuilder.create(personv1, sb);
+        jdbcTemplate.execute(String.valueOf(query));
         Assertions.assertThat("create table PersonV1 (id INT AUTO_INCREMENT PRIMARY KEY , name varchar , age int  )")
-                .isEqualTo(String.valueOf(createQuery));
+                .isEqualTo(String.valueOf(query));
     }
 
     @Test
@@ -49,11 +50,10 @@ public class DDLTest {
     void createTest2() {
         MetaData personv2 = metadataGenerator.generator(PersonV2.class);
         StringBuilder sb = new StringBuilder();
-        StringBuilder createQuery = queryBuilder.create(personv2, sb);
-        jdbcTemplate.execute(String.valueOf(createQuery));
-        System.out.println(String.valueOf(createQuery));
+        Query query = createQueryBuilder.create(personv2, sb);
+        jdbcTemplate.execute(String.valueOf(query));
         Assertions.assertThat("create table PersonV2 (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
-                .isEqualTo(String.valueOf(createQuery));
+                .isEqualTo(String.valueOf(query));
     }
 
     @Test
@@ -61,11 +61,10 @@ public class DDLTest {
     void createTest3() {
         MetaData personv3 = metadataGenerator.generator(PersonV3.class);
         StringBuilder sb = new StringBuilder();
-        StringBuilder createQuery = queryBuilder.create(personv3, sb);
-        jdbcTemplate.execute(String.valueOf(createQuery));
-        System.out.println(String.valueOf(createQuery));
+        Query query = createQueryBuilder.create(personv3, sb);
+        jdbcTemplate.execute(String.valueOf(query));
         Assertions.assertThat("create table users (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
-                .isEqualTo(String.valueOf(createQuery));
+                .isEqualTo(String.valueOf(query));
     }
 
     @Test
@@ -73,11 +72,10 @@ public class DDLTest {
     void dropTest() {
         MetaData personv3 = metadataGenerator.generator(PersonV3.class);
         StringBuilder sb = new StringBuilder();
-        StringBuilder dropQuery = queryBuilder.drop(personv3, sb);
-        jdbcTemplate.execute(String.valueOf(dropQuery));
-        System.out.println(String.valueOf(dropQuery));
+        Query query = dropQueryBuilder.drop(personv3, sb);
+        jdbcTemplate.execute(String.valueOf(query));
         Assertions.assertThat("drop table users")
-                .isEqualTo(String.valueOf(dropQuery));
+                .isEqualTo(String.valueOf(query));
     }
 
     @AfterAll

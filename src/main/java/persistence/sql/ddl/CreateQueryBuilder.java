@@ -8,23 +8,24 @@ import java.util.List;
 
 public class CreateQueryBuilder extends QueryBuilder{
 
+    private Query query;
+
     public CreateQueryBuilder(Dialect dialect) {
         super(dialect);
     }
 
-    public StringBuilder create(MetaData metaData, StringBuilder sb) {
-        return sb.append("create table ")
+    public Query create(MetaData metaData, StringBuilder sb) {
+        StringBuilder query = sb.append("create table ")
                 .append(metaData.getEntity())
                 .append(" (")
                 .append(metaData.getId())
                 .append(" ")
                 .append(columnTypeName(metaData.getColumns()))
-                .append(" )")
-                ;
-
+                .append(" )");
+        return new Query(query);
     }
 
-    public String columnTypeName(List<ColumnMetaData> columns) {
+    private String columnTypeName(List<ColumnMetaData> columns) {
         StringBuilder columnQuery = new StringBuilder();
         for (ColumnMetaData column : columns) {
             columnQuery.append(columnQueryBuilder(column));
@@ -34,8 +35,8 @@ public class CreateQueryBuilder extends QueryBuilder{
 
     private String columnQueryBuilder(ColumnMetaData columnMetaData) {
         if(columnMetaData.isNullable()) {
-            return ", "+ columnMetaData.getName() + " "+ dialect.transferType(columnMetaData.getType()) + " ";
+            return ", "+ columnMetaData.getName() + " "+ dialect.javaTypeToJdbcType(columnMetaData.getType()) + " ";
         }
-        return ", "+columnMetaData.getName() + " " + dialect.transferType(columnMetaData.getType()) + " not null";
+        return ", "+columnMetaData.getName() + " " + dialect.javaTypeToJdbcType(columnMetaData.getType()) + " not null";
     }
 }

@@ -4,45 +4,56 @@ public class ColumnMetaData {
 
     private String name;
     private String type;
+    private int length;
     private boolean nullable = true;
+
+    public ColumnMetaData() {
+    }
+
+    public ColumnMetaData(String name, String type, int length, boolean nullable) {
+        this.name = name;
+        this.type = type;
+        this.length = length;
+        this.nullable = nullable;
+    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public int getLength() {
+        return length;
     }
 
     public boolean isNullable() {
         return nullable;
     }
 
-    public void setNullable(boolean nullable) {
-        this.nullable = nullable;
-    }
-
-    public ColumnMetaData() {
-
-    }
-
-    public ColumnMetaData(String name, String type) {
+    public ColumnMetaData name(String name) {
         this.name = name;
-        this.type = type;
+        return this;
     }
 
-    public ColumnMetaData(String name, String type, boolean nullable) {
-        this.name = name;
+    public ColumnMetaData type(String type) {
         this.type = type;
+        return this;
+    }
+
+    public ColumnMetaData length(int length) {
+        this.length = length;
+        return this;
+    }
+
+    public ColumnMetaData nullable(boolean nullable) {
         this.nullable = nullable;
+        return this;
     }
 
+    public ColumnMetaData build() {
+        return new ColumnMetaData(name, type, length, nullable);
+    }
 }

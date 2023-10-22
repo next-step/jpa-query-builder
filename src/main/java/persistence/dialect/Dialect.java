@@ -7,8 +7,8 @@ public abstract class Dialect {
     public Dialect() {
     }
 
-    public int javaTypeToJdbcType(Class javaType) {
-        return switch (javaType.getTypeName()) {
+    public int javaTypeToJdbcType(String javaType) {
+        return switch (javaType) {
             case "String" -> Types.VARCHAR;
             case "BigDecimal" -> Types.NUMERIC;
             case "Long" -> Types.BIGINT;
