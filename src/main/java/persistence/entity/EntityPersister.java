@@ -12,14 +12,14 @@ import persistence.meta.EntityColumn;
 import persistence.meta.EntityMeta;
 
 
-public class EntityPersister<T> implements RowMapper<T> {
+public class EntityPersister<T> {
     private final Class<T> tClass;
+    private final RowMapper<T> rowMapper;
 
     public EntityPersister(Class<T> tClass) {
         this.tClass = tClass;
+        this.rowMapper = this::mapRow;
     }
-
-
 
     public T mapRow(ResultSet resultSet) {
         return mapEntity(tClass, resultSet);
@@ -83,5 +83,9 @@ public class EntityPersister<T> implements RowMapper<T> {
             return resultSet.getInt(column.getName());
         }
         return null;
+    }
+
+    public RowMapper<T> getRowMapper() {
+        return rowMapper;
     }
 }

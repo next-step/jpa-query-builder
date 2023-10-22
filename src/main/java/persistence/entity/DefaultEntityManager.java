@@ -58,6 +58,6 @@ public class DefaultEntityManager implements EntityManager {
 
 
     private <T> RowMapper<T> getRowMapper(Class<T> tClass) {
-        return new EntityPersister<>(tClass);
+        return new EntityPersister<>(tClass).getRowMapper();
     }
 }
