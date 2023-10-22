@@ -1,8 +1,6 @@
 package persistence.sql.meta;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -27,12 +25,29 @@ public class ColumnMeta {
         return field.isAnnotationPresent(Transient.class);
     }
 
+    public boolean isGenerationTypeIdentity() {
+        if (!field.isAnnotationPresent(GeneratedValue.class)) {
+            return false;
+        }
+        GeneratedValue generatedValue = field.getDeclaredAnnotation(GeneratedValue.class);
+        return generatedValue.strategy() == GenerationType.IDENTITY;
+    }
+
+    public boolean isNullable() {
+        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
+        return columnAnnotation == null || columnAnnotation.nullable();
+    }
+
     public String getColumnName() {
         Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
         if (columnAnnotation == null || StringUtils.isNullOrEmpty(columnAnnotation.name())) {
             return field.getName().toLowerCase();
         }
         return columnAnnotation.name();
+    }
+
+    public Class<?> getJavaType() {
+        return field.getType();
     }
 
 }
