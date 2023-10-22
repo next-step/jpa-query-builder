@@ -20,7 +20,7 @@ public class ReflectionRowMapper<T> implements RowMapper<T> {
         return generateMappedInstance(resultSet, new EntityClass<>(clazz));
     }
 
-    private static <T> T generateMappedInstance(ResultSet resultSet, EntityClass<T> entityClass) {
+    private T generateMappedInstance(ResultSet resultSet, EntityClass<T> entityClass) {
         T instance = entityClass.newInstance();
         List<EntityColumn> entityColumns = entityClass.getEntityColumns();
         for (EntityColumn entityColumn : entityColumns) {
@@ -29,7 +29,7 @@ public class ReflectionRowMapper<T> implements RowMapper<T> {
         return instance;
     }
 
-    private static Object getResultSetColumn(ResultSet resultSet, EntityColumn entityColumn) {
+    private Object getResultSetColumn(ResultSet resultSet, EntityColumn entityColumn) {
         try {
             return resultSet.getObject(entityColumn.getFieldName());
         } catch (SQLException e) {
