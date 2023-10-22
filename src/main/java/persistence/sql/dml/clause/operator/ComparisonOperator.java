@@ -1,6 +1,6 @@
 package persistence.sql.dml.clause.operator;
 
-public interface SqlOperator {
+public interface ComparisonOperator {
 
     String getOperatorSql();
 }

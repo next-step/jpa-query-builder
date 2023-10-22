@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import persistence.sql.dml.clause.WherePredicate;
 import persistence.sql.dml.clause.operator.AndOperator;
+import persistence.sql.dml.clause.operator.LogicalOperator;
 import persistence.sql.dml.clause.operator.OrOperator;
-import persistence.sql.dml.clause.operator.SqlOperator;
 import persistence.sql.exception.PreconditionRequiredException;
 
 public class WhereClauseBuilder {
 
     private static final String WHERE_FORMAT = "WHERE %s";
     private static final String WHERE_PREDICATE_FORMAT = "%s %s";
-    private static final AndOperator andOperator = new AndOperator();
-    private static final OrOperator orOperator = new OrOperator();
     private static final String EMPTY_STRING = "";
+    private static final LogicalOperator andOperator = new AndOperator();
+    private static final LogicalOperator orOperator = new OrOperator();
 
     private final List<WhereClause> whereClauseList;
 
@@ -66,10 +66,10 @@ public class WhereClauseBuilder {
 
     private static class WhereClause {
 
-        private final SqlOperator operator;
+        private final LogicalOperator operator;
         private final WherePredicate predicate;
 
-        public WhereClause(SqlOperator operator, WherePredicate predicate) {
+        public WhereClause(LogicalOperator operator, WherePredicate predicate) {
             this.operator = operator;
             this.predicate = predicate;
         }
