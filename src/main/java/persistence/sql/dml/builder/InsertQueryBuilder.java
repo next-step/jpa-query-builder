@@ -1,85 +1,56 @@
 package persistence.sql.dml.builder;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Transient;
-import persistence.sql.meta.ColumnMeta;
+import persistence.sql.dml.ColumnValues;
 import persistence.sql.meta.EntityMeta;
+import persistence.sql.meta.MetaFactory;
 import persistence.sql.util.StringConstant;
 
-import java.lang.reflect.Field;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
-public abstract class InsertQueryBuilder {
+public class InsertQueryBuilder {
 
     private static final String INSERT_HEADER = "INSERT INTO ";
     private static final String VALUES = "VALUES";
 
-    public String getQuery(Object object) {
-        validateEntityAnnotation(object.getClass());
-        return buildQuery(object);
+    private final EntityMeta entityMeta;
+    private final ColumnValues columnValues;
+
+    private InsertQueryBuilder(EntityMeta entityMeta, ColumnValues columnValues) {
+        this.entityMeta = entityMeta;
+        this.columnValues = columnValues;
     }
 
-    private void validateEntityAnnotation(Class<?> clazz) {
-        if (!EntityMeta.isEntity(clazz)) {
+    public static InsertQueryBuilder of(Object entityInstance) {
+        EntityMeta entityMeta = MetaFactory.get(entityInstance.getClass());
+        validateEntityAnnotation(entityMeta);
+        return new InsertQueryBuilder(entityMeta, ColumnValues.ofFilteredAutoGenType(entityInstance));
+    }
+
+    private static void validateEntityAnnotation(EntityMeta entityMeta) {
+        if (!entityMeta.isEntity()) {
             throw new IllegalArgumentException("Insert Query 빌드 대상이 아닙니다.");
         }
     }
 
-    private String buildQuery(Object object) {
-        Map<String, String> insertKeyValueMap = buildInsertKeyValueMap(object);
+    public String build() {
         return new StringBuilder()
                 .append(INSERT_HEADER)
-                .append(EntityMeta.getTableName(object.getClass()))
+                .append(entityMeta.getTableName())
                 .append(" (")
-                .append(columnsClause(insertKeyValueMap))
+                .append(columnsClause(columnValues.columns()))
                 .append(") ")
                 .append(VALUES)
                 .append(" (")
-                .append(valuesClause(insertKeyValueMap))
+                .append(valuesClause(columnValues.values()))
                 .append(");")
                 .toString();
     }
 
-    private Map<String, String> buildInsertKeyValueMap(Object object) {
-        Map<String, String> insertKeyValueMap = new LinkedHashMap<>();
-        Class<?> clazz = object.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
-            put(insertKeyValueMap, object, field);
-        }
-        return insertKeyValueMap;
+    private String columnsClause(List<String> columns) {
+        return String.join(StringConstant.COLUMN_JOIN, columns);
     }
 
-    private void put(Map<String, String> insertKeyValueMap, Object object, Field field) {
-        if (isInsertSkipTarget(field)) {
-            return;
-        }
-        insertKeyValueMap.put(getColumnClause(field), getValueClause(object, field));
-    }
-
-    private boolean isInsertSkipTarget(Field field) {
-        GeneratedValue generatedValue = field.getDeclaredAnnotation(GeneratedValue.class);
-        if (generatedValue != null && generatedValue.strategy() == GenerationType.IDENTITY) {
-            return true;
-        }
-        Transient transientAnnotation = field.getDeclaredAnnotation(Transient.class);
-        return transientAnnotation != null;
-    }
-
-    private String getColumnClause(Field field) {
-        return ColumnMeta.getColumnName(field);
-    }
-
-    private String getValueClause(Object object, Field field) {
-        return ColumnMeta.getColumnValue(object, field);
-    }
-
-    private String columnsClause(Map<String, String> insertKeyValueMap) {
-        return String.join(StringConstant.COLUMN_JOIN, insertKeyValueMap.keySet());
-    }
-
-    private String valuesClause(Map<String, String> insertKeyValueMap) {
-        return String.join(StringConstant.COLUMN_JOIN, insertKeyValueMap.values());
+    private String valuesClause(List<String> values) {
+        return String.join(StringConstant.COLUMN_JOIN, values);
     }
 }
