@@ -17,7 +17,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.TestFactory;
 import persistence.entity.DefaultEntityManager;
-import persistence.jdbc.JdbcTemplate;
+import persistence.entity.JdbcTemplate;
+import jdbc.BaseJdbcTemplate;
 import persistence.testFixtures.Person;
 
 
@@ -31,7 +32,7 @@ public class RepositoryTest {
     static void setUp() throws SQLException {
         final DatabaseServer server = new H2();
         server.start();
-        jdbcTemplate = new JdbcTemplate(server.getConnection());
+        jdbcTemplate = new BaseJdbcTemplate(server.getConnection());
     }
 
 

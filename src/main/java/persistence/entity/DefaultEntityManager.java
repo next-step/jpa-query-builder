@@ -1,12 +1,10 @@
 package persistence.entity;
 
 
-import java.sql.ResultSet;
 import java.util.List;
 import persistence.exception.NotFoundException;
 import persistence.mapper.EntityRowsMapper;
-import persistence.mapper.EntitySingleMapper;
-import persistence.jdbc.JdbcTemplate;
+import persistence.mapper.RowMapper;
 import persistence.meta.EntityMeta;
 import persistence.sql.QueryGenerator;
 
@@ -18,20 +16,6 @@ public class DefaultEntityManager implements EntityManager {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public <T> T find(Class<T> clazz, Long id) {
-        if (id == null) {
-            throw new NotFoundException("id가 널이면 안 됩니다.");
-        }
-
-        final EntityMeta entityMeta = new EntityMeta(clazz);
-
-        final String query = QueryGenerator.from(entityMeta)
-                .select()
-                .findById(id);
-
-        return jdbcTemplate.queryForObject(query, new EntitySingleMapper<>(clazz));
-    }
 
     @Override
     public Object persist(Object entity) {
@@ -53,13 +37,30 @@ public class DefaultEntityManager implements EntityManager {
         jdbcTemplate.execute(query);
     }
 
+    @Override
+    public <T> T find(Class<T> clazz, Long id) {
+        if (id == null) {
+            throw new NotFoundException("id가 널이면 안 됩니다.");
+        }
+
+        final EntityMeta entityMeta = new EntityMeta(clazz);
+
+        final String query = QueryGenerator.from(entityMeta)
+                .select()
+                .findById(id);
+
+        return jdbcTemplate.queryForObject(query, getRowMapper(clazz));
+    }
+
     public <T> List<T> findList(String query, Class<T> tClass) {
-        return jdbcTemplate.query(query,
-                (ResultSet rs) -> new EntityRowsMapper<>(tClass).mapRow(rs));
+        return jdbcTemplate.query(query, getRowMapper(tClass));
     }
 
     public <T> T find(String query, Class<T> tClass) {
-        return jdbcTemplate.queryForObject(query,
-                (ResultSet rs) -> new EntitySingleMapper<>(tClass).mapRow(rs));
+        return jdbcTemplate.queryForObject(query, getRowMapper(tClass));
+    }
+
+    private <T> RowMapper<T> getRowMapper(Class<T> tClass) {
+        return new EntityRowsMapper<>(tClass);
     }
 }

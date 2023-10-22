@@ -1,16 +1,17 @@
-package persistence.jdbc;
+package jdbc;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import persistence.entity.JdbcTemplate;
 import persistence.mapper.RowMapper;
 
-public class JdbcTemplate {
+public class BaseJdbcTemplate implements JdbcTemplate {
     private final Connection connection;
 
-    public JdbcTemplate(final Connection connection) {
+    public BaseJdbcTemplate(final Connection connection) {
         this.connection = connection;
     }
 
@@ -24,7 +25,10 @@ public class JdbcTemplate {
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
         try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
-            return rowMapper.mapRow(resultSet);
+            if (resultSet.next()) {
+                return rowMapper.mapRow(resultSet);
+            }
+            return null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
