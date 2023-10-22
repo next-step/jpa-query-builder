@@ -52,7 +52,6 @@ public class DDLTest {
         StringBuilder sb = new StringBuilder();
         Query query = createQueryBuilder.create(personv2, sb);
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
-        System.out.println(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
                 .isEqualTo("create table PersonV2 (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar(255) , old int, email varchar(255)  not null )");
     }
@@ -64,9 +63,8 @@ public class DDLTest {
         StringBuilder sb = new StringBuilder();
         Query query = createQueryBuilder.create(personv3, sb);
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
-        System.out.println(String.valueOf(query.getQuery()));
-        Assertions.assertThat("create table users (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
-                .isEqualTo(String.valueOf(query));
+        Assertions.assertThat(String.valueOf(query.getQuery()))
+                .isEqualTo("create table users (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar(255) , old int, email varchar(255)  not null )");
     }
 
     @Test
