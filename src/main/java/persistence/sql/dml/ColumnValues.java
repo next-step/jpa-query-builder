@@ -1,6 +1,8 @@
 package persistence.sql.dml;
 
 import persistence.sql.meta.ColumnMeta;
+import persistence.sql.meta.ColumnMetas;
+import persistence.sql.meta.EntityMeta;
 import persistence.sql.util.StringConstant;
 
 import java.lang.reflect.Field;
@@ -30,6 +32,16 @@ public class ColumnValues {
         return new ColumnValues(elements);
     }
 
+    public static ColumnValues ofId(EntityMeta entityMeta, Object pkObject) {
+        Map<ColumnMeta, String> columnValueMap = new LinkedHashMap<>();
+        ColumnMetas columnMetas = entityMeta.getColumnMetas();
+        ColumnMetas idColumns = columnMetas.idColumns();
+        idColumns.forEach(
+                idColumn -> columnValueMap.put(idColumn, parseColumnValue(pkObject))
+        );
+        return new ColumnValues(columnValueMap);
+    }
+
     private static Map<ColumnMeta, String> buildElements(Object object) {
         Map<ColumnMeta, String> columnValueMap = new LinkedHashMap<>();
         Class<?> clazz = object.getClass();
@@ -39,12 +51,12 @@ public class ColumnValues {
         return columnValueMap;
     }
 
-    private static void put(Map<ColumnMeta, String> insertKeyValueMap, Object object, Field field) {
+    private static void put(Map<ColumnMeta, String> columnValueMap, Object object, Field field) {
         ColumnMeta columnMeta = ColumnMeta.of(field);
         if (columnMeta.isTransient()) {
             return;
         }
-        insertKeyValueMap.put(columnMeta, getColumnValue(object, field));
+        columnValueMap.put(columnMeta, getColumnValue(object, field));
     }
 
     private static String getColumnValue(Object object, Field field) {
@@ -74,6 +86,16 @@ public class ColumnValues {
 
     public List<String> values() {
         return new ArrayList<>(elements.values());
+    }
+
+    public List<String> buildValueConditions() {
+        return elements.keySet().stream()
+                .map(columnMeta -> buildValueCondition(columnMeta.getColumnName(), elements.get(columnMeta)))
+                .collect(Collectors.toList());
+    }
+
+    private String buildValueCondition(String column, String value) {
+        return column + StringConstant.EQUAL + value;
     }
 
 }
