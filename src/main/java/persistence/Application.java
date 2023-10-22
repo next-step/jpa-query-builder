@@ -26,8 +26,8 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            DdlQueryGenerator ddlGenerator = DdlQueryGenerator.of(new H2Dialect());
-            DmlQueryGenerator dmlGenerator = DmlQueryGenerator.of(new H2Dialect());
+            DdlQueryGenerator ddlGenerator = DdlQueryGenerator.of(H2Dialect.getInstance());
+            DmlQueryGenerator dmlGenerator = DmlQueryGenerator.of(H2Dialect.getInstance());
 
             EntityMeta personMeta = MetaFactory.get(Person.class);
             jdbcTemplate.execute(ddlGenerator.generateCreateQuery(personMeta));

@@ -9,6 +9,8 @@ public class H2Dialect implements Dialect {
 
     private static final H2Dialect INSTANCE = new H2Dialect();
 
+    private H2Dialect() {}
+
     public static H2Dialect getInstance() {
         return INSTANCE;
     }
