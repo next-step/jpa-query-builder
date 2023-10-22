@@ -12,44 +12,49 @@ import persistence.sql.dml.SelectQueryBuilder;
 
 public class QueryGenerator<T> {
     private final static Dialect DEFAULT_DIALECT = new H2Dialect();
-    private final EntityMeta entityTable;
+    private final EntityMeta entityMeta;
     private final Dialect dialect;
 
-    private QueryGenerator(Class<T> entityClass, Dialect dialect) {
-        if (entityClass == null) {
+    private QueryGenerator(EntityMeta entityMeta, Dialect dialect) {
+        if (entityMeta == null) {
             throw new NoEntityException();
         }
-        this.entityTable = new EntityMeta(entityClass);
+        this.entityMeta = entityMeta;
         this.dialect = dialect;
     }
-    private QueryGenerator(Class<T> entityClass) {
-        this(entityClass, DEFAULT_DIALECT);
+    private QueryGenerator(EntityMeta entityMeta) {
+        this(entityMeta, DEFAULT_DIALECT);
     }
 
-    public static <T> QueryGenerator<T> from(Class<T> entityClass) {
-        return new QueryGenerator<>(entityClass);
+    public static <T> QueryGenerator <T> from(Class<T> tClass) {;
+        return new QueryGenerator<>(new EntityMeta(tClass));
     }
-    public static <T> QueryGenerator<T> of(Class<T> entityClass, Dialect dialect) {
-        return new QueryGenerator<>(entityClass, dialect);
+
+    public static <T> QueryGenerator <T> from(EntityMeta entityMeta) {
+        return new QueryGenerator<>(entityMeta);
+    }
+
+    public static <T> QueryGenerator<T> of(EntityMeta entityMeta, Dialect dialect) {
+        return new QueryGenerator<>(entityMeta, dialect);
     }
 
     public String create() {
-        return new CreateQueryBuilder<>(entityTable, dialect).create();
+        return new CreateQueryBuilder<>(entityMeta, dialect).create();
     }
 
     public String drop() {
-        return new DropQueryBuilder<>(entityTable, dialect).drop();
+        return new DropQueryBuilder<>(entityMeta, dialect).drop();
     }
 
     public String insert(T object) {
-        return new InsertQueryBuilder<>(entityTable, dialect).insert(object);
+        return new InsertQueryBuilder<>(entityMeta, dialect).insert(object);
     }
 
     public String delete(Object id) {
-        return new DeleteQueryBuilder<>(entityTable, dialect).delete(id);
+        return new DeleteQueryBuilder<>(entityMeta, dialect).delete(id);
     }
 
     public SelectQueryBuilder<T> select() {
-        return new SelectQueryBuilder<>(entityTable, dialect);
+        return new SelectQueryBuilder<>(entityMeta, dialect);
     }
 }

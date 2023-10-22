@@ -6,7 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GenerationType;
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.exception.NotFoundException;
 import persistence.exception.NumberRangeException;
 
@@ -16,15 +16,15 @@ public class EntityColumn {
     private final String name;
     private final ColumnType columType;
     private final EntityColumnOption option;
-    private final String filedName;
+    private final String fieldName;
     private Integer length;
 
     public EntityColumn(Field field) {
         if (field == null) {
-            throw new FiledEmptyException();
+            throw new FieldEmptyException();
         }
         this.name = initName(field);
-        this.filedName = field.getName();
+        this.fieldName = field.getName();
         this.columType = initColumType(field);
         this.option = new EntityColumnOption(field);
     }
@@ -60,7 +60,7 @@ public class EntityColumn {
     public Object getFieldValue(Object object) {
         try {
             final Class<?> clazz = object.getClass();
-            final Field field = clazz.getDeclaredField(filedName);
+            final Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(object);
         } catch (NoSuchFieldException | IllegalAccessException e ) {
@@ -100,7 +100,7 @@ public class EntityColumn {
         return option.hasGenerationValue();
     }
 
-    public String getFiledName() {
-        return filedName;
+    public String getFieldName() {
+        return fieldName;
     }
 }

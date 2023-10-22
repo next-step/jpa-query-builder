@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.sql.QueryGenerator;
 import persistence.testFixtures.Person;
 
@@ -45,7 +45,7 @@ class SelectQueryBuilderTest {
         SelectQueryBuilder<Person> select = QueryGenerator.from(Person.class).select();
 
         //when & then
-        assertThatExceptionOfType(FiledEmptyException.class)
+        assertThatExceptionOfType(FieldEmptyException.class)
             .isThrownBy(() -> select.findById(null));
     }
 

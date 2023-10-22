@@ -6,14 +6,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 
 public class EntityColumns {
     private final List<EntityColumn> entityColumns;
 
     public EntityColumns(Field[] fields) {
         if (fields == null) {
-            throw new FiledEmptyException();
+            throw new FieldEmptyException();
         }
         this.entityColumns = extractColumns(fields);
     }
@@ -28,6 +28,14 @@ public class EntityColumns {
 
     public List<EntityColumn> getEntityColumns() {
         return Collections.unmodifiableList(entityColumns);
+    }
+
+    public EntityColumn pkColumn() {
+        return getEntityColumns()
+                .stream()
+                .filter(EntityColumn::isPk)
+                .findFirst()
+                .orElseThrow(() -> new FieldEmptyException("pk가 없습니다."));
     }
 
 

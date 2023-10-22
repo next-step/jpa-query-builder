@@ -1,7 +1,7 @@
 package persistence.sql.dml;
 
 import persistence.dialect.Dialect;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.meta.EntityMeta;
 
 public class DeleteQueryBuilder<T> extends DMLQueryBuilder<T> {
@@ -11,7 +11,7 @@ public class DeleteQueryBuilder<T> extends DMLQueryBuilder<T> {
 
     public String delete(Object id) {
         if (id == null) {
-            throw new FiledEmptyException("id가 비어 있으면 안 됩니다.");
+            throw new FieldEmptyException("id가 비어 있으면 안 됩니다.");
         }
 
         return delete()

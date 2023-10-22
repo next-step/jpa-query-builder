@@ -1,4 +1,4 @@
-package jdbc;
+package persistence.mapper;
 
 import java.sql.ResultSet;
 

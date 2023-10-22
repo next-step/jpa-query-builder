@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import java.util.stream.Collectors;
 import persistence.dialect.Dialect;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityMeta;
 
@@ -18,7 +18,7 @@ public class SelectQueryBuilder<T> extends DMLQueryBuilder<T> {
 
     public String findById(Object id) {
         if (id == null) {
-            throw new FiledEmptyException("id가 비어 있으면 안 됩니다.");
+            throw new FieldEmptyException("id가 비어 있으면 안 됩니다.");
         }
 
         return select(columns(entityMeta))

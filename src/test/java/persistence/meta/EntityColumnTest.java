@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.exception.FiledEmptyException;
+import persistence.exception.FieldEmptyException;
 import persistence.exception.NumberRangeException;
 import persistence.testFixtures.Person;
 
@@ -20,7 +20,7 @@ class EntityColumnTest {
     @Test
     @DisplayName("필드 파라미터에 null이 들어가면 예외가 발생한다.")
     void nullField() {
-        assertThatExceptionOfType(FiledEmptyException.class)
+        assertThatExceptionOfType(FieldEmptyException.class)
                 .isThrownBy(() -> new EntityColumn(null));
     }
 
