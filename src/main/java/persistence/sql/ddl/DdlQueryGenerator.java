@@ -2,33 +2,27 @@ package persistence.sql.ddl;
 
 import persistence.sql.ddl.builder.CreateQueryBuilder;
 import persistence.sql.ddl.builder.DropQueryBuilder;
-import persistence.sql.ddl.h2.H2CreateQueryBuilder;
-
-import java.util.Arrays;
-import java.util.NoSuchElementException;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.meta.EntityMeta;
 
 public class DdlQueryGenerator {
 
-    private final CreateQueryBuilder createQueryBuilder;
-    private final DropQueryBuilder dropQueryBuilder;
+    private final Dialect dialect;
 
-    private DdlQueryGenerator(CreateQueryBuilder createQueryBuilder, DropQueryBuilder dropQueryBuilder) {
-        this.createQueryBuilder = createQueryBuilder;
-        this.dropQueryBuilder = dropQueryBuilder;
+    private DdlQueryGenerator(Dialect dialect) {
+        this.dialect = dialect;
     }
 
-    public static DdlQueryGenerator findByDbmsType(String dbmsType) {
-        return Arrays.stream(values())
-                .filter(builder -> builder.dbmsType.equals(dbmsType))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("지원하지 않는 DBMS 유형입니다."));
+    public static DdlQueryGenerator of(Dialect dialect) {
+        return new DdlQueryGenerator(dialect);
     }
 
-    public CreateQueryBuilder getCreateQueryBuilder() {
-        return createQueryBuilder;
+    public String generateCreateQuery(EntityMeta entityMeta) {
+        return CreateQueryBuilder.of(dialect, entityMeta).build();
     }
 
-    public DropQueryBuilder getDropQueryBuilder() {
-        return dropQueryBuilder;
+    public String generateDropQuery(EntityMeta entityMeta) {
+        return DropQueryBuilder.of(entityMeta).build();
     }
+
 }
