@@ -7,6 +7,12 @@ public class H2Dialect implements Dialect {
 
     private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
 
+    private static final H2Dialect INSTANCE = new H2Dialect();
+
+    public static H2Dialect getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public TypeDialect getTypeDialect() {
         return H2TypeDialect.getInstance();
