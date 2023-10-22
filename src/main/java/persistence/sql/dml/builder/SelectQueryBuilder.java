@@ -12,8 +12,15 @@ public class SelectQueryBuilder {
     private final WhereClauseBuilder whereClauseBuilder;
 
     private SelectQueryBuilder(EntityMeta entityMeta) {
+        validateEntityAnnotation(entityMeta);
         this.entityMeta = entityMeta;
         this.whereClauseBuilder = WhereClauseBuilder.builder(entityMeta);
+    }
+
+    private void validateEntityAnnotation(EntityMeta entityMeta) {
+        if (!entityMeta.isEntity()) {
+            throw new IllegalArgumentException("Select Query 빌드 대상이 아닙니다.");
+        }
     }
 
     public static SelectQueryBuilder of(EntityMeta entityMeta) {
