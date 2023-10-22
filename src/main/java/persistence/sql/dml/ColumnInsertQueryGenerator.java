@@ -53,8 +53,11 @@ public class ColumnInsertQueryGenerator extends QueryBuilder {
 
             if (value == null) {
                 keywords.add("NULL");
-            } else {
+            }
+            else if (value instanceof String) {
                 keywords.add(TableFieldUtil.replaceNameBySingleQuote(value.toString()));
+            } else {
+                keywords.add(value.toString());
             }
         }
 

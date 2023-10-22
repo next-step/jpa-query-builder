@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 public class RowFindByIdQueryGenerator extends QueryBuilder {
-    final private LinkedHashSet<Long> ids = new LinkedHashSet<>();
+    final private LinkedHashSet<Object> primaryKeys = new LinkedHashSet<>();
 
     public RowFindByIdQueryGenerator(Dialect dialect) {
         super(dialect);
@@ -27,20 +27,20 @@ public class RowFindByIdQueryGenerator extends QueryBuilder {
             ";";
     }
 
-    public RowFindByIdQueryGenerator findBy(Long... ids){
-        Collections.addAll(this.ids, ids);
+    public RowFindByIdQueryGenerator findBy(Object... primaryKeyValues){
+        Collections.addAll(this.primaryKeys, primaryKeyValues);
         return this;
     }
 
     private String whereClause(Class<?> clazz) {
         Field primaryKeyField = TableFieldUtil.getPrimaryKeyField(clazz);
         String primaryKeyColumName = TableFieldUtil.replaceNameByBacktick(TableFieldUtil.getColumnName(primaryKeyField));
-        switch (ids.size()) {
+        switch (primaryKeys.size()) {
             case 0:
             case 1:
-                return primaryKeyColumName + " = " + ids.stream().findFirst().orElse(0L);
+                return primaryKeyColumName + " = " + primaryKeys.stream().findFirst().orElse(0L);
             default:
-                return primaryKeyColumName + " in (" + ids.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")";
+                return primaryKeyColumName + " in (" + primaryKeys.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")";
         }
     }
 }

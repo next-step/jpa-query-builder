@@ -9,6 +9,7 @@ import persistence.sql.H2Dialect;
 import persistence.sql.ddl.TableCreateQueryBuilder;
 import persistence.sql.ddl.TableDropQueryBuilder;
 import persistence.sql.dml.ColumnInsertQueryGenerator;
+import persistence.sql.dml.RowDeleteQueryGenerator;
 import persistence.sql.dml.RowFindAllQueryGenerator;
 import persistence.sql.dml.RowFindByIdQueryGenerator;
 
@@ -31,12 +32,12 @@ public class Application {
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
-            person.setEmail("a@email.com");
+            person.setEmail("a@email.com").setAge(11);
             sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
-            person.setEmail("b@email.com");
+            person.setEmail("b@email.com").setAge(21).setId(2L);
             sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
@@ -50,7 +51,12 @@ public class Application {
                 resultSet.getString("email")
             )).forEach(p -> logger.info("{}", p));
 
-            sql = new RowFindByIdQueryGenerator(h2Dialect).findBy(1L, 3L).generateSQLQuery(person);
+            person.setId(1L);
+            sql = new RowDeleteQueryGenerator(h2Dialect).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.execute(sql);
+
+            sql = new RowFindByIdQueryGenerator(h2Dialect).findBy(1L, 2L).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.query(sql, resultSet -> new Person(
                 resultSet.getLong("id"),

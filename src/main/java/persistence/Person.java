@@ -36,8 +36,19 @@ public class Person {
     @Transient
     private Integer index;
 
-    public void setEmail(String email) {
+    public Person setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public Person setAge(Integer age) {
+        this.age = age;
+        return this;
+    }
+
+    public Person setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     @Override
