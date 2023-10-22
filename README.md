@@ -163,3 +163,10 @@ public interface EntityManager {
   - 인스턴스를 받아 field값을 변경할 수 있다.
 - ReflectionRawMapper
   - T 타입의 인스턴스를 만들어 ResultSet값을 매핑한다.
+
+### 요구사항 2
+```java
+void persist(Object entity);
+```
+- 데이터베이스에 insert 쿼리를 전달하여 저장한다.
+- 저장 후 entity에 id값을 넣어준다.
