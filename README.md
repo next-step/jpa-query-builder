@@ -173,3 +173,9 @@ void persist(Object entity);
   - getFieldValues에서 다른 타입의 클래스 객체가 입력될 경우 예외가 발생한다.
 - 데이터베이스에 insert 쿼리를 전달하여 저장한다.
 - 저장 후 entity에 id값을 넣어준다.
+
+### 요구사항 3
+```java
+void remove(Object entity);
+```
+- 데이터베이스에 delete 쿼리를 전달하여 제거한다.
