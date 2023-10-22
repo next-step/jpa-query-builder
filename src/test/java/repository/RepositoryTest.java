@@ -38,8 +38,8 @@ public class RepositoryTest {
     @TestFactory
     @DisplayName("레포지토리를 관리 한다.")
     Stream<DynamicNode> testFactory() {
-        final DDLRepository<Person> ddlRepository = new DDLRepository(jdbcTemplate, Person.class);
-        final CrudRepository<Person> crudRepository = new CrudRepository<>(jdbcTemplate, Person.class);
+        final DDLRepository<Person> ddlRepository = new BaseDDLRepository<>(jdbcTemplate, Person.class);
+        final CrudRepository<Person> crudRepository = new BaseCrudRepository<>(jdbcTemplate, Person.class);
 
 
         return Stream.of(
