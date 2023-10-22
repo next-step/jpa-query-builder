@@ -28,8 +28,10 @@ public class EntityColumn {
     private int length;
 
     public EntityColumn(Field columnField) {
+        assert columnField != null;
+
         this.type = columnField.getType();
-        this.name = getColumnName(columnField);
+        this.name = extractColumnName(columnField);
 
         if (columnField.isAnnotationPresent(Id.class)) {
             setPkColumn(columnField);
@@ -60,7 +62,7 @@ public class EntityColumn {
         }
     }
 
-    private String getColumnName(Field columnField) {
+    private String extractColumnName(Field columnField) {
         if (columnField.isAnnotationPresent(Column.class)) {
             Column columnAnnotation = columnField.getAnnotation(Column.class);
             return columnAnnotation.name().equals(DEFAULT_COLUMN_NAME) ?
@@ -77,14 +79,6 @@ public class EntityColumn {
 
     public Class<?> getType() {
         return type;
-    }
-
-    public boolean hasGeneratedValue() {
-        return generatedValue != null;
-    }
-
-    public GeneratedValue getGeneratedValue() {
-        return generatedValue;
     }
 
     public String getName() {

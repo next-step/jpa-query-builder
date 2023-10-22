@@ -35,7 +35,7 @@ class H2TableDdlQueryBuilderTest {
         String query = tableDdlQueryBuilder.createDdlQuery(entityMetadataModel);
 
         // then
-        assertThat(query).isEqualTo("create table users(id bigint auto_increment, nick_name varchar(255) null, email varchar(255) not null, old null, primary key (id))");
+        assertThat(query).isEqualTo("create table users(id bigint auto_increment, nick_name varchar(255) null, old null, email varchar(255) not null, primary key (id))");
     }
 
     @DisplayName("Person Entity를 읽어 drop DDL Query를 생성한다")

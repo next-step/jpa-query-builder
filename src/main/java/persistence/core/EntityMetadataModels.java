@@ -8,7 +8,7 @@ public class EntityMetadataModels {
 
     private final Set<EntityMetadataModel> metadataModels;
 
-    EntityMetadataModels(Collection<EntityMetadataModel> metadataModels) {
+    public EntityMetadataModels(Collection<EntityMetadataModel> metadataModels) {
         this.metadataModels = (metadataModels == null || metadataModels.isEmpty()) ?
                 Collections.emptySet() :
                 Set.copyOf(metadataModels);

@@ -14,4 +14,12 @@ public class DepthPersonFixtureEntity {
     private String name;
 
     private int age;
+
+    protected DepthPersonFixtureEntity() {
+    }
+
+    public DepthPersonFixtureEntity(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
 }
