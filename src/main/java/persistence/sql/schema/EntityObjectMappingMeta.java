@@ -1,8 +1,10 @@
 package persistence.sql.schema;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,18 +12,18 @@ import persistence.sql.exception.AccessRequiredException;
 
 public class EntityObjectMappingMeta {
 
-    private static final String STRING_TYPE_FORMAT = "'%s'";
+    private static final String DELIMITER = ", ";
 
     private final EntityClassMappingMeta entityClassMappingMeta;
-    private final Map<ColumnMeta, Object> objectValueMap = new LinkedHashMap<>();
+    private final Map<ColumnMeta, ValueMeta> objectValueMap = new LinkedHashMap<>();
 
-    private EntityObjectMappingMeta(Map<ColumnMeta, Object> valueMap, EntityClassMappingMeta entityClassMappingMeta) {
+    private EntityObjectMappingMeta(Map<ColumnMeta, ValueMeta> valueMap, EntityClassMappingMeta entityClassMappingMeta) {
         this.entityClassMappingMeta = entityClassMappingMeta;
         this.objectValueMap.putAll(valueMap);
     }
 
     public static EntityObjectMappingMeta of(Object instance, EntityClassMappingMeta entityClassMappingMeta) {
-        final Map<ColumnMeta, Object> valueMap = new LinkedHashMap<>();
+        final Map<ColumnMeta, ValueMeta> valueMap = new LinkedHashMap<>();
 
         entityClassMappingMeta.getMappingFieldList().forEach(field ->
             valueMap.put(entityClassMappingMeta.getColumnMeta(field), getFieldValueAsObject(field, instance))
@@ -38,37 +40,27 @@ public class EntityObjectMappingMeta {
         return objectValueMap.keySet();
     }
 
+    public List<ColumnMeta> getColumnMetaList() {
+        return new ArrayList<>(objectValueMap.keySet());
+    }
+
+    public List<Entry<ColumnMeta, ValueMeta>> getMetaEntryList() {
+        return new ArrayList<>(objectValueMap.entrySet());
+    }
+
     public Map<String, Object> getValueMapByColumnName() {
         Map<String, Object> map = new HashMap<>();
-        for (Entry<ColumnMeta, Object> entry : objectValueMap.entrySet()) {
-            map.put(entry.getKey().getColumnName(), entry.getValue());
+        for (Entry<ColumnMeta, ValueMeta> entry : objectValueMap.entrySet()) {
+            map.put(entry.getKey().getColumnName(), entry.getValue().getValue());
         }
 
         return map;
     }
 
-    public String getFormattedValue(ColumnMeta columnMeta) {
-        final Object value = objectValueMap.get(columnMeta);
-
-        return formatValueAsString(value);
-    }
-
-    public static String formatValueAsString(Object object) {
-        if (object == null) {
-            return null;
-        }
-
-        if (object instanceof String) {
-            return String.format(STRING_TYPE_FORMAT, object);
-        }
-
-        return String.valueOf(object);
-    }
-
-    private static Object getFieldValueAsObject(Field field, Object object) {
+    private static ValueMeta getFieldValueAsObject(Field field, Object object) {
         field.setAccessible(true);
         try {
-            return field.get(object);
+            return ValueMeta.of(field.get(object));
         } catch (IllegalAccessException e) {
             throw new AccessRequiredException(e);
         }

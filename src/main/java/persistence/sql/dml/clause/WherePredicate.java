@@ -1,7 +1,7 @@
 package persistence.sql.dml.clause;
 
 import persistence.sql.dml.clause.operator.SqlOperator;
-import persistence.sql.schema.EntityObjectMappingMeta;
+import persistence.sql.schema.ValueMeta;
 
 public class WherePredicate {
 
@@ -23,7 +23,7 @@ public class WherePredicate {
 
     public String toCondition() {
         return String.format(PREDICATE_FORMAT, columnName, whereOperator.getOperatorSql(),
-            EntityObjectMappingMeta.formatValueAsString(whereValue)
+            ValueMeta.formatValueAsString(whereValue)
         );
     }
 }
