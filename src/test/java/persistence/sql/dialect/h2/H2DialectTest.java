@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2ColumnTypePropertiesTest {
+class H2DialectTest {
 
 
     private static final int TEST_LENGTH = 300;
@@ -31,16 +31,16 @@ class H2ColumnTypePropertiesTest {
     @DisplayName("String 타입이고 @Column이 없거나 length 값이 없는 경우 기본 길이는 255이다.")
     @ParameterizedTest
     @CsvSource("withoutLength,withoutColumn")
-    void varcharLengthTestWithoutDeclaredLength(String fieldName) throws Exception {
-        assertThat(H2ColumnTypeProperties.getVarcharLength(ColumnTestClass.class.getDeclaredField(fieldName)))
+    void h2VarcharLengthTestWithoutDeclaredLength(String fieldName) throws Exception {
+        assertThat(new H2Dialect().getStringLength(ColumnTestClass.class.getDeclaredField(fieldName)))
                 .isEqualTo("(255)");
     }
 
     @DisplayName("String 타입이고 @Column(length = 값)에 값이 명시된 경우 그 값을 따른다.")
     @ParameterizedTest
     @CsvSource("withColumnAndLength")
-    void varcharLengthTestWithDeclaredLength(String fieldName) throws Exception {
-        assertThat(H2ColumnTypeProperties.getVarcharLength(ColumnTestClass.class.getDeclaredField(fieldName)))
+    void h2VarcharLengthTestWithDeclaredLength(String fieldName) throws Exception {
+        assertThat(new H2Dialect().getStringLength(ColumnTestClass.class.getDeclaredField(fieldName)))
                 .isEqualTo("(" + TEST_LENGTH + ")");
     }
 

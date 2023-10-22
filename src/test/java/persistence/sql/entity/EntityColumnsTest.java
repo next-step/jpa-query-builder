@@ -1,4 +1,4 @@
-package persistence.sql.ddl.entity;
+package persistence.sql.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +35,7 @@ class EntityColumnsTest {
     @DisplayName("@Transient 클래스는 EntityData에 포함하지 않는다.")
     @Test
     void exceptTransientField() throws Exception {
-        assertThat(new EntityColumns(ColumnTestClass.class).getEntityColumns())
+        assertThat(new EntityColumns(ColumnTestClass.class).getEntityColumnList())
                 .doesNotContain(new EntityColumn(ColumnTestClass.class.getDeclaredField("transientField")));
     }
 

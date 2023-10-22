@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,9 +22,13 @@ public enum H2ColumnType {
         this.dbType = dbType;
     }
 
-    static final Map<Class<?>, H2ColumnType> typeMap = Arrays.stream(H2ColumnType.values())
+    private static final Map<Class<?>, H2ColumnType> typeMap = Arrays.stream(H2ColumnType.values())
             .collect(Collectors.toMap(
                     columnTypeEnum -> columnTypeEnum.fieldType,
                     Function.identity()));
+
+    public static String getDbType(Class<?> columnType) {
+        return typeMap.get(columnType).dbType;
+    }
 
 }

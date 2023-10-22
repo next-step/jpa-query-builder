@@ -1,16 +1,14 @@
-package persistence.sql.ddl.entity;
+package persistence.sql.entity;
 
 /**
  * 엔티티 정보 모음
  */
 public class EntityData {
 
-    private final Class<?> entityClass;
     private final EntityName entityName;
     private final EntityColumns entityColumns;
 
     public EntityData(Class<?> entityClass) {
-        this.entityClass = entityClass;
         this.entityName = new EntityName(entityClass);
         this.entityColumns = new EntityColumns(entityClass);
     }
