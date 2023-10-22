@@ -33,7 +33,10 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
 
     private Field findIdField(Class<?> fromClass) {
         List<Field> fields = getFieldsInClass(fromClass);
-        return fields.stream().filter(field -> field.isAnnotationPresent(Id.class)).findFirst().orElseThrow(() -> new AnnotationException("id 필드가 없습니다."));
+        return fields.stream()
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(() -> new AnnotationException("id 필드가 없습니다."));
     }
 
     private List<Field> getFieldsInClass(Class<?> fromClass) {

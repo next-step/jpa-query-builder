@@ -38,14 +38,14 @@ public class AnnotationBinder {
             return field.getName() + generator;
             // not null auto_increment
         }
-        return field.getName() + registerGenerators(GenerationType.AUTO);
+        return field.getName() + " int";
     }
 
     // 컬럼 어노테이션이 설정되어 있으면 컬럼 어노테이션의 이름 사용, 아니면 필드 이름 사용
     public ColumnMetaData columnBinder(Field field) {
         if(field.isAnnotationPresent(Column.class)) {
             Column column = field.getDeclaredAnnotation(Column.class);
-            String name = column.name();
+            String name = column.name().isEmpty() ? field.getName() : column.name();
             int length = column.length();
             boolean nullable = column.nullable();
             String type = field.getType().getSimpleName();
@@ -70,7 +70,7 @@ public class AnnotationBinder {
             case UUID:
                 return "";
             default:
-                return " INT AUTO_INCREMENT PRIMARY KEY";
+                return "";
         }
     }
 }
