@@ -1,7 +1,8 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.dialect.ColumnType;
-import persistence.sql.ddl.schema.EntityMappingMeta;
+
+import persistence.sql.dialect.ColumnType;
+import persistence.sql.schema.EntityClassMappingMeta;
 
 public class CreateDDLQueryGenerator {
 
@@ -14,8 +15,8 @@ public class CreateDDLQueryGenerator {
     }
 
     public String create(Class<?> entityClazz) {
-        final EntityMappingMeta entityMappingMeta = EntityMappingMeta.of(entityClazz, columnType);
+        final EntityClassMappingMeta entityClassMappingMeta = EntityClassMappingMeta.of(entityClazz, columnType);
 
-        return String.format(CREATE_TABLE_FORMAT, entityMappingMeta.tableClause(), entityMappingMeta.fieldClause());
+        return String.format(CREATE_TABLE_FORMAT, entityClassMappingMeta.tableClause(), entityClassMappingMeta.fieldClause());
     }
 }
