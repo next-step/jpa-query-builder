@@ -60,26 +60,26 @@ public class EntityClass<T> {
     }
 
     // TODO: 하드코딩 리팩터링
-    public Map<EntityColumn, Object> getFieldValues(final Object object) {
-        validateEntityType(object);
+    public Map<EntityColumn, Object> getFieldValues(final Object entity) {
+        validateEntityType(entity);
         return entityColumns.getValues()
                 .stream()
-                .filter(entityColumn -> entityColumn.getFieldValue(object) != null)
+                .filter(entityColumn -> entityColumn.getFieldValue(entity) != null)
                 .collect(Collectors.toMap(
                         entityColumn -> entityColumn,
-                        entityColumn -> entityColumn.getFieldValue(object),
+                        entityColumn -> entityColumn.getFieldValue(entity),
                         (existing, replacement) -> existing,
                         LinkedHashMap::new
                 ));
     }
 
-    public Object extractEntityId(final Object object) {
-        validateEntityType(object);
-        return getEntityId().getFieldValue(object);
+    public Object extractEntityId(final Object entity) {
+        validateEntityType(entity);
+        return getEntityId().getFieldValue(entity);
     }
 
-    private void validateEntityType(Object object) {
-        if (clazz != object.getClass()) {
+    private void validateEntityType(Object entity) {
+        if (clazz != entity.getClass()) {
             throw new IllegalArgumentException("EntityClass와 일치하지 않는 객체입니다.");
         }
     }

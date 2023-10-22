@@ -16,8 +16,8 @@ public class InsertQueryBuilder {
     private static final String INSERT_COLUMN_QUERY_DELIMITER = ", ";
     private static final String INSERT_COLUMN_STRING_VALUE_FORMAT = "'%s'";
 
-    public String generateQuery(final EntityClass<?> entityClass, Object object) {
-        Map<EntityColumn, Object> fieldValues = entityClass.getFieldValues(object);
+    public String generateQuery(final EntityClass<?> entityClass, Object entity) {
+        Map<EntityColumn, Object> fieldValues = entityClass.getFieldValues(entity);
         List<EntityColumn> entityColumns = new ArrayList<>(fieldValues.keySet());
         return String.format(INSERT_QUERY,
                 entityClass.tableName(), parseColumnQueries(entityColumns), parseColumnValueQueries(entityColumns, fieldValues));
@@ -35,10 +35,10 @@ public class InsertQueryBuilder {
                 .collect(Collectors.joining(INSERT_COLUMN_QUERY_DELIMITER));
     }
 
-    private String parseFieldValue(final EntityColumn entityColumn, final Object object) {
+    private String parseFieldValue(final EntityColumn entityColumn, final Object entity) {
         if (entityColumn.getColumnType() == ColumnType.VAR_CHAR) {
-            return String.format(INSERT_COLUMN_STRING_VALUE_FORMAT, object);
+            return String.format(INSERT_COLUMN_STRING_VALUE_FORMAT, entity);
         }
-        return object.toString();
+        return entity.toString();
     }
 }
