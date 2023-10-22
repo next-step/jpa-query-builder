@@ -2,10 +2,11 @@ package persistence.sql.meta;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColumnMetas {
+public class ColumnMetas implements Iterable<ColumnMeta> {
 
     private final List<ColumnMeta> values;
 
@@ -19,11 +20,16 @@ public class ColumnMetas {
                 .collect(Collectors.toList()));
     }
 
-    public List<String> sqlColumnNames() {
-        return values.stream()
+    public ColumnMetas exceptTransient() {
+        List<ColumnMeta> exceptTransient = values.stream()
                 .filter(columnMeta -> !columnMeta.isTransient())
-                .map(ColumnMeta::getColumnName)
                 .collect(Collectors.toList());
+        return new ColumnMetas(exceptTransient);
+    }
+
+    @Override
+    public Iterator<ColumnMeta> iterator() {
+        return values.iterator();
     }
 
 }
