@@ -29,4 +29,8 @@ public class EntityMeta {
         }
         return clazz.getSimpleName().toLowerCase();
     }
+
+    public ColumnMetas getColumnMetas() {
+        return columnMetas;
+    }
 }
