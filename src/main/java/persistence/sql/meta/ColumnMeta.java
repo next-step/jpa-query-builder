@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import persistence.sql.util.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public class ColumnMeta {
 
@@ -50,4 +51,16 @@ public class ColumnMeta {
         return field.getType();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        ColumnMeta that = (ColumnMeta) object;
+        return Objects.equals(field, that.field);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(field);
+    }
 }
