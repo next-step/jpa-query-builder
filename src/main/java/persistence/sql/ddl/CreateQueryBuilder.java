@@ -1,27 +1,34 @@
 package persistence.sql.ddl;
 
+import persistence.sql.QueryBuilder;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class CreateQueryBuilder implements QueryBuilder{
-    private final static String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
+public class CreateQueryBuilder implements QueryBuilder {
+    private static final String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
 
-    private QueryValidator queryValidator;
+    private final QueryValidator queryValidator;
 
-    public CreateQueryBuilder(QueryValidator queryValidator) {
+    private final Columns columns;
+
+    private final Table table;
+
+    public CreateQueryBuilder(QueryValidator queryValidator, Class<?> clazz) {
         this.queryValidator = queryValidator;
+        queryValidator.checkIsEntity(clazz);
+        this.columns = new Columns(convertClassToColumnList(clazz));
+        this.table = new Table(clazz);
     }
 
     @Override
-    public String buildQuery(Class<?> clazz) {
-        queryValidator.checkIsEntity(clazz);
-
-        return format(CREATE_TABLE_COMMAND, new Table(clazz).getName()) +
+    public String buildQuery() {
+        return format(CREATE_TABLE_COMMAND, table.getName()) +
                 "(" +
-                new ColumnBuilder((convertClassToColumnList(clazz))).buildColumnList() +
+                columns.buildColumnsToCreate() +
                 ");";
     }
 

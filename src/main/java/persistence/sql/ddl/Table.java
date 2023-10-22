@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 public class Table {
-    private String name;
+    private final String name;
 
     public Table(Class<?> clazz) {
         this.name = findTableName(clazz);

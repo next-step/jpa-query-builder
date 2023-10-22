@@ -1,20 +1,24 @@
 package persistence.sql.ddl;
 
+import persistence.sql.QueryBuilder;
+
 import static java.lang.String.format;
 
-public class DropQueryBuilder implements QueryBuilder{
-    private final static String DROP_TABLE_COMMAND = "DROP TABLE %s;";
+public class DropQueryBuilder implements QueryBuilder {
+    private static final String DROP_TABLE_COMMAND = "DROP TABLE %s;";
 
-    private QueryValidator queryValidator;
+    private final QueryValidator queryValidator;
 
-    public DropQueryBuilder(QueryValidator queryValidator) {
+    private final Table table;
+
+    public DropQueryBuilder(QueryValidator queryValidator, Class<?> clazz) {
         this.queryValidator = queryValidator;
+        queryValidator.checkIsEntity(clazz);
+        this.table = new Table(clazz);
     }
 
     @Override
-    public String buildQuery(Class<?> clazz) {
-        queryValidator.checkIsEntity(clazz);
-
-        return format(DROP_TABLE_COMMAND, new Table(clazz).getName());
+    public String buildQuery() {
+        return format(DROP_TABLE_COMMAND, table.getName());
     }
 }

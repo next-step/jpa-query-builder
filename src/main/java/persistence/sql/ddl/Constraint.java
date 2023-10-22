@@ -8,14 +8,14 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 
 public class Constraint {
-    private final static String PRIMARY_CONSTRAINT = " PRIMARY KEY";
-    private final static String NOT_NULL_CONSTRAINT = " NOT NULL";
+    private static final String PRIMARY_CONSTRAINT = " PRIMARY KEY";
+    private static final String NOT_NULL_CONSTRAINT = " NOT NULL";
 
-    private boolean isPrimaryKey;
+    private final boolean isPrimaryKey;
 
-    private boolean isNullable;
+    private final boolean isNullable;
 
-    private String generatedType;
+    private final String generatedType;
 
     public Constraint(Field field) {
         this.isPrimaryKey = findIsPrimaryKey(field);
