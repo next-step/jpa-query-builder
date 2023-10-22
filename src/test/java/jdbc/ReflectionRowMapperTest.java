@@ -13,13 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ReflectionRowMapperTest {
 
     @Test
-    void ResultSet의_결과로_객체를_매핑한다() throws SQLException {
+    void ResultSet의_결과로_객체를_매핑한다() {
         // given
         SimpleResultSet givenResultSet = new SimpleResultSet();
         givenResultSet.addColumn("id", Types.BIGINT, 0, 0);
         givenResultSet.addColumn("nick_name", Types.VARCHAR, 0, 0);
         givenResultSet.addRow(1L, "최진영");
-        givenResultSet.next();
         RowMapper<TestEntity> rowMapper = new ReflectionRowMapper<>(TestEntity.class);
 
         // when
