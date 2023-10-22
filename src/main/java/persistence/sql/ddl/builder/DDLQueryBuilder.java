@@ -1,6 +1,9 @@
 package persistence.sql.ddl.builder;
 
 
-interface DDLQueryBuilder {
-    String prepareStatement(Class<?> tClass);
+import persistence.entitiy.attribute.EntityAttribute;
+import persistence.sql.ddl.converter.SqlConverter;
+
+public interface DDLQueryBuilder {
+    String prepareStatement(EntityAttribute entityAttribute, SqlConverter sqlConverter);
 }

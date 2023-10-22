@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence;
 
 import database.DatabaseServer;
 import database.H2;
@@ -7,6 +7,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entitiy.attribute.EntityAttribute;
+import persistence.mapper.StringRowMapper;
+import persistence.sql.common.DDLType;
+import persistence.sql.ddl.builder.DDLQueryBuilder;
+import persistence.sql.ddl.builder.DDLQueryBuilderFactory;
+import persistence.sql.ddl.converter.SqlConverter;
+import persistence.sql.parser.AttributeParser;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -34,5 +41,11 @@ public class DatabaseTest {
         }
 
         server.stop();
+    }
+
+    protected void setUpFixtureTable(Class<?> clazz, SqlConverter sqlConverter) {
+        DDLQueryBuilder queryBuilder = DDLQueryBuilderFactory.createQueryBuilder(DDLType.CREATE);
+        EntityAttribute entityAttribute = EntityAttribute.of(clazz, new AttributeParser());
+        jdbcTemplate.execute(queryBuilder.prepareStatement(entityAttribute, sqlConverter));
     }
 }

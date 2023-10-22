@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.mapper;
 
 import entity.Person;
 import jdbc.RowMapper;
