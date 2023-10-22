@@ -17,8 +17,18 @@ public class DeleteQuery {
         this.arg = arg;
     }
 
+    private <T> DeleteQuery(T t) {
+        this.entityMeta = EntityMeta.of(t.getClass());
+        this.instanceManager = InstanceManager.of(t);
+        this.arg = entityMeta.getIdName();
+    }
+
     public static <T> String create(T t, Object arg) {
         return new DeleteQuery(t, arg).combine();
+    }
+
+    public static <T> String create(T t) {
+        return new DeleteQuery(t).combine();
     }
 
     private String combine() {
