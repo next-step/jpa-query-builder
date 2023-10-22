@@ -1,6 +1,7 @@
 package persistence.sql;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
@@ -40,5 +41,13 @@ public class TableFieldUtil {
             .stream(clazz.getDeclaredFields())
             .filter(x -> !x.isAnnotationPresent(Transient.class))
             .toArray(Field[]::new);
+    }
+
+    static public Field getPrimaryKeyField(Class<?> clazz) {
+        return Arrays
+            .stream(clazz.getDeclaredFields())
+            .filter(f -> f.isAnnotationPresent(Id.class))
+            .findFirst()
+            .orElse(null);
     }
 }

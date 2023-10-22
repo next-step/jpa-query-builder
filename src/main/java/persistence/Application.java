@@ -10,6 +10,7 @@ import persistence.sql.ddl.TableCreateQueryBuilder;
 import persistence.sql.ddl.TableDropQueryBuilder;
 import persistence.sql.dml.ColumnInsertQueryGenerator;
 import persistence.sql.dml.RowFindAllQueryGenerator;
+import persistence.sql.dml.RowFindByIdQueryGenerator;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -30,12 +31,12 @@ public class Application {
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
-            person.setEmail("a");
+            person.setEmail("a@email.com");
             sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
-            person.setEmail("b");
+            person.setEmail("b@email.com");
             sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
@@ -47,7 +48,16 @@ public class Application {
                 resultSet.getString("nick_name"),
                 resultSet.getInt("old"),
                 resultSet.getString("email")
-            )).forEach(x -> logger.info("{}", x));
+            )).forEach(p -> logger.info("{}", p));
+
+            sql = new RowFindByIdQueryGenerator(h2Dialect).findBy(1L, 3L).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.query(sql, resultSet -> new Person(
+                resultSet.getLong("id"),
+                resultSet.getString("nick_name"),
+                resultSet.getInt("old"),
+                resultSet.getString("email")
+            )).forEach(p -> logger.info("{}", p));
 
             sql = new TableDropQueryBuilder(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
