@@ -3,10 +3,11 @@ package persistence.entitiy;
 import persistence.entitiy.context.PersistencContext;
 
 public class EntityManagerImpl implements EntityManager {
-    private static final EntityManagerImpl INSTANCE = new EntityManagerImpl();
-    private static final PersistencContext persistencContext = new PersistencContext();
+    private static PersistencContext persistencContext = PersistencContext.getInstance();
+    private static final EntityManagerImpl INSTANCE = new EntityManagerImpl(persistencContext);
 
-    private EntityManagerImpl() {
+    private EntityManagerImpl(PersistencContext persistencContext) {
+        EntityManagerImpl.persistencContext = persistencContext;
     }
 
     public static EntityManagerImpl getInstance() {
