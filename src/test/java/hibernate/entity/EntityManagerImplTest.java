@@ -5,6 +5,7 @@ import database.H2;
 import hibernate.ddl.CreateQueryBuilder;
 import jakarta.persistence.*;
 import jdbc.JdbcTemplate;
+import jdbc.ReflectionRowMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ class EntityManagerImplTest {
 
     @AfterEach
     void afterEach() {
+        jdbcTemplate.execute("truncate table test_entity;");
         server.stop();
     }
 
@@ -52,6 +54,24 @@ class EntityManagerImplTest {
         );
     }
 
+    @Test
+    void 객체를_저장한다() {
+        // given
+        TestEntity givenEntity = new TestEntity("최진영", 19, "jinyoungchoi95@gmail.com");
+
+        // when
+        entityManager.persist(givenEntity);
+        TestEntity actual = jdbcTemplate.queryForObject("select id, nick_name, age from test_entity;", new ReflectionRowMapper<>(TestEntity.class));
+
+        // then
+        assertAll(
+                () -> assertThat(actual.id).isEqualTo(1L),
+                () -> assertThat(actual.name).isEqualTo(givenEntity.name),
+                () -> assertThat(actual.age).isEqualTo(givenEntity.age)
+        );
+
+    }
+
     @Entity
     @Table(name= "test_entity")
     static class TestEntity {
@@ -66,5 +86,14 @@ class EntityManagerImplTest {
 
         @Transient
         private String email;
+
+        public TestEntity() {
+        }
+
+        public TestEntity(String name, Integer age, String email) {
+            this.name = name;
+            this.age = age;
+            this.email = email;
+        }
     }
 }
