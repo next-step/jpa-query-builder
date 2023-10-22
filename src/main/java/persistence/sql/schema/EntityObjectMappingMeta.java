@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import persistence.sql.exception.AccessRequiredException;
+import persistence.sql.exception.ColumnNotFoundException;
 
 public class EntityObjectMappingMeta {
 
+    private final EntityClassMappingMeta entityClassMappingMeta;
     private final Map<ColumnMeta, ValueMeta> objectValueMap = new LinkedHashMap<>();
 
-    private EntityObjectMappingMeta(Map<ColumnMeta, ValueMeta> valueMap) {
+    private EntityObjectMappingMeta(Map<ColumnMeta, ValueMeta> valueMap, EntityClassMappingMeta entityClassMappingMeta) {
+        this.entityClassMappingMeta = entityClassMappingMeta;
         this.objectValueMap.putAll(valueMap);
     }
 
@@ -24,7 +27,7 @@ public class EntityObjectMappingMeta {
             valueMap.put(entityClassMappingMeta.getColumnMeta(field), getFieldValueAsObject(field, instance))
         );
 
-        return new EntityObjectMappingMeta(valueMap);
+        return new EntityObjectMappingMeta(valueMap, entityClassMappingMeta);
     }
 
     public List<ColumnMeta> getColumnMetaList() {
@@ -42,6 +45,25 @@ public class EntityObjectMappingMeta {
         }
 
         return map;
+    }
+
+    public String getIdColumnName() {
+        final ColumnMeta idColumnMeta = objectValueMap.keySet().stream()
+            .filter(ColumnMeta::isPrimaryKey)
+            .findAny()
+            .orElseThrow(() -> new ColumnNotFoundException("Id Column not found"));
+
+        return idColumnMeta.getColumnName();
+    }
+
+    public Object getIdValue() {
+        final ValueMeta idValueMeta = objectValueMap.entrySet().stream()
+            .filter(entry -> entry.getKey().isPrimaryKey())
+            .map(Entry::getValue)
+            .findAny()
+            .orElseThrow(() -> new ColumnNotFoundException("Id Column not found"));
+
+        return idValueMeta.getValue();
     }
 
     private static ValueMeta getFieldValueAsObject(Field field, Object object) {

@@ -1,6 +1,7 @@
 package persistence.sql.schema;
 
 import jakarta.persistence.Entity;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,12 +61,23 @@ public class EntityClassMappingMeta {
         return columnMetaMap.get(field);
     }
 
+    public String getMappingColumnName(Field field) {
+        return columnMetaMap.get(field).getColumnName();
+    }
+
     public ColumnMeta getIdFieldColumnMeta() {
         return columnMetaMap.entrySet().stream()
             .filter(entry -> PrimaryKeyConstraint.isPrimaryKey(entry.getKey()))
             .map(Entry::getValue)
             .findAny()
             .orElseThrow(() -> new RequiredAnnotationException("@Id annotation is required in entity"));
+    }
+
+    public Constructor<?> getDefaultConstructor() {
+        return Arrays.stream(tableMeta.getType().getDeclaredConstructors())
+            .filter(constructor -> constructor.getParameterCount() == 0)
+            .findAny()
+            .orElseThrow(() -> new RuntimeException("Default constructor required"));
     }
 
     private static Map<Field, ColumnMeta> getColumnMetasFromEntity(Class<?> entityClazz, ColumnType columnType) {
