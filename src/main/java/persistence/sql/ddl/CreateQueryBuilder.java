@@ -34,9 +34,15 @@ public class CreateQueryBuilder extends QueryBuilder{
     }
 
     private String columnQueryBuilder(ColumnMetaData columnMetaData) {
-        if(columnMetaData.isNullable()) {
-            return ", "+ columnMetaData.getName() + " "+ dialect.javaTypeToJdbcType(columnMetaData.getType()) + " ";
+        String query = ", "+ columnMetaData.getName() + " "+ dialect.javaTypeToJdbcType(columnMetaData.getType());
+
+        if(columnMetaData.getType().equals("String")) {
+            query = query + "(" +columnMetaData.getLength()+") ";
         }
-        return ", "+columnMetaData.getName() + " " + dialect.javaTypeToJdbcType(columnMetaData.getType()) + " not null";
+
+        if(!columnMetaData.isNullable()) {
+            query = query + " not null";
+        }
+        return query;
     }
 }

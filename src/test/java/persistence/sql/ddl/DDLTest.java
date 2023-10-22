@@ -40,9 +40,9 @@ public class DDLTest {
         MetaData personv1 = metadataGenerator.generator(PersonV1.class);
         StringBuilder sb = new StringBuilder();
         Query query = createQueryBuilder.create(personv1, sb);
-        jdbcTemplate.execute(String.valueOf(query));
-        Assertions.assertThat("create table PersonV1 (id INT AUTO_INCREMENT PRIMARY KEY , name varchar , age int  )")
-                .isEqualTo(String.valueOf(query));
+        jdbcTemplate.execute(String.valueOf(query.getQuery()));
+        Assertions.assertThat(String.valueOf(query.getQuery()))
+                .isEqualTo("create table PersonV1 (id INT AUTO_INCREMENT PRIMARY KEY , name varchar(255) , age int )");
     }
 
     @Test
@@ -51,9 +51,10 @@ public class DDLTest {
         MetaData personv2 = metadataGenerator.generator(PersonV2.class);
         StringBuilder sb = new StringBuilder();
         Query query = createQueryBuilder.create(personv2, sb);
-        jdbcTemplate.execute(String.valueOf(query));
-        Assertions.assertThat("create table PersonV2 (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
-                .isEqualTo(String.valueOf(query));
+        jdbcTemplate.execute(String.valueOf(query.getQuery()));
+        System.out.println(String.valueOf(query.getQuery()));
+        Assertions.assertThat(String.valueOf(query.getQuery()))
+                .isEqualTo("create table PersonV2 (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )");
     }
 
     @Test
@@ -62,7 +63,8 @@ public class DDLTest {
         MetaData personv3 = metadataGenerator.generator(PersonV3.class);
         StringBuilder sb = new StringBuilder();
         Query query = createQueryBuilder.create(personv3, sb);
-        jdbcTemplate.execute(String.valueOf(query));
+        jdbcTemplate.execute(String.valueOf(query.getQuery()));
+        System.out.println(String.valueOf(query.getQuery()));
         Assertions.assertThat("create table users (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar , old int , email varchar not null )")
                 .isEqualTo(String.valueOf(query));
     }
@@ -73,9 +75,9 @@ public class DDLTest {
         MetaData personv3 = metadataGenerator.generator(PersonV3.class);
         StringBuilder sb = new StringBuilder();
         Query query = dropQueryBuilder.drop(personv3, sb);
-        jdbcTemplate.execute(String.valueOf(query));
-        Assertions.assertThat("drop table users")
-                .isEqualTo(String.valueOf(query));
+        jdbcTemplate.execute(String.valueOf(query.getQuery()));
+        Assertions.assertThat(String.valueOf(query.getQuery()))
+                .isEqualTo("drop table users");
     }
 
     @AfterAll

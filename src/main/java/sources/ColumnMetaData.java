@@ -4,7 +4,7 @@ public class ColumnMetaData {
 
     private String name;
     private String type;
-    private int length;
+    private int length = 255;
     private boolean nullable = true;
 
     public ColumnMetaData() {

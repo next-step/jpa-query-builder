@@ -5,7 +5,7 @@ public class H2Dialect extends Dialect {
     public H2Dialect() {
     }
     @Override
-    public int javaTypeToJdbcType(String javaType) {
+    public String javaTypeToJdbcType(String javaType) {
         return super.javaTypeToJdbcType(javaType);
     }
 
