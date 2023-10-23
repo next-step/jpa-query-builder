@@ -25,6 +25,12 @@ public class WhereClauseBuilder {
         return new WhereClauseBuilder(entityMeta);
     }
 
+    public WhereClauseBuilder appendPkClause(Object entity) {
+        ColumnValues idColumnValues = ColumnValues.ofId(entity);
+        columnValues.putAll(idColumnValues);
+        return this;
+    }
+
     public String build() {
         if (columnValues == null) {
             return StringConstant.EMPTY_STRING;
