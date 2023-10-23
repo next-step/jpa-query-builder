@@ -6,15 +6,17 @@ public class ColumnMetaData {
     private String type;
     private int length = 255;
     private boolean nullable = true;
+    private String value;
 
     public ColumnMetaData() {
     }
 
-    public ColumnMetaData(String name, String type, int length, boolean nullable) {
+    public ColumnMetaData(String name, String type, int length, boolean nullable, String value) {
         this.name = name;
         this.type = type;
         this.length = length;
         this.nullable = nullable;
+        this.value = value;
     }
 
     public String getName() {
@@ -53,7 +55,12 @@ public class ColumnMetaData {
         return this;
     }
 
+    public ColumnMetaData value(String value) {
+        this.value = value;
+        return this;
+    }
+
     public ColumnMetaData build() {
-        return new ColumnMetaData(name, type, length, nullable);
+        return new ColumnMetaData(name, type, length, nullable, value);
     }
 }
