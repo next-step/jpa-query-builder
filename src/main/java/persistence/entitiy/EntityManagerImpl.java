@@ -39,7 +39,8 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public void remove(Object entity) {
-
+    public <T> void remove(T entity) {
+        String id = persistencContext.remove(entity);
+        entityPersister.remove(entity, id);
     }
 }

@@ -6,6 +6,7 @@ import jdbc.JdbcTemplate;
 import persistence.entitiy.attribute.EntityAttribute;
 import persistence.entitiy.attribute.GeneralAttribute;
 import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.sql.dml.builder.DeleteQueryBuilder;
 import persistence.sql.dml.builder.InsertQueryBuilder;
 import persistence.sql.dml.builder.SelectQueryBuilder;
 import persistence.sql.parser.AttributeParser;
@@ -49,6 +50,13 @@ public class EntityPersister {
         String sql = SelectQueryBuilder.of(entityAttribute).where(idAttribute.getColumnName(), id).prepareStatement();
 
         return jdbcTemplate.queryForObject(sql, rs -> mapResultSetToEntity(clazz, idAttribute, generalAttributes, rs));
+    }
+
+    public <T> void remove(T entity, String id) {
+        EntityAttribute entityAttribute = EntityAttribute.of(entity.getClass(), new AttributeParser());
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
+        String deleteDML = deleteQueryBuilder.prepareStatement(entityAttribute, id);
+        jdbcTemplate.execute(deleteDML);
     }
 
     private <T> T mapResultSetToEntity(Class<T> clazz, IdAttribute idAttribute, List<GeneralAttribute> generalAttributes, ResultSet rs) {

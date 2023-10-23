@@ -21,6 +21,24 @@ public class PersistencContext {
         FIRST_CACHE.put(clazz, entityMap);
     }
 
+    public <T> String remove(T entity) {
+        Class<?> clazz = entity.getClass();
+        Map<String, Object> entityMap = FIRST_CACHE.get(clazz);
+
+        String entityId = getEntityId(entity);
+
+        if (entityMap == null) {
+            return entityId;
+        }
+
+        entityMap.remove(entityId);
+
+        if (entityMap.isEmpty()) {
+            FIRST_CACHE.remove(clazz);
+        }
+        return entityId;
+    }
+
     private <T> Map<String, Object> getOrCreateEntityMap(Class<T> clazz) {
         return FIRST_CACHE.computeIfAbsent(clazz, k -> new HashMap<>());
     }
