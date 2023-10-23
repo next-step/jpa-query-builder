@@ -1,8 +1,6 @@
 package jdbc;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +37,15 @@ public class JdbcTemplate {
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public String getDbmsName()  {
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            return metaData.getDatabaseProductName();
+        } catch (SQLException e) {
+            throw new IllegalStateException("DBMS 정보를 획득하는 데 실패하였습니다.");
         }
     }
 }
