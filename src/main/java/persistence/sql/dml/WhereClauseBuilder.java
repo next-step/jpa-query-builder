@@ -1,5 +1,8 @@
 package persistence.sql.dml;
 
+import persistence.sql.metadata.Value;
+import persistence.sql.metadata.Values;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -11,7 +14,7 @@ public class WhereClauseBuilder {
 
 	private final Values values;
 
-	public WhereClauseBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) throws Exception{
+	public WhereClauseBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) {
 		if(whereColumns.size() != whereValues.size()) {
 			throw new IllegalArgumentException("조건문에 해당하는 컬럼과 값의 개수가 일치하지 않습니다.");
 		}
@@ -30,10 +33,10 @@ public class WhereClauseBuilder {
 	}
 
 	public String buildClause() {
-		if(values.whereClause().isEmpty()) {
+		if(values.buildWhereClause().isEmpty()) {
 			return "";
 		}
 
-		return format(WHERE_CLAUSE, values.whereClause());
+		return format(WHERE_CLAUSE, values.buildWhereClause());
 	}
 }

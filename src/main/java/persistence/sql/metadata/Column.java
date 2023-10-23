@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.metadata;
 
 import jakarta.persistence.Transient;
 
@@ -22,14 +22,6 @@ public class Column {
 
     public String getName() {
         return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public Constraint getConstraint() {
-        return constraint;
     }
 
     public boolean isTransient() {

@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.metadata;
 
 public class Table {
     private final String name;

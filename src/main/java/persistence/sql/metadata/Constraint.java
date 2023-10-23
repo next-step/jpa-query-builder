@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.metadata;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

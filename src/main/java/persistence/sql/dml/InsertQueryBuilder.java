@@ -1,30 +1,29 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.*;
+import persistence.sql.metadata.EntityMetadata;
+import persistence.sql.metadata.Value;
+import persistence.sql.metadata.Values;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
 public class InsertQueryBuilder{
     private final static String INSERT_COMMAND = "INSERT INTO %s (%s) VALUES %s;";
 
-    private QueryValidator queryValidator;
-
-    private final Table table;
+    private final EntityMetadata entityMetadata;
 
     private final Values values;
 
-    public InsertQueryBuilder(QueryValidator queryValidator, Object insertObject) {
-        this.queryValidator = queryValidator;
-        queryValidator.checkIsEntity(insertObject.getClass());
-        this.table = new Table(insertObject.getClass());
+    public InsertQueryBuilder(Object insertObject) {
+        this.entityMetadata = new EntityMetadata(insertObject.getClass());
         this.values = convertObjectToValues(insertObject);
     }
 
     public String buildQuery() {
-        return format(INSERT_COMMAND, table.getName(), values.columnsClause(), "(" +  values.valueClause() + ")");
+        return format(INSERT_COMMAND, entityMetadata.getTableName(), values.buildColumnsClause(), "(" +  values.buildValueClause() + ")");
     }
 
     private Values convertObjectToValues(Object object) {
@@ -32,13 +31,11 @@ public class InsertQueryBuilder{
             return null;
         }
 
-        Values values = new Values(new ArrayList<>());
         Field[] fields = object.getClass().getDeclaredFields();
-
-        for(Field field : fields) {
-            field.setAccessible(true);
-            values.addInsertValue(new Value(field, object));
-        }
+        Values values = new Values(Arrays.stream(fields)
+                .map(x -> new Value(x, object))
+                .filter(Value::checkPossibleToInsert)
+                .collect(Collectors.toList()));
 
         return values;
     }

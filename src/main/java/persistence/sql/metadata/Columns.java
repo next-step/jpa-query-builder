@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.metadata;
 
 import java.util.List;
 import java.util.stream.Collectors;
