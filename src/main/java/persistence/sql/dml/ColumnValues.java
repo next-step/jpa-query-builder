@@ -17,6 +17,10 @@ public class ColumnValues {
         this.elements = elements;
     }
 
+    public static ColumnValues emptyValues() {
+        return new ColumnValues(new LinkedHashMap<>());
+    }
+
     public static ColumnValues of(Object object) {
         return new ColumnValues(buildElements(object));
     }
@@ -95,6 +99,10 @@ public class ColumnValues {
 
     public List<String> values() {
         return new ArrayList<>(elements.values());
+    }
+
+    public boolean isEmpty() {
+        return elements.isEmpty();
     }
 
     public List<String> buildValueConditions() {

@@ -16,6 +16,7 @@ public class WhereClauseBuilder {
 
     private WhereClauseBuilder(EntityMeta entityMeta) {
         this.entityMeta = entityMeta;
+        this.columnValues = ColumnValues.emptyValues();
     }
 
     public static WhereClauseBuilder builder(EntityMeta entityMeta) {
@@ -32,7 +33,7 @@ public class WhereClauseBuilder {
     }
 
     public String build() {
-        if (columnValues == null) {
+        if (columnValues.isEmpty()) {
             return StringConstant.EMPTY_STRING;
         }
         return new StringBuilder()
