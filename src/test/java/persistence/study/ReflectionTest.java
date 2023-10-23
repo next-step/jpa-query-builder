@@ -15,6 +15,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReflectionTest {
 
@@ -69,7 +70,7 @@ public class ReflectionTest {
     @Test
     @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
     void testAnnotationMethodRun() {
-        //given when
+
         Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                         .forEach(method -> {
@@ -84,38 +85,27 @@ public class ReflectionTest {
     @Test
     @DisplayName("요구사항 4 - private field에 값 할당")
     void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-        Car car = carClass.getDeclaredConstructor().newInstance();
+        Car car = carClass.getConstructor().newInstance();
         Field name = car.getClass().getDeclaredField("name");
         Field price = car.getClass().getDeclaredField("price");
         name.setAccessible(true);
         name.set(car, CAR_NAME);
         price.setAccessible(true);
         price.setInt(car, CAR_PRICE);
-        assertThat(car.getName()).isEqualTo(CAR_NAME);
-        assertThat(car.getPrice()).isEqualTo(CAR_PRICE);
+        assertAll(() -> assertEquals(CAR_NAME, car.getName()),
+                () -> assertEquals(CAR_PRICE, car.getPrice()));
+
     }
 
     @Test
     @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
-    void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        Constructor<?>[] declaredConstructors = carClass.getDeclaredConstructors();
-        Arrays.stream(declaredConstructors)
-                .filter(constructor -> constructor.getParameterCount() == 2)
-                .forEach(constructor -> {
-                    constructor.setAccessible(true);
-                    try {
-                        Car car = (Car) constructor.newInstance(CAR_NAME, CAR_PRICE);
-                        assertThat(car.getName()).isEqualTo(CAR_NAME);
-                        assertThat(car.getPrice()).isEqualTo(CAR_PRICE);
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-
+    void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+        Constructor<Car> carClassConstructor = carClass.getConstructor(String.class, int.class);
+        Car car = carClassConstructor.newInstance(CAR_NAME, CAR_PRICE);
+        assertAll(() -> assertEquals(CAR_NAME, car.getName()),
+                () -> assertEquals(CAR_PRICE, car.getPrice()));
     }
 
-    // 배열을 list 로 바꿔주는 메소드
     private <T, G> List<G> fromArrayToList(T[] array, Function<T, G> toListFunction) {
         return Arrays.stream(array)
                 .map(toListFunction)
