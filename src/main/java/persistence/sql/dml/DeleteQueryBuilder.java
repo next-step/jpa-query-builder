@@ -3,8 +3,8 @@ package persistence.sql.dml;
 import persistence.dialect.Dialect;
 import persistence.sql.QueryBuilder;
 
-public class InsertQueryBuilder extends QueryBuilder {
-    public InsertQueryBuilder(Dialect dialect) {
+public class DeleteQueryBuilder extends QueryBuilder {
+    public DeleteQueryBuilder(Dialect dialect) {
         super(dialect);
     }
 }
