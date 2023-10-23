@@ -30,10 +30,9 @@ public class JdbcEntityManager implements EntityManager {
     }
 
     @Override
-    public Object persist(Object entity) {
+    public void persist(Object entity) {
         String insertEntityQuery = dmlQueryGenerator.generateInsertQuery(entity);
         jdbcTemplate.execute(insertEntityQuery);
-        return entity;
     }
 
     @Override
