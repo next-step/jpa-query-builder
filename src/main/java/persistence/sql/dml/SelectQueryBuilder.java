@@ -13,7 +13,7 @@ public class SelectQueryBuilder implements QueryBuilder {
 	private final EntityMetadata entityMetadata;
 	private final String whereClause;
 
-	public SelectQueryBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) throws Exception {
+	public SelectQueryBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) {
 		this.entityMetadata = new EntityMetadata(clazz);
 		this.whereClause = new WhereClauseBuilder(clazz, whereColumns, whereValues).buildClause();
 	}

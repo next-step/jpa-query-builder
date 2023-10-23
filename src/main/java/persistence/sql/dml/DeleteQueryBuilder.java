@@ -14,7 +14,7 @@ public class DeleteQueryBuilder implements QueryBuilder {
 
 	private final String whereClause;
 
-	public DeleteQueryBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) throws Exception {
+	public DeleteQueryBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) {
 		this.entityMetadata = new EntityMetadata(clazz);
 		this.whereClause = new WhereClauseBuilder(clazz, whereColumns, whereValues).buildClause();
 	}
