@@ -48,7 +48,7 @@ public class EntityManagerTest extends DatabaseTest {
                 EntityManagerImpl entityManager = EntityManagerImpl.of(persistencContext, entityPersister);
 
                 Person retrieved = entityManager.findById(Person.class, "1");
-                assertThat(retrieved.toString()).isEqualTo("Person{id=1, name='민준', age=29, email='minjoon.com'}");
+                assertThat(retrieved.toString()).isEqualTo("Person{id=1, name='민준', age=29, email='민준.com'}");
             }
         }
 
