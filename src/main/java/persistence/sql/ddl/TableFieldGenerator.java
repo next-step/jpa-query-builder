@@ -5,39 +5,30 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.Dialect;
+import persistence.sql.JdbcTypeJavaClassMappings;
+import persistence.sql.TableFieldUtil;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TableFieldGenerator {
     private final Dialect dialect;
-    private final ConcurrentHashMap<Class<?>, Integer> mappings;
 
-    public TableFieldGenerator(Dialect dialect, ConcurrentHashMap<Class<?>, Integer> mappings) {
+    public TableFieldGenerator(Dialect dialect) {
         this.dialect = dialect;
-        this.mappings = mappings;
     }
 
     public String generate(Field field) {
-        if (TableFieldUtil.skip(field)) {
-            return null;
-        }
-
         return Stream.of(
-                TableFieldUtil.getColumnNameBySingleQuote(TableFieldUtil.getColumnName(field)),
+                TableFieldUtil.replaceNameByBacktick(TableFieldUtil.getColumnName(field)),
                 getColumnType(field),
                 getNullableCondition(field),
                 getGenerationType(field)
             )
             .filter(Objects::nonNull)
             .collect(Collectors.joining(" "));
-    }
-
-    String getColumnType(Field field) {
-        return dialect.get(mappings.get(field.getType()));
     }
 
     String getNullableCondition(Field field) {
@@ -68,5 +59,9 @@ public class TableFieldGenerator {
         }
 
         return "AUTO_INCREMENT";
+    }
+
+    public String getColumnType(Field field) {
+        return this.dialect.get(JdbcTypeJavaClassMappings.getJavaClassToJdbcCode(field.getType()));
     }
 }

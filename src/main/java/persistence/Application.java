@@ -8,30 +8,73 @@ import org.slf4j.LoggerFactory;
 import persistence.sql.H2Dialect;
 import persistence.sql.ddl.TableCreateQueryBuilder;
 import persistence.sql.ddl.TableDropQueryBuilder;
+import persistence.sql.dml.ColumnInsertQueryGenerator;
+import persistence.sql.dml.RowDeleteQueryGenerator;
+import persistence.sql.dml.RowFindAllQueryGenerator;
+import persistence.sql.dml.RowFindByIdQueryGenerator;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
         logger.info("Starting application...");
+        DatabaseServer server = null;
         try {
-            final DatabaseServer server = new H2();
+            server = new H2();
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            String sql = new TableCreateQueryBuilder(new H2Dialect()).generateSQLQuery(Person.class);
+
+            final H2Dialect h2Dialect = new H2Dialect();
+            final Person person = new Person();
+
+            String sql = new TableCreateQueryBuilder(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
-            sql = new TableDropQueryBuilder(new H2Dialect()).generateSQLQuery(Person.class);
+            person.setEmail("a@email.com").setAge(11);
+            sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
             logger.info(sql);
             jdbcTemplate.execute(sql);
 
-            server.stop();
+            person.setEmail("b@email.com").setAge(21).setId(2L);
+            sql = new ColumnInsertQueryGenerator(h2Dialect).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.execute(sql);
+
+            sql = new RowFindAllQueryGenerator(h2Dialect).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.query(sql, resultSet -> new Person(
+                resultSet.getLong("id"),
+                resultSet.getString("nick_name"),
+                resultSet.getInt("old"),
+                resultSet.getString("email")
+            )).forEach(p -> logger.info("{}", p));
+
+            person.setId(1L);
+            sql = new RowDeleteQueryGenerator(h2Dialect).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.execute(sql);
+
+            sql = new RowFindByIdQueryGenerator(h2Dialect).findBy(1L, 2L).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.query(sql, resultSet -> new Person(
+                resultSet.getLong("id"),
+                resultSet.getString("nick_name"),
+                resultSet.getInt("old"),
+                resultSet.getString("email")
+            )).forEach(p -> logger.info("{}", p));
+
+            sql = new TableDropQueryBuilder(h2Dialect).generateSQLQuery(person);
+            logger.info(sql);
+            jdbcTemplate.execute(sql);
         } catch (Exception e) {
             logger.error("Error occurred", e);
         } finally {
             logger.info("Application finished");
+            if (server != null) {
+                server.stop();
+            }
         }
     }
 }
