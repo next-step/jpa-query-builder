@@ -1,6 +1,5 @@
 package persistence.sql.dml;
 
-import jdbc.RowMapper;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.dbms.DbmsStrategy;
@@ -8,8 +7,6 @@ import persistence.sql.ddl.CreateDDLQueryBuilder;
 import persistence.testutils.ReflectionTestSupport;
 import persistence.testutils.TestQueryExecuteSupport;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
