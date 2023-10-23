@@ -1,10 +1,15 @@
 package persistence.sql.dml;
 
 import persistence.common.EntityClazz;
+import persistence.common.FieldClazz;
 import persistence.common.FieldClazzList;
+import persistence.common.FieldValueList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DeleteQueryBuilder {
 
@@ -22,5 +27,15 @@ public class DeleteQueryBuilder {
                         .append(idIter.next()));
 
         return sb.append(";").toString();
+    }
+
+    public String delete(Object entity) {
+        List<Object> idList = new FieldClazzList(entity.getClass())
+                .getIdFieldList()
+                .stream()
+                .map(fc -> fc.get(entity))
+                .collect(Collectors.toList());
+
+        return deleteById(entity.getClass(), idList);
     }
 }
