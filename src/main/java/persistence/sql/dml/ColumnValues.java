@@ -21,10 +21,18 @@ public class ColumnValues {
         return new ColumnValues(buildElements(object));
     }
 
-    public static ColumnValues ofFilteredAutoGenType(Object object) {
-        Map<ColumnMeta, String> elements = buildElements(object);
+    public static ColumnValues ofFilteredAutoGenType(Object entity) {
+        Map<ColumnMeta, String> elements = buildElements(entity);
         Set.copyOf(elements.keySet()).stream()
                 .filter(ColumnMeta::isGenerationTypeIdentity)
+                .forEach(elements::remove);
+        return new ColumnValues(elements);
+    }
+
+    public static ColumnValues ofId(Object entity) {
+        Map<ColumnMeta, String> elements = buildElements(entity);
+        Set.copyOf(elements.keySet()).stream()
+                .filter(columnMeta -> !columnMeta.isId())
                 .forEach(elements::remove);
         return new ColumnValues(elements);
     }
@@ -73,6 +81,10 @@ public class ColumnValues {
             return StringConstant.SINGLE_QUOTATION + fieldValue + StringConstant.SINGLE_QUOTATION;
         }
         return fieldValue.toString();
+    }
+
+    public void putAll(ColumnValues addTarget) {
+        elements.putAll(addTarget.elements);
     }
 
     public List<String> columns() {
