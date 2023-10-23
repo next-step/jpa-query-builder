@@ -1,6 +1,6 @@
 package persistence.sql.dml.builder;
 
-import persistence.entitiy.attribute.EntityAttribute;
+import persistence.entity.attribute.EntityAttribute;
 
 public class SelectQueryBuilder {
     private final String tableName;

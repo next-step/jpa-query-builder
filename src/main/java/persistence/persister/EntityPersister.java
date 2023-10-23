@@ -3,13 +3,13 @@ package persistence.persister;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jdbc.JdbcTemplate;
-import persistence.entitiy.attribute.EntityAttribute;
-import persistence.entitiy.attribute.GeneralAttribute;
-import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.entity.attribute.AttributeParser;
+import persistence.entity.attribute.EntityAttribute;
+import persistence.entity.attribute.GeneralAttribute;
+import persistence.entity.attribute.id.IdAttribute;
 import persistence.sql.dml.builder.DeleteQueryBuilder;
 import persistence.sql.dml.builder.InsertQueryBuilder;
 import persistence.sql.dml.builder.SelectQueryBuilder;
-import persistence.sql.parser.AttributeParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

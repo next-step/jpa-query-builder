@@ -6,10 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
-import persistence.entitiy.attribute.EntityAttribute;
+import persistence.entity.attribute.AttributeParser;
+import persistence.entity.attribute.EntityAttribute;
 import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.infra.H2SqlConverter;
-import persistence.sql.parser.AttributeParser;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static persistence.sql.common.DDLType.DROP;

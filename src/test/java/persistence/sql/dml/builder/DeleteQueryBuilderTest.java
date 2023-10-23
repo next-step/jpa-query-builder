@@ -4,8 +4,8 @@ import entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.entitiy.attribute.EntityAttribute;
-import persistence.sql.parser.AttributeParser;
+import persistence.entity.attribute.AttributeParser;
+import persistence.entity.attribute.EntityAttribute;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

@@ -1,6 +1,6 @@
-package persistence.entitiy;
+package persistence.entity;
 
-import persistence.entitiy.context.PersistencContext;
+import persistence.entity.context.PersistencContext;
 import persistence.persister.EntityPersister;
 
 public class EntityManagerImpl implements EntityManager {

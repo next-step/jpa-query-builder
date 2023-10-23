@@ -1,11 +1,10 @@
-package persistence.entitiy.attribute;
+package persistence.entity.attribute;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.entity.attribute.id.IdAttribute;
 import persistence.sql.ddl.wrapper.DDLWrapper;
-import persistence.sql.parser.AttributeParser;
 
 import java.util.Arrays;
 import java.util.List;

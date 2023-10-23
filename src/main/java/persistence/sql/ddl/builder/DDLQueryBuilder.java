@@ -1,7 +1,7 @@
 package persistence.sql.ddl.builder;
 
 
-import persistence.entitiy.attribute.EntityAttribute;
+import persistence.entity.attribute.EntityAttribute;
 import persistence.sql.ddl.converter.SqlConverter;
 
 public interface DDLQueryBuilder {

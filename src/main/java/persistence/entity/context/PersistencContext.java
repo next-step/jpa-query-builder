@@ -1,4 +1,4 @@
-package persistence.entitiy.context;
+package persistence.entity.context;
 
 import jakarta.persistence.Id;
 

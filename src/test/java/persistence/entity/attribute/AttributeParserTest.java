@@ -1,14 +1,12 @@
-package persistence.sql.ddl.parser;
+package persistence.entity.attribute;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.entitiy.attribute.GeneralAttribute;
-import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.entity.attribute.id.IdAttribute;
 import persistence.fixture.TestEntityFixture;
 import persistence.sql.infra.H2SqlConverter;
-import persistence.sql.parser.AttributeParser;
 
 import java.util.List;
 

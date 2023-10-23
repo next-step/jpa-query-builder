@@ -7,14 +7,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
-import persistence.entitiy.EntityManagerImpl;
-import persistence.entitiy.attribute.EntityAttribute;
-import persistence.entitiy.context.PersistencContext;
+import persistence.entity.attribute.AttributeParser;
+import persistence.entity.attribute.EntityAttribute;
+import persistence.entity.context.PersistencContext;
 import persistence.fixture.TestEntityFixture;
 import persistence.persister.EntityPersister;
 import persistence.sql.dml.builder.InsertQueryBuilder;
 import persistence.sql.infra.H2SqlConverter;
-import persistence.sql.parser.AttributeParser;
 
 import java.sql.SQLException;
 

@@ -1,4 +1,4 @@
-package persistence.entitiy.attribute;
+package persistence.entity.attribute;
 
 import persistence.sql.ddl.converter.SqlConverter;
 

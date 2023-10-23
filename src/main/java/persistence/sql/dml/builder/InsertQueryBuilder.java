@@ -1,8 +1,8 @@
 package persistence.sql.dml.builder;
 
-import persistence.entitiy.attribute.EntityAttribute;
-import persistence.entitiy.attribute.GeneralAttribute;
-import persistence.entitiy.attribute.id.IdAttribute;
+import persistence.entity.attribute.EntityAttribute;
+import persistence.entity.attribute.GeneralAttribute;
+import persistence.entity.attribute.id.IdAttribute;
 
 import java.lang.reflect.Field;
 import java.util.*;

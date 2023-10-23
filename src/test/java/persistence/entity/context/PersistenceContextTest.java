@@ -1,11 +1,10 @@
-package persistence.entity;
+package persistence.entity.context;
 
 import entity.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.entitiy.context.PersistencContext;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

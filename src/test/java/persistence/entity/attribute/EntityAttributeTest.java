@@ -1,16 +1,14 @@
-package persistence.sql.attribute;
+package persistence.entity.attribute;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.entitiy.attribute.EntityAttribute;
 import persistence.fixture.TestEntityFixture;
 import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.ddl.wrapper.CreateDDLWrapper;
 import persistence.sql.ddl.wrapper.DropDDLWrapper;
 import persistence.sql.infra.H2SqlConverter;
-import persistence.sql.parser.AttributeParser;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
