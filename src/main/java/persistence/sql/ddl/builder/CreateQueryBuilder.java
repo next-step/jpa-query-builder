@@ -31,12 +31,12 @@ public class CreateQueryBuilder {
                 .append(CREATE_HEADER)
                 .append(entityMeta.getTableName())
                 .append(" (")
-                .append(buildColumns(entityMeta))
+                .append(buildColumnDefinitions())
                 .append(");")
                 .toString();
     }
 
-    private String buildColumns(EntityMeta entityMeta) {
+    private String buildColumnDefinitions() {
         ColumnBuilder columnBuilder = new ColumnBuilder(dialect, entityMeta.getColumnMetas());
         return columnBuilder.buildColumnDefinition();
     }
