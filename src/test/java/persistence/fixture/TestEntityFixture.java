@@ -6,6 +6,10 @@ public class TestEntityFixture {
     @Entity
     @Table(name = "entity_name")
     public static class SampleOneWithValidAnnotation {
+        public Long getId() {
+            return id;
+        }
+
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         Long id;
@@ -80,15 +84,6 @@ public class TestEntityFixture {
         String name;
         @Column(name = "age")
         Integer age;
-
-        public EntityWithMultiIdAnnotation() {
-
-        }
-
-        public EntityWithMultiIdAnnotation(String name, Integer age) {
-            this.name = name;
-            this.age = age;
-        }
     }
 
     public static class EntityWithOutEntityAnnotation {
@@ -101,19 +96,23 @@ public class TestEntityFixture {
         String name;
         @Column(name = "age")
         Integer age;
+    }
 
-        public EntityWithOutEntityAnnotation() {
-        }
+    @Table(name = "entity_with_string_id")
+    public static class EntityWithStringId {
+        @Id
+        String id;
+        @Id
+        @Column(name = "name", length = 200)
+        String name;
+        @Column(name = "age")
+        Integer age;
 
-        public EntityWithOutEntityAnnotation(String name, Integer age) {
+        public EntityWithStringId(String id, String name, Integer age) {
+            this.id = id;
             this.name = name;
             this.age = age;
         }
 
-        public EntityWithOutEntityAnnotation(long id, String nickName, int age) {
-            this.id = id;
-            this.name = nickName;
-            this.age = age;
-        }
     }
 }
