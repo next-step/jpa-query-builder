@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import persistence.dialect.Dialect;
 import persistence.dialect.H2Dialect;
+import persistence.sql.Query;
 import sources.AnnotationBinder;
 import sources.MetaData;
 import sources.MetadataGenerator;

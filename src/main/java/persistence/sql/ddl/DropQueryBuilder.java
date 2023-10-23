@@ -1,9 +1,11 @@
 package persistence.sql.ddl;
 
 import persistence.dialect.Dialect;
+import persistence.sql.Query;
+import persistence.sql.QueryBuilder;
 import sources.MetaData;
 
-public class DropQueryBuilder extends QueryBuilder{
+public class DropQueryBuilder extends QueryBuilder {
 
     private Query query;
 

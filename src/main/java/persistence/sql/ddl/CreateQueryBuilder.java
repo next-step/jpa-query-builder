@@ -1,12 +1,14 @@
 package persistence.sql.ddl;
 
 import persistence.dialect.Dialect;
+import persistence.sql.Query;
+import persistence.sql.QueryBuilder;
 import sources.ColumnMetaData;
 import sources.MetaData;
 
 import java.util.List;
 
-public class CreateQueryBuilder extends QueryBuilder{
+public class CreateQueryBuilder extends QueryBuilder {
 
     private Query query;
 
