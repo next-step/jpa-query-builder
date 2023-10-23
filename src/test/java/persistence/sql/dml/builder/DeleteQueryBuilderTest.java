@@ -3,6 +3,7 @@ package persistence.sql.dml.builder;
 import domain.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.mock.MockEntity;
 import persistence.mock.PureDomain;
 import persistence.sql.meta.MetaFactory;
 
@@ -29,6 +30,15 @@ class DeleteQueryBuilderTest {
     void deleteByPk() {
         DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(MetaFactory.get(Person.class));
         assertThat(deleteQueryBuilder.buildDeleteByPkQuery(1L)).isEqualTo("DELETE FROM users WHERE id=1;");
+    }
+
+    @Test
+    @DisplayName("엔티티 인스턴스를 활용한 PK 기반 삭제쿼리 정상빌드 테스트")
+    void deleteEntityInstance() {
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(MetaFactory.get(MockEntity.class));
+        MockEntity 테스트 = new MockEntity(2L, "테스트");
+        String deleteQuery = deleteQueryBuilder.buildDeleteQuery(테스트);
+        assertThat(deleteQuery).isEqualTo("DELETE FROM mockentity WHERE id=2;");
     }
 
 }
