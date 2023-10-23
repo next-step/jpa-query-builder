@@ -3,14 +3,14 @@ package persistence;
 import jdbc.JdbcTemplate;
 import persistence.entity.Person;
 import persistence.sql.Query;
-import persistence.sql.dialect.h2.H2Query;
+import persistence.sql.dialect.h2.H2Dialect;
 
 import java.util.List;
 
 public class Executions {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Query<Person, Long> query = new H2Query<>();
+    private final Query<Person, Long> query = new Query<>(new H2Dialect());
 
     public Executions(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

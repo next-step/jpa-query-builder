@@ -1,20 +1,50 @@
 package persistence.sql;
 
-/**
- * 쿼리를 생성하는 인터페이스
- */
-public interface Query<T, K> {
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.dml.DeleteQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
+import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.entity.EntityData;
 
-    String create(Class<T> entityClass);
+public class Query<T, K> {
 
-    String drop(Class<T> entityClass);
+    private final Dialect dialect;
 
-    String insert(T entity);
+    public Query(Dialect dialect) {
+        this.dialect = dialect;
+    }
 
-    String findAll(Class<T> entityClass);
+    public String create(Class<T> entityClass) {
+        EntityData entityData = new EntityData(entityClass);
+        return new CreateQueryBuilder(dialect).generateQuery(entityData);
+    }
 
-    String findById(Class<T> entityClass, K id);
+    public String drop(Class<T> entityClass) {
+        EntityData entityData = new EntityData(entityClass);
+        return new DropQueryBuilder().generateQuery(entityData);
+    }
 
-    String delete(T entity);
+    public String insert(T entity) {
+        EntityData entityData = new EntityData(entity.getClass());
+        return new InsertQueryBuilder(dialect).generateQuery(entityData, entity);
+    }
+
+    public String findAll(Class<T> entityClass) {
+        EntityData entityData = new EntityData(entityClass);
+        return new SelectQueryBuilder().generateQuery(entityData);
+    }
+
+    public String findById(Class<T> entityClass, K id) {
+        EntityData entityData = new EntityData(entityClass);
+        return new SelectQueryBuilder()
+                .appendWhereClause(entityData.getEntityColumns().getIdColumn().getColumnName(), id)
+                .generateQuery(entityData);
+    }
+
+    public String delete(T entity) {
+        EntityData entityData = new EntityData(entity.getClass());
+        return new DeleteQueryBuilder().generateQuery(entityData, entity);
+    }
 
 }
