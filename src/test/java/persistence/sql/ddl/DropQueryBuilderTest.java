@@ -1,12 +1,12 @@
 package persistence.sql.ddl;
 
+import entity.Person_Week1_Step2_Demand1;
+import entity.Person_Week1_Step2_Demand2;
+import entity.Person_Week1_Step2_Demand3;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import persistence.entity.Person_Week1_Step2_Demand1;
-import persistence.entity.Person_Week1_Step2_Demand2;
-import persistence.entity.Person_Week1_Step2_Demand3;
 import persistence.sql.entity.EntityData;
 
 import java.util.stream.Stream;

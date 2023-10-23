@@ -1,10 +1,9 @@
-package persistence.entity;
+package entity;
 
 import jakarta.persistence.*;
 
-@Table(name = "users")
 @Entity
-public class Person_Week1_Step2_Demand3 {
+public class Person_Week1_Step2_Demand2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +17,5 @@ public class Person_Week1_Step2_Demand3 {
 
     @Column(nullable = false)
     private String email;
-
-    @Transient
-    private Integer index;
 
 }

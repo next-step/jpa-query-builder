@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
+import entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.entity.Person;
 import persistence.sql.entity.EntityData;
 
 import static org.assertj.core.api.Assertions.assertThat;

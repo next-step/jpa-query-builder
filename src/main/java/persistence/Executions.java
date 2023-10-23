@@ -1,7 +1,7 @@
 package persistence;
 
+import entity.Person;
 import jdbc.JdbcTemplate;
-import persistence.entity.Person;
 import persistence.sql.Query;
 import persistence.sql.dialect.h2.H2Dialect;
 
