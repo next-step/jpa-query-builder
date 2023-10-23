@@ -7,6 +7,7 @@ public enum DataLanguage {
     INSERT("INSERT INTO"),
     VALUES("VALUES"),
     SELECT("SELECT"),
+    DELETE("DELETE"),
     FROM("FROM"),
     WHERE("WHERE"),
     LEFT_PARENTHESIS("("),

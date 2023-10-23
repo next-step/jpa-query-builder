@@ -41,4 +41,15 @@ class EntityManipulationBuilderTest {
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = " + id + ";");
     }
 
+    @Test
+    @DisplayName("Person 엔터티 delete 쿼리 만들기")
+    public void deleteQueryTest() {
+        EntityManipulationBuilder entityManipulationBuilder = new EntityManipulationBuilder(Person.class);
+
+        long id = 1L;
+        String query = entityManipulationBuilder.delete(Person.class, id);
+
+        assertThat(query).isEqualTo("DELETE FROM users WHERE id = " + id + ";");
+    }
+
 }

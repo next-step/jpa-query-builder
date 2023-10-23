@@ -65,4 +65,18 @@ public class EntityManipulationBuilder {
                 .appendWithoutSpace(SEMICOLON.getName())
                 .toStringWithoutSpace();
     }
+
+    public String delete(Class<?> type, long id) {
+        return new CustomStringBuilder()
+                .append(DELETE.getName())
+                .append(FROM.getName())
+                .append(entityMetadata.getTableName())
+                .append(WHERE.getName())
+                .append(entityMetadata.getIdColumnName(type))
+                .append(EQUALS.getName())
+                .appendWithoutSpace(String.valueOf(id))
+                .appendWithoutSpace(SEMICOLON.getName())
+                .toStringWithoutSpace();
+    }
+
 }
