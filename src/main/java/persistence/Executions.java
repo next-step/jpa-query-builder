@@ -10,7 +10,7 @@ import java.util.List;
 public class Executions {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Query<Person, Long> query = new Query<>(new H2Dialect());
+    private final Query query = new Query(new H2Dialect());
 
     public Executions(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
