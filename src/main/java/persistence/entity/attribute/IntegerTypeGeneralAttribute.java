@@ -1,17 +1,18 @@
-package persistence.entitiy.attribute;
+package persistence.entity.attribute;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import persistence.sql.ddl.converter.SqlConverter;
 
 import java.lang.reflect.Field;
 
-public class LongTypeGeneralAttribute extends GeneralAttribute {
-    private final Integer scale;
+public class IntegerTypeGeneralAttribute extends GeneralAttribute {
+    private final boolean nullable;
+    private final int scale;
     private final String fieldName;
     private final String columnName;
-    private final boolean nullable;
 
-    private LongTypeGeneralAttribute(
+    private IntegerTypeGeneralAttribute(
             int scale,
             String fieldName,
             String columnName,
@@ -19,20 +20,17 @@ public class LongTypeGeneralAttribute extends GeneralAttribute {
     ) {
         this.scale = scale;
         this.fieldName = fieldName;
-        this.columnName = columnName != null && !columnName.isEmpty() ? columnName : fieldName;
+        this.columnName = columnName;
         this.nullable = nullable;
     }
 
-    public static LongTypeGeneralAttribute of(Field field) {
+    public static IntegerTypeGeneralAttribute of(Field field) {
         Column column = field.getDeclaredAnnotation(Column.class);
-
-        assert column != null;
-
-        return new LongTypeGeneralAttribute(
+        return new IntegerTypeGeneralAttribute(
                 column.scale(),
                 field.getName(),
                 column.name().isBlank() ? field.getName() : column.name(),
-                column.nullable()
+                field.isAnnotationPresent(Id.class)
         );
     }
 
@@ -40,8 +38,8 @@ public class LongTypeGeneralAttribute extends GeneralAttribute {
     public String prepareDDL(SqlConverter sqlConverter) {
         StringBuilder component = new StringBuilder();
 
-        component.append(columnName.isBlank() ? fieldName : columnName).append(" ");
-        component.append(sqlConverter.convert(Long.class));
+        component.append(columnName.isBlank() ? fieldName : columnName);
+        component.append(" ").append(sqlConverter.convert(Integer.class));
         if (scale != 0) {
             component.append(String.format(" (%s)", scale));
         }
@@ -63,6 +61,6 @@ public class LongTypeGeneralAttribute extends GeneralAttribute {
 
     @Override
     public boolean isNullable() {
-        return nullable;
+        return this.nullable;
     }
 }

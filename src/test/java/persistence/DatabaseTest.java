@@ -7,13 +7,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.entitiy.attribute.EntityAttribute;
+import persistence.entity.attribute.AttributeParser;
+import persistence.entity.attribute.EntityAttribute;
 import persistence.mapper.StringRowMapper;
 import persistence.sql.common.DDLType;
 import persistence.sql.ddl.builder.DDLQueryBuilder;
 import persistence.sql.ddl.builder.DDLQueryBuilderFactory;
 import persistence.sql.ddl.converter.SqlConverter;
-import persistence.sql.parser.AttributeParser;
 
 import java.sql.SQLException;
 import java.util.List;

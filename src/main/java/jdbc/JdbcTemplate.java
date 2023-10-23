@@ -1,6 +1,7 @@
 package jdbc;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -36,6 +37,22 @@ public class JdbcTemplate {
                 result.add(rowMapper.mapRow(resultSet));
             }
             return result;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public long executeForGeneratedKey(final String sql) {
+        try (final PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.execute();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getLong(1);
+                } else {
+                    throw new RuntimeException("생성된 키를 가져오는 데 실패했습니다.");
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

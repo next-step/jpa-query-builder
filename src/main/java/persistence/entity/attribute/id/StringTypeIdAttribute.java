@@ -1,4 +1,4 @@
-package persistence.entitiy.attribute.id;
+package persistence.entity.attribute.id;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GenerationType;

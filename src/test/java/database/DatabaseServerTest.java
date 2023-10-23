@@ -5,7 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
-import persistence.entitiy.attribute.EntityAttribute;
+import persistence.entity.attribute.AttributeParser;
+import persistence.entity.attribute.EntityAttribute;
 import persistence.fixture.TestEntityFixture;
 import persistence.mapper.TestEntityRowMapper;
 import persistence.sql.dml.builder.InsertQueryBuilder;
@@ -18,10 +19,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Nested
 @DisplayName("DatabaseServer 클래스의")
 public class DatabaseServerTest extends DatabaseTest {
-
-    EntityAttribute entityAttribute;
-
-
     @Nested
     @DisplayName("executeQuery 메소드는")
     class executeQuery {
@@ -35,6 +32,8 @@ public class DatabaseServerTest extends DatabaseTest {
 
                 InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
 
+                EntityAttribute entityAttribute = EntityAttribute.of(TestEntityFixture.SampleOneWithValidAnnotation.class, new AttributeParser());
+
                 TestEntityFixture.SampleOneWithValidAnnotation entityOne =
                         new TestEntityFixture.SampleOneWithValidAnnotation("민준", 29);
                 TestEntityFixture.SampleOneWithValidAnnotation entityTwo =
@@ -42,9 +41,9 @@ public class DatabaseServerTest extends DatabaseTest {
                 TestEntityFixture.SampleOneWithValidAnnotation entityThree =
                         new TestEntityFixture.SampleOneWithValidAnnotation("민준", 29);
 
-                String insertDMLOne = insertQueryBuilder.prepareStatement(entityAttribute.createEntityContext(entityOne));
-                String insertDMLTwo = insertQueryBuilder.prepareStatement(entityAttribute.createEntityContext(entityTwo));
-                String insertDMLThree = insertQueryBuilder.prepareStatement(entityAttribute.createEntityContext(entityThree));
+                String insertDMLOne = insertQueryBuilder.prepareStatement(entityAttribute, entityOne);
+                String insertDMLTwo = insertQueryBuilder.prepareStatement(entityAttribute, entityTwo);
+                String insertDMLThree = insertQueryBuilder.prepareStatement(entityAttribute, entityThree);
 
                 Assertions.assertAll(
                         () -> Assertions.assertDoesNotThrow(() -> jdbcTemplate.execute(insertDMLOne)),

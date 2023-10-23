@@ -1,14 +1,10 @@
-package persistence.sql.parser;
+package persistence.entity.attribute;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import persistence.entitiy.attribute.GeneralAttribute;
-import persistence.entitiy.attribute.IntegerTypeGeneralAttribute;
-import persistence.entitiy.attribute.LongTypeGeneralAttribute;
-import persistence.entitiy.attribute.StringTypeGeneralAttribute;
-import persistence.entitiy.attribute.id.IdAttribute;
-import persistence.entitiy.attribute.id.LongTypeIdAttribute;
-import persistence.entitiy.attribute.id.StringTypeIdAttribute;
+import persistence.entity.attribute.id.IdAttribute;
+import persistence.entity.attribute.id.LongTypeIdAttribute;
+import persistence.entity.attribute.id.StringTypeIdAttribute;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

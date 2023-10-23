@@ -3,7 +3,7 @@ package persistence.sql.dml.builder;
 public class WhereClause {
     private final StringBuilder conditions = new StringBuilder();
 
-    public void and(String condition) {
+    private void and(String condition) {
         if (conditions.length() > 0) {
             conditions.append(" AND ");
         }
