@@ -37,7 +37,7 @@ public class CreateQueryBuilder {
     }
 
     private String buildColumns(EntityMeta entityMeta) {
-        ColumnBuilder columnBuilder = new ColumnBuilder(dialect, entityMeta);
+        ColumnBuilder columnBuilder = new ColumnBuilder(dialect, entityMeta.getColumnMetas());
         return columnBuilder.buildColumnDefinition();
     }
 
