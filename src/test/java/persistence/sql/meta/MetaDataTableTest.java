@@ -1,26 +1,47 @@
 package persistence.sql.meta;
 
+import jakarta.persistence.Table;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.dialect.h2.H2Dialect;
+import persistence.meta.MetaDataTable;
+import persistence.sql.fixture.PersonFixture;
+import persistence.sql.fixture.PersonFixture2;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("1.2 MetaDataTable을 Clazz에서 추출합니다.")
 public class MetaDataTableTest {
+  private static Class<PersonFixture2> person2;
+  private static Class<PersonFixture> person1;
 
+  @BeforeAll
+  static void setup() {
+    person1 = PersonFixture.class;
+    person2 = PersonFixture2.class;
+  }
   @Test
   @DisplayName("1.2.1 Clazz의 클래스 명과 table의 명이 매칭 됩니다.")
   public void matchClazzNameandTableName() {
+    
+    MetaDataTable table = MetaDataTable.of(person2);
 
+    assertAll( {
+      () -> assertThat(table.getTableName()).isEqualTo("PERSONFIXTURE2");
+    });
   }
 
   @Test
-  @DisplayName("1.2.1 애노테이션이 누락 되었을 때, metaDataTable을 생성 할 수 없다.")
+  @DisplayName("1.2.3 @Table에 name 값을 추가하였을 때, metaDataTable을 생성 할 수 있다.")
   public void requireEntityAnnotation() {
+    Table tableAnnotation = person1.getAnnotation(Table.class);
+    MetaDataTable table = MetaDataTable.of(person2);
 
+    assertAll( {
+      () -> assertThat(tableAnnotation.name()).isEqualTo("users");
+      () -> assertThat(table.getTableName()).isEqualTo("USERS");
+    });
   }
 
-  @Test
-  @DisplayName("1.2.3 Table 애노테이션에 name 값을 추가하였을 때, 해당 이름으로 DDL을 생성한다.")
-  public void createTableWithAnnotationName() {
-
-  }
 }
