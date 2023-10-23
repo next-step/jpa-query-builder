@@ -41,6 +41,14 @@ public class DeleteQueryBuilder {
                 .toString();
     }
 
+    public String buildDeleteQuery(Object entity) {
+        return new StringBuilder()
+                .append(getDeleteHeaderQuery())
+                .append(whereClauseBuilder.appendPkClause(entity).build())
+                .append(";")
+                .toString();
+    }
+
     private String getDeleteHeaderQuery() {
         return new StringBuilder()
                 .append(DELETE)
@@ -48,5 +56,4 @@ public class DeleteQueryBuilder {
                 .append(entityMeta.getTableName())
                 .toString();
     }
-
 }
