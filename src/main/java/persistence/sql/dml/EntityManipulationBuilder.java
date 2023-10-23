@@ -42,4 +42,14 @@ public class EntityManipulationBuilder {
                 .toStringWithoutSpace();
     }
 
+    public String findAll(Class<?> type) {
+        return new CustomStringBuilder()
+                .append(SELECT.getName())
+                .append(entityMetadata.getColumnNames(type))
+                .append(FROM.getName())
+                .appendWithoutSpace(entityMetadata.getTableName())
+                .appendWithoutSpace(SEMICOLON.getName())
+                .toStringWithoutSpace();
+    }
+
 }

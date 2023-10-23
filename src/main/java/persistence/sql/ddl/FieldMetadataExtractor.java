@@ -35,6 +35,10 @@ public class FieldMetadataExtractor {
         return "";
     }
 
+    public String getColumnName(Class<?> type) throws NoSuchFieldException, IllegalAccessException {
+        return getColumnName(type.getDeclaredField(field.getName()));
+    }
+
     public String getValueFrom(Object entity) throws NoSuchFieldException, IllegalAccessException {
         Field entityFiled = entity.getClass().getDeclaredField(field.getName());
         entityFiled.setAccessible(true);

@@ -28,6 +28,10 @@ public class EntityMetadata {
         return fieldMetaDatas.getColumnNames(entity);
     }
 
+    public String getColumnNames(Class<?> type) {
+        return fieldMetaDatas.getColumnNames(type);
+    }
+
     public String getValueFrom(Object entity) {
         return fieldMetaDatas.getValueFrom(entity);
     }

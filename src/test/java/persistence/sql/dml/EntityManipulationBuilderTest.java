@@ -13,11 +13,21 @@ class EntityManipulationBuilderTest {
     public void insertQueryTest() {
         EntityManipulationBuilder entityManipulationBuilder = new EntityManipulationBuilder(Person.class);
 
-        Person person = new Person("John Doe", 30, "john.doe@example.com");
+        Person person = new Person("John Doe",  30, "john.doe@example.com");
         String query = entityManipulationBuilder.insert(person);
 
         assertThat(query).isEqualTo("INSERT INTO users (nick_name, old, email) " +
                 "VALUES ('John Doe', 30, 'john.doe@example.com');");
+    }
+
+    @Test
+    @DisplayName("Person 엔터티 findAll 쿼리 만들기")
+    public void findAllQueryTest() {
+        EntityManipulationBuilder entityManipulationBuilder = new EntityManipulationBuilder(Person.class);
+
+        String query = entityManipulationBuilder.findAll(Person.class);
+
+        assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users;");
     }
 
 }
