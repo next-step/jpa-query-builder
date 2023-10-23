@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import utils.CustomStringBuilder;
 
 import java.lang.reflect.Field;
@@ -80,6 +81,10 @@ public class FieldMetadataExtractor {
 
     private boolean isAnnotationNameEmpty(Field field) {
         return field.getAnnotation(Column.class).name().equals("");
+    }
+
+    public boolean isId() {
+        return field.isAnnotationPresent(Id.class);
     }
 
 }

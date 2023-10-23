@@ -36,4 +36,8 @@ public class EntityMetadata {
         return fieldMetaDatas.getValueFrom(entity);
     }
 
+    public String getIdColumnName(Class<?> type) {
+        return fieldMetaDatas.getIdColumnName(type);
+    }
+
 }

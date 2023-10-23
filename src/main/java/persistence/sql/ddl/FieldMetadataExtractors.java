@@ -53,9 +53,9 @@ public class FieldMetadataExtractors {
 
     public String getValueFrom(Object entity) {
         return fieldMetadataExtractorList.stream()
-                .map(FieldMetadataExtractor -> {
+                .map(fieldMetadataExtractor -> {
                     try {
-                        return FieldMetadataExtractor.getValueFrom(entity);
+                        return fieldMetadataExtractor.getValueFrom(entity);
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -63,5 +63,20 @@ public class FieldMetadataExtractors {
                 })
                 .filter(columnName -> !columnName.isEmpty())
                 .collect(Collectors.joining(", "));
+    }
+
+    public String getIdColumnName(Class<?> type) {
+        return fieldMetadataExtractorList.stream()
+                .filter(FieldMetadataExtractor::isId)
+                .map(fieldMetadataExtractor -> {
+                    try {
+                        return fieldMetadataExtractor.getColumnName(type);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    return "";
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No @Id annotation"));
     }
 }

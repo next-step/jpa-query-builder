@@ -12,6 +12,7 @@ public enum DataLanguage {
     LEFT_PARENTHESIS("("),
     RIGHT_PARENTHESIS(")"),
     COMMA(","),
+    EQUALS("="),
     SEMICOLON(";");
 
     private final String name;

@@ -30,4 +30,15 @@ class EntityManipulationBuilderTest {
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users;");
     }
 
+    @Test
+    @DisplayName("Person 엔터티 findById 쿼리 만들기")
+    public void findByIdQueryTest() {
+        EntityManipulationBuilder entityManipulationBuilder = new EntityManipulationBuilder(Person.class);
+
+        long id = 1L;
+        String query = entityManipulationBuilder.findById(Person.class, id);
+
+        assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = " + id + ";");
+    }
+
 }
