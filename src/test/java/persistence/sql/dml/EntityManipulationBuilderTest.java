@@ -13,7 +13,8 @@ class EntityManipulationBuilderTest {
     public void insertQueryTest() {
         EntityManipulationBuilder entityManipulationBuilder = new EntityManipulationBuilder(Person.class);
 
-        String query = entityManipulationBuilder.insert();
+        Person person = new Person("John Doe", 30, "john.doe@example.com");
+        String query = entityManipulationBuilder.insert(person);
 
         assertThat(query).isEqualTo("INSERT INTO users (nick_name, old, email) " +
                 "VALUES ('John Doe', 30, 'john.doe@example.com');");

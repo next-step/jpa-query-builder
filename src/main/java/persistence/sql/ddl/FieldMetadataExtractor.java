@@ -15,7 +15,7 @@ public class FieldMetadataExtractor {
 
     public String getDefinition() {
         return new CustomStringBuilder()
-                .append(getFieldName(field))
+                .append(getColumnName(field))
                 .append(map(field.getType()))
                 .append(getColumnOptionValue())
                 .toString();
@@ -23,6 +23,32 @@ public class FieldMetadataExtractor {
 
     private String getColumnOptionValue() {
         return ColumnOptionFactory.createColumnOption(field);
+    }
+
+    public String getColumnName(Object entity) throws NoSuchFieldException, IllegalAccessException {
+        Field entityFiled = entity.getClass().getDeclaredField(field.getName());
+        entityFiled.setAccessible(true);
+        if (entityFiled.get(entity) != null) {
+            return getColumnName(field);
+        }
+
+        return "";
+    }
+
+    public String getValueFrom(Object entity) throws NoSuchFieldException, IllegalAccessException {
+        Field entityFiled = entity.getClass().getDeclaredField(field.getName());
+        entityFiled.setAccessible(true);
+        Object object = entityFiled.get(entity);
+
+        if (object instanceof String) {
+            return "'" + object + "'";
+        } else if (object instanceof Integer) {
+            return String.valueOf(object);
+        } else if (object instanceof Long) {
+            return String.valueOf(object);
+        }
+
+        return "";
     }
 
     String map(Class<?> type) {
@@ -38,7 +64,7 @@ public class FieldMetadataExtractor {
         throw new IllegalArgumentException("지원하지 않는 타입입니다.");
     }
 
-    private String getFieldName(Field field) {
+    private String getColumnName(Field field) {
         if (field.isAnnotationPresent(Column.class)
                 && !isAnnotationNameEmpty(field)) {
             Column column = field.getAnnotation(Column.class);

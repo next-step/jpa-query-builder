@@ -3,6 +3,8 @@ package persistence.sql.dml;
 import persistence.sql.ddl.EntityMetadata;
 import utils.CustomStringBuilder;
 
+import static persistence.sql.dml.DataLanguage.*;
+
 public class EntityManipulationBuilder {
 
     private final EntityMetadata entityMetadata;
@@ -11,27 +13,33 @@ public class EntityManipulationBuilder {
         this.entityMetadata = new EntityMetadata(type);
     }
 
-    public String insert() {
-
+    public String insert(Object entity) {
         return new CustomStringBuilder()
-                .append(DataLanguage.INSERT.getName())
+                .append(columnsClause(entity))
+                .append(valueClause(entity))
+                .toString();
+    }
+
+    private String columnsClause(Object entity) {
+        // TODO 포캣 잡아주는 부분 리팩토링
+        return new CustomStringBuilder()
+                .append(INSERT.getName())
                 .append(entityMetadata.getTableName())
-                .appendWithoutSpace(DataLanguage.LEFT_PARENTHESIS.getName())
+                .appendWithoutSpace(LEFT_PARENTHESIS.getName())
+                .appendWithoutSpace(entityMetadata.getColumnNames(entity))
+                .append(RIGHT_PARENTHESIS.getName())
+                .toStringWithoutSpace();
 
-
-
-
-
-        return "INSERT INTO users (nick_name, old, email) " +
-                "VALUES ('John Doe', 30, 'john.doe@example.com');";
     }
 
-    private String columnsClause(Class<?> clazz) {
-        return "users (nick_name, old, email)";
-    }
-
-    private String valueClause(Object object) {
-        return "('John Doe', 30, 'john.doe@example.com')";
+    private String valueClause(Object entity) {
+        return new CustomStringBuilder()
+                .append(VALUES.getName())
+                .appendWithoutSpace(LEFT_PARENTHESIS.getName())
+                .appendWithoutSpace(entityMetadata.getValueFrom(entity))
+                .appendWithoutSpace(RIGHT_PARENTHESIS.getName())
+                .appendWithoutSpace(SEMICOLON.getName())
+                .toStringWithoutSpace();
     }
 
 }

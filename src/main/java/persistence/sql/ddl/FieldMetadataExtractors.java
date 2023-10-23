@@ -23,5 +23,31 @@ public class FieldMetadataExtractors {
                 .collect(Collectors.joining(","));
     }
 
+    public String getColumnNames(Object entity) {
+        return fieldMetadataExtractorList.stream()
+                .map(FieldMetadataExtractor -> {
+                    try {
+                        return FieldMetadataExtractor.getColumnName(entity);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    return "";
+                })
+                .filter(columnName -> !columnName.isEmpty())
+                .collect(Collectors.joining(", "));
+    }
 
+    public String getValueFrom(Object entity) {
+        return fieldMetadataExtractorList.stream()
+                .map(FieldMetadataExtractor -> {
+                    try {
+                        return FieldMetadataExtractor.getValueFrom(entity);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    return "";
+                })
+                .filter(columnName -> !columnName.isEmpty())
+                .collect(Collectors.joining(", "));
+    }
 }

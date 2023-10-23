@@ -24,4 +24,12 @@ public class EntityMetadata {
         return fieldMetaDatas.getDefinition();
     }
 
+    public String getColumnNames(Object entity) {
+        return fieldMetaDatas.getColumnNames(entity);
+    }
+
+    public String getValueFrom(Object entity) {
+        return fieldMetaDatas.getValueFrom(entity);
+    }
+
 }
