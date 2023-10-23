@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static persistence.entity.PersonFixtures.fixture;
 
 class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
 
@@ -22,9 +23,9 @@ class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
         String createQuery = createDDLQueryBuilder.build();
         jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE PUBLIC.USERS"));
         List<Person> persons = Arrays.asList(
-                createPerson(1L, "name1", 20, "email1"),
-                createPerson(2L, "name2", 20, "email2"),
-                createPerson(3L, "name3", 20, "email3")
+                fixture(1L, "name1", 20, "email1"),
+                fixture(2L, "name2", 20, "email2"),
+                fixture(3L, "name3", 20, "email3")
         );
 
         // when
@@ -40,7 +41,7 @@ class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
             int age = resultSet.getInt("OLD");
             String email = resultSet.getString("EMAIL");
 
-            return createPerson(id, name, age, email);
+            return fixture(id, name, age, email);
         });
 
         assertAll(
@@ -55,14 +56,5 @@ class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
                         .map(it -> ReflectionTestSupport.getFieldValue(it, "email"))
                 ).containsExactly("email1", "email2", "email3")
         );
-    }
-
-    private Person createPerson(long id, String name, int age, String email) {
-        Person person = new Person();
-        ReflectionTestSupport.setFieldValue(person, "id", id);
-        ReflectionTestSupport.setFieldValue(person, "name", name);
-        ReflectionTestSupport.setFieldValue(person, "age", age);
-        ReflectionTestSupport.setFieldValue(person, "email", email);
-        return person;
     }
 }
