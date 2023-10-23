@@ -13,19 +13,22 @@ class EntityMetaTest {
     @Test
     @DisplayName("Entity 도메인 클래스")
     void entityDomain() {
-        assertThat(EntityMeta.isEntity(Person.class)).isTrue();
+        EntityMeta entityMeta = EntityMeta.of(Person.class);
+        assertThat(entityMeta.isEntity()).isTrue();
     }
 
     @Test
     @DisplayName("POJO 클래스")
     void pojoDomain() {
-        assertThat(EntityMeta.isEntity(PureDomain.class)).isFalse();
+        EntityMeta entityMeta = EntityMeta.of(PureDomain.class);
+        assertThat(entityMeta.isEntity()).isFalse();
     }
 
     @Test
     @DisplayName("Table Name 조회테스트")
     void getTableName() {
+        EntityMeta entityMeta = EntityMeta.of(Person.class);
         Table tableAnnotation = Person.class.getDeclaredAnnotation(Table.class);
-        assertThat(EntityMeta.getTableName(Person.class)).isEqualTo(tableAnnotation.name());
+        assertThat(entityMeta.getTableName()).isEqualTo(tableAnnotation.name());
     }
 }

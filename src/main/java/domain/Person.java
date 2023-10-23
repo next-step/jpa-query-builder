@@ -6,6 +6,15 @@ import jakarta.persistence.*;
 @Entity
 public class Person {
 
+    protected Person() {}
+
+    public Person(String name, Integer age, String email, Integer index) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,5 +30,4 @@ public class Person {
 
     @Transient
     private Integer index;
-
 }
