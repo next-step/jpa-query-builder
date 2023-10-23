@@ -8,6 +8,8 @@ import persistence.sql.entity.EntityData;
 
 import java.util.List;
 
+import static persistence.sql.Dialect.CREATE_STATEMENT;
+
 /**
  * CREATE 쿼리 생성
  */
@@ -20,12 +22,10 @@ public class CreateQueryBuilder {
     }
 
     public String generateQuery(EntityData entityData) {
-        return "create table "
-                + entityData.getTableName()
-                + " ("
-                + columnPart(entityData)
-                + primaryKeyPart(entityData.getPrimaryKey())
-                + ")";
+        return String.format(CREATE_STATEMENT,
+                entityData.getTableName(),
+                columnPart(entityData) + primaryKeyPart(entityData.getPrimaryKey())
+        );
     }
 
     private String columnPart(EntityData entityData) {
@@ -107,9 +107,7 @@ public class CreateQueryBuilder {
      * Create 문의 Primary Key 부분 생성
      */
     private String primaryKeyPart(EntityColumn primaryKey) {
-        return "primary key ("
-                + primaryKey.getColumnName()
-                + ")";
+        return "primary key (" + primaryKey.getColumnName() + ")";
     }
 
 }

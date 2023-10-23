@@ -19,7 +19,7 @@ public class InsertQueryBuilder {
     }
 
     public String generateQuery(EntityData entityData, Object entity) {
-        return String.format(dialect.INSERT_TEMPLATE,
+        return String.format(dialect.INSERT_STATEMENT,
                 entityData.getTableName(),
                 columnsClause(entityData),
                 valueClause(entityData, entity));
