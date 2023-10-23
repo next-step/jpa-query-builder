@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import persistence.sql.DbmsQueryBuilder;
+import persistence.sql.SqlValueMapper;
 import persistence.sql.dbms.DbmsStrategy;
 import persistence.sql.entitymetadata.model.EntityColumn;
 import persistence.sql.entitymetadata.model.EntityColumns;
@@ -14,8 +15,6 @@ import java.util.stream.Collectors;
 public class CreateDDLQueryBuilder<E> extends DbmsQueryBuilder<E> {
 
     private static final String INDENT = "    ";
-    private static final String NULL = "NULL";
-    private static final String NOT_NULL = "NOT NULL";
     private static final String LINE_BREAK = "\n";
 
     public CreateDDLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass) {
@@ -97,6 +96,6 @@ public class CreateDDLQueryBuilder<E> extends DbmsQueryBuilder<E> {
     }
 
     private String createColumnNullableDefinition(EntityColumn<E, ?> entityColumn) {
-        return " " + (!entityColumn.isIdColumn() && entityColumn.isNullable() ? NULL : NOT_NULL);
+        return " " + (!entityColumn.isIdColumn() && entityColumn.isNullable() ? SqlValueMapper.NULL : SqlValueMapper.NOT_NULL);
     }
 }
