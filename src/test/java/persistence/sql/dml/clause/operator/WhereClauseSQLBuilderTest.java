@@ -22,6 +22,6 @@ class WhereClauseSQLBuilderTest {
                 )
         );
         WhereClauseSQLBuilder builder = new WhereClauseSQLBuilder(whereClause);
-        assertThat(builder.build()).isEqualTo("where (column1 = 'value1' AND (column2 != 'value2' OR (column3 > 3 AND column4 <= 4)))");
+        assertThat(builder.build()).isEqualTo("WHERE (column1 = 'value1' AND (column2 != 'value2' OR (column3 > 3 AND column4 <= 4)))");
     }
 }

@@ -21,7 +21,7 @@ class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
         // given
         CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
         String createQuery = createDDLQueryBuilder.build();
-        jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE PUBLIC.USERS"));
+        jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE IF NOT EXISTS PUBLIC.USERS"));
         List<Person> persons = Arrays.asList(
                 fixture(1L, "name1", 20, "email1"),
                 fixture(2L, "name2", 20, "email2"),

@@ -13,7 +13,6 @@ public class SelectQuery {
     private Set<String> selectClause;
     private WhereClause whereClause;
 
-    //  TODO
 
     /**
      * TODO

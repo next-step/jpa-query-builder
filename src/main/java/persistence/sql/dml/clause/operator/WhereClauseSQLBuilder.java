@@ -36,7 +36,7 @@ public class WhereClauseSQLBuilder {
             return "";
         }
 
-        return "where " + build(whereClause, true);
+        return "WHERE " + build(whereClause, true);
     }
 
     private String build(ChainingLogicalOperatorStandardWhereClause parentWhereClause, boolean isRootClause) {

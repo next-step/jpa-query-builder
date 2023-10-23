@@ -19,7 +19,7 @@ public class CreateDDLQueryBuilderIntegrationTest extends TestQueryExecuteSuppor
 
         // when
         String createQuery = createDDLQueryBuilder.build();
-        jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE PUBLIC.USERS"));
+        jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE IF NOT EXISTS PUBLIC.USERS"));
 
         // then
         List<H2TableMetaResultRow> results = jdbcTemplate.query("SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE \n" +

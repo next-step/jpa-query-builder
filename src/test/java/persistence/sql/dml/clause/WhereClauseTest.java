@@ -32,10 +32,10 @@ class WhereClauseTest {
 
 
     @Test
-    void name() {
+    void buildClauseWithoutPrecedence() {
         WhereClause whereClauseWithPrecedence = WhereClause.of("column1", "value1", Operator.EQUALS);
 
-        assertThat(whereClauseWithPrecedence).isEqualTo("column1 = 'value1'");
+        assertThat(whereClauseWithPrecedence.buildClauseWithoutPrecedence()).isEqualTo("column1 = 'value1'");
     }
 
     static class WhereClauseBuildClauseTestArgumentProvider implements ArgumentsProvider {

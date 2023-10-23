@@ -1,6 +1,8 @@
 package persistence.sql.dml;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,14 +18,15 @@ import persistence.testutils.ReflectionTestSupport;
 import persistence.testutils.TestQueryExecuteSupport;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
+class DeleteDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS USERS;");
@@ -35,17 +38,21 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
         savePersonFixtures(persons);
     }
 
-    @DisplayName("전체 (findAll) 조회")
+    @DisplayName("전체 삭제, DELETE FROM USERS")
     @Test
-    void executeSelectDmlQuery_findAll() {
+    void executeDeleteDmlQuery_All() {
         // given
-        SelectQuery findAllSelectQuery = SelectQuery.select();
+        DeleteQuery allDeleteQuery = DeleteQuery.create();
+        DeleteDMLQueryBuilder<Person> deleteAllDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, allDeleteQuery);
 
         // when
-        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        jdbcTemplate.execute(deleteAllDMLQueryBuilder.build());
 
         // then
-        List<Person> selectQueryResultPersons = jdbcTemplate.query(selectDMLQueryBuilder.build(), resultSet -> {
+        SelectQuery findAllSelectQuery = SelectQuery.select();
+        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+
+        List<Person> selectQueryResultPersons = jdbcTemplate.query(findAllDMLQueryBuilder.build(), resultSet -> {
             int id = resultSet.getInt("ID");
             String name = resultSet.getString("NICK_NAME");
             int age = resultSet.getInt("OLD");
@@ -54,33 +61,26 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
             return PersonFixtures.fixture(id, name, age, email);
         });
 
-        assertAll(
-                () -> assertThat(selectQueryResultPersons).hasSize(3),
-                () -> assertThat(selectQueryResultPersons.stream()
-                        .map(it -> ReflectionTestSupport.getFieldValue(it, "id"))
-                ).containsExactly(1L, 2L, 3L),
-                () -> assertThat(selectQueryResultPersons.stream()
-                        .map(it -> ReflectionTestSupport.getFieldValue(it, "name"))
-                ).containsExactly("name1", "name2", "name3"),
-                () -> assertThat(selectQueryResultPersons.stream()
-                        .map(it -> ReflectionTestSupport.getFieldValue(it, "email"))
-                ).containsExactly("email1", "email2", "email3")
-        );
+        assertThat(selectQueryResultPersons).isEmpty();
     }
 
-    @DisplayName("조건 (findBy) 조회")
+    @DisplayName("조건 삭제, DELETE FROM USERS WHERE ...")
     @ParameterizedTest
-    @ArgumentsSource(FindByTestWhereClauseArgumentProvider.class)
-    void executeSelectDmlQuery_findAll(WhereClause whereClause, int expectedSize, List<Long> expectedIds, List<String> expectedNames, List<String> expectedEmails) {
+    @ArgumentsSource(DeleteByTestWhereClauseArgumentProvider.class)
+    void executeDeleteDmlQuery_By(WhereClause whereClause, int expectedSize, List<Long> expectedIds, List<String> expectedNames, List<String> expectedEmails) {
         // given
-        SelectQuery findAllSelectQuery = SelectQuery.select()
+        DeleteQuery deleteByQuery = DeleteQuery.create()
                 .where(whereClause);
+        DeleteDMLQueryBuilder<Person> deleteByDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, deleteByQuery);
 
         // when
-        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        jdbcTemplate.execute(deleteByDMLQueryBuilder.build());
 
         // then
-        List<Person> selectQueryResultPersons = jdbcTemplate.query(selectDMLQueryBuilder.build(), resultSet -> {
+        SelectQuery findAllSelectQuery = SelectQuery.select();
+        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+
+        List<Person> selectQueryResultPersons = jdbcTemplate.query(findAllDMLQueryBuilder.build(), resultSet -> {
             int id = resultSet.getInt("ID");
             String name = resultSet.getString("NICK_NAME");
             int age = resultSet.getInt("OLD");
@@ -106,37 +106,37 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
         );
     }
 
-    static class FindByTestWhereClauseArgumentProvider implements ArgumentsProvider {
+    static class DeleteByTestWhereClauseArgumentProvider implements ArgumentsProvider {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     Arguments.of(
                             WhereClause.of("ID", 1L, Operator.EQUALS),
-                            1,
-                            Arrays.asList(1L),
-                            Arrays.asList("name1"),
-                            Arrays.asList("email1")
-                    ),
-                    Arguments.of(
-                            WhereClause.of("NICK_NAME", "name2", Operator.EQUALS),
-                            1,
-                            Arrays.asList(2L),
-                            Arrays.asList("name2"),
-                            Arrays.asList("email2")
-                    ),
-                    Arguments.of(
-                            WhereClause.of("OLD", 20, Operator.EQUALS),
-                            3,
-                            Arrays.asList(1L, 2L, 3L),
-                            Arrays.asList("name1", "name2", "name3"),
-                            Arrays.asList("email1", "email2", "email3")
-                    ),
-                    Arguments.of(
-                            WhereClause.of("ID", 2L, Operator.GREATER_THAN_OR_EQUALS),
                             2,
                             Arrays.asList(2L, 3L),
                             Arrays.asList("name2", "name3"),
                             Arrays.asList("email2", "email3")
+                    ),
+                    Arguments.of(
+                            WhereClause.of("NICK_NAME", "name2", Operator.EQUALS),
+                            2,
+                            Arrays.asList(1L, 3L),
+                            Arrays.asList("name1", "name3"),
+                            Arrays.asList("email1", "email3")
+                    ),
+                    Arguments.of(
+                            WhereClause.of("OLD", 20, Operator.EQUALS),
+                            0,
+                            Collections.emptyList(),
+                            Collections.emptyList(),
+                            Collections.emptyList()
+                    ),
+                    Arguments.of(
+                            WhereClause.of("ID", 2L, Operator.GREATER_THAN_OR_EQUALS),
+                            1,
+                            Arrays.asList(1L),
+                            Arrays.asList("name1"),
+                            Arrays.asList("email1")
                     )
             );
         }
