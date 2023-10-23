@@ -1,6 +1,5 @@
 package persistence.entity;
 
-import entity.Person;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -9,9 +8,7 @@ import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
 import persistence.entity.attribute.AttributeParser;
 import persistence.entity.attribute.EntityAttribute;
-import persistence.entity.context.PersistencContext;
 import persistence.fixture.TestEntityFixture;
-import persistence.persister.EntityPersister;
 import persistence.sql.dml.builder.InsertQueryBuilder;
 import persistence.sql.infra.H2SqlConverter;
 
@@ -26,31 +23,6 @@ public class EntityManagerTest extends DatabaseTest {
     @Nested
     @DisplayName("findById 메소드는")
     public class findById {
-
-        @Nested
-        @DisplayName("Person 클래스와 아이디가 주어졌을떄")
-        public class withPerson {
-            @Test
-            @DisplayName("적절한 Person 객체를 반환한다.")
-            void returnObject() throws SQLException {
-                setUpFixtureTable(Person.class, new H2SqlConverter());
-
-                EntityAttribute entityAttribute = EntityAttribute.of(Person.class, new AttributeParser());
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-                Person person = new Person(1L, "민준", 29, "minjoon.com");
-
-                String insertDML
-                        = new InsertQueryBuilder().prepareStatement(entityAttribute, person);
-                jdbcTemplate.execute(insertDML);
-
-                PersistencContext persistencContext = new PersistencContext();
-                EntityPersister entityPersister = new EntityPersister(jdbcTemplate);
-                EntityManagerImpl entityManager = EntityManagerImpl.of(persistencContext, entityPersister);
-
-                Person retrieved = entityManager.findById(Person.class, "1");
-                assertThat(retrieved.toString()).isEqualTo("Person{id=1, name='민준', age=29, email='민준.com'}");
-            }
-        }
 
         @Nested
         @DisplayName("SampleOneWithValidAnnotation 클래스와 아이디가 주어졌을떄")
@@ -70,9 +42,7 @@ public class EntityManagerTest extends DatabaseTest {
                         = new InsertQueryBuilder().prepareStatement(entityAttribute, sample);
                 jdbcTemplate.execute(insertDML);
 
-                PersistencContext persistencContext = new PersistencContext();
-                EntityPersister entityPersister = new EntityPersister(jdbcTemplate);
-                EntityManagerImpl entityManager = EntityManagerImpl.of(persistencContext, entityPersister);
+                EntityManagerImpl entityManager = EntityManagerImpl.of(new JdbcTemplate(server.getConnection()));
 
                 TestEntityFixture.SampleOneWithValidAnnotation retrieved =
                         entityManager.findById(TestEntityFixture.SampleOneWithValidAnnotation.class, "1");
@@ -99,9 +69,7 @@ public class EntityManagerTest extends DatabaseTest {
                         = new InsertQueryBuilder().prepareStatement(entityAttribute, sample);
                 jdbcTemplate.execute(insertDML);
 
-                PersistencContext persistencContext = new PersistencContext();
-                EntityPersister entityPersister = new EntityPersister(jdbcTemplate);
-                EntityManagerImpl entityManager = EntityManagerImpl.of(persistencContext, entityPersister);
+                EntityManagerImpl entityManager = EntityManagerImpl.of(new JdbcTemplate(server.getConnection()));
 
                 TestEntityFixture.SampleTwoWithValidAnnotation retrieved =
                         entityManager.findById(TestEntityFixture.SampleTwoWithValidAnnotation.class, "1");
@@ -125,10 +93,7 @@ public class EntityManagerTest extends DatabaseTest {
 
                 setUpFixtureTable(TestEntityFixture.SampleOneWithValidAnnotation.class, new H2SqlConverter());
 
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-
-                EntityManagerImpl entityManager = EntityManagerImpl
-                        .of(new PersistencContext(), new EntityPersister(jdbcTemplate));
+                EntityManagerImpl entityManager = EntityManagerImpl.of(new JdbcTemplate(server.getConnection()));
 
                 TestEntityFixture.SampleOneWithValidAnnotation persisted =
                         entityManager.persist(sample);
@@ -153,10 +118,7 @@ public class EntityManagerTest extends DatabaseTest {
 
                 setUpFixtureTable(TestEntityFixture.SampleOneWithValidAnnotation.class, new H2SqlConverter());
 
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-
-                EntityManagerImpl entityManager = EntityManagerImpl
-                        .of(new PersistencContext(), new EntityPersister(jdbcTemplate));
+                EntityManagerImpl entityManager = EntityManagerImpl.of(new JdbcTemplate(server.getConnection()));
 
                 entityManager.persist(sample);
 

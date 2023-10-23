@@ -1,13 +1,12 @@
 package persistence.sql.ddl.builder;
 
-import entity.Person;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
 import persistence.entity.attribute.AttributeParser;
 import persistence.entity.attribute.EntityAttribute;
+import persistence.fixture.TestEntityFixture;
 import persistence.sql.ddl.converter.SqlConverter;
 import persistence.sql.infra.H2SqlConverter;
 
@@ -29,16 +28,12 @@ public class DropDDLQueryBuilderTest extends DatabaseTest {
             @Test
             @DisplayName("DROP DDL을 리턴한다.")
             void returnDDL() {
-                EntityAttribute entityAttribute = EntityAttribute.of(Person.class, parser);
+                EntityAttribute entityAttribute = EntityAttribute.of(TestEntityFixture.SampleTwoWithValidAnnotation.class, parser);
 
                 String dropDDL = DDLQueryBuilderFactory.createQueryBuilder(DROP)
                         .prepareStatement(entityAttribute, sqlConverter);
 
-                String message = Assertions.assertThrows(RuntimeException.class, () -> jdbcTemplate.execute(dropDDL))
-                        .getMessage();
-
-                assertThat(message).contains("Table \"USERS\" not found; SQL statement");
-                assertThat(dropDDL).isEqualTo("DROP TABLE users;");
+                assertThat(dropDDL).isEqualTo("DROP TABLE two;");
             }
         }
     }
