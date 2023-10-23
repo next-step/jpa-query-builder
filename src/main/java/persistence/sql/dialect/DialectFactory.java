@@ -21,7 +21,8 @@ public class DialectFactory {
     }
 
     public Dialect getDialect(String dbmsName) {
-        return Optional.of(dialectMap.get(dbmsName)).orElseThrow(() -> new IllegalArgumentException("지원하지 않는 데이터베이스입니다."));
+        Dialect dialect = dialectMap.get(dbmsName);
+        return Optional.ofNullable(dialect).orElseThrow(() -> new IllegalArgumentException("지원하지 않는 데이터베이스입니다."));
     }
 
 }
