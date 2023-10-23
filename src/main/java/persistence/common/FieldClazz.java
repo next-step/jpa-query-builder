@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public class FieldClazz {
 
+    private Field field;
     private String name;
     private Class<?> clazz;
     private boolean isId;
@@ -15,6 +16,7 @@ public class FieldClazz {
     private boolean isTransient;
 
     public FieldClazz(Field field) {
+        this.field = field;
         this.clazz = field.getType();
         this.name = Optional.ofNullable(field.getAnnotation(Column.class))
                 .map(Column::name)
@@ -30,6 +32,8 @@ public class FieldClazz {
                 .map(GeneratedValue::strategy)
                 .orElse(null);
         this.isTransient = field.isAnnotationPresent(Transient.class);
+
+        this.field.setAccessible(true);
     }
 
     public boolean isId() {
@@ -50,5 +54,26 @@ public class FieldClazz {
 
     public GenerationType getGenerationType() {
         return generationType;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public Object get(Object entity){
+        try {
+            return this.field.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <T> void set(T entity, Object value) {
+        try {
+            this.field.setAccessible(true);
+            this.field.set(entity, value);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
