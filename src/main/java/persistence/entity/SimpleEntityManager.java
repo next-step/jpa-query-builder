@@ -22,8 +22,9 @@ public class SimpleEntityManager implements EntityManager{
     }
 
     @Override
-    public Object persist(Object entity) {
-        return null;
+    public void persist(Object entity) {
+        String query = new InsertQueryBuilder(entity).buildQuery();
+        jdbcTemplate.execute(query);
     }
 
     @Override
