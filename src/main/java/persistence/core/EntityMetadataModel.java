@@ -13,7 +13,7 @@ public class EntityMetadataModel {
 
     private final EntityColumn primaryKeyColumn;
 
-    private final Set<EntityColumn> columns;
+    private final EntityColumns columns;
 
     public EntityMetadataModel(
             String tableName,
@@ -25,12 +25,11 @@ public class EntityMetadataModel {
 
         this.tableName = tableName;
         this.type = type;
-        this.columns = new LinkedHashSet<>(columns);
 
-        EntityColumn primaryKeyColumn = findPrimaryKey();
+        EntityColumn primaryKeyColumn = findPrimaryKey(columns);
 
         this.primaryKeyColumn = primaryKeyColumn;
-        this.columns.remove(primaryKeyColumn);
+        this.columns = new EntityColumns(columns, primaryKeyColumn);
     }
 
     public String getTableName() {
@@ -41,15 +40,12 @@ public class EntityMetadataModel {
         return this.primaryKeyColumn;
     }
 
-    public Set<EntityColumn> getColumns() {
+    public EntityColumns getColumns() {
         return this.columns;
     }
 
     public List<String> getColumnNames() {
-        return this.columns.stream()
-                .filter(column -> !column.hasTransient())
-                .map(EntityColumn::getName)
-                .collect(Collectors.toUnmodifiableList());
+        return this.columns.getColumnNames();
     }
 
     public Class<?> getType() {
@@ -77,8 +73,8 @@ public class EntityMetadataModel {
         return Objects.hash(tableName, type, primaryKeyColumn, columns);
     }
 
-    private EntityColumn findPrimaryKey() {
-        return this.columns.stream()
+    private EntityColumn findPrimaryKey(Collection<EntityColumn> columns) {
+        return columns.stream()
                 .filter(EntityColumn::isPrimaryKey)
                 .findFirst()
                 .orElseThrow(NotHavePrimaryKeyException::new);

@@ -56,6 +56,7 @@ public class TableDdlQueryBuilder {
 
     private void addColumnQueries(EntityMetadataModel entityMetadataModel, StringBuilder builder) {
         entityMetadataModel.getColumns()
+                .get()
                 .forEach(createColumnQueries(builder));
     }
 

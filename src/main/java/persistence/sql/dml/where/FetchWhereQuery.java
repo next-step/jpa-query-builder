@@ -42,7 +42,7 @@ public class FetchWhereQuery {
         }
 
         List<String> whereClauses = new ArrayList<>();
-        
+
         if (hasPrimaryKey(entityMetadataModel)) {
             whereClauses.add(makeWhereClause(
                     entityMetadataModel.getPrimaryKeyColumn().getName(),
@@ -52,6 +52,7 @@ public class FetchWhereQuery {
         }
 
         whereClauses.addAll(entityMetadataModel.getColumns()
+                .get()
                 .stream()
                 .filter(targetColumn -> !targetColumn.hasTransient())
                 .filter(targetColumn -> whereQueries.containsKey(targetColumn.getName()))
@@ -84,7 +85,7 @@ public class FetchWhereQuery {
 
         return String.valueOf(value);
     }
-    
+
     private String getRootSeparationWhereClauseType() {
         return BLANK + whereClauseType.getOperator() + BLANK;
     }

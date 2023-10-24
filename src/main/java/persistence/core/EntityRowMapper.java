@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class EntityRowMapper<T> implements RowMapper<T> {
@@ -63,13 +64,7 @@ public class EntityRowMapper<T> implements RowMapper<T> {
                 return;
             }
 
-            //TODO: 일급컬렉션 활용으로 변경
-            Set<EntityColumn> columns = entityMetadataModel.getColumns();
-
-            EntityColumn entityColumn = columns.stream()
-                    .filter(it -> it.isEqualField(field))
-                    .findFirst()
-                    .orElseThrow();
+            EntityColumn entityColumn = entityMetadataModel.getColumns().findColumnByField(field);
 
             if (entityColumn.hasTransient()) {
                 return;
