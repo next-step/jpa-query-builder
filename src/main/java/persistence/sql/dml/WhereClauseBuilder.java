@@ -39,4 +39,8 @@ public class WhereClauseBuilder {
 
 		return format(WHERE_CLAUSE, values.buildWhereClause());
 	}
+
+	public String buildPKClause() {
+		return format(WHERE_CLAUSE, values.buildWherePKClause());
+	}
 }

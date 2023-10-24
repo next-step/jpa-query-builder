@@ -29,4 +29,11 @@ public class Values {
 				.map(x -> x.getColumn().getName() + " = " + x.getValue())
 				.collect(Collectors.joining(" AND "));
 	}
+
+	public String buildWherePKClause() {
+		return values.stream()
+				.filter(x -> x.getColumn().isPrimaryKey())
+				.map(x -> x.getColumn().getName() + " = " + x.getValue())
+				.findFirst().get();
+	}
 }

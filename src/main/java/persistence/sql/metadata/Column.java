@@ -41,6 +41,10 @@ public class Column {
         return !isTransient && !constraint.isPrimaryKey();
     }
 
+    public boolean isPrimaryKey() {
+        return constraint.isPrimaryKey();
+    }
+
     private String findName(Field field) {
         if(!field.isAnnotationPresent(jakarta.persistence.Column.class)) {
             return field.getName();
