@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
+import entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.entity.Person;
 import persistence.sql.dialect.h2.H2Dialect;
 import persistence.sql.entity.EntityData;
 

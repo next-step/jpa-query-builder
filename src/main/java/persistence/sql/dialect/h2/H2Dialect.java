@@ -1,6 +1,5 @@
 package persistence.sql.dialect.h2;
 
-import jakarta.persistence.Column;
 import persistence.sql.Dialect;
 
 import java.lang.reflect.Field;
@@ -12,6 +11,8 @@ public class H2Dialect implements Dialect {
 
     private static final int VARCHAR_DEFAULT_LENGTH = 255;
 
+    private final ColumnAttributes columnAttributes = new ColumnAttributes();
+
     @Override
     public String getDbType(Class<?> columnType) {
         return H2ColumnType.getDbType(columnType);
@@ -19,15 +20,7 @@ public class H2Dialect implements Dialect {
 
     @Override
     public String getStringLength(Field entityField) {
-        return "(" + getStringLengthInt(entityField) + ")";
-    }
-
-    private int getStringLengthInt(Field entityField) {
-        Column columnAnnotation = entityField.getDeclaredAnnotation(Column.class);
-        if (columnAnnotation == null) {
-            return VARCHAR_DEFAULT_LENGTH;
-        }
-        return entityField.getDeclaredAnnotation(Column.class).length();
+        return "(" + columnAttributes.getStringLength(entityField, VARCHAR_DEFAULT_LENGTH) + ")";
     }
 
 }

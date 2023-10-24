@@ -1,6 +1,8 @@
-package persistence.entity;
+package entity;
 
 import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Table(name = "users")
 @Entity
@@ -38,6 +40,25 @@ public class Person {
         this.age = age;
         this.email = email;
         this.index = index;
+    }
+
+    /**
+     * `@Transient`를 제외한 필드만으로 equals 생성
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id) && Objects.equals(name, person.name) && Objects.equals(age, person.age) && Objects.equals(email, person.email);
+    }
+
+    /**
+     * `@Transient`를 제외한 필드만으로 hashCode 생성
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, age, email);
     }
 
 }
