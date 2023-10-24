@@ -44,15 +44,33 @@ class SimpleEntityManagerTest {
         jdbcTemplate.execute("drop table if exists users CASCADE");
     }
 
-
-    @DisplayName("EntityManger를 통해 해당하는 Entity를 조회한다.")
+    @DisplayName("EntityManger#find를 통해 Entity를 조회한다.")
     @Test
     void findTest() {
-        Person expected = new Person(1L, "test1", 10, "test1@gmail.com", 0);
+        // given
         EntityManager entityManager = new SimpleEntityManager(QUERY, jdbcTemplate);
+        Person expected = new Person(1L, "test1", 10, "test1@gmail.com", 0);
 
+        // when
         Person actual = entityManager.find(Person.class, 1L);
+
+        // then
         assertThat(actual.equals(expected)).isTrue();
+    }
+
+    @DisplayName("EntityManger#persist를 통해 Entity를 저장한다.")
+    @Test
+    void persistTest() {
+        // given
+        EntityManager entityManager = new SimpleEntityManager(QUERY, jdbcTemplate);
+        Person testEntity = new Person(2L, "test2", 11, "test2@gmail.com", 0);
+
+        // when
+        entityManager.persist(testEntity);
+        Person found = entityManager.find(Person.class, 2L);
+
+        // then
+        assertThat(found.equals(testEntity)).isTrue();
     }
 
 }
