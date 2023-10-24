@@ -13,12 +13,9 @@ class DropDDLQueryBuilderTest {
     @DisplayName("DROP TABLE DDL Query 생성")
     @Test
     void build() {
-        DropDDLQueryBuilder<Person> dropDDLQueryBuilder = new DropDDLQueryBuilder<>(DbmsStrategy.H2);
-        EntityTable<Person> entityTable = new EntityTable<>(Person.class);
+        DropDDLQueryBuilder<Person> dropDDLQueryBuilder = new DropDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
 
-        dropDDLQueryBuilder.build(entityTable);
-
-        assertThat(dropDDLQueryBuilder.build(entityTable))
+        assertThat(dropDDLQueryBuilder.build())
                 .isEqualTo("DROP TABLE USERS;");
     }
 }

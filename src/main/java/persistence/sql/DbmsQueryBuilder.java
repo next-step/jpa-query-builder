@@ -6,12 +6,14 @@ import persistence.sql.entitymetadata.model.EntityTable;
 
 public abstract class DbmsQueryBuilder<E> implements QueryBuilder<E> {
     protected DbmsStrategy dbmsStrategy;
+    protected EntityTable<E> entityTable;
 
-    public DbmsQueryBuilder(DbmsStrategy dbmsStrategy) {
+    protected DbmsQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entity) {
         this.dbmsStrategy = dbmsStrategy;
+        this.entityTable = new EntityTable<>(entity);
     }
 
-    protected String createTableNameDefinition(EntityTable<E> entityTable) {
+    protected String createTableNameDefinition() {
         return dbmsStrategy.defineTableName(entityTable);
     }
 
