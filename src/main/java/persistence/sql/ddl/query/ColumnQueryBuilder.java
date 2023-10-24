@@ -25,7 +25,7 @@ public class ColumnQueryBuilder {
         return columnTypes.stream()
                 .map(columnType -> String.join(" ",
                                 columnType.getName(),
-                                columnType.getTypeName() + generateLength(columnType.getLength())
+                                columnType.getDataType().getName() + generateLength(columnType.getLength())
                                 , generateConstraint(columnType))
                         .trim())
                 .collect(Collectors.toList());

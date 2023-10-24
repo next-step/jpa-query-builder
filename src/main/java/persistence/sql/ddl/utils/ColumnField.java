@@ -1,14 +1,15 @@
 package persistence.sql.ddl.utils;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Transient;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import persistence.sql.ddl.type.DataType;
+import persistence.sql.ddl.type.H2DataType;
+import persistence.sql.ddl.type.H2DataTypeMapper;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
 
-public class ColumnField implements ColumnType2 {
+public class ColumnField implements ColumnType {
 
     private final String name;
     private final boolean nullable;
@@ -16,13 +17,15 @@ public class ColumnField implements ColumnType2 {
     private final boolean isTransient;
     private final int length;
 
+    private final DataType dataType;
+
     public ColumnField(final Field field) {
         this.name = parseName(field);
         this.nullable = parsNullable(field);
         this.isTransient = parseTransient(field);
         this.length = parseLength(field);
+        this.dataType = parseDataType(field);
     }
-
 
     private boolean parsNullable(final Field field) {
        return Optional.ofNullable(getColumnAnnotation(field))
@@ -46,6 +49,12 @@ public class ColumnField implements ColumnType2 {
                 .map(Column::length)
                 .orElse(255);
     }
+
+    private DataType parseDataType(final Field field) {
+        //H2DataTypeMapper는 누가 가지고 있어야 하는지,,?
+        return H2DataTypeMapper.getInstance().getDataType(field.getType());
+    }
+
 
     private Column getColumnAnnotation(final Field field) {
         return field.getAnnotation(Column.class);
@@ -76,5 +85,9 @@ public class ColumnField implements ColumnType2 {
         return this.length;
     }
 
+    @Override
+    public DataType getDataType() {
+        return this.dataType;
+    }
 
 }

@@ -13,7 +13,7 @@ public class H2DataTypeMapper implements DataTypeMapper {
     private H2DataTypeMapper() {
         dataTypes.put(Long.class, new H2DataType("BIGINT"));
         dataTypes.put(Integer.class, new H2DataType("INTEGER"));
-        dataTypes.put(String.class, new H2DataType("VARCHAR", 255));
+        dataTypes.put(String.class, new H2DataType("VARCHAR"));
     }
 
     @Override

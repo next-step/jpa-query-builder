@@ -4,19 +4,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.ddl.exception.InvalidIdColumnException;
+import persistence.sql.ddl.type.DataType;
 
 import java.lang.reflect.Field;
 
-public class ColumnId implements ColumnType2 {
+public class ColumnId implements ColumnType {
 
-    private final ColumnType2 columnType2;
+    private final ColumnType columnType;
 
     private final GenerationType generationType;
 
 
     public ColumnId(final Field field) {
         validateIdColumn(field);
-        this.columnType2 = new ColumnField(field);
+        this.columnType = new ColumnField(field);
         this.generationType = paresGenerationType(field);
     }
 
@@ -33,7 +34,7 @@ public class ColumnId implements ColumnType2 {
 
     @Override
     public String getName() {
-        return this.columnType2.getName();
+        return this.columnType.getName();
     }
 
     @Override
@@ -48,12 +49,17 @@ public class ColumnId implements ColumnType2 {
 
     @Override
     public boolean isTransient() {
-        return this.columnType2.isTransient();
+        return this.columnType.isTransient();
     }
 
     @Override
     public int getLength() {
-        return this.columnType2.getLength();
+        return this.columnType.getLength();
+    }
+
+    @Override
+    public DataType getDataType() {
+        return  this.columnType.getDataType();
     }
 
     public GenerationType getGenerationType() {

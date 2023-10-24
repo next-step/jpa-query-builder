@@ -1,5 +1,7 @@
 package persistence.sql.ddl.utils;
 
+import jakarta.persistence.Id;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,12 @@ public class ColumnTypes {
         Map<String, ColumnType> columns = new HashMap<>();
         Field[] fields = entity.getDeclaredFields();
         for (Field field : fields) {
-            ColumnType columnType = new ColumnType(field);
+            ColumnType columnType;
+            if (field.isAnnotationPresent(Id.class)) {
+                columnType = new ColumnId(field);
+            } else {
+                columnType = new ColumnField(field);
+            }
             columns.put(columnType.getName(), columnType);
         }
         return columns;
@@ -35,14 +42,14 @@ public class ColumnTypes {
 
     public ColumnTypes getIdColumns() {
         return new ColumnTypes(columnTypeMap.values().stream()
-                .filter(ColumnType::isPrimaryKey)
+                .filter(ColumnType::isId)
                 .collect(toMap(ColumnType::getName, columnType -> columnType)));
     }
 
     public List<ColumnType> getColumns() {
         return columnTypeMap.values()
                 .stream()
-                .filter(ColumnType::notTransient)
+                .filter(columnType -> !columnType.isTransient())
                 .collect(Collectors.toList());
     }
 

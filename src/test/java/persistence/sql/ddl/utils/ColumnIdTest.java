@@ -20,7 +20,7 @@ class ColumnIdTest {
     @DisplayName("Column name값이 있는 경우 테스트")
     void nameTest() throws Exception {
         Field id = clazz.getDeclaredField("id");
-        ColumnType2 columnId = new ColumnId(id);
+        ColumnType columnId = new ColumnId(id);
         Assertions.assertThat(columnId.getName()).isEqualTo("id");
     }
 
@@ -28,7 +28,7 @@ class ColumnIdTest {
     @DisplayName("pk column 판단")
     void noNameTest() throws Exception {
         Field id = clazz.getDeclaredField("id");
-        ColumnType2 columnId = new ColumnId(id);
+        ColumnType columnId = new ColumnId(id);
         Assertions.assertThat(columnId.isId()).isTrue();
     }
 

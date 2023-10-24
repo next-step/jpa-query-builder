@@ -3,6 +3,8 @@ package persistence.sql.ddl.utils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
+import persistence.sql.ddl.type.DataType;
+import persistence.sql.ddl.type.H2DataType;
 
 import java.lang.reflect.Field;
 
@@ -17,7 +19,7 @@ class ColumnFieldTest {
     @DisplayName("Column name값이 있는 경우 테스트")
     void nameTest() throws Exception {
         Field name = clazz.getDeclaredField("name");
-        ColumnType2 columnField = new ColumnField(name);
+        ColumnType columnField = new ColumnField(name);
         assertThat(columnField.getName()).isEqualTo("nick_name");
     }
 
@@ -25,7 +27,7 @@ class ColumnFieldTest {
     @DisplayName("Column name값이 없는 경우 테스트")
     void noNameTest() throws Exception {
         Field email = clazz.getDeclaredField("email");
-        ColumnType2 columnField = new ColumnField(email);
+        ColumnType columnField = new ColumnField(email);
         assertThat(columnField.getName()).isEqualTo("email");
     }
 
@@ -33,7 +35,7 @@ class ColumnFieldTest {
     @DisplayName("isId 테스트")
     void isIdTest() throws Exception {
         Field email = clazz.getDeclaredField("email");
-        ColumnType2 columnField = new ColumnField(email);
+        ColumnType columnField = new ColumnField(email);
         assertThat(columnField.isId()).isFalse();
     }
 
@@ -41,7 +43,7 @@ class ColumnFieldTest {
     @DisplayName("@Transient 붙어있을때 테스트")
     void transientTest() throws Exception {
         Field index = clazz.getDeclaredField("index");
-        ColumnType2 columnField = new ColumnField(index);
+        ColumnType columnField = new ColumnField(index);
         assertThat(columnField.isTransient()).isTrue();
     }
 
@@ -49,7 +51,7 @@ class ColumnFieldTest {
     @DisplayName("@Transient 없을때 테스트")
     void noTransientTest() throws Exception {
         Field email = clazz.getDeclaredField("email");
-        ColumnType2 columnField = new ColumnField(email);
+        ColumnType columnField = new ColumnField(email);
         assertThat(columnField.isTransient()).isFalse();
     }
 
@@ -59,8 +61,8 @@ class ColumnFieldTest {
         Field email = clazz.getDeclaredField("email");
         Field name = clazz.getDeclaredField("name");
 
-        ColumnType2 emailField = new ColumnField(email);
-        ColumnType2 nameField = new ColumnField(name);
+        ColumnType emailField = new ColumnField(email);
+        ColumnType nameField = new ColumnField(name);
 
         assertAll(
                 () -> assertThat(emailField.isNullable()).isFalse(),
@@ -73,8 +75,8 @@ class ColumnFieldTest {
         Field email = clazz.getDeclaredField("email");
         Field name = clazz.getDeclaredField("name");
 
-        ColumnType2 emailField = new ColumnField(email);
-        ColumnType2 nameField = new ColumnField(name);
+        ColumnType emailField = new ColumnField(email);
+        ColumnType nameField = new ColumnField(name);
 
         assertAll(
                 () -> assertThat(emailField.getLength()).isEqualTo(255),
@@ -82,5 +84,21 @@ class ColumnFieldTest {
         );
     }
 
+    @Test
+    @DisplayName("dataType 테스트")
+    void dataTypeTest() throws Exception {
+        Field email = clazz.getDeclaredField("email");
+        Field age = clazz.getDeclaredField("age");
+
+        ColumnType emailField = new ColumnField(email);
+        ColumnType ageField = new ColumnField(age);
+
+        System.out.println(emailField.getDataType());
+        System.out.println(ageField.getDataType());
+        assertAll(
+                () -> assertThat(emailField.getDataType().getName()).isEqualTo("VARCHAR"),
+                () ->   assertThat(ageField.getDataType().getName()).isEqualTo("INTEGER")
+        );
+    }
 
 }
