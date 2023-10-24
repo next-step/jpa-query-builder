@@ -9,32 +9,31 @@ import jdbc.RowMapper;
 import persistence.sql.dialect.ColumnType;
 import persistence.sql.schema.EntityClassMappingMeta;
 
-public class ResultSetMapper<T> implements RowMapper<T> {
+public class EntityRowMapper<T> implements RowMapper<T> {
 
     private final Class<T> type;
     private final EntityClassMappingMeta entityClassMappingMeta;
 
-    public ResultSetMapper(Class<T> type, ColumnType columnType) {
+    public EntityRowMapper(Class<T> type, ColumnType columnType) {
         this.type = type;
         this.entityClassMappingMeta = EntityClassMappingMeta.of(type, columnType);
     }
 
     @Override
     public T mapRow(ResultSet resultSet) {
-        return mapToObject(resultSet);
-    }
-
-    private T mapToObject(ResultSet resultSet) {
         try {
-            final Constructor<?> defaultConstructor = entityClassMappingMeta.getDefaultConstructor();
-            defaultConstructor.setAccessible(true);
-            final Object object = defaultConstructor.newInstance();
-
+            final Object object = initDefaultObject();
             mapColumnToField(object, resultSet);
             return type.cast(object);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Object initDefaultObject() throws InstantiationException, IllegalAccessException, InvocationTargetException {
+        final Constructor<?> defaultConstructor = entityClassMappingMeta.getDefaultConstructor();
+        defaultConstructor.setAccessible(true);
+        return defaultConstructor.newInstance();
     }
 
     private void mapColumnToField(Object object, ResultSet resultSet) {
