@@ -51,4 +51,13 @@ class SimpleEntityManagerTest {
                 () -> assertTrue(resultPerson.getId().equals(2L))
         );
     }
+
+    @DisplayName("EntityManager를 통해 Entity를 삭제한다.")
+    @Test
+    void test_remove() {
+        entityManager.remove(new Person(1L, "hhhhhwi", 1, "aab555586@gmail.com", 0));
+        Person resultPerson = entityManager.find(Person.class, 1L);
+
+        assertThat(resultPerson).isNull();
+    }
 }

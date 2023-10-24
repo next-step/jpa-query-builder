@@ -38,6 +38,7 @@ public class SimpleEntityManager implements EntityManager{
 
     @Override
     public void remove(Object entity) {
-
+        String query = new DeleteQueryBuilder(entity.getClass(), new WhereClauseBuilder(entity)).buildQuery();
+        jdbcTemplate.execute(query);
     }
 }
