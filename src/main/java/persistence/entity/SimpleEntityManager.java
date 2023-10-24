@@ -25,6 +25,7 @@ public class SimpleEntityManager implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-
+        jdbcTemplate.execute(query.delete(entity));
     }
+
 }

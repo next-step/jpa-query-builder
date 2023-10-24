@@ -1,6 +1,7 @@
 package persistence.entity;
 
 import jdbc.RowMapper;
+import persistence.exception.NoSuchEntityFoundException;
 import persistence.sql.entity.EntityColumn;
 import persistence.sql.entity.EntityData;
 
@@ -18,14 +19,16 @@ public class SimpleRowMapper<T> implements RowMapper<T> {
 
     @Override
     public T mapRow(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) {
+            throw new NoSuchEntityFoundException();
+        }
+
         T entity;
         try {
             entity = entityClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException("엔티티 객체를 생성하는데 오류가 발생하였습니다.", e);
         }
-
-        resultSet.next();
 
         EntityData entityData = new EntityData(entityClass);
         for (EntityColumn column : entityData.getEntityColumns().getEntityColumnList()) {

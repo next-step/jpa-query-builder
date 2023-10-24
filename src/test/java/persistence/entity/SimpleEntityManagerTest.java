@@ -5,10 +5,12 @@ import database.H2;
 import entity.Person;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
+import persistence.exception.NoSuchEntityFoundException;
 import persistence.sql.Query;
 import persistence.sql.dialect.h2.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SimpleEntityManagerTest {
 
@@ -71,6 +73,21 @@ class SimpleEntityManagerTest {
 
         // then
         assertThat(found.equals(testEntity)).isTrue();
+    }
+
+    @DisplayName("EntityManger#remove를 통해 Entity를 삭제한다.")
+    @Test
+    void removeTest() {
+        // given
+        EntityManager entityManager = new SimpleEntityManager(QUERY, jdbcTemplate);
+        Person testEntity = new Person(1L, "test1", 10, "test1@gmail.com", 0);
+
+        // when
+        entityManager.remove(testEntity);
+
+        // then
+        assertThatThrownBy(() -> entityManager.find(Person.class, 1L))
+                .hasCauseExactlyInstanceOf(NoSuchEntityFoundException.class);
     }
 
 }
