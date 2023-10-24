@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 public class InsertQueryBuilder{
-    private final static String INSERT_COMMAND = "INSERT INTO %s (%s) VALUES %s;";
+    private static final String INSERT_COMMAND = "INSERT INTO %s (%s) VALUES %s;";
 
     private final EntityMetadata entityMetadata;
 

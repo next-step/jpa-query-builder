@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 public class WhereClauseBuilder {
-	private final static String WHERE_CLAUSE = " WHERE %s";
+	private static final String WHERE_CLAUSE = " WHERE %s";
 
 	private final Values values;
 

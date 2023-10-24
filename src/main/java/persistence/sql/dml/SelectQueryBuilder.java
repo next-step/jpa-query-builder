@@ -6,7 +6,7 @@ import persistence.sql.QueryBuilder;
 import static java.lang.String.format;
 
 public class SelectQueryBuilder implements QueryBuilder {
-	private final static String SELECT_COMMAND = "SELECT %s FROM %s;";
+	private static final String SELECT_COMMAND = "SELECT %s FROM %s;";
 
 	private final EntityMetadata entityMetadata;
 

@@ -6,7 +6,7 @@ import persistence.sql.QueryBuilder;
 import static java.lang.String.format;
 
 public class DeleteQueryBuilder implements QueryBuilder {
-	private final static String DELETE_COMMAND = "DELETE FROM %s;";
+	private static final String DELETE_COMMAND = "DELETE FROM %s;";
 
 	private final EntityMetadata entityMetadata;
 
