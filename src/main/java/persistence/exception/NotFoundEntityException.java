@@ -9,4 +9,8 @@ public class NotFoundEntityException extends PersistenceException {
     public NotFoundEntityException(Class<?> entity) {
         super(MESSAGE_FORMAT.replace("%s", entity.getName()));
     }
+
+    public NotFoundEntityException(String message) {
+        super(message);
+    }
 }

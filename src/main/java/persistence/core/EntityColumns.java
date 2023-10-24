@@ -1,5 +1,7 @@
 package persistence.core;
 
+import persistence.exception.NotFoundEntityException;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -34,6 +36,6 @@ public class EntityColumns {
         return columns.stream()
                 .filter(it -> it.isEqualField(field))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundEntityException("not found entity column: " + field.getName()));
     }
 }
