@@ -85,10 +85,15 @@ public class TableDdlQueryBuilder {
                         .append(OPEN_PARENTHESIS)
                         .append(column.getLength())
                         .append(CLOSE_PARENTHESIS)
-                        .append(BLANK);
+                        .append(BLANK)
+                        .append(getUniqueConstraintQuery(column.isUnique()))
+                        .append(getNullableConstraintQuery(column.isNullable()));
+                return;
             }
 
-            builder.append(getUniqueConstraintQuery(column.isUnique()))
+            builder.append(javaClassMapping.getType(column.getType()))
+                    .append(BLANK)
+                    .append(getUniqueConstraintQuery(column.isUnique()))
                     .append(getNullableConstraintQuery(column.isNullable()));
         };
     }

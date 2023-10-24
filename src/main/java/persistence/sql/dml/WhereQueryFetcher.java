@@ -1,4 +1,6 @@
-package persistence.sql.dml.where;
+package persistence.sql.dml;
+
+import persistence.sql.dml.where.FetchWhereQuery;
 
 public interface WhereQueryFetcher {
 
