@@ -3,8 +3,6 @@ package persistence.sql.dml;
 import persistence.sql.metadata.EntityMetadata;
 import persistence.sql.QueryBuilder;
 
-import java.util.List;
-
 import static java.lang.String.format;
 
 public class DeleteQueryBuilder implements QueryBuilder {
@@ -12,15 +10,15 @@ public class DeleteQueryBuilder implements QueryBuilder {
 
 	private final EntityMetadata entityMetadata;
 
-	private final String whereClause;
+	private final WhereClauseBuilder whereClauseBuilder;
 
-	public DeleteQueryBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) {
+	public DeleteQueryBuilder(Class<?> clazz, WhereClauseBuilder whereClauseBuilder) {
 		this.entityMetadata = new EntityMetadata(clazz);
-		this.whereClause = new WhereClauseBuilder(clazz, whereColumns, whereValues).buildClause();
+		this.whereClauseBuilder = whereClauseBuilder;
 	}
 
 	@Override
 	public String buildQuery() {
-		return format(DELETE_COMMAND, entityMetadata.getTableName() + whereClause);
+		return format(DELETE_COMMAND, entityMetadata.getTableName() + whereClauseBuilder.buildClause());
 	}
 }

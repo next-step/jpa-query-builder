@@ -3,23 +3,30 @@ package persistence.sql.dml;
 import persistence.sql.metadata.EntityMetadata;
 import persistence.sql.QueryBuilder;
 
-import java.util.List;
-
 import static java.lang.String.format;
 
 public class SelectQueryBuilder implements QueryBuilder {
 	private final static String SELECT_COMMAND = "SELECT %s FROM %s;";
 
 	private final EntityMetadata entityMetadata;
-	private final String whereClause;
 
-	public SelectQueryBuilder(Class<?> clazz, List<String> whereColumns, List<String> whereValues) {
+	private final WhereClauseBuilder whereClauseBuilder;
+
+	public SelectQueryBuilder(Class<?> clazz, WhereClauseBuilder whereClauseBuilder) {
 		this.entityMetadata = new EntityMetadata(clazz);
-		this.whereClause = new WhereClauseBuilder(clazz, whereColumns, whereValues).buildClause();
+		this.whereClauseBuilder = whereClauseBuilder;
 	}
-
 	@Override
 	public String buildQuery() {
-		return format(SELECT_COMMAND, "*", entityMetadata.getTableName() + whereClause);
+		return format(SELECT_COMMAND, "*", entityMetadata.getTableName() + whereClauseBuilder.buildClause());
 	}
+
+	public String buildFindByIdQuery() {
+		return format(SELECT_COMMAND, "*", entityMetadata.getTableName() + whereClauseBuilder.buildPKClause());
+	}
+
+	public String buidFindAllQuery() {
+		return format(SELECT_COMMAND, "*", entityMetadata.getTableName());
+	}
+
 }

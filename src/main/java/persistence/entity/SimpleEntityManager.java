@@ -3,10 +3,14 @@ package persistence.entity;
 import jakarta.persistence.Id;
 import jdbc.EntityMapper;
 import jdbc.JdbcTemplate;
+import persistence.sql.dml.DeleteQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.WhereClauseBuilder;
+import persistence.sql.metadata.Value;
+import persistence.sql.metadata.Values;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class SimpleEntityManager implements EntityManager{
@@ -16,8 +20,13 @@ public class SimpleEntityManager implements EntityManager{
     }
 
     @Override
-    public <T> T find(Class<T> clazz, Long Id) {
-        String query = new SelectQueryBuilder(clazz, Arrays.stream(clazz.getDeclaredFields()).filter(x -> x.isAnnotationPresent(Id.class)).map(x->x.getName()).collect(Collectors.toList()), List.of(Id.toString())).buildQuery();
+    public <T> T find(Class<T> clazz, Long id) {
+        Values values = new Values(Arrays.stream(clazz.getDeclaredFields())
+                .filter(x -> x.isAnnotationPresent(Id.class))
+                .map(x -> new Value(x, String.valueOf(id)))
+                .collect(Collectors.toList()));
+
+        String query = new SelectQueryBuilder(clazz, new WhereClauseBuilder(values)).buildFindByIdQuery();
         return jdbcTemplate.queryForObject(query, new EntityMapper<>(clazz));
     }
 
