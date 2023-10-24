@@ -1,6 +1,7 @@
 package persistence.sql.ddl.utils;
 
 import jakarta.persistence.*;
+import persistence.sql.ddl.constraint.NotNullConstraint;
 import persistence.sql.ddl.type.DataType;
 import persistence.sql.ddl.type.DataTypeMapper;
 import persistence.sql.ddl.type.H2DataTypeMapper;

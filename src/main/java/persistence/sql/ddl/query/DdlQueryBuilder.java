@@ -1,10 +1,13 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.query;
 
-import persistence.sql.ddl.utils.ColumnQueryBuilder;
+import persistence.sql.ddl.EntityMetaData;
 
 public class DdlQueryBuilder {
 
+    private final ColumnQueryBuilder columnQueryBuilder;
+
     private DdlQueryBuilder() {
+        columnQueryBuilder = new ColumnQueryBuilder();
     }
 
     public String createTable(EntityMetaData entityMetaData) {
@@ -25,7 +28,7 @@ public class DdlQueryBuilder {
     }
 
     public String createColumnsDdl(EntityMetaData entityMetaData) {
-        return String.join(", ", ColumnQueryBuilder.generateDdlQueryRows(entityMetaData.getColumns()));
+        return String.join(", ", columnQueryBuilder.generateDdlQueryRows(entityMetaData.getColumns()));
     }
 
     public static DdlQueryBuilder getInstance() {

@@ -5,7 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.ddl.query.DdlQueryBuilder;
 import persistence.sql.ddl.EntityMetaData;
 import persistence.sql.ddl.Person;
 
