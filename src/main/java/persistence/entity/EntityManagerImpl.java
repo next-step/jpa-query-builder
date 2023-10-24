@@ -1,10 +1,7 @@
 package persistence.entity;
 
 import java.sql.Connection;
-import persistence.entity.impl.retrieve.EntityLoader;
-import persistence.entity.impl.retrieve.EntityLoaderImpl;
-import persistence.entity.impl.store.EntityPersister;
-import persistence.entity.impl.store.EntityPersisterImpl;
+import jdbc.JdbcTemplate;
 import persistence.sql.dialect.ColumnType;
 import persistence.sql.dml.clause.WherePredicate;
 import persistence.sql.dml.clause.operator.EqualOperator;
@@ -14,21 +11,18 @@ import persistence.sql.dml.statement.SelectStatementBuilder;
 import persistence.sql.schema.EntityClassMappingMeta;
 import persistence.sql.schema.EntityObjectMappingMeta;
 
-public class EntityManagerImpl<T> implements EntityManager<T> {
+public class EntityManagerImpl implements EntityManager {
 
     private final ColumnType columnType;
+    private final JdbcTemplate jdbcTemplate;
 
-    private final EntityLoader<T> entityLoader;
-    private final EntityPersister entityPersister;
-
-    public EntityManagerImpl(Class<T> clazz, Connection connection, ColumnType columnType) {
-        this.entityLoader = new EntityLoaderImpl<>(clazz, connection, columnType);
-        this.entityPersister = new EntityPersisterImpl(connection);
+    public EntityManagerImpl(Connection connection, ColumnType columnType) {
+        this.jdbcTemplate = new JdbcTemplate(connection);
         this.columnType = columnType;
     }
 
     @Override
-    public T find(Class<T> clazz, Long Id) {
+    public <T> T find(Class<T> clazz, Long Id) {
         final EntityClassMappingMeta classMappingMeta = EntityClassMappingMeta.of(clazz, columnType);
 
         final String selectSql = SelectStatementBuilder.builder()
@@ -36,7 +30,7 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
             .where(WherePredicate.of(classMappingMeta.getIdFieldColumnName(), Id, new EqualOperator()))
             .build();
 
-        return entityLoader.load(selectSql);
+        return jdbcTemplate.queryForObject(selectSql, new EntityRowMapper<>(clazz, columnType));
     }
 
     @Override
@@ -44,7 +38,7 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
         final InsertStatementBuilder insertStatementBuilder = new InsertStatementBuilder(columnType);
         final String insertSql = insertStatementBuilder.insert(entity);
 
-        entityPersister.store(insertSql);
+        jdbcTemplate.execute(insertSql);
     }
 
     @Override
@@ -57,6 +51,6 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
             .where(WherePredicate.of(objectMappingMeta.getIdColumnName(), objectMappingMeta.getIdValue(), new EqualOperator()))
             .build();
 
-        entityPersister.delete(deleteSql);
+        jdbcTemplate.execute(deleteSql);
     }
 }

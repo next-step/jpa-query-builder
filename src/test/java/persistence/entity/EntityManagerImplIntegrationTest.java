@@ -26,14 +26,14 @@ class EntityManagerImplIntegrationTest {
 
     private Database jdbcTemplate;
 
-    private EntityManager<PersonV3> entityManager;
+    private EntityManager entityManager;
 
     @BeforeEach
     void setUp() throws SQLException {
         server = new H2();
         server.start();
 
-        entityManager = new EntityManagerImpl<>(PersonV3.class, server.getConnection(), new H2ColumnType());
+        entityManager = new EntityManagerImpl(server.getConnection(), new H2ColumnType());
 
         jdbcTemplate = new JdbcTemplate(server.getConnection());
         CreateDDLQueryGenerator createDDLQueryGenerator = new CreateDDLQueryGenerator(new H2ColumnType());
