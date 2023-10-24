@@ -18,8 +18,8 @@ public class DmlQueryGenerator {
         return new DmlQueryGenerator(dialect);
     }
 
-    public String generateInsertQuery(Object object) {
-        return InsertQueryBuilder.of(object).build();
+    public String generateInsertQuery(Object entity) {
+        return InsertQueryBuilder.of(entity).build();
     }
 
     public String generateSelectAllQuery(Class<?> clazz) {
@@ -35,6 +35,11 @@ public class DmlQueryGenerator {
     public String generateDeleteAllQuery(Class<?> clazz) {
         EntityMeta entityMeta = EntityMeta.of(clazz);
         return DeleteQueryBuilder.of(entityMeta).buildDeleteAllQuery();
+    }
+
+    public String generateDeleteQuery(Object entity) {
+        EntityMeta entityMeta = EntityMeta.of(entity.getClass());
+        return DeleteQueryBuilder.of(entityMeta).buildDeleteQuery(entity);
     }
 
     public String generateDeleteByPkQuery(Class<?> clazz, Object pkObject) {

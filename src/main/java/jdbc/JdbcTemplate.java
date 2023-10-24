@@ -1,8 +1,6 @@
 package jdbc;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +21,10 @@ public class JdbcTemplate {
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
         try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
-            resultSet.next();
-            return rowMapper.mapRow(resultSet);
+            if (resultSet.next()) {
+                return rowMapper.mapRow(resultSet);
+            }
+            return null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -39,6 +39,15 @@ public class JdbcTemplate {
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public String getDbmsName()  {
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            return metaData.getDatabaseProductName();
+        } catch (SQLException e) {
+            throw new IllegalStateException("DBMS 정보를 획득하는 데 실패하였습니다.");
         }
     }
 }

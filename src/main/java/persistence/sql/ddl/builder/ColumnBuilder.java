@@ -4,7 +4,6 @@ import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.TypeDialect;
 import persistence.sql.meta.ColumnMeta;
 import persistence.sql.meta.ColumnMetas;
-import persistence.sql.meta.EntityMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +16,18 @@ public class ColumnBuilder {
     private static final String NOT_NULL = "NOT NULL";
 
     private final Dialect dialect;
-    private final EntityMeta entityMeta;
+    private final ColumnMetas columnMetas;
 
-    public ColumnBuilder(Dialect dialect, EntityMeta entityMeta) {
+    public ColumnBuilder(Dialect dialect, ColumnMetas columnMetas) {
         this.dialect = dialect;
-        this.entityMeta = entityMeta;
+        this.columnMetas = columnMetas;
     }
 
     public String buildColumnDefinition() {
-        ColumnMetas columnMetas = entityMeta.getColumnMetas();
-        return String.join(COLUMN_JOIN, toSql(columnMetas));
+        return String.join(COLUMN_JOIN, toSql());
     }
 
-    private List<String> toSql(ColumnMetas columnMetas) {
+    private List<String> toSql() {
         List<String> sqlElements = new ArrayList<>();
         ColumnMetas exceptTransientColumns = columnMetas.exceptTransient();
         exceptTransientColumns.forEach(

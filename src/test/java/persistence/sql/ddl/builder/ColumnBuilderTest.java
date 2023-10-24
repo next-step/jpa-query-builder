@@ -25,7 +25,7 @@ class ColumnBuilderTest {
     @DisplayName("H2 컬럼목록 빌드 정상 테스트")
     void getColumnDefinition() {
         EntityMeta entityMeta = MetaFactory.get(TestDomain.class);
-        ColumnBuilder columnBuilder = new ColumnBuilder(H2Dialect.getInstance(), entityMeta);
+        ColumnBuilder columnBuilder = new ColumnBuilder(H2Dialect.getInstance(), entityMeta.getColumnMetas());
         String columnDefinition = columnBuilder.buildColumnDefinition();
         assertAll(
                 () -> assertThat(columnDefinition).isEqualTo("a BIGINT PRIMARY KEY, b INT, c VARCHAR"),

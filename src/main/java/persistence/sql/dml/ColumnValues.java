@@ -17,14 +17,26 @@ public class ColumnValues {
         this.elements = elements;
     }
 
+    public static ColumnValues emptyValues() {
+        return new ColumnValues(new LinkedHashMap<>());
+    }
+
     public static ColumnValues of(Object object) {
         return new ColumnValues(buildElements(object));
     }
 
-    public static ColumnValues ofFilteredAutoGenType(Object object) {
-        Map<ColumnMeta, String> elements = buildElements(object);
+    public static ColumnValues ofFilteredAutoGenType(Object entity) {
+        Map<ColumnMeta, String> elements = buildElements(entity);
         Set.copyOf(elements.keySet()).stream()
                 .filter(ColumnMeta::isGenerationTypeIdentity)
+                .forEach(elements::remove);
+        return new ColumnValues(elements);
+    }
+
+    public static ColumnValues ofId(Object entity) {
+        Map<ColumnMeta, String> elements = buildElements(entity);
+        Set.copyOf(elements.keySet()).stream()
+                .filter(columnMeta -> !columnMeta.isId())
                 .forEach(elements::remove);
         return new ColumnValues(elements);
     }
@@ -75,6 +87,10 @@ public class ColumnValues {
         return fieldValue.toString();
     }
 
+    public void putAll(ColumnValues addTarget) {
+        elements.putAll(addTarget.elements);
+    }
+
     public List<String> columns() {
         return elements.keySet().stream()
                 .map(ColumnMeta::getColumnName)
@@ -83,6 +99,10 @@ public class ColumnValues {
 
     public List<String> values() {
         return new ArrayList<>(elements.values());
+    }
+
+    public boolean isEmpty() {
+        return elements.isEmpty();
     }
 
     public List<String> buildValueConditions() {

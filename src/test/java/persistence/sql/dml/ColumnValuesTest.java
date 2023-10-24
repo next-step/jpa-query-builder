@@ -4,6 +4,7 @@ import domain.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.mock.MockEntity;
 import persistence.sql.meta.MetaFactory;
 
 import java.util.Arrays;
@@ -62,6 +63,19 @@ class ColumnValuesTest {
         Assertions.assertAll(
                 () -> assertThat(columns).isEqualTo(List.of("id")),
                 () -> assertThat(values).isEqualTo(List.of("1"))
+        );
+    }
+
+    @Test
+    @DisplayName("Entity Instance를 활용한 Id 컬럼 추출")
+    void ofIdByEntityInstance() {
+        MockEntity 테스트 = new MockEntity(2L, "테스트");
+        ColumnValues columnValues = ColumnValues.ofId(테스트);
+        List<String> columns = columnValues.columns();
+        List<String> values = columnValues.values();
+        Assertions.assertAll(
+                () -> assertThat(columns).isEqualTo(List.of("id")),
+                () -> assertThat(values).isEqualTo(List.of("2"))
         );
     }
 
