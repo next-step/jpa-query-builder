@@ -1,4 +1,4 @@
-package persistence.sql.dml.h2;
+package persistence.sql.dml;
 
 import entityloaderfixture.depth.DepthPersonFixtureEntity;
 import fixture.EntityMetadataModelFixture;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2DmlGeneratorTest {
+class DmlGeneratorTest {
 
     private DmlGenerator dmlGenerator;
 
@@ -24,7 +24,7 @@ class H2DmlGeneratorTest {
     void setUp() {
         EntityMetadataModel entityMetadataModel = EntityMetadataModelFixture.getEntityMetadataModel(DepthPersonFixtureEntity.class);
         EntityMetadataModels entityMetadataModels = new EntityMetadataModels(Set.of(entityMetadataModel));
-        dmlGenerator = new H2DmlGenerator(new EntityMetadataModelHolder(entityMetadataModels));
+        dmlGenerator = new DmlGenerator(new EntityMetadataModelHolder(entityMetadataModels));
     }
 
 

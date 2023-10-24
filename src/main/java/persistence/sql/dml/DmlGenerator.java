@@ -1,16 +1,36 @@
 package persistence.sql.dml;
 
+import persistence.core.EntityMetadataModelHolder;
 import persistence.sql.dml.where.FetchWhereQuery;
 
-import java.util.List;
+public class DmlGenerator {
 
-public interface DmlGenerator {
+    private final InsertQueryBuilder insertQueryBuilder;
 
-    String insert(Object entity);
+    private final SelectQueryBuilder selectQueryBuilder;
 
-    String findAll(Class<?> entity);
 
-    String findBy(Class<?> entity, FetchWhereQuery whereClauses);
+    private final DeleteQueryBuilder deleteQueryBuilder;
 
-    String delete(Class<?> entity, FetchWhereQuery whereClauses);
+    public DmlGenerator(EntityMetadataModelHolder entityMetadataModelHolder) {
+        this.insertQueryBuilder = new InsertQueryBuilder(entityMetadataModelHolder);
+        this.selectQueryBuilder = new SelectQueryBuilder(entityMetadataModelHolder);
+        this.deleteQueryBuilder = new DeleteQueryBuilder(entityMetadataModelHolder);
+    }
+
+    public String insert(Object entity) {
+        return insertQueryBuilder.createInsertQuery(entity);
+    }
+
+    public String findAll(Class<?> entity) {
+        return selectQueryBuilder.findAll(entity);
+    }
+
+    public String findBy(Class<?> entity, FetchWhereQuery whereClauses) {
+        return selectQueryBuilder.findBy(entity, whereClauses);
+    }
+
+    public String delete(Class<?> entity, FetchWhereQuery whereClauses) {
+        return deleteQueryBuilder.delete(entity, whereClauses);
+    }
 }
