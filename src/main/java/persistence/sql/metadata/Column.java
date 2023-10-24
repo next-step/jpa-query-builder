@@ -15,7 +15,7 @@ public class Column {
 
     public Column(Field field) {
         this.name = findName(field);
-        this.type = convertTypeToString(field.getType());
+        this.type = ColumnType.convertTypeClassToName(field.getType());//convertTypeToString(field.getType());
         this.constraint = new Constraint(field);
         this.isTransient = field.isAnnotationPresent(Transient.class);
     }
@@ -32,7 +32,7 @@ public class Column {
         return new StringBuilder()
                 .append(name + " " + type)
                 .append(constraint.buildNullable())
-                .append(constraint.bulidGeneratedType())
+                .append(GeneratedType.convertTypeClassToName(constraint.getGeneratedType()))
                 .append(constraint.buildPrimaryKey())
                 .toString();
     }
@@ -57,21 +57,5 @@ public class Column {
         }
 
         return column.name();
-    }
-
-    private String convertTypeToString(Class<?> type) {
-        switch (type.getSimpleName()) {
-            case "Long" :
-                return "BIGINT";
-
-            case "String" :
-                return "VARCHAR(255)";
-
-            case "Integer" :
-                return "INTEGER";
-
-            default:
-                throw new IllegalArgumentException(type.getSimpleName() + " : 정의되지 않은 타입입니다.");
-        }
     }
 }
