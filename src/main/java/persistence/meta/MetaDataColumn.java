@@ -1,16 +1,15 @@
 package persistence.meta;
 
-import jakarta.persistence.Transient;
-
-import java.lang.annotation.Annotation;
+import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MetaDataColumn {
   public static final String SPACE = " ";
-  private static final String COMMA = ",";
+  private static final String COLUMN_DATA_TYPE = "%s %s";
   private final String name;
   private final String type;
   private final List<MetaDataColumnConstraint> constraints;
@@ -23,27 +22,35 @@ public class MetaDataColumn {
 
   public static MetaDataColumn of(Field field, String columnType){
     List<MetaDataColumnConstraint> constraints = Arrays.stream(field.getAnnotations())
-            .filter(MetaDataColumn::isNotTransient)
             .map(MetaDataColumnConstraint::of)
+            .sorted(Comparator.comparing(MetaDataColumnConstraint::getConstraint).reversed())
             .collect(Collectors.toList());
-    return new MetaDataColumn(field.getName(), columnType, constraints);
+
+    String name = setColumnName(field);
+
+    return new MetaDataColumn(name, columnType, constraints);
   }
   public String getColumn(){
+
     StringBuilder sb = new StringBuilder();
-    sb.append(name);
-    sb.append(SPACE);
-    sb.append(type);
-    sb.append(" ");
+    sb.append(String.format(COLUMN_DATA_TYPE, name,type));
 
     for (MetaDataColumnConstraint constraint : constraints){
+      sb.append(SPACE);
       sb.append(constraint.getConstraint());
-      sb.append(" ");
     }
-    sb.append(COMMA);
+
     return sb.toString();
   }
-  private static boolean isNotTransient(Annotation annotation) {
-    return !annotation.annotationType().equals(Transient.class);
+
+  private static String setColumnName(Field field){
+
+    if (field.isAnnotationPresent(Column.class)
+            && !field.getAnnotation(Column.class).name().isEmpty()){
+      return field.getAnnotation(Column.class).name();
+    }
+
+    return field.getName().toLowerCase();
   }
 
 }
