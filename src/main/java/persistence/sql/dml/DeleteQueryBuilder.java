@@ -8,17 +8,15 @@ import static java.lang.String.format;
 public class DeleteQueryBuilder implements QueryBuilder {
 	private static final String DELETE_COMMAND = "DELETE FROM %s;";
 
-	private final EntityMetadata entityMetadata;
-
-	private final WhereClauseBuilder whereClauseBuilder;
-
-	public DeleteQueryBuilder(Class<?> clazz, WhereClauseBuilder whereClauseBuilder) {
-		this.entityMetadata = new EntityMetadata(clazz);
-		this.whereClauseBuilder = whereClauseBuilder;
+	public DeleteQueryBuilder() {
 	}
 
 	@Override
-	public String buildQuery() {
+	public String buildQuery(EntityMetadata entityMetadata) {
+		return format(DELETE_COMMAND, entityMetadata.getTableName());
+	}
+
+	public String buildQuery(EntityMetadata entityMetadata, WhereClauseBuilder whereClauseBuilder) {
 		return format(DELETE_COMMAND, entityMetadata.getTableName() + whereClauseBuilder.buildClause());
 	}
 }

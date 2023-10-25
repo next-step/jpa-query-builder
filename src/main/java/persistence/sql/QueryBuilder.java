@@ -1,5 +1,7 @@
 package persistence.sql;
 
+import persistence.sql.metadata.EntityMetadata;
+
 public interface QueryBuilder {
-    String buildQuery();
+    String buildQuery(EntityMetadata entityMetadata);
 }

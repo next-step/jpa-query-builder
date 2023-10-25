@@ -15,7 +15,7 @@ public class Column {
 
     public Column(Field field) {
         this.name = findName(field);
-        this.type = ColumnType.convertTypeClassToName(field.getType());//convertTypeToString(field.getType());
+        this.type = ColumnType.convertTypeClassToName(field.getType());
         this.constraint = new Constraint(field);
         this.isTransient = field.isAnnotationPresent(Transient.class);
     }

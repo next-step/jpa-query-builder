@@ -7,14 +7,12 @@ import static java.lang.String.format;
 
 public class DropQueryBuilder implements QueryBuilder {
     private static final String DROP_TABLE_COMMAND = "DROP TABLE %s IF EXISTS;";
-    private final EntityMetadata entityMetadata;
 
-    public DropQueryBuilder(Class<?> clazz) {
-        this.entityMetadata = new EntityMetadata(clazz);
+    public DropQueryBuilder() {
     }
 
     @Override
-    public String buildQuery() {
+    public String buildQuery(EntityMetadata entityMetadata) {
         return format(DROP_TABLE_COMMAND, entityMetadata.getTableName());
     }
 }

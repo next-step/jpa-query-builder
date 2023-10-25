@@ -8,14 +8,11 @@ import static java.lang.String.format;
 public class CreateQueryBuilder implements QueryBuilder {
     private static final String CREATE_TABLE_COMMAND = "CREATE TABLE %s";
 
-    private final EntityMetadata entityMetadata;
-
-    public CreateQueryBuilder(Class<?> clazz) {
-        this.entityMetadata = new EntityMetadata(clazz);
+    public CreateQueryBuilder() {
     }
 
     @Override
-    public String buildQuery() {
+    public String buildQuery(EntityMetadata entityMetadata) {
         return format(CREATE_TABLE_COMMAND, entityMetadata.getTableName()) +
                 "(" +
                 entityMetadata.getColumnsToCreate() +

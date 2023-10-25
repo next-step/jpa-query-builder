@@ -8,25 +8,18 @@ import static java.lang.String.format;
 public class SelectQueryBuilder implements QueryBuilder {
 	private static final String SELECT_COMMAND = "SELECT %s FROM %s;";
 
-	private final EntityMetadata entityMetadata;
-
-	private final WhereClauseBuilder whereClauseBuilder;
-
-	public SelectQueryBuilder(Class<?> clazz, WhereClauseBuilder whereClauseBuilder) {
-		this.entityMetadata = new EntityMetadata(clazz);
-		this.whereClauseBuilder = whereClauseBuilder;
+	public SelectQueryBuilder() {
 	}
 	@Override
-	public String buildQuery() {
-		return format(SELECT_COMMAND, "*", entityMetadata.getTableName() + whereClauseBuilder.buildClause());
-	}
-
-	public String buildFindByIdQuery() {
-		return format(SELECT_COMMAND, "*", entityMetadata.getTableName() + whereClauseBuilder.buildPKClause());
-	}
-
-	public String buidFindAllQuery() {
+	public String buildQuery(EntityMetadata entityMetadata) {
 		return format(SELECT_COMMAND, "*", entityMetadata.getTableName());
 	}
 
+	public String buildQuery(EntityMetadata entityMetadata, WhereClauseBuilder whereClauseBuilder) {
+		return format(SELECT_COMMAND, "*", entityMetadata.getTableName() + whereClauseBuilder.buildClause());
+	}
+
+	public String buildFindByIdQuery(EntityMetadata entityMetadata, WhereClauseBuilder whereClauseBuilder) {
+		return format(SELECT_COMMAND, "*", entityMetadata.getTableName() + whereClauseBuilder.buildPKClause());
+	}
 }

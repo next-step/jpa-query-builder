@@ -10,30 +10,23 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class InsertQueryBuilder{
+public class InsertQueryBuilder {
     private static final String INSERT_COMMAND = "INSERT INTO %s (%s) VALUES %s;";
 
-    private final EntityMetadata entityMetadata;
+    public InsertQueryBuilder() {
+    }
 
-    private final Values values;
-
-    public InsertQueryBuilder(Object insertObject) {
+    public String buildQuery(EntityMetadata entityMetadata, Object insertObject) {
         if(insertObject == null) {
             throw new IllegalArgumentException("등록하려는 객체가 NULL 값이 될 수 없습니다.");
         }
 
-        this.entityMetadata = new EntityMetadata(insertObject.getClass());
-
         Field[] fields = insertObject.getClass().getDeclaredFields();
 
-        this.values = new Values(Arrays.stream(fields)
+        Values values = new Values(Arrays.stream(fields)
                 .map(x -> new Value(x, insertObject))
                 .filter(Value::checkPossibleToInsert)
                 .collect(Collectors.toList()));
-    }
-
-    public String buildQuery() {
         return format(INSERT_COMMAND, entityMetadata.getTableName(), values.buildColumnsClause(), "(" +  values.buildValueClause() + ")");
     }
-
 }
