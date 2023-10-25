@@ -12,7 +12,7 @@ public interface ColumnType {
 
     boolean isTransient();
 
-    int getLength();
+    String getLength();
 
     DataType getDataType();
 

@@ -74,13 +74,13 @@ class ColumnTypesTest {
         ColumnTypes columnTypes = new ColumnTypes(Person.class);
 
         //When
-        Integer id = columnTypes.getColumn(ID).getLength();
-        Integer name = columnTypes.getColumn(NAME).getLength();
-        Integer age = columnTypes.getColumn(AGE).getLength();
+        String id = columnTypes.getColumn(ID).getLength();
+        String name = columnTypes.getColumn(NAME).getLength();
+        String age = columnTypes.getColumn(AGE).getLength();
 
         //Then
-        assertAll(() -> assertThat(id).isNull(),
-                () -> assertThat(name).isEqualTo(255),
-                () -> assertThat(age).isNull());
+        assertAll(() -> assertThat(id).isEqualTo(""),
+                () -> assertThat(name).isEqualTo("(255)"),
+                () -> assertThat(age).isEqualTo(""));
     }
 }

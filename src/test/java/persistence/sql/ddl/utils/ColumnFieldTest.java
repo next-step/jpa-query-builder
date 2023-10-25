@@ -79,8 +79,8 @@ class ColumnFieldTest {
         ColumnType nameField = new ColumnField(name);
 
         assertAll(
-                () -> assertThat(emailField.getLength()).isEqualTo(255),
-                () ->   assertThat(nameField.getLength()).isEqualTo(255)
+                () -> assertThat(emailField.getLength()).isEqualTo("(255)"),
+                () ->   assertThat(nameField.getLength()).isEqualTo("(255)")
         );
     }
 

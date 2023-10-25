@@ -3,7 +3,6 @@ package persistence.sql.ddl.utils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.type.DataType;
-import persistence.sql.ddl.type.H2DataType;
 import persistence.sql.ddl.type.H2DataTypeMapper;
 
 import java.lang.reflect.Field;
@@ -28,7 +27,7 @@ public class ColumnField implements ColumnType {
     }
 
     private boolean parsNullable(final Field field) {
-       return Optional.ofNullable(getColumnAnnotation(field))
+        return Optional.ofNullable(getColumnAnnotation(field))
                 .map(Column::nullable)
                 .orElse(true);
     }
@@ -81,8 +80,11 @@ public class ColumnField implements ColumnType {
     }
 
     @Override
-    public int getLength() {
-        return this.length;
+    public String getLength() {
+        if ("VARCHAR".equals(this.dataType.getName())) {
+            return "("+this.length+")";
+        }
+        return "";
     }
 
     @Override

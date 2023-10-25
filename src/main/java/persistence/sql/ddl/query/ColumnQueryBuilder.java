@@ -8,7 +8,6 @@ import persistence.sql.ddl.utils.ColumnType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ColumnQueryBuilder {
@@ -25,18 +24,13 @@ public class ColumnQueryBuilder {
         return columnTypes.stream()
                 .map(columnType -> String.join(" ",
                                 columnType.getName(),
-                                columnType.getDataType().getName() + generateLength(columnType.getLength())
+                                columnType.getDataType().getName() + columnType.getLength()
                                 , generateConstraint(columnType))
                         .trim())
                 .collect(Collectors.toList());
     }
 
 
-    private String generateLength(final Integer length) {
-        return Optional.ofNullable(length)
-                .map(e -> "(" + e + ")")
-                .orElse("");
-    }
 
     private String generateConstraint(ColumnType columnType) {
         return this.constraints.stream()

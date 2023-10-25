@@ -6,6 +6,9 @@ public class NotNullConstraint implements Constraint {
 
     @Override
     public boolean check(ColumnType columnType) {
+        if(columnType.isId()) {
+            return false;
+        }
         return !columnType.isNullable();
     }
 

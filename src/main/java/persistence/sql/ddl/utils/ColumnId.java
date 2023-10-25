@@ -53,7 +53,7 @@ public class ColumnId implements ColumnType {
     }
 
     @Override
-    public int getLength() {
+    public String getLength() {
         return this.columnType.getLength();
     }
 
