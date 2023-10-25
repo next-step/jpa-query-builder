@@ -1,5 +1,8 @@
 package persistence.dialect;
 
+import org.h2.value.DataType;
+import org.h2.value.Value;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
@@ -17,5 +20,10 @@ public abstract class Dialect {
     Optional<Integer> dbType = Optional.ofNullable(defaults.get(type));
 
     return dbType.orElseThrow(() -> new RuntimeException(String.format("%s is not in the mappings", type)));
+  }
+
+  public String convertToColumn(Field field){
+    Integer type = getJavaSqlType(field);
+    return Value.getTypeName(DataType.convertSQLTypeToValueType(type));
   }
 }
