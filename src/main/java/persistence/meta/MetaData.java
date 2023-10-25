@@ -3,9 +3,10 @@ package persistence.meta;
 import persistence.dialect.Dialect;
 
 public class MetaData {
+
+  private static final String CREATE_TABLE_CLAUSE = "%s (%s)";
   private final MetaDataTable metaDataTable;
   private final MetaDataColumns metaDataColumns;
-  private static final String CREATE_TABLE_CLAUSE = "%s (%s)";
 
   private MetaData(MetaDataTable metaDataTable, MetaDataColumns metaDataColumns) {
     this.metaDataTable = metaDataTable;

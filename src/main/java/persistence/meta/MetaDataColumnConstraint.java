@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 public class MetaDataColumnConstraint {
   private final ConstraintType constraintType;
-
   private final Annotation annotation;
 
   private MetaDataColumnConstraint(ConstraintType constraintType, Annotation annotation) {
@@ -14,7 +13,6 @@ public class MetaDataColumnConstraint {
   }
 
   public static MetaDataColumnConstraint of(Annotation annotation){
-
     ConstraintType constraintType = Arrays.stream(ConstraintType.values())
             .filter(constraintGroupType -> constraintGroupType.hasConstraint(annotation))
             .findFirst()

@@ -19,11 +19,10 @@ public enum ConstraintType {
   ID((annotation -> annotation.annotationType() == Id.class), "", Map.of("", "PRIMARY KEY")),
   COLUMN((annotation -> annotation.annotationType() == Column.class), "nullable", Map.of("false", "NOT NULL", "true", ""));
 
-
+  private static final String EMPTY_STRING = "";
   private Predicate<Annotation> predicate;
   private String optionParam;
   private Map<String, String> constraintMapping;
-  private String EMPTY_STRING = "";
 
   ConstraintType(Predicate<Annotation> predicate, String optionParam, Map<String, String> constraintMapping) {
     this.predicate = predicate;

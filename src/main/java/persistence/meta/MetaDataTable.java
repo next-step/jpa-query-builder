@@ -15,7 +15,6 @@ public class MetaDataTable {
   }
 
   public static MetaDataTable of(Class<?> clazz){
-
     if(clazz.isAnnotationPresent(Table.class)){
       Table annotation = clazz.getAnnotation(Table.class);
       return new MetaDataTable(annotation.name().toUpperCase());

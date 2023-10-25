@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MetaDataColumns {
-  private final List<MetaDataColumn> columns = new ArrayList<>();
+
   private static final String COMMA = ",";
+  private final List<MetaDataColumn> columns = new ArrayList<>();
   private MetaDataColumns(List<MetaDataColumn> metaColumns) {
     columns.addAll(metaColumns);
   }
