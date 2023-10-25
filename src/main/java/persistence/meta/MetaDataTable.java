@@ -2,8 +2,6 @@ package persistence.meta;
 
 import jakarta.persistence.Table;
 
-import java.lang.annotation.Annotation;
-
 public class MetaDataTable {
 
   private final String name;
@@ -23,6 +21,6 @@ public class MetaDataTable {
       return new MetaDataTable(annotation.name().toUpperCase());
     }
 
-    return new MetaDataTable(clazz.getName().toUpperCase());
+    return new MetaDataTable(clazz.getSimpleName().toUpperCase());
   }
 }
