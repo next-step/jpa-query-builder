@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory;
 import persistence.core.EntityMetadataModelFactory;
 import persistence.core.EntityMetadataModelHolder;
 import persistence.core.EntityMetadataModels;
+import persistence.sql.JdbcTypeJavaClassMapping;
 import persistence.sql.ddl.TableDdlQueryBuilder;
-import persistence.sql.ddl.h2.H2Dialect;
-import persistence.sql.ddl.h2.H2TableDdlQueryBuilder;
 import persistence.sql.dml.DmlGenerator;
-import persistence.sql.dml.h2.H2DmlGenerator;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class Application {
             EntityMetadataModelFactory entityMetadataModelFactory = new EntityMetadataModelFactory();
             EntityMetadataModels entityMetadataModels = entityMetadataModelFactory.createEntityMetadataModels(List.of(Person.class));
 
-            TableDdlQueryBuilder h2TableDdlQueryBuilder = new H2TableDdlQueryBuilder(new H2Dialect());
+            TableDdlQueryBuilder h2TableDdlQueryBuilder = new TableDdlQueryBuilder(new JdbcTypeJavaClassMapping());
             String createTableQuery = h2TableDdlQueryBuilder.createDdlQuery(entityMetadataModels.getMetadataModels()
                     .stream()
                     .findFirst()
@@ -39,7 +37,7 @@ public class Application {
 
             jdbcTemplate.execute(createTableQuery);
 
-            DmlGenerator dmlGenerator = new H2DmlGenerator(new EntityMetadataModelHolder(entityMetadataModels));
+            DmlGenerator dmlGenerator = new DmlGenerator(new EntityMetadataModelHolder(entityMetadataModels));
 
             jdbcTemplate.queryForObject(dmlGenerator.findAll(Person.class), resultSet -> null);
 

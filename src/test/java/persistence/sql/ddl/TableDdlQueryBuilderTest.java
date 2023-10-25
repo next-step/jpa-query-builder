@@ -1,4 +1,4 @@
-package persistence.sql.ddl.h2;
+package persistence.sql.ddl;
 
 import domain.Person;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadataModel;
 import persistence.core.EntityMetadataModelFactory;
 import persistence.core.EntityMetadataModels;
-import persistence.sql.ddl.TableDdlQueryBuilder;
+import persistence.sql.JdbcTypeJavaClassMapping;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2TableDdlQueryBuilderTest {
+class TableDdlQueryBuilderTest {
 
     EntityMetadataModelFactory entityMetadataModelFactory;
 
@@ -22,7 +22,7 @@ class H2TableDdlQueryBuilderTest {
     @BeforeEach
     void setUp() {
         entityMetadataModelFactory = new EntityMetadataModelFactory();
-        tableDdlQueryBuilder = new H2TableDdlQueryBuilder(new H2Dialect());
+        tableDdlQueryBuilder = new TableDdlQueryBuilder(new JdbcTypeJavaClassMapping());
     }
 
     @DisplayName("Person Entity를 읽어 create DDL Query를 생성한다")

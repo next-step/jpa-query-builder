@@ -42,37 +42,6 @@ public class EntityColumn {
         this.hasTransient = columnField.isAnnotationPresent(Transient.class);
     }
 
-    private void setPkColumn(Field columnField) {
-        this.generatedValue = columnField.getAnnotation(GeneratedValue.class);
-        this.isPrimaryKey = true;
-        this.isNullable = false;
-        this.isUnique = false;
-    }
-
-    private void setColumn(Field columnField) {
-        if (columnField.isAnnotationPresent(Column.class)) {
-            Column columnAnnotation = columnField.getAnnotation(Column.class);
-            this.isUnique = columnAnnotation.unique();
-            this.isNullable = columnAnnotation.nullable();
-            this.length = columnAnnotation.length();
-        } else {
-            this.isUnique = false;
-            this.isNullable = true;
-            this.length = DEFAULT_LENGTH;
-        }
-    }
-
-    private String extractColumnName(Field columnField) {
-        if (columnField.isAnnotationPresent(Column.class)) {
-            Column columnAnnotation = columnField.getAnnotation(Column.class);
-            return columnAnnotation.name().equals(DEFAULT_COLUMN_NAME) ?
-                    columnField.getName() :
-                    columnAnnotation.name();
-        }
-
-        return columnField.getName();
-    }
-
     public boolean isPrimaryKey() {
         return isPrimaryKey;
     }
@@ -113,6 +82,10 @@ public class EntityColumn {
         return this.generatedValue.strategy() == GenerationType.IDENTITY;
     }
 
+    public boolean isEqualField(Field field) {
+        return this.name.equals(field.getName()) && this.type.equals(field.getType());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -128,5 +101,36 @@ public class EntityColumn {
     @Override
     public int hashCode() {
         return Objects.hash(name, type, isPrimaryKey, isUnique, isNullable);
+    }
+
+    private String extractColumnName(Field columnField) {
+        if (columnField.isAnnotationPresent(Column.class)) {
+            Column columnAnnotation = columnField.getAnnotation(Column.class);
+            return columnAnnotation.name().equals(DEFAULT_COLUMN_NAME) ?
+                    columnField.getName() :
+                    columnAnnotation.name();
+        }
+
+        return columnField.getName();
+    }
+
+    private void setPkColumn(Field columnField) {
+        this.generatedValue = columnField.getAnnotation(GeneratedValue.class);
+        this.isPrimaryKey = true;
+        this.isNullable = false;
+        this.isUnique = false;
+    }
+
+    private void setColumn(Field columnField) {
+        if (columnField.isAnnotationPresent(Column.class)) {
+            Column columnAnnotation = columnField.getAnnotation(Column.class);
+            this.isUnique = columnAnnotation.unique();
+            this.isNullable = columnAnnotation.nullable();
+            this.length = columnAnnotation.length();
+        } else {
+            this.isUnique = false;
+            this.isNullable = true;
+            this.length = DEFAULT_LENGTH;
+        }
     }
 }

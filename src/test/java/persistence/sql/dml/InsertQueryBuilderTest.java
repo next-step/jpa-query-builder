@@ -1,4 +1,4 @@
-package persistence.sql.dml.h2;
+package persistence.sql.dml;
 
 import entityloaderfixture.depth.DepthPersonFixtureEntity;
 import fixture.EntityMetadataModelFixture;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2InsertQueryBuilderTest {
+class InsertQueryBuilderTest {
 
     private InsertQueryBuilder insertQueryBuilder;
 
@@ -23,7 +23,7 @@ class H2InsertQueryBuilderTest {
         EntityMetadataModel entityMetadataModel = EntityMetadataModelFixture.getEntityMetadataModel(DepthPersonFixtureEntity.class);
         EntityMetadataModels entityMetadataModels = new EntityMetadataModels(Set.of(entityMetadataModel));
         EntityMetadataModelHolder entityMetadataModelHolder = new EntityMetadataModelHolder(entityMetadataModels);
-        insertQueryBuilder = new H2InsertQueryBuilder(entityMetadataModelHolder);
+        insertQueryBuilder = new InsertQueryBuilder(entityMetadataModelHolder);
     }
 
     @DisplayName("EntityMetadataModel과 Entity를 받아 insert 쿼리를 생성한다")

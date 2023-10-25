@@ -3,7 +3,7 @@ package persistence.sql.dml;
 import persistence.core.EntityMetadataModelHolder;
 import persistence.sql.dml.where.FetchWhereQuery;
 
-public abstract class AbstractSelectQueryBuilder extends AbstractQueryBuilder implements SelectQueryBuilder {
+public abstract class AbstractSelectQueryBuilder extends AbstractQueryBuilder {
 
     protected static final String SELECT = "select";
 

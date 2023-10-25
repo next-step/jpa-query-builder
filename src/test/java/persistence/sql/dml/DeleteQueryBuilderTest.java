@@ -1,4 +1,4 @@
-package persistence.sql.dml.h2;
+package persistence.sql.dml;
 
 import entityloaderfixture.depth.DepthPersonFixtureEntity;
 import fixture.EntityMetadataModelFixture;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import persistence.core.EntityMetadataModel;
 import persistence.core.EntityMetadataModelHolder;
 import persistence.core.EntityMetadataModels;
-import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.where.EntityCertification;
 import persistence.sql.dml.where.FetchWhereQuery;
 import persistence.sql.dml.where.WhereQuery;
@@ -19,45 +19,34 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2SelectQueryBuilderTest {
+class DeleteQueryBuilderTest {
 
-    private SelectQueryBuilder selectQueryBuilder;
+    private DeleteQueryBuilder deleteQueryBuilder;
 
     @BeforeEach
     void setUp() {
         EntityMetadataModel entityMetadataModel = EntityMetadataModelFixture.getEntityMetadataModel(DepthPersonFixtureEntity.class);
         EntityMetadataModels entityMetadataModels = new EntityMetadataModels(Set.of(entityMetadataModel));
         EntityMetadataModelHolder entityMetadataModelHolder = new EntityMetadataModelHolder(entityMetadataModels);
-
-        selectQueryBuilder = new H2SelectQueryBuilder(entityMetadataModelHolder);
+        deleteQueryBuilder = new DeleteQueryBuilder(entityMetadataModelHolder);
     }
 
-
-    @DisplayName("Entity Class 타입을 받아 Find All Select 쿼리를 생성한다")
+    @DisplayName("Entity 타입과 FetchWhereQuery를 받아 delete query를 생성하여 반환한다")
     @Test
-    void createFindAllSelectQuery() {
-        // when
-        String findAllSelectQuery = selectQueryBuilder.findAll(DepthPersonFixtureEntity.class);
-
-        // then
-        assertThat(findAllSelectQuery).isEqualTo("select id, name, age from DepthPersonFixtureEntity");
-    }
-
-    @DisplayName("Entity Class 타입과, FetchWhereQuerie를 받아 Select 쿼리를 생성한다")
-    @Test
-    void createSelectQuery() {
+    void createDeleteQuery() {
         // given
         EntityCertification<DepthPersonFixtureEntity> certification = EntityCertification.certification(DepthPersonFixtureEntity.class);
         WhereQuery idEqual = certification.equal("id", 1L);
         WhereQuery nameEqual = certification.equal("name", "ok");
 
-        FetchWhereQuery fetchWhereQuery = WhereQueryBuilder.builder().and(List.of(idEqual, nameEqual));
+        WhereQueryBuilder whereQueryBuilder = WhereQueryBuilder.builder();
+        FetchWhereQuery fetchWhereQueries = whereQueryBuilder.or(List.of(idEqual, nameEqual));
 
         // when
-        String whereQuery = selectQueryBuilder.findBy(DepthPersonFixtureEntity.class, fetchWhereQuery);
+        String deleteQuery = deleteQueryBuilder.delete(DepthPersonFixtureEntity.class, fetchWhereQueries);
 
         // then
-        assertThat(whereQuery).isEqualTo("select id, name, age from DepthPersonFixtureEntity where id = 1 and name = 'ok'");
+        assertThat(deleteQuery).isEqualTo("delete from DepthPersonFixtureEntity where id = 1 or name = 'ok'");
     }
 
 }

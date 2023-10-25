@@ -1,7 +1,6 @@
 package persistence.sql.dml;
 
 import persistence.core.EntityMetadataModelHolder;
-import persistence.sql.dml.where.WhereQueryFetcher;
 import persistence.sql.dml.where.FetchWhereQuery;
 
 public class AbstractQueryBuilder implements WhereQueryFetcher {
