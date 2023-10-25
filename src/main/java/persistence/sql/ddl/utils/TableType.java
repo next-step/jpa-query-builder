@@ -7,7 +7,8 @@ import persistence.sql.ddl.exception.InvalidEntityException;
 import java.util.Optional;
 
 public class TableType {
-    final private Class<?> entity;
+
+    private final Class<?> entity;
 
     public TableType(final Class<?> entity) {
         validateEntityClass(entity);

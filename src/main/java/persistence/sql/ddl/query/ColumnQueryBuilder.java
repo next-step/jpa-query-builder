@@ -12,12 +12,10 @@ import java.util.stream.Collectors;
 
 public class ColumnQueryBuilder {
 
-    public final List<Constraint> constraints = new ArrayList<>();
+    private final List<Constraint> constraints;
 
-    public ColumnQueryBuilder() {
-        constraints.add(new NotNullConstraint());
-        constraints.add(new IdentityConstraint());
-        constraints.add(new PrimaryKeyConstraint());
+    public ColumnQueryBuilder(List<Constraint> list) {
+        this.constraints = list;
     }
 
     public List<String> generateDdlQueryRows(final List<ColumnType> columnTypes) {
@@ -29,7 +27,6 @@ public class ColumnQueryBuilder {
                         .trim())
                 .collect(Collectors.toList());
     }
-
 
 
     private String generateConstraint(ColumnType columnType) {
