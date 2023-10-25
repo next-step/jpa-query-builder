@@ -5,7 +5,8 @@ import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
-import persistence.dialect.H2.H2Dialect;
+import persistence.dialect.Dialect;
+import persistence.dialect.DialectFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.metadata.EntityMetadata;
@@ -16,20 +17,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimpleEntityManagerTest {
-    private JdbcTemplate jdbcTemplate;
+    public static EntityManager entityManager;
 
-    private EntityManager entityManager;
-
-    private final EntityMetadata entityMetadata = new EntityMetadata(Person.class);
-
-    @BeforeEach
-    void setJdbcTemplate() throws SQLException {
+    @BeforeAll
+    static void setJdbcTemplate() throws SQLException {
         DatabaseServer server = new H2();
         server.start();
 
-        jdbcTemplate = new JdbcTemplate(server.getConnection());
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+
+        Dialect dialect = DialectFactory.getDialect("H2");
+        EntityMetadata entityMetadata = new EntityMetadata(Person.class);
+
         jdbcTemplate.execute(new DropQueryBuilder().buildQuery(entityMetadata));
-        jdbcTemplate.execute(new CreateQueryBuilder(new H2Dialect()).buildQuery(entityMetadata));
+        jdbcTemplate.execute(new CreateQueryBuilder(dialect).buildQuery(entityMetadata));
         jdbcTemplate.execute("INSERT INTO users (nick_name, old, email) VALUES ('hhhhhwi',1,'aab555586@gmail.com');");
 
         entityManager = new SimpleEntityManager(jdbcTemplate);

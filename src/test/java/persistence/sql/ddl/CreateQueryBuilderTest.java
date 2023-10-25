@@ -3,13 +3,16 @@ package persistence.sql.ddl;
 import domain.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.dialect.H2.H2Dialect;
+import persistence.dialect.Dialect;
+import persistence.dialect.DialectFactory;
 import persistence.sql.metadata.EntityMetadata;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CreateQueryBuilderTest {
-    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
+    private final Dialect dialect = DialectFactory.getDialect("H2");
+
+    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(dialect);
 
     private final EntityMetadata entityMetadata = new EntityMetadata(Person.class);
 

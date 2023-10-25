@@ -1,8 +1,8 @@
-package persistence.dialect.H2;
+package persistence.dialect.MySQL;
 
 import java.util.Arrays;
 
-public enum H2ColumnType {
+public enum MySQLColumnType {
 
     Long(Long.class, "BIGINT"),
     String(String.class, "VARCHAR(255)"),
@@ -11,7 +11,7 @@ public enum H2ColumnType {
     private final Class<?> typeClass;
     private final String dbTypeName;
 
-    H2ColumnType(Class<?> typeClass, String dbTypeName) {
+    MySQLColumnType(Class<?> typeClass, String dbTypeName) {
         this.typeClass = typeClass;
         this.dbTypeName= dbTypeName;
     }
@@ -25,7 +25,7 @@ public enum H2ColumnType {
     }
 
     public static String getColumnTypeByClass(Class<?> typeClass) {
-        return Arrays.stream(H2ColumnType.values())
+        return Arrays.stream(MySQLColumnType.values())
                 .filter(x -> x.getTypeClass().equals(typeClass))
                 .findAny()
                 .get()
