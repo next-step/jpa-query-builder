@@ -22,7 +22,7 @@ public abstract class Dialect {
     return dbType.orElseThrow(() -> new RuntimeException(String.format("%s is not in the mappings", type)));
   }
 
-  public String convertToColumn(Field field){
+  public String convertToColumn(Field field) {
     Integer type = getJavaSqlType(field);
     return Value.getTypeName(DataType.convertSQLTypeToValueType(type));
   }

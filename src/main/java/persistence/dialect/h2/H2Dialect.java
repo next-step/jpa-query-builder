@@ -15,7 +15,7 @@ public class H2Dialect extends Dialect {
     this.registerColumnType(Long.class, Types.BIGINT);
   }
 
-  public String convertToColumn(Field field){
+  public String convertToColumn(Field field) {
     Integer type = getJavaSqlType(field);
     return Value.getTypeName(DataType.convertSQLTypeToValueType(type));
   }

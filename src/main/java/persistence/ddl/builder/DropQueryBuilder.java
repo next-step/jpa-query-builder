@@ -8,7 +8,7 @@ public class DropQueryBuilder {
   public DropQueryBuilder() {
   }
 
-  public String createDropQuery(MetaData metaData){
+  public String createDropQuery(MetaData metaData) {
     return String.format(DROP_SQL_QUERY, metaData.getDropClause());
   }
 }
