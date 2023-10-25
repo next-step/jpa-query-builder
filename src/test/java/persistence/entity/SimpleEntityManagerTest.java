@@ -5,6 +5,7 @@ import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
+import persistence.dialect.H2.H2Dialect;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.metadata.EntityMetadata;
@@ -19,7 +20,7 @@ class SimpleEntityManagerTest {
 
     private EntityManager entityManager;
 
-    private EntityMetadata entityMetadata = new EntityMetadata(Person.class);
+    private final EntityMetadata entityMetadata = new EntityMetadata(Person.class);
 
     @BeforeEach
     void setJdbcTemplate() throws SQLException {
@@ -28,7 +29,7 @@ class SimpleEntityManagerTest {
 
         jdbcTemplate = new JdbcTemplate(server.getConnection());
         jdbcTemplate.execute(new DropQueryBuilder().buildQuery(entityMetadata));
-        jdbcTemplate.execute(new CreateQueryBuilder().buildQuery(entityMetadata));
+        jdbcTemplate.execute(new CreateQueryBuilder(new H2Dialect()).buildQuery(entityMetadata));
         jdbcTemplate.execute("INSERT INTO users (nick_name, old, email) VALUES ('hhhhhwi',1,'aab555586@gmail.com');");
 
         entityManager = new SimpleEntityManager(jdbcTemplate);

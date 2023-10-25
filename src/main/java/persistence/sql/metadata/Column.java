@@ -1,13 +1,14 @@
 package persistence.sql.metadata;
 
 import jakarta.persistence.Transient;
+import persistence.dialect.Dialect;
 
 import java.lang.reflect.Field;
 
 public class Column {
     private final String name;
 
-    private final String type;
+    private final Class<?> type;
 
     private final Constraint constraint;
 
@@ -15,7 +16,7 @@ public class Column {
 
     public Column(Field field) {
         this.name = findName(field);
-        this.type = ColumnType.convertTypeClassToName(field.getType());
+        this.type = field.getType();
         this.constraint = new Constraint(field);
         this.isTransient = field.isAnnotationPresent(Transient.class);
     }
@@ -28,11 +29,11 @@ public class Column {
         return isTransient;
     }
 
-    public String buildColumnToCreate() {
+    public String buildColumnToCreate(Dialect dialect) {
         return new StringBuilder()
-                .append(name + " " + type)
+                .append(name + " " + findType(dialect))
                 .append(constraint.buildNullable())
-                .append(GeneratedType.convertTypeClassToName(constraint.getGeneratedType()))
+                .append(dialect.getGeneratedStrategy(constraint.getGeneratedType()))
                 .append(constraint.buildPrimaryKey())
                 .toString();
     }
@@ -57,5 +58,9 @@ public class Column {
         }
 
         return column.name();
+    }
+
+    private String findType(Dialect dialect) {
+        return dialect.getColumnType(type);
     }
 }

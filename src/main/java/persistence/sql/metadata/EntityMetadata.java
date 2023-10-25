@@ -1,6 +1,7 @@
 package persistence.sql.metadata;
 
 import jakarta.persistence.Entity;
+import persistence.dialect.Dialect;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,7 @@ public class EntityMetadata {
         return table.getName();
     }
 
-    public String getColumnsToCreate() {
-        return columns.buildColumnsToCreate();
+    public String getColumnsToCreate(Dialect dialect) {
+        return columns.buildColumnsToCreate(dialect);
     }
 }
