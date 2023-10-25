@@ -3,7 +3,7 @@ package persistence.ddl.builder;
 import persistence.meta.MetaData;
 
 public class DropQueryBuilder {
-  private static final String DROP_SQL_QUERY = "DROP TABLE %s";
+  private static final String DROP_SQL_QUERY = "DROP TABLE %s;";
 
   public DropQueryBuilder() {
   }

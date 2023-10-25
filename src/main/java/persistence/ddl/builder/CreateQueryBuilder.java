@@ -11,7 +11,7 @@ import persistence.meta.MetaData;
 //    );
 
 public class CreateQueryBuilder {
-  private static final String CREATE_SQL_QUERY = "CREATE TABLE %s";
+  private static final String CREATE_SQL_QUERY = "CREATE TABLE %s;";
 
   public CreateQueryBuilder() {
   }
