@@ -1,6 +1,8 @@
 package persistence.sql.dml;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
@@ -38,11 +40,8 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @DisplayName("전체 (findAll) 조회")
     @Test
     void executeSelectDmlQuery_findAll() {
-        // given
-        SelectQuery findAllSelectQuery = SelectQuery.select();
-
         // when
-        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class);
 
         // then
         List<Person> selectQueryResultPersons = jdbcTemplate.query(selectDMLQueryBuilder.build(), resultSet -> {
@@ -72,12 +71,9 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @ParameterizedTest
     @ArgumentsSource(FindByTestWhereClauseArgumentProvider.class)
     void executeSelectDmlQuery_findAll(WhereClause whereClause, int expectedSize, List<Long> expectedIds, List<String> expectedNames, List<String> expectedEmails) {
-        // given
-        SelectQuery findAllSelectQuery = SelectQuery.select()
-                .where(whereClause);
-
         // when
-        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class)
+                .where(whereClause);
 
         // then
         List<Person> selectQueryResultPersons = jdbcTemplate.query(selectDMLQueryBuilder.build(), resultSet -> {

@@ -1,13 +1,19 @@
 package persistence.sql.dml;
 
 import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dml.clause.WhereClause;
+import persistence.sql.dml.clause.operator.WhereClauseSQLBuilder;
 
 public class DeleteDMLQueryBuilder<E> extends DMLQueryBuilder<E> {
-    private DeleteQuery query;
+    private WhereClause whereClause;
 
-    public DeleteDMLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass, DeleteQuery query) {
+    public DeleteDMLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass) {
         super(dbmsStrategy, entityClass);
-        this.query = query;
+    }
+
+    public DeleteDMLQueryBuilder<E> where(WhereClause whereClause) {
+        this.whereClause = whereClause;
+        return this;
     }
 
     @Override
@@ -17,7 +23,15 @@ public class DeleteDMLQueryBuilder<E> extends DMLQueryBuilder<E> {
                         " %s" +
                         ";",
                 createTableNameDefinition(),
-                query.toSQLWhereClause()
+                createWhereSql()
         );
+    }
+
+    private String createWhereSql() {
+        if (whereClause == null) {
+            return "";
+        }
+
+        return new WhereClauseSQLBuilder(whereClause).build();
     }
 }

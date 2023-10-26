@@ -9,7 +9,7 @@ public abstract class ChainingLogicalOperatorStandardWhereClause extends Default
         super(columnName, value, operator, precedenceOperator);
     }
 
-    private final ChainingWhereClauseList additionalClauses = new ChainingWhereClauseList();
+    private final ChainingWhereClauses additionalClauses = new ChainingWhereClauses();
 
     private void and() {
         super.precedenceOperator = PrecedenceOperator.AND;
@@ -35,7 +35,7 @@ public abstract class ChainingLogicalOperatorStandardWhereClause extends Default
         return additionalClauses.isEmpty();
     }
 
-    public ChainingWhereClauseList getAdditionalClauses() {
+    public ChainingWhereClauses getAdditionalClauses() {
         return additionalClauses;
     }
 }

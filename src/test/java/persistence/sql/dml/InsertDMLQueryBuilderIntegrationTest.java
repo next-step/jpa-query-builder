@@ -1,5 +1,6 @@
 package persistence.sql.dml;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.dbms.DbmsStrategy;
@@ -15,6 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static persistence.entity.PersonFixtures.fixture;
 
 class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS PUBLIC.USERS;");
+    }
 
     @Test
     void executeInsertDmlQuery() {

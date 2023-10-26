@@ -7,16 +7,15 @@ import persistence.sql.dbms.DbmsStrategy;
 import persistence.sql.dml.clause.WhereClause;
 import persistence.sql.dml.clause.operator.Operator;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DeleteDMLQueryBuilderTest {
 
     @DisplayName("DELETE 쿼리 생성")
     @Test
     void builder() {
-        DeleteQuery deleteQuery = DeleteQuery.create()
+        DeleteDMLQueryBuilder<Person> deleteDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class)
                 .where(WhereClause.of("ID", 1L, Operator.EQUALS));
-        DeleteDMLQueryBuilder<Person> deleteDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, deleteQuery);
 
         assertThat(deleteDMLQueryBuilder.build()).isEqualTo(
                 "DELETE FROM" +

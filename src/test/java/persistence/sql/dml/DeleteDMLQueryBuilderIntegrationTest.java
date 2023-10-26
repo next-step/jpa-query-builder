@@ -42,15 +42,13 @@ class DeleteDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @Test
     void executeDeleteDmlQuery_All() {
         // given
-        DeleteQuery allDeleteQuery = DeleteQuery.create();
-        DeleteDMLQueryBuilder<Person> deleteAllDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, allDeleteQuery);
+        DeleteDMLQueryBuilder<Person> deleteAllDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class);
 
         // when
         jdbcTemplate.execute(deleteAllDMLQueryBuilder.build());
 
         // then
-        SelectQuery findAllSelectQuery = SelectQuery.select();
-        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class);
 
         List<Person> selectQueryResultPersons = jdbcTemplate.query(findAllDMLQueryBuilder.build(), resultSet -> {
             int id = resultSet.getInt("ID");
@@ -69,16 +67,14 @@ class DeleteDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @ArgumentsSource(DeleteByTestWhereClauseArgumentProvider.class)
     void executeDeleteDmlQuery_By(WhereClause whereClause, int expectedSize, List<Long> expectedIds, List<String> expectedNames, List<String> expectedEmails) {
         // given
-        DeleteQuery deleteByQuery = DeleteQuery.create()
+        DeleteDMLQueryBuilder<Person> deleteByDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class)
                 .where(whereClause);
-        DeleteDMLQueryBuilder<Person> deleteByDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, deleteByQuery);
 
         // when
         jdbcTemplate.execute(deleteByDMLQueryBuilder.build());
 
         // then
-        SelectQuery findAllSelectQuery = SelectQuery.select();
-        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class);
 
         List<Person> selectQueryResultPersons = jdbcTemplate.query(findAllDMLQueryBuilder.build(), resultSet -> {
             int id = resultSet.getInt("ID");

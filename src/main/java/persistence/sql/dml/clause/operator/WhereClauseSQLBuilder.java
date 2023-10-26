@@ -1,7 +1,7 @@
 package persistence.sql.dml.clause.operator;
 
 import persistence.sql.dml.clause.ChainingLogicalOperatorStandardWhereClause;
-import persistence.sql.dml.clause.ChainingWhereClauseList;
+import persistence.sql.dml.clause.ChainingWhereClauses;
 import persistence.sql.dml.clause.WhereClause;
 
 public class WhereClauseSQLBuilder {
@@ -45,7 +45,7 @@ public class WhereClauseSQLBuilder {
         }
 
         StringBuilder clause = new StringBuilder();
-        ChainingWhereClauseList additionalClauses = parentWhereClause.getAdditionalClauses();
+        ChainingWhereClauses additionalClauses = parentWhereClause.getAdditionalClauses();
         String startingPrecedenceOperator = parentWhereClause.precedenceOperator();
         clause.append(startingPrecedenceOperator)
                 .append(isRootClause ? "" : " ")
