@@ -1,8 +1,7 @@
 package persistence.sql.ddl;
 
-import utils.CustomStringBuilder;
-
-import static persistence.sql.dml.DataLanguage.*;
+import static utils.CustomStringBuilder.toCreateStatement;
+import static utils.CustomStringBuilder.toDropStatement;
 
 public class EntityDefinitionBuilder {
 
@@ -13,22 +12,11 @@ public class EntityDefinitionBuilder {
     }
 
     public String create() {
-        return new CustomStringBuilder()
-                .append(CREATE.getName())
-                .append(entityMetadata.getTableName())
-                .appendWithoutSpace(LEFT_PARENTHESIS.getName())
-                .appendWithoutSpace(entityMetadata.getColumnInfo())
-                .appendWithoutSpace(RIGHT_PARENTHESIS.getName())
-                .appendWithoutSpace(SEMICOLON.getName())
-                .toString();
+        return toCreateStatement(entityMetadata.getTableName(), entityMetadata.getColumnInfo());
     }
 
     public String drop() {
-        return  new CustomStringBuilder()
-                .append(DROP.getName())
-                .appendWithoutSpace(entityMetadata.getTableName())
-                .appendWithoutSpace(SEMICOLON.getName())
-                .toString();
+        return toDropStatement(entityMetadata.getTableName());
     }
 
 }

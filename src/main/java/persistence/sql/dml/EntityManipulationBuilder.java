@@ -3,7 +3,7 @@ package persistence.sql.dml;
 import persistence.sql.ddl.EntityMetadata;
 import utils.CustomStringBuilder;
 
-import static persistence.sql.dml.DataLanguage.*;
+import static utils.CustomStringBuilder.*;
 
 public class EntityManipulationBuilder {
 
@@ -16,67 +16,36 @@ public class EntityManipulationBuilder {
     public String insert(Object entity) {
         return new CustomStringBuilder()
                 .append(columnsClause(entity))
-                .append(valueClause(entity))
+                .append(valuesClause(entity))
                 .toString();
     }
 
     private String columnsClause(Object entity) {
-        // TODO 포캣 잡아주는 부분 리팩토링
-        return new CustomStringBuilder()
-                .append(INSERT.getName())
-                .append(entityMetadata.getTableName())
-                .appendWithoutSpace(LEFT_PARENTHESIS.getName())
-                .appendWithoutSpace(entityMetadata.getColumnNames(entity))
-                .append(RIGHT_PARENTHESIS.getName())
-                .toStringWithoutSpace();
-
+        return toInsertColumnsClause(entityMetadata.getTableName(), entityMetadata.getColumnNames(entity));
     }
 
-    private String valueClause(Object entity) {
-        return new CustomStringBuilder()
-                .append(VALUES.getName())
-                .appendWithoutSpace(LEFT_PARENTHESIS.getName())
-                .appendWithoutSpace(entityMetadata.getValueFrom(entity))
-                .appendWithoutSpace(RIGHT_PARENTHESIS.getName())
-                .appendWithoutSpace(SEMICOLON.getName())
-                .toStringWithoutSpace();
+    private String valuesClause(Object entity) {
+        return toInsertValuesClause(entityMetadata.getValueFrom(entity));
     }
 
     public String findAll(Class<?> type) {
-        return new CustomStringBuilder()
-                .append(SELECT.getName())
-                .append(entityMetadata.getColumnNames(type))
-                .append(FROM.getName())
-                .appendWithoutSpace(entityMetadata.getTableName())
-                .appendWithoutSpace(SEMICOLON.getName())
-                .toStringWithoutSpace();
+        return toFindAllStatement(entityMetadata.getColumnNames(type), entityMetadata.getTableName());
     }
 
     public String findById(Class<?> type, long id) {
-        return new CustomStringBuilder()
-                .append(SELECT.getName())
-                .append(entityMetadata.getColumnNames(type))
-                .append(FROM.getName())
-                .append(entityMetadata.getTableName())
-                .append(WHERE.getName())
-                .append(entityMetadata.getIdColumnName(type))
-                .append(EQUALS.getName())
-                .appendWithoutSpace(String.valueOf(id))
-                .appendWithoutSpace(SEMICOLON.getName())
-                .toStringWithoutSpace();
+        return toFindByIdStatement(
+                entityMetadata.getColumnNames(type),
+                entityMetadata.getTableName(),
+                entityMetadata.getIdColumnName(type),
+                String.valueOf(id)
+        );
     }
 
     public String delete(Class<?> type, long id) {
-        return new CustomStringBuilder()
-                .append(DELETE.getName())
-                .append(FROM.getName())
-                .append(entityMetadata.getTableName())
-                .append(WHERE.getName())
-                .append(entityMetadata.getIdColumnName(type))
-                .append(EQUALS.getName())
-                .appendWithoutSpace(String.valueOf(id))
-                .appendWithoutSpace(SEMICOLON.getName())
-                .toStringWithoutSpace();
+        return toDeleteStatement(
+                entityMetadata.getTableName(),
+                entityMetadata.getIdColumnName(type),
+                String.valueOf(id));
     }
 
 }
