@@ -2,8 +2,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
-import persistence.sql.dbms.DbmsStrategy;
-import persistence.sql.entitymetadata.model.EntityTable;
+import persistence.sql.dbms.Dialect;
 import persistence.testutils.H2TableMetaResultRow;
 import persistence.testutils.TestQueryExecuteSupport;
 
@@ -20,7 +19,7 @@ class DropDDLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
         jdbcTemplate.execute("DROP TABLE IF EXISTS PUBLIC.USERS;");
         createPersonTableAndAssertion();
 
-        DropDDLQueryBuilder<Person> dropDDLQueryBuilder = new DropDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        DropDDLQueryBuilder<Person> dropDDLQueryBuilder = new DropDDLQueryBuilder<>(Dialect.H2, Person.class);
 
         // when
         String dropQuery = dropDDLQueryBuilder.build();
@@ -39,7 +38,7 @@ class DropDDLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     }
 
     private void createPersonTableAndAssertion() {
-        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(Dialect.H2, Person.class);
         String createQuery = createDDLQueryBuilder.build();
         jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE PUBLIC.USERS"));
 

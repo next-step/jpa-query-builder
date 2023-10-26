@@ -54,4 +54,7 @@ public class EntityTable<E> extends EntityValidatable<E> {
         return columns;
     }
 
+    public EntityColumn<E, ?> getIdColumn() {
+        return columns.getIdColumn();
+    }
 }

@@ -3,7 +3,7 @@ package persistence.sql.dml;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
-import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dbms.Dialect;
 import persistence.sql.ddl.CreateDDLQueryBuilder;
 import persistence.testutils.ReflectionTestSupport;
 import persistence.testutils.TestQueryExecuteSupport;
@@ -24,7 +24,7 @@ class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @Test
     void executeInsertDmlQuery() {
         // given
-        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(Dialect.H2, Person.class);
         String createQuery = createDDLQueryBuilder.build();
         jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE IF NOT EXISTS PUBLIC.USERS"));
         List<Person> persons = Arrays.asList(
@@ -35,7 +35,7 @@ class InsertDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
 
         // when
         for (Person person : persons) {
-            InsertDMLQueryBuilder<Person> insertDMLQueryBuilder = new InsertDMLQueryBuilder<>(DbmsStrategy.H2, person);
+            InsertDMLQueryBuilder<Person> insertDMLQueryBuilder = new InsertDMLQueryBuilder<>(Dialect.H2, person);
             jdbcTemplate.execute(insertDMLQueryBuilder.build());
         }
 

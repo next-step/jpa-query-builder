@@ -1,6 +1,6 @@
 package persistence.sql.dml;
 
-import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dbms.Dialect;
 import persistence.sql.dml.clause.WhereClause;
 import persistence.sql.dml.clause.operator.WhereClauseSQLBuilder;
 
@@ -15,8 +15,8 @@ public class SelectDMLQueryBuilder<E> extends DMLQueryBuilder<E> {
     private Set<String> selectClause;
     private WhereClause whereClause;
 
-    public SelectDMLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass) {
-        super(dbmsStrategy, entityClass);
+    public SelectDMLQueryBuilder(Dialect dialect, Class<E> entityClass) {
+        super(dialect, entityClass);
     }
 
     public SelectDMLQueryBuilder<E> select(String... selectColumnNames) {

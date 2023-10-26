@@ -1,24 +1,23 @@
 package persistence.sql.ddl;
 
-import persistence.sql.DbmsQueryBuilder;
+import persistence.sql.DialectQueryBuilder;
 import persistence.sql.SqlValueMapper;
-import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dbms.Dialect;
 import persistence.sql.entitymetadata.model.EntityColumn;
 import persistence.sql.entitymetadata.model.EntityColumns;
-import persistence.sql.entitymetadata.model.EntityTable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class CreateDDLQueryBuilder<E> extends DbmsQueryBuilder<E> {
+public class CreateDDLQueryBuilder<E> extends DialectQueryBuilder<E> {
 
     private static final String INDENT = "    ";
     private static final String LINE_BREAK = "\n";
 
-    public CreateDDLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass) {
-        super(dbmsStrategy, entityClass);
+    public CreateDDLQueryBuilder(Dialect dialect, Class<E> entityClass) {
+        super(dialect, entityClass);
     }
 
     @Override
@@ -39,7 +38,7 @@ public class CreateDDLQueryBuilder<E> extends DbmsQueryBuilder<E> {
     }
 
     private String createPrimaryKeyQuery(EntityColumns<E> columns) {
-        return String.format("PRIMARY KEY (%s)", columns.getIdColumn().getName());
+        return String.format("PRIMARY KEY (%s)", columns.getIdColumn().getDbColumnName());
     }
 
     private String createColumnsQuery(EntityColumns<E> entityColumns) {
@@ -68,7 +67,7 @@ public class CreateDDLQueryBuilder<E> extends DbmsQueryBuilder<E> {
 
     private String createIdColumnDefinition(EntityColumn<E, ?> entityColumn) {
         if (!entityColumn.isIdColumn()) {
-            throw new IllegalArgumentException("IdColumn이 아닙니다. column:" + entityColumn.getName());
+            throw new IllegalArgumentException("IdColumn이 아닙니다. column:" + entityColumn.getDbColumnName());
         }
 
         String idGenerationType = createIdGenerationTypeDefinition(entityColumn);

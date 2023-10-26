@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import persistence.entity.Person;
 import persistence.entity.PersonFixtures;
-import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dbms.Dialect;
 import persistence.sql.ddl.CreateDDLQueryBuilder;
 import persistence.sql.dml.clause.WhereClause;
 import persistence.sql.dml.clause.operator.Operator;
@@ -41,7 +41,7 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @Test
     void executeSelectDmlQuery_findAll() {
         // when
-        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(Dialect.H2, Person.class);
 
         // then
         List<Person> selectQueryResultPersons = jdbcTemplate.query(selectDMLQueryBuilder.build(), resultSet -> {
@@ -72,7 +72,7 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @ArgumentsSource(FindByTestWhereClauseArgumentProvider.class)
     void executeSelectDmlQuery_findAll(WhereClause whereClause, int expectedSize, List<Long> expectedIds, List<String> expectedNames, List<String> expectedEmails) {
         // when
-        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class)
+        SelectDMLQueryBuilder<Person> selectDMLQueryBuilder = new SelectDMLQueryBuilder<>(Dialect.H2, Person.class)
                 .where(whereClause);
 
         // then
@@ -139,12 +139,12 @@ class SelectDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     }
 
     private void savePersonFixtures(List<Person> persons) {
-        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(Dialect.H2, Person.class);
         String createQuery = createDDLQueryBuilder.build();
         jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE IF NOT EXISTS PUBLIC.USERS"));
 
         for (Person person : persons) {
-            InsertDMLQueryBuilder<Person> insertDMLQueryBuilder = new InsertDMLQueryBuilder<>(DbmsStrategy.H2, person);
+            InsertDMLQueryBuilder<Person> insertDMLQueryBuilder = new InsertDMLQueryBuilder<>(Dialect.H2, person);
             jdbcTemplate.execute(insertDMLQueryBuilder.build());
         }
     }

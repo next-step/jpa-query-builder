@@ -1,14 +1,14 @@
 package persistence.sql.dml;
 
-import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dbms.Dialect;
 import persistence.sql.dml.clause.WhereClause;
 import persistence.sql.dml.clause.operator.WhereClauseSQLBuilder;
 
 public class DeleteDMLQueryBuilder<E> extends DMLQueryBuilder<E> {
     private WhereClause whereClause;
 
-    public DeleteDMLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass) {
-        super(dbmsStrategy, entityClass);
+    public DeleteDMLQueryBuilder(Dialect dialect, Class<E> entityClass) {
+        super(dialect, entityClass);
     }
 
     public DeleteDMLQueryBuilder<E> where(WhereClause whereClause) {

@@ -7,10 +7,10 @@ import persistence.sql.dbms.mapper.type.TypeMapper;
 import persistence.sql.entitymetadata.model.EntityColumn;
 import persistence.sql.entitymetadata.model.EntityTable;
 
-public enum DbmsStrategy {
+public enum Dialect {
     H2(new UpperSnakeCaseNameMapper(), new H2TypeMapper());
 
-    DbmsStrategy(NameMapper nameMapper, TypeMapper typeMapper) {
+    Dialect(NameMapper nameMapper, TypeMapper typeMapper) {
         this.nameMapper = nameMapper;
         this.typeMapper = typeMapper;
     }
@@ -23,7 +23,7 @@ public enum DbmsStrategy {
     }
 
     public String defineColumnName(EntityColumn<?, ?> entityColumn) {
-        return nameMapper.create(entityColumn.getName());
+        return nameMapper.create(entityColumn.getDbColumnName());
     }
 
     public String defineColumnType(EntityColumn<?, ?> entityColumn) {

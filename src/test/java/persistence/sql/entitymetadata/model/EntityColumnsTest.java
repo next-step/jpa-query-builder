@@ -16,10 +16,10 @@ class EntityColumnsTest {
         EntityColumns<Person> entityColumns = new EntityColumns<>(Person.class);
 
         assertThat(entityColumns.getColumns().size()).isEqualTo(4);
-        assertThat(entityColumns.getIdColumn().getName()).isEqualTo("id");
+        assertThat(entityColumns.getIdColumn().getDbColumnName()).isEqualTo("id");
         assertThat(entityColumns.getIdColumn().isIdColumn()).isTrue();
         assertThat(entityColumns.getColumns().stream()
-                .map(EntityColumn::getName)
+                .map(EntityColumn::getDbColumnName)
                 .collect(Collectors.toList())).containsExactlyInAnyOrder("id", "nick_name", "old", "email");
     }
 }

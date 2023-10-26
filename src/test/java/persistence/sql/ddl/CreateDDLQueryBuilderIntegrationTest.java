@@ -2,8 +2,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
-import persistence.sql.dbms.DbmsStrategy;
-import persistence.sql.entitymetadata.model.EntityTable;
+import persistence.sql.dbms.Dialect;
 import persistence.testutils.H2TableMetaResultRow;
 import persistence.testutils.TestQueryExecuteSupport;
 
@@ -15,7 +14,7 @@ public class CreateDDLQueryBuilderIntegrationTest extends TestQueryExecuteSuppor
     @Test
     void executeDdlQuery() {
         // given
-        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(Dialect.H2, Person.class);
 
         // when
         String createQuery = createDDLQueryBuilder.build();
