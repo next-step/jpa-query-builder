@@ -1,6 +1,4 @@
-package persistence.sql.dml;
-
-import persistence.sql.ddl.Column;
+package persistence.sql.metadata;
 
 import java.lang.reflect.Field;
 
@@ -12,6 +10,7 @@ public class Value {
 	public Value(Field field, Object object) {
 		this.column = new Column(field);
 		try {
+			field.setAccessible(true);
 			this.value = convertValueToString(field, String.valueOf(field.get(object)));
 		} catch (Exception e) {
 			e.printStackTrace();

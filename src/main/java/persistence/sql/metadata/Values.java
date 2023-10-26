@@ -1,6 +1,4 @@
-package persistence.sql.dml;
-
-import persistence.sql.ddl.Columns;
+package persistence.sql.metadata;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,25 +10,13 @@ public class Values {
 		this.values = values;
 	}
 
-	public void addValue(Value value) {
-		if(!value.getColumn().isTransient()) {
-			values.add(value);
-		}
-	}
-
-	public void addInsertValue(Value value) {
-		if (value.checkPossibleToInsert()) {
-			values.add(value);
-		}
-	}
-
-	public String valueClause() {
+	public String buildValueClause() {
 		return values.stream()
 				.map(Value::getValue)
 				.collect(Collectors.joining(","));
 	}
 
-	public String columnsClause() {
+	public String buildColumnsClause() {
 		return new Columns(
 				values.stream()
 				.map(Value::getColumn)
@@ -38,9 +24,16 @@ public class Values {
 			).buildColumnsToInsert();
 	}
 
-	public String whereClause() {
+	public String buildWhereClause() {
 		return values.stream()
 				.map(x -> x.getColumn().getName() + " = " + x.getValue())
 				.collect(Collectors.joining(" AND "));
+	}
+
+	public String buildWherePKClause() {
+		return values.stream()
+				.filter(x -> x.getColumn().isPrimaryKey())
+				.map(x -> x.getColumn().getName() + " = " + x.getValue())
+				.findFirst().get();
 	}
 }

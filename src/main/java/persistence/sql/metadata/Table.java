@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.metadata;
 
 public class Table {
     private final String name;
@@ -12,7 +12,7 @@ public class Table {
     }
 
     private String findTableName(Class<?> clazz) {
-        if(clazz.isAnnotationPresent(jakarta.persistence.Table.class)) {
+        if(clazz.isAnnotationPresent(jakarta.persistence.Table.class) && !"".equals(clazz.getDeclaredAnnotation(jakarta.persistence.Table.class).name())) {
             return clazz.getDeclaredAnnotation(jakarta.persistence.Table.class).name();
         }
 

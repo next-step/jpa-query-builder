@@ -1,45 +1,32 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.*;
+import persistence.sql.metadata.EntityMetadata;
+import persistence.sql.metadata.Value;
+import persistence.sql.metadata.Values;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class InsertQueryBuilder{
-    private final static String INSERT_COMMAND = "INSERT INTO %s (%s) VALUES %s;";
+public class InsertQueryBuilder {
+    private static final String INSERT_COMMAND = "INSERT INTO %s (%s) VALUES %s;";
 
-    private QueryValidator queryValidator;
-
-    private final Table table;
-
-    private final Values values;
-
-    public InsertQueryBuilder(QueryValidator queryValidator, Object insertObject) {
-        this.queryValidator = queryValidator;
-        queryValidator.checkIsEntity(insertObject.getClass());
-        this.table = new Table(insertObject.getClass());
-        this.values = convertObjectToValues(insertObject);
+    public InsertQueryBuilder() {
     }
 
-    public String buildQuery() {
-        return format(INSERT_COMMAND, table.getName(), values.columnsClause(), "(" +  values.valueClause() + ")");
-    }
-
-    private Values convertObjectToValues(Object object) {
-        if(object == null) {
-            return null;
+    public String buildQuery(EntityMetadata entityMetadata, Object insertObject) {
+        if(insertObject == null) {
+            throw new IllegalArgumentException("등록하려는 객체가 NULL 값이 될 수 없습니다.");
         }
 
-        Values values = new Values(new ArrayList<>());
-        Field[] fields = object.getClass().getDeclaredFields();
+        Field[] fields = insertObject.getClass().getDeclaredFields();
 
-        for(Field field : fields) {
-            field.setAccessible(true);
-            values.addInsertValue(new Value(field, object));
-        }
-
-        return values;
+        Values values = new Values(Arrays.stream(fields)
+                .map(x -> new Value(x, insertObject))
+                .filter(Value::checkPossibleToInsert)
+                .collect(Collectors.toList()));
+        return format(INSERT_COMMAND, entityMetadata.getTableName(), values.buildColumnsClause(), "(" +  values.buildValueClause() + ")");
     }
 }

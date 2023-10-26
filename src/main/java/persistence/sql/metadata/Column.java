@@ -1,13 +1,14 @@
-package persistence.sql.ddl;
+package persistence.sql.metadata;
 
 import jakarta.persistence.Transient;
+import persistence.dialect.Dialect;
 
 import java.lang.reflect.Field;
 
 public class Column {
     private final String name;
 
-    private final String type;
+    private final Class<?> type;
 
     private final Constraint constraint;
 
@@ -15,7 +16,7 @@ public class Column {
 
     public Column(Field field) {
         this.name = findName(field);
-        this.type = convertTypeToString(field.getType());
+        this.type = field.getType();
         this.constraint = new Constraint(field);
         this.isTransient = field.isAnnotationPresent(Transient.class);
     }
@@ -24,29 +25,25 @@ public class Column {
         return name;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public Constraint getConstraint() {
-        return constraint;
-    }
-
     public boolean isTransient() {
         return isTransient;
     }
 
-    public String buildColumnToCreate() {
+    public String buildColumnToCreate(Dialect dialect) {
         return new StringBuilder()
-                .append(name + " " + type)
+                .append(name + " " + findType(dialect))
                 .append(constraint.buildNullable())
-                .append(constraint.bulidGeneratedType())
+                .append(dialect.getGeneratedStrategy(constraint.getGeneratedType()))
                 .append(constraint.buildPrimaryKey())
                 .toString();
     }
 
     public boolean checkPossibleToInsert() {
         return !isTransient && !constraint.isPrimaryKey();
+    }
+
+    public boolean isPrimaryKey() {
+        return constraint.isPrimaryKey();
     }
 
     private String findName(Field field) {
@@ -63,19 +60,7 @@ public class Column {
         return column.name();
     }
 
-    private String convertTypeToString(Class<?> type) {
-        switch (type.getSimpleName()) {
-            case "Long" :
-                return "BIGINT";
-
-            case "String" :
-                return "VARCHAR(255)";
-
-            case "Integer" :
-                return "INTEGER";
-
-            default:
-                throw new IllegalArgumentException(type.getSimpleName() + " : 정의되지 않은 타입입니다.");
-        }
+    private String findType(Dialect dialect) {
+        return dialect.getColumnType(type);
     }
 }

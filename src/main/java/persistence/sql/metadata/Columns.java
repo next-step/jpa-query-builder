@@ -1,4 +1,6 @@
-package persistence.sql.ddl;
+package persistence.sql.metadata;
+
+import persistence.dialect.Dialect;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,10 +12,10 @@ public class Columns {
         this.columns = columns;
     }
 
-    public String buildColumnsToCreate() {
+    public String buildColumnsToCreate(Dialect dialect) {
         return columns.stream()
                 .filter(x -> !x.isTransient())
-                .map(Column::buildColumnToCreate)
+                .map(x -> x.buildColumnToCreate(dialect))
                 .collect(Collectors.joining(", "));
     }
 
