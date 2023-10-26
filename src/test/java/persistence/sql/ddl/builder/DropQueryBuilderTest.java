@@ -3,7 +3,6 @@ package persistence.sql.ddl.builder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.ddl.builder.DropQueryBuilder;
 import persistence.dialect.h2.H2Dialect;
 import persistence.meta.MetaData;
 import persistence.sql.fixture.PersonFixture;
