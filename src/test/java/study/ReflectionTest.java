@@ -1,7 +1,6 @@
 package study;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -24,7 +23,7 @@ public class ReflectionTest {
   private static Class<Car> carClass;
 
   @BeforeAll
-  static void setup(){
+  static void setup() {
     carClass = Car.class;
   }
 
@@ -62,20 +61,15 @@ public class ReflectionTest {
   @Test
   @DisplayName("2. test로 시작하는 메소드 시작하기")
   void runAutomaticRun() throws Exception {
-    //GIVEN
     Car car = carClass.getConstructor().newInstance();
-    logger.debug("객체 메서드 목록");
 
     List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
             .filter(method -> method.getName().startsWith("test"))
             .collect(Collectors.toList());
 
-    //WHEN
     for (Method method : methods) {
-      logger.debug(method.getName());
       String output = String.valueOf(method.invoke(car));
 
-      // THEN
       assertThat(method.getName()).startsWith("test");
       assertThat(output).startsWith("test :");
     }
@@ -84,7 +78,6 @@ public class ReflectionTest {
   @Test
   @DisplayName("3. @PrintView 애노테이션 메소드 실행")
   void testAnnotationMethodRun() throws Exception {
-    //GIVEN
     Car car = null;
     car = carClass.getConstructor().newInstance();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -94,10 +87,8 @@ public class ReflectionTest {
             .filter(method -> method.isAnnotationPresent(PrintView.class))
             .collect(Collectors.toList());
 
-    //WHEN
     for (Method method : methods) {
       method.invoke(car);
-      //THEN
       assertThat(outputStream.toString()).startsWith("자동차 정보를 출력 합니다.");
     }
   }
@@ -106,33 +97,25 @@ public class ReflectionTest {
   @Test
   @DisplayName("4. private field에 값 할당")
   public void privateFieldAccess() throws Exception {
-    //GIVEN
-    logger.debug(carClass.getName());
     Car car = carClass.getConstructor().newInstance();
     final String price = "price";
 
-    //WHEN
     Field field = carClass.getDeclaredField(price);
     field.setAccessible(true);
     int value = 30;
     field.set(car, value);
 
-    //THEN
-    assertThat(car.testGetPrice()).isEqualTo("test : " + value);
+    assertThat(car.testGetPrice()).isEqualTo("test : 30");
   }
 
   @Test
   @DisplayName("5. 인자를 가진 생성자의 인스턴스 생성")
   void constructorWithArgs() throws Exception {
-    //GIVEN
-    logger.debug(carClass.getName());
     final String sonata = "sonata";
     int value = 300;
 
-    //WHEN
     Car car = carClass.getConstructor(String.class, int.class).newInstance(sonata, value);
 
-    //THEN
     assertThat(car.testGetPrice()).isEqualTo("test : " + value);
   }
 
