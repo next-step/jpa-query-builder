@@ -15,7 +15,7 @@ public class InsertQueryBuilder<T> {
     MetaEntity<T> metaEntity = MetaEntity.of(entity);
 
     String valueClause = getValueClause(metaEntity, entity);
-    String columnClause = getColumnClause(metaEntity, entity);
+    String columnClause = getColumnClause(metaEntity);
     return String.format(INSERT_SQL_QUERY, metaEntity.getTableName(), columnClause, valueClause);
   }
 
@@ -25,7 +25,7 @@ public class InsertQueryBuilder<T> {
     return String.join(DELIMITER, extractValuesFromEntity(columns, entity));
   }
 
-  private String getColumnClause(MetaEntity metaEntity, T entity) {
+  private String getColumnClause(MetaEntity metaEntity) {
     List<String> columns = metaEntity.getEntityFields();
 
     return String.join(DELIMITER, columns);
