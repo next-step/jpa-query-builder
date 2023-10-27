@@ -6,6 +6,8 @@ public interface ColumnType {
 
     String getName();
 
+    Object getValue();
+
     boolean isId();
 
     boolean isNullable();

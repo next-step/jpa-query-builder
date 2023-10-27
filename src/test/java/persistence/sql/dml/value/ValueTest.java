@@ -24,17 +24,17 @@ class ValueTest {
         person.setEmail(EMAIL);
 
         //given
-        Value value = new Value();
-        Object name = value.getValue(person, "name");
-        Object email = value.getValue(person, "email");
-        Object age = value.getValue(person, "age");
-
+        Object name = new Value(person, "name").getValue();
+        Object email = new Value(person, "email").getValue();
+        Object age = new Value(person, "age").getValue();
+        Object id = new Value(person, "id").getValue();
 
         //then
         assertAll(
                 () -> assertThat(name).isEqualTo(NAME),
                 () -> assertThat(email).isEqualTo(EMAIL),
-                () -> assertThat(age).isEqualTo(AGE)
+                () -> assertThat(age).isEqualTo(AGE),
+                () -> assertThat(id).isEqualTo(null)
         );
     }
 
@@ -43,11 +43,10 @@ class ValueTest {
     void noGetterTest() {
         //when
         Person person = new Person();
-        Value value = new Value();
 
         try {
             //given
-            Object name = value.getValue(person, "address");
+            Object name = new Value(person, "address").getValue();
         } catch (RuntimeException e) {
             //then
             assertEquals("address에 getAddress가 존재하지 않습니다.", e.getMessage());

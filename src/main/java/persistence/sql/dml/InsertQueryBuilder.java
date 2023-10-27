@@ -1,10 +1,7 @@
 package persistence.sql.dml;
 
-import org.h2.table.Column;
 import persistence.sql.ddl.EntityMetaData;
-import persistence.sql.ddl.Person;
 import persistence.sql.ddl.utils.ColumnType;
-import persistence.sql.dml.value.Value;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -11,7 +11,7 @@ public class EntityMetaData {
     final private TableType tableType;
     final private ColumnTypes columnTypes;
 
-    public EntityMetaData(final Class<?> entity) {
+    public EntityMetaData(final Object entity) {
         this.tableType = new TableType(entity);
         this.columnTypes = new ColumnTypes(entity);
     }

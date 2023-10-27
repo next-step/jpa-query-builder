@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.type.DataType;
 import persistence.sql.ddl.type.H2DataTypeMapper;
+import persistence.sql.dml.value.Value;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -17,13 +18,21 @@ public class ColumnField implements ColumnType {
     private final int length;
 
     private final DataType dataType;
+    private final Class<?> type;
+    private Value value;
 
-    public ColumnField(final Field field) {
-        this.name = parseName(field);
-        this.nullable = parsNullable(field);
-        this.isTransient = parseTransient(field);
-        this.length = parseLength(field);
-        this.dataType = parseDataType(field);
+    public ColumnField(final Object entity, final Field field) {
+        this.type = entity.getClass();
+        this.name = this.parseName(field);
+        this.nullable = this.parsNullable(field);
+        this.isTransient = this.parseTransient(field);
+        this.length = this.parseLength(field);
+        this.dataType = this.parseDataType(field);
+        this.value = this.parseValue(entity, field);
+    }
+
+    private Value parseValue(final Object entity, final Field field) {
+        return new Value(entity, field.getName());
     }
 
     private boolean parsNullable(final Field field) {
@@ -65,6 +74,11 @@ public class ColumnField implements ColumnType {
     }
 
     @Override
+    public Object getValue() {
+        return null;
+    }
+
+    @Override
     public boolean isId() {
         return false;
     }
@@ -82,7 +96,7 @@ public class ColumnField implements ColumnType {
     @Override
     public String getLength() {
         if ("VARCHAR".equals(this.dataType.getName())) {
-            return "("+this.length+")";
+            return "(" + this.length + ")";
         }
         return "";
     }

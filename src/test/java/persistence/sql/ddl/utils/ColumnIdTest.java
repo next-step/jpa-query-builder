@@ -14,39 +14,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ColumnIdTest {
 
-    Class<Person> clazz = Person.class;
+    Person person = new Person();
+    Class<? extends Person> personClass = person.getClass();
 
     @Test
     @DisplayName("Column name값이 있는 경우 테스트")
     void nameTest() throws Exception {
-        Field id = clazz.getDeclaredField("id");
-        ColumnType columnId = new ColumnId(id);
+        Field id = personClass.getDeclaredField("id");
+        ColumnType columnId = new ColumnId(person, id);
         Assertions.assertThat(columnId.getName()).isEqualTo("id");
     }
 
     @Test
     @DisplayName("pk column 판단")
     void noNameTest() throws Exception {
-        Field id = clazz.getDeclaredField("id");
-        ColumnType columnId = new ColumnId(id);
+        Field id = personClass.getDeclaredField("id");
+        ColumnType columnId = new ColumnId(person, id);
         Assertions.assertThat(columnId.isId()).isTrue();
     }
 
     @Test
     @DisplayName("pk column이 아닐때 에러 발생")
     void invalidIdColumnTest() throws Exception {
-        Field name = clazz.getDeclaredField("name");
+        Field name = personClass.getDeclaredField("name");
         assertThrows(InvalidIdColumnException.class, () -> {
-            new ColumnId(name);
+            new ColumnId(person, name);
         });
     }
 
     @Test
     @DisplayName("GenerationType 테스트")
     void getGenerationType() throws Exception {
-        Field id = clazz.getDeclaredField("id");
+        Field id = personClass.getDeclaredField("id");
 
-        ColumnId columnId = new ColumnId(id);
+        ColumnId columnId = new ColumnId(person, id);
 
         assertThat(columnId.getGenerationType()).isEqualTo(GenerationType.IDENTITY);
     }

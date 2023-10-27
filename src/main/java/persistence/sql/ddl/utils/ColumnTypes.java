@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class ColumnTypes {
     final private Map<String, ColumnType> columnTypeMap;
 
-    public ColumnTypes(final Class<?> entity) {
+    public ColumnTypes(final Object entity) {
         this.columnTypeMap = generateColumns(entity);
     }
 
@@ -19,15 +19,16 @@ public class ColumnTypes {
         this.columnTypeMap = columns;
     }
 
-    private Map<String, ColumnType> generateColumns(final Class<?> entity) {
+    private Map<String, ColumnType> generateColumns(final Object entity) {
+        Class<?> entityClass = entity.getClass();
         Map<String, ColumnType> columns = new HashMap<>();
-        Field[] fields = entity.getDeclaredFields();
+        Field[] fields = entityClass.getDeclaredFields();
         for (Field field : fields) {
             ColumnType columnType;
             if (field.isAnnotationPresent(Id.class)) {
-                columnType = new ColumnId(field);
+                columnType = new ColumnId(entity, field);
             } else {
-                columnType = new ColumnField(field);
+                columnType = new ColumnField(entity, field);
             }
             columns.put(columnType.getName(), columnType);
         }

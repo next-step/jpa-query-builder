@@ -21,7 +21,7 @@ class ColumnTypesTest {
     @DisplayName("column들의 이름을 가져온다.")
     void getColumnsName() {
         //Given
-        ColumnTypes columnTypes = new ColumnTypes(Person.class);
+        ColumnTypes columnTypes = new ColumnTypes(new Person());
 
         //When
         String id = columnTypes.getColumn(ID).getName();
@@ -38,7 +38,7 @@ class ColumnTypesTest {
     @DisplayName("@Id 컬럼만 가져온다")
     void getIdColumn() {
         //Given
-        ColumnTypes columnTypes = new ColumnTypes(Person.class);
+        ColumnTypes columnTypes = new ColumnTypes(new Person());
         List<ColumnId> idColumnTypes = columnTypes.getIdColumns();
         //When
         long count = idColumnTypes.stream().filter(ColumnId::isId).count();
@@ -51,7 +51,7 @@ class ColumnTypesTest {
     @DisplayName("컬럼 타입별 DB 타입을 가져온다")
     void getColumnType() {
         //Given
-        ColumnTypes columnTypes = new ColumnTypes(Person.class);
+        ColumnTypes columnTypes = new ColumnTypes(new Person());
 
         //When
         DataType id = columnTypes.getColumn(ID).getDataType();
@@ -68,7 +68,7 @@ class ColumnTypesTest {
     @DisplayName("컬럼의 length 값을 가져온다")
     void getColumnLength() {
         //Given
-        ColumnTypes columnTypes = new ColumnTypes(Person.class);
+        ColumnTypes columnTypes = new ColumnTypes(new Person());
 
         //When
         String id = columnTypes.getColumn(ID).getLength();

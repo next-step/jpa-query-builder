@@ -10,14 +10,14 @@ import java.lang.reflect.Field;
 
 public class ColumnId implements ColumnType {
 
-    private final ColumnType columnType;
+    private final ColumnType delegate;
 
     private final GenerationType generationType;
 
 
-    public ColumnId(final Field field) {
+    public ColumnId(final Object entity, final Field field) {
         validateIdColumn(field);
-        this.columnType = new ColumnField(field);
+        this.delegate = new ColumnField(entity, field);
         this.generationType = paresGenerationType(field);
     }
 
@@ -34,7 +34,12 @@ public class ColumnId implements ColumnType {
 
     @Override
     public String getName() {
-        return this.columnType.getName();
+        return this.delegate.getName();
+    }
+
+    @Override
+    public Object getValue() {
+        return this.delegate.getValue();
     }
 
     @Override
@@ -49,17 +54,17 @@ public class ColumnId implements ColumnType {
 
     @Override
     public boolean isTransient() {
-        return this.columnType.isTransient();
+        return this.delegate.isTransient();
     }
 
     @Override
     public String getLength() {
-        return this.columnType.getLength();
+        return this.delegate.getLength();
     }
 
     @Override
     public DataType getDataType() {
-        return  this.columnType.getDataType();
+        return this.delegate.getDataType();
     }
 
     public GenerationType getGenerationType() {

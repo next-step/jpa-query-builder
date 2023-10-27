@@ -25,7 +25,7 @@ class ColumnTypeQueryBuilderTest {
     @Test
     @DisplayName("컬럼 행별 ddl쿼리를 추출한다.")
     void query() {
-        EntityMetaData entityMetaData = new EntityMetaData(Person.class);
+        EntityMetaData entityMetaData = new EntityMetaData(new Person());
         ColumnQueryBuilder columnQueryBuilder = new ColumnQueryBuilder(generateConstraints());
         List<String> fields = columnQueryBuilder.generateDdlQueryRows(entityMetaData.getFieldColumns());
         List<String> ids = columnQueryBuilder.generateDdlQueryRows(entityMetaData.getIdColumns());
