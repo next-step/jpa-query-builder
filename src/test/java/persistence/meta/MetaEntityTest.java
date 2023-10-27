@@ -13,6 +13,7 @@ import persistence.sql.fixture.PersonInstances;
 
 @DisplayName("1.2 MetaEntity를 Entity에서 추출합니다.")
 public class MetaEntityTest {
+
   private static PersonFixtureStep3 person;
   private static H2Dialect h2Dialect;
   private static MetaEntity<PersonFixtureStep3> entity;
@@ -40,7 +41,7 @@ public class MetaEntityTest {
     List<String> columns = entity.getEntityColumns();
 
     assertAll(
-        () -> assertThat(columns).containsExactly("nick_name","old","email")
+        () -> assertThat(columns).containsExactly("nick_name", "old", "email")
     );
   }
 
@@ -50,7 +51,7 @@ public class MetaEntityTest {
     List<String> columns = entity.getEntityColumnsWithId();
 
     assertAll(
-        () -> assertThat(columns).containsExactly("id","nick_name","old","email")
+        () -> assertThat(columns).containsExactly("id", "nick_name", "old", "email")
     );
   }
 
@@ -60,7 +61,7 @@ public class MetaEntityTest {
     List<String> columns = entity.getEntityFields();
 
     assertAll(
-        () -> assertThat(columns).containsExactly("name","age","email")
+        () -> assertThat(columns).containsExactly("name", "age", "email")
     );
   }
 }

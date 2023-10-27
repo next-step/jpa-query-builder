@@ -23,6 +23,7 @@ public class InsertQueryBuilderTest {
   private static DatabaseServer server;
   private static Class<PersonFixtureStep3> person;
   private static JdbcTemplate jdbcTemplate;
+
   @BeforeAll
   static void setup() throws SQLException {
     person = PersonFixtureStep3.class;
@@ -36,19 +37,21 @@ public class InsertQueryBuilderTest {
     jdbcTemplate = new JdbcTemplate(server.getConnection());
     jdbcTemplate.execute(query);
   }
+
   @AfterAll
-  static void teardown(){
+  static void teardown() {
     server.stop();
   }
 
   @Test
   @DisplayName("Insert SQL 구문을 생성합니다.")
-  public void insertDMLfromEntity(){
+  public void insertDMLfromEntity() {
     InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder();
 
     String query = insertQueryBuilder.createInsertQuery(PersonInstances.첫번째사람);
 
-    assertThat(query).isEqualTo("INSERT INTO USERS (nick_name,old,email) values ('제임스',21,'sdafij@gmail.com');");
+    assertThat(query).isEqualTo(
+        "INSERT INTO USERS (nick_name,old,email) values ('제임스',21,'sdafij@gmail.com');");
   }
 
   @Test

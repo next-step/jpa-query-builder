@@ -20,9 +20,11 @@ import persistence.sql.fixture.PersonInstances;
 
 @DisplayName("4. 요구사항 DELETE 구현하기")
 public class DeleteQueryBuilderTest {
+
   private static DatabaseServer server;
   private static Class<PersonFixtureStep3> person;
   private static JdbcTemplate jdbcTemplate;
+
   @BeforeAll
   static void setup() throws SQLException {
     person = PersonFixtureStep3.class;
@@ -42,8 +44,9 @@ public class DeleteQueryBuilderTest {
     jdbcTemplate.execute(queryFirst);
     jdbcTemplate.execute(querySecond);
   }
+
   @AfterAll
-  static void teardown(){
+  static void teardown() {
     server.stop();
   }
 

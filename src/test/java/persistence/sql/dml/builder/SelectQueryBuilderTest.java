@@ -20,9 +20,11 @@ import persistence.sql.fixture.PersonInstances;
 
 @DisplayName("2. 요구사항 SELECT 구현하기, 3. 요구사항 WHERE 구현하기")
 public class SelectQueryBuilderTest {
+
   private static DatabaseServer server;
   private static Class<PersonFixtureStep3> person;
   private static JdbcTemplate jdbcTemplate;
+
   @BeforeAll
   static void setup() throws SQLException {
     person = PersonFixtureStep3.class;
@@ -42,14 +44,15 @@ public class SelectQueryBuilderTest {
     jdbcTemplate.execute(queryFirst);
     jdbcTemplate.execute(querySecond);
   }
+
   @AfterAll
-  static void teardown(){
+  static void teardown() {
     server.stop();
   }
 
   @Test
   @DisplayName("SELECT SQL 구문을 생성합니다.")
-  public void selectDMLfromEntity(){
+  public void selectDMLfromEntity() {
     SelectQueryBuilder<PersonFixtureStep3> selectQueryBuilder = new SelectQueryBuilder<>();
 
     String query = selectQueryBuilder.createSelectQuery(PersonInstances.첫번째사람);
@@ -69,6 +72,7 @@ public class SelectQueryBuilderTest {
 
     assertThat(query).isEqualTo("SELECT id,nick_name,old,email FROM USERS WHERE id=1;");
   }
+
   @Test
   @DisplayName("Select 쿼리 실행시에 Entity들이 반환됩니다.")
   public void selectDMLfromEntityDatabase()

@@ -40,6 +40,7 @@ public class PersonFixtureStep3 {
     this.age = age;
     this.email = email;
   }
+
   public PersonFixtureStep3() {
 
   }
