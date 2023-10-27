@@ -26,11 +26,18 @@ public class MetaEntity<T> {
     return metaDataTable.getName();
   }
 
-  public List<String> getEntityFields(){
+  public List<String> getEntityColumns(){
     return metaDataColumns.getSimpleColumns();
   }
 
+  public List<String> getEntityFields(){
+    return metaDataColumns.getFields();
+  }
   public Map<String, String> getFieldMapping(){
     return metaDataColumns.getFieldToDBColumnMap();
+  }
+
+  public List<String> getEntityColumnsWithId(){
+    return metaDataColumns.getColumnsWithId();
   }
 }
