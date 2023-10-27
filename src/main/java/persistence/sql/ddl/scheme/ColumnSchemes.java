@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect;
+package persistence.sql.ddl.scheme;
 
 import java.util.ArrayList;
 import java.util.List;

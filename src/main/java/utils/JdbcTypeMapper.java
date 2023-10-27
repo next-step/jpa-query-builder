@@ -3,7 +3,7 @@ package utils;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.dialect.Schemes;
+import persistence.sql.ddl.scheme.Schemes;
 
 import java.sql.Types;
 import java.util.concurrent.ConcurrentHashMap;

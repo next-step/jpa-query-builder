@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect;
+package persistence.sql.ddl.scheme;
 
 public class ColumnScheme {
 

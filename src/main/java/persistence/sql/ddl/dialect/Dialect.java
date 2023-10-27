@@ -1,5 +1,7 @@
 package persistence.sql.ddl.dialect;
 
+import persistence.sql.ddl.scheme.ColumnSchemes;
+
 import java.util.HashMap;
 import java.util.Map;
 

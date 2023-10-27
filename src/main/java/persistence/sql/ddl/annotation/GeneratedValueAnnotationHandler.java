@@ -3,9 +3,9 @@ package persistence.sql.ddl.annotation;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import persistence.sql.ddl.ColumnOption;
-import persistence.sql.ddl.dialect.ColumnSchemes;
+import persistence.sql.ddl.scheme.ColumnSchemes;
 import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.Schemes;
+import persistence.sql.ddl.scheme.Schemes;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

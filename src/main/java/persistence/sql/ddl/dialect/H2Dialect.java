@@ -1,5 +1,8 @@
 package persistence.sql.ddl.dialect;
 
+import persistence.sql.ddl.scheme.ColumnSchemes;
+import persistence.sql.ddl.scheme.Schemes;
+
 import java.sql.Types;
 
 public class H2Dialect extends Dialect {
