@@ -59,7 +59,7 @@ public class MetaDataColumn {
   }
 
   public boolean isNotPrimaryKey() {
-    return constraints.stream().anyMatch(MetaDataColumnConstraint::isPrimaryKey);
+    return !constraints.stream().anyMatch(MetaDataColumnConstraint::isPrimaryKey);
   }
 
   public String getFieldName(){

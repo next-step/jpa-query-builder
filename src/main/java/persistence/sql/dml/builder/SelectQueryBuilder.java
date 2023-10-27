@@ -28,7 +28,7 @@ public class SelectQueryBuilder<T> {
   }
 
   private String getColumnClause(MetaEntity metaEntity) {
-    List<String> columns = metaEntity.getEntityFields();
+    List<String> columns = metaEntity.getEntityColumnsWithId();
 
     return String.join(DELIMITER, columns);
   }

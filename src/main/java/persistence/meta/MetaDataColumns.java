@@ -44,7 +44,6 @@ public class MetaDataColumns {
             .map(MetaDataColumn::getSimpleName)
             .collect(Collectors.toList());
   }
-//            .collect(Collectors.joining(DELIMITER));
 
   public Map<String, String> getFieldToDBColumnMap(){
     return columns.stream()
@@ -52,5 +51,18 @@ public class MetaDataColumns {
                     MetaDataColumn::getSimpleName,
                     MetaDataColumn::getFieldName
             ));
+  }
+
+  public List<String> getFields(){
+    return columns.stream()
+        .filter(MetaDataColumn::isNotPrimaryKey)
+        .map(MetaDataColumn::getFieldName)
+        .collect(Collectors.toList());
+  }
+
+  public List<String> getColumnsWithId(){
+    return columns.stream()
+        .map(MetaDataColumn::getSimpleName)
+        .collect(Collectors.toList());
   }
 }
