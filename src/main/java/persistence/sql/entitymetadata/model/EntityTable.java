@@ -54,4 +54,17 @@ public class EntityTable<E> extends EntityValidatable<E> {
         return columns;
     }
 
+    public EntityColumn<E, ?> getIdColumn() {
+        return columns.getIdColumn();
+    }
+
+    public E createEntityInstance() {
+        try {
+            return entityClass.getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException("Entity Class must have a default constructor");
+        } catch (Exception e) {
+            throw new RuntimeException("Entity Creation Failed! Entity Name: " + name);
+        }
+    }
 }

@@ -1,9 +1,7 @@
 package persistence.sql.dml;
 
-import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dbms.Dialect;
 import persistence.sql.entitymetadata.model.EntityColumn;
-import persistence.sql.entitymetadata.model.EntityColumns;
-import persistence.sql.entitymetadata.model.EntityTable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,8 +11,8 @@ public class InsertDMLQueryBuilder<E> extends DMLQueryBuilder<E> {
     private E entity;
     private List<String> defaultValuesClause;
 
-    public InsertDMLQueryBuilder(DbmsStrategy dbmsStrategy, E entity) {
-        super(dbmsStrategy, (Class<E>) entity.getClass());
+    public InsertDMLQueryBuilder(Dialect dialect, E entity) {
+        super(dialect, (Class<E>) entity.getClass());
         this.entity = entity;
         this.defaultValuesClause = initDefaultValuesClause();
     }

@@ -13,7 +13,8 @@ public class EntityColumn<E, T> {
     private boolean idColumn;
     private GenerationType idGenerateType;
     private Class<T> type;
-    private String name;
+    private String dbColumnName;
+    private String entityFieldName;
     private Integer length;
     private boolean nullable;
     private Field columnField;
@@ -23,7 +24,8 @@ public class EntityColumn<E, T> {
         this.idColumn = entityColumnField.isAnnotationPresent(Id.class);
         this.idGenerateType = createIdGenerateType(entityColumnField);
         this.type = (Class<T>) entityColumnField.getType();
-        this.name = createColumnName(entityColumnField);
+        this.dbColumnName = createColumnName(entityColumnField);
+        this.entityFieldName = entityColumnField.getName();
         this.length = createColumnLength(entityColumnField);
         this.nullable = createColumnNullable(entityColumnField);
         this.columnField = entityColumnField;
@@ -71,8 +73,12 @@ public class EntityColumn<E, T> {
         return columnAnnotationName;
     }
 
-    public String getName() {
-        return name;
+    public String getDbColumnName() {
+        return dbColumnName;
+    }
+
+    public String getEntityFieldName() {
+        return entityFieldName;
     }
 
     public Class<T> getType() {
@@ -100,14 +106,14 @@ public class EntityColumn<E, T> {
 
         if (!Objects.equals(entityClass, that.entityClass)) return false;
         if (!Objects.equals(type, that.type)) return false;
-        return Objects.equals(name, that.name);
+        return Objects.equals(dbColumnName, that.dbColumnName);
     }
 
     @Override
     public int hashCode() {
         int result = entityClass != null ? entityClass.hashCode() : 0;
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (dbColumnName != null ? dbColumnName.hashCode() : 0);
         return result;
     }
 
@@ -128,6 +134,18 @@ public class EntityColumn<E, T> {
                     " of entity " +
                     entityClass.getName(),
                     e);
+        }
+    }
+
+    public void setValue(E entityInstance, Object value) {
+        try {
+            columnField.setAccessible(true);
+            columnField.set(entityInstance, value);
+            columnField.setAccessible(false);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Cannot set value from field %s of entity %s",
+                    columnField.getName(),
+                    entityClass.getName()));
         }
     }
 }

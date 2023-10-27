@@ -1,13 +1,12 @@
 package persistence.sql.ddl;
 
-import persistence.sql.DbmsQueryBuilder;
-import persistence.sql.dbms.DbmsStrategy;
-import persistence.sql.entitymetadata.model.EntityTable;
+import persistence.sql.DialectQueryBuilder;
+import persistence.sql.dbms.Dialect;
 
-public class DropDDLQueryBuilder<E> extends DbmsQueryBuilder<E> {
+public class DropDDLQueryBuilder<E> extends DialectQueryBuilder<E> {
 
-    public DropDDLQueryBuilder(DbmsStrategy dbmsStrategy, Class<E> entityClass) {
-        super(dbmsStrategy, entityClass);
+    public DropDDLQueryBuilder(Dialect dialect, Class<E> entityClass) {
+        super(dialect, entityClass);
     }
 
     @Override

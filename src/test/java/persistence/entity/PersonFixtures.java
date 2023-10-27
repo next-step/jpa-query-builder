@@ -13,4 +13,9 @@ public class PersonFixtures {
         return person;
     }
 
+    public static Person fixtureById(long id) {
+        Person person = new Person();
+        ReflectionTestSupport.setFieldValue(person, "id", id);
+        return person;
+    }
 }

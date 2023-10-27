@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import persistence.entity.Person;
 import persistence.entity.PersonFixtures;
-import persistence.sql.dbms.DbmsStrategy;
+import persistence.sql.dbms.Dialect;
 import persistence.sql.ddl.CreateDDLQueryBuilder;
 import persistence.sql.dml.clause.WhereClause;
 import persistence.sql.dml.clause.operator.Operator;
@@ -42,15 +42,13 @@ class DeleteDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @Test
     void executeDeleteDmlQuery_All() {
         // given
-        DeleteQuery allDeleteQuery = DeleteQuery.create();
-        DeleteDMLQueryBuilder<Person> deleteAllDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, allDeleteQuery);
+        DeleteDMLQueryBuilder<Person> deleteAllDMLQueryBuilder = new DeleteDMLQueryBuilder<>(Dialect.H2, Person.class);
 
         // when
         jdbcTemplate.execute(deleteAllDMLQueryBuilder.build());
 
         // then
-        SelectQuery findAllSelectQuery = SelectQuery.select();
-        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(Dialect.H2, Person.class);
 
         List<Person> selectQueryResultPersons = jdbcTemplate.query(findAllDMLQueryBuilder.build(), resultSet -> {
             int id = resultSet.getInt("ID");
@@ -69,16 +67,14 @@ class DeleteDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     @ArgumentsSource(DeleteByTestWhereClauseArgumentProvider.class)
     void executeDeleteDmlQuery_By(WhereClause whereClause, int expectedSize, List<Long> expectedIds, List<String> expectedNames, List<String> expectedEmails) {
         // given
-        DeleteQuery deleteByQuery = DeleteQuery.create()
+        DeleteDMLQueryBuilder<Person> deleteByDMLQueryBuilder = new DeleteDMLQueryBuilder<>(Dialect.H2, Person.class)
                 .where(whereClause);
-        DeleteDMLQueryBuilder<Person> deleteByDMLQueryBuilder = new DeleteDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, deleteByQuery);
 
         // when
         jdbcTemplate.execute(deleteByDMLQueryBuilder.build());
 
         // then
-        SelectQuery findAllSelectQuery = SelectQuery.select();
-        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(DbmsStrategy.H2, Person.class, findAllSelectQuery);
+        SelectDMLQueryBuilder<Person> findAllDMLQueryBuilder = new SelectDMLQueryBuilder<>(Dialect.H2, Person.class);
 
         List<Person> selectQueryResultPersons = jdbcTemplate.query(findAllDMLQueryBuilder.build(), resultSet -> {
             int id = resultSet.getInt("ID");
@@ -143,12 +139,12 @@ class DeleteDMLQueryBuilderIntegrationTest extends TestQueryExecuteSupport {
     }
 
     private void savePersonFixtures(List<Person> persons) {
-        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(DbmsStrategy.H2, Person.class);
+        CreateDDLQueryBuilder<Person> createDDLQueryBuilder = new CreateDDLQueryBuilder<>(Dialect.H2, Person.class);
         String createQuery = createDDLQueryBuilder.build();
         jdbcTemplate.execute(createQuery.replace("CREATE TABLE USERS", "CREATE TABLE IF NOT EXISTS PUBLIC.USERS"));
 
         for (Person person : persons) {
-            InsertDMLQueryBuilder<Person> insertDMLQueryBuilder = new InsertDMLQueryBuilder<>(DbmsStrategy.H2, person);
+            InsertDMLQueryBuilder<Person> insertDMLQueryBuilder = new InsertDMLQueryBuilder<>(Dialect.H2, person);
             jdbcTemplate.execute(insertDMLQueryBuilder.build());
         }
     }

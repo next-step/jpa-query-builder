@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Spliterator;
 import java.util.stream.Stream;
 
-public class ChainingWhereClauseList implements Iterable<ChainingLogicalOperatorStandardWhereClause> {
+public class ChainingWhereClauses implements Iterable<ChainingLogicalOperatorStandardWhereClause> {
     private List<ChainingLogicalOperatorStandardWhereClause> whereClauses;
 
-    public ChainingWhereClauseList() {
+    public ChainingWhereClauses() {
         this.whereClauses = new ArrayList<>();
     }
 
