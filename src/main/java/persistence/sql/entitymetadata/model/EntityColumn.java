@@ -136,4 +136,16 @@ public class EntityColumn<E, T> {
                     e);
         }
     }
+
+    public void setValue(E entityInstance, Object value) {
+        try {
+            columnField.setAccessible(true);
+            columnField.set(entityInstance, value);
+            columnField.setAccessible(false);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Cannot set value from field %s of entity %s",
+                    columnField.getName(),
+                    entityClass.getName()));
+        }
+    }
 }
