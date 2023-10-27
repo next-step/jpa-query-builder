@@ -4,14 +4,19 @@
 
 ```mermaid
 classDiagram
-    class EntityQueryBuilder {
+    class EntityDefinitionBuilder {
         - EntityMetadata EntityMetadata
-        + EntityQueryBuilder(type: Class<?>)
+        + EntityDefinitionBuilder(type: Class<?>, dialect: Dialect)
+    }
+    class EntityManipulationBuilder {
+        - EntityMetadata EntityMetadata
+        + EntityManipulationBuilder(type: Class<?>, dialect: Dialect)
     }
     class EntityMetadata {
         - TableMetadataExtractor tableMetaDataExtractor
         - FieldMetadataExtractors fieldMetaDatas
-        + EntityMetadata(type: Class<?>)
+        - Dialect dialect
+        + EntityMetadata(type: Class<?>, dialect: Dialect)
     }
     class TableMetadataExtractor {
         - Class<?> type
@@ -20,6 +25,10 @@ classDiagram
     class FieldMetadataExtractors {
         - List<FieldMetadataExtractor> fieldMetadataExtractorList
         + FieldMetadataExtractors(type: Class<?>)
+    }
+    class Dialect {
+    }
+    class H2Dialect {
     }
     class FieldMetadataExtractor {
         - Field field
@@ -30,28 +39,33 @@ classDiagram
     }
     class AnnotationHandler {
         - T annotation
-        + AnnotationHandler(field: Field, annotationType: Class<T>)
+        - Dialect dialect
+        + AnnotationHandler(field: Field, annotationType: Class<T>, , dialect: Dialect)
         + metaInfos(): List<ColumnOption>
     }
     class ColumnAnnotationHandler {
-        + ColumnAnnotationHandler(field: Field)
+        + ColumnAnnotationHandler(field: Field, , dialect: Dialect)
         + metaInfos(): List<ColumnOption>
     }
     class GeneratedValueAnnotationHandler {
-        + GeneratedValueAnnotationHandler(field: Field)
+        + GeneratedValueAnnotationHandler(field: Field, dialect: Dialect)
         + metaInfos(): List<ColumnOption>
     }
     class IdAnnotationHandler {
-        + IdAnnotationHandler(field: Field)
+        + IdAnnotationHandler(field: Field, dialect: Dialect)
         + metaInfos(): List<ColumnOption>
     }
     
-    EntityQueryBuilder --* EntityMetadata
+    EntityDefinitionBuilder --* EntityMetadata
+    EntityManipulationBuilder --* EntityMetadata
     EntityMetadata --* TableMetadataExtractor
     EntityMetadata --* FieldMetadataExtractors
+    EntityMetadata --* Dialect
+    Dialect <|-- H2Dialect : extends
     FieldMetadataExtractors --* FieldMetadataExtractor
     FieldMetadataExtractor --|> ColumnOptionFactory : uses
     ColumnOptionFactory --* AnnotationHandler : uses
+    AnnotationHandler --* Dialect : uses
     AnnotationHandler <|-- ColumnAnnotationHandler : implements
     AnnotationHandler <|-- GeneratedValueAnnotationHandler : implements
     AnnotationHandler <|-- IdAnnotationHandler : implements
