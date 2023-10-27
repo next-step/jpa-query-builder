@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Entity;
 import persistence.sql.Dialect;
 import persistence.sql.QueryBuilder;
-import persistence.sql.TableQueryUtil;
+import persistence.sql.TableSQLMapper;
 
 public class TableDropQueryBuilder extends QueryBuilder {
 
@@ -12,11 +12,11 @@ public class TableDropQueryBuilder extends QueryBuilder {
     }
 
     @Override
-    public String generateSQLQuery(Object object) {
-        if (!object.getClass().isAnnotationPresent(Entity.class)) {
+    public String generateSQLQuery(Class<?> clazz) {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new RuntimeException("clazz is not @Entity");
         }
 
-        return "DROP TABLE " + TableQueryUtil.getTableName(object.getClass());
+        return "DROP TABLE " + TableSQLMapper.getTableName(clazz);
     }
 }
