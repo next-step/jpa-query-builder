@@ -18,16 +18,16 @@ public class ColumnQueryBuilder {
         this.constraints = list;
     }
 
-    public List<String> generateDdlQueryRows(final List<ColumnType> columnTypes) {
+
+    public List<String> generateDdlQueryRows(final List<? extends ColumnType> columnTypes) {
         return columnTypes.stream()
-                .map(columnType -> String.join(" ",
-                                columnType.getName(),
-                                columnType.getDataType().getName() + columnType.getLength()
-                                , generateConstraint(columnType))
+                .map(columnType -> String.format("%s %s %s",
+                        columnType.getName(),
+                        columnType.getDataType().getName() + columnType.getLength(),
+                        generateConstraint(columnType))
                         .trim())
                 .collect(Collectors.toList());
     }
-
 
     private String generateConstraint(ColumnType columnType) {
         return this.constraints.stream()

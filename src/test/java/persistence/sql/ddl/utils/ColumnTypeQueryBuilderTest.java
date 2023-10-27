@@ -27,8 +27,10 @@ class ColumnTypeQueryBuilderTest {
     void query() {
         EntityMetaData entityMetaData = new EntityMetaData(Person.class);
         ColumnQueryBuilder columnQueryBuilder = new ColumnQueryBuilder(generateConstraints());
-        List<String> strings = columnQueryBuilder.generateDdlQueryRows(entityMetaData.getColumns());
-        assertThat(strings).containsOnly("email VARCHAR(255) not null",
+        List<String> fields = columnQueryBuilder.generateDdlQueryRows(entityMetaData.getFieldColumns());
+        List<String> ids = columnQueryBuilder.generateDdlQueryRows(entityMetaData.getIdColumns());
+        fields.addAll(ids);
+        assertThat(fields).containsOnly("email VARCHAR(255) not null",
                 "old INTEGER",
                 "nick_name VARCHAR(255)",
                 "id BIGINT auto_increment primary key"

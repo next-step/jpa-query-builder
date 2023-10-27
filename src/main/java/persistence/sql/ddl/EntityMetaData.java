@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.utils.ColumnId;
 import persistence.sql.ddl.utils.ColumnType;
 import persistence.sql.ddl.utils.ColumnTypes;
 import persistence.sql.ddl.utils.TableType;
@@ -15,13 +16,15 @@ public class EntityMetaData {
         this.columnTypes = new ColumnTypes(entity);
     }
 
-    public TableType getTable() {
-        return this.tableType;
+    public List<ColumnId> getIdColumns() {
+        return columnTypes.getIdColumns();
     }
 
-    public List<ColumnType> getColumns() {
-        return columnTypes.getColumns();
+
+    public List<ColumnType> getFieldColumns() {
+        return columnTypes.getFieldColumns();
     }
+
 
     public String getTableName() {
         return this.tableType.getName();

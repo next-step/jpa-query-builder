@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.type.DataType;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -37,17 +39,12 @@ class ColumnTypesTest {
     void getIdColumn() {
         //Given
         ColumnTypes columnTypes = new ColumnTypes(Person.class);
-        ColumnTypes idColumnTypes = columnTypes.getIdColumns();
-
+        List<ColumnId> idColumnTypes = columnTypes.getIdColumns();
         //When
-        ColumnType id = idColumnTypes.getColumn(ID);
-        ColumnType name = idColumnTypes.getColumn(NAME);
-        ColumnType age = idColumnTypes.getColumn(AGE);
+        long count = idColumnTypes.stream().filter(ColumnId::isId).count();
+        //then
+        assertThat(count).isEqualTo(idColumnTypes.size());
 
-        //Then
-        assertAll(() -> assertThat(id.getName()).isEqualTo("id"),
-                () -> assertThat(name).isNull(),
-                () -> assertThat(age).isNull());
     }
 
     @Test

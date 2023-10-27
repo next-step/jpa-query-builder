@@ -30,7 +30,9 @@ public class DdlQueryBuilder {
     }
 
     public String createColumnsDdl(EntityMetaData entityMetaData) {
-        return String.join(", ", columnQueryBuilder.generateDdlQueryRows(entityMetaData.getColumns()));
+        String idColumnsQuery = String.join(",", columnQueryBuilder.generateDdlQueryRows(entityMetaData.getIdColumns()));
+        String fieldColumnsQuery = String.join(", ", columnQueryBuilder.generateDdlQueryRows(entityMetaData.getFieldColumns()));
+        return String.format("%s, %s" , idColumnsQuery , fieldColumnsQuery);
     }
 
     private List<Constraint> generateConstraints() {

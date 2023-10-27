@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
-
 public class ColumnTypes {
     final private Map<String, ColumnType> columnTypeMap;
 
@@ -40,17 +38,20 @@ public class ColumnTypes {
         return columnTypeMap.get(name);
     }
 
-    public ColumnTypes getIdColumns() {
-        return new ColumnTypes(columnTypeMap.values().stream()
-                .filter(ColumnType::isId)
-                .collect(toMap(ColumnType::getName, columnType -> columnType)));
-    }
-
-    public List<ColumnType> getColumns() {
+    public List<ColumnId> getIdColumns() {
         return columnTypeMap.values()
                 .stream()
+                .filter(ColumnType::isId)
                 .filter(columnType -> !columnType.isTransient())
+                .map(columnType -> (ColumnId) columnType)
                 .collect(Collectors.toList());
+    }
+
+    public List<ColumnType> getFieldColumns() {
+        return columnTypeMap.values()
+                .stream()
+                .filter(columnType -> !columnType.isId())
+                .filter(columnType -> !columnType.isTransient()).collect(Collectors.toList());
     }
 
 }
