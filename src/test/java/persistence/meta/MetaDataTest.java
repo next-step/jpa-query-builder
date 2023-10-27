@@ -1,4 +1,4 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
