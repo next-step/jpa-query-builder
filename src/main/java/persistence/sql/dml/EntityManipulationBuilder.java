@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import persistence.sql.ddl.EntityMetadata;
+import persistence.sql.ddl.dialect.Dialect;
 import utils.CustomStringBuilder;
 
 import static utils.CustomStringBuilder.*;
@@ -9,8 +10,8 @@ public class EntityManipulationBuilder {
 
     private final EntityMetadata entityMetadata;
 
-    public EntityManipulationBuilder(Class<?> type) {
-        this.entityMetadata = new EntityMetadata(type);
+    public EntityManipulationBuilder(Class<?> type, Dialect dialectParam) {
+        this.entityMetadata = new EntityMetadata(type, dialectParam );
     }
 
     public String insert(Object entity) {
@@ -29,13 +30,13 @@ public class EntityManipulationBuilder {
     }
 
     public String findAll(Class<?> type) {
-        return toFindAllStatement(entityMetadata.getColumnNames(type), entityMetadata.getTableName());
+        return toFindAllStatement(entityMetadata.getTableName(), entityMetadata.getColumnNames(type));
     }
 
     public String findById(Class<?> type, long id) {
         return toFindByIdStatement(
-                entityMetadata.getColumnNames(type),
                 entityMetadata.getTableName(),
+                entityMetadata.getColumnNames(type),
                 entityMetadata.getIdColumnName(type),
                 String.valueOf(id)
         );

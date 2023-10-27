@@ -2,9 +2,13 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import persistence.sql.ddl.dialect.Dialect;
 import utils.CustomStringBuilder;
+import utils.JdbcTypeMapper;
 
 import java.lang.reflect.Field;
+
+import static utils.JdbcTypeMapper.getJdbcTypeForClass;
 
 public class FieldMetadataExtractor {
 
@@ -14,10 +18,10 @@ public class FieldMetadataExtractor {
         this.field = field;
     }
 
-    public String getDefinition() {
+    public String getDefinition(Dialect dialect) {
         return new CustomStringBuilder()
                 .append(getColumnName(field))
-                .append(map(field.getType()))
+                .append(dialect.get(getJdbcTypeForClass(field.getType())))
                 .append(getColumnOptionValue())
                 .toString();
     }
@@ -54,19 +58,6 @@ public class FieldMetadataExtractor {
         }
 
         return "";
-    }
-
-    String map(Class<?> type) {
-        // TODO 리팩토링
-        if (type == String.class) {
-            return "VARCHAR(255)";
-        } else if (type == int.class || type == Integer.class) {
-            return "INT";
-        } else if (type == long.class || type == Long.class) {
-            return "BIGINT";
-        }
-
-        throw new IllegalArgumentException("지원하지 않는 타입입니다.");
     }
 
     private String getColumnName(Field field) {
