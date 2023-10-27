@@ -21,4 +21,44 @@ public class Person {
 
     @Transient
     private Integer index;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(final Integer age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(final Integer index) {
+        this.index = index;
+    }
 }
