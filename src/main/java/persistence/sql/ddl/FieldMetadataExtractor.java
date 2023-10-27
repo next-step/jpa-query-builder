@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import persistence.sql.ddl.dialect.Dialect;
 import utils.CustomStringBuilder;
-import utils.JdbcTypeMapper;
 
 import java.lang.reflect.Field;
 
@@ -21,13 +20,13 @@ public class FieldMetadataExtractor {
     public String getDefinition(Dialect dialect) {
         return new CustomStringBuilder()
                 .append(getColumnName(field))
-                .append(dialect.get(getJdbcTypeForClass(field.getType())))
-                .append(getColumnOptionValue())
+                .append(dialect.getType(getJdbcTypeForClass(field.getType())))
+                .append(getColumnOptionValue(dialect))
                 .toString();
     }
 
-    private String getColumnOptionValue() {
-        return ColumnOptionFactory.createColumnOption(field);
+    private String getColumnOptionValue(Dialect dialect) {
+        return ColumnOptionFactory.createColumnOption(field, dialect);
     }
 
     public String getColumnName(Object entity) throws NoSuchFieldException, IllegalAccessException {

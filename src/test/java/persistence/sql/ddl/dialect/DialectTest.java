@@ -3,7 +3,7 @@ package persistence.sql.ddl.dialect;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DialectTest {
 
@@ -13,7 +13,7 @@ class DialectTest {
         Dialect dialect = new H2Dialect();
 
         assertThrows(IllegalArgumentException.class, () -> {
-            dialect.get(0);
+            dialect.getType(0);
         });
     }
 

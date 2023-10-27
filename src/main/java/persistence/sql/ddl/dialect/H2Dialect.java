@@ -8,6 +8,9 @@ public class H2Dialect extends Dialect {
         registerColumnType(Types.VARCHAR, "VARCHAR");
         registerColumnType(Types.INTEGER, "INT");
         registerColumnType(Types.BIGINT, "BIGINT");
+        registerColumnScheme(Schemes.Column, ColumnSchemes.builder().addColumnScheme("nullable", "NOT NULL").build());
+        registerColumnScheme(Schemes.GeneratedValue, ColumnSchemes.builder().addColumnScheme("IDENTITY", "AUTO_INCREMENT").build());
+        registerColumnScheme(Schemes.Id, ColumnSchemes.builder().addColumnScheme("Id", "PRIMARY KEY").build());
     }
 
 }

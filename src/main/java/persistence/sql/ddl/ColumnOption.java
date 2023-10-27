@@ -22,5 +22,15 @@ public enum ColumnOption {
         return priority;
     }
 
+    public static ColumnOption getColumnOption(String option) {
+        for (ColumnOption columnOption : ColumnOption.values()) {
+            if (columnOption.getOption().equals(option)) {
+                return columnOption;
+            }
+        }
+
+        return null;
+    }
+
 }
 

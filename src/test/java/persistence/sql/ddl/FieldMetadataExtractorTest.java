@@ -13,7 +13,6 @@ import persistence.sql.ddl.dialect.H2Dialect;
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FieldMetadataExtractorTest {
 

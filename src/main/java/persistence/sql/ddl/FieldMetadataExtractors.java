@@ -80,4 +80,5 @@ public class FieldMetadataExtractors {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No @Id annotation"));
     }
+
 }
