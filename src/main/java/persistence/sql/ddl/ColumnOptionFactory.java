@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import persistence.sql.ddl.annotation.AnnotationHandler;
 import persistence.sql.ddl.annotation.AnnotationMap;
+import persistence.sql.ddl.dialect.Dialect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -17,11 +18,11 @@ public class ColumnOptionFactory {
     private ColumnOptionFactory() {
     }
 
-    public static String createColumnOption(Field field) {
+    public static String createColumnOption(Field field, Dialect dialect) {
         List<ColumnOption> result = new ArrayList<>();
 
         for (Annotation annotation : field.getAnnotations()) {
-            AnnotationHandler<?> annotationHandler = getAnnotationInfo(field, annotation);
+            AnnotationHandler<?> annotationHandler = getAnnotationInfo(field, annotation, dialect);
             result.addAll(annotationHandler.metaInfos());
         }
 
@@ -31,12 +32,12 @@ public class ColumnOptionFactory {
                 .collect(Collectors.joining(" "));
     }
 
-    private static AnnotationHandler<?> getAnnotationInfo(Field field, Annotation annotation) {
+    private static AnnotationHandler<?> getAnnotationInfo(Field field, Annotation annotation, Dialect dialect) {
         try {
             Class<? extends AnnotationHandler<?>> annotationInfoClass = AnnotationMap.getInfoClassByAnnotationClass(annotation.annotationType());
-            Constructor<?> constructor = annotationInfoClass.getDeclaredConstructor(Field.class);
+            Constructor<?> constructor = annotationInfoClass.getDeclaredConstructor(Field.class, Dialect.class);
 
-            return (AnnotationHandler<?>) constructor.newInstance(field);
+            return (AnnotationHandler<?>) constructor.newInstance(field, dialect);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new IllegalArgumentException("Field에 " + annotation.annotationType().getSimpleName() + " 어노테이션을 처리할 수 없습니다.");
         }

@@ -1,8 +1,13 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import persistence.sql.ddl.dialect.Dialect;
+import utils.CustomStringBuilder;
 
 import java.lang.reflect.Field;
+
+import static utils.JdbcTypeMapper.getJdbcTypeForClass;
 
 public class FieldMetadataExtractor {
 
@@ -12,45 +17,49 @@ public class FieldMetadataExtractor {
         this.field = field;
     }
 
-    public String getDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getFieldName(field));
-        sb.append(" ");
-        sb.append(map(field.getType()));
-        sb.append(" ");
-        sb.append(getColumnOptionValue());
-
-        if (sb.lastIndexOf(" ") == sb.length() - 1) {
-            sb.deleteCharAt(sb.length() - 1);
-        }
-
-        return sb.toString();
+    public String getDefinition(Dialect dialect) {
+        return new CustomStringBuilder()
+                .append(getColumnName(field))
+                .append(dialect.getType(getJdbcTypeForClass(field.getType())))
+                .append(getColumnOptionValue(dialect))
+                .toString();
     }
 
-    private String getColumnOptionValue() {
-        String columnOption = ColumnOptionFactory.createColumnOption(field);
-
-        if (columnOption.equals("")) {
-            return "";
-        }
-
-        return columnOption;
+    private String getColumnOptionValue(Dialect dialect) {
+        return ColumnOptionFactory.createColumnOption(field, dialect);
     }
 
-    String map(Class<?> type) {
-        // TODO 리팩토링
-        if (type == String.class) {
-            return "VARCHAR(255)";
-        } else if (type == int.class || type == Integer.class) {
-            return "INT";
-        } else if (type == long.class || type == Long.class) {
-            return "BIGINT";
+    public String getColumnName(Object entity) throws NoSuchFieldException, IllegalAccessException {
+        Field entityFiled = entity.getClass().getDeclaredField(field.getName());
+        entityFiled.setAccessible(true);
+        if (entityFiled.get(entity) != null) {
+            return getColumnName(field);
         }
 
-        throw new IllegalArgumentException("지원하지 않는 타입입니다.");
+        return "";
     }
 
-    private String getFieldName(Field field) {
+    public String getColumnName(Class<?> type) throws NoSuchFieldException, IllegalAccessException {
+        return getColumnName(type.getDeclaredField(field.getName()));
+    }
+
+    public String getValueFrom(Object entity) throws NoSuchFieldException, IllegalAccessException {
+        Field entityFiled = entity.getClass().getDeclaredField(field.getName());
+        entityFiled.setAccessible(true);
+        Object object = entityFiled.get(entity);
+
+        if (object instanceof String) {
+            return "'" + object + "'";
+        } else if (object instanceof Integer) {
+            return String.valueOf(object);
+        } else if (object instanceof Long) {
+            return String.valueOf(object);
+        }
+
+        return "";
+    }
+
+    private String getColumnName(Field field) {
         if (field.isAnnotationPresent(Column.class)
                 && !isAnnotationNameEmpty(field)) {
             Column column = field.getAnnotation(Column.class);
@@ -62,6 +71,10 @@ public class FieldMetadataExtractor {
 
     private boolean isAnnotationNameEmpty(Field field) {
         return field.getAnnotation(Column.class).name().equals("");
+    }
+
+    public boolean isId() {
+        return field.isAnnotationPresent(Id.class);
     }
 
 }
