@@ -16,6 +16,6 @@ public interface ColumnType {
 
     String getLength();
 
-    DataType getDataType();
+    String getDataType();
 
 }

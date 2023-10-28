@@ -54,14 +54,14 @@ class ColumnTypesTest {
         ColumnTypes columnTypes = new ColumnTypes(new Person());
 
         //When
-        DataType id = columnTypes.getColumn(ID).getDataType();
-        DataType name = columnTypes.getColumn(NAME).getDataType();
-        DataType age = columnTypes.getColumn(AGE).getDataType();
+        String id = columnTypes.getColumn(ID).getDataType();
+        String name = columnTypes.getColumn(NAME).getDataType();
+        String age = columnTypes.getColumn(AGE).getDataType();
 
         //Then
-        assertAll(() -> assertThat(id.getName()).isEqualTo("BIGINT"),
-                () -> assertThat(name.getName()).isEqualTo("VARCHAR"),
-                () -> assertThat(age.getName()).isEqualTo("INTEGER"));
+        assertAll(() -> assertThat(id).isEqualTo("BIGINT"),
+                () -> assertThat(name).isEqualTo("VARCHAR"),
+                () -> assertThat(age).isEqualTo("INTEGER"));
     }
 
     @Test

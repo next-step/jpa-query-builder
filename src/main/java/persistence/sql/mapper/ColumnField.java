@@ -17,7 +17,7 @@ public class ColumnField implements ColumnType {
     private final boolean isTransient;
     private final int length;
 
-    private final DataType dataType;
+    private final String dataType;
     private final Class<?> type;
     private final ColumnValue columnValue;
 
@@ -58,9 +58,9 @@ public class ColumnField implements ColumnType {
                 .orElse(255);
     }
 
-    private DataType parseDataType(final Field field) {
+    private String parseDataType(final Field field) {
         //H2DataTypeMapper는 누가 가지고 있어야 하는지,,?
-        return H2DataTypeMapper.getInstance().getDataType(field.getType());
+        return H2DataTypeMapper.getInstance().getDataType(field.getType()).getName();
     }
 
 
@@ -76,8 +76,8 @@ public class ColumnField implements ColumnType {
     @Override
     public String getValue() {
         final Object value = columnValue.getValue();
-        if(TypeUtils.isString(value)) {
-            return "'"+value+"'";
+        if (TypeUtils.isString(value)) {
+            return "'" + value + "'";
         }
 
         return Optional.ofNullable(value)
@@ -102,14 +102,14 @@ public class ColumnField implements ColumnType {
 
     @Override
     public String getLength() {
-        if ("VARCHAR".equals(this.dataType.getName())) {
+        if ("VARCHAR".equals(this.dataType)) {
             return "(" + this.length + ")";
         }
         return "";
     }
 
     @Override
-    public DataType getDataType() {
+    public String getDataType() {
         return this.dataType;
     }
 

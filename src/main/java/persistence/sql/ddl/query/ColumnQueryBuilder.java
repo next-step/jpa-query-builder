@@ -18,9 +18,9 @@ public class ColumnQueryBuilder {
     public List<String> generateDdlQueryRows(final List<? extends ColumnType> columnTypes) {
         return columnTypes.stream()
                 .map(columnType -> String.format("%s %s %s",
-                        columnType.getName(),
-                        columnType.getDataType().getName() + columnType.getLength(),
-                        generateConstraint(columnType))
+                                columnType.getName(),
+                                columnType.getDataType() + columnType.getLength(),
+                                generateConstraint(columnType))
                         .trim())
                 .collect(Collectors.toList());
     }

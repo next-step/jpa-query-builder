@@ -63,7 +63,7 @@ public class ColumnId implements ColumnType {
     }
 
     @Override
-    public DataType getDataType() {
+    public String getDataType() {
         return this.delegate.getDataType();
     }
 

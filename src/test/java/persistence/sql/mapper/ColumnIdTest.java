@@ -60,6 +60,7 @@ class ColumnIdTest {
         person.setId(100L);
         ColumnId columnId = new ColumnId(person, id);
 
-        assertThat(columnId.getValue()).isEqualTo(100L);
+        assertThat(columnId.getValue()).isEqualTo("100");
+
     }
 }

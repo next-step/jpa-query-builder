@@ -95,8 +95,8 @@ class ColumnFieldTest {
         ColumnType ageField = new ColumnField(person, age);
 
         assertAll(
-                () -> assertThat(emailField.getDataType().getName()).isEqualTo("VARCHAR"),
-                () -> assertThat(ageField.getDataType().getName()).isEqualTo("INTEGER")
+                () -> assertThat(emailField.getDataType()).isEqualTo("VARCHAR"),
+                () -> assertThat(ageField.getDataType()).isEqualTo("INTEGER")
         );
     }
 
@@ -120,9 +120,9 @@ class ColumnFieldTest {
 
         //then
         assertAll(
-                () -> assertThat(emailField.getValue()).isEqualTo("jy@lim.com"),
-                () -> assertThat(ageField.getValue()).isEqualTo(28),
-                () -> assertThat(nameField.getValue()).isEqualTo("지영")
+                () -> assertThat(emailField.getValue()).isEqualTo("'jy@lim.com'"),
+                () -> assertThat(ageField.getValue()).isEqualTo("28"),
+                () -> assertThat(nameField.getValue()).isEqualTo("'지영'")
         );
     }
 
