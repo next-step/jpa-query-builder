@@ -6,13 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.exception.InvalidIdColumnException;
-import persistence.sql.mapper.ColumnId;
-import persistence.sql.mapper.ColumnType;
 
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ColumnIdTest {
 
@@ -52,5 +50,16 @@ class ColumnIdTest {
         ColumnId columnId = new ColumnId(person, id);
 
         assertThat(columnId.getGenerationType()).isEqualTo(GenerationType.IDENTITY);
+    }
+
+
+    @Test
+    @DisplayName("value 값 뽑기 테스트")
+    void valueTest() throws Exception {
+        Field id = personClass.getDeclaredField("id");
+        person.setId(100L);
+        ColumnId columnId = new ColumnId(person, id);
+
+        assertThat(columnId.getValue()).isEqualTo(100L);
     }
 }

@@ -1,5 +1,6 @@
 package persistence.sql.mapper;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
@@ -96,6 +97,32 @@ class ColumnFieldTest {
         assertAll(
                 () -> assertThat(emailField.getDataType().getName()).isEqualTo("VARCHAR"),
                 () -> assertThat(ageField.getDataType().getName()).isEqualTo("INTEGER")
+        );
+    }
+
+
+    @Test
+    @DisplayName("value 값 뽑기 테스트")
+    void valueTest() throws Exception {
+        person.setAge(28);
+        person.setName("지영");
+        person.setEmail("jy@lim.com");
+
+        Field email = personClass.getDeclaredField("email");
+        Field age = personClass.getDeclaredField("age");
+        Field name = personClass.getDeclaredField("name");
+
+
+        ColumnType emailField = new ColumnField(person, email);
+        ColumnType ageField = new ColumnField(person, age);
+        ColumnType nameField = new ColumnField(person, name);
+
+
+        //then
+        assertAll(
+                () -> assertThat(emailField.getValue()).isEqualTo("jy@lim.com"),
+                () -> assertThat(ageField.getValue()).isEqualTo(28),
+                () -> assertThat(nameField.getValue()).isEqualTo("지영")
         );
     }
 
