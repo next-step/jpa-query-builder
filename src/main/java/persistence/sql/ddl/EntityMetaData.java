@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.utils.ColumnId;
-import persistence.sql.ddl.utils.ColumnType;
-import persistence.sql.ddl.utils.ColumnTypes;
-import persistence.sql.ddl.utils.TableType;
+import persistence.sql.mapper.ColumnId;
+import persistence.sql.mapper.ColumnType;
+import persistence.sql.mapper.ColumnTypes;
+import persistence.sql.mapper.TableType;
 
 import java.util.List;
 

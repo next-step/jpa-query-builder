@@ -1,8 +1,8 @@
 package persistence.sql.ddl.constraint;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.utils.ColumnId;
-import persistence.sql.ddl.utils.ColumnType;
+import persistence.sql.mapper.ColumnId;
+import persistence.sql.mapper.ColumnType;
 
 public class IdentityConstraint implements Constraint {
 

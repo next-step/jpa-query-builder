@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.EntityMetaData;
 import persistence.sql.ddl.Person;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class InsertQueryBuilderTest {
 
 
@@ -15,8 +13,8 @@ class InsertQueryBuilderTest {
     @DisplayName("insert 쿼리를 생성한다.")
     void insertTest() {
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
-        EntityMetaData entityMetaData = new EntityMetaData(Person.class);
         Person person = new Person();
+        EntityMetaData entityMetaData = new EntityMetaData(person);
         person.setAge(28);
         person.setName("지영");
         person.setEmail("jy@lim.com");

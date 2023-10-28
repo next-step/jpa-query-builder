@@ -1,4 +1,4 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.mapper;
 
 import jakarta.persistence.GenerationType;
 import org.assertj.core.api.Assertions;
@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.exception.InvalidIdColumnException;
+import persistence.sql.mapper.ColumnId;
+import persistence.sql.mapper.ColumnType;
 
 import java.lang.reflect.Field;
 

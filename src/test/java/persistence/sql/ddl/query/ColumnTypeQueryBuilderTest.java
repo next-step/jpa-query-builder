@@ -1,4 +1,4 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.ddl.query;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,5 @@
-package persistence.sql.dml.value;
+package persistence.sql.mapper;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
@@ -9,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ValueTest {
+class ColumnValueTest {
 
     @Test
     @DisplayName("getter로 값 추출 테스트")
@@ -24,10 +23,10 @@ class ValueTest {
         person.setEmail(EMAIL);
 
         //given
-        Object name = new Value(person, "name").getValue();
-        Object email = new Value(person, "email").getValue();
-        Object age = new Value(person, "age").getValue();
-        Object id = new Value(person, "id").getValue();
+        Object name = new ColumnValue(person, "name").getValue();
+        Object email = new ColumnValue(person, "email").getValue();
+        Object age = new ColumnValue(person, "age").getValue();
+        Object id = new ColumnValue(person, "id").getValue();
 
         //then
         assertAll(
@@ -46,7 +45,7 @@ class ValueTest {
 
         try {
             //given
-            Object name = new Value(person, "address").getValue();
+            Object name = new ColumnValue(person, "address").getValue();
         } catch (RuntimeException e) {
             //then
             assertEquals("address에 getAddress가 존재하지 않습니다.", e.getMessage());

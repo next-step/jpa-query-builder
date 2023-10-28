@@ -1,10 +1,9 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.mapper;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.type.DataType;
 import persistence.sql.ddl.type.H2DataTypeMapper;
-import persistence.sql.dml.value.Value;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class ColumnField implements ColumnType {
 
     private final DataType dataType;
     private final Class<?> type;
-    private Value value;
+    private ColumnValue columnValue;
 
     public ColumnField(final Object entity, final Field field) {
         this.type = entity.getClass();
@@ -28,11 +27,11 @@ public class ColumnField implements ColumnType {
         this.isTransient = this.parseTransient(field);
         this.length = this.parseLength(field);
         this.dataType = this.parseDataType(field);
-        this.value = this.parseValue(entity, field);
+        this.columnValue = this.parseValue(entity, field);
     }
 
-    private Value parseValue(final Object entity, final Field field) {
-        return new Value(entity, field.getName());
+    private ColumnValue parseValue(final Object entity, final Field field) {
+        return new ColumnValue(entity, field.getName());
     }
 
     private boolean parsNullable(final Field field) {

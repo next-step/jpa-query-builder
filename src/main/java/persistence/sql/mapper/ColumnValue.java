@@ -1,13 +1,13 @@
-package persistence.sql.dml.value;
+package persistence.sql.mapper;
 
 import persistence.sql.ddl.utils.ReflectionUtil;
 
 import java.lang.reflect.Method;
 
-public class Value {
-    private Object value;
+public class ColumnValue {
+    private final Object value;
 
-    public Value(final Object object, final String fieldName) {
+    public ColumnValue(final Object object, final String fieldName) {
         this.value = generateValue(object, fieldName);
     }
 

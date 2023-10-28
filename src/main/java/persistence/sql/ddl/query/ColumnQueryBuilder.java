@@ -1,12 +1,8 @@
 package persistence.sql.ddl.query;
 
 import persistence.sql.ddl.constraint.Constraint;
-import persistence.sql.ddl.constraint.IdentityConstraint;
-import persistence.sql.ddl.constraint.NotNullConstraint;
-import persistence.sql.ddl.constraint.PrimaryKeyConstraint;
-import persistence.sql.ddl.utils.ColumnType;
+import persistence.sql.mapper.ColumnType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +10,8 @@ public class ColumnQueryBuilder {
 
     private final List<Constraint> constraints;
 
-    public ColumnQueryBuilder(List<Constraint> list) {
-        this.constraints = list;
+    public ColumnQueryBuilder(List<Constraint> constraints) {
+        this.constraints = constraints;
     }
 
 

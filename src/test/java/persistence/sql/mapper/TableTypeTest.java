@@ -1,4 +1,4 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.mapper;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
