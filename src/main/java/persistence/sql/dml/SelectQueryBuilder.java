@@ -25,6 +25,17 @@ public class SelectQueryBuilder extends QueryBuilder {
         return new Query(queryStringBuilder);
     }
 
+    public Query findById(Class<?> domain, Long id) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder queryStringBuilder = sb.append("select * from ")
+                .append(getMetaData(domain).getEntity())
+                .append(" where ")
+                .append(getMetaData(domain).getId())
+                .append(" = ")
+                .append(id);
+        return new Query(queryStringBuilder);
+    }
+
     private MetaData getMetaData(Class<?> domain) {
         return metadataGenerator.generator(domain);
     }

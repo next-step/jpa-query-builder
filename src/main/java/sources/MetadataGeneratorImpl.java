@@ -23,6 +23,7 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
         String entityName = annotationBinder.entityBinder(entity);
         Field idField = findIdField(entity);
         String idName = annotationBinder.entityIdBinder(idField);
+        String idOption = annotationBinder.entityIdOptionBinder(idField);
         List<ColumnMetaData> columns = Arrays.stream(entity.getDeclaredFields())
                 .filter(field -> !field.equals(idField))
                 .filter(this::isTransientField)
@@ -36,7 +37,7 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
                 })
                 .collect(Collectors.toList());
 
-        return new MetaData(entityName, idName, columns);
+        return new MetaData(entityName, idName, idOption, columns);
     }
 
     private Field findIdField(Class<?> fromClass) {

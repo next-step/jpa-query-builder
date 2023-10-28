@@ -32,14 +32,18 @@ public class AnnotationBinder {
             throw new AnnotationException( "Type '" + field.getName()
                     + "@id 가 아닙니다." );
         }
+
+        return field.getName();
+    }
+
+    public String entityIdOptionBinder(Field field) {
         // 요구사항2. generatedValue 어노테이션이 있을 경우에 처리한다.
         if(field.isAnnotationPresent(GeneratedValue.class)) {
             GeneratedValue declaredAnnotation = field.getDeclaredAnnotation(GeneratedValue.class);
-            String generator = registerGenerators(declaredAnnotation.strategy());
-            return field.getName() + generator;
+            return registerGenerators(declaredAnnotation.strategy());
             // not null auto_increment
         }
-        return field.getName() + " int";
+        return " int ";
     }
 
     // 컬럼 어노테이션이 설정되어 있으면 컬럼 어노테이션의 이름 사용, 아니면 필드 이름 사용

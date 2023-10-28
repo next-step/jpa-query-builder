@@ -23,6 +23,7 @@ public class CreateQueryBuilder extends QueryBuilder {
                 .append(metaData.getEntity())
                 .append(" (")
                 .append(metaData.getId())
+                .append(metaData.getIdOption())
                 .append(" ")
                 .append(columnTypeName(metaData.getColumns()))
                 .append(" )");
