@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,8 @@ public class DMLTest {
     void insert() {
         Person kim = new Person().name("김쿼리").age(30).email("query@gmail.com").index(1).build();
         Query insertQuery = insertQueryBuilder.insert(kim);
-        jdbcTemplate.execute(insertQuery.getQuery());
+        jdbcTemplate.execute(insertQuery.getQuery().toString());
+        Assertions.assertThat(String.valueOf(insertQuery.getQuery()))
+                .isEqualTo("insert into users(nick_name, old, email ) values('김쿼리', 30, 'query@gmail.com' )");
     }
 }

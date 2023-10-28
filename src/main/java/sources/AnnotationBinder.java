@@ -4,6 +4,7 @@ import exception.AnnotationException;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 public class AnnotationBinder {
 
@@ -42,7 +43,7 @@ public class AnnotationBinder {
     }
 
     // 컬럼 어노테이션이 설정되어 있으면 컬럼 어노테이션의 이름 사용, 아니면 필드 이름 사용
-    public ColumnMetaData columnBinder(Field field) {
+    public ColumnMetaData columnBinder(Class<?> entity, Field field) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
         if(field.isAnnotationPresent(Column.class)) {
             Column column = field.getDeclaredAnnotation(Column.class);
             String name = column.name().isEmpty() ? field.getName() : column.name();
@@ -51,6 +52,7 @@ public class AnnotationBinder {
             String type = field.getType().getSimpleName();
             return new ColumnMetaData()
                     .name(name)
+                    .fieldName(field.getName())
                     .type(type)
                     .length(length)
                     .nullable(nullable)
@@ -58,6 +60,7 @@ public class AnnotationBinder {
         }
         return new ColumnMetaData()
                 .name(field.getName())
+                .fieldName(field.getName())
                 .type(field.getType().getSimpleName());
     }
 

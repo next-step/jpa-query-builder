@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
     }
 
     @Override
-    public MetaData generator(Class<?> entity) {
+    public MetaData generator(Class<?> entity){
         //엔티티 이름(테이블 이름)
         String entityName = annotationBinder.entityBinder(entity);
         Field idField = findIdField(entity);
@@ -25,7 +26,14 @@ public class MetadataGeneratorImpl implements MetadataGenerator {
         List<ColumnMetaData> columns = Arrays.stream(entity.getDeclaredFields())
                 .filter(field -> !field.equals(idField))
                 .filter(this::isTransientField)
-                .map(annotationBinder::columnBinder)
+                .map(field -> {
+                    try {
+                        return annotationBinder.columnBinder(entity, field);
+                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                             InstantiationException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
 
         return new MetaData(entityName, idName, columns);

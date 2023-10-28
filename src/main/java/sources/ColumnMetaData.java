@@ -3,6 +3,7 @@ package sources;
 public class ColumnMetaData {
 
     private String name;
+    private String fieldName;
     private String type;
     private int length = 255;
     private boolean nullable = true;
@@ -11,8 +12,9 @@ public class ColumnMetaData {
     public ColumnMetaData() {
     }
 
-    public ColumnMetaData(String name, String type, int length, boolean nullable, String value) {
+    public ColumnMetaData(String name, String fieldName, String type, int length, boolean nullable, String value) {
         this.name = name;
+        this.fieldName = fieldName;
         this.type = type;
         this.length = length;
         this.nullable = nullable;
@@ -23,6 +25,10 @@ public class ColumnMetaData {
         return name;
     }
 
+    public String getFieldName() {
+        return fieldName;
+    }
+
     public String getType() {
         return type;
     }
@@ -31,12 +37,21 @@ public class ColumnMetaData {
         return length;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public boolean isNullable() {
         return nullable;
     }
 
     public ColumnMetaData name(String name) {
         this.name = name;
+        return this;
+    }
+
+    public ColumnMetaData fieldName(String fieldName) {
+        this.fieldName = fieldName;
         return this;
     }
 
@@ -61,6 +76,6 @@ public class ColumnMetaData {
     }
 
     public ColumnMetaData build() {
-        return new ColumnMetaData(name, type, length, nullable, value);
+        return new ColumnMetaData(name, fieldName, type, length, nullable, value);
     }
 }

@@ -11,9 +11,11 @@ import java.util.List;
 public class CreateQueryBuilder extends QueryBuilder {
 
     private Query query;
+    private final Dialect dialect;
 
     public CreateQueryBuilder(Dialect dialect) {
         super(dialect);
+        this.dialect = dialect;
     }
 
     public Query create(MetaData metaData, StringBuilder sb) {
