@@ -66,6 +66,7 @@ public class DMLTest {
         insertPerson(kim);
         insertPerson(lee);
         insertPerson(lim);
+
         Query all = selectQueryBuilder.findAll(Person.class);
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> personList = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
@@ -84,6 +85,7 @@ public class DMLTest {
         insertPerson(kim);
         insertPerson(lee);
         insertPerson(lim);
+
         Query findByIdQuery = selectQueryBuilder.findById(Person.class, 1L);
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> personList = jdbcTemplate.query(findByIdQuery.getQuery().toString(), personGenericRowMapper);
