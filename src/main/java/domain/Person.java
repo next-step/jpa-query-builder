@@ -82,4 +82,15 @@ public class Person {
     public Person build() {
         return new Person(id, name, age, email, index);
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", index=" + index +
+                '}';
+    }
 }

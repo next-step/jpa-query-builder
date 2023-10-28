@@ -67,9 +67,9 @@ public class AnnotationBinder {
     private String registerGenerators(GenerationType type) {
         switch (type) {
             case IDENTITY:
-                return " INT AUTO_INCREMENT PRIMARY KEY";
+                return " LONG AUTO_INCREMENT PRIMARY KEY";
             case AUTO:
-                return " INT AUTO_INCREMENT PRIMARY KEY";
+                return " LONG AUTO_INCREMENT PRIMARY KEY";
             case UUID:
                 return "";
             default:
