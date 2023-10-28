@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.type.DataType;
 import persistence.sql.ddl.type.H2DataTypeMapper;
+import persistence.sql.ddl.utils.TypeUtils;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -73,8 +74,15 @@ public class ColumnField implements ColumnType {
     }
 
     @Override
-    public Object getValue() {
-        return columnValue.getValue();
+    public String getValue() {
+        final Object value = columnValue.getValue();
+        if(TypeUtils.isString(value)) {
+            return "'"+value+"'";
+        }
+
+        return Optional.ofNullable(value)
+                .map(Object::toString)
+                .orElse("");
     }
 
     @Override

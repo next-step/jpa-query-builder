@@ -14,12 +14,13 @@ class InsertQueryBuilderTest {
     void insertTest() {
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
         Person person = new Person();
-        EntityMetaData entityMetaData = new EntityMetaData(person);
         person.setAge(28);
         person.setName("지영");
         person.setEmail("jy@lim.com");
-        Assertions.assertThat(insertQueryBuilder.create(entityMetaData, person))
-                .isEqualTo("insert into users (old, nick_name, email) values(28, '지영', jy@lim.com)");
+        EntityMetaData entityMetaData = new EntityMetaData(person);
+
+        Assertions.assertThat(insertQueryBuilder.create(entityMetaData))
+                .isEqualTo("insert into users (old, nick_name, email) values(28, '지영', 'jy@lim.com')");
     }
 
     @Test

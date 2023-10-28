@@ -38,7 +38,7 @@ public class ColumnId implements ColumnType {
     }
 
     @Override
-    public Object getValue() {
+    public String getValue() {
         return this.delegate.getValue();
     }
 

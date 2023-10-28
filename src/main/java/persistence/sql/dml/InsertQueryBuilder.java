@@ -10,20 +10,23 @@ public class InsertQueryBuilder {
 
     private static final String INSERT_QUERY_FORMAT = "insert into %s (%s) values(%s)";
 
-    public String create(final EntityMetaData entityMetaData, Object object) {
+    public String create(final EntityMetaData entityMetaData) {
         return String.format(INSERT_QUERY_FORMAT
                 , entityMetaData.getTableName()
                 , columnsClause(entityMetaData.getFieldColumns())
-                , valueClause(entityMetaData, object));
+                , valueClause(entityMetaData.getFieldColumns()));
     }
 
     private String columnsClause(final List<ColumnType> columns) {
-        return columns.stream().map(ColumnType::getName)
+        return columns.stream()
+                .map(ColumnType::getName)
                 .collect(Collectors.joining(", "));
     }
 
-    private String valueClause(final EntityMetaData entityMetaData, Object object) {
-        return "28, '지영', jy@lim.com";
+    private String valueClause(final List<ColumnType> columns) {
+        return columns.stream()
+                .map(ColumnType::getValue)
+                .collect(Collectors.joining(", "));
     }
 
 

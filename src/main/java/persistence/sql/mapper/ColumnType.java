@@ -6,7 +6,7 @@ public interface ColumnType {
 
     String getName();
 
-    Object getValue();
+    String getValue();
 
     boolean isId();
 
