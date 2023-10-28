@@ -1,14 +1,14 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
-import persistence.sql.TableFieldUtil;
+import persistence.sql.TableSQLMapper;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FieldConstraintsGenerator {
+public class FieldConstraintsGenerator implements FieldSQLGenerator {
 
     public String generate(Field field) {
         return Stream.of(
@@ -23,6 +23,6 @@ public class FieldConstraintsGenerator {
             return null;
         }
 
-        return "PRIMARY KEY(" + TableFieldUtil.getColumnName(field) + ")";
+        return "PRIMARY KEY(" + TableSQLMapper.getColumnName(field) + ")";
     }
 }

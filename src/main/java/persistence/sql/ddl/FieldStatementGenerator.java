@@ -6,23 +6,25 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.Dialect;
 import persistence.sql.JdbcTypeJavaClassMappings;
-import persistence.sql.TableFieldUtil;
+import persistence.sql.SQLEscaper;
+import persistence.sql.TableSQLMapper;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TableFieldGenerator {
+public class FieldStatementGenerator implements FieldSQLGenerator {
+
     private final Dialect dialect;
 
-    public TableFieldGenerator(Dialect dialect) {
+    public FieldStatementGenerator(Dialect dialect) {
         this.dialect = dialect;
     }
 
     public String generate(Field field) {
         return Stream.of(
-                TableFieldUtil.replaceNameByBacktick(TableFieldUtil.getColumnName(field)),
+                SQLEscaper.escapeNameByBacktick(TableSQLMapper.getColumnName(field)),
                 getColumnType(field),
                 getNullableCondition(field),
                 getGenerationType(field)
