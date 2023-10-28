@@ -31,6 +31,7 @@ public class DMLTest {
     final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(dialect);
     final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(dialect);
     final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(dialect);
+    final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(dialect);
     final AnnotationBinder annotationBinder = new AnnotationBinder();
     final MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     JdbcTemplate jdbcTemplate;
@@ -68,7 +69,6 @@ public class DMLTest {
         Query all = selectQueryBuilder.findAll(Person.class);
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> personList = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
-        System.out.println(personList.toString());
         assertAll(() -> assertEquals(isEqualPerson(personList.get(0), kim), Boolean.TRUE),
                 () -> assertEquals(isEqualPerson(personList.get(1), lee), Boolean.TRUE),
                 () -> assertEquals(isEqualPerson(personList.get(2), lim), Boolean.TRUE));
@@ -85,7 +85,6 @@ public class DMLTest {
         insertPerson(lee);
         insertPerson(lim);
         Query findByIdQuery = selectQueryBuilder.findById(Person.class, 1L);
-        System.out.println(findByIdQuery.getQuery().toString());
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> personList = jdbcTemplate.query(findByIdQuery.getQuery().toString(), personGenericRowMapper);
         assertAll(() -> assertEquals(isEqualPerson(personList.get(0), kim), Boolean.TRUE));
@@ -94,9 +93,20 @@ public class DMLTest {
 
     @Test
     @DisplayName("요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기")
-    void delete() {
+    void delete() throws NoSuchFieldException, IllegalAccessException {
         Person kim = new Person().name("김쿼리").age(30).email("query1@gmail.com").index(1).build();
         insertPerson(kim);
+        Query findByIdQuery = selectQueryBuilder.findById(Person.class, 1L);
+        GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
+        List<Person> beforeDelete = jdbcTemplate.query(findByIdQuery.getQuery().toString(), personGenericRowMapper);
+
+        Query delete = deleteQueryBuilder.delete(beforeDelete.get(0));
+        jdbcTemplate.execute(delete.getQuery().toString());
+
+        Query all = selectQueryBuilder.findAll(Person.class);
+        List<Person> afterDelete = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
+        org.junit.jupiter.api.Assertions.assertEquals(afterDelete.size(), 0);
+
     }
 
     private void insertPerson(Person person) {
