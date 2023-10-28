@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.type.DataType;
 import persistence.sql.ddl.type.H2DataTypeMapper;
-import persistence.sql.ddl.utils.TypeUtils;
+import utils.TypeUtils;
 
 import java.lang.reflect.Field;
 import java.util.Optional;

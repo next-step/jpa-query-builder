@@ -1,6 +1,6 @@
 package persistence.sql.mapper;
 
-import persistence.sql.ddl.utils.ReflectionUtil;
+import utils.ReflectionUtil;
 
 import java.lang.reflect.Method;
 

@@ -1,4 +1,4 @@
-package persistence.sql.ddl.utils;
+package utils;
 
 import java.lang.reflect.Field;
 
