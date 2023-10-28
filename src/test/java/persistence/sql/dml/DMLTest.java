@@ -74,6 +74,19 @@ public class DMLTest {
 
     }
 
+    @Test
+    @DisplayName("요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기")
+    void findById() {
+        Person kim = new Person().name("김쿼리").age(30).email("query1@gmail.com").index(1).build();
+        Person lee = new Person().name("이쿼리").age(31).email("query2@gmail.com").index(1).build();
+        Person lim = new Person().name("임쿼리").age(32).email("query3@gmail.com").index(1).build();
+        insertPerson(kim);
+        insertPerson(lee);
+        insertPerson(lim);
+        Query all = selectQueryBuilder.findById(1L);
+
+    }
+
     private void insertPerson(Person person) {
         Query insert = insertQueryBuilder.insert(person);
         jdbcTemplate.execute(insert.getQuery().toString());
