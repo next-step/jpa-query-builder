@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import persistence.sql.entity.Person;
 
 class DropQueryBuilderTest {
 

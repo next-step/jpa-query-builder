@@ -109,4 +109,21 @@ public class ReflectionTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void extractFieldValue() {
+        Car car = new Car("name", 1000);
+
+        Field[] declaredFields = car.getClass().getDeclaredFields();
+
+        for (Field declaredField : declaredFields) {
+            try {
+                declaredField.setAccessible(true);
+                Object name = declaredField.get(car);
+                System.out.println("name = " + name);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

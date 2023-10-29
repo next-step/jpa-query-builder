@@ -1,7 +1,5 @@
 package persistence.sql.ddl;
 
-import static persistence.sql.ddl.TypesMapper.getFieldType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
@@ -20,7 +18,7 @@ public class MyField {
             .filter(String::isEmpty)
             .map(emptyColumnName -> field.getName())
             .orElse(field.getName());
-        this.types = getFieldType(field);
+        this.types = TypesMapper.getFieldType(field);
         this.isPk = field.isAnnotationPresent(Id.class);
     }
 

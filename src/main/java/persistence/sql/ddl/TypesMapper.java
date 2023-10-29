@@ -18,6 +18,7 @@ public class TypesMapper {
 
     public static Integer getFieldType(Field field) {
         final Class<?> fieldType = field.getType();
+
         return typesMap.get(fieldType.getSimpleName());
     }
 
