@@ -5,6 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
 import persistence.sql.ddl.EntityDefinitionBuilder;
+import persistence.sql.ddl.EntityMetadata;
 import persistence.sql.ddl.dialect.H2Dialect;
 import persistence.sql.dml.EntityManipulationBuilder;
 
@@ -16,16 +17,16 @@ class SimpleEntityManagerTest {
 
     private static DatabaseServer server;
     private static JdbcTemplate jdbcTemplate;
-    private static EntityDefinitionBuilder entityDefinitionBuilder;
-    private static EntityManipulationBuilder entityManipulationBuilder;
+    private EntityDefinitionBuilder entityDefinitionBuilder;
+    private EntityManipulationBuilder entityManipulationBuilder;
+
+    private EntityManager entityManager;
 
     @BeforeAll
     static void beforeAll() throws SQLException {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
-        entityDefinitionBuilder = new EntityDefinitionBuilder(Person.class, new H2Dialect());
-        entityManipulationBuilder = new EntityManipulationBuilder(Person.class, new H2Dialect());
     }
 
     @AfterAll
@@ -35,10 +36,16 @@ class SimpleEntityManagerTest {
 
     @BeforeEach
     void beforeEach() {
+        EntityMetadata entityMetadata = EntityMetadata.of(Person.class, new H2Dialect());
+        entityDefinitionBuilder = new EntityDefinitionBuilder(entityMetadata);
+        entityManipulationBuilder = new EntityManipulationBuilder(entityMetadata);
+        entityManager = new SimpleEntityManager(jdbcTemplate);
+
         jdbcTemplate.execute(entityDefinitionBuilder.create());
         jdbcTemplate.execute(entityManipulationBuilder
                 .insert(new Person("test1", 30, "test1@gmail.com"))
         );
+
     }
 
     @AfterEach
@@ -49,11 +56,9 @@ class SimpleEntityManagerTest {
     @Test
     @DisplayName("find() 메서드 테스트")
     void find() {
-//        final EntityManager entityManager = new SimpleEntityManager(entityManipulationBuilder);
-//
-//        Person person = entityManager.find(Person.class, 1L);
-//
-//        assertThat(person.getId()).isEqualTo(1L);
+        Person person = entityManager.find(Person.class, 1L);
+
+        assertThat(person.getId()).isEqualTo(1L);
     }
 
 }

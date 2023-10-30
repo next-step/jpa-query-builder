@@ -19,6 +19,10 @@ public class EntityMetadata {
         dialect = dialectParam;
     }
 
+    public static EntityMetadata of(Class<?> type, Dialect dialectParam) {
+        return new EntityMetadata(type, dialectParam);
+    }
+
     public String getTableName() {
         return tableMetaDataExtractor.getTableName();
     }

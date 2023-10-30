@@ -8,15 +8,10 @@ import static utils.CustomStringBuilder.*;
 
 public class EntityManipulationBuilder {
 
-    // TODO List가 되어야 한다.
     private EntityMetadata entityMetadata;
 
-    // TODO 패키지 받아서 정보 읽어와서 EntityMetadata 초기화
-    public EntityManipulationBuilder() {
-    }
-
-    public EntityManipulationBuilder(Class<?> type, Dialect dialectParam) {
-        this.entityMetadata = new EntityMetadata(type, dialectParam );
+    public EntityManipulationBuilder(EntityMetadata entityMetadata) {
+        this.entityMetadata = entityMetadata;
     }
 
     public String insert(Object entity) {
