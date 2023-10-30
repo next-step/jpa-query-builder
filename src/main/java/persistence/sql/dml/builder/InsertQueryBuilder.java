@@ -2,11 +2,10 @@ package persistence.sql.dml.builder;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import persistence.meta.MetaEntity;
 
-public class InsertQueryBuilder<T> {
+public class InsertQueryBuilder<T> implements QueryBuilder<T>{
   private static final String INSERT_SQL_QUERY = "INSERT INTO %s (%s) values (%s);";
   private static final String DELIMITER = ",";
 
@@ -49,15 +48,4 @@ public class InsertQueryBuilder<T> {
     }
   }
 
-  private String getFieldValue(Field field, T entity) {
-    try {
-      Object value = field.get(entity);
-      if (value.getClass().equals(String.class)) {
-        return "'" + value.toString() + "'";
-      }
-      return value.toString();
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
-  }
 }

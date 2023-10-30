@@ -1,11 +1,10 @@
 package persistence.sql.dml.builder;
 
-import persistence.meta.MetaEntity;
-
 import java.lang.reflect.Field;
 import java.util.List;
+import persistence.meta.MetaEntity;
 
-public class SelectQueryBuilder<T> {
+public class SelectQueryBuilder<T> implements QueryBuilder<T>{
   private static final String SELECT_SQL_QUERY = "SELECT %s FROM %s;";
   private static final String SELECT_WHERE_SQL_QUERY = "SELECT %s FROM %s WHERE %s=%s;";
   private static final String DELIMITER = ",";
@@ -33,15 +32,4 @@ public class SelectQueryBuilder<T> {
     return String.join(DELIMITER, columns);
   }
 
-  private String getFieldValue(Field field, T entity) {
-    try {
-      Object value = field.get(entity);
-      if (value.getClass().equals(String.class)) {
-        return "'" + value.toString() + "'";
-      }
-      return value.toString();
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
-  }
 }

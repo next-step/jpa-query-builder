@@ -29,7 +29,7 @@ public class MetaDataColumn {
             .sorted(Comparator.comparing(MetaDataColumnConstraint::getConstraint).reversed())
             .collect(Collectors.toList());
 
-    return new MetaDataColumn(setColumnName(field), columnType, field.getName(), constraints);
+    return new MetaDataColumn(getColumnName(field), columnType, field.getName(), constraints);
   }
 
   public String getColumn() {
@@ -44,7 +44,7 @@ public class MetaDataColumn {
     return sb.toString();
   }
 
-  private static String setColumnName(Field field) {
+  private static String getColumnName(Field field) {
 
     if (field.isAnnotationPresent(Column.class)
             && !field.getAnnotation(Column.class).name().isEmpty()) {
