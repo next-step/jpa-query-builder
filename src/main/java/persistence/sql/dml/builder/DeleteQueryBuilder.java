@@ -3,7 +3,7 @@ package persistence.sql.dml.builder;
 import java.lang.reflect.Field;
 import persistence.meta.MetaEntity;
 
-public class DeleteQueryBuilder<T> implements QueryBuilder<T>{
+public class DeleteQueryBuilder<T> implements QueryBuilder{
   private static final String DELETE_SQL_QUERY = "DELETE FROM %s WHERE %s = %s;";
 
   public String createDeleteQuery(T entity, Field field) {

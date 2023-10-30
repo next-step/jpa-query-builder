@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import persistence.meta.MetaEntity;
 
-public class SelectQueryBuilder<T> implements QueryBuilder<T>{
+public class SelectQueryBuilder<T> implements QueryBuilder{
   private static final String SELECT_SQL_QUERY = "SELECT %s FROM %s;";
   private static final String SELECT_WHERE_SQL_QUERY = "SELECT %s FROM %s WHERE %s=%s;";
   private static final String DELIMITER = ",";

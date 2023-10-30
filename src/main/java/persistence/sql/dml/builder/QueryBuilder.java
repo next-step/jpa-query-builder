@@ -2,8 +2,8 @@ package persistence.sql.dml.builder;
 
 import java.lang.reflect.Field;
 
-public interface QueryBuilder<T> {
-  default String getFieldValue(Field field, T entity) {
+public interface QueryBuilder {
+  default <T> String getFieldValue(Field field, T entity) {
     try {
       Object value = field.get(entity);
       if (value.getClass().equals(String.class)) {

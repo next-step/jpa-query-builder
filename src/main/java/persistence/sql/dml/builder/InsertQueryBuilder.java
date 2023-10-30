@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import persistence.meta.MetaEntity;
 
-public class InsertQueryBuilder<T> implements QueryBuilder<T>{
+public class InsertQueryBuilder<T> implements QueryBuilder{
   private static final String INSERT_SQL_QUERY = "INSERT INTO %s (%s) values (%s);";
   private static final String DELIMITER = ",";
 
