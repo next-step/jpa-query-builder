@@ -19,7 +19,7 @@ public class MyEntity {
 
         this.myFields = Arrays.stream(clazz.getDeclaredFields())
             .filter(field -> !field.isAnnotationPresent(Transient.class))
-            .map(MyField::new)
+            .map(field -> new MyField(field))
             .collect(Collectors.toList());
     }
 

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import persistence.sql.entity.Person;
 
 class MyEntityTest {
 
@@ -15,11 +16,12 @@ class MyEntityTest {
     private static final int age = 10;
     private static final String name = "my name";
     private static final String email = "my@email.com";
+    private static final Integer index = 0;
 
 
     @BeforeEach
     void setUp() {
-        this.person = new Person(id, name, age, email);
+        this.person = new Person(id, name, age, email, index);
     }
 
     @Test

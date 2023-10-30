@@ -9,9 +9,8 @@ import java.util.Optional;
 public class MyField {
 
     private final String name;
-    private final String type;
+    private final Integer types;
     private final boolean isPk;
-
 
     public MyField(final Field field) {
         this.name = Optional.ofNullable(field.getAnnotation(Column.class))
@@ -19,27 +18,16 @@ public class MyField {
             .filter(String::isEmpty)
             .map(emptyColumnName -> field.getName())
             .orElse(field.getName());
-        this.type = getFieldType(field);
+        this.types = TypesMapper.getFieldType(field);
         this.isPk = field.isAnnotationPresent(Id.class);
-    }
-
-    private String getFieldType(final Field field) {
-        final Class<?> fieldType = field.getType();
-
-        return switch (fieldType.getSimpleName()) {
-            case "Long" -> "BIGINT";
-            case "String" -> "VARCHAR";
-            case "Integer" -> "INT";
-            default -> throw new IllegalStateException("Unexpected value: " + fieldType.getSimpleName());
-        };
     }
 
     public String getName() {
         return name;
     }
 
-    public String getType() {
-        return type;
+    public Integer getType() {
+        return types;
     }
 
     public boolean isPk() {
@@ -55,11 +43,11 @@ public class MyField {
             return false;
         }
         MyField myField = (MyField) o;
-        return isPk == myField.isPk && Objects.equals(name, myField.name) && Objects.equals(type, myField.type);
+        return isPk == myField.isPk && Objects.equals(name, myField.name) && Objects.equals(types, myField.types);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, isPk);
+        return Objects.hash(name, types, isPk);
     }
 }

@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import persistence.sql.entity.Person;
 
 class MyFieldTest {
 
@@ -14,13 +15,15 @@ class MyFieldTest {
     private static final int age = 10;
     private static final String name = "my name";
     private static final String email = "my@email.com";
+    private static final Integer index = 0;
 
-    private static Person person = new Person(id, name, age, email);;
+    private static Person person = new Person(id, name, age, email, index);;
     private static Class<? extends Person> personClass = person.getClass();
+
 
     @MethodSource
     @ParameterizedTest
-    void createMyField(MyField myField, String expectedName, String expectedType, boolean expectedPk) {
+    void createMyField(MyField myField, String expectedName, Integer expectedType, boolean expectedPk) {
         assertAll(
             () -> assertThat(myField.getName()).isEqualTo(expectedName),
             () -> assertThat(myField.getType()).isEqualTo(expectedType),
@@ -33,25 +36,25 @@ class MyFieldTest {
             Arguments.of(
                 new MyField(personClass.getDeclaredField("id")),
                 "id",
-                "BIGINT",
+                TypesMapper.getFieldType(personClass.getDeclaredField("id")),
                 true
             ),
             Arguments.of(
                 new MyField(personClass.getDeclaredField("name")),
                 "name",
-                "VARCHAR",
+                TypesMapper.getFieldType(personClass.getDeclaredField("name")),
                 false
             ),
             Arguments.of(
                 new MyField(personClass.getDeclaredField("age")),
                 "age",
-                "INT",
+                TypesMapper.getFieldType(personClass.getDeclaredField("age")),
                 false
             ),
             Arguments.of(
                 new MyField(personClass.getDeclaredField("email")),
                 "email",
-                "VARCHAR",
+                TypesMapper.getFieldType(personClass.getDeclaredField("email")),
                 false
             )
         );
