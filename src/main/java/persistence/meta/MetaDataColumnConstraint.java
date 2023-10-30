@@ -25,4 +25,7 @@ public class MetaDataColumnConstraint {
     return this.constraintType.getConstraintMappingToConstraint(this.annotation);
   }
 
+  public boolean isPrimaryKey(){
+    return this.constraintType.equals(ConstraintType.ID);
+  }
 }

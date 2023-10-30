@@ -16,7 +16,11 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     testImplementation 'org.assertj:assertj-core:3.24.2'
 }
+compileJava.options.encoding = 'UTF-8'
 
+tasks.withType(JavaCompile){
+    options.encoding = 'UTF-8'
+}
 test {
     useJUnitPlatform()
 }

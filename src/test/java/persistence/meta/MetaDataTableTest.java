@@ -1,4 +1,4 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import jakarta.persistence.Table;
 import org.junit.jupiter.api.BeforeAll;

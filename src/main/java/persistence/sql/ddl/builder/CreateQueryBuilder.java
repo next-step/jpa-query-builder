@@ -1,4 +1,4 @@
-package persistence.ddl.builder;
+package persistence.sql.ddl.builder;
 
 import persistence.meta.MetaData;
 
