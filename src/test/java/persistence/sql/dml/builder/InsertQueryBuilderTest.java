@@ -46,7 +46,7 @@ public class InsertQueryBuilderTest {
   @Test
   @DisplayName("Insert SQL 구문을 생성합니다.")
   public void insertDMLfromEntity() {
-    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder();
+    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder<>();
 
     String query = insertQueryBuilder.createInsertQuery(PersonInstances.첫번째사람);
 
@@ -58,7 +58,7 @@ public class InsertQueryBuilderTest {
   @DisplayName("Insert SQL 구문을 생성하고 Select 쿼리 실행시에 Entity들이 반환됩니다.")
   public void insertDMLfromEntityDatabase() throws SQLException {
 
-    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder();
+    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder<>();
     String query = insertQueryBuilder.createInsertQuery(PersonInstances.첫번째사람);
 
     jdbcTemplate.execute(query);

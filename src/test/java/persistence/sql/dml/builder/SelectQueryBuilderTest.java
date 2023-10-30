@@ -38,7 +38,7 @@ public class SelectQueryBuilderTest {
     jdbcTemplate = new JdbcTemplate(server.getConnection());
     jdbcTemplate.execute(query);
 
-    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder();
+    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder<>();
     String queryFirst = insertQueryBuilder.createInsertQuery(PersonInstances.첫번째사람);
     String querySecond = insertQueryBuilder.createInsertQuery(PersonInstances.두번째사람);
     jdbcTemplate.execute(queryFirst);
