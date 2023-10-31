@@ -20,7 +20,7 @@ public class IdAnnotationHandler extends AnnotationHandler<Id> {
     public List<ColumnOption> metaInfos() {
         List<ColumnOption> result = new ArrayList<>();
         ColumnSchemes schemes = dialect.getSchemes(Schemes.Id);
-        ColumnOption columnOption = ColumnOption.getColumnOption(schemes.getScheme("Id"));
+        ColumnOption columnOption = ColumnOption.valueOf(schemes.getScheme("Id"));
         result.add(columnOption);
 
         return result;

@@ -33,10 +33,10 @@ public class ColumnSchemes {
         return new Builder();
     }
 
-    public String getScheme(String name) {
+    public ColumnScheme getScheme(String name) {
         for (ColumnScheme columnScheme : columnSchemes) {
             if (columnScheme.getName().equals(name)) {
-                return columnScheme.getValue();
+                return columnScheme;
             }
         }
 

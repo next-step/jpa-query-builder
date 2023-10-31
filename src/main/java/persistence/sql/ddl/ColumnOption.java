@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.scheme.ColumnScheme;
+
 public enum ColumnOption {
 
     AUTO_INCREMENT("AUTO_INCREMENT", 1),
@@ -22,9 +24,9 @@ public enum ColumnOption {
         return priority;
     }
 
-    public static ColumnOption getColumnOption(String option) {
+    public static ColumnOption valueOf(ColumnScheme columnScheme) {
         for (ColumnOption columnOption : ColumnOption.values()) {
-            if (columnOption.getOption().equals(option)) {
+            if (columnOption.getOption().equals(columnScheme.getValue())) {
                 return columnOption;
             }
         }

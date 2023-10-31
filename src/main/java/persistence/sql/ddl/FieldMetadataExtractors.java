@@ -3,8 +3,11 @@ package persistence.sql.ddl;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.dialect.Dialect;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FieldMetadataExtractors {
@@ -38,17 +41,9 @@ public class FieldMetadataExtractors {
                 .collect(Collectors.joining(", "));
     }
 
-    public String getColumnNames(Class<?> type) {
+    public String getColumnNames() {
         return fieldMetadataExtractorList.stream()
-                .map(FieldMetadataExtractor -> {
-                    try {
-                        return FieldMetadataExtractor.getColumnName(type);
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    return "";
-                })
-                .filter(columnName -> !columnName.isEmpty())
+                .map(FieldMetadataExtractor::getColumnName)
                 .collect(Collectors.joining(", "));
     }
 
@@ -60,25 +55,24 @@ public class FieldMetadataExtractors {
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
-                    return "";
+                    return null;
                 })
-                .filter(columnName -> !columnName.isEmpty())
+                .filter(Objects::nonNull)
                 .collect(Collectors.joining(", "));
     }
 
-    public String getIdColumnName(Class<?> type) {
+    public String getIdColumnName() {
         return fieldMetadataExtractorList.stream()
                 .filter(FieldMetadataExtractor::isId)
-                .map(fieldMetadataExtractor -> {
-                    try {
-                        return fieldMetadataExtractor.getColumnName(type);
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    return "";
-                })
+                .map(FieldMetadataExtractor::getColumnName)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No @Id annotation"));
+    }
+
+    public <T> void setInstanceValue(T instance, ResultSet resultSet) throws SQLException, IllegalAccessException {
+        for (FieldMetadataExtractor fieldMetadataExtractor : fieldMetadataExtractorList) {
+            fieldMetadataExtractor.setInstanceValue(instance, resultSet);
+        }
     }
 
 }
