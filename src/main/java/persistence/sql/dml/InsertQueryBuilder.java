@@ -19,7 +19,7 @@ public class InsertQueryBuilder extends QueryBuilder {
         super(dialect);
     }
 
-    public Query insert(Object domain) {
+    public Query queryForObject(Object domain) {
         StringBuilder sb = new StringBuilder();
         MetaData metaData = getMetaData(domain.getClass());
         //여기서 인서트문 만들어주기

@@ -18,7 +18,7 @@ public class DeleteQueryBuilder extends QueryBuilder {
         super(dialect);
     }
 
-    public Query delete(Object domain) throws NoSuchFieldException, IllegalAccessException {
+    public Query queryForObject(Object domain) throws NoSuchFieldException, IllegalAccessException {
         StringBuilder sb = new StringBuilder();
         Class<?> clazz = domain.getClass();
         String id = getMetaData(clazz).getId();

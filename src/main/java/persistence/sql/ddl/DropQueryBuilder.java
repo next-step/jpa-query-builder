@@ -13,7 +13,7 @@ public class DropQueryBuilder extends QueryBuilder {
         super(dialect);
     }
 
-    public Query drop(MetaData metaData, StringBuilder sb) {
+    public Query queryForObject(MetaData metaData, StringBuilder sb) {
         StringBuilder query = sb.append("drop table ")
                 .append(metaData.getEntity());
         return new Query(query);

@@ -18,7 +18,7 @@ public class CreateQueryBuilder extends QueryBuilder {
         this.dialect = dialect;
     }
 
-    public Query create(MetaData metaData, StringBuilder sb) {
+    public Query queryForObject(MetaData metaData, StringBuilder sb) {
         StringBuilder query = sb.append("create table ")
                 .append(metaData.getEntity())
                 .append(" (")

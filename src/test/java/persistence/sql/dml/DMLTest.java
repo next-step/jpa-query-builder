@@ -43,7 +43,7 @@ public class DMLTest {
         this.jdbcTemplate = new JdbcTemplate(server.getConnection());
         MetaData person = metadataGenerator.generator(Person.class);
         StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.create(person, sb);
+        Query query = createQueryBuilder.queryForObject(person, sb);
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
     }
 
@@ -51,7 +51,7 @@ public class DMLTest {
     @DisplayName("요구사항 1 - 위의 정보를 바탕으로 insert 구현해보기")
     void insert() {
         Person kim = new Person().name("김쿼리").age(30).email("query@gmail.com").index(1).build();
-        Query insertQuery = insertQueryBuilder.insert(kim);
+        Query insertQuery = insertQueryBuilder.queryForObject(kim);
         jdbcTemplate.execute(insertQuery.getQuery().toString());
         Assertions.assertThat(String.valueOf(insertQuery.getQuery()))
                 .isEqualTo("insert into users(nick_name, old, email ) values('김쿼리', 30, 'query@gmail.com' )");
@@ -98,7 +98,7 @@ public class DMLTest {
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> beforeDelete = jdbcTemplate.query(findByIdQuery.getQuery().toString(), personGenericRowMapper);
 
-        Query delete = deleteQueryBuilder.delete(beforeDelete.get(0));
+        Query delete = deleteQueryBuilder.queryForObject(beforeDelete.get(0));
         jdbcTemplate.execute(delete.getQuery().toString());
 
         Query all = selectQueryBuilder.findAll(Person.class);
@@ -108,7 +108,7 @@ public class DMLTest {
     }
 
     private void insertPerson(Person person) {
-        Query insert = insertQueryBuilder.insert(person);
+        Query insert = insertQueryBuilder.queryForObject(person);
         jdbcTemplate.execute(insert.getQuery().toString());
     }
 
