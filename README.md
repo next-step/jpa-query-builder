@@ -74,6 +74,8 @@ DELETE FROM users [TABLE] where id = ? [WHERE]
     - 2. (쿼리, 저장, 삭제)을 쿼리빌더를 통해 쿼리 생성
     - 3. 가져온 Entity값을 row mapper를 이용해 인스턴스들 생성
   - QueryBuilder의 Metadata 추출 작업을 EntityManager의 책임으로 이관
+- MetaData의 책임:
+  - 
 - RowMapper 의 책임:
   - 1. Instance 생성
   - 2. 쿼리에 대한 값 받아오기
@@ -83,3 +85,5 @@ DELETE FROM users [TABLE] where id = ? [WHERE]
 - 구현 인터페이스에 따른 queryBuilder 의 호환이 맞지 않아 리팩토링이 필요했다.
 - metaData의 생성에 대한 책임을 누가 가지고 갈지?
 - EntityManager의 책임과 QueryBuilder의 책임을 정함
+- QueryBuilder를 generic 클래스로 구현했는데 제거했습니다. 
+  - Entity의 값을 맵핑하고 생성하는 책임을 queryBuilder에서 MetaEntity로 이전했습니다.
