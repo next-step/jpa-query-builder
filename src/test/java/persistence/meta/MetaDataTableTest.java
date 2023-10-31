@@ -4,7 +4,6 @@ import jakarta.persistence.Table;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.meta.MetaDataTable;
 import persistence.sql.fixture.PersonFixture;
 import persistence.sql.fixture.PersonFixture2;
 

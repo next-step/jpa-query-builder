@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.dialect.h2.H2Dialect;
-import persistence.meta.MetaDataColumn;
 import persistence.sql.fixture.PersonFixture;
 
 import java.lang.reflect.Field;

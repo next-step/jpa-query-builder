@@ -14,7 +14,9 @@ public class MetaDataColumns {
 
   public static final String DELIMITER = ",";
   private final List<MetaDataColumn> columns = new ArrayList<>();
-  private MetaDataColumns(List<MetaDataColumn> metaColumns) {
+  private final MetaDataColumn primaryColumn;
+  private MetaDataColumns(List<MetaDataColumn> metaColumns, MetaDataColumn primaryColumn) {
+    this.primaryColumn = primaryColumn;
     columns.addAll(metaColumns);
   }
 
@@ -24,7 +26,10 @@ public class MetaDataColumns {
             .map(field -> MetaDataColumn.of(field, dialect.convertToColumn(field)))
             .collect(Collectors.toList());
 
-    return new MetaDataColumns(metaColumns);
+    MetaDataColumn primaryKeyColumn = metaColumns.stream().filter(column -> !column.isNotPrimaryKey())
+        .findFirst().orElseThrow(() -> new RuntimeException("ID 필드가 없습니다."));
+
+    return new MetaDataColumns(metaColumns, primaryKeyColumn);
   }
 
   public String getColumns() {
@@ -34,8 +39,8 @@ public class MetaDataColumns {
   }
 
   private static boolean isNotTransient(List<Annotation> annotations) {
-    return !annotations.stream()
-            .anyMatch(annotation -> annotation.annotationType().equals(Transient.class));
+    return annotations.stream()
+            .noneMatch(annotation -> annotation.annotationType().equals(Transient.class));
   }
 
   public List<String> getSimpleColumns(){
@@ -64,5 +69,12 @@ public class MetaDataColumns {
     return columns.stream()
         .map(MetaDataColumn::getSimpleName)
         .collect(Collectors.toList());
+  }
+  public MetaDataColumn getPrimaryColumn(){
+    return primaryColumn;
+  }
+
+  public List<MetaDataColumn> getMetaDataColumns(){
+    return columns;
   }
 }
