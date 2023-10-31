@@ -8,10 +8,10 @@ import static utils.CustomStringBuilder.*;
 
 public class EntityManipulationBuilder {
 
-    private final EntityMetadata entityMetadata;
+    private EntityMetadata entityMetadata;
 
-    public EntityManipulationBuilder(Class<?> type, Dialect dialectParam) {
-        this.entityMetadata = new EntityMetadata(type, dialectParam );
+    public EntityManipulationBuilder(EntityMetadata entityMetadata) {
+        this.entityMetadata = entityMetadata;
     }
 
     public String insert(Object entity) {

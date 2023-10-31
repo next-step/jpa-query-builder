@@ -7,10 +7,10 @@ import static utils.CustomStringBuilder.toDropStatement;
 
 public class EntityDefinitionBuilder {
 
-    private final EntityMetadata entityMetadata;
+    private EntityMetadata entityMetadata;
 
-    public EntityDefinitionBuilder(Class<?> type, Dialect dialectParam) {
-        this.entityMetadata = new EntityMetadata(type, dialectParam);
+    public EntityDefinitionBuilder(EntityMetadata entityMetadata) {
+        this.entityMetadata = entityMetadata;
     }
 
     public String create() {

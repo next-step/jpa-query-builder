@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
+import persistence.sql.ddl.EntityMetadata;
 import persistence.sql.ddl.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,12 +15,9 @@ class EntityManipulationBuilderTest {
 
     @BeforeAll
     static void setUp() {
-        entityManipulationBuilder = new EntityManipulationBuilder(
-                Person.class,
-                new H2Dialect()
-        );
+        EntityMetadata entityMetadata = EntityMetadata.of(Person.class, new H2Dialect());
+        entityManipulationBuilder = new EntityManipulationBuilder(entityMetadata);
     }
-
 
     @Test
     @DisplayName("Person 엔터티 insert 쿼리 만들기")

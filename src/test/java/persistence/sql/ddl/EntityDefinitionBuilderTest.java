@@ -14,10 +14,8 @@ public class EntityDefinitionBuilderTest {
 
     @BeforeAll
     static void setUp() {
-        entityDefinitionBuilder = new EntityDefinitionBuilder(
-                Person.class,
-                new H2Dialect()
-        );
+        EntityMetadata entityMetadata = EntityMetadata.of(Person.class, new H2Dialect());
+        entityDefinitionBuilder = new EntityDefinitionBuilder(entityMetadata);
     }
 
     @Test
