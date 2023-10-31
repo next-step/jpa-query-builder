@@ -7,8 +7,6 @@ import sources.MetaData;
 
 public class DropQueryBuilder extends QueryBuilder {
 
-    private Query query;
-
     public DropQueryBuilder(Dialect dialect) {
         super(dialect);
     }

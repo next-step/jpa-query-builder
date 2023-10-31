@@ -10,7 +10,6 @@ import java.util.List;
 
 public class CreateQueryBuilder extends QueryBuilder {
 
-    private Query query;
     private final Dialect dialect;
 
     public CreateQueryBuilder(Dialect dialect) {

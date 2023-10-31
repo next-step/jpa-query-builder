@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class InsertQueryBuilder extends QueryBuilder {
 
-    private Query query;
     private AnnotationBinder annotationBinder = new AnnotationBinder();
     private MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
 
