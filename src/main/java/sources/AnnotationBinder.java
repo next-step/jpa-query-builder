@@ -2,13 +2,17 @@ package sources;
 
 import exception.AnnotationException;
 import jakarta.persistence.*;
+import persistence.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 public class AnnotationBinder {
 
-    public AnnotationBinder() {
+    private final Dialect dialect;
+
+    public AnnotationBinder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     //엔티티 어노테이션 바인더(필수)
@@ -43,7 +47,7 @@ public class AnnotationBinder {
             return registerGenerators(declaredAnnotation.strategy());
             // not null auto_increment
         }
-        return " int ";
+        return " "+dialect.javaTypeToJdbcType(field.getType().getSimpleName());
     }
 
     // 컬럼 어노테이션이 설정되어 있으면 컬럼 어노테이션의 이름 사용, 아니면 필드 이름 사용

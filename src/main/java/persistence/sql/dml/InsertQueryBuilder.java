@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class InsertQueryBuilder extends QueryBuilder {
 
-    private AnnotationBinder annotationBinder = new AnnotationBinder();
+    private AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
     private MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
 
     public InsertQueryBuilder(Dialect dialect) {
@@ -52,20 +52,23 @@ public class InsertQueryBuilder extends QueryBuilder {
     }
 
     private String valueBuilder(Object domain, MetaData metaData) {
-        StringBuilder sb = new StringBuilder();
         List<String> values = metaData.getColumns()
                 .stream()
                 .map(column -> {
             try {
-                Field field = domain.getClass().getDeclaredField(column.getFieldName());
-                field.setAccessible(Boolean.TRUE);
-                Object value = field.get(domain);
-                return matchValueType(value);
+                return mapColumnToValue(domain, metaData, column);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
         return listToStringBuilder(values);
+    }
+
+    private String mapColumnToValue(Object domain, MetaData metaData, ColumnMetaData column) throws NoSuchFieldException, IllegalAccessException {
+        Field field = domain.getClass().getDeclaredField(column.getFieldName());
+        field.setAccessible(Boolean.TRUE);
+        Object value = field.get(domain);
+        return matchValueType(value);
     }
 
     private String matchValueType(Object value) {

@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 
 public class DeleteQueryBuilder extends QueryBuilder {
 
-    private AnnotationBinder annotationBinder = new AnnotationBinder();
+    private AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
     private MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     public DeleteQueryBuilder(Dialect dialect) {
         super(dialect);

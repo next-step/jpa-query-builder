@@ -32,7 +32,7 @@ public class DMLTest {
     final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(dialect);
     final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(dialect);
     final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(dialect);
-    final AnnotationBinder annotationBinder = new AnnotationBinder();
+    final AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
     final MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     JdbcTemplate jdbcTemplate;
 
@@ -103,7 +103,7 @@ public class DMLTest {
 
         Query all = selectQueryBuilder.findAll(Person.class);
         List<Person> afterDelete = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
-        org.junit.jupiter.api.Assertions.assertEquals(afterDelete.size(), 0);
+        assertEquals(afterDelete.size(), 0);
 
     }
 

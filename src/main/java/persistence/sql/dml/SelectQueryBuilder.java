@@ -10,7 +10,7 @@ import sources.MetadataGeneratorImpl;
 
 public class SelectQueryBuilder extends QueryBuilder {
 
-    private AnnotationBinder annotationBinder = new AnnotationBinder();
+    private AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
     private MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
 
     public SelectQueryBuilder(Dialect dialect) {
