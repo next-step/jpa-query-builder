@@ -10,3 +10,4 @@ public class DropQueryBuilder {
     return String.format(DROP_SQL_QUERY, dropClause);
   }
 }
+

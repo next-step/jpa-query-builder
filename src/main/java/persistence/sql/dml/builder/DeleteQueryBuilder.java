@@ -1,6 +1,5 @@
 package persistence.sql.dml.builder;
 
-import persistence.meta.MetaEntity;
 
 public class DeleteQueryBuilder {
   private static final String DELETE_SQL_QUERY = "DELETE FROM %s WHERE %s = %s;";
