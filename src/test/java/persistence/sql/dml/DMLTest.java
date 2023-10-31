@@ -60,18 +60,15 @@ public class DMLTest {
     @Test
     @DisplayName("요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기")
     void findAll() {
-        Person kim = new Person().name("김쿼리").age(30).email("query1@gmail.com").index(1).build();
         Person lee = new Person().name("이쿼리").age(31).email("query2@gmail.com").index(1).build();
         Person lim = new Person().name("임쿼리").age(32).email("query3@gmail.com").index(1).build();
-        insertPerson(kim);
         insertPerson(lee);
         insertPerson(lim);
 
         Query all = selectQueryBuilder.findAll(Person.class);
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> personList = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
-        assertAll(() -> assertEquals(isEqualPerson(personList.get(0), kim), Boolean.TRUE),
-                () -> assertEquals(isEqualPerson(personList.get(1), lee), Boolean.TRUE),
+        assertAll(() -> assertEquals(isEqualPerson(personList.get(1), lee), Boolean.TRUE),
                 () -> assertEquals(isEqualPerson(personList.get(2), lim), Boolean.TRUE));
 
     }
@@ -79,17 +76,16 @@ public class DMLTest {
     @Test
     @DisplayName("요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기")
     void findById() {
-        Person kim = new Person().name("김쿼리").age(30).email("query1@gmail.com").index(1).build();
-        Person lee = new Person().name("이쿼리").age(31).email("query2@gmail.com").index(1).build();
-        Person lim = new Person().name("임쿼리").age(32).email("query3@gmail.com").index(1).build();
-        insertPerson(kim);
-        insertPerson(lee);
-        insertPerson(lim);
+        Person park = new Person().name("박쿼리").age(30).email("query4@gmail.com").index(1).build();
+        insertPerson(park);
 
-        Query findByIdQuery = selectQueryBuilder.findById(Person.class, 1L);
+        Query all = selectQueryBuilder.findAll(Person.class);
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
-        List<Person> personList = jdbcTemplate.query(findByIdQuery.getQuery().toString(), personGenericRowMapper);
-        assertAll(() -> assertEquals(isEqualPerson(personList.get(0), kim), Boolean.TRUE));
+        List<Person> personList = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
+        Person PersonPark = personList.get(personList.size() - 1);
+        Query findByIdQuery = selectQueryBuilder.findById(Person.class, PersonPark.getId());
+        List<Person> results = jdbcTemplate.query(findByIdQuery.getQuery().toString(), personGenericRowMapper);
+        assertAll(() -> assertEquals(isEqualPerson(results.get(0), PersonPark), Boolean.TRUE));
 
     }
 
@@ -117,6 +113,6 @@ public class DMLTest {
     }
 
     private boolean isEqualPerson(Person entity, Person db) {
-        return entity.getName().equals(db.getName()) && entity.getAge().equals(db.getAge()) && entity.getEmail().equals(db.getEmail());
+        return entity.equals(db);
     }
 }

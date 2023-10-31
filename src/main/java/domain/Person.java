@@ -2,6 +2,8 @@ package domain;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Table(name = "users")
 @Entity
 public class Person {
@@ -92,5 +94,25 @@ public class Person {
                 ", email='" + email + '\'' +
                 ", index=" + index +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        if (!Objects.equals(name, person.name)) return false;
+        if (!Objects.equals(age, person.age)) return false;
+        return Objects.equals(email, person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (age != null ? age.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
     }
 }
