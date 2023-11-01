@@ -68,8 +68,7 @@ public class DMLTest {
         Query all = selectQueryBuilder.findAll(Person.class);
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> personList = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
-        assertAll(() -> assertEquals(isEqualPerson(personList.get(1), lee), Boolean.TRUE),
-                () -> assertEquals(isEqualPerson(personList.get(2), lim), Boolean.TRUE));
+        Assertions.assertThat(personList).contains(lee, lim);
 
     }
 
