@@ -10,11 +10,13 @@ import sources.MetadataGeneratorImpl;
 
 public class SelectQueryBuilder extends QueryBuilder {
 
-    private AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
-    private MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
+    private final AnnotationBinder annotationBinder;
+    private final MetadataGenerator metadataGenerator;
 
     public SelectQueryBuilder(Dialect dialect) {
         super(dialect);
+        this.annotationBinder = new AnnotationBinder(dialect);
+        this.metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     }
 
     public Query findAll(Class<?> domain) {

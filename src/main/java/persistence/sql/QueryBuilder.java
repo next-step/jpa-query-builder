@@ -10,4 +10,13 @@ public abstract class QueryBuilder {
         this.dialect = dialect;
     }
 
+    public Query queryForObject(Object domain) {
+        return new Query();
+    }
+
+    public Query queryForObject(Object domain, Long id) {
+        return new Query();
+    }
+
+
 }

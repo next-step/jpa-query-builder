@@ -12,7 +12,6 @@ import persistence.dialect.Dialect;
 import persistence.dialect.H2Dialect;
 import persistence.sql.Query;
 import sources.AnnotationBinder;
-import sources.MetaData;
 import sources.MetadataGenerator;
 import sources.MetadataGeneratorImpl;
 
@@ -38,9 +37,7 @@ public class DDLTest {
     @Test
     @DisplayName("요구사항 1 - 아래 정보를 바탕으로 create 쿼리 만들어보기")
     void createTest1() {
-        MetaData personv1 = metadataGenerator.generator(PersonV1.class);
-        StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.queryForObject(personv1, sb);
+        Query query = createQueryBuilder.queryForObject(new PersonV1());
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
                 .isEqualTo("create table PersonV1 (id Long, name varchar(255) , age int )");
@@ -49,9 +46,7 @@ public class DDLTest {
     @Test
     @DisplayName("요구사항 2 - 추가된 정보를 통해 create 쿼리 만들어보기")
     void createTest2() {
-        MetaData personv2 = metadataGenerator.generator(PersonV2.class);
-        StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.queryForObject(personv2, sb);
+        Query query = createQueryBuilder.queryForObject(new PersonV2());
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
                 .isEqualTo("create table PersonV2 (id LONG AUTO_INCREMENT PRIMARY KEY, nick_name varchar(255) , old int, email varchar(255)  not null )");
@@ -60,9 +55,7 @@ public class DDLTest {
     @Test
     @DisplayName("요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기")
     void createTest3() {
-        MetaData personv3 = metadataGenerator.generator(PersonV3.class);
-        StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.queryForObject(personv3, sb);
+        Query query = createQueryBuilder.queryForObject(new PersonV3());
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
                 .isEqualTo("create table users (id LONG AUTO_INCREMENT PRIMARY KEY, nick_name varchar(255) , old int, email varchar(255)  not null )");
@@ -71,9 +64,7 @@ public class DDLTest {
     @Test
     @DisplayName("요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기")
     void dropTest() {
-        MetaData personv3 = metadataGenerator.generator(PersonV3.class);
-        StringBuilder sb = new StringBuilder();
-        Query query = dropQueryBuilder.queryForObject(personv3, sb);
+        Query query = dropQueryBuilder.queryForObject(new PersonV3());
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
                 .isEqualTo("drop table users");

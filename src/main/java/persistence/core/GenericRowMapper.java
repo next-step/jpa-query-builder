@@ -1,4 +1,4 @@
-package persistence.sql.dml;
+package persistence.core;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;

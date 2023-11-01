@@ -9,19 +9,17 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import persistence.core.GenericRowMapper;
 import persistence.dialect.Dialect;
 import persistence.dialect.H2Dialect;
 import persistence.sql.Query;
 import persistence.sql.ddl.CreateQueryBuilder;
-import sources.AnnotationBinder;
-import sources.MetaData;
-import sources.MetadataGenerator;
-import sources.MetadataGeneratorImpl;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DMLTest {
@@ -32,8 +30,6 @@ public class DMLTest {
     final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(dialect);
     final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(dialect);
     final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(dialect);
-    final AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
-    final MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     JdbcTemplate jdbcTemplate;
 
     @BeforeAll
@@ -41,9 +37,7 @@ public class DMLTest {
         this.server = new H2();
         server.start();
         this.jdbcTemplate = new JdbcTemplate(server.getConnection());
-        MetaData person = metadataGenerator.generator(Person.class);
-        StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.queryForObject(person, sb);
+        Query query = createQueryBuilder.queryForObject(new Person());
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
     }
 
@@ -68,8 +62,8 @@ public class DMLTest {
         Query all = selectQueryBuilder.findAll(Person.class);
         GenericRowMapper<Person> personGenericRowMapper = new GenericRowMapper<>(Person.class);
         List<Person> personList = jdbcTemplate.query(all.getQuery().toString(), personGenericRowMapper);
-        assertAll(() -> assertEquals(isEqualPerson(personList.get(1), lee), Boolean.TRUE),
-                () -> assertEquals(isEqualPerson(personList.get(2), lim), Boolean.TRUE));
+        
+        Assertions.assertThat(personList).contains(lee, lim);
 
     }
 
