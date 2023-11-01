@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
-import persistence.sql.ddl.exception.InvalidIdColumnException;
+import exception.InvalidIdColumnException;
 
 import java.lang.reflect.Field;
 
@@ -63,4 +63,15 @@ class ColumnIdTest {
         assertThat(columnId.getValue()).isEqualTo("100");
 
     }
+
+    @Test
+    @DisplayName("getType 테스트")
+    void getTypeTest() throws Exception{
+        Field id = personClass.getDeclaredField("id");
+        person.setId(100L);
+        ColumnId columnId = new ColumnId(person, id);
+
+        assertThat(columnId.getType()).isEqualTo(Long.class);
+    }
+
 }

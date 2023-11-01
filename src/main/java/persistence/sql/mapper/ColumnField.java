@@ -108,6 +108,7 @@ public class ColumnField implements ColumnType {
         return this.dataType;
     }
 
+    @Override
     public Class<?> getType() {
         return type;
     }

@@ -3,8 +3,7 @@ package persistence.sql.mapper;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.exception.InvalidIdColumnException;
-import persistence.sql.ddl.type.DataType;
+import exception.InvalidIdColumnException;
 
 import java.lang.reflect.Field;
 
@@ -65,6 +64,11 @@ public class ColumnId implements ColumnType {
     @Override
     public String getDataType() {
         return this.delegate.getDataType();
+    }
+
+    @Override
+    public Class<?> getType() {
+        return delegate.getType();
     }
 
     public GenerationType getGenerationType() {

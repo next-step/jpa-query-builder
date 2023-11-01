@@ -18,4 +18,6 @@ public interface ColumnType {
 
     String getDataType();
 
+    Class<?> getType();
+
 }
