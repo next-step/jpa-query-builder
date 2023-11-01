@@ -3,22 +3,26 @@ package persistence.sql.ddl;
 import persistence.dialect.Dialect;
 import persistence.sql.Query;
 import persistence.sql.QueryBuilder;
-import sources.ColumnMetaData;
-import sources.MetaData;
+import sources.*;
 
 import java.util.List;
 
 public class CreateQueryBuilder extends QueryBuilder {
 
-    private final Dialect dialect;
+    private final AnnotationBinder annotationBinder;
+    private final MetadataGenerator metadataGenerator;
 
     public CreateQueryBuilder(Dialect dialect) {
         super(dialect);
-        this.dialect = dialect;
+        this.annotationBinder = new AnnotationBinder(dialect);
+        this.metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     }
 
-    public Query queryForObject(MetaData metaData, StringBuilder sb) {
-        StringBuilder query = sb.append("create table ")
+    @Override
+    public Query queryForObject(Object entity) {
+        StringBuilder query = new StringBuilder();
+        MetaData metaData = metadataGenerator.generator(entity.getClass());
+        query.append("create table ")
                 .append(metaData.getEntity())
                 .append(" (")
                 .append(metaData.getId())

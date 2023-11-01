@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 
 public class InsertQueryBuilder extends QueryBuilder {
 
-    private AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
-    private MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
+    private final AnnotationBinder annotationBinder;
+    private final MetadataGenerator metadataGenerator;
 
     public InsertQueryBuilder(Dialect dialect) {
         super(dialect);
+        this.annotationBinder = new AnnotationBinder(dialect);
+        this.metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     }
 
     @Override
