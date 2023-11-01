@@ -3,10 +3,10 @@ package database.mapper;
 import jdbc.RowMapper;
 import utils.EntityAnnotationUtils;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
 public class ResultMapper<T> implements RowMapper<T> {
 
@@ -17,21 +17,24 @@ public class ResultMapper<T> implements RowMapper<T> {
     }
 
     @Override
-    public T mapRow(final ResultSet resultSet) throws SQLException {
-        resultSet.next();
+    public T mapRow(final ResultSet resultSet) {
         try {
             T entity = entityClass.getConstructor().newInstance();
-
-            Arrays.stream(entityClass.getDeclaredFields()).forEach(field -> {
+            EntityAnnotationUtils.getNonTransientData(entityClass.getDeclaredFields()).forEach(field -> {
                 try {
                     Class<?> type = field.getType();
                     field.setAccessible(true);
+                    String columnName = EntityAnnotationUtils.parseColumnName(field);
                     if (type.equals(String.class)) {
-                        String string = resultSet.getString(EntityAnnotationUtils.parseColumnName(field));
+                        String string = resultSet.getString(columnName);
                         field.set(entity, string);
                     }
-
-
+                    if (type.equals(Integer.class)) {
+                        field.set(entity, resultSet.getInt(columnName));
+                    }
+                    if (type.equals(Long.class)) {
+                        field.set(entity, resultSet.getLong(columnName));
+                    }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -40,7 +43,6 @@ public class ResultMapper<T> implements RowMapper<T> {
             return entity;
         } catch (Exception e) {
             throw new RuntimeException(e);
-
         }
     }
 }

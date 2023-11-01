@@ -24,7 +24,6 @@ class ResultMapperTest {
         server.start();
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-
         //데이터 생성
         Person person = new Person();
         int AGE = 28;
@@ -39,14 +38,11 @@ class ResultMapperTest {
         EntityMetaData entityMetaData = new EntityMetaData(person);
         jdbcTemplate.execute(ddlQueryBuilder.createTable(entityMetaData));
 
-
+        //데이터 insert
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
         jdbcTemplate.execute(insertQueryBuilder.create(entityMetaData));
 
-
-        ResultMapper<Person> personResultMapper = new ResultMapper<>(Person.class);
-        Person person1 = jdbcTemplate.queryForObject("select * from users", personResultMapper);
-        System.out.println(person1);
+        Person person1 = jdbcTemplate.queryForObject("select * from users", new ResultMapper<>(Person.class));
     }
 
 
