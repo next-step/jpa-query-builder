@@ -28,7 +28,7 @@ public abstract class Dialect {
             case Types.NUMERIC:
                 return "numeric";
             case Types.BIGINT:
-                return "bigint";
+                return "Long";
             case Types.INTEGER:
                 return "int";
 

@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import persistence.dialect.Dialect;
 import persistence.dialect.H2Dialect;
+import persistence.sql.Query;
 import sources.AnnotationBinder;
 import sources.MetaData;
 import sources.MetadataGenerator;
@@ -23,7 +24,7 @@ public class DDLTest {
     final Dialect dialect = new H2Dialect();
     final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(dialect);
     final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(dialect);
-    final AnnotationBinder annotationBinder = new AnnotationBinder();
+    final AnnotationBinder annotationBinder = new AnnotationBinder(dialect);
     final MetadataGenerator metadataGenerator = new MetadataGeneratorImpl(annotationBinder);
     JdbcTemplate jdbcTemplate;
 
@@ -39,10 +40,10 @@ public class DDLTest {
     void createTest1() {
         MetaData personv1 = metadataGenerator.generator(PersonV1.class);
         StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.create(personv1, sb);
+        Query query = createQueryBuilder.queryForObject(personv1, sb);
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
-                .isEqualTo("create table PersonV1 (id int , name varchar(255) , age int )");
+                .isEqualTo("create table PersonV1 (id Long, name varchar(255) , age int )");
     }
 
     @Test
@@ -50,10 +51,10 @@ public class DDLTest {
     void createTest2() {
         MetaData personv2 = metadataGenerator.generator(PersonV2.class);
         StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.create(personv2, sb);
+        Query query = createQueryBuilder.queryForObject(personv2, sb);
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
-                .isEqualTo("create table PersonV2 (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar(255) , old int, email varchar(255)  not null )");
+                .isEqualTo("create table PersonV2 (id LONG AUTO_INCREMENT PRIMARY KEY, nick_name varchar(255) , old int, email varchar(255)  not null )");
     }
 
     @Test
@@ -61,10 +62,10 @@ public class DDLTest {
     void createTest3() {
         MetaData personv3 = metadataGenerator.generator(PersonV3.class);
         StringBuilder sb = new StringBuilder();
-        Query query = createQueryBuilder.create(personv3, sb);
+        Query query = createQueryBuilder.queryForObject(personv3, sb);
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
-                .isEqualTo("create table users (id INT AUTO_INCREMENT PRIMARY KEY , nick_name varchar(255) , old int, email varchar(255)  not null )");
+                .isEqualTo("create table users (id LONG AUTO_INCREMENT PRIMARY KEY, nick_name varchar(255) , old int, email varchar(255)  not null )");
     }
 
     @Test
@@ -72,7 +73,7 @@ public class DDLTest {
     void dropTest() {
         MetaData personv3 = metadataGenerator.generator(PersonV3.class);
         StringBuilder sb = new StringBuilder();
-        Query query = dropQueryBuilder.drop(personv3, sb);
+        Query query = dropQueryBuilder.queryForObject(personv3, sb);
         jdbcTemplate.execute(String.valueOf(query.getQuery()));
         Assertions.assertThat(String.valueOf(query.getQuery()))
                 .isEqualTo("drop table users");

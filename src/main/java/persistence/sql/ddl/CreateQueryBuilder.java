@@ -1,25 +1,28 @@
 package persistence.sql.ddl;
 
 import persistence.dialect.Dialect;
+import persistence.sql.Query;
+import persistence.sql.QueryBuilder;
 import sources.ColumnMetaData;
 import sources.MetaData;
 
 import java.util.List;
 
-public class CreateQueryBuilder extends QueryBuilder{
+public class CreateQueryBuilder extends QueryBuilder {
 
-    private Query query;
+    private final Dialect dialect;
 
     public CreateQueryBuilder(Dialect dialect) {
         super(dialect);
+        this.dialect = dialect;
     }
 
-    public Query create(MetaData metaData, StringBuilder sb) {
+    public Query queryForObject(MetaData metaData, StringBuilder sb) {
         StringBuilder query = sb.append("create table ")
                 .append(metaData.getEntity())
                 .append(" (")
                 .append(metaData.getId())
-                .append(" ")
+                .append(metaData.getIdOption())
                 .append(columnTypeName(metaData.getColumns()))
                 .append(" )");
         return new Query(query);
