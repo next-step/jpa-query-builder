@@ -18,20 +18,30 @@ public class DeleteQueryBuilder extends QueryBuilder {
         super(dialect);
     }
 
-    public Query queryForObject(Object domain) throws NoSuchFieldException, IllegalAccessException {
+    @Override
+    public Query queryForObject(Object domain) {
         StringBuilder sb = new StringBuilder();
         Class<?> clazz = domain.getClass();
         String id = getMetaData(clazz).getId();
-        Field idField = domain.getClass().getDeclaredField(id);
+        Field idField = null;
+        try {
+            idField = domain.getClass().getDeclaredField(id);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
         idField.setAccessible(Boolean.TRUE);
-        StringBuilder deleteQuery = sb.append("delete from ")
-                .append(getMetaData(clazz).getEntity())
-                .append(" where ")
-                .append(id)
-                .append(" = ")
-                .append(idField.get(domain));
+        StringBuilder deleteQuery = null;
+        try {
+            deleteQuery = sb.append("delete from ")
+                    .append(getMetaData(clazz).getEntity())
+                    .append(" where ")
+                    .append(id)
+                    .append(" = ")
+                    .append(idField.get(domain));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
         return new Query(deleteQuery);
-
     }
 
     private MetaData getMetaData(Class<?> domain) {

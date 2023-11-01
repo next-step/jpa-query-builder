@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import persistence.core.GenericRowMapper;
 import persistence.dialect.Dialect;
 import persistence.dialect.H2Dialect;
 import persistence.sql.Query;

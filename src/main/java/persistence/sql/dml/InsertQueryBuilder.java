@@ -18,6 +18,7 @@ public class InsertQueryBuilder extends QueryBuilder {
         super(dialect);
     }
 
+    @Override
     public Query queryForObject(Object domain) {
         StringBuilder sb = new StringBuilder();
         MetaData metaData = getMetaData(domain.getClass());
