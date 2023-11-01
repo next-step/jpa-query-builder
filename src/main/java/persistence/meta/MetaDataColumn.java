@@ -13,12 +13,14 @@ public class MetaDataColumn {
   private static final String COLUMN_DATA_TYPE = "%s %s";
   private final String name;
   private final String type;
-  private final String field;
+  private final String fieldName;
+  private final Field field;
   private final List<MetaDataColumnConstraint> constraints;
 
-  private MetaDataColumn(String name, String type, String field, List<MetaDataColumnConstraint> constraints) {
+  private MetaDataColumn(String name, String type, String fieldName, Field field, List<MetaDataColumnConstraint> constraints) {
     this.name = name;
     this.type = type;
+    this.fieldName = fieldName;
     this.field = field;
     this.constraints = constraints;
   }
@@ -29,7 +31,7 @@ public class MetaDataColumn {
             .sorted(Comparator.comparing(MetaDataColumnConstraint::getConstraint).reversed())
             .collect(Collectors.toList());
 
-    return new MetaDataColumn(getColumnName(field), columnType, field.getName(), constraints);
+    return new MetaDataColumn(getColumnName(field), columnType, field.getName(), field, constraints);
   }
 
   public String getColumn() {
@@ -54,15 +56,39 @@ public class MetaDataColumn {
     return field.getName().toLowerCase();
   }
 
+  public Object getFieldValue(Object entity) {
+    try {
+      field.setAccessible(true);
+      Object value = field.get(entity);
+      if (value.getClass().equals(String.class)) {
+        return "'" + value.toString() + "'";
+      }
+      field.setAccessible(false);
+      return value;
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public String getSimpleName() {
     return name;
   }
 
   public boolean isNotPrimaryKey() {
-    return !constraints.stream().anyMatch(MetaDataColumnConstraint::isPrimaryKey);
+    return constraints.stream().noneMatch(MetaDataColumnConstraint::isPrimaryKey);
   }
 
-  public String getFieldName(){
-    return field;
+  public String getFieldName() {
+    return fieldName;
+  }
+
+  public void setFieldValue(Object instance, Object value) {
+    field.setAccessible(true);
+    try {
+      field.set(instance, value);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+    field.setAccessible(false);
   }
 }

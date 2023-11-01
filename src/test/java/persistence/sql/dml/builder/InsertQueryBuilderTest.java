@@ -11,8 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.dialect.h2.H2Dialect;
-import persistence.meta.MetaData;
+import persistence.meta.MetaEntity;
 import persistence.sql.ddl.builder.CreateQueryBuilder;
 import persistence.sql.fixture.PersonFixtureStep3;
 import persistence.sql.fixture.PersonInstances;
@@ -23,16 +22,16 @@ public class InsertQueryBuilderTest {
   private static DatabaseServer server;
   private static Class<PersonFixtureStep3> person;
   private static JdbcTemplate jdbcTemplate;
-
+  private static MetaEntity<PersonFixtureStep3> meta;
   @BeforeAll
   static void setup() throws SQLException {
     person = PersonFixtureStep3.class;
     server = new H2();
     server.start();
 
-    MetaData meta = MetaData.of(person, new H2Dialect());
+    meta = MetaEntity.of(person);
     CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
-    String query = createQueryBuilder.createCreateQuery(meta);
+    String query = createQueryBuilder.createCreateQuery(meta.getCreateClause());
 
     jdbcTemplate = new JdbcTemplate(server.getConnection());
     jdbcTemplate.execute(query);
@@ -46,9 +45,9 @@ public class InsertQueryBuilderTest {
   @Test
   @DisplayName("Insert SQL 구문을 생성합니다.")
   public void insertDMLfromEntity() {
-    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder<>();
+    InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
 
-    String query = insertQueryBuilder.createInsertQuery(PersonInstances.첫번째사람);
+    String query = insertQueryBuilder.createInsertQuery("USERS", "nick_name,old,email", "'제임스',21,'sdafij@gmail.com'");
 
     assertThat(query).isEqualTo(
         "INSERT INTO USERS (nick_name,old,email) values ('제임스',21,'sdafij@gmail.com');");
@@ -58,8 +57,9 @@ public class InsertQueryBuilderTest {
   @DisplayName("Insert SQL 구문을 생성하고 Select 쿼리 실행시에 Entity들이 반환됩니다.")
   public void insertDMLfromEntityDatabase() throws SQLException {
 
-    InsertQueryBuilder<PersonFixtureStep3> insertQueryBuilder = new InsertQueryBuilder<>();
-    String query = insertQueryBuilder.createInsertQuery(PersonInstances.첫번째사람);
+    InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+
+    String query = insertQueryBuilder.createInsertQuery(meta.getTableName(), meta.getColumnClause(), meta.getValueClause(PersonInstances.첫번째사람));
 
     jdbcTemplate.execute(query);
 

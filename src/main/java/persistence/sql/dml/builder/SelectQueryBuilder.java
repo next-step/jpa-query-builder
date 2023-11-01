@@ -1,35 +1,19 @@
 package persistence.sql.dml.builder;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import persistence.meta.MetaEntity;
-
-public class SelectQueryBuilder<T> implements QueryBuilder{
+public class SelectQueryBuilder {
   private static final String SELECT_SQL_QUERY = "SELECT %s FROM %s;";
   private static final String SELECT_WHERE_SQL_QUERY = "SELECT %s FROM %s WHERE %s=%s;";
-  private static final String DELIMITER = ",";
 
-  public String createSelectQuery(T entity) {
 
-    MetaEntity<T> metaEntity = MetaEntity.of(entity);
+  public String createSelectQuery(String columnClause, String tableName) {
 
-    String columnClause = getColumnClause(metaEntity);
-    return String.format(SELECT_SQL_QUERY, columnClause, metaEntity.getTableName());
+    return String.format(SELECT_SQL_QUERY, columnClause, tableName);
   }
 
-  public String createSelectByFieldQuery(T entity, Field field) {
+  public String createSelectByFieldQuery(String columnClause, String tableName, String targetName, Object targetValue) {
 
-    MetaEntity<T> metaEntity = MetaEntity.of(entity);
-    Object value = getFieldValue(field, entity);
-    String dbFieldName = metaEntity.getFieldMapping().get(field.getName());
-    String columnClause = getColumnClause(metaEntity);
-    return String.format(SELECT_WHERE_SQL_QUERY, columnClause, metaEntity.getTableName(), dbFieldName, value);
+    return String.format(SELECT_WHERE_SQL_QUERY, columnClause, tableName, targetName, targetValue);
   }
 
-  private String getColumnClause(MetaEntity metaEntity) {
-    List<String> columns = metaEntity.getEntityColumnsWithId();
-
-    return String.join(DELIMITER, columns);
-  }
 
 }
