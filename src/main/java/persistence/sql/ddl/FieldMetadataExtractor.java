@@ -6,6 +6,8 @@ import persistence.sql.ddl.dialect.Dialect;
 import utils.CustomStringBuilder;
 
 import java.lang.reflect.Field;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static utils.JdbcTypeMapper.getJdbcTypeForClass;
 
@@ -19,28 +21,20 @@ public class FieldMetadataExtractor {
 
     public String getDefinition(Dialect dialect) {
         return new CustomStringBuilder()
-                .append(getColumnName(field))
+                .append(getColumnName())
                 .append(dialect.getType(getJdbcTypeForClass(field.getType())))
                 .append(getColumnOptionValue(dialect))
                 .toString();
-    }
-
-    private String getColumnOptionValue(Dialect dialect) {
-        return ColumnOptionFactory.createColumnOption(field, dialect);
     }
 
     public String getColumnName(Object entity) throws NoSuchFieldException, IllegalAccessException {
         Field entityFiled = entity.getClass().getDeclaredField(field.getName());
         entityFiled.setAccessible(true);
         if (entityFiled.get(entity) != null) {
-            return getColumnName(field);
+            return getColumnName();
         }
 
         return "";
-    }
-
-    public String getColumnName(Class<?> type) throws NoSuchFieldException, IllegalAccessException {
-        return getColumnName(type.getDeclaredField(field.getName()));
     }
 
     public String getValueFrom(Object entity) throws NoSuchFieldException, IllegalAccessException {
@@ -56,10 +50,10 @@ public class FieldMetadataExtractor {
             return String.valueOf(object);
         }
 
-        return "";
+        return null;
     }
 
-    private String getColumnName(Field field) {
+    public String getColumnName() {
         if (field.isAnnotationPresent(Column.class)
                 && !isAnnotationNameEmpty(field)) {
             Column column = field.getAnnotation(Column.class);
@@ -69,12 +63,22 @@ public class FieldMetadataExtractor {
         return field.getName();
     }
 
+    public boolean isId() {
+        return field.isAnnotationPresent(Id.class);
+    }
+
+    public <T> void setInstanceValue(T instance, ResultSet resultSet) throws SQLException, IllegalAccessException {
+        field.setAccessible(true);
+        Object value = resultSet.getObject(getColumnName());
+        field.set(instance, value);
+    }
+
     private boolean isAnnotationNameEmpty(Field field) {
         return field.getAnnotation(Column.class).name().equals("");
     }
 
-    public boolean isId() {
-        return field.isAnnotationPresent(Id.class);
+    private String getColumnOptionValue(Dialect dialect) {
+        return ColumnOptionFactory.createColumnOption(field, dialect);
     }
 
 }

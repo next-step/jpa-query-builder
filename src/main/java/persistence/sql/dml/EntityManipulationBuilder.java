@@ -1,17 +1,18 @@
 package persistence.sql.dml;
 
 import persistence.sql.ddl.EntityMetadata;
-import persistence.sql.ddl.dialect.Dialect;
 import utils.CustomStringBuilder;
+
+import java.sql.ResultSet;
 
 import static utils.CustomStringBuilder.*;
 
 public class EntityManipulationBuilder {
 
-    private final EntityMetadata entityMetadata;
+    private EntityMetadata entityMetadata;
 
-    public EntityManipulationBuilder(Class<?> type, Dialect dialectParam) {
-        this.entityMetadata = new EntityMetadata(type, dialectParam );
+    public EntityManipulationBuilder(EntityMetadata entityMetadata) {
+        this.entityMetadata = entityMetadata;
     }
 
     public String insert(Object entity) {
@@ -29,24 +30,28 @@ public class EntityManipulationBuilder {
         return toInsertValuesClause(entityMetadata.getValueFrom(entity));
     }
 
-    public String findAll(Class<?> type) {
-        return toFindAllStatement(entityMetadata.getTableName(), entityMetadata.getColumnNames(type));
+    public String findAll() {
+        return toFindAllStatement(entityMetadata.getTableName(), entityMetadata.getColumnNames());
     }
 
-    public String findById(Class<?> type, long id) {
+    public String findById(long id) {
         return toFindByIdStatement(
                 entityMetadata.getTableName(),
-                entityMetadata.getColumnNames(type),
-                entityMetadata.getIdColumnName(type),
+                entityMetadata.getColumnNames(),
+                entityMetadata.getIdColumnName(),
                 String.valueOf(id)
         );
     }
 
-    public String delete(Class<?> type, long id) {
+    public String delete(String id) {
         return toDeleteStatement(
                 entityMetadata.getTableName(),
-                entityMetadata.getIdColumnName(type),
-                String.valueOf(id));
+                entityMetadata.getIdColumnName(),
+                id);
+    }
+
+    public <T> T getEntity(ResultSet resultSet) {
+        return entityMetadata.getEntity(resultSet);
     }
 
 }

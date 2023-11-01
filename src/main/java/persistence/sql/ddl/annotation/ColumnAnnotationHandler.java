@@ -24,7 +24,7 @@ public class ColumnAnnotationHandler extends AnnotationHandler<Column> {
 
         if (!annotation.nullable()) {
             // TODO columnOption 부분 리팩토링
-            ColumnOption columnOption = ColumnOption.getColumnOption(schemes.getScheme("nullable"));
+            ColumnOption columnOption = ColumnOption.valueOf(schemes.getScheme("nullable"));
             result.add(columnOption);
         }
 

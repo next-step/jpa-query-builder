@@ -24,7 +24,7 @@ public class GeneratedValueAnnotationHandler extends AnnotationHandler<Generated
         ColumnSchemes schemes = dialect.getSchemes(Schemes.GeneratedValue);
 
         if (annotation.strategy().name().equals(GenerationType.IDENTITY.name())) {
-            ColumnOption columnOption = ColumnOption.getColumnOption(schemes.getScheme("IDENTITY"));
+            ColumnOption columnOption = ColumnOption.valueOf(schemes.getScheme("IDENTITY"));
             result.add(columnOption);
         }
 
