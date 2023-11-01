@@ -6,20 +6,19 @@ import database.H2;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class H2JdbcTemplate extends JdbcTemplate {
+public class H2JdbcTemplate {
+
+    private final JdbcTemplate jdbcTemplate;
+    private final DatabaseServer server;
 
 
-    private H2JdbcTemplate(final Connection connection) {
-        super(connection);
-    }
-
-    public static JdbcTemplate getInstance() {
+    private H2JdbcTemplate() {
         try {
-            final DatabaseServer server = new H2();
-            server.start();
-            return new JdbcTemplate(server.getConnection());
+            this.server = new H2();
+            this.server.start();
+            this.jdbcTemplate = new JdbcTemplate(server.getConnection());
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

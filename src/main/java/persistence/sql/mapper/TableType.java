@@ -2,7 +2,7 @@ package persistence.sql.mapper;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import persistence.sql.ddl.exception.InvalidEntityException;
+import exception.InvalidEntityException;
 
 import java.util.Optional;
 

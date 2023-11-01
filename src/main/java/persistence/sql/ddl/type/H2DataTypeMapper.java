@@ -1,6 +1,6 @@
 package persistence.sql.ddl.type;
 
-import persistence.sql.ddl.exception.DataTypeNotFoundException;
+import exception.DataTypeNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
