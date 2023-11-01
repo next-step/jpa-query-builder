@@ -9,7 +9,10 @@ import persistence.sql.ddl.EntityMetaData;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.query.DdlQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
+import persistence.sql.dml.SelectQueryBuilder;
 import test.PersonGenerator;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,13 +28,7 @@ class ResultMapperTest {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
         //데이터 생성
-        Person person = new Person();
-        int AGE = 28;
-        String NAME = "지영";
-        String EMAIL = "jy@lim.com";
-        person.setAge(AGE);
-        person.setName(NAME);
-        person.setEmail(EMAIL);
+        Person person = PersonGenerator.getDefualtPerson();
 
         //테이블 생성
         DdlQueryBuilder ddlQueryBuilder = DdlQueryBuilder.getInstance();
@@ -41,8 +38,14 @@ class ResultMapperTest {
         //데이터 insert
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
         jdbcTemplate.execute(insertQueryBuilder.create(entityMetaData));
+        jdbcTemplate.execute(insertQueryBuilder.create(entityMetaData));
+        jdbcTemplate.execute(insertQueryBuilder.create(entityMetaData));
 
-        Person person1 = jdbcTemplate.queryForObject("select * from users", new ResultMapper<>(Person.class));
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        String findAll = selectQueryBuilder.findAll(entityMetaData);
+
+        List<Person> persons = jdbcTemplate.query(findAll, new ResultMapper<>(Person.class));
+        System.out.println(persons);
     }
 
 
