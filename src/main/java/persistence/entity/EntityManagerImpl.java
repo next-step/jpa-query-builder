@@ -23,7 +23,8 @@ public class EntityManagerImpl implements EntityManager {
     @Override
     public <T> T find(Class<T> clazz, Long id) {
         Query query = selectQueryBuilder.findById(clazz, id);
-        return jdbcTemplate.queryForObject(query.getQuery().toString(), new GenericRowMapper<>(clazz));
+        GenericRowMapper<T> genericRowMapper = new GenericRowMapper<>(clazz);
+        return jdbcTemplate.queryForObject(query.getQuery().toString(), genericRowMapper);
     }
 
     @Override
@@ -33,7 +34,7 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public void remove(Object entity) throws NoSuchFieldException, IllegalAccessException {
+    public void remove(Object entity) {
         Query query = deleteQueryBuilder.queryForObject(entity);
         jdbcTemplate.execute(query.getQuery().toString());
     }
