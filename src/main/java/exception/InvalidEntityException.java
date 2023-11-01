@@ -1,4 +1,4 @@
-package persistence.sql.ddl.exception;
+package exception;
 
 public class InvalidEntityException extends RuntimeException {
 
