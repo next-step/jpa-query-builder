@@ -61,4 +61,15 @@ public class Person {
     public void setIndex(final Integer index) {
         this.index = index;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", index=" + index +
+                '}';
+    }
 }

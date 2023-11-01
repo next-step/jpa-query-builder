@@ -2,12 +2,14 @@ package persistence.sql.mapper;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.type.DataType;
 import persistence.sql.ddl.type.H2DataTypeMapper;
+import utils.EntityAnnotationUtils;
 import utils.TypeUtils;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
+
+import static utils.EntityAnnotationUtils.getColumnAnnotation;
 
 public class ColumnField implements ColumnType {
 
@@ -46,10 +48,7 @@ public class ColumnField implements ColumnType {
     }
 
     private String parseName(Field field) {
-        return Optional.ofNullable(getColumnAnnotation(field))
-                .filter(column -> !column.name().isEmpty())
-                .map(Column::name)
-                .orElse(field.getName());
+        return EntityAnnotationUtils.parseColumnName(field);
     }
 
     private int parseLength(final Field field) {
@@ -63,10 +62,6 @@ public class ColumnField implements ColumnType {
         return H2DataTypeMapper.getInstance().getDataType(field.getType()).getName();
     }
 
-
-    private Column getColumnAnnotation(final Field field) {
-        return field.getAnnotation(Column.class);
-    }
 
     @Override
     public String getName() {
