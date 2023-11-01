@@ -1,5 +1,8 @@
 package jdbc;
 
+import exception.EmptyResultException;
+import exception.IncorrectResultSizeException;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -8,6 +11,7 @@ import java.util.List;
 
 public class JdbcTemplate {
     private final Connection connection;
+
 
     public JdbcTemplate(final Connection connection) {
         this.connection = connection;
@@ -23,7 +27,16 @@ public class JdbcTemplate {
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
         try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
-            return rowMapper.mapRow(resultSet);
+            if (!resultSet.next()) {
+                throw new EmptyResultException("데이터가 존재하지 않습니다.");
+            }
+            T result = rowMapper.mapRow(resultSet);
+            if (resultSet.next()) {
+                throw new IncorrectResultSizeException();
+            }
+            return result;
+        } catch (EmptyResultException | IncorrectResultSizeException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
