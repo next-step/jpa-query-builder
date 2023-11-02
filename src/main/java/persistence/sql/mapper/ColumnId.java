@@ -1,23 +1,22 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.mapper;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.exception.InvalidIdColumnException;
-import persistence.sql.ddl.type.DataType;
+import exception.InvalidIdColumnException;
 
 import java.lang.reflect.Field;
 
 public class ColumnId implements ColumnType {
 
-    private final ColumnType columnType;
+    private final ColumnType delegate;
 
     private final GenerationType generationType;
 
 
-    public ColumnId(final Field field) {
+    public ColumnId(final Object entity, final Field field) {
         validateIdColumn(field);
-        this.columnType = new ColumnField(field);
+        this.delegate = new ColumnField(entity, field);
         this.generationType = paresGenerationType(field);
     }
 
@@ -34,7 +33,12 @@ public class ColumnId implements ColumnType {
 
     @Override
     public String getName() {
-        return this.columnType.getName();
+        return this.delegate.getName();
+    }
+
+    @Override
+    public String getValue() {
+        return this.delegate.getValue();
     }
 
     @Override
@@ -49,17 +53,22 @@ public class ColumnId implements ColumnType {
 
     @Override
     public boolean isTransient() {
-        return this.columnType.isTransient();
+        return this.delegate.isTransient();
     }
 
     @Override
-    public int getLength() {
-        return this.columnType.getLength();
+    public String getLength() {
+        return this.delegate.getLength();
     }
 
     @Override
-    public DataType getDataType() {
-        return  this.columnType.getDataType();
+    public String getDataType() {
+        return this.delegate.getDataType();
+    }
+
+    @Override
+    public Class<?> getType() {
+        return delegate.getType();
     }
 
     public GenerationType getGenerationType() {

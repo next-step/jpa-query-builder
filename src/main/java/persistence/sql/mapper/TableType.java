@@ -1,17 +1,19 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.mapper;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import persistence.sql.ddl.exception.InvalidEntityException;
+import exception.InvalidEntityException;
 
 import java.util.Optional;
 
 public class TableType {
-    final private Class<?> entity;
 
-    public TableType(final Class<?> entity) {
-        validateEntityClass(entity);
-        this.entity = entity;
+    private final Class<?> entity;
+
+    public TableType(final Object entity) {
+        Class<?> entityClass = entity.getClass();
+        validateEntityClass(entityClass);
+        this.entity = entityClass;
     }
 
     public void validateEntityClass(final Class<?> entity) {

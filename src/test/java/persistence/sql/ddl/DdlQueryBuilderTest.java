@@ -7,7 +7,7 @@ import persistence.sql.ddl.query.DdlQueryBuilder;
 
 class DdlQueryBuilderTest {
     final DdlQueryBuilder ddlQueryBuilder = DdlQueryBuilder.getInstance();
-    final EntityMetaData entityMetaData = new EntityMetaData(Person.class);
+    final EntityMetaData entityMetaData = new EntityMetaData(new Person());
 
 
     @Test
@@ -15,7 +15,7 @@ class DdlQueryBuilderTest {
     void createTest() {
         String columnsDdl = ddlQueryBuilder.createTable(entityMetaData);
         Assertions.assertThat(columnsDdl.trim().toLowerCase())
-                .isEqualTo("create table users (old integer, nick_name varchar(255), id bigint auto_increment primary key, email varchar(255) not null )");
+                .isEqualTo("create table users (id bigint auto_increment primary key, old integer, nick_name varchar(255), email varchar(255) not null)");
     }
 
     @Test

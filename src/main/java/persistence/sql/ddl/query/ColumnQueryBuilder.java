@@ -1,41 +1,28 @@
 package persistence.sql.ddl.query;
 
 import persistence.sql.ddl.constraint.Constraint;
-import persistence.sql.ddl.constraint.IdentityConstraint;
-import persistence.sql.ddl.constraint.NotNullConstraint;
-import persistence.sql.ddl.constraint.PrimaryKeyConstraint;
-import persistence.sql.ddl.utils.ColumnType;
+import persistence.sql.mapper.ColumnType;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ColumnQueryBuilder {
 
-    public final List<Constraint> constraints = new ArrayList<>();
+    private final List<Constraint> constraints;
 
-    public ColumnQueryBuilder() {
-        constraints.add(new NotNullConstraint());
-        constraints.add(new IdentityConstraint());
-        constraints.add(new PrimaryKeyConstraint());
+    public ColumnQueryBuilder(List<Constraint> constraints) {
+        this.constraints = constraints;
     }
 
-    public List<String> generateDdlQueryRows(final List<ColumnType> columnTypes) {
+
+    public List<String> generateDdlQueryRows(final List<? extends ColumnType> columnTypes) {
         return columnTypes.stream()
-                .map(columnType -> String.join(" ",
+                .map(columnType -> String.format("%s %s %s",
                                 columnType.getName(),
-                                columnType.getDataType().getName() + generateLength(columnType.getLength())
-                                , generateConstraint(columnType))
+                                columnType.getDataType() + columnType.getLength(),
+                                generateConstraint(columnType))
                         .trim())
                 .collect(Collectors.toList());
-    }
-
-
-    private String generateLength(final Integer length) {
-        return Optional.ofNullable(length)
-                .map(e -> "(" + e + ")")
-                .orElse("");
     }
 
     private String generateConstraint(ColumnType columnType) {

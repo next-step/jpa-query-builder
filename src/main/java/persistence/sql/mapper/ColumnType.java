@@ -1,4 +1,4 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.mapper;
 
 import persistence.sql.ddl.type.DataType;
 
@@ -6,14 +6,18 @@ public interface ColumnType {
 
     String getName();
 
+    String getValue();
+
     boolean isId();
 
     boolean isNullable();
 
     boolean isTransient();
 
-    int getLength();
+    String getLength();
 
-    DataType getDataType();
+    String getDataType();
+
+    Class<?> getType();
 
 }

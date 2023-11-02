@@ -1,4 +1,4 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.mapper;
 
 import jakarta.persistence.Id;
 
@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
-
 public class ColumnTypes {
     final private Map<String, ColumnType> columnTypeMap;
 
-    public ColumnTypes(final Class<?> entity) {
+    public ColumnTypes(final Object entity) {
         this.columnTypeMap = generateColumns(entity);
     }
 
@@ -21,15 +19,16 @@ public class ColumnTypes {
         this.columnTypeMap = columns;
     }
 
-    private Map<String, ColumnType> generateColumns(final Class<?> entity) {
+    private Map<String, ColumnType> generateColumns(final Object entity) {
+        Class<?> entityClass = entity.getClass();
         Map<String, ColumnType> columns = new HashMap<>();
-        Field[] fields = entity.getDeclaredFields();
+        Field[] fields = entityClass.getDeclaredFields();
         for (Field field : fields) {
             ColumnType columnType;
             if (field.isAnnotationPresent(Id.class)) {
-                columnType = new ColumnId(field);
+                columnType = new ColumnId(entity, field);
             } else {
-                columnType = new ColumnField(field);
+                columnType = new ColumnField(entity, field);
             }
             columns.put(columnType.getName(), columnType);
         }
@@ -40,17 +39,20 @@ public class ColumnTypes {
         return columnTypeMap.get(name);
     }
 
-    public ColumnTypes getIdColumns() {
-        return new ColumnTypes(columnTypeMap.values().stream()
-                .filter(ColumnType::isId)
-                .collect(toMap(ColumnType::getName, columnType -> columnType)));
-    }
-
-    public List<ColumnType> getColumns() {
+    public List<ColumnId> getIdColumns() {
         return columnTypeMap.values()
                 .stream()
+                .filter(ColumnType::isId)
                 .filter(columnType -> !columnType.isTransient())
+                .map(columnType -> (ColumnId) columnType)
                 .collect(Collectors.toList());
+    }
+
+    public List<ColumnType> getFieldColumns() {
+        return columnTypeMap.values()
+                .stream()
+                .filter(columnType -> !columnType.isId())
+                .filter(columnType -> !columnType.isTransient()).collect(Collectors.toList());
     }
 
 }
