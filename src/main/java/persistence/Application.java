@@ -28,12 +28,15 @@ public class Application {
             String createQuery = generateCreateQuery();
             String dropQuery = generateDropQuery();
             String insertQuery = generateInsert();
+            String selectQuery = generateFindAll();
             jdbcTemplate.execute(createQuery);
             jdbcTemplate.execute(insertQuery);
+            jdbcTemplate.execute(selectQuery);
             jdbcTemplate.execute(dropQuery);
             System.out.println(createQuery);
             System.out.println(dropQuery);
             System.out.println(insertQuery);
+            System.out.println(selectQuery);
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
@@ -62,7 +65,6 @@ public class Application {
         return dataDefinitionLanguageAssembler.assembleDropTableQuery(Person.class);
     }
 
-    //dml
     private static String generateInsert() {
         H2Dialect h2Dialect = new H2Dialect();
         GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
@@ -77,5 +79,20 @@ public class Application {
         );
         Person person = new Person("hello", 13, "gmail");
         return dataManipulationLanguageAssembler.generateInsert(person);
+    }
+
+    private static String generateFindAll() {
+        H2Dialect h2Dialect = new H2Dialect();
+        GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
+        GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
+        GetFieldValueUseCase getFieldValueUseCase = new GetFieldValueUseCase();
+        DataManipulationLanguageGenerator dataManipulationLanguageGenerator = new DataManipulationLanguageGenerator(
+            getTableNameFromClassUseCase,
+            getFieldFromClassUseCase,
+            getFieldValueUseCase);
+        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = new DataManipulationLanguageAssembler(
+            h2Dialect, dataManipulationLanguageGenerator
+        );
+        return dataManipulationLanguageAssembler.generateSelect(Person.class);
     }
 }

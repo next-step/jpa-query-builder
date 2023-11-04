@@ -3,6 +3,7 @@ package persistence.sql.dialect;
 import persistence.sql.dml.ColumnClause;
 import persistence.sql.dml.ValueClause;
 import persistence.sql.dml.insert.InsertQuery;
+import persistence.sql.dml.select.SelectQuery;
 import persistence.sql.vo.type.VarChar;
 
 public class H2Dialect implements Dialect{
@@ -24,6 +25,16 @@ public class H2Dialect implements Dialect{
         sb.append(");");
         return sb.toString();
     }
+
+    @Override
+    public String selectBuilder(SelectQuery selectQuery) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ");
+        sb.append(selectQuery.getTableName().toString());
+        sb.append(";");
+        return sb.toString();
+    }
+
     private void fillColumn(ColumnClause columnClause, StringBuilder sb, boolean isLast) {
         sb.append(columnClause.getColumnName());
         if (!isLast) {

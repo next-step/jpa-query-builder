@@ -4,6 +4,7 @@ import jakarta.persistence.GenerationType;
 import java.util.ArrayList;
 import java.util.List;
 import persistence.sql.dml.insert.InsertQuery;
+import persistence.sql.dml.select.SelectQuery;
 import persistence.sql.usecase.GetFieldFromClassUseCase;
 import persistence.sql.usecase.GetFieldValueUseCase;
 import persistence.sql.usecase.GetTableNameFromClassUseCase;
@@ -35,5 +36,10 @@ public class DataManipulationLanguageGenerator {
             valueClauses.add(new ValueClause(getFieldValueUseCase.execute(object, databaseField), databaseField.getDatabaseType()));
         }
         return new InsertQuery(tableName, columnClauses ,valueClauses);
+    }
+
+    public SelectQuery buildSelectQuery(Class<?> cls) {
+        TableName tableName = getTableNameFromClassUseCase.execute(cls);
+        return new SelectQuery(tableName);
     }
 }
