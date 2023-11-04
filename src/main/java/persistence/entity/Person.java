@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.ToString;
 
+@ToString
 @Table(name = "users")
 @Entity
 public class Person {

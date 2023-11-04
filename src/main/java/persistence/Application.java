@@ -2,6 +2,7 @@ package persistence;
 
 import database.DatabaseServer;
 import database.H2;
+import java.util.List;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,10 @@ public class Application {
             String selectQuery = generateFindAll();
             jdbcTemplate.execute(createQuery);
             jdbcTemplate.execute(insertQuery);
-            jdbcTemplate.execute(selectQuery);
+            List<Person> query = jdbcTemplate.query(selectQuery, (resultSet -> new Person(resultSet.getString("nick_name"), resultSet.getInt("old"), resultSet.getString("email"))));
+            for(Person p : query) {
+                System.out.println("###### Person " + p);
+            }
             jdbcTemplate.execute(dropQuery);
             System.out.println(createQuery);
             System.out.println(dropQuery);
