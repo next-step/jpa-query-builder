@@ -31,7 +31,7 @@ public class DataManipulationLanguageGenerator {
             if(databaseField.isPrimary() && databaseField.getPrimaryKeyGenerationType() == GenerationType.IDENTITY) {
                 continue;
             }
-            columnClauses.add(new ColumnClause(databaseField.getOriginalFieldName()));
+            columnClauses.add(new ColumnClause(databaseField.getDatabaseFieldName()));
             valueClauses.add(new ValueClause(getFieldValueUseCase.execute(object, databaseField), databaseField.getDatabaseType()));
         }
         return new InsertQuery(tableName, columnClauses ,valueClauses);

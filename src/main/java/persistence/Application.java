@@ -29,6 +29,7 @@ public class Application {
             String dropQuery = generateDropQuery();
             String insertQuery = generateInsert();
             jdbcTemplate.execute(createQuery);
+            jdbcTemplate.execute(insertQuery);
             jdbcTemplate.execute(dropQuery);
             System.out.println(createQuery);
             System.out.println(dropQuery);
@@ -74,7 +75,7 @@ public class Application {
         DataManipulationLanguageAssembler dataManipulationLanguageAssembler = new DataManipulationLanguageAssembler(
             h2Dialect, dataManipulationLanguageGenerator
         );
-        Person person = new Person("hello");
+        Person person = new Person("hello", 13, "gmail");
         return dataManipulationLanguageAssembler.generateInsert(person);
     }
 }
