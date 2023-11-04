@@ -10,6 +10,7 @@ import persistence.sql.ddl.DataDefinitionLanguageGenerator;
 import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.DataManipulationLanguageGenerator;
 import persistence.sql.dml.assembler.DataManipulationLanguageAssembler;
+import persistence.sql.dml.insert.PersonRowMapper;
 import persistence.sql.usecase.GetFieldFromClassUseCase;
 import persistence.sql.usecase.GetFieldValueUseCase;
 import persistence.sql.usecase.GetTableNameFromClassUseCase;
@@ -26,13 +27,14 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            PersonRowMapper personRowMapper = new PersonRowMapper();
             String createQuery = generateCreateQuery();
             String dropQuery = generateDropQuery();
             String insertQuery = generateInsert();
             String selectQuery = generateFindAll();
             jdbcTemplate.execute(createQuery);
             jdbcTemplate.execute(insertQuery);
-            List<Person> query = jdbcTemplate.query(selectQuery, (resultSet -> new Person(resultSet.getString("nick_name"), resultSet.getInt("old"), resultSet.getString("email"))));
+            List<Person> query = jdbcTemplate.query(selectQuery, personRowMapper);
             for(Person p : query) {
                 System.out.println("###### Person " + p);
             }
