@@ -32,17 +32,21 @@ public class Application {
             String dropQuery = generateDropQuery();
             String insertQuery = generateInsert();
             String selectQuery = generateFindAll();
+            String selectByIdQuery = generateFindById();
             jdbcTemplate.execute(createQuery);
             jdbcTemplate.execute(insertQuery);
-            List<Person> query = jdbcTemplate.query(selectQuery, personRowMapper);
-            for(Person p : query) {
-                System.out.println("###### Person " + p);
+            List<Person> persons = jdbcTemplate.query(selectQuery, personRowMapper);
+            for(Person p : persons) {
+                System.out.println("###### Person All " + p);
             }
+            List<Person> persons2 = jdbcTemplate.query(selectByIdQuery, personRowMapper);
+            System.out.println("###### Person By Id " + persons2.get(0));
             jdbcTemplate.execute(dropQuery);
             System.out.println(createQuery);
             System.out.println(dropQuery);
             System.out.println(insertQuery);
             System.out.println(selectQuery);
+            System.out.println(selectByIdQuery);
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
@@ -72,33 +76,32 @@ public class Application {
     }
 
     private static String generateInsert() {
-        H2Dialect h2Dialect = new H2Dialect();
-        GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
-        GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
-        GetFieldValueUseCase getFieldValueUseCase = new GetFieldValueUseCase();
-        DataManipulationLanguageGenerator dataManipulationLanguageGenerator = new DataManipulationLanguageGenerator(
-            getTableNameFromClassUseCase,
-            getFieldFromClassUseCase,
-            getFieldValueUseCase);
-        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = new DataManipulationLanguageAssembler(
-            h2Dialect, dataManipulationLanguageGenerator
-        );
+        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
         Person person = new Person("hello", 13, "gmail");
         return dataManipulationLanguageAssembler.generateInsert(person);
     }
 
     private static String generateFindAll() {
+        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
+        return dataManipulationLanguageAssembler.generateSelect(Person.class);
+    }
+
+    private static String generateFindById() {
+        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
+        return dataManipulationLanguageAssembler.generateSelectWithWhere(Person.class);
+    }
+
+    private static DataManipulationLanguageAssembler createDataManipulationLanguageAssembler() {
         H2Dialect h2Dialect = new H2Dialect();
         GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
         GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
         GetFieldValueUseCase getFieldValueUseCase = new GetFieldValueUseCase();
         DataManipulationLanguageGenerator dataManipulationLanguageGenerator = new DataManipulationLanguageGenerator(
-            getTableNameFromClassUseCase,
-            getFieldFromClassUseCase,
-            getFieldValueUseCase);
-        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = new DataManipulationLanguageAssembler(
-            h2Dialect, dataManipulationLanguageGenerator
+                getTableNameFromClassUseCase,
+                getFieldFromClassUseCase,
+                getFieldValueUseCase);
+        return new DataManipulationLanguageAssembler(
+                h2Dialect, dataManipulationLanguageGenerator
         );
-        return dataManipulationLanguageAssembler.generateSelect(Person.class);
     }
 }
