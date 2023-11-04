@@ -62,7 +62,7 @@ public class Application {
         }
     }
 
-    public static String generateCreateQuery() {
+    private static String generateCreateQuery() {
         GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
         GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
         DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
@@ -72,7 +72,7 @@ public class Application {
         return dataDefinitionLanguageAssembler.assembleCreateTableQuery(Person.class);
     }
 
-    public static String generateDropQuery() {
+    private static String generateDropQuery() {
         GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
         GetFieldFromClassUseCase getFieldFromClass = new GetFieldFromClassUseCase();
         DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
