@@ -33,6 +33,7 @@ public class Application {
             String insertQuery = generateInsert();
             String selectQuery = generateFindAll();
             String selectByIdQuery = generateFindById();
+            String deleteQuery = generateDeleteById();
             jdbcTemplate.execute(createQuery);
             jdbcTemplate.execute(insertQuery);
             List<Person> persons = jdbcTemplate.query(selectQuery, personRowMapper);
@@ -41,12 +42,18 @@ public class Application {
             }
             List<Person> persons2 = jdbcTemplate.query(selectByIdQuery, personRowMapper);
             System.out.println("###### Person By Id " + persons2.get(0));
+
+            jdbcTemplate.execute(deleteQuery);
+            List<Person> personsEmpty = jdbcTemplate.query(selectQuery, personRowMapper);
+            System.out.println("after delete size " + personsEmpty.size());
+
             jdbcTemplate.execute(dropQuery);
             System.out.println(createQuery);
             System.out.println(dropQuery);
             System.out.println(insertQuery);
             System.out.println(selectQuery);
             System.out.println(selectByIdQuery);
+            System.out.println(deleteQuery);
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
@@ -89,6 +96,11 @@ public class Application {
     private static String generateFindById() {
         DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
         return dataManipulationLanguageAssembler.generateSelectWithWhere(Person.class);
+    }
+
+    private static String generateDeleteById() {
+        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
+        return dataManipulationLanguageAssembler.generateDeleteWithWhere(Person.class);
     }
 
     private static DataManipulationLanguageAssembler createDataManipulationLanguageAssembler() {

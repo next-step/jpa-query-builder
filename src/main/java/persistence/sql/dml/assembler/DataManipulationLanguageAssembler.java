@@ -2,6 +2,7 @@ package persistence.sql.dml.assembler;
 
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dml.DataManipulationLanguageGenerator;
+import persistence.sql.dml.delete.DeleteQuery;
 import persistence.sql.dml.insert.InsertQuery;
 import persistence.sql.dml.select.SelectQuery;
 import persistence.sql.dml.where.WhereQuery;
@@ -29,5 +30,11 @@ public class DataManipulationLanguageAssembler {
         SelectQuery selectQuery = dataManipulationLanguageGenerator.buildSelectQuery(cls);
         WhereQuery whereQuery = dataManipulationLanguageGenerator.buildWhereQuery();
         return dialect.selectConditionBuilder(selectQuery, whereQuery);
+    }
+
+    public String generateDeleteWithWhere(Class<?> cls) {
+        DeleteQuery deleteQuery = dataManipulationLanguageGenerator.buildDeleteQuery(cls);
+        WhereQuery whereQuery = dataManipulationLanguageGenerator.buildWhereQuery();
+        return dialect.deleteBuilder(deleteQuery, whereQuery);
     }
 }

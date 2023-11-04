@@ -3,6 +3,7 @@ package persistence.sql.dml;
 import jakarta.persistence.GenerationType;
 import java.util.ArrayList;
 import java.util.List;
+import persistence.sql.dml.delete.DeleteQuery;
 import persistence.sql.dml.insert.InsertQuery;
 import persistence.sql.dml.select.SelectQuery;
 import persistence.sql.dml.where.ConditionType;
@@ -50,5 +51,10 @@ public class DataManipulationLanguageGenerator {
         WhereQuery whereQuery = new WhereQuery();
         whereQuery.addKey("id", new ValueClause(1L, BigInt.getInstance()), ConditionType.IS);
         return whereQuery;
+    }
+
+    public DeleteQuery buildDeleteQuery(Class<?> cls) {
+        TableName tableName = getTableNameFromClassUseCase.execute(cls);
+        return new DeleteQuery(tableName);
     }
 }

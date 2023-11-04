@@ -2,6 +2,7 @@ package persistence.sql.dialect;
 
 import persistence.sql.dml.ColumnClause;
 import persistence.sql.dml.ValueClause;
+import persistence.sql.dml.delete.DeleteQuery;
 import persistence.sql.dml.insert.InsertQuery;
 import persistence.sql.dml.select.SelectQuery;
 import persistence.sql.dml.where.ConditionType;
@@ -43,11 +44,17 @@ public class H2Dialect implements Dialect{
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ");
         sb.append(selectQuery.getTableName().toString());
-        sb.append(" where 1 = 1\n");
-        for(KeyCondition keyCondition : whereQuery.getKeyConditions()) {
-            fillWhere(keyCondition, sb);
-        }
+        whereQueryToSql(whereQuery, sb);
         sb.append(";");
+        return sb.toString();
+    }
+
+    @Override
+    public String deleteBuilder(DeleteQuery deleteQuery, WhereQuery whereQuery) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("delete from ");
+        sb.append(deleteQuery.getTableName().toString());
+        whereQueryToSql(whereQuery, sb);
         return sb.toString();
     }
 
@@ -68,8 +75,18 @@ public class H2Dialect implements Dialect{
         }
     }
 
-    private void fillWhere(KeyCondition keyCondition, StringBuilder sb) {
-        sb.append("and ");
+    private void whereQueryToSql(WhereQuery whereQuery, StringBuilder sb) {
+        sb.append(" where ");
+        int n = whereQuery.getKeyConditions().size();
+        for(int i = 0;i<n;++i) {
+            fillWhere(whereQuery.getKeyConditions().get(i), sb, i == 0);
+        }
+    }
+
+    private void fillWhere(KeyCondition keyCondition, StringBuilder sb, boolean isStart) {
+        if(!isStart){
+            sb.append("and ");
+        }
         sb.append(keyCondition.getKey());
         if(keyCondition.getConditionType() == ConditionType.IS) {
             sb.append(" = ");
