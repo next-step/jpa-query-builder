@@ -55,6 +55,7 @@ public class H2Dialect implements Dialect{
         sb.append("delete from ");
         sb.append(deleteQuery.getTableName().toString());
         whereQueryToSql(whereQuery, sb);
+        sb.append(";");
         return sb.toString();
     }
 
@@ -78,21 +79,20 @@ public class H2Dialect implements Dialect{
     private void whereQueryToSql(WhereQuery whereQuery, StringBuilder sb) {
         sb.append(" where ");
         int n = whereQuery.getKeyConditions().size();
-        for(int i = 0;i<n;++i) {
+        for(int i = 0;i < n;++i) {
             fillWhere(whereQuery.getKeyConditions().get(i), sb, i == 0);
         }
     }
 
     private void fillWhere(KeyCondition keyCondition, StringBuilder sb, boolean isStart) {
         if(!isStart){
-            sb.append("and ");
+            sb.append(" and ");
         }
         sb.append(keyCondition.getKey());
         if(keyCondition.getConditionType() == ConditionType.IS) {
             sb.append(" = ");
         }
         sb.append(changeToSql(keyCondition.getValue()));
-        sb.append("\n");
     }
 
     private String changeToSql(ValueClause valueClause) {
