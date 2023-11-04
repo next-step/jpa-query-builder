@@ -6,7 +6,11 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DataDefinitionLanguageGenerator;
+import persistence.sql.dialect.H2Dialect;
+import persistence.sql.dml.DataManipulationLanguageGenerator;
+import persistence.sql.dml.assembler.DataManipulationLanguageAssembler;
 import persistence.sql.usecase.GetFieldFromClassUseCase;
+import persistence.sql.usecase.GetFieldValueUseCase;
 import persistence.sql.usecase.GetTableNameFromClassUseCase;
 import persistence.sql.ddl.assembler.DataDefinitionLanguageAssembler;
 import persistence.entity.Person;
@@ -23,10 +27,12 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             String createQuery = generateCreateQuery();
             String dropQuery = generateDropQuery();
+            String insertQuery = generateInsert();
             jdbcTemplate.execute(createQuery);
             jdbcTemplate.execute(dropQuery);
             System.out.println(createQuery);
             System.out.println(dropQuery);
+            System.out.println(insertQuery);
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
@@ -53,5 +59,22 @@ public class Application {
         );
         DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = new DataDefinitionLanguageAssembler(dataDefinitionLanguageGenerator);
         return dataDefinitionLanguageAssembler.assembleDropTableQuery(Person.class);
+    }
+
+    //dml
+    private static String generateInsert() {
+        H2Dialect h2Dialect = new H2Dialect();
+        GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
+        GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
+        GetFieldValueUseCase getFieldValueUseCase = new GetFieldValueUseCase();
+        DataManipulationLanguageGenerator dataManipulationLanguageGenerator = new DataManipulationLanguageGenerator(
+            getTableNameFromClassUseCase,
+            getFieldFromClassUseCase,
+            getFieldValueUseCase);
+        DataManipulationLanguageAssembler dataManipulationLanguageAssembler = new DataManipulationLanguageAssembler(
+            h2Dialect, dataManipulationLanguageGenerator
+        );
+        Person person = new Person("hello");
+        return dataManipulationLanguageAssembler.generateInsert(person);
     }
 }

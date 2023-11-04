@@ -36,7 +36,7 @@ public class GetFieldFromClassUseCase {
                                                        type = GenerationType.IDENTITY;
                                                    }
                                                }
-                                               return new DatabaseField(name, TypeConverter.convert(it), isPrimary,
+                                               return new DatabaseField(name, it.getName(), TypeConverter.convert(it), isPrimary,
                                                    type, isNullable);
                                            }
                                        ).collect(Collectors.toList()));

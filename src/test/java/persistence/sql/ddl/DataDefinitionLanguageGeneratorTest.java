@@ -84,7 +84,7 @@ class DataDefinitionLanguageGeneratorTest {
 
         List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields();
         assertThat(databaseFields.stream()
-                                 .filter(it -> "noColumn".equals(it.getName()))
+                                 .filter(it -> "noColumn".equals(it.getDatabaseFieldName()))
                                  .count()).isEqualTo(1L);
     }
 
@@ -96,7 +96,7 @@ class DataDefinitionLanguageGeneratorTest {
 
         List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields();
         assertThat(databaseFields.stream()
-                                 .filter(it -> "columnWithoutName".equals(it.getName()))
+                                 .filter(it -> "columnWithoutName".equals(it.getDatabaseFieldName()))
                                  .count()).isEqualTo(1L);
     }
 
@@ -109,10 +109,10 @@ class DataDefinitionLanguageGeneratorTest {
         List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields();
         assertAll(
             () -> assertThat(databaseFields.stream()
-                                           .filter(it -> "columnWithName".equals(it.getName()))
+                                           .filter(it -> "columnWithName".equals(it.getDatabaseFieldName()))
                                            .count()).isEqualTo(0L),
             () -> assertThat(databaseFields.stream()
-                                           .filter(it -> "column".equals(it.getName()))
+                                           .filter(it -> "column".equals(it.getDatabaseFieldName()))
                                            .count()).isEqualTo(1L)
         );
     }
@@ -124,7 +124,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTest.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "defaultNullableColumn".equals(it.getName())).collect(Collectors.toList());
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "defaultNullableColumn".equals(it.getDatabaseFieldName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.isNullable()).isTrue();
@@ -136,7 +136,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTest.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "nonNullableColumn".equals(it.getName())).collect(Collectors.toList());
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "nonNullableColumn".equals(it.getDatabaseFieldName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.isNullable()).isFalse();
@@ -148,7 +148,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTest.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeLong".equals(it.getName())).collect(Collectors.toList());
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeLong".equals(it.getDatabaseFieldName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.getDatabaseType() == BigInt.getInstance()).isTrue();
@@ -160,7 +160,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTest.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeInteger".equals(it.getName())).collect(Collectors.toList());
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeInteger".equals(it.getDatabaseFieldName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
 
         assertThat(databaseField.getDatabaseType() == Int.getInstance()).isTrue();
@@ -172,7 +172,7 @@ class DataDefinitionLanguageGeneratorTest {
         TableCreator tableCreator = dataDefinitionLanguageGenerator.generateTableCreatorWithClass(
             ColumnTest.class);
 
-        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeString".equals(it.getName())).collect(Collectors.toList());
+        List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields().stream().filter(it -> "fieldTypeString".equals(it.getDatabaseFieldName())).collect(Collectors.toList());
         DatabaseField databaseField = databaseFields.get(0);
         assertAll(
             () -> assertThat(databaseField.getDatabaseType() instanceof VarChar).isTrue(),
@@ -188,7 +188,7 @@ class DataDefinitionLanguageGeneratorTest {
             ColumnTest.class);
 
         List<DatabaseField> databaseFields = tableCreator.getFields().getDatabaseFields();
-        assertThat(databaseFields.stream().filter(it -> "transientField".equals(it.getName())).count()).isZero();
+        assertThat(databaseFields.stream().filter(it -> "transientField".equals(it.getDatabaseFieldName())).count()).isZero();
     }
 
 }
