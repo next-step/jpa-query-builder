@@ -42,8 +42,4 @@ public class Person {
         this.age = age;
         this.email = email;
     }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 }
