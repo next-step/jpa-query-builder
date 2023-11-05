@@ -1,5 +1,6 @@
 package persistence.sql.dialect;
 
+import java.util.Map;
 import persistence.sql.dml.ColumnClause;
 import persistence.sql.dml.ValueClause;
 import persistence.sql.dml.delete.DeleteQuery;
@@ -17,16 +18,7 @@ public class H2Dialect implements Dialect{
         StringBuilder sb = new StringBuilder();
         sb.append("insert into ");
         sb.append(insertQuery.getTableName());
-        sb.append(" (");
-        int n = insertQuery.getColumnClauses().size();
-        for(int i = 0; i < n; ++i) {
-            fillColumn(insertQuery.getColumnClauses().get(i), sb, i == n - 1);
-        }
-        sb.append(") values (");
-        for(int i = 0;i < n; ++i) {
-            fillValue(insertQuery.getValueClauses().get(i), sb, i == n - 1);
-        }
-        sb.append(");");
+        fillColumnAndValue(insertQuery.getColumToValueMap(), sb);
         return sb.toString();
     }
 
@@ -57,6 +49,23 @@ public class H2Dialect implements Dialect{
         whereQueryToSql(whereQuery, sb);
         sb.append(";");
         return sb.toString();
+    }
+
+    private void fillColumnAndValue(Map<ColumnClause, ValueClause> map, StringBuilder sb) {
+        sb.append(" (");
+        int idx = 0;
+        final int maxIdx = map.size() - 1;
+        for(ColumnClause columnClause : map.keySet()) {
+            fillColumn(columnClause, sb, idx == maxIdx);
+            idx++;
+        }
+        sb.append(") values (");
+        idx = 0;
+        for(ValueClause valueClause : map.values()) {
+            fillValue(valueClause, sb, idx == maxIdx);
+            idx++;
+        }
+        sb.append(");");
     }
 
     private void fillColumn(ColumnClause columnClause, StringBuilder sb, boolean isLast) {

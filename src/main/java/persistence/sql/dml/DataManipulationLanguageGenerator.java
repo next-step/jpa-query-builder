@@ -1,8 +1,6 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.GenerationType;
-import java.util.ArrayList;
-import java.util.List;
 import persistence.sql.dml.delete.DeleteQuery;
 import persistence.sql.dml.insert.InsertQuery;
 import persistence.sql.dml.select.SelectQuery;
@@ -30,16 +28,14 @@ public class DataManipulationLanguageGenerator {
     public InsertQuery buildInsertQuery(Object object) {
         TableName tableName = getTableNameFromClassUseCase.execute(object.getClass());
         DatabaseFields databaseFields = getFieldFromClassUseCase.execute(object.getClass());
-        List<ColumnClause> columnClauses = new ArrayList<>(databaseFields.getDatabaseFields().size());
-        List<ValueClause> valueClauses = new ArrayList<>(databaseFields.getDatabaseFields().size());
+        InsertQuery insertQuery = new InsertQuery(tableName);
         for(DatabaseField databaseField : databaseFields.getDatabaseFields()) {
             if(databaseField.isPrimary() && databaseField.getPrimaryKeyGenerationType() == GenerationType.IDENTITY) {
                 continue;
             }
-            columnClauses.add(new ColumnClause(databaseField.getDatabaseFieldName()));
-            valueClauses.add(new ValueClause(getFieldValueUseCase.execute(object, databaseField), databaseField.getDatabaseType()));
+            insertQuery.addFieldValue(new ColumnClause(databaseField.getDatabaseFieldName()), new ValueClause(getFieldValueUseCase.execute(object, databaseField), databaseField.getDatabaseType()));
         }
-        return new InsertQuery(tableName, columnClauses ,valueClauses);
+        return insertQuery;
     }
 
     public SelectQuery buildSelectQuery(Class<?> cls) {
@@ -57,4 +53,6 @@ public class DataManipulationLanguageGenerator {
         TableName tableName = getTableNameFromClassUseCase.execute(cls);
         return new DeleteQuery(tableName);
     }
+
+
 }

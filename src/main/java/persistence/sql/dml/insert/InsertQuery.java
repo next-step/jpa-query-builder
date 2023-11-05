@@ -1,30 +1,28 @@
 package persistence.sql.dml.insert;
 
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import persistence.sql.dml.ColumnClause;
 import persistence.sql.dml.ValueClause;
 import persistence.sql.vo.TableName;
 
 public class InsertQuery {
     private final TableName tableName;
-    private final List<ColumnClause> columnClauses;
-    private final List<ValueClause> valueClauses;
+    private final Map<ColumnClause, ValueClause> columToValueMap = new LinkedHashMap<>();
 
-    public InsertQuery(TableName tableName, List<ColumnClause> columnClauses, List<ValueClause> valueClauses) {
+    public InsertQuery(TableName tableName) {
         this.tableName = tableName;
-        this.columnClauses = columnClauses;
-        this.valueClauses = valueClauses;
     }
 
     public TableName getTableName() {
         return tableName;
     }
 
-    public List<ColumnClause> getColumnClauses() {
-        return columnClauses;
+    public void addFieldValue(ColumnClause columnClause, ValueClause valueClause) {
+        this.columToValueMap.put(columnClause, valueClause);
     }
 
-    public List<ValueClause> getValueClauses() {
-        return valueClauses;
+    public Map<ColumnClause, ValueClause> getColumToValueMap() {
+        return columToValueMap;
     }
 }
