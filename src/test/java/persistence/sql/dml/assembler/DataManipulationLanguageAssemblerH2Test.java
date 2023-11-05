@@ -39,7 +39,7 @@ class DataManipulationLanguageAssemblerH2Test {
     @Test
     void generateSelectWithWhere() {
         // when
-        String sql = dataManipulationLanguageAssembler.generateSelectWithWhere(Person.class);
+        String sql = dataManipulationLanguageAssembler.generateSelectWithWhere(Person.class, 1L);
 
         // then
         String expected = "select * from users where id = 1;";
@@ -49,7 +49,7 @@ class DataManipulationLanguageAssemblerH2Test {
     @Test
     void generateDeleteWithWhere() {
         // when
-        String sql = dataManipulationLanguageAssembler.generateDeleteWithWhere(Person.class);
+        String sql = dataManipulationLanguageAssembler.generateDeleteWithWhere(Person.class, 1L);
 
         // then
         String expected = "delete from users where id = 1;";

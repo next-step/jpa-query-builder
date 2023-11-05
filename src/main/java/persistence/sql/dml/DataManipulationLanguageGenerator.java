@@ -43,9 +43,9 @@ public class DataManipulationLanguageGenerator {
         return new SelectQuery(tableName);
     }
 
-    public WhereQuery buildWhereQuery() {
+    public WhereQuery buildWhereQuery(long id) {
         WhereQuery whereQuery = new WhereQuery();
-        whereQuery.addKey("id", new ValueClause(1L, BigInt.getInstance()), ConditionType.IS);
+        whereQuery.addKey("id", new ValueClause(id, BigInt.getInstance()), ConditionType.IS);
         return whereQuery;
     }
 

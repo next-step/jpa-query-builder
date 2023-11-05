@@ -75,7 +75,7 @@ class PersonIntegrationTest {
         final String email = "tongnamuu@naver.com";
         PersonRowMapper personRowMapper = new PersonRowMapper();
         String insertQuery = dataManipulationLanguageAssembler.generateInsert(new Person(name, age, email));
-        String selectQuery = dataManipulationLanguageAssembler.generateSelectWithWhere(Person.class);
+        String selectQuery = dataManipulationLanguageAssembler.generateSelectWithWhere(Person.class, 1L);
 
         // when
         jdbcTemplate.execute(insertQuery);
@@ -98,7 +98,7 @@ class PersonIntegrationTest {
         PersonRowMapper personRowMapper = new PersonRowMapper();
         String insertQuery = dataManipulationLanguageAssembler.generateInsert(new Person(name, age, email));
         jdbcTemplate.execute(insertQuery);
-        String deleteQuery = dataManipulationLanguageAssembler.generateDeleteWithWhere(Person.class);
+        String deleteQuery = dataManipulationLanguageAssembler.generateDeleteWithWhere(Person.class, 1L);
 
         // when
         jdbcTemplate.execute(deleteQuery);
