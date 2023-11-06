@@ -18,7 +18,7 @@ import persistence.sql.ddl.assembler.DataDefinitionLanguageAssembler;
 import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.DataManipulationLanguageGenerator;
 import persistence.sql.dml.assembler.DataManipulationLanguageAssembler;
-import persistence.sql.dml.insert.PersonRowMapper;
+import jdbc.PersonRowMapper;
 import persistence.sql.usecase.GetFieldFromClassUseCase;
 import persistence.sql.usecase.GetFieldValueUseCase;
 import persistence.sql.usecase.GetTableNameFromClassUseCase;
@@ -26,8 +26,8 @@ import persistence.sql.usecase.GetTableNameFromClassUseCase;
 class PersonIntegrationTest {
     private DatabaseServer server;
     private JdbcTemplate jdbcTemplate;
-    private DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = createDataDefinitionLanguageAssembler();
-    private DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
+    private final DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = createDataDefinitionLanguageAssembler();
+    private final DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
 
 
     @BeforeEach
