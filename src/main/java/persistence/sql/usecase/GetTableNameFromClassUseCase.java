@@ -1,9 +1,9 @@
-package persistence.sql.ddl.usecase;
+package persistence.sql.usecase;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import persistence.sql.ddl.exception.CannotCreateTableException;
-import persistence.sql.ddl.vo.TableName;
+import persistence.sql.vo.TableName;
 
 public class GetTableNameFromClassUseCase {
     public TableName execute(Class<?> cls) {

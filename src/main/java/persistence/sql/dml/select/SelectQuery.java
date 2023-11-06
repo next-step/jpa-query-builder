@@ -1,13 +1,11 @@
-package persistence.sql.ddl;
+package persistence.sql.dml.select;
 
-import lombok.Builder;
 import persistence.sql.vo.TableName;
 
-public class TableRemover {
+public class SelectQuery {
     private final TableName tableName;
 
-    @Builder
-    private TableRemover(TableName tableName) {
+    public SelectQuery(TableName tableName) {
         this.tableName = tableName;
     }
 

@@ -3,7 +3,7 @@ package persistence.sql.ddl.assembler;
 import persistence.sql.ddl.DataDefinitionLanguageGenerator;
 import persistence.sql.ddl.TableCreator;
 import persistence.sql.ddl.TableRemover;
-import persistence.sql.ddl.vo.DatabaseField;
+import persistence.sql.vo.DatabaseField;
 
 public class DataDefinitionLanguageAssembler {
     private final DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator;

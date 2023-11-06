@@ -1,4 +1,4 @@
-package persistence.sql.ddl.vo;
+package persistence.sql.vo;
 
 import java.util.Collections;
 import java.util.List;
