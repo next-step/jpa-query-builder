@@ -8,6 +8,7 @@ import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.DataManipulationLanguageGenerator;
 import persistence.sql.usecase.GetFieldFromClassUseCase;
 import persistence.sql.usecase.GetFieldValueUseCase;
+import persistence.sql.usecase.GetIdDatabaseFieldUseCase;
 import persistence.sql.usecase.GetTableNameFromClassUseCase;
 
 class DataManipulationLanguageAssemblerH2Test {
@@ -48,11 +49,15 @@ class DataManipulationLanguageAssemblerH2Test {
 
     @Test
     void generateDeleteWithWhere() {
+        // given
+        Person person = new Person("tongnamuu", 11, "tongnamuu@naver.com");
+        person.setId(2L);
+
         // when
-        String sql = dataManipulationLanguageAssembler.generateDeleteWithWhere(Person.class, 1L);
+        String sql = dataManipulationLanguageAssembler.generateDeleteWithWhere(person);
 
         // then
-        String expected = "delete from users where id = 1;";
+        String expected = "delete from users where id = 2;";
         assertThat(sql).isEqualTo(expected);
     }
 
@@ -61,10 +66,11 @@ class DataManipulationLanguageAssemblerH2Test {
         GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
         GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
         GetFieldValueUseCase getFieldValueUseCase = new GetFieldValueUseCase();
+        GetIdDatabaseFieldUseCase getIdDatabaseFieldUseCase = new GetIdDatabaseFieldUseCase(getFieldFromClassUseCase);
         DataManipulationLanguageGenerator dataManipulationLanguageGenerator = new DataManipulationLanguageGenerator(
             getTableNameFromClassUseCase,
             getFieldFromClassUseCase,
-            getFieldValueUseCase);
+            getFieldValueUseCase, getIdDatabaseFieldUseCase);
         return new DataManipulationLanguageAssembler(
             h2Dialect, dataManipulationLanguageGenerator
         );

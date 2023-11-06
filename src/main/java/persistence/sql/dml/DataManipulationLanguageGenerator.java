@@ -8,21 +8,23 @@ import persistence.sql.dml.where.ConditionType;
 import persistence.sql.dml.where.WhereQuery;
 import persistence.sql.usecase.GetFieldFromClassUseCase;
 import persistence.sql.usecase.GetFieldValueUseCase;
+import persistence.sql.usecase.GetIdDatabaseFieldUseCase;
 import persistence.sql.usecase.GetTableNameFromClassUseCase;
 import persistence.sql.vo.DatabaseField;
 import persistence.sql.vo.DatabaseFields;
 import persistence.sql.vo.TableName;
-import persistence.sql.vo.type.BigInt;
 
 public class DataManipulationLanguageGenerator {
     private final GetTableNameFromClassUseCase getTableNameFromClassUseCase;
     private final GetFieldFromClassUseCase getFieldFromClassUseCase;
     private final GetFieldValueUseCase getFieldValueUseCase;
+    private final GetIdDatabaseFieldUseCase getIdDatabaseFieldUseCase;
 
-    public DataManipulationLanguageGenerator(GetTableNameFromClassUseCase getTableNameFromClassUseCase, GetFieldFromClassUseCase getFieldFromClassUseCase, GetFieldValueUseCase getFieldValueUseCase) {
+    public DataManipulationLanguageGenerator(GetTableNameFromClassUseCase getTableNameFromClassUseCase, GetFieldFromClassUseCase getFieldFromClassUseCase, GetFieldValueUseCase getFieldValueUseCase, GetIdDatabaseFieldUseCase getIdDatabaseFieldUseCase) {
         this.getTableNameFromClassUseCase = getTableNameFromClassUseCase;
         this.getFieldFromClassUseCase = getFieldFromClassUseCase;
         this.getFieldValueUseCase = getFieldValueUseCase;
+        this.getIdDatabaseFieldUseCase = getIdDatabaseFieldUseCase;
     }
 
     public InsertQuery buildInsertQuery(Object object) {
@@ -43,9 +45,21 @@ public class DataManipulationLanguageGenerator {
         return new SelectQuery(tableName);
     }
 
-    public WhereQuery buildWhereQuery(long id) {
+    public WhereQuery buildSelectWhereQuery(Class<?> cls, long id) {
         WhereQuery whereQuery = new WhereQuery();
-        whereQuery.addKey("id", new ValueClause(id, BigInt.getInstance()), ConditionType.IS);
+        DatabaseField field = getIdDatabaseFieldUseCase.execute(cls);
+        whereQuery.addKey(field.getDatabaseFieldName(), new ValueClause(id, field.getDatabaseType()), ConditionType.IS);
+        return whereQuery;
+    }
+
+    public WhereQuery buildWhereQuery(Object object) {
+        WhereQuery whereQuery = new WhereQuery();
+        DatabaseField field = getIdDatabaseFieldUseCase.execute(object.getClass());
+        Object value = getFieldValueUseCase.execute(object, field);
+        if(value == null) {
+            throw new NullPointerException("Id should not be null to delete");
+        }
+        whereQuery.addKey(field.getDatabaseFieldName(), new ValueClause(value, field.getDatabaseType()), ConditionType.IS);
         return whereQuery;
     }
 
@@ -53,6 +67,4 @@ public class DataManipulationLanguageGenerator {
         TableName tableName = getTableNameFromClassUseCase.execute(cls);
         return new DeleteQuery(tableName);
     }
-
-
 }

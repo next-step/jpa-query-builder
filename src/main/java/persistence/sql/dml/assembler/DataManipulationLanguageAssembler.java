@@ -28,13 +28,13 @@ public class DataManipulationLanguageAssembler {
 
     public String generateSelectWithWhere(Class<?> cls, long id) {
         SelectQuery selectQuery = dataManipulationLanguageGenerator.buildSelectQuery(cls);
-        WhereQuery whereQuery = dataManipulationLanguageGenerator.buildWhereQuery(id);
+        WhereQuery whereQuery = dataManipulationLanguageGenerator.buildSelectWhereQuery(cls, id);
         return dialect.selectConditionBuilder(selectQuery, whereQuery);
     }
 
-    public String generateDeleteWithWhere(Class<?> cls, long id) {
-        DeleteQuery deleteQuery = dataManipulationLanguageGenerator.buildDeleteQuery(cls);
-        WhereQuery whereQuery = dataManipulationLanguageGenerator.buildWhereQuery(id);
+    public String generateDeleteWithWhere(Object object) {
+        DeleteQuery deleteQuery = dataManipulationLanguageGenerator.buildDeleteQuery(object.getClass());
+        WhereQuery whereQuery = dataManipulationLanguageGenerator.buildWhereQuery(object);
         return dialect.deleteBuilder(deleteQuery, whereQuery);
     }
 }
