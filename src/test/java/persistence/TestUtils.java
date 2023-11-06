@@ -7,6 +7,7 @@ import persistence.sql.dml.DataManipulationLanguageGenerator;
 import persistence.sql.dml.assembler.DataManipulationLanguageAssembler;
 import persistence.sql.usecase.GetFieldFromClassUseCase;
 import persistence.sql.usecase.GetFieldValueUseCase;
+import persistence.sql.usecase.GetIdDatabaseFieldUseCase;
 import persistence.sql.usecase.GetTableNameFromClassUseCase;
 
 public class TestUtils {
@@ -15,10 +16,12 @@ public class TestUtils {
         GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
         GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
         GetFieldValueUseCase getFieldValueUseCase = new GetFieldValueUseCase();
+        GetIdDatabaseFieldUseCase getIdDatabaseFieldUseCase = new GetIdDatabaseFieldUseCase(getFieldFromClassUseCase);
         DataManipulationLanguageGenerator dataManipulationLanguageGenerator = new DataManipulationLanguageGenerator(
             getTableNameFromClassUseCase,
             getFieldFromClassUseCase,
-            getFieldValueUseCase);
+            getFieldValueUseCase,
+            getIdDatabaseFieldUseCase);
         return new DataManipulationLanguageAssembler(
             h2Dialect, dataManipulationLanguageGenerator
         );

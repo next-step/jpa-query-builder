@@ -2,26 +2,22 @@ package persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static persistence.TestUtils.createDataDefinitionLanguageAssembler;
+import static persistence.TestUtils.createDataManipulationLanguageAssembler;
 
 import database.DatabaseServer;
 import database.H2;
 import java.sql.SQLException;
 import java.util.List;
 import jdbc.JdbcTemplate;
+import jdbc.PersonRowMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
-import persistence.sql.ddl.DataDefinitionLanguageGenerator;
 import persistence.sql.ddl.assembler.DataDefinitionLanguageAssembler;
-import persistence.sql.dialect.H2Dialect;
-import persistence.sql.dml.DataManipulationLanguageGenerator;
 import persistence.sql.dml.assembler.DataManipulationLanguageAssembler;
-import jdbc.PersonRowMapper;
-import persistence.sql.usecase.GetFieldFromClassUseCase;
-import persistence.sql.usecase.GetFieldValueUseCase;
-import persistence.sql.usecase.GetTableNameFromClassUseCase;
 
 class PersonIntegrationTest {
     private DatabaseServer server;
@@ -95,38 +91,16 @@ class PersonIntegrationTest {
         final String name = "tongnamuu";
         final int age = 14;
         final String email = "tongnamuu@naver.com";
+        Person p = new Person(name, age, email);
         PersonRowMapper personRowMapper = new PersonRowMapper();
-        String insertQuery = dataManipulationLanguageAssembler.generateInsert(new Person(name, age, email));
+        String insertQuery = dataManipulationLanguageAssembler.generateInsert(p);
         jdbcTemplate.execute(insertQuery);
-        String deleteQuery = dataManipulationLanguageAssembler.generateDeleteWithWhere(Person.class, 1L);
+        p.setId(1L);
+        String deleteQuery = dataManipulationLanguageAssembler.generateDeleteWithWhere(p);
 
         // when
         jdbcTemplate.execute(deleteQuery);
         List<Person> persons = jdbcTemplate.query(dataManipulationLanguageAssembler.generateSelect(Person.class), personRowMapper);
         assertThat(persons.size()).isZero();
-    }
-
-
-    private DataManipulationLanguageAssembler createDataManipulationLanguageAssembler() {
-        H2Dialect h2Dialect = new H2Dialect();
-        GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
-        GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
-        GetFieldValueUseCase getFieldValueUseCase = new GetFieldValueUseCase();
-        DataManipulationLanguageGenerator dataManipulationLanguageGenerator = new DataManipulationLanguageGenerator(
-            getTableNameFromClassUseCase,
-            getFieldFromClassUseCase,
-            getFieldValueUseCase);
-        return new DataManipulationLanguageAssembler(
-            h2Dialect, dataManipulationLanguageGenerator
-        );
-    }
-
-    private DataDefinitionLanguageAssembler createDataDefinitionLanguageAssembler() {
-        GetTableNameFromClassUseCase getTableNameFromClassUseCase = new GetTableNameFromClassUseCase();
-        GetFieldFromClassUseCase getFieldFromClassUseCase = new GetFieldFromClassUseCase();
-        DataDefinitionLanguageGenerator dataDefinitionLanguageGenerator = new DataDefinitionLanguageGenerator(
-            getTableNameFromClassUseCase, getFieldFromClassUseCase
-        );
-        return new DataDefinitionLanguageAssembler(dataDefinitionLanguageGenerator);
     }
 }

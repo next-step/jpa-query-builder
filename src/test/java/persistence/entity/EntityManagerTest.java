@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.assembler.DataDefinitionLanguageAssembler;
 import persistence.sql.dml.assembler.DataManipulationLanguageAssembler;
 
-
 class EntityManagerTest {
     private final DataManipulationLanguageAssembler dataManipulationLanguageAssembler = createDataManipulationLanguageAssembler();
     private final DataDefinitionLanguageAssembler dataDefinitionLanguageAssembler = createDataDefinitionLanguageAssembler();
@@ -52,5 +51,33 @@ class EntityManagerTest {
             () -> assertThat(findPerson.getAge()).isEqualTo(person.getAge()),
             () -> assertThat(findPerson.getEmail()).isEqualTo(person.getEmail())
         );
+    }
+
+    @Test
+    void persist() {
+        // when, then
+        Person person = (Person) entityManager.persist(new Person("tongnamuu", 11, "tongnamuu@naver.com"));
+        Person findPerson = entityManager.find(Person.class, 1L);
+        assertAll(
+            () -> assertThat(findPerson.getName()).isEqualTo(person.getName()),
+            () -> assertThat(findPerson.getAge()).isEqualTo(person.getAge()),
+            () -> assertThat(findPerson.getEmail()).isEqualTo(person.getEmail())
+        );
+    }
+
+    @Test
+    void remove() {
+        // given
+        Person person = new Person("tongnamuu", 11, "tongnamuu@naver.com");
+        jdbcTemplate.execute(dataManipulationLanguageAssembler.generateInsert(person));
+        Person findPerson = entityManager.find(Person.class, 1L);
+
+        // when
+        entityManager.remove(findPerson);
+        Person findPerson2 = entityManager.find(Person.class, 1L);
+
+        // then
+        assertThat(findPerson).isNotNull();
+        assertThat(findPerson2).isNull();
     }
 }
