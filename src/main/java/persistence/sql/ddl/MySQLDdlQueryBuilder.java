@@ -1,9 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -23,12 +20,16 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
     private static final String EMPTY_SPACE = "";
 
     public String createQuery(Class<?> type) {
+        if (!type.isAnnotationPresent(Entity.class)){
+            throw new IllegalArgumentException("entity annotation is required");
+        }
         StringBuilder sb = new StringBuilder();
         sb.append(CREATE_TABLE)
-                .append(type.getSimpleName())
+                .append(addTableName(type))
                 .append(OPEN_BRACKET);
 
         String columns = Arrays.stream(type.getDeclaredFields())
+                .filter(field-> !field.isAnnotationPresent(Transient.class))
                 .map(this::buildColumn)
                 .reduce((columnA, columnB) -> String.join(COLUMN_SEPARATOR, columnA, columnB))
                 .orElseThrow(IllegalStateException::new);
@@ -37,6 +38,14 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
                 .append(CLOSE_BRACKET)
                 .append(END_STR)
                 .toString();
+    }
+
+    private String addTableName(Class<?> type) {
+        Table table = type.getAnnotation(Table.class);
+        if (table != null && table.name().length() > 0){
+            return table.name();
+        }
+        return type.getSimpleName();
     }
 
     private String buildColumn(Field field) {

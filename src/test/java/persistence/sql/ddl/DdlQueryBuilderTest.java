@@ -10,7 +10,7 @@ class DdlQueryBuilderTest {
     void should_create_ddl_query() {
         DdlQueryBuilder builder = new MySQLDdlQueryBuilder();
 
-        assertThat(builder.createQuery(Person.class)).isEqualTo("CREATE TABLE Person(" +
+        assertThat(builder.createQuery(Person.class)).isEqualTo("CREATE TABLE users(" +
                 "id BIGINT PRIMARY KEY AUTO_INCREMENT," +
                 " nick_name VARCHAR(255)," +
                 " old INT," +
