@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -57,6 +54,30 @@ public class ReflectionTest {
                         throw new RuntimeException(e);
                     }
                 });
+    }
+
+    @Test
+    @DisplayName("요구사항 4 - private field 에 값 할당")
+    void privateFieldAccess() {
+        Class<Car> clazz = Car.class;
+        Car car = new Car();
+        Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> Modifier.isPrivate(field.getModifiers()))
+                .forEach(field -> {
+                    field.setAccessible(true);
+                    try {
+                        if (field.getName().equals("name")) {
+                            field.set(car, "테스트");
+                        }
+                        if (field.getName().equals("price")) {
+                            field.set(car, 1000);
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        assertThat(car).isEqualTo(new Car("테스트", 1000));
     }
 
 }

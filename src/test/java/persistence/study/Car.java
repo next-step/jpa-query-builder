@@ -1,8 +1,10 @@
 package persistence.study;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @ToString
+@EqualsAndHashCode
 public class Car {
 
     private String name;
