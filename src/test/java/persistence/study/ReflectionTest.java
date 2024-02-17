@@ -1,6 +1,5 @@
 package persistence.study;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,6 +14,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,36 +26,36 @@ public class ReflectionTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionTest.class);
 
     @Test
-    @DisplayName("Car 객체 정보 가져오기")
+    @DisplayName("Car 객체 이름 가져오기")
+    void showName() {
+        Class<Car> carClass = Car.class;
+        assertThat(carClass.getName()).isEqualTo("persistence.study.Car");
+    }
+
+    @Test
+    @DisplayName("Car 객체 필드 정보 가져오기")
     void showFields() {
         Class<Car> carClass = Car.class;
-        LOGGER.debug(carClass.getName());
         Field[] declaredFields = carClass.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            LOGGER.debug(String.valueOf(declaredField));
-        }
+        assertThat(Arrays.stream(declaredFields).count()).isEqualTo(2);
     }
 
     @Test
     @DisplayName("Car 생성자들을 가져오기")
-    void showContrcutors() {
+    void showConstructors() {
         Class<Car> carClass = Car.class;
-        LOGGER.debug(carClass.getName());
         Constructor<?>[] constructors = carClass.getConstructors();
-        for (Constructor<?> constructor : constructors) {
-            LOGGER.debug(String.valueOf(constructor));
-        }
+        assertThat(Arrays.stream(constructors).count()).isEqualTo(2);
     }
 
     @Test
     @DisplayName("Car 메서드들을 가져오기")
     void showMethods() {
         Class<Car> carClass = Car.class;
-        LOGGER.debug(carClass.getName());
-        Method[] methods = carClass.getMethods();
-        for (Method method : methods) {
-            LOGGER.debug(String.valueOf(method));
-        }
+        List<String> actual = Arrays.stream(carClass.getMethods())
+                .map(Method::getName)
+                .collect(Collectors.toList());
+        assertThat(actual).contains("testGetName", "printView");
     }
 
     @Test
@@ -65,7 +65,7 @@ public class ReflectionTest {
         Method[] declaredMethods = carClass.getDeclaredMethods();
         List<Method> test = Arrays.stream(declaredMethods)
                 .filter(it -> it.getName().startsWith("test"))
-                .toList();
+                .collect(Collectors.toList());
         Car car = carClass.getDeclaredConstructor().newInstance();
 
         for (Method method : test) {
@@ -81,7 +81,7 @@ public class ReflectionTest {
 
         List<Method> printViewAnnotatedMethods = Arrays.stream(carClass.getDeclaredMethods())
                 .filter(it -> it.isAnnotationPresent(PrintView.class))
-                .toList();
+                .collect(Collectors.toList());
         Car car = carClass.getDeclaredConstructor().newInstance();
 
         for (Method printViewAnnotatedMethod : printViewAnnotatedMethods) {
@@ -99,15 +99,17 @@ public class ReflectionTest {
         Field[] declaredFields = carClass.getDeclaredFields();
         List<Field> privateFields = Arrays.stream(declaredFields)
                 .filter(it -> Modifier.isPrivate(it.getModifiers()))
-                .toList();
+                .collect(Collectors.toList());
         for (Field privateField : privateFields) {
             privateField.setAccessible(true);
             Class<?> type = privateField.getType();
             privateField.set(car, generateTestValue(type));
         }
+        int expectedPrice = 1000;
+        String expectedName = "carName";
         assertAll(
-                () -> assertThat(car.getPrice()).isEqualTo(generateTestValue(int.class)),
-                () -> assertThat(car.getName()).isEqualTo(generateTestValue(String.class))
+                () -> assertThat(car.getPrice()).isEqualTo(expectedPrice),
+                () -> assertThat(car.getName()).isEqualTo(expectedName)
         );
     }
 
@@ -119,8 +121,8 @@ public class ReflectionTest {
         Constructor<Car> declaredConstructor = carClass.getDeclaredConstructor(String.class, int.class);
         Car car = declaredConstructor.newInstance(carName, price);
         assertAll(
-                () -> Assertions.assertThat(car.getName()).isEqualTo(carName),
-                () -> Assertions.assertThat(car.getPrice()).isEqualTo(price)
+                () -> assertThat(car.getName()).isEqualTo(carName),
+                () -> assertThat(car.getPrice()).isEqualTo(price)
         );
     }
 
