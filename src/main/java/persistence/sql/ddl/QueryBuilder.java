@@ -1,9 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -16,7 +13,7 @@ public class QueryBuilder {
         StringBuilder sb = new StringBuilder();
 
         sb.append("CREATE TABLE ")
-                .append(convertCamelCaseToSnakeCase(clazz.getSimpleName()))
+                .append(generateTableName(clazz))
                 .append(" (");
 
         Arrays.stream(clazz.getDeclaredFields())
@@ -35,8 +32,22 @@ public class QueryBuilder {
         return sb.toString();
     }
 
+    private String generateTableName(Class<?> clazz) {
+        Table annotation = clazz.getDeclaredAnnotation(Table.class);
+
+        if (Objects.nonNull(annotation) && !annotation.name().isEmpty()) {
+            return annotation.name();
+        }
+
+        return convertCamelCaseToSnakeCase(clazz.getSimpleName());
+    }
+
     private void generateColumn(Field field, StringBuilder sb) {
         field.setAccessible(true);
+
+        if (field.isAnnotationPresent(Transient.class)) {
+            return;
+        }
 
         sb.append(generateColumnName(field))
                 .append(" ")
