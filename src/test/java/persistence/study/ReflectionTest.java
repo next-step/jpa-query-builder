@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -80,18 +81,22 @@ class ReflectionTest {
     @DisplayName("private field에 값 할당")
     void privateFieldAccess(String field1, String value1, String field2, int value2) throws Exception {
         // Given
-        Map<String, Object> fieldToValue = Map.of(
+        Map<String, Object> fieldNameToValue = Map.of(
             field1, value1,
             field2, value2
         );
 
         Car car = newInstanceByDefaultConstructor(carClass);
 
-        assertThat(
-            Arrays.stream(carClass.getDeclaredFields())
-                .map(Field::getName)
-                .toList()
-        ).contains(field1, field2);
+        List<Field> privateFields = Arrays.stream(carClass.getDeclaredFields())
+            .filter(field -> Modifier.isPrivate(field.getModifiers()))
+            .toList();
+
+        List<String> privateFieldNames = privateFields.stream()
+            .map(Field::getName)
+            .toList();
+
+        assertThat(privateFieldNames).contains(field1, field2);
 
         // When
         for (Field declaredField : carClass.getDeclaredFields()) {
@@ -99,9 +104,9 @@ class ReflectionTest {
 
             String fieldName = declaredField.getName();
 
-            if (fieldToValue.containsKey(fieldName)) {
+            if (fieldNameToValue.containsKey(fieldName)) {
                 declaredField.setAccessible(true);
-                declaredField.set(car, fieldToValue.get(fieldName));
+                declaredField.set(car, fieldNameToValue.get(fieldName));
             }
         }
 
