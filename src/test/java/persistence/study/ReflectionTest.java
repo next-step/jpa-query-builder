@@ -43,4 +43,20 @@ public class ReflectionTest {
                     }
                 });
     }
+
+    @Test
+    @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() {
+        Class<Car> clazz = Car.class;
+        Arrays.stream(clazz.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .forEach(method -> {
+                    try {
+                        method.invoke(clazz.getConstructor().newInstance());
+                    } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
 }
