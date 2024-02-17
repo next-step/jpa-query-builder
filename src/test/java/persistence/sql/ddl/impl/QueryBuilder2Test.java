@@ -33,6 +33,15 @@ class QueryBuilder2Test {
     }
 
     @Test
+    void buildDropQuery() {
+        String dropQuery = queryBuilder.buildDropQuery(entityClass);
+
+        log.debug("Drop query: {}", dropQuery);
+
+        assertThat(dropQuery).isEqualTo("DROP TABLE Person2");
+    }
+
+    @Test
     void getTableNameByClassName() {
         String tableName = queryBuilder.getTableNameFrom(entityClass);
 
