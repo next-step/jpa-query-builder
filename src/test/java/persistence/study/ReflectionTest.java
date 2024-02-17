@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -52,5 +53,29 @@ public class ReflectionTest {
                 method.invoke(car);
             }
         }
+    }
+
+    @DisplayName("private field에 값 할당")
+    @Test
+    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        final String name = "simpson";
+        final int price = 100;
+        final Class<Car> carClass = Car.class;
+        final Car car = carClass.getConstructor().newInstance();
+
+        for (Field field : carClass.getDeclaredFields()) {
+            if (field.getModifiers() == 2) {
+                field.setAccessible(true);
+
+                if (field.getName().equals("name")) {
+                    field.set(car, name);
+                }
+                if (field.getName().equals("price")) {
+                    field.set(car, price);
+                }
+            }
+        }
+        assertThat(car.getName()).isEqualTo(name);
+        assertThat(car.getPrice()).isEqualTo(price);
     }
 }
