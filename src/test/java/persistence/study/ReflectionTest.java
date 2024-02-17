@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,10 +29,8 @@ public class ReflectionTest {
     @DisplayName("test로 시작하는 메소드 실행한다.")
     @Test
     void testMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        String name = "simpson";
-        int age = 31;
         final Class<Car> carClass = Car.class;
-        final Car car = carClass.getConstructor(String.class, int.class).newInstance(name, age);
+        final Car car = carClass.getDeclaredConstructor().newInstance();
 
         for (Method method : carClass.getDeclaredMethods()) {
             if (method.getName().startsWith("test")) {
@@ -64,7 +62,7 @@ public class ReflectionTest {
         final Car car = carClass.getConstructor().newInstance();
 
         for (Field field : carClass.getDeclaredFields()) {
-            if (field.getModifiers() == 2) {
+            if (field.getModifiers() == Modifier.PRIVATE) {
                 field.setAccessible(true);
 
                 if (field.getName().equals("name")) {
