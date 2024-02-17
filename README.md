@@ -29,7 +29,7 @@
 
 ### 요구사항
 
-* [ ] 요구사항 1 - 아래 정보를 바탕으로 create 쿼리 만들어보기
+* [x] 요구사항 1 - 아래 정보를 바탕으로 create 쿼리 만들어보기
     * 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
     * ```java
       @Entity
