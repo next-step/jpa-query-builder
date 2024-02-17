@@ -92,6 +92,6 @@
       
       }
       ```
-* [ ] 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
+* [x] 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
     * 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
     * @Entity, @Table를 고려해서 잘 작성해보자

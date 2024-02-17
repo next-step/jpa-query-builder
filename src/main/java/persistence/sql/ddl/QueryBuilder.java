@@ -32,6 +32,10 @@ public class QueryBuilder {
         return sb.toString();
     }
 
+    public String dropTableSql(Class<?> clazz) {
+        return "DROP TABLE " + generateTableName(clazz);
+    }
+
     private String generateTableName(Class<?> clazz) {
         Table annotation = clazz.getDeclaredAnnotation(Table.class);
 

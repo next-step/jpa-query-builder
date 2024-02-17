@@ -36,4 +36,13 @@ class QueryBuilderTest {
 
         assertThat(createTableQuery).isEqualTo("CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT, nick_name VARCHAR, old INTEGER, email VARCHAR NOT NULL, PRIMARY KEY (id))");
     }
+
+    @Test
+    @DisplayName("요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기")
+    void generateDropTableQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String dropTableQuery = queryBuilder.dropTableSql(Person.class);
+
+        assertThat(dropTableQuery).isEqualTo("DROP TABLE users");
+    }
 }
