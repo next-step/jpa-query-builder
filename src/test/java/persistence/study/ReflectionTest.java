@@ -1,5 +1,6 @@
 package persistence.study;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -8,8 +9,11 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 
 public class ReflectionTest {
@@ -79,5 +83,35 @@ public class ReflectionTest {
             LOGGER.debug(String.valueOf(printViewAnnotatedMethod));
             printViewAnnotatedMethod.invoke(car);
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값을 할당할 수 있다.")
+    void insertValueInPrivateField() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        Field[] declaredFields = carClass.getDeclaredFields();
+        List<Field> privateFields = Arrays.stream(declaredFields)
+                .filter(it -> Modifier.isPrivate(it.getModifiers()))
+                .toList();
+        for (Field privateField : privateFields) {
+            privateField.setAccessible(true);
+            Class<?> type = privateField.getType();
+            privateField.set(car, generateTestValue(type));
+        }
+
+        assertThat(car.getPrice()).isEqualTo(generateTestValue(int.class));
+        assertThat(car.getName()).isEqualTo(generateTestValue(String.class));
+    }
+
+    private Object generateTestValue(Class<?> targetClass) {
+        if (targetClass.equals(String.class)) {
+            return "TEST VALUE";
+        }
+        if (targetClass.equals(int.class) || targetClass.equals(Integer.class)) {
+            return 1000;
+        }
+        throw new UnsupportedOperationException();
     }
 }
