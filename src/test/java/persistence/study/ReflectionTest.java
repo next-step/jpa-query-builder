@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 
@@ -23,5 +25,23 @@ public class ReflectionTest {
         logger.debug(Arrays.toString(carClass.getDeclaredConstructors()));
         // 모든 메서드 반환
         logger.debug(Arrays.toString(carClass.getDeclaredMethods()));
+    }
+
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    void testMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        final String name = "new Car";
+        final int age = 1;
+
+        final Class<Car> carClass = Car.class;
+        final Car car = carClass.getConstructor(String.class, int.class).newInstance(name, age);
+
+        for (Method method : carClass.getDeclaredMethods()) {
+            if (method.getName().startsWith("test")) {
+                final String result = (String) method.invoke(car);
+                logger.info(result);
+            }
+        }
+
     }
 }
