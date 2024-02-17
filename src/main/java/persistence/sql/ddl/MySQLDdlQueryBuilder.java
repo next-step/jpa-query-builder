@@ -29,9 +29,9 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
                 .append(OPEN_BRACKET);
 
         String columns = Arrays.stream(type.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .filter(this::isMappingColumn)
                 .map(this::buildColumn)
-                .reduce((columnA, columnB) -> String.join(COLUMN_SEPARATOR, columnA, columnB))
+                .reduce(this::combineColumn)
                 .orElseThrow(IllegalStateException::new);
 
         return sb.append(columns)
@@ -48,6 +48,10 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
         return type.getSimpleName();
     }
 
+    private boolean isMappingColumn(Field field) {
+        return !field.isAnnotationPresent(Transient.class);
+    }
+
     private String buildColumn(Field field) {
         Class<?> fieldType = field.getType();
         String fieldName = getFieldName(field);
@@ -61,6 +65,11 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
         return sb.toString();
     }
+
+    private String combineColumn(String columnA, String columnB) {
+        return String.join(COLUMN_SEPARATOR, columnA, columnB);
+    }
+
 
     private String getFieldName(Field field) {
         Column column = field.getAnnotation(Column.class);
