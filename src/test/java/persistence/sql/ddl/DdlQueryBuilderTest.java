@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DdlQueryBuilderTest {
 
@@ -22,4 +23,13 @@ class DdlQueryBuilderTest {
     void should_create_drop_query() {
         assertThat(builder.dropQuery(Person.class)).isEqualTo("DROP TABLE users;");
     }
+
+    @Test
+    void should_throw_exception_when_class_is_not_entity(){
+        assertThatThrownBy(()->builder.createQuery(NoEntityAnnotationClass.class))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("entity annotation is required");
+    }
+
+    class NoEntityAnnotationClass {}
 }
