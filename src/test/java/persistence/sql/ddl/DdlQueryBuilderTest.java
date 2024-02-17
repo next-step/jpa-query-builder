@@ -11,9 +11,10 @@ class DdlQueryBuilderTest {
         DdlQueryBuilder builder = new MySQLDdlQueryBuilder();
 
         assertThat(builder.createQuery(Person.class)).isEqualTo("CREATE TABLE Person(" +
-                "id BIGINT PRIMARY KEY," +
-                " name VARCHAR(255)," +
-                " age INT" +
+                "id BIGINT PRIMARY KEY AUTO_INCREMENT," +
+                " nick_name VARCHAR(255)," +
+                " old INT," +
+                " email VARCHAR(255) NOT NULL" +
                 ");");
     }
 }

@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -12,9 +15,12 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
     private static final String COLUMN_SEPARATOR = ", ";
     private static final String CREATE_TABLE = "CREATE TABLE ";
-    private static final String EMPTY_SPACE = " ";
+    private static final String SPACE = " ";
     private static final String PRIMARY_KEY = "PRIMARY KEY";
     private static final String END_STR = ";";
+    private static final String NOT_NULL = "NOT NULL";
+    private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
+    private static final String EMPTY_SPACE = "";
 
     public String createQuery(Class<?> type) {
         StringBuilder sb = new StringBuilder();
@@ -35,17 +41,51 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
     private String buildColumn(Field field) {
         Class<?> fieldType = field.getType();
-        String fieldName = field.getName();
+        String fieldName = getFieldName(field);
 
         StringBuilder sb = new StringBuilder();
         sb.append(fieldName)
-                .append(EMPTY_SPACE)
-                .append(MySQLColumnType.convert(fieldType));
+                .append(SPACE)
+                .append(MySQLColumnType.convert(fieldType))
+                .append(addPrimaryKeyConstraint(field))
+                .append(addNullConstraint(field));
 
-        if (field.isAnnotationPresent(Id.class)) {
-            sb.append(EMPTY_SPACE)
+        return sb.toString();
+    }
+
+    private String getFieldName(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        if (column != null && column.name().length() > 0){
+            return column.name();
+        }
+        return field.getName();
+    }
+
+    private String addPrimaryKeyConstraint(Field field) {
+        StringBuilder sb = new StringBuilder();
+        if (field.isAnnotationPresent(Id.class)){
+            sb.append(SPACE)
               .append(PRIMARY_KEY);
         }
+        if (field.isAnnotationPresent(GeneratedValue.class)){
+            sb.append(addIncrementStrategy(field));
+        }
         return sb.toString();
+    }
+
+    private String addIncrementStrategy(Field field) {
+        GeneratedValue strategy = field.getAnnotation(GeneratedValue.class);
+        if (strategy.strategy().equals(GenerationType.IDENTITY)){
+           return SPACE + AUTO_INCREMENT;
+        }
+        return EMPTY_SPACE;
+    }
+
+    private String addNullConstraint(Field field) {
+        Column annotation = field.getAnnotation(Column.class);
+        if(annotation != null && !annotation.nullable()){
+            return SPACE + NOT_NULL;
+        }
+        return EMPTY_SPACE;
     }
 }
