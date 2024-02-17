@@ -19,7 +19,7 @@
 
 ## 구현할 기능 목록 리스트
 
-- [ ] String 클래스의 학습 테스트 작성
-    - [ ] src>test>java>persistence>study 하위에 StringTest 클래스를 하나 생성한다
-    - [ ] 요구사항1 : 123 이라는 숫자를 문자열로 반환하는 테스트 코드를 생성한다.
+- [x] String 클래스의 학습 테스트 작성
+    - [x] src>test>java>persistence>study 하위에 StringTest 클래스를 하나 생성한다
+    - [x] 요구사항1 : 123 이라는 숫자를 문자열로 반환하는 테스트 코드를 생성한다.
 
