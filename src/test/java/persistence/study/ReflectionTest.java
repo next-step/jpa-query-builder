@@ -145,23 +145,23 @@ class ReflectionTest {
         return carClass.getDeclaredConstructor().newInstance();
     }
 
-    private void logFields(Class<?> clazz) {
+    protected static void logFields(Class<?> clazz) {
         for (Field declaredField : clazz.getDeclaredFields()) {
             logField(declaredField);
         }
     }
 
-    private void logField(Field declaredField) {
+    protected static void logField(Field declaredField) {
         log.debug("declaredField.getName() : {}", declaredField.getName());
     }
 
-    private void logMethods(Class<?> clazz) {
+    protected static void logMethods(Class<?> clazz) {
         for (Method declaredMethod : clazz.getDeclaredMethods()) {
             logMethod(declaredMethod);
         }
     }
 
-    private void logMethod(Method declaredMethod) {
+    protected static void logMethod(Method declaredMethod) {
         log.debug("declaredMethod.getName() : {}", declaredMethod.getName());
         for (Class<?> parameterType : declaredMethod.getParameterTypes()) {
             log.debug("parameterType.getName() : {}", parameterType.getName());
@@ -174,13 +174,13 @@ class ReflectionTest {
         log.debug("declaredMethod.getReturnType() : {}", declaredMethod.getReturnType());
     }
 
-    private void logConstructors(Class<?> clazz) {
+    protected static void logConstructors(Class<?> clazz) {
         for (Constructor<?> declaredConstructor : clazz.getDeclaredConstructors()) {
             logConstructor(declaredConstructor);
         }
     }
 
-    private void logConstructor(Constructor<?> declaredConstructor) {
+    protected static void logConstructor(Constructor<?> declaredConstructor) {
         log.debug("declaredConstructor.getName() : {}", declaredConstructor.getName());
 
         for (Class<?> parameterType : declaredConstructor.getParameterTypes()) {
