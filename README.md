@@ -94,7 +94,7 @@ public class ReflectionTest {
 >
 > Class가 기본 생성자를 가질 경우 getDeclaredConstructor().newInstance()를 활용해 인스턴스를 생성할 수 있다.
 
-### [ ] 요구사항 3 - @PrintView 애노테이션 메소드 실행
+### [x] 요구사항 3 - @PrintView 애노테이션 메소드 실행
 
 * `@PrintView` 애노테이션이 설정되어 있는 메소드를 자동으로 실행한다.
     * = Car 클래스에서 `@PrintView` 애노테이션으로 설정되어 있는 메소드만 Java Reflection을 활용해 실행하도록 구현.

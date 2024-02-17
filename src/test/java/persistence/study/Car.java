@@ -14,8 +14,7 @@ public class Car {
         this.price = price;
     }
 
-    // todo
-    // @PrintView
+    @PrintView
     public void printView() {
         System.out.println("자동차 정보를 출력 합니다.");
     }

@@ -53,4 +53,30 @@ public class ReflectionTest {
                     }
                 });
     }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() {
+
+        // get Car instance first
+        Car carFromDefaultConstructor;
+        try {
+            carFromDefaultConstructor = carClass.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
+
+        // `@PrintView` 애노테이션으로 설정되어 있는 메소드만 Java Reflection을 활용해 실행하도록 구현.
+        Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .forEach(method -> {
+                    try {
+                        method.invoke(carFromDefaultConstructor);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+
+    }
 }
