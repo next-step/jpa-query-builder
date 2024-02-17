@@ -1,8 +1,13 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,14 +20,7 @@ public class QueryBuilder {
                 .append(" (");
 
         Arrays.stream(clazz.getDeclaredFields())
-                .forEach(field -> {
-                    field.setAccessible(true);
-
-                    sb.append(convertCamelCaseToSnakeCase(field.getName()))
-                            .append(" ")
-                            .append(getDbColumnTypeByType(field.getType()))
-                            .append(", ");
-                });
+                .forEach(field -> generateColumn(field, sb));
 
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Id.class))
@@ -37,7 +35,49 @@ public class QueryBuilder {
         return sb.toString();
     }
 
-    private String getDbColumnTypeByType(Class<?> type) {
+    private void generateColumn(Field field, StringBuilder sb) {
+        field.setAccessible(true);
+
+        sb.append(generateColumnName(field))
+                .append(" ")
+                .append(generateDbColumnType(field.getType()))
+                .append(generateNotNull(field))
+                .append(generateAutoIncrement(field))
+                .append(", ");
+    }
+
+    private String generateNotNull(Field field) {
+        Id primaryKeyAnnotation = field.getDeclaredAnnotation(Id.class);
+        Column annotation = field.getDeclaredAnnotation(Column.class);
+
+        if (Objects.nonNull(primaryKeyAnnotation) || Objects.nonNull(annotation) && !annotation.nullable()) {
+            return " NOT NULL";
+        }
+
+        return "";
+    }
+
+    private String generateColumnName(Field field) {
+        Column annotation = field.getDeclaredAnnotation(Column.class);
+
+        if (Objects.nonNull(annotation) && !annotation.name().isEmpty()) {
+            return annotation.name();
+        }
+
+        return convertCamelCaseToSnakeCase(field.getName());
+    }
+
+    private String generateAutoIncrement(Field field) {
+        GeneratedValue annotation = field.getDeclaredAnnotation(GeneratedValue.class);
+
+        if (Objects.nonNull(annotation) && annotation.strategy() == GenerationType.IDENTITY) {
+            return " AUTO_INCREMENT";
+        }
+
+        return "";
+    }
+
+    private String generateDbColumnType(Class<?> type) {
         if (type == Long.class) {
             return "BIGINT";
         }
