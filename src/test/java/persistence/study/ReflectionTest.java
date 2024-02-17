@@ -3,6 +3,9 @@ package persistence.study;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +15,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 public class ReflectionTest {
@@ -100,9 +105,29 @@ public class ReflectionTest {
             Class<?> type = privateField.getType();
             privateField.set(car, generateTestValue(type));
         }
+        assertAll(
+                () -> assertThat(car.getPrice()).isEqualTo(generateTestValue(int.class)),
+                () -> assertThat(car.getName()).isEqualTo(generateTestValue(String.class))
+        );
+    }
 
-        assertThat(car.getPrice()).isEqualTo(generateTestValue(int.class));
-        assertThat(car.getName()).isEqualTo(generateTestValue(String.class));
+    @ParameterizedTest
+    @MethodSource("provideConstructorWithArgs")
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs(String carName, Integer price) throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> declaredConstructor = carClass.getDeclaredConstructor(String.class, int.class);
+        Car car = declaredConstructor.newInstance(carName, price);
+        assertAll(
+                () -> Assertions.assertThat(car.getName()).isEqualTo(carName),
+                () -> Assertions.assertThat(car.getPrice()).isEqualTo(price)
+        );
+    }
+
+    private static Stream<Arguments> provideConstructorWithArgs() {
+        return Stream.of(
+                Arguments.of("carName", 1000)
+        );
     }
 
     private Object generateTestValue(Class<?> targetClass) {
