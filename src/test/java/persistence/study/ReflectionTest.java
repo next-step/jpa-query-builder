@@ -64,4 +64,20 @@ public class ReflectionTest {
             Object invoke = method.invoke(car);
         }
     }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메서드 실행한다.")
+    void executeMethodsWithPritViewAnnotation() throws Exception {
+        Class<Car> carClass = Car.class;
+
+        List<Method> printViewAnnotatedMethods = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(it -> it.isAnnotationPresent(PrintView.class))
+                .toList();
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        for (Method printViewAnnotatedMethod : printViewAnnotatedMethods) {
+            LOGGER.debug(String.valueOf(printViewAnnotatedMethod));
+            printViewAnnotatedMethod.invoke(car);
+        }
+    }
 }
