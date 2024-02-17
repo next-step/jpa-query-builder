@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class ReflectionTest {
@@ -44,6 +46,22 @@ public class ReflectionTest {
         Method[] methods = carClass.getMethods();
         for (Method method : methods) {
             LOGGER.debug(String.valueOf(method));
+        }
+    }
+
+    @Test
+    @DisplayName("test로 시작하는 메서드를 실행한다")
+    void executeMethodsStartingWithTest() throws Exception {
+        Class<Car> carClass = Car.class;
+        Method[] declaredMethods = carClass.getDeclaredMethods();
+        List<Method> test = Arrays.stream(declaredMethods)
+                .filter(it -> it.getName().startsWith("test"))
+                .toList();
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        for (Method method : test) {
+            LOGGER.debug(String.valueOf(method));
+            Object invoke = method.invoke(car);
         }
     }
 }
