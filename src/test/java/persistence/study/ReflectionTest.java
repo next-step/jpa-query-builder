@@ -5,9 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class ReflectionTest {
@@ -54,5 +57,29 @@ public class ReflectionTest {
                 method.invoke(car);
             }
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateField() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        final int PRIVATE_MODIFIER = 2;
+        final String MOCK_NAME = "차이름";
+        final int MOCK_PRICE = 1000;
+        final Class<Car> carClass = Car.class;
+        final Car car = carClass.getConstructor().newInstance();
+
+        for (Field field : carClass.getDeclaredFields()) {
+            if (field.getModifiers() == PRIVATE_MODIFIER) {
+                field.setAccessible(true);
+                if (field.getName().equals("name")) {
+                    field.set(car, MOCK_NAME);
+                }
+                if (field.getName().equals("price")) {
+                    field.set(car, MOCK_PRICE);
+                }
+            }
+        }
+        assertThat(car.getName()).isEqualTo(MOCK_NAME);
+        assertThat(car.getPrice()).isEqualTo(MOCK_PRICE);
     }
 }
