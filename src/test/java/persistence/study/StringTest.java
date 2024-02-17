@@ -8,12 +8,10 @@ public class StringTest {
 
     @Test
     void convert() {
-        int i = 123;
-
-        assertEquals(conv(i), "123");
+        assertEquals("123", conv(123));
     }
 
     private String conv(int i) {
-        return "123";
+        return String.format("%d", i);
     }
 }
