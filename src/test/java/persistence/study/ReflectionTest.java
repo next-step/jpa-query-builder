@@ -31,7 +31,6 @@ public class ReflectionTest {
         String name = "simpson";
         int age = 31;
         final Class<Car> carClass = Car.class;
-        final Constructor<?>[] declaredConstructors = carClass.getDeclaredConstructors();
         final Car car = carClass.getConstructor(String.class, int.class).newInstance(name, age);
 
         for (Method method : carClass.getDeclaredMethods()) {
