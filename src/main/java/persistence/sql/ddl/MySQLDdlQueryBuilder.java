@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import static persistence.sql.ddl.MySQLColumnType.CLOSE_BRACKET;
-import static persistence.sql.ddl.MySQLColumnType.OPEN_BRACKET;
+import static persistence.sql.ddl.MySQLColumnType.*;
 
 public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
@@ -18,11 +17,11 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
     private static final String NOT_NULL = "NOT NULL";
     private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
     private static final String EMPTY_SPACE = "";
+    private static final String DROP_TABLE = "DROP TABLE";
 
     public String createQuery(Class<?> type) {
-        if (!type.isAnnotationPresent(Entity.class)){
-            throw new IllegalArgumentException("entity annotation is required");
-        }
+        validateEntityClass(type);
+
         StringBuilder sb = new StringBuilder();
         sb.append(CREATE_TABLE)
                 .append(addTableName(type))
@@ -100,6 +99,21 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
     @Override
     public String dropQuery(Class<?> type) {
-        return null;
+        validateEntityClass(type);
+
+        StringBuilder sb = new StringBuilder();
+
+        return sb.append(DROP_TABLE)
+                .append(SPACE)
+                .append(addTableName(type))
+                .append(END_STR)
+                .toString();
+    }
+
+    private void validateEntityClass(Class<?> type) {
+        if (type.isAnnotationPresent(Entity.class)){
+            return;
+        }
+        throw new IllegalArgumentException("entity annotation is required");
     }
 }

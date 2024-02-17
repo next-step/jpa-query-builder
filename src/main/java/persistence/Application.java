@@ -18,8 +18,10 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            
-            jdbcTemplate.execute(new MySQLDdlQueryBuilder().createQuery(Person.class));
+
+            MySQLDdlQueryBuilder ddlQueryBuilder = new MySQLDdlQueryBuilder();
+            jdbcTemplate.execute(ddlQueryBuilder.createQuery(Person.class));
+            jdbcTemplate.execute(ddlQueryBuilder.dropQuery(Person.class));
 
             server.stop();
         } catch (Exception e) {
