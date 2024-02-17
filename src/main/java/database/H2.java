@@ -29,15 +29,15 @@ public class H2 implements DatabaseServer {
         this(Server.createWebServer("-webPort", Integer.toString(randomPort())), properties);
     }
 
+    public H2(final Server server, final DataSourceProperties properties) {
+        this.server = server;
+        this.properties = properties;
+    }
+
     private static int randomPort() {
         final int min = 1024;
         final int max = 65535;
         return ThreadLocalRandom.current().nextInt(min, max + 1);
-    }
-
-    public H2(final Server server, final DataSourceProperties properties) {
-        this.server = server;
-        this.properties = properties;
     }
 
     @Override
