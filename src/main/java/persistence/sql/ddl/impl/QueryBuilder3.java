@@ -2,6 +2,8 @@ package persistence.sql.ddl.impl;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,13 +14,21 @@ import java.util.stream.Stream;
 import persistence.sql.ddl.DataType;
 import persistence.sql.ddl.QueryBuilder;
 
-public class QueryBuilder2 extends QueryBuilder {
+public class QueryBuilder3 extends QueryBuilder {
     protected String getTableNameFrom(final Class<?> clazz) {
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table table = clazz.getAnnotation(Table.class);
+            if (!table.name().isEmpty()) {
+                return table.name();
+            }
+        }
+
         return clazz.getSimpleName();
     }
 
     protected String getTableColumnDefinitionFrom(final Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
             .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1))
             .map(this::getColumnDefinitionStatementFrom)
             .collect(Collectors.joining(", "));

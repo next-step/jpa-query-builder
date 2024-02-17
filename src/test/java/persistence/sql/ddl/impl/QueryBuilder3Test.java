@@ -12,14 +12,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import persistence.sql.ddl.Person1;
+import persistence.sql.ddl.Person3;
 
-class QueryBuilder1Test {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilder2Test.class);
+class QueryBuilder3Test {
 
-    private final Class<?> entityClass = Person1.class;
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilder3Test.class);
 
-    private final QueryBuilder1 queryBuilder = new QueryBuilder1();
+    private final Class<?> entityClass = Person3.class;
+
+    private final QueryBuilder3 queryBuilder = new QueryBuilder3();
 
     @Test
     void createDDL() {
@@ -28,7 +29,7 @@ class QueryBuilder1Test {
         log.debug("DDL: {}", ddl);
 
         assertThat(ddl)
-            .isEqualTo("CREATE TABLE Person1 (id BIGINT AUTO_INCREMENT, name VARCHAR(255), age INTEGER)");
+            .isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) UNIQUE NOT NULL)");
     }
 
     @Test
@@ -37,9 +38,8 @@ class QueryBuilder1Test {
 
         log.debug("Table name: {}", tableName);
 
-        assertThat(tableName).isEqualTo("Person1");
+        assertThat(tableName).isEqualTo("users");
     }
-
 
     @Test
     void getColumnDefinitionStatement() {
@@ -47,7 +47,7 @@ class QueryBuilder1Test {
 
         log.debug("Column definition statement: {}", columnDefinitionStatement);
 
-        assertThat(columnDefinitionStatement).isEqualTo("id BIGINT AUTO_INCREMENT, name VARCHAR(255), age INTEGER");
+        assertThat(columnDefinitionStatement).isEqualTo("id BIGINT AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) UNIQUE NOT NULL");
     }
 
     @Test
@@ -73,10 +73,13 @@ class QueryBuilder1Test {
                     assertThat(columnDefinitionStatement).isEqualTo("id BIGINT AUTO_INCREMENT");
                     break;
                 case "name":
-                    assertThat(columnDefinitionStatement).isEqualTo("name VARCHAR(255)");
+                    assertThat(columnDefinitionStatement).isEqualTo("nick_name VARCHAR(255)");
                     break;
                 case "age":
-                    assertThat(columnDefinitionStatement).isEqualTo("age INTEGER");
+                    assertThat(columnDefinitionStatement).isEqualTo("old INTEGER");
+                    break;
+                case "email":
+                    assertThat(columnDefinitionStatement).isEqualTo("email VARCHAR(255) UNIQUE NOT NULL");
                     break;
                 default:
                     fail("Unexpected field name: " + fieldName);

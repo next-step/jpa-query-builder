@@ -18,11 +18,13 @@ class QueryBuilder2Test {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilder2Test.class);
 
+    private final Class<?> entityClass = Person2.class;
+
     private final QueryBuilder2 queryBuilder = new QueryBuilder2();
 
     @Test
     void createDDL() {
-        String ddl = queryBuilder.buildDDL(Person2.class);
+        String ddl = queryBuilder.buildDDL(entityClass);
 
         log.debug("DDL: {}", ddl);
 
@@ -32,7 +34,7 @@ class QueryBuilder2Test {
 
     @Test
     void getTableNameByClassName() {
-        String tableName = queryBuilder.getTableNameFrom(Person2.class);
+        String tableName = queryBuilder.getTableNameFrom(entityClass);
 
         log.debug("Table name: {}", tableName);
 
@@ -41,7 +43,7 @@ class QueryBuilder2Test {
 
     @Test
     void getColumnDefinitionStatement() {
-        String columnDefinitionStatement = queryBuilder.getTableColumnDefinitionFrom(Person2.class);
+        String columnDefinitionStatement = queryBuilder.getTableColumnDefinitionFrom(entityClass);
 
         log.debug("Column definition statement: {}", columnDefinitionStatement);
 

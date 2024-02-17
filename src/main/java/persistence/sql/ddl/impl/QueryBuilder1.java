@@ -44,8 +44,6 @@ public class QueryBuilder1 extends QueryBuilder {
             return "";
         }
 
-        // TODO: implementation specific to the database
-
         return "AUTO_INCREMENT";
     }
 
