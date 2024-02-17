@@ -42,6 +42,17 @@ public class ReflectionTest {
                 logger.info(result);
             }
         }
+    }
 
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void annotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        final Class<Car> carClass = Car.class;
+        final Car car = carClass.getConstructor().newInstance();
+        for (Method method : carClass.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(PrintView.class)) {
+                method.invoke(car);
+            }
+        }
     }
 }
