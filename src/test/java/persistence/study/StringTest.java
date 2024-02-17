@@ -6,6 +6,6 @@ public class StringTest {
     @Test
     void convert() {
         Integer a = 123;
-        System.out.println(String.valueOf(a));
+        System.out.println(a);
     }
 }
