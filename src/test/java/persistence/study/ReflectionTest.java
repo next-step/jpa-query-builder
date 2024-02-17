@@ -80,4 +80,16 @@ public class ReflectionTest {
         assertThat(car).isEqualTo(new Car("테스트", 1000));
     }
 
+    @Test
+    @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        Class<Car> clazz = Car.class;
+        Constructor<?> findConstructor = Arrays.stream(clazz.getDeclaredConstructors())
+                .filter(constructor -> constructor.getParameterCount() > 0)
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("인자를 가진 생성자가 없습니다."));
+
+        assertThat(findConstructor.newInstance("테스트", 1000)).isEqualTo(new Car("테스트", 1000));
+    }
+
 }
