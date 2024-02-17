@@ -80,11 +80,11 @@ public class ReflectionTest {
 }
 ```
 
-### [ ] 요구사항 2 - test로 시작하는 메소드 실행
+### [x] 요구사항 2 - test로 시작하는 메소드 실행
 
-* src/test/java/persistence/study > Car 객체의 메소드 중 `test로 시작하는 메소드를 자동으로 실행`한다.
-    * = Car 클래스에서 test로 시작하는 메소드만 Java Reflection을 활용해 실행하도록 구현한다.
-* 구현은 src/test/java/persistence/study > ReflectionTest 클래스의 `testMethodRun()` 메소드에 한다.
+- [x] Car 클래스에서 test로 시작하는 메소드만 Java Reflection을 활용해 실행하도록 구현
+    - [x] Car 객체의 메소드 중 `test로 시작하는 메소드를 자동으로 실행`
+    - [x] 구현은 src/test/java/persistence/study > ReflectionTest 클래스의 `testMethodRun()`
 
 > 힌트
 >
