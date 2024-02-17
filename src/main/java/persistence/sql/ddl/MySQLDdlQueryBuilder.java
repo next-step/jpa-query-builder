@@ -97,4 +97,9 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
         }
         return EMPTY_SPACE;
     }
+
+    @Override
+    public String dropQuery(Class<?> type) {
+        return null;
+    }
 }
