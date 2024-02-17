@@ -25,11 +25,12 @@ class DdlQueryBuilderTest {
     }
 
     @Test
-    void should_throw_exception_when_class_is_not_entity(){
-        assertThatThrownBy(()->builder.createQuery(NoEntityAnnotationClass.class))
+    void should_throw_exception_when_class_is_not_entity() {
+        assertThatThrownBy(() -> builder.createQuery(NoEntityAnnotationClass.class))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("entity annotation is required");
     }
 
-    class NoEntityAnnotationClass {}
+    class NoEntityAnnotationClass {
+    }
 }

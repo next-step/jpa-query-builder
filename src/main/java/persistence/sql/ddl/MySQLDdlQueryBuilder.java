@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import static persistence.sql.ddl.MySQLColumnType.*;
+import static persistence.sql.ddl.MySQLColumnType.CLOSE_BRACKET;
+import static persistence.sql.ddl.MySQLColumnType.OPEN_BRACKET;
 
 public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
@@ -28,7 +29,7 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
                 .append(OPEN_BRACKET);
 
         String columns = Arrays.stream(type.getDeclaredFields())
-                .filter(field-> !field.isAnnotationPresent(Transient.class))
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::buildColumn)
                 .reduce((columnA, columnB) -> String.join(COLUMN_SEPARATOR, columnA, columnB))
                 .orElseThrow(IllegalStateException::new);
@@ -41,7 +42,7 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
     private String addTableName(Class<?> type) {
         Table table = type.getAnnotation(Table.class);
-        if (table != null && table.name().length() > 0){
+        if (table != null && table.name().length() > 0) {
             return table.name();
         }
         return type.getSimpleName();
@@ -63,7 +64,7 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
     private String getFieldName(Field field) {
         Column column = field.getAnnotation(Column.class);
-        if (column != null && column.name().length() > 0){
+        if (column != null && column.name().length() > 0) {
             return column.name();
         }
         return field.getName();
@@ -71,11 +72,11 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
     private String addPrimaryKeyConstraint(Field field) {
         StringBuilder sb = new StringBuilder();
-        if (field.isAnnotationPresent(Id.class)){
+        if (field.isAnnotationPresent(Id.class)) {
             sb.append(SPACE)
-              .append(PRIMARY_KEY);
+                    .append(PRIMARY_KEY);
         }
-        if (field.isAnnotationPresent(GeneratedValue.class)){
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
             sb.append(addIncrementStrategy(field));
         }
         return sb.toString();
@@ -83,15 +84,15 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
 
     private String addIncrementStrategy(Field field) {
         GeneratedValue strategy = field.getAnnotation(GeneratedValue.class);
-        if (strategy.strategy().equals(GenerationType.IDENTITY)){
-           return SPACE + AUTO_INCREMENT;
+        if (strategy.strategy().equals(GenerationType.IDENTITY)) {
+            return SPACE + AUTO_INCREMENT;
         }
         return EMPTY_SPACE;
     }
 
     private String addNullConstraint(Field field) {
         Column annotation = field.getAnnotation(Column.class);
-        if(annotation != null && !annotation.nullable()){
+        if (annotation != null && !annotation.nullable()) {
             return SPACE + NOT_NULL;
         }
         return EMPTY_SPACE;
@@ -111,7 +112,7 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
     }
 
     private void validateEntityClass(Class<?> type) {
-        if (type.isAnnotationPresent(Entity.class)){
+        if (type.isAnnotationPresent(Entity.class)) {
             return;
         }
         throw new IllegalArgumentException("entity annotation is required");
