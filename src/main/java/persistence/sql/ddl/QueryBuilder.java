@@ -1,7 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.domain.Entity;
-import persistence.domain.Id;
+import persistence.domain.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -25,8 +24,8 @@ public class QueryBuilder {
 
         ddl.append(fieldDDLSql);
 
-        final String primaryDDLSql = createPrimaryDDLSql(clazz);
-        ddl.append(primaryDDLSql);
+        final String constraintDDLSql = createConstraintDDLSql(clazz);
+        ddl.append(constraintDDLSql);
 
         ddl.append(SQUARE_BRACKETS_CLOSE);
 
@@ -37,23 +36,49 @@ public class QueryBuilder {
         return Arrays.stream(clazz.getDeclaredFields())
                 .sorted(Comparator.comparing(f -> f.isAnnotationPresent(Id.class) ? 0 : 1))
                 .map(f -> {
-                    final String printType = DataType.ofPrintType(f);
+                    String fieldName = createFieldName(f);
 
-                    String notNullDDL = createNotNull(f);
+                    String printType = DataType.ofPrintType(f);
 
-                    return String.format("%s %s%s", f.getName(), printType, notNullDDL);
+                    String notNullDDL = createNotNullDDL(f);
+
+                    String primaryKeyGenerateDDL = createPrimaryKeyGenerateDDL(f);
+
+                    return String.format("%s %s%s%s", fieldName, printType, notNullDDL, primaryKeyGenerateDDL);
                 })
                 .collect(Collectors.joining(", "));
     }
 
-    private String createPrimaryDDLSql(final Class<?> clazz) {
+    private String createNotNullDDL(final Field f) {
+        if (f.isAnnotationPresent(Column.class) && !f.getAnnotation(Column.class).nullable()) {
+            return SPACE + "not null";
+        }
+
+        return "";
+    }
+
+    private String createFieldName(final Field f) {
+        String fieldName = f.getName();
+
+        if (f.isAnnotationPresent(Column.class) && isFieldNameNotBlank(f)) {
+            fieldName = f.getAnnotation(Column.class).name();
+        }
+
+        return fieldName;
+    }
+
+    private boolean isFieldNameNotBlank(final Field f) {
+        return !f.getAnnotation(Column.class).name().isBlank();
+    }
+
+    private String createConstraintDDLSql(final Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(Id.class))
                 .map(f -> COMMA + createPrimaryKey(f))
                 .collect(Collectors.joining());
     }
 
-    private static void checkEntityAnnotationPresent(final Class<?> clazz) {
+    private void checkEntityAnnotationPresent(final Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException();
         }
@@ -67,11 +92,19 @@ public class QueryBuilder {
         return "";
     }
 
-    private String createNotNull(final Field f) {
+    private String createPrimaryKeyGenerateDDL(final Field f) {
         if (f.isAnnotationPresent(Id.class)) {
-            return  SPACE + "not null";
+            return createGenerateTypeDDL(f);
         }
 
         return "";
+    }
+
+    private String createGenerateTypeDDL(final Field f) {
+        if (f.isAnnotationPresent(GeneratedValue.class)) {
+            return f.getAnnotation(GeneratedValue.class).strategy().generateDDL;
+        }
+
+        return SPACE + "not null";
     }
 }

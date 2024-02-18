@@ -10,7 +10,4 @@ import java.lang.annotation.Target;
 public @interface GeneratedValue {
     GenerationType strategy() default GenerationType.AUTO;
 
-    static enum GenerationType {
-        TABLE, SEQUENCE, IDENTITY, AUTO;
-    }
 }
