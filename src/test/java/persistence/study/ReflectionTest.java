@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 public class ReflectionTest {
@@ -19,7 +20,7 @@ public class ReflectionTest {
     @Test
     @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
-        Class<Car> carClass = Car.class;
+        final Class<Car> carClass = Car.class;
         // 패키지+클래스 이름
         logger.debug(carClass.getName());
         // 모든 필드 목록
@@ -33,26 +34,23 @@ public class ReflectionTest {
     @Test
     @DisplayName("test로 시작하는 메소드 실행")
     void testMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        final String name = "new Car";
-        final int age = 1;
-
         final Class<Car> carClass = Car.class;
-        final Car car = carClass.getConstructor(String.class, int.class).newInstance(name, age);
+        final Car car = carClass.getConstructor().newInstance();
 
-        for (Method method : carClass.getDeclaredMethods()) {
+        for (final Method method : carClass.getDeclaredMethods()) {
             if (method.getName().startsWith("test")) {
                 final String result = (String) method.invoke(car);
-                logger.info(result);
+                logger.debug(result);
             }
         }
     }
 
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
-    void annotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    void testAnnotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getConstructor().newInstance();
-        for (Method method : carClass.getDeclaredMethods()) {
+        for (final Method method : carClass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(PrintView.class)) {
                 method.invoke(car);
             }
@@ -61,26 +59,27 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("private field에 값 할당")
-    void privateField() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        final int PRIVATE_MODIFIER = 2;
-        final String MOCK_NAME = "차이름";
-        final int MOCK_PRICE = 1000;
+    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getConstructor().newInstance();
+        final String name = "Sonata";
+        final int price = 1000;
 
-        for (Field field : carClass.getDeclaredFields()) {
-            if (field.getModifiers() == PRIVATE_MODIFIER) {
+        for (final Field field : carClass.getDeclaredFields()) {
+            if (field.getName().equals("name")) {
                 field.setAccessible(true);
-                if (field.getName().equals("name")) {
-                    field.set(car, MOCK_NAME);
-                }
-                if (field.getName().equals("price")) {
-                    field.set(car, MOCK_PRICE);
-                }
+                field.set(car, name);
+            }
+            if (field.getName().equals("price")) {
+                field.setAccessible(true);
+                field.set(car, price);
             }
         }
-        assertThat(car.getName()).isEqualTo(MOCK_NAME);
-        assertThat(car.getPrice()).isEqualTo(MOCK_PRICE);
+
+        assertAll(
+                () -> assertThat(car.getName()).isEqualTo(name),
+                () -> assertThat(car.getPrice()).isEqualTo(price)
+        );
     }
 
     @Test
@@ -92,8 +91,10 @@ public class ReflectionTest {
 
         final Car car = carClass.getConstructor(String.class, int.class).newInstance(name, price);
 
-        assertThat(car).isInstanceOf(Car.class);
-        assertThat(car.getName()).isEqualTo(name);
-        assertThat(car.getPrice()).isEqualTo(price);
+        assertAll(
+                () -> assertThat(car).isInstanceOf(Car.class),
+                () -> assertThat(car.getName()).isEqualTo(name),
+                () -> assertThat(car.getPrice()).isEqualTo(price)
+        );
     }
 }
