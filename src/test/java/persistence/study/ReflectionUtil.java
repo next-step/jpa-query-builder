@@ -18,9 +18,19 @@ public final class ReflectionUtil {
         return carClass.getDeclaredConstructor(String.class, int.class).newInstance("nextstep", 123);
     }
 
-    public static void setField(final Field field, final Object carInstance, final Object value) {
+    public static void setField(final Field field, final Object instance, final Object value) {
         try {
-            field.set(carInstance, value);
+            field.setAccessible(true);
+            field.set(instance, value);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object getField(final Field field, final Object instance) {
+        try {
+            field.setAccessible(true);
+            return field.get(instance);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

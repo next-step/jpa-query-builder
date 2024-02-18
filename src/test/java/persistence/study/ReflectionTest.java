@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -21,9 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static persistence.study.ReflectionUtil.*;
 
 public class ReflectionTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
-
     private final Class<Car> carClass = Car.class;
     private Object carInstance;
 
@@ -95,17 +90,15 @@ public class ReflectionTest {
     void seField() {
         Arrays.stream(carInstance.getClass().getDeclaredFields())
                 .forEach(field -> {
-                    field.setAccessible(true);
                     final Object value = field.getType() == String.class ? "123" : 123;
                     setField(field, carInstance, value);
                 });
 
-        List<Object> result = Arrays.stream(carInstance.getClass().getDeclaredMethods())
-                .filter(method -> method.getName().startsWith("test"))
-                .map(method -> runMethod(carInstance, method))
+        List<Object> result = Arrays.stream(carInstance.getClass().getDeclaredFields())
+                .map(field -> getField(field, carInstance))
                 .collect(Collectors.toList());
 
-        assertThat(result).containsExactlyInAnyOrder("test : 123", "test : 123");
+        assertThat(result).containsExactlyInAnyOrder("123", 123);
     }
 
     @Test
