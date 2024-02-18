@@ -35,4 +35,12 @@ public enum DataType {
     public String getDefaultValue() {
         return START_SYMBOL + defaultValue + END_SYMBOL;
     }
+
+    public String getTypeQuery() {
+        String query = this.name();
+        if (this.containsDefaultValue()) {
+            query += this.getDefaultValue();
+        }
+        return query;
+    }
 }
