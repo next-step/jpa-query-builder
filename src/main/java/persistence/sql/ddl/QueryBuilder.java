@@ -9,27 +9,18 @@ import java.util.stream.Collectors;
 
 public class QueryBuilder {
 
-    public static final String SQUARE_BRACKETS_OPEN = "(";
-    public static final String SQUARE_BRACKETS_CLOSE = ")";
-    public static final String CREATE_DEFAULT_DDL = "create table %s %s";
+    public static final String CREATE_DEFAULT_DDL = "create table %s (%s)";
     public static final String SPACE = " ";
     public static final String COMMA = ",";
 
     public String createDdl(final Class<?> clazz) {
         String tableName = createTableName(clazz);
 
-        final String defaultCreateDDL = String.format(CREATE_DEFAULT_DDL, tableName, SQUARE_BRACKETS_OPEN);
-        StringBuilder ddl = new StringBuilder(defaultCreateDDL);
-
-        final String fieldDDLSql = createFieldDDLSql(clazz);
-        ddl.append(fieldDDLSql);
+        String fieldDDLSql = createFieldDDLSql(clazz);
 
         final String constraintDDLSql = createConstraintDDLSql(clazz);
-        ddl.append(constraintDDLSql);
 
-        ddl.append(SQUARE_BRACKETS_CLOSE);
-
-        return ddl.toString();
+        return String.format(CREATE_DEFAULT_DDL, tableName, fieldDDLSql.concat(constraintDDLSql));
     }
 
     public String dropDdl(final Class<?> clazz) {
@@ -56,7 +47,7 @@ public class QueryBuilder {
     private String createFieldDDLSql(final Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .sorted(Comparator.comparing(f -> f.isAnnotationPresent(Id.class) ? 0 : 1))
-                .filter(f -> !f.isAnnotationPresent(Transient.class))
+                .filter(QueryBuilder::nonTransientField)
                 .map(f -> {
                     String fieldName = createFieldName(f);
 
@@ -69,6 +60,10 @@ public class QueryBuilder {
                     return String.format("%s %s%s%s", fieldName, printType, notNullDDL, primaryKeyGenerateDDL);
                 })
                 .collect(Collectors.joining(", "));
+    }
+
+    private static boolean nonTransientField(final Field f) {
+        return !f.isAnnotationPresent(Transient.class);
     }
 
     private String createFieldName(final Field f) {
