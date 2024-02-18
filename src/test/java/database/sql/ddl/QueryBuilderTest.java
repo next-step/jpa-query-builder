@@ -6,14 +6,15 @@ import static database.sql.ddl.QueryBuilder.convertFieldToDdl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class PersonTest {
+class QueryBuilderTest {
 
     @Test
-    void creatingCreateQuery() {
-        String query = buildQuery(Person.class);
+    void buildCreateQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
 
-        String expected = "CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)";
-        assertThat(query).isEqualTo(expected);
+        String actual = queryBuilder.buildCreateQuery(Person.class);
+
+        assertThat(actual).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)");
     }
 
     @Test
@@ -26,10 +27,6 @@ class PersonTest {
                 () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("age"))).isEqualTo("old INT NULL"),
                 () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("email"))).isEqualTo("email VARCHAR(100) NOT NULL")
         );
-    }
-
-    private String buildQuery(Class<?> entityClass) {
-        return new QueryBuilder().buildCreateQuery(entityClass);
     }
 }
 

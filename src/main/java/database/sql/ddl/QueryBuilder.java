@@ -12,6 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class QueryBuilder {
+    public String buildCreateQuery(Class<?> entityClass) {
+        String tableName = extractTableName(entityClass);
+        List<String> fields = extractFields(entityClass);
+        return String.format("CREATE TABLE %s (%s)", tableName, String.join(", ", fields));
+    }
+
     private static String extractTableName(Class<?> entityClass) {
         Table tableAnnotation = entityClass.getAnnotation(Table.class);
         if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {
@@ -19,6 +25,18 @@ public class QueryBuilder {
         } else {
             return entityClass.getSimpleName();
         }
+    }
+
+    private static List<String> extractFields(Class<?> entityClass) {
+        Field[] fields = entityClass.getDeclaredFields();
+        return Arrays.stream(fields)
+                .filter(QueryBuilder::notTransientField)
+                .map(QueryBuilder::convertFieldToDdl)
+                .collect(Collectors.toList());
+    }
+
+    static boolean notTransientField(Field field) {
+        return field.getAnnotation(Transient.class) == null;
     }
 
     static String convertFieldToDdl(Field field) {
@@ -35,21 +53,13 @@ public class QueryBuilder {
         return String.join(" ", list);
     }
 
-    private static List<String> extractFields(Class<?> entityClass) {
-        Field[] fields = entityClass.getDeclaredFields();
-        return Arrays.stream(fields)
-                .filter(QueryBuilder::notTransientField)
-                .map(QueryBuilder::convertFieldToDdl).collect(Collectors.toList());
-    }
-
-    static boolean notTransientField(Field field) {
-        return field.getAnnotation(Transient.class) == null;
-    }
-
-    public String buildCreateQuery(Class<?> entityClass) {
-        String tableName = extractTableName(entityClass);
-        List<String> fields = extractFields(entityClass);
-        return String.format("CREATE TABLE %s (%s)", tableName, String.join(", ", fields));
+    static String extractName(Field field) {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
+            return columnAnnotation.name();
+        } else {
+            return field.getName();
+        }
     }
 
     static String convertType(Class<?> type) {
@@ -62,15 +72,6 @@ public class QueryBuilder {
                 return "INT";
             default:
                 throw new RuntimeException("Cannot convert type: " + type.getName());
-        }
-    }
-
-    static String extractName(Field field) {
-        Column columnAnnotation = field.getAnnotation(Column.class);
-        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
-            return columnAnnotation.name();
-        } else {
-            return field.getName();
         }
     }
 
