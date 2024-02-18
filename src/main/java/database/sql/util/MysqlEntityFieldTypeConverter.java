@@ -1,4 +1,4 @@
-package database.sql.ddl;
+package database.sql.util;
 
 public class MysqlEntityFieldTypeConverter implements EntityFieldTypeConverter {
     @Override

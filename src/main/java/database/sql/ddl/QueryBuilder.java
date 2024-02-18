@@ -1,5 +1,8 @@
 package database.sql.ddl;
 
+import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityColumn;
+
 import java.util.stream.Collectors;
 
 public class QueryBuilder {

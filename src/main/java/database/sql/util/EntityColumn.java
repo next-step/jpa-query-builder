@@ -1,4 +1,4 @@
-package database.sql.ddl;
+package database.sql.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +26,10 @@ public class EntityColumn {
         this.autoIncrement = autoIncrement;
         this.nullable = nullable;
         this.entityFieldTypeConverter = entityFieldTypeConverter;
+    }
+
+    public String getColumnName() {
+        return columnName;
     }
 
     public String toColumnDefinition() {

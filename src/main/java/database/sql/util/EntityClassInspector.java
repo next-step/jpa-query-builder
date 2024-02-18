@@ -1,4 +1,4 @@
-package database.sql.ddl;
+package database.sql.util;
 
 import jakarta.persistence.*;
 
@@ -23,13 +23,26 @@ public class EntityClassInspector {
     }
 
     public Stream<EntityColumn> getVisibleColumns() {
-        return Arrays.stream(this.entityClass.getDeclaredFields())
-                .filter(this::notTransientField)
+        return getFields().map(this::getEntityColumn);
+    }
+
+    public Stream<EntityColumn> getColumnsForInserting() {
+        return getFields()
+                .filter(this::notPrimaryKeyField)
                 .map(this::getEntityColumn);
+    }
+
+    private Stream<Field> getFields() {
+        return Arrays.stream(entityClass.getDeclaredFields())
+                .filter(this::notTransientField);
     }
 
     private boolean notTransientField(Field field) {
         return field.getAnnotation(Transient.class) == null;
+    }
+
+    private boolean notPrimaryKeyField(Field field) {
+        return !field.isAnnotationPresent(Id.class);
     }
 
     private EntityColumn getEntityColumn(Field field) {
@@ -79,4 +92,5 @@ public class EntityClassInspector {
             return defaultValue;
         }
     }
+
 }
