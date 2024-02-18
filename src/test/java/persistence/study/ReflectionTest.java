@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -28,6 +30,28 @@ public class ReflectionTest {
         for (Constructor<?> constructor : carClass.getConstructors()) {
             logger.debug(constructor.getName());
         }
+    }
+
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    public void runTestMethod() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = Car.class.getConstructor(String.class, int.class).newInstance("Porsche", 4000);
+        for (Method method : carClass.getDeclaredMethods()) {
+            testMethodRun(car, method);
+        }
+    }
+
+    private void testMethodRun(Object instance, Method method) throws Exception {
+        method.getDeclaringClass().getDeclaredConstructor().newInstance();
+        if (isTestMethod(method)) {
+                method.setAccessible(true);
+                logger.debug((String) method.invoke(instance));
+        }
+    }
+
+    private boolean isTestMethod(Method method) {
+        return method.getName().startsWith("test");
     }
 
 }
