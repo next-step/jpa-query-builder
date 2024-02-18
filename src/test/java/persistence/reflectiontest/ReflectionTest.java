@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,4 +60,27 @@ class ReflectionTest {
                 () -> assertThat(methodNames).containsExactlyInAnyOrderElementsOf(expectedMethodNames)
         );
     }
+
+    @Test
+    @DisplayName("test로 시작하는 메소드를 실행한다.")
+    void testMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        // given
+        List<String> expectedResults = List.of("test : null", "test : 0");
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        // when
+        List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.getName().startsWith("test"))
+                .collect(Collectors.toList());
+
+        List<String> actualResults = new ArrayList<>();
+        for (Method method : methods) {
+            actualResults.add((String) method.invoke(car));
+        }
+
+        // then
+        assertThat(actualResults).containsExactlyInAnyOrderElementsOf(expectedResults);
+    }
+
 }
