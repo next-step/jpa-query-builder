@@ -3,21 +3,23 @@ package persistence.sql.ddl;
 import java.util.stream.Collectors;
 import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.wrapper.Table;
+import persistence.sql.dialet.Dialect;
 
 public class CreateQueryBuilder implements QueryBuilder {
 
     private static CreateQueryBuilder instance = null;
 
-    private final FieldBuilder fieldBuilder = FieldBuilder.getInstance();
+    private final FieldBuilder fieldBuilder;
     private static final String CREATE_TABLE_DEFINITION = "CREATE TABLE %s (%s)";
     private static final String COMMA = ",";
 
-    private CreateQueryBuilder() {
+    private CreateQueryBuilder(Dialect dialect) {
+        fieldBuilder = FieldBuilder.getInstance(dialect);
     }
 
-    public static synchronized CreateQueryBuilder getInstance() {
+    public static synchronized CreateQueryBuilder getInstance(Dialect dialect) {
         if (instance == null) {
-            instance = new CreateQueryBuilder();
+            instance = new CreateQueryBuilder(dialect);
         }
         return instance;
     }

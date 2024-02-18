@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.wrapper.Column;
+import persistence.sql.dialet.h2.H2Dialect;
 
 @DisplayName("FieldBuilderor class의")
 class FieldBuilderTest {
@@ -15,7 +16,7 @@ class FieldBuilderTest {
 
     @BeforeEach
     public void setup() {
-        fieldBuilder = FieldBuilder.getInstance();
+        fieldBuilder = FieldBuilder.getInstance(H2Dialect.getInstance());
     }
 
     @DisplayName("builder 메서드는")

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.wrapper.Table;
+import persistence.sql.dialet.h2.H2Dialect;
 
 class CreateQueryBuilderTest {
 
@@ -14,9 +15,8 @@ class CreateQueryBuilderTest {
 
     @BeforeEach
     public void setup() {
-        builder = CreateQueryBuilder.getInstance();
+        builder = CreateQueryBuilder.getInstance(H2Dialect.getInstance());
     }
-
 
     @DisplayName("Person Entity로 테이블 생성 ddl이 만들어지는지 확인한다.")
     @Test

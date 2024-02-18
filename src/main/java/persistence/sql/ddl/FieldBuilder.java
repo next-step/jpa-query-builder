@@ -1,22 +1,24 @@
 package persistence.sql.ddl;
 
 import persistence.sql.ddl.wrapper.Column;
+import persistence.sql.dialet.Dialect;
 
 public class FieldBuilder {
 
     private static FieldBuilder instance = null;
+    private final Dialect dialect;
     private static final String SPACE = " ";
     private static final String EMPTY = "";
     private static final String PRIMARY_KEY_DEFINITION = "PRIMARY KEY";
     private static final String NOTNULL_DEFINITION = "NOT NULL";
-    private static final String AUTO_INCREMENT_DEFINITION = "AUTO_INCREMENT";
 
-    private FieldBuilder() {
+    private FieldBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
-    public static synchronized FieldBuilder getInstance() {
+    public static synchronized FieldBuilder getInstance(Dialect dialect) {
         if (instance == null) {
-            instance = new FieldBuilder();
+            instance = new FieldBuilder(dialect);
         }
         return instance;
     }
@@ -36,22 +38,14 @@ public class FieldBuilder {
 
     private String getGeneratedValue(Column field) {
         if (field.isGeneratedValueAnnotation()) {
-            return SPACE + AUTO_INCREMENT_DEFINITION;
+            return SPACE + dialect.getAutoIncrementDefinition();
         }
         return EMPTY;
     }
 
     private String getSqlType(Column field) {
         Class<?> type = field.getType();
-        if (type.equals(String.class)) {
-            return "VARCHAR";
-        } else if (type.equals(Integer.class)) {
-            return "INTEGER";
-        } else if (type.equals(Long.class)) {
-            return "BIGINT";
-        } else {
-            throw new IllegalArgumentException("지원하지 않은 타입입니다.: " + type);
-        }
+        return dialect.getSqlTypeDefinition(type);
     }
 
     private String getPkConstraint(Column field) {
