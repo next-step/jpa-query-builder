@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
 
@@ -68,9 +69,10 @@ public class ReflectionTest {
         nameField.set(car, name);
         priceField.set(car, price);
 
-        assertThat(car.testGetName()).contains(name);
-        assertThat(car.testGetPrice()).contains(String.valueOf(price));
-
+        assertAll(
+                ()-> assertThat(car.testGetName()).contains(name),
+                ()-> assertThat(car.testGetPrice()).contains(String.valueOf(price))
+        );
     }
 
     private Field setFieldPublic(Class<Car> carClass, String fieldName) throws NoSuchFieldException {
