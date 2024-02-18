@@ -19,8 +19,11 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            Query query = new Query(QueryType.CREATE, Person.class);
-            jdbcTemplate.execute(query.getSql());
+            Query createQuery = new Query(QueryType.CREATE, Person.class);
+            jdbcTemplate.execute(createQuery.getSql());
+
+            Query dropQuery = new Query(QueryType.DROP, Person.class);
+            jdbcTemplate.execute(dropQuery.getSql());
 
             server.stop();
         } catch (Exception e) {
