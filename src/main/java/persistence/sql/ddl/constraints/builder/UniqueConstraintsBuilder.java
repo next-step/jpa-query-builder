@@ -1,7 +1,6 @@
-package persistence.sql.ddl.constraints.impl;
+package persistence.sql.ddl.constraints.builder;
 
 import jakarta.persistence.Column;
-import persistence.sql.ddl.constraints.ConstraintsBuilder;
 
 public class UniqueConstraintsBuilder implements ConstraintsBuilder {
 

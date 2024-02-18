@@ -1,10 +1,11 @@
-package persistence.sql.ddl.constraints.impl;
+package persistence.sql.ddl.constraints.strategy;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.constraints.ConstraintsBuilder;
-import persistence.sql.ddl.constraints.ConstraintsStrategy;
+import persistence.sql.ddl.constraints.builder.ConstraintsBuilder;
+import persistence.sql.ddl.constraints.builder.NotNullConstraintsBuilder;
+import persistence.sql.ddl.constraints.builder.UniqueConstraintsBuilder;
 
 public class DefaultConstraintsStrategy implements ConstraintsStrategy {
     private final List<ConstraintsBuilder> constraintsBuilders = List.of(

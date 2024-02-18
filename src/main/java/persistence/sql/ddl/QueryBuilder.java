@@ -3,8 +3,8 @@ package persistence.sql.ddl;
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import persistence.sql.ddl.constraints.ConstraintsStrategy;
-import persistence.sql.ddl.constraints.impl.DefaultConstraintsStrategy;
+import persistence.sql.ddl.constraints.strategy.ConstraintsStrategy;
+import persistence.sql.ddl.constraints.strategy.DefaultConstraintsStrategy;
 import persistence.sql.ddl.type.DataTypeBuilder;
 import persistence.sql.ddl.type.impl.DefaultDataTypeBuilder;
 

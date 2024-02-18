@@ -1,4 +1,4 @@
-package persistence.sql.ddl.constraints;
+package persistence.sql.ddl.constraints.strategy;
 
 import java.lang.reflect.Field;
 
