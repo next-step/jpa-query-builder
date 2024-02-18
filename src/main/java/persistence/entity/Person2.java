@@ -2,9 +2,8 @@ package persistence.entity;
 
 import jakarta.persistence.*;
 
-@Table(name = "users")
 @Entity
-public class Person {
+public class Person2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +17,4 @@ public class Person {
 
     @Column(nullable = false)
     private String email;
-
-    @Transient
-    private Integer index;
-
 }

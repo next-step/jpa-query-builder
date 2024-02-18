@@ -1,8 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class DDLQueryBuilder {
     }
 
     private String getTableName(Class<?> clazz) {
-        return clazz.getSimpleName().toLowerCase();
+        return clazz.isAnnotationPresent(Table.class) ? clazz.getAnnotation(Table.class).name() : clazz.getSimpleName().toLowerCase();
     }
 
     private String createFieldsSql(Class<?> clazz) {
@@ -33,9 +31,15 @@ public class DDLQueryBuilder {
         List<String> columns = new ArrayList<>();
 
         for (Field declaredField : clazz.getDeclaredFields()) {
-            columns.add(getColumn(declaredField));
+            if (isPersistable(declaredField)) {
+                columns.add(getColumn(declaredField));
+            }
         }
         return columns;
+    }
+
+    private boolean isPersistable(Field declaredField) {
+        return !declaredField.isAnnotationPresent(Transient.class);
     }
 
     private String createPrimaryKeySql(Class<?> clazz) {
