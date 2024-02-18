@@ -22,7 +22,7 @@ public class FieldBuilder {
     }
 
 
-    public String process(Column field) {
+    public String builder(Column field) {
         StringBuilder builder = new StringBuilder();
 
         builder.append(field.getColumnName());

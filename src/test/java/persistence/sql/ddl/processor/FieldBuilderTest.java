@@ -18,17 +18,17 @@ class FieldBuilderTest {
         fieldBuilder = FieldBuilder.getInstance();
     }
 
-    @DisplayName("process 메서드는")
+    @DisplayName("builder 메서드는")
     @Nested
-    class Process {
+    class Builder {
         @DisplayName("String 타입의 필드일 경우 필드명 VARCHAR가 리턴된다")
         @Test
         public void testProcess_WhenFieldTypeIsString() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("stringField"));
 
-            String result = fieldBuilder.process(field);
+            String result = fieldBuilder.builder(field);
 
-            assertEquals("stringField VARCHAR", result);
+            assertEquals("string_field VARCHAR", result);
         }
 
         @DisplayName("Integer 타입의 필드일 경우 '필드명 INTEGER'가 리턴된다")
@@ -36,9 +36,9 @@ class FieldBuilderTest {
         public void testProcess_WhenFieldTypeIsInteger() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("integerField"));
 
-            String result = fieldBuilder.process(field);
+            String result = fieldBuilder.builder(field);
 
-            assertEquals("integerField INTEGER", result);
+            assertEquals("integer_field INTEGER", result);
         }
 
         @DisplayName("Long 타입의 필드일 경우 '필드명 BIGINT'가 리턴된다")
@@ -46,9 +46,9 @@ class FieldBuilderTest {
         public void testProcess_WhenFieldTypeIsLong() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("longField"));
 
-            String result = fieldBuilder.process(field);
+            String result = fieldBuilder.builder(field);
 
-            assertEquals("longField BIGINT", result);
+            assertEquals("long_field BIGINT", result);
         }
 
         @DisplayName("지원하지 않은 타입의 필드일 경우 예외가 발생한다.")
@@ -56,7 +56,7 @@ class FieldBuilderTest {
         public void testProcess_WhenFieldTypeIsNotSupported() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("unsupportedField"));
 
-            assertThrows(IllegalArgumentException.class, () -> fieldBuilder.process(field));
+            assertThrows(IllegalArgumentException.class, () -> fieldBuilder.builder(field));
         }
     }
 

@@ -9,6 +9,9 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     private static CreateQueryBuilder instance = null;
 
+    private final FieldBuilder fieldBuilder = FieldBuilder.getInstance();
+    private static final String CREATE_TABLE_DEFINITION = "CREATE TABLE %s (%s)";
+
     private CreateQueryBuilder() {
     }
 
@@ -19,18 +22,13 @@ public class CreateQueryBuilder implements QueryBuilder {
         return instance;
     }
 
-    private final FieldBuilder fieldBuilder = FieldBuilder.getInstance();
-
-    private static final String CREATE_TABLE_DEFINITION = "CREATE TABLE %s (%s)";
-
-
     @Override
     public String builder(Class<?> clazz) {
 
         Table table = Table.of(clazz);
 
         String columnDefinitions = table.getColumns().stream()
-            .map(fieldBuilder::process)
+            .map(fieldBuilder::builder)
             .collect(Collectors.joining(","));
 
         return String.format(CREATE_TABLE_DEFINITION, table.getTableName(), columnDefinitions);

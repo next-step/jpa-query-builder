@@ -21,7 +21,7 @@ public class Column {
     public String getColumnName() {
         jakarta.persistence.Column column = field.getDeclaredAnnotation(jakarta.persistence.Column.class);
         if (column == null || StringUtils.isNullOrEmpty(column.name())) {
-            return field.getName().toLowerCase();
+            return utils.StringUtils.convertCamelToSnakeString(field.getName());
         }
         return column.name();
     }
