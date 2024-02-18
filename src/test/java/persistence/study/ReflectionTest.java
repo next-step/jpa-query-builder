@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -22,13 +24,37 @@ public class ReflectionTest {
     void showClass() {
         final Class<Car> carClass = Car.class;
         // 패키지+클래스 이름
-        logger.debug(carClass.getName());
+        assertThat(carClass.getName()).isEqualTo("persistence.study.Car");
+
         // 모든 필드 목록
-        logger.debug(Arrays.toString(carClass.getDeclaredFields()));
+        List<String> fields = Arrays.stream(carClass.getDeclaredFields())
+                .map(Field::toString)
+                .toList();
+        assertThat(fields).contains(
+                "private java.lang.String persistence.study.Car.name",
+                "private int persistence.study.Car.price"
+        );
+
         // 모든 생성자 반환
-        logger.debug(Arrays.toString(carClass.getDeclaredConstructors()));
+        List<String> constructors = Arrays.stream(carClass.getDeclaredConstructors())
+                .map(Constructor::toString)
+                .toList();
+        assertThat(constructors).contains(
+                "public persistence.study.Car()",
+                "public persistence.study.Car(java.lang.String,int)"
+        );
+
         // 모든 메서드 반환
-        logger.debug(Arrays.toString(carClass.getDeclaredMethods()));
+        List<String> methods = Arrays.stream(carClass.getDeclaredMethods())
+                .map(Method::toString)
+                .toList();
+        assertThat(methods).contains(
+                "public java.lang.String persistence.study.Car.getName()",
+                "public void persistence.study.Car.printView()",
+                "public int persistence.study.Car.getPrice()",
+                "public java.lang.String persistence.study.Car.testGetName()",
+                "public java.lang.String persistence.study.Car.testGetPrice()"
+        );
     }
 
     @Test
