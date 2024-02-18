@@ -1,3 +1,7 @@
 # jpa-query-builder
 
-0단계 : 123 이라는 숫자를 문자열로 반환
+### Step 2 : QueryBuilder DDL
+
+- [x] 요구사항1 : create 쿼리 만들어보기
+  - Person Entity : @Id id, name, age
+
