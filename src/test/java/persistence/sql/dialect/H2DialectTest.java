@@ -33,7 +33,7 @@ class H2DialectTest {
 
     @DisplayName("필드의 Type Name 으로 H2 DB 의 column type 을 반환할 때 적절한 type 을 찾지 못하면 VARCHAR 를 반환한다")
     @Test
-    public void throwNotfoundColumnType() throws Exception {
+    public void createNotfoundColumnType() throws Exception {
         // given
         final String doubleName = Double.class.getSimpleName();
 
