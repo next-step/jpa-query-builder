@@ -1,4 +1,4 @@
-package reflectiontest;
+package persistence.study;
 
 public class Car {
     private String name;
