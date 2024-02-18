@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,6 +14,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 public class ReflectionTest {
@@ -65,31 +66,30 @@ public class ReflectionTest {
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getConstructor().newInstance();
 
-        for (final Method method : carClass.getDeclaredMethods()) {
-            if (method.getName().startsWith("test")) {
-                final String result = (String) method.invoke(car);
-                logger.debug(result);
-            }
+        List<Method> startWithTestMethods = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.getName().startsWith("test"))
+                .toList();
+
+        for (final Method method : startWithTestMethods) {
+            final String result = (String) method.invoke(car);
+            logger.debug(result);
         }
     }
 
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
-    void testAnnotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
-
+    void testAnnotationMethodRun() throws InvocationTargetException, IllegalAccessException {
         final Class<Car> carClass = Car.class;
-        final Car car = carClass.getConstructor().newInstance();
+        Car mockCar = mock(Car.class);
 
         List<Method> annotationMethods = Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                 .toList();
-
         for (final Method method : annotationMethods) {
-            method.invoke(car);
-            assertThat(outputStreamCaptor.toString()).isEqualTo("자동차 정보를 출력 합니다.\n");
+            method.invoke(mockCar);
         }
+
+        verify(mockCar, times(1)).printView();
     }
 
     @Test
