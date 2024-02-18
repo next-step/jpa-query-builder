@@ -1,2 +1,7 @@
-package persistence.sql.ddl;public class DdlQueryBuilder {
+package persistence.sql.ddl;
+
+public interface DdlQueryBuilder<T> {
+
+    String buildCreateQuery(final T entity);
+
 }
