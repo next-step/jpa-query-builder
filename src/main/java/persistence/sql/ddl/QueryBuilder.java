@@ -118,4 +118,8 @@ public class QueryBuilder {
 
         return SPACE + "not null";
     }
+
+    public String dropDdl(final Class<?> personClass) {
+        throw new UnsupportedOperationException("Unsupported dropDdl");
+    }
 }

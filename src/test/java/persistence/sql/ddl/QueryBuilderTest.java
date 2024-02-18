@@ -48,4 +48,18 @@ class QueryBuilderTest {
 
         assertThat(actualDDL).isEqualTo(expectedDDL);
     }
+
+    @DisplayName("요구사항4, Person drop ddl문 생성")
+    @Test
+    void persion_ddl_drop() {
+        final QueryBuilder queryBuilder = new QueryBuilder();
+        final Class<?> personClass = Person3.class;
+
+        String actualDDL = queryBuilder.dropDdl(personClass);
+
+        String expectedDDL = "drop table if exists users CASCADE";
+
+        assertThat(actualDDL).isEqualTo(expectedDDL);
+    }
+
 }
