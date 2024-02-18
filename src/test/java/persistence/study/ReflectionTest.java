@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -76,15 +79,20 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("PrintView 어노테이션이 있는 메소드를 실행한다.")
-    void runPrintView() throws Exception {
+    void runPrintView() {
+        final OutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
+
         Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                 .forEach(method -> runMethod(carInstance, method));
+
+        assertThat(out.toString()).isEqualTo("자동차 정보를 출력 합니다.\n");
     }
 
     @Test
     @DisplayName("Car 클래스에 필드에 값을 할당한다.")
-    void seField() throws Exception {
+    void seField() {
         Arrays.stream(carInstance.getClass().getDeclaredFields())
                 .forEach(field -> {
                     field.setAccessible(true);
