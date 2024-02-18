@@ -2,7 +2,7 @@ package persistence.domain;
 
 
 @Entity
-public class Person {
+public class Person1 {
 
     @Id
     private Long id;
