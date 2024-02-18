@@ -44,9 +44,22 @@ public class ReflectionTest {
         }
     }
 
+    @Test
+    @DisplayName("PrintView 어노테이션 메소드 실행")
+    public void printViewMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = Car.class.getConstructor(String.class, int.class).newInstance("Porsche", 10000);
+        for (Method method : carClass.getDeclaredMethods()){
+            if (method.isAnnotationPresent(PrintView.class)) {
+                methodRun(car, method);
+            }
+        }
+    }
+
+
     private void methodRun(Object instance, Method method) throws Exception {
         method.setAccessible(true);
-        logger.debug((String) method.invoke(instance));
+        method.invoke(instance);
     }
 
     private boolean isTestMethod(Method method) {
