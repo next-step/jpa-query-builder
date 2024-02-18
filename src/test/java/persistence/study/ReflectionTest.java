@@ -1,5 +1,6 @@
 package persistence.study;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -7,9 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -36,7 +35,7 @@ public class ReflectionTest {
     @DisplayName("test로 시작하는 메소드 실행")
     public void testMethodRun() throws Exception {
         Class<Car> carClass = Car.class;
-        Car car = Car.class.getConstructor(String.class, int.class).newInstance("Porsche", 10000);
+        Car car = Car.class.getConstructor().newInstance();
         for (Method method : carClass.getDeclaredMethods()) {
             if (isTestMethod(method)) {
                 methodRun(car, method);
@@ -48,7 +47,7 @@ public class ReflectionTest {
     @DisplayName("PrintView 어노테이션 메소드 실행")
     public void printViewMethodRun() throws Exception {
         Class<Car> carClass = Car.class;
-        Car car = Car.class.getConstructor(String.class, int.class).newInstance("Porsche", 10000);
+        Car car = Car.class.getConstructor().newInstance();
         for (Method method : carClass.getDeclaredMethods()){
             if (method.isAnnotationPresent(PrintView.class)) {
                 methodRun(car, method);
@@ -56,8 +55,39 @@ public class ReflectionTest {
         }
     }
 
+    @Test
+    @DisplayName("private field에 값 할당")
+    public void privateFieldAccess() throws Exception{
+        final String name = "타이칸";
+        final int price = 10000;
+
+        Class<Car> carClass = Car.class;
+        Car car = Car.class.getConstructor().newInstance();
+
+        setFieldValue(car, carClass.getDeclaredField("name"), name);
+        setFieldValue(car, carClass.getDeclaredField("price"), price);
+
+        Assertions.assertThat(name).isEqualTo(car.getName());
+        Assertions.assertThat(price).isEqualTo(car.getPrice());
+    }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    public void constructorWithArgs() throws Exception {
+        final String name = "타이칸";
+        final int price = 10000;
+
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor(String.class, int.class).newInstance(name, price);
+
+        Assertions.assertThat(name).isEqualTo(car.getName());
+        Assertions.assertThat(price).isEqualTo(car.getPrice());
+    }
+
+
 
     private void methodRun(Object instance, Method method) throws Exception {
+
         method.setAccessible(true);
         method.invoke(instance);
     }
@@ -66,4 +96,8 @@ public class ReflectionTest {
         return method.getName().startsWith("test");
     }
 
+    private void setFieldValue(Object instance, Field field, Object value) throws IllegalAccessException {
+        field.setAccessible(true);
+        field.set(instance, value);
+    }
 }
