@@ -103,7 +103,7 @@ class ReflectionTest {
 
     @Test
     @DisplayName("Car 클래스의 name과 price 필드에 값을 할당한 후 getter 메소드를 통해 값을 확인한다.")
-    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         // given
         Class<Car> carClass = Car.class;
         Car car = carClass.getDeclaredConstructor().newInstance();
@@ -124,6 +124,25 @@ class ReflectionTest {
         assertAll(
                 () -> assertThat(car.getName()).isEqualTo(fieldMap.get("name")),
                 () -> assertThat(car.getPrice()).isEqualTo(fieldMap.get("price"))
+        );
+    }
+
+    @Test
+    @DisplayName("인자를 가진 Car 인스턴스를 생성한다.")
+    void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        // given
+        Class<Car> carClass = Car.class;
+        String name = "아반떼";
+        int price = 24_000_000;
+
+        // when
+        Constructor<Car> constructor = carClass.getDeclaredConstructor(String.class, int.class);
+        Car car = constructor.newInstance(name, price);
+
+        // then
+        assertAll(
+                () -> assertThat(car.getName()).isEqualTo(name),
+                () -> assertThat(car.getPrice()).isEqualTo(price)
         );
     }
 }

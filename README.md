@@ -13,6 +13,6 @@
 - [x] private field에 값 할당
   - Car 클래스의 name과 price 필드에 값을 할당한 후 getter 메소드를 통해 값을 확인한다.
   - privateFieldAccess()
-- [ ] 인자를 가진 생성자의 인스턴스 생성
+- [x] 인자를 가진 생성자의 인스턴스 생성
   - Car 클래스의 인스턴스를 생성한다.
   - constructorWithArgs()
