@@ -8,4 +8,4 @@
   - @GeneratedValue, @Column
 - [x] 요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기2
   - @Table, @Transient
-- [ ] 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
+- [x] 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
