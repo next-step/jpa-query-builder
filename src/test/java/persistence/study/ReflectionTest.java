@@ -1,4 +1,4 @@
-package persistence.study.step1;
+package persistence.study;
 
 import annotation.PrintView;
 import domain.Car;
