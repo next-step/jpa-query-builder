@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,20 +87,32 @@ class ReflectionTest {
     @DisplayName("@PrintView 애노테이션이 설정되어 있는 메소드를 실행한다.")
     void testAnnotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         // given
+        final PrintStream originalOut = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
         Class<Car> carClass = Car.class;
         Car car = carClass.getDeclaredConstructor().newInstance();
+        String expectedOutput = "자동차 정보를 출력 합니다.";
 
-        // when
-        List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(PrintView.class))
-                .collect(Collectors.toList());
+        try {
+            // when
+            List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
+                    .filter(method -> method.isAnnotationPresent(PrintView.class))
+                    .collect(Collectors.toList());
 
-        for (Method method : methods) {
-            method.invoke(car);
+            for (Method method : methods) {
+                method.invoke(car);
+            }
+
+            // then
+            assertAll(
+                    () -> assertThat(methods).hasSize(1),
+                    () -> assertThat(outputStream.toString().trim()).isEqualTo(expectedOutput)
+            );
+        } finally {
+            System.setOut(originalOut);
         }
-
-        // then
-        assertThat(methods).hasSize(1);
     }
 
     @Test
