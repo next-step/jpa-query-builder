@@ -18,7 +18,10 @@ public class Query {
         checkIsEntity(targetClass);
         String ddlType = queryType.getValue();
         String tableName = getTableName(targetClass);
-        String tableFields = ColumnQueries.of(targetClass).toQuery();
+        String tableFields = "";
+        if (queryType.isCreate()) {
+            tableFields = ColumnQueries.of(targetClass).toQuery();
+        }
         this.sql = String.join(DELIMITER, List.of(ddlType, tableName, tableFields));
     }
 

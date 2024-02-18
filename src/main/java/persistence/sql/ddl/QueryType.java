@@ -1,7 +1,9 @@
 package persistence.sql.ddl;
 
 public enum QueryType {
-    CREATE("CREATE TABLE");
+    CREATE("CREATE TABLE"),
+    DROP("DROP TABLE"),
+    ;
 
     private final String value;
 
@@ -11,5 +13,9 @@ public enum QueryType {
 
     public String getValue() {
         return value;
+    }
+
+    public boolean isCreate() {
+        return this == CREATE;
     }
 }
