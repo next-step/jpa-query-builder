@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ReflectionTest {
@@ -47,8 +48,10 @@ public class ReflectionTest {
                 .map(declaredTestMethod -> invokeMethod(declaredTestMethod, car))
                 .collect(Collectors.toList());
 
-        assertThat(result).hasSize(2);
-        assertThat(result).contains("test : null", "test : 0");
+        assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(2);
+            softly.assertThat(result).contains("test : null", "test : 0");
+        });
     }
 
     @Test
@@ -94,8 +97,10 @@ public class ReflectionTest {
         String carName = car.getName();
         int carPrice = car.getPrice();
 
-        assertThat(carName).isEqualTo("소나타");
-        assertThat(carPrice).isEqualTo(10_000);
+        assertSoftly(softly -> {
+            softly.assertThat(carName).isEqualTo("소나타");
+            softly.assertThat(carPrice).isEqualTo(10_000);
+        });
     }
 
     private Object getFieldValueByName(String name) {
@@ -130,7 +135,9 @@ public class ReflectionTest {
         String carName = car.getName();
         int carPrice = car.getPrice();
 
-        assertThat(carName).isEqualTo("소나타");
-        assertThat(carPrice).isEqualTo(10_000);
+        assertSoftly(softly -> {
+            softly.assertThat(carName).isEqualTo("소나타");
+            softly.assertThat(carPrice).isEqualTo(10_000);
+        });
     }
 }
