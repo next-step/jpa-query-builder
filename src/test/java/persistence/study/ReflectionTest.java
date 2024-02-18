@@ -28,7 +28,8 @@ public class ReflectionTest {
     @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
         String carClassName = carClass.getName();
-        logger.debug(carClassName);
+
+        assertThat(carClassName).isEqualTo("persistence.study.Car");
     }
 
     @Test
