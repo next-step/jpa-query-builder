@@ -36,8 +36,8 @@ public class ReflectionTest {
         }
 
         logger.info("Car 객체의 모든 생성자");
-        final Constructor[] constructors = carClass.getDeclaredConstructors();
-        for (Constructor constructor : constructors) {
+        final Constructor<?>[] constructors = carClass.getDeclaredConstructors();
+        for (Constructor<?> constructor : constructors) {
             logger.info("생성자: {}, 파라미터 갯수: {}", constructor.getName(), constructor.getParameterCount());
         }
 
@@ -87,8 +87,8 @@ public class ReflectionTest {
     @Test
     @DisplayName("인자를 가진 생성자의 인스턴스 생성")
     void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        final Constructor constructor = carClass.getDeclaredConstructor(String.class, int.class);
-        final Car car = (Car) constructor.newInstance("페라리", 100);
+        final Constructor<Car> constructor = carClass.getDeclaredConstructor(String.class, int.class);
+        final Car car = constructor.newInstance("페라리", 100);
 
         assertThat(car.getName()).isEqualTo("페라리");
     }
