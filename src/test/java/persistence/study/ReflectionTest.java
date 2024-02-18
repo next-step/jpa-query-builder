@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -110,5 +111,22 @@ public class ReflectionTest {
     } catch (IllegalAccessException e) {
       fail();
     }
+  }
+
+  @Test
+  @DisplayName("인자를 가진 생성자를 찾아 인스턴스 생성하기")
+  void constructorWithArgs() throws Exception {
+    Constructor<?>[] constructors = carClass.getConstructors();
+    Constructor<?> findConstructor = Arrays.stream(constructors)
+      .filter(constructor -> constructor.getParameterCount() == 2)
+      .findAny()
+      .orElseThrow();
+
+    Car car = (Car) findConstructor.newInstance("소나타", 10_000);
+    String carName = car.getName();
+    int carPrice = car.getPrice();
+
+    assertThat(carName).isEqualTo("소나타");
+    assertThat(carPrice).isEqualTo(10_000);
   }
 }
