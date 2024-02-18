@@ -12,10 +12,12 @@ class QueryBuilderTest {
     @Test
     void persion_ddl_create() {
         final QueryBuilder queryBuilder = new QueryBuilder();
-        final Class<Person> personClass = Person.class;
+        final Class<?> personClass = Person.class;
 
-        String createDdl = queryBuilder.createDdl(personClass);
+        String actualDDL = queryBuilder.createDdl(personClass);
 
-        assertThat(createDdl).isEqualTo("create table person (id bigint not null, age integer, name varchar(255), primary key (id)");
+        String expectedDDL = "create table person (id bigint not null, age integer, name varchar(255), primary key (id))";
+
+        assertThat(actualDDL).isEqualTo(expectedDDL);
     }
 }
