@@ -82,4 +82,18 @@ public class ReflectionTest {
         assertThat(car.getName()).isEqualTo(MOCK_NAME);
         assertThat(car.getPrice()).isEqualTo(MOCK_PRICE);
     }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        final Class<Car> carClass = Car.class;
+        final String name = "Sonata";
+        final int price = 1000;
+
+        final Car car = carClass.getConstructor(String.class, int.class).newInstance(name, price);
+
+        assertThat(car).isInstanceOf(Car.class);
+        assertThat(car.getName()).isEqualTo(name);
+        assertThat(car.getPrice()).isEqualTo(price);
+    }
 }
