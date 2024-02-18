@@ -41,11 +41,11 @@ public class EntityClassInspector {
         return new EntityColumn(
                 columnName(columnAnnotation, field.getName()),
                 field.getType(),
+                columnLength(columnAnnotation, 255),
                 idAnnotation != null,
                 isAutoIncrement(GeneratedValueAnnotation, false),
                 isNullable(columnAnnotation, true),
-                entityFieldTypeConverter
-        );
+                entityFieldTypeConverter);
     }
 
     private String columnName(Column columnAnnotation, String defaultName) {
@@ -53,6 +53,14 @@ public class EntityClassInspector {
             return columnAnnotation.name();
         } else {
             return defaultName;
+        }
+    }
+
+    private static Integer columnLength(Column columnAnnotation, Integer defaultValue) {
+        if (columnAnnotation != null) {
+            return columnAnnotation.length();
+        } else {
+            return defaultValue;
         }
     }
 

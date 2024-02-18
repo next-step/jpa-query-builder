@@ -10,9 +10,9 @@ class QueryBuilderTest {
     @Test
     void buildCreateQuery() {
         assertAll(
-                () -> assertCreateQuery(OldPerson1.class, "CREATE TABLE OldPerson1 (id BIGINT PRIMARY KEY, name VARCHAR(100) NULL, age INT NULL)"),
-                () -> assertCreateQuery(OldPerson2.class, "CREATE TABLE OldPerson2 (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)"),
-                () -> assertCreateQuery(Person.class, "CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)")
+                () -> assertCreateQuery(OldPerson1.class, "CREATE TABLE OldPerson1 (id BIGINT PRIMARY KEY, name VARCHAR(255) NULL, age INT NULL)"),
+                () -> assertCreateQuery(OldPerson2.class, "CREATE TABLE OldPerson2 (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255) NULL, old INT NULL, email VARCHAR(255) NOT NULL)"),
+                () -> assertCreateQuery(Person.class, "CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255) NULL, old INT NULL, email VARCHAR(255) NOT NULL)")
         );
     }
 
@@ -37,4 +37,3 @@ class QueryBuilderTest {
         assertThat(actual).isEqualTo(expected);
     }
 }
-
