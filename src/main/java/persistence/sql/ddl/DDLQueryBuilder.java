@@ -8,6 +8,15 @@ import java.util.List;
 
 public class DDLQueryBuilder {
 
+    private static final DDLQueryBuilder instance = new DDLQueryBuilder();
+
+    private DDLQueryBuilder() {
+    }
+
+    public static DDLQueryBuilder getInstance() {
+        return instance;
+    }
+
     public String createTableQuery(Class<?> clazz) {
         return String.format("CREATE TABLE %s (%s%s)",
                 getTableName(clazz),
@@ -95,14 +104,12 @@ public class DDLQueryBuilder {
 
 
     private String getColumnType(Field field) {
-        switch (field.getType().getSimpleName()) {
-            case "Long":
-                return "BIGINT";
-            case "Integer":
-                return "INT";
-            default:
-                return "VARCHAR(255)";
+        if (field.getType().equals(Long.class)) {
+            return "BIGINT";
+        } else if (field.getType().equals(Integer.class)) {
+            return "INT";
         }
+        return "VARCHAR(255)";
     }
 
 }

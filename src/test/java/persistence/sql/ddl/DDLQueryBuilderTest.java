@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DDLQueryBuilderTest {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
+    private DDLQueryBuilder ddlQueryBuilder = DDLQueryBuilder.getInstance();
 
     @Test
     @DisplayName("요구사항1_Person Create Table Query")
