@@ -11,9 +11,9 @@ public class QueryBuilder {
 
     public static final String SQUARE_BRACKETS_OPEN = "(";
     public static final String SQUARE_BRACKETS_CLOSE = ")";
+    public static final String CREATE_DEFAULT_DDL = "create table %s %s";
     public static final String SPACE = " ";
     public static final String COMMA = ",";
-    public static final String CREATE_DEFAULT_DDL = "create table %s %s";
 
     public String createDdl(final Class<?> clazz) {
         String tableName = createTableName(clazz);
@@ -30,6 +30,11 @@ public class QueryBuilder {
         ddl.append(SQUARE_BRACKETS_CLOSE);
 
         return ddl.toString();
+    }
+
+    public String dropDdl(final Class<?> clazz) {
+        final String tableName = createTableName(clazz);
+        return String.format("drop table if exists %s CASCADE", tableName);
     }
 
     private String createTableName(final Class<?> clazz) {
@@ -119,7 +124,4 @@ public class QueryBuilder {
         return SPACE + "not null";
     }
 
-    public String dropDdl(final Class<?> personClass) {
-        throw new UnsupportedOperationException("Unsupported dropDdl");
-    }
 }
