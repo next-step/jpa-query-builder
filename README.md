@@ -36,7 +36,7 @@
 - [x] 생성 쿼리를 만들 수 있다.
 
 ## 요구사항 2 - 추가된 정보로 create 쿼리 만들기
-- [ ] GeneratedValue를 통해 생성 전략을 생성할 수 있다.
-- [ ] Column을 통해 테이블 이름을 지정할 수 있다.
-- [ ] Column을 통해 nullable 설정을 할 수 있다.
+- [x] GeneratedValue를 통해 생성 전략을 생성할 수 있다.
+- [x] Column을 통해 테이블 이름을 지정할 수 있다.
+- [x] Column을 통해 nullable 설정을 할 수 있다.
 
