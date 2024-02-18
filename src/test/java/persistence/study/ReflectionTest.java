@@ -34,20 +34,19 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("test로 시작하는 메소드 실행")
-    public void runTestMethod() throws Exception {
+    public void testMethodRun() throws Exception {
         Class<Car> carClass = Car.class;
-        Car car = Car.class.getConstructor(String.class, int.class).newInstance("Porsche", 4000);
+        Car car = Car.class.getConstructor(String.class, int.class).newInstance("Porsche", 10000);
         for (Method method : carClass.getDeclaredMethods()) {
-            testMethodRun(car, method);
+            if (isTestMethod(method)) {
+                methodRun(car, method);
+            }
         }
     }
 
-    private void testMethodRun(Object instance, Method method) throws Exception {
-        method.getDeclaringClass().getDeclaredConstructor().newInstance();
-        if (isTestMethod(method)) {
-                method.setAccessible(true);
-                logger.debug((String) method.invoke(instance));
-        }
+    private void methodRun(Object instance, Method method) throws Exception {
+        method.setAccessible(true);
+        logger.debug((String) method.invoke(instance));
     }
 
     private boolean isTestMethod(Method method) {
