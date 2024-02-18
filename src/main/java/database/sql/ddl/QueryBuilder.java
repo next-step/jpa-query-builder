@@ -1,9 +1,6 @@
 package database.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -48,11 +45,19 @@ public class QueryBuilder {
         boolean isId = field.isAnnotationPresent(Id.class);
 
         List<String> list = new ArrayList<>();
+
         list.add(extractName(field));
+
         list.add(convertType(field.getType()));
+
         if (isId) {
-            list.add("AUTO_INCREMENT PRIMARY KEY");
+            GeneratedValue generatedValueAnnotation = field.getAnnotation(GeneratedValue.class);
+            if (generatedValueAnnotation != null && generatedValueAnnotation.strategy() == GenerationType.IDENTITY) {
+                list.add("AUTO_INCREMENT");
+            }
+            list.add("PRIMARY KEY");
         }
+
         if (!isId) list.add(extractNullability(field));
 
         return String.join(" ", list);

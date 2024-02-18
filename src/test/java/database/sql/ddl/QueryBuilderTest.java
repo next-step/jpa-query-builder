@@ -2,7 +2,6 @@ package database.sql.ddl;
 
 import org.junit.jupiter.api.Test;
 
-import static database.sql.ddl.QueryBuilder.convertFieldToDdl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -10,32 +9,32 @@ class QueryBuilderTest {
 
     @Test
     void buildCreateQuery() {
+        assertAll(
+                () -> assertCreateQuery(OldPerson1.class, "CREATE TABLE OldPerson1 (id BIGINT PRIMARY KEY, name VARCHAR(100) NULL, age INT NULL)"),
+                () -> assertCreateQuery(OldPerson2.class, "CREATE TABLE OldPerson2 (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)"),
+                () -> assertCreateQuery(Person.class, "CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)")
+        );
+    }
+
+    private void assertCreateQuery(Class<?> entityClass, String expected) {
         QueryBuilder queryBuilder = new QueryBuilder();
-
-        String actual = queryBuilder.buildCreateQuery(Person.class);
-
-        assertThat(actual).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)");
+        String actual = queryBuilder.buildCreateQuery(entityClass);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     void buildDeleteQuery() {
-        QueryBuilder queryBuilder = new QueryBuilder();
-
-        String actual = queryBuilder.buildDeleteQuery(Person.class);
-
-        assertThat(actual).isEqualTo("DROP TABLE users");
+        assertAll(
+                () -> assertDropQuery(OldPerson1.class, "DROP TABLE OldPerson1"),
+                () -> assertDropQuery(OldPerson2.class, "DROP TABLE OldPerson2"),
+                () -> assertDropQuery(Person.class, "DROP TABLE users")
+        );
     }
 
-    @Test
-    void testConvertFieldToDdl() {
-        Class<Person> clazz = Person.class;
-
-        assertAll(
-                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("id"))).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY"),
-                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("name"))).isEqualTo("nick_name VARCHAR(100) NULL"),
-                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("age"))).isEqualTo("old INT NULL"),
-                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("email"))).isEqualTo("email VARCHAR(100) NOT NULL")
-        );
+    private void assertDropQuery(Class<?> entityClass, String expected) {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String actual = queryBuilder.buildDeleteQuery(entityClass);
+        assertThat(actual).isEqualTo(expected);
     }
 }
 
