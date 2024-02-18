@@ -21,7 +21,6 @@ public class FieldBuilder {
         return instance;
     }
 
-
     public String builder(Column field) {
         StringBuilder builder = new StringBuilder();
 

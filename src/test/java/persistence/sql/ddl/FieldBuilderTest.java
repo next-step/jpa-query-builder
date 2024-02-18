@@ -6,10 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.FieldBuilder;
 import persistence.sql.ddl.wrapper.Column;
 
-@DisplayName("FieldProcessor class의")
+@DisplayName("FieldBuilderor class의")
 class FieldBuilderTest {
 
     private FieldBuilder fieldBuilder;
@@ -24,7 +23,7 @@ class FieldBuilderTest {
     class Builder {
         @DisplayName("String 타입의 필드일 경우 필드명 VARCHAR가 리턴된다")
         @Test
-        public void testProcess_WhenFieldTypeIsString() throws NoSuchFieldException {
+        void testBuilder_WhenFieldTypeIsString() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("stringField"));
 
             String result = fieldBuilder.builder(field);
@@ -34,7 +33,7 @@ class FieldBuilderTest {
 
         @DisplayName("Integer 타입의 필드일 경우 '필드명 INTEGER'가 리턴된다")
         @Test
-        public void testProcess_WhenFieldTypeIsInteger() throws NoSuchFieldException {
+        void testBuilder_WhenFieldTypeIsInteger() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("integerField"));
 
             String result = fieldBuilder.builder(field);
@@ -44,7 +43,7 @@ class FieldBuilderTest {
 
         @DisplayName("Long 타입의 필드일 경우 '필드명 BIGINT'가 리턴된다")
         @Test
-        public void testProcess_WhenFieldTypeIsLong() throws NoSuchFieldException {
+        void testBuilder_WhenFieldTypeIsLong() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("longField"));
 
             String result = fieldBuilder.builder(field);
@@ -54,7 +53,7 @@ class FieldBuilderTest {
 
         @DisplayName("지원하지 않은 타입의 필드일 경우 예외가 발생한다.")
         @Test
-        public void testProcess_WhenFieldTypeIsNotSupported() throws NoSuchFieldException {
+        void testBuilder_WhenFieldTypeIsNotSupported() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("unsupportedField"));
 
             assertThrows(IllegalArgumentException.class, () -> fieldBuilder.builder(field));
