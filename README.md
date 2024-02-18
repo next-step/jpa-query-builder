@@ -7,7 +7,7 @@
 - [x] test로 시작하는 메소드 실행
   - Car 객체의 메소드 중 test로 시작하는 메소드를 자동으로 실행한다.
   - testMethodRun()
-- [ ] @PrintView 애노테이션 메소드 실행
+- [x] @PrintView 애노테이션 메소드 실행
   - @PrintView애노테이션이 설정되어 있는 메소드를 자동으로 실행한다.
   - testAnnotationMethodRun()
 - [ ] private field에 값 할당

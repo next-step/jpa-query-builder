@@ -83,4 +83,24 @@ class ReflectionTest {
         assertThat(actualResults).containsExactlyInAnyOrderElementsOf(expectedResults);
     }
 
+    @Test
+    @DisplayName("@PrintView 애노테이션이 설정되어 있는 메소드를 실행한다.")
+    void testAnnotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        // given
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        // when
+        List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .collect(Collectors.toList());
+
+        for (Method method : methods) {
+            method.invoke(car);
+        }
+
+        // then
+        assertThat(methods).hasSize(1);
+    }
+
 }
