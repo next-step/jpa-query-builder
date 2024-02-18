@@ -36,14 +36,15 @@ public class EntityClassInspector {
         Column columnAnnotation = field.getAnnotation(Column.class);
         Id idAnnotation = field.getAnnotation(Id.class);
         GeneratedValue GeneratedValueAnnotation = field.getAnnotation(GeneratedValue.class);
+        EntityFieldTypeConverter entityFieldTypeConverter = new MysqlEntityFieldTypeConverter();
 
         return new EntityColumn(
-                field.getName(),
                 columnName(columnAnnotation, field.getName()),
                 field.getType(),
                 idAnnotation != null,
                 isAutoIncrement(GeneratedValueAnnotation, false),
-                isNullable(columnAnnotation, true)
+                isNullable(columnAnnotation, true),
+                entityFieldTypeConverter
         );
     }
 

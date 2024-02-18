@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityColumn {
-    private final String propertyName;
     private final String columnName;
     private final Class<?> type;
     private final boolean isPrimaryKey;
     private final boolean autoIncrement;
     private final boolean nullable;
+    private final EntityFieldTypeConverter entityFieldTypeConverter;
 
-    public EntityColumn(String propertyName,
-                        String columnName,
+    public EntityColumn(String columnName,
                         Class<?> type,
                         boolean isPrimaryKey,
                         boolean autoIncrement,
-                        boolean nullable) {
-        this.propertyName = propertyName;
+                        boolean nullable,
+                        EntityFieldTypeConverter entityFieldTypeConverter) {
         this.columnName = columnName;
         this.type = type;
         this.isPrimaryKey = isPrimaryKey;
         this.autoIncrement = autoIncrement;
         this.nullable = nullable;
+        this.entityFieldTypeConverter = entityFieldTypeConverter;
     }
 
     public String toColumnDefinition() {
@@ -30,8 +30,7 @@ public class EntityColumn {
 
         list.add(columnName);
 
-        String e = convertType(type);
-        list.add(e);
+        list.add(entityFieldTypeConverter.convert(type));
 
         if (autoIncrement) {
             list.add("AUTO_INCREMENT");
@@ -49,18 +48,5 @@ public class EntityColumn {
         }
 
         return String.join(" ", list);
-    }
-
-    private String convertType(Class<?> type) {
-        switch (type.getName()) {
-            case "java.lang.Long":
-                return "BIGINT";
-            case "java.lang.String":
-                return "VARCHAR(100)";
-            case "java.lang.Integer":
-                return "INT";
-            default:
-                throw new RuntimeException("Cannot convert type: " + type.getName());
-        }
     }
 }
