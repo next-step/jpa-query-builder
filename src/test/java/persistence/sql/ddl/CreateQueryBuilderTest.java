@@ -6,15 +6,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.QueryBuilder;
 
-class DdlQueryBuilderTest {
+class CreateQueryBuilderTest {
 
     @DisplayName("Person Entity로 테이블 생성 ddl이 만들어지는지 확인한다.")
     @Test
     void builder() {
-        QueryBuilder builder = new DdlQueryBuilder();
+        QueryBuilder builder = CreateQueryBuilder.getInstance();
 
         String ddl = builder.builder(Person.class);
 
-        assertThat(ddl).isEqualTo("CREATE TABLE Person (id BIGINT PRIMARY KEY,name VARCHAR,age INTEGER)");
+        assertThat(ddl).isEqualTo("CREATE TABLE Person (id BIGINT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR,old INTEGER,email VARCHAR NOT NULL)");
     }
 }
