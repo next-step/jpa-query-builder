@@ -1,6 +1,5 @@
 package persistence.study;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -9,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -67,8 +69,10 @@ public class ReflectionTest {
         setFieldValue(car, carClass.getDeclaredField("name"), name);
         setFieldValue(car, carClass.getDeclaredField("price"), price);
 
-        Assertions.assertThat(name).isEqualTo(car.getName());
-        Assertions.assertThat(price).isEqualTo(car.getPrice());
+        assertAll(
+                () -> assertThat(name).isEqualTo(car.getName()),
+                () -> assertThat(price).isEqualTo(car.getPrice())
+        );
     }
 
     @Test
@@ -80,8 +84,10 @@ public class ReflectionTest {
         Class<Car> carClass = Car.class;
         Car car = carClass.getDeclaredConstructor(String.class, int.class).newInstance(name, price);
 
-        Assertions.assertThat(name).isEqualTo(car.getName());
-        Assertions.assertThat(price).isEqualTo(car.getPrice());
+        assertAll(
+                () -> assertThat(name).isEqualTo(car.getName()),
+                () -> assertThat(price).isEqualTo(car.getPrice())
+        );
     }
 
 
