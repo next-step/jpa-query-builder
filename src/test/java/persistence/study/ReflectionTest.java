@@ -97,22 +97,18 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("private field에 값 할당")
-    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getConstructor().newInstance();
         final String name = "Sonata";
         final int price = 1000;
 
-        for (final Field field : carClass.getDeclaredFields()) {
-            if (field.getName().equals("name")) {
-                field.setAccessible(true);
-                field.set(car, name);
-            }
-            if (field.getName().equals("price")) {
-                field.setAccessible(true);
-                field.set(car, price);
-            }
-        }
+        Field nameField = carClass.getDeclaredField("name");
+        nameField.setAccessible(true);
+        nameField.set(car, name);
+        Field priceField = carClass.getDeclaredField("price");
+        priceField.setAccessible(true);
+        priceField.set(car, price);
 
         assertAll(
                 () -> assertThat(car.getName()).isEqualTo(name),
