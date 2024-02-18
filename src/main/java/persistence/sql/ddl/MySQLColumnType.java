@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public enum MySQLColumnType {
 
@@ -13,23 +14,23 @@ public enum MySQLColumnType {
 
     private final Class<?> type;
     private final String keyword;
-    private final Integer size;
+    private final Integer defaultSize;
 
-    MySQLColumnType(Class<?> type, String keyword, Integer size) {
+    MySQLColumnType(Class<?> type, String keyword, Integer defaultSize) {
         this.type = type;
         this.keyword = keyword;
-        this.size = size;
+        this.defaultSize = defaultSize;
     }
 
-    public static String convert(Class<?> type) {
+    public static String convert(Class<?> type,Integer size) {
         return Arrays.stream(values())
                 .filter(value -> value.type.equals(type))
                 .findFirst()
                 .map(value -> {
-                    if (value.size == null) {
+                    if (value.defaultSize == null) {
                         return value.keyword;
                     }
-                    return value.keyword + OPEN_BRACKET + value.size + CLOSE_BRACKET;
+                    return value.keyword + OPEN_BRACKET + Objects.requireNonNullElseGet(size, () -> value.defaultSize) + CLOSE_BRACKET;
 
                 })
                 .orElseThrow(IllegalArgumentException::new);

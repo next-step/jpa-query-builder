@@ -55,21 +55,17 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
     private String buildColumn(Field field) {
         Class<?> fieldType = field.getType();
         String fieldName = getFieldName(field);
+        Integer length = getFieldLength(field);
 
         StringBuilder sb = new StringBuilder();
         sb.append(fieldName)
                 .append(SPACE)
-                .append(MySQLColumnType.convert(fieldType))
+                .append(MySQLColumnType.convert(fieldType,length))
                 .append(addPrimaryKeyConstraint(field))
                 .append(addNullConstraint(field));
 
         return sb.toString();
     }
-
-    private String combineColumn(String columnA, String columnB) {
-        return String.join(COLUMN_SEPARATOR, columnA, columnB);
-    }
-
 
     private String getFieldName(Field field) {
         Column column = field.getAnnotation(Column.class);
@@ -77,6 +73,18 @@ public class MySQLDdlQueryBuilder implements DdlQueryBuilder {
             return column.name();
         }
         return field.getName();
+    }
+
+    private Integer getFieldLength(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        if (column != null && column.length() > 0) {
+            return column.length();
+        }
+        return null;
+    }
+
+    private String combineColumn(String columnA, String columnB) {
+        return String.join(COLUMN_SEPARATOR, columnA, columnB);
     }
 
     private String addPrimaryKeyConstraint(Field field) {
