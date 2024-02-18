@@ -1,6 +1,5 @@
 package persistence.sql.ddl.wrapper;
 
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;

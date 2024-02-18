@@ -1,8 +1,10 @@
 package persistence.sql.ddl.wrapper;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import java.util.Arrays;
 import java.util.List;
+import org.h2.util.StringUtils;
 
 public class Table {
 
@@ -16,12 +18,12 @@ public class Table {
 
     public static Table of(Class<?> clazz) {
         List<Column> columnList = Arrays.stream(clazz.getDeclaredFields())
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
             .map(Column::from).toList();
 
         validate(clazz, columnList);
 
-        return new Table(clazz, Arrays.stream(clazz.getDeclaredFields())
-            .map(Column::from).toList());
+        return new Table(clazz, columnList);
     }
 
 
@@ -42,6 +44,10 @@ public class Table {
     }
 
     public String getTableName() {
-        return clazz.getSimpleName();
+        jakarta.persistence.Table table = clazz.getAnnotation(jakarta.persistence.Table.class);
+        if (table == null || StringUtils.isNullOrEmpty(table.name())) {
+            return clazz.getSimpleName();
+        }
+        return table.name();
     }
 }

@@ -15,6 +15,6 @@ class CreateQueryBuilderTest {
 
         String ddl = builder.builder(Person.class);
 
-        assertThat(ddl).isEqualTo("CREATE TABLE Person (id BIGINT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR,old INTEGER,email VARCHAR NOT NULL)");
+        assertThat(ddl).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR,old INTEGER,email VARCHAR NOT NULL)");
     }
 }
