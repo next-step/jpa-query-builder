@@ -2,36 +2,36 @@ package persistence.study;
 
 public class Car {
 
-  private String name;
-  private int price;
+    private String name;
+    private int price;
 
-  public Car() {
+    public Car() {
 
-  }
+    }
 
-  public Car(String name, int price) {
-    this.name = name;
-    this.price = price;
-  }
+    public Car(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
 
-  @PrintView
-  public void printView() {
-    System.out.println("자동차 정보를 출력 합니다.");
-  }
+    @PrintView
+    public void printView() {
+        System.out.println("자동차 정보를 출력 합니다.");
+    }
 
-  public String testGetName() {
-    return "test : " + name;
-  }
+    public String testGetName() {
+        return "test : " + name;
+    }
 
-  public String testGetPrice() {
-    return "test : " + price;
-  }
+    public String testGetPrice() {
+        return "test : " + price;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public int getPrice() {
-    return price;
-  }
+    public int getPrice() {
+        return price;
+    }
 }
