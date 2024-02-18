@@ -1,11 +1,13 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import persistence.exception.NotEntityException;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Query {
@@ -15,9 +17,16 @@ public class Query {
     public Query(QueryType queryType, Class<?> targetClass) {
         checkIsEntity(targetClass);
         String ddlType = queryType.getValue();
-        String tableName = targetClass.getSimpleName();
+        String tableName = getTableName(targetClass);
         String tableFields = ColumnQueries.of(targetClass).toQuery();
         this.sql = String.join(DELIMITER, List.of(ddlType, tableName, tableFields));
+    }
+
+    private String getTableName(Class<?> targetClass) {
+        return Optional.ofNullable(targetClass.getAnnotation(Table.class))
+                .map(Table::name)
+                .filter(name -> !name.isBlank())
+                .orElse(targetClass.getSimpleName());
     }
 
     private void checkIsEntity(Class<?> targetClass) {

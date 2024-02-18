@@ -41,6 +41,6 @@
 - [x] Column을 통해 nullable 설정을 할 수 있다.
 
 ## 요구사항 3 - 추가된 정보로 create 쿼리 만들기 2
-- [ ] Table 이름을 변경할 수 있다.
+- [x] Table 이름을 변경할 수 있다.
 - [ ] Transient 를 통해 쿼리를 만들지 않을 수 있다.
 
