@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -60,8 +62,30 @@ public class DDLQueryBuilder {
     }
 
     private String getColumn(Field field) {
-        return field.getName() + " " + getColumnType(field);
+        return getColumnName(field) + " " + getColumnType(field) + " " + getColumnProperty(field);
     }
+
+    private String getColumnName(Field field) {
+        if (field.isAnnotationPresent(Column.class)) {
+            return field.getAnnotation(Column.class).name().isEmpty() ? field.getName() : field.getAnnotation(Column.class).name();
+        }
+        return field.getName();
+    }
+
+    private String getColumnProperty(Field field) {
+        StringBuilder columnProperty = new StringBuilder();
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            if (!column.nullable()) {
+                columnProperty.append("NOT NULL ");
+            }
+        }
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
+            columnProperty.append("AUTO_INCREMENT ");
+        }
+        return columnProperty.toString();
+    }
+
 
     private String getColumnType(Field field) {
         switch (field.getType().getSimpleName()) {
