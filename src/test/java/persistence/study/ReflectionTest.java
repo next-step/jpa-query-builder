@@ -18,10 +18,11 @@ import static org.mockito.Mockito.verify;
 
 
 public class ReflectionTest {
+    private static final Class<Car> carClass = Car.class;
+
     @Test
     @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
-        final Class<Car> carClass = Car.class;
         // 패키지+클래스 이름
         assertThat(carClass.getName()).isEqualTo("persistence.study.Car");
 
@@ -59,7 +60,6 @@ public class ReflectionTest {
     @Test
     @DisplayName("test로 시작하는 메소드 실행")
     void testMethodRun() throws InvocationTargetException, IllegalAccessException {
-        final Class<Car> carClass = Car.class;
         Car mockCar = mock(Car.class);
 
         List<Method> startWithTestMethods = Arrays.stream(carClass.getDeclaredMethods())
@@ -78,7 +78,6 @@ public class ReflectionTest {
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
     void testAnnotationMethodRun() throws InvocationTargetException, IllegalAccessException {
-        final Class<Car> carClass = Car.class;
         Car mockCar = mock(Car.class);
 
         List<Method> annotationMethods = Arrays.stream(carClass.getDeclaredMethods())
@@ -115,7 +114,6 @@ public class ReflectionTest {
     @Test
     @DisplayName("인자를 가진 생성자의 인스턴스 생성")
     void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        final Class<Car> carClass = Car.class;
         final String name = "Sonata";
         final int price = 1000;
 
