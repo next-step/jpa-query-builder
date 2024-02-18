@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +26,7 @@ class ReflectionTest {
         String expectedClassName = "persistence.reflectiontest.Car";
         List<String> expectedFieldNames = List.of("name", "price");
         List<String> expectedConstructorNames = List.of("persistence.reflectiontest.Car", "persistence.reflectiontest.Car");
-        List<String> expectedMethodNames = List.of("printView", "testGetName", "testGetPrice");
+        List<String> expectedMethodNames = List.of("printView", "testGetName", "testGetPrice", "getName", "getPrice");
 
         // when
         Class<Car> carClass = Car.class;
@@ -103,4 +101,29 @@ class ReflectionTest {
         assertThat(methods).hasSize(1);
     }
 
+    @Test
+    @DisplayName("Car 클래스의 name과 price 필드에 값을 할당한 후 getter 메소드를 통해 값을 확인한다.")
+    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+        // given
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+        Map<String, Object> fieldMap = Map.of("name", "아반떼", "price", 24_000_000);
+
+        // when
+        List<Field> fields = Arrays.stream(carClass.getDeclaredFields())
+                .filter(field -> Modifier.isPrivate(field.getModifiers()))
+                .filter(field -> fieldMap.containsKey(field.getName()))
+                .collect(Collectors.toList());
+
+        for (Field field : fields) {
+            field.setAccessible(true);
+            field.set(car, fieldMap.get(field.getName()));
+        }
+
+        // then
+        assertAll(
+                () -> assertThat(car.getName()).isEqualTo(fieldMap.get("name")),
+                () -> assertThat(car.getPrice()).isEqualTo(fieldMap.get("price"))
+        );
+    }
 }
