@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,5 +72,43 @@ public class ReflectionTest {
       fail();
     }
     return null;
+  }
+
+  @Test
+  @DisplayName("Car 클래스의 private field에 값 할당 후 확인하기")
+  void privateFieldAccess() throws Exception {
+    Car car = carClass.newInstance();
+
+    Arrays.stream(carClass.getDeclaredFields())
+      .forEach(field -> {
+        String fieldName = field.getName();
+        Object fieldValue = getFieldValueByName(fieldName);
+        setFieldValue(field, car, fieldValue);
+      });
+
+    String carName = car.getName();
+    int carPrice = car.getPrice();
+
+    assertThat(carName).isEqualTo("소나타");
+    assertThat(carPrice).isEqualTo(10_000);
+  }
+
+  private Object getFieldValueByName(String name) {
+    if (Objects.equals(name, "name")) {
+      return "소나타";
+    }
+    if (Objects.equals(name, "price")) {
+      return 10_000;
+    }
+    return null;
+  }
+
+  private void setFieldValue(Field field, Object instance, Object value) {
+    try {
+      field.setAccessible(true);
+      field.set(instance, value);
+    } catch (IllegalAccessException e) {
+      fail();
+    }
   }
 }
