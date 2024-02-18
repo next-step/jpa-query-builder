@@ -1,8 +1,5 @@
 package persistence.domain;
 
-
-import static persistence.domain.GeneratedValue.*;
-
 @Entity
 public class Person2 {
     @Id

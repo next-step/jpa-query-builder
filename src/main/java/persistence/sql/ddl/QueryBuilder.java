@@ -47,6 +47,12 @@ public class QueryBuilder {
         return clazz.getSimpleName().toLowerCase();
     }
 
+    private void checkEntityAnnotationPresent(final Class<?> clazz) {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
     private String createFieldDDLSql(final Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .sorted(Comparator.comparing(f -> f.isAnnotationPresent(Id.class) ? 0 : 1))
@@ -65,14 +71,6 @@ public class QueryBuilder {
                 .collect(Collectors.joining(", "));
     }
 
-    private String createNotNullDDL(final Field f) {
-        if (f.isAnnotationPresent(Column.class) && !f.getAnnotation(Column.class).nullable()) {
-            return SPACE + "not null";
-        }
-
-        return "";
-    }
-
     private String createFieldName(final Field f) {
         String fieldName = f.getName();
 
@@ -83,29 +81,20 @@ public class QueryBuilder {
         return fieldName;
     }
 
-    private boolean isFieldNameNotBlank(final Field f) {
-        return !f.getAnnotation(Column.class).name().isBlank();
-    }
-
-    private String createConstraintDDLSql(final Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(f -> f.isAnnotationPresent(Id.class))
-                .map(f -> COMMA + createPrimaryKey(f))
-                .collect(Collectors.joining());
-    }
-
-    private void checkEntityAnnotationPresent(final Class<?> clazz) {
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private String createPrimaryKey(final Field f) {
-        if (f.isAnnotationPresent(Id.class)) {
-            return  String.format(" primary key (%s)", f.getName());
+    private String createNotNullDDL(final Field f) {
+        if (f.isAnnotationPresent(Column.class) && isNotNullColumn(f)) {
+            return SPACE + "not null";
         }
 
         return "";
+    }
+
+    private boolean isNotNullColumn(final Field f) {
+        return !f.getAnnotation(Column.class).nullable();
+    }
+
+    private boolean isFieldNameNotBlank(final Field f) {
+        return !f.getAnnotation(Column.class).name().isBlank();
     }
 
     private String createPrimaryKeyGenerateDDL(final Field f) {
@@ -122,6 +111,21 @@ public class QueryBuilder {
         }
 
         return SPACE + "not null";
+    }
+
+    private String createConstraintDDLSql(final Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(Id.class))
+                .map(f -> COMMA + createPrimaryKey(f))
+                .collect(Collectors.joining());
+    }
+
+    private String createPrimaryKey(final Field f) {
+        if (f.isAnnotationPresent(Id.class)) {
+            return  String.format(" primary key (%s)", f.getName());
+        }
+
+        return "";
     }
 
 }

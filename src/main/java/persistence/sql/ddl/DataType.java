@@ -1,10 +1,8 @@
 package persistence.sql.ddl;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public enum DataType {
     BIGINT(List.of(Long.class), "bigint"),
@@ -22,7 +20,8 @@ public enum DataType {
         this.printTypeName = printTypeName;
     }
 
-    public static String ofPrintType(final Field f) {
+    public static String
+    ofPrintType(final Field f) {
         return Arrays.stream(values())
                 .filter(d -> d.types.contains(f.getType()))
                 .map(d -> d.printTypeName)
