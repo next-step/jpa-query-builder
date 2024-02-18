@@ -12,7 +12,7 @@ class PersonTest {
     void creatingCreateQuery() {
         String query = buildQuery(Person.class);
 
-        String expected = "CREATE TABLE Person (id bigint unsigned auto_increment, name varchar(100), age int)";
+        String expected = "CREATE TABLE Person (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)";
         assertThat(query).isEqualTo(expected);
     }
 
@@ -21,9 +21,10 @@ class PersonTest {
         Class<Person> clazz = Person.class;
 
         assertAll(
-                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("id"))).isEqualTo("id bigint unsigned auto_increment"),
-                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("name"))).isEqualTo("name varchar(100)"),
-                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("age"))).isEqualTo("age int")
+                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("id"))).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY"),
+                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("name"))).isEqualTo("nick_name VARCHAR(100) NULL"),
+                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("age"))).isEqualTo("old INT NULL"),
+                () -> assertThat(convertFieldToDdl(clazz.getDeclaredField("email"))).isEqualTo("email VARCHAR(100) NOT NULL")
         );
     }
 

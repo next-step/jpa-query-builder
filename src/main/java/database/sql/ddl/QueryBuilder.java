@@ -1,5 +1,6 @@
 package database.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -20,26 +21,44 @@ public class QueryBuilder {
         boolean isId = field.isAnnotationPresent(Id.class);
 
         List<String> list = new ArrayList<>();
-        list.add(field.getName());
+        list.add(extractName(field));
         list.add(convertType(field.getType()));
         if (isId) {
-            list.add("unsigned");
+            list.add("AUTO_INCREMENT PRIMARY KEY");
         }
-        if (isId) {
-            list.add("auto_increment");
-        }
+        if (!isId) list.add(extractNullability(field));
         return String.join(" ", list);
     }
 
     private static String convertType(Class<?> type) {
-        if (type.getName().equals("java.lang.Long")) {
-            return "bigint";
-        } else if (type.getName().equals("java.lang.String")) {
-            return "varchar(100)";
-        } else if (type.getName().equals("java.lang.Integer")) {
-            return "int";
+        switch (type.getName()) {
+            case "java.lang.Long":
+                return "BIGINT";
+            case "java.lang.String":
+                return "VARCHAR(100)";
+            case "java.lang.Integer":
+                return "INT";
+            default:
+                throw new RuntimeException("Cannot convert type: " + type.getName());
+        }
+    }
+
+    static String extractName(Field field) {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if (columnAnnotation != null) {
+            String name = columnAnnotation.name();
+            if (!name.isEmpty())
+                return name;
+        }
+        return field.getName();
+    }
+
+    private static String extractNullability(Field field) {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if (columnAnnotation != null && !columnAnnotation.nullable()) {
+            return "NOT NULL";
         } else {
-            throw new RuntimeException("Cannot convert type: " + type.getName());
+            return "NULL";
         }
     }
 
