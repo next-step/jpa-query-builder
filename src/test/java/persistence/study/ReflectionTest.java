@@ -125,7 +125,7 @@ public class ReflectionTest {
     @Test
     @DisplayName("인자를 가진 생성자를 찾아 인스턴스 생성하기")
     void constructorWithArgs() throws Exception {
-        Constructor<?>[] constructors = carClass.getConstructors();
+        Constructor<?>[] constructors = carClass.getDeclaredConstructors();
         Constructor<?> findConstructor = Arrays.stream(constructors)
                 .filter(constructor -> constructor.getParameterCount() == 2)
                 .findAny()
