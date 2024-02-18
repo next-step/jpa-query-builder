@@ -1,4 +1,4 @@
-package persistence.sql.ddl.processor;
+package persistence.sql.ddl;
 
 import persistence.sql.ddl.wrapper.Column;
 

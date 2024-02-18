@@ -1,4 +1,4 @@
-package persistence.sql.ddl.processor;
+package persistence.sql.ddl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.FieldBuilder;
 import persistence.sql.ddl.wrapper.Column;
 
 @DisplayName("FieldProcessor class의")
