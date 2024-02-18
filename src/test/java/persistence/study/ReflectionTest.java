@@ -35,7 +35,8 @@ public class ReflectionTest {
     @Test
     @DisplayName("Car 클래스에서 test로 시작하는 메소드만 실행하기")
     void toMethodRun() throws Exception {
-        Car car = carClass.newInstance();
+        Car car = carClass.getDeclaredConstructor()
+                .newInstance();
 
         Method[] declaredMethods = carClass.getDeclaredMethods();
         List<Object> result = Arrays.stream(declaredMethods)
@@ -56,7 +57,8 @@ public class ReflectionTest {
         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStreamCaptor));
 
-        Car car = carClass.newInstance();
+        Car car = carClass.getDeclaredConstructor()
+                .newInstance();
 
         Method[] declaredMethods = carClass.getDeclaredMethods();
         Arrays.stream(declaredMethods)
@@ -79,7 +81,8 @@ public class ReflectionTest {
     @Test
     @DisplayName("Car 클래스의 private field에 값 할당 후 확인하기")
     void privateFieldAccess() throws Exception {
-        Car car = carClass.newInstance();
+        Car car = carClass.getDeclaredConstructor()
+                .newInstance();
 
         Arrays.stream(carClass.getDeclaredFields())
                 .forEach(field -> {
