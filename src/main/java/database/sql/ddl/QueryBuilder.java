@@ -18,7 +18,12 @@ public class QueryBuilder {
         return String.format("CREATE TABLE %s (%s)", tableName, String.join(", ", fields));
     }
 
-    private static String extractTableName(Class<?> entityClass) {
+    public String buildDeleteQuery(Class<?> entityClass) {
+        String tableName = extractTableName(entityClass);
+        return String.format("DROP TABLE %s", tableName);
+    }
+
+    static String extractTableName(Class<?> entityClass) {
         Table tableAnnotation = entityClass.getAnnotation(Table.class);
         if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {
             return tableAnnotation.name();
@@ -27,7 +32,7 @@ public class QueryBuilder {
         }
     }
 
-    private static List<String> extractFields(Class<?> entityClass) {
+    static List<String> extractFields(Class<?> entityClass) {
         Field[] fields = entityClass.getDeclaredFields();
         return Arrays.stream(fields)
                 .filter(QueryBuilder::notTransientField)

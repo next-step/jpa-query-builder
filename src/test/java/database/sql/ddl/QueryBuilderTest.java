@@ -18,6 +18,15 @@ class QueryBuilderTest {
     }
 
     @Test
+    void buildDeleteQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+
+        String actual = queryBuilder.buildDeleteQuery(Person.class);
+
+        assertThat(actual).isEqualTo("DROP TABLE users");
+    }
+
+    @Test
     void testConvertFieldToDdl() {
         Class<Person> clazz = Person.class;
 
