@@ -1,10 +1,12 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import persistence.sql.ddl.strategy.AdditionalColumQueryStrategy;
 import persistence.sql.ddl.strategy.AdditionalColumnQueryFactory;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 
 public class ColumnQuery {
     private static final String SPACE = " ";
@@ -20,10 +22,17 @@ public class ColumnQuery {
     }
 
     public static ColumnQuery of(Field target) {
-        String name = target.getName();
+        String name = getName(target);
         DataType dataType = DataType.from(target.getType());
         List<AdditionalColumQueryStrategy> strategies = AdditionalColumnQueryFactory.getStrategies(target);
         return new ColumnQuery(name, dataType, strategies);
+    }
+
+    private static String getName(Field target) {
+        return Optional.ofNullable(target.getAnnotation(Column.class))
+                .map(Column::name)
+                .filter(name -> !name.isBlank())
+                .orElse(target.getName());
     }
 
     public String toQuery() {
