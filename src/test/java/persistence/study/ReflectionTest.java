@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,14 +19,12 @@ public class ReflectionTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
-    private Class<Car> carClass = Car.class;;
+    private final Class<Car> carClass = Car.class;
+    ;
 
     @Test
     @DisplayName("Car 클래스의 필드이름을 가져온다.")
     void showClass() {
-        logger.debug(carClass.getName());
-
-        // 필드
         List<String> result = Arrays.stream(carClass.getDeclaredFields())
                 .map(Field::getName)
                 .collect(Collectors.toList());
@@ -59,20 +56,21 @@ public class ReflectionTest {
     void runMethod() {
         List<Object> result = Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.getName().startsWith("test"))
-                .map(method -> {
-                    try {
-                        return method.invoke(createNewInstance());
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .map(method -> runMethod(createNewInstance(), method))
                 .collect(Collectors.toList());
 
         assertThat(result).containsExactlyInAnyOrder("test : 123", "test : nextstep");
     }
 
+    private Object runMethod(final Object instance, final Method method) {
+        try {
+            return method.invoke(instance);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Object createNewInstance() {
-        Class<Car> carClass = Car.class;
         try {
             return carClass.getDeclaredConstructor(String.class, int.class).newInstance("nextstep", 123);
         } catch (IllegalAccessException e) {
