@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Transient;
+
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,9 +18,15 @@ public class ColumnQueries {
     }
 
     public static ColumnQueries of(Class<?> target) {
-        return new ColumnQueries(Arrays.stream(target.getDeclaredFields())
+        return new ColumnQueries(getTargetFields(target).stream()
                 .map(ColumnQuery::of)
                 .collect(Collectors.toList()));
+    }
+
+    private static List<Field> getTargetFields(Class<?> target) {
+        return Arrays.stream(target.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .collect(Collectors.toList());
     }
 
     public String toQuery() {
