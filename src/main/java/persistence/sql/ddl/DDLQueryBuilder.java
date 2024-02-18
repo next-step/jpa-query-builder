@@ -9,12 +9,15 @@ import java.util.List;
 public class DDLQueryBuilder {
 
     public String createTableQuery(Class<?> clazz) {
-
         return String.format("CREATE TABLE %s (%s%s)",
                 getTableName(clazz),
                 createFieldsSql(clazz),
                 createPrimaryKeySql(clazz)
         );
+    }
+
+    public String dropTableQuery(Class<?> clazz) {
+        return String.format("DROP TABLE %s", getTableName(clazz));
     }
 
     private String getTableName(Class<?> clazz) {
