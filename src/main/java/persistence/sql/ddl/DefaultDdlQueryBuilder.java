@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import persistence.sql.QueryException;
 import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
@@ -20,9 +22,9 @@ public class DefaultDdlQueryBuilder<T> implements DdlQueryBuilder<T> {
     @Override
     public String buildCreateQuery(final T entity) {
 
-        final StringBuilder ddl = new StringBuilder();
+        final Class<?> clazz = getEntityClass(entity);
 
-        final Class<?> clazz = entity.getClass();
+        final StringBuilder ddl = new StringBuilder();
 
         final String tableName = createTableName(clazz);
 
@@ -40,6 +42,14 @@ public class DefaultDdlQueryBuilder<T> implements DdlQueryBuilder<T> {
                 .append(");");
 
         return ddl.toString();
+    }
+
+    private Class<?> getEntityClass(final T entity) {
+        final Class<?> clazz = entity.getClass();
+
+        if (!clazz.isAnnotationPresent(Entity.class)) throw new QueryException(clazz.getSimpleName() + " is not entity");
+
+        return clazz;
     }
 
     private String generateColumnQuery(final Field field) {
