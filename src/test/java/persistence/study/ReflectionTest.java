@@ -50,7 +50,7 @@ public class ReflectionTest {
     void showMethod() {
         List<String> result = Arrays.stream(carClass.getDeclaredMethods())
                 .map(Method::getName)
-                .toList();
+                .collect(Collectors.toList());
 
         assertThat(result).containsExactlyInAnyOrder("printView", "testGetPrice", "testGetName");
     }
@@ -66,7 +66,7 @@ public class ReflectionTest {
                         throw new RuntimeException(e);
                     }
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         assertThat(result).containsExactlyInAnyOrder("test : 123", "test : nextstep");
     }
@@ -127,7 +127,7 @@ public class ReflectionTest {
                         throw new RuntimeException(e);
                     }
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         assertThat(result).containsExactlyInAnyOrder("test : 123", "test : 123");
     }
@@ -146,7 +146,7 @@ public class ReflectionTest {
                         throw new RuntimeException(e);
                     }
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         assertThat(result).containsExactlyInAnyOrder("test : 123", "test : nextstep");
     }
