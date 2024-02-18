@@ -47,5 +47,19 @@ class ColumnQueryTest {
             //then
             assertThat(actual).endsWith("PRIMARY KEY");
         }
+
+        @Test
+        @DisplayName("Nullable False 쿼리를 요청히면 NOT NULL을 붙인다.")
+        void fieldWithNullableFalse() throws Exception {
+            //given
+            Class<Person> personClass = Person.class;
+            ColumnQuery columnQuery = ColumnQuery.of(personClass.getDeclaredField("email"));
+
+            //when
+            String actual = columnQuery.toQuery();
+
+            //then
+            assertThat(actual).endsWith("NOT NULL");
+        }
     }
 }

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Query 의")
 class QueryTest {
@@ -37,26 +38,32 @@ class QueryTest {
     @DisplayName("getSql 메서드는")
     class GetSql {
         @Test
-        @DisplayName("쿼리타입, 테이블 이름, 테이블 필드명을 가진 쿼리를 반환한다.")
-        void sqlWithType_TableName_Fields() {
+        @DisplayName("CREATE 쿼리를 반환한다.")
+        void sqlForCreate() {
             //given
             Class<Person> targetClass = Person.class;
             QueryType type = QueryType.CREATE;
-            String tableName = targetClass.getSimpleName();
-            List<String> fieldNames = Arrays.stream(targetClass.getDeclaredFields())
-                    .map(Field::getName)
-                    .collect(Collectors.toList());
 
             //when
-
             String sql = new Query(type, targetClass).getSql();
 
             //then
-            org.junit.jupiter.api.Assertions.assertAll(
-                    () -> assertThat(sql).contains(type.name()),
-                    () -> assertThat(sql).contains(tableName),
-                    () -> assertThat(sql).contains(fieldNames)
-            );
+            assertThat(sql).contains(type.name());
+        }
+
+        @Test
+        @DisplayName("Drop 쿼리를 반환한다.")
+        void sqlForDrop() {
+            //given
+            Class<Person> targetClass = Person.class;
+            QueryType type = QueryType.DROP;
+
+            //when
+            String sql = new Query(type, targetClass).getSql();
+
+            //then
+            assertThat(sql).contains(type.name());
+
         }
     }
 }

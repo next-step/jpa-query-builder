@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Transient;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,12 +19,13 @@ class ColumnQueriesTest {
     class ToQuery {
 
         @Test
-        @DisplayName("클래스의 필드값이 모두 담긴 쿼리를 만든다.")
+        @DisplayName("클래스의 필드값이 Transient인 경우 포함하지 않는다.")
         void fields() {
             //given
             Class<Person> personClass = Person.class;
             ColumnQueries columnQueries = ColumnQueries.of(personClass);
             List<String> fieldNames = Arrays.stream(personClass.getDeclaredFields())
+                    .filter(it -> it.isAnnotationPresent(Transient.class))
                     .map(Field::getName)
                     .collect(Collectors.toList());
 
@@ -31,7 +33,7 @@ class ColumnQueriesTest {
             String query = columnQueries.toQuery();
 
             //then
-            Assertions.assertThat(query).contains(fieldNames);
+            Assertions.assertThat(query).doesNotContain(fieldNames);
         }
     }
 
