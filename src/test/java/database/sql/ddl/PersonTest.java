@@ -12,7 +12,7 @@ class PersonTest {
     void creatingCreateQuery() {
         String query = buildQuery(Person.class);
 
-        String expected = "CREATE TABLE Person (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)";
+        String expected = "CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(100) NULL, old INT NULL, email VARCHAR(100) NOT NULL)";
         assertThat(query).isEqualTo(expected);
     }
 
