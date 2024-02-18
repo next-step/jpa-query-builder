@@ -40,8 +40,8 @@ public class ColumnQuery {
         stringBuilder.append(name);
         stringBuilder.append(SPACE);
         stringBuilder.append(type.name());
-        if (type.isVarchar()) {
-            stringBuilder.append("(255)");
+        if (type.containsDefaultValue()) {
+            stringBuilder.append(type.getDefaultValue());
         }
         if (isPrimaryKey) {
             stringBuilder.append(SPACE);
