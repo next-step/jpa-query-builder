@@ -13,15 +13,15 @@ public class QueryBuilder {
     public static final String SQUARE_BRACKETS_CLOSE = ")";
     public static final String SPACE = " ";
     public static final String COMMA = ",";
+    public static final String CREATE_DEFAULT_DDL = "create table %s %s";
 
     public String createDdl(final Class<?> clazz) {
-        final String defaultCreateDDL = String.format("create table %s %s", clazz.getSimpleName().toLowerCase(), SQUARE_BRACKETS_OPEN);
+        String tableName = createTableName(clazz);
+
+        final String defaultCreateDDL = String.format(CREATE_DEFAULT_DDL, tableName, SQUARE_BRACKETS_OPEN);
         StringBuilder ddl = new StringBuilder(defaultCreateDDL);
 
-        checkEntityAnnotationPresent(clazz);
-
         final String fieldDDLSql = createFieldDDLSql(clazz);
-
         ddl.append(fieldDDLSql);
 
         final String constraintDDLSql = createConstraintDDLSql(clazz);
@@ -32,9 +32,20 @@ public class QueryBuilder {
         return ddl.toString();
     }
 
+    private String createTableName(final Class<?> clazz) {
+        checkEntityAnnotationPresent(clazz);
+
+        if (clazz.isAnnotationPresent(Table.class)) {
+           return clazz.getAnnotation(Table.class).name();
+        }
+
+        return clazz.getSimpleName().toLowerCase();
+    }
+
     private String createFieldDDLSql(final Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .sorted(Comparator.comparing(f -> f.isAnnotationPresent(Id.class) ? 0 : 1))
+                .filter(f -> !f.isAnnotationPresent(Transient.class))
                 .map(f -> {
                     String fieldName = createFieldName(f);
 

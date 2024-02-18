@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.domain.Person1;
 import persistence.domain.Person2;
+import persistence.domain.Person3;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,7 +40,7 @@ class QueryBuilderTest {
     @Test
     void persion_ddl_create3() {
         final QueryBuilder queryBuilder = new QueryBuilder();
-        final Class<?> personClass = Person2.class;
+        final Class<?> personClass = Person3.class;
 
         String actualDDL = queryBuilder.createDdl(personClass);
 
