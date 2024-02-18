@@ -2,8 +2,6 @@ package persistence.study;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -20,8 +18,6 @@ import static org.mockito.Mockito.verify;
 
 
 public class ReflectionTest {
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
-
     @Test
     @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
