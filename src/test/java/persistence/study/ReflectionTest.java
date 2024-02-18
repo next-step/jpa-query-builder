@@ -4,150 +4,168 @@ import annotation.PrintView;
 import domain.Car;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReflectionTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
     private static final Class<Car> clazz = Car.class;
+    private final PrintStream printStream = System.out;
+    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
     private static final String TEST_WORD = "test";
+    private static final String PORSCHE_NAME = "포르쉐";
+    private static final int PORSCHE_PRICE = 1_000_000;
 
-    @DisplayName("Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력한다.")
+    @DisplayName("Car 클래스의 모든 필드에 대한 정보를 출력한다.")
     @Test
-    void showClass() {
-        logger.info("모든 필드");
+    void showFieldsInfoTest() {
         Arrays.stream(clazz.getDeclaredFields())
-                .forEach(field -> {
-                            logger.info("필드명 = {}", field.getName());
-                            logger.info("접근 제어자 = {}", field.getModifiers());
-                        }
-                );
+                .forEach(field -> assertAll(
+                        () -> assertThat(field.getName()).containsAnyOf("name", "price"),
+                        () -> assertThat(field.getModifiers()).isEqualTo(2)
+                ));
+    }
 
-        logger.info("모든 생성자");
+    @DisplayName("Car 클래스의 모든 생성자에 대한 정보를 출력한다.")
+    @Test
+    void showConstructorsInfoTest() {
         Arrays.stream(clazz.getConstructors())
                 .forEach(constructor -> {
-                    logger.info("생성자명 = {}", constructor.getName());
-                    logger.info("접근 제어자 = {}", constructor.getModifiers());
+                    assertAll(
+                            () -> assertThat(constructor.getName()).isEqualTo("domain.Car"),
+                            () -> assertThat(constructor.getModifiers()).isOne()
+                    );
 
                     Arrays.stream(constructor.getParameterTypes())
-                            .forEach(parameter -> logger.info("생성자 파라미터 데이터 타입 : {}", parameter.getName()));
+                            .forEach(parameter ->
+                                    assertThat(parameter.getName()).containsAnyOf("java.lang.String", "int")
+                            );
                 });
+    }
 
-        logger.info("모든 메소드");
+    @DisplayName("Car 클래스의 모든 메소드에 대한 정보를 출력한다.")
+    @Test
+    void showMethodsInfoTest() {
         Arrays.stream(clazz.getDeclaredMethods())
-                .forEach(method -> {
-                    logger.info("메소드명 = {}", method.getName());
-                    logger.info("접근 제어자 = {}", method.getModifiers());
-
-                    Arrays.stream(method.getParameterTypes())
-                            .forEach(parameter -> logger.info("메소드 파라미터 데이터 타입 : {}", parameter.getName()));
-                });
+                .forEach(method -> assertAll(
+                        () -> assertThat(method.getName())
+                                .containsAnyOf("printView", "testGetName", "testGetPrice", "getName", "getPrice"),
+                        () -> assertThat(method.getModifiers()).isOne()
+                ));
     }
 
     @DisplayName("Car 클래스에서 test 로 시작하는 메소드만 Java Reflection 을 활용해 실행한다.")
     @Test
-    void testMethodRun() {
+    void testMethodRunTest() {
+        Car porsche = new Car(PORSCHE_NAME, PORSCHE_PRICE);
         Method[] methods = clazz.getDeclaredMethods();
 
-        Stream<Object> result = Arrays.stream(methods)
+        List<Object> result = Arrays.stream(methods)
                 .filter(method -> method.getName().startsWith(TEST_WORD))
                 .map(method -> {
                     try {
-                        Object invokedMethod = method.invoke(clazz.getDeclaredConstructor().newInstance());
-                        logger.info("메소드 = {}", invokedMethod);
-                        return invokedMethod;
-                    } catch (IllegalAccessException | InvocationTargetException | InstantiationException |
-                             NoSuchMethodException e) {
+                        return method.invoke(porsche);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }
-                });
+                })
+                .collect(Collectors.toList());
 
-        assertThat(result).hasSize(2);
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result).containsExactlyInAnyOrder("test : 포르쉐", "test : 1000000")
+        );
     }
 
     @DisplayName("Car 클래스에서 @PrintView 애노테이션으로 설정되어 있는 메소드만 Java Reflection 을 활용해 실행한다.")
     @Test
-    void testAnnotationMethodRun() {
+    void testAnnotationMethodRunTest() {
+        System.setOut(new PrintStream(outputStream));
+
+        Car porsche = new Car(PORSCHE_NAME, PORSCHE_PRICE);
         Method[] methods = clazz.getDeclaredMethods();
 
-        Stream<Object> result = Arrays.stream(methods)
+        List<Object> result = Arrays.stream(methods)
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                 .map(method -> {
                     try {
-                        Object invokedMethod = method.invoke(clazz.getDeclaredConstructor().newInstance());
-                        logger.info("메소드 = {}", invokedMethod);
-                        return invokedMethod;
-                    } catch (IllegalAccessException | InvocationTargetException | InstantiationException |
-                             NoSuchMethodException e) {
+                        return method.invoke(porsche);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }
-                });
+                })
+                .collect(Collectors.toList());
 
-        assertThat(result).hasSize(1);
+        assertAll(
+                () -> assertThat(outputStream.toString().trim()).isEqualTo("자동차 정보를 출력 합니다."),
+                () -> assertThat(result).hasSize(1)
+        );
+
+        System.setOut(printStream);
     }
 
     @DisplayName("Reflection API 를 활용해 다음 Car 클래스의 name 과 price 필드에 값을 할당한다.")
     @Test
-    void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException,
-            IllegalAccessException {
+    void privateFieldAccessTest() throws Exception {
         Car car = clazz.getDeclaredConstructor().newInstance();
         Field[] fields = clazz.getDeclaredFields();
 
-        String carName = "페라리";
-        int carPrice = 1_000_000_000;
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (field.getName().equals("name")) {
+                field.set(car, PORSCHE_NAME);
+            } else if (field.getName().equals("price")) {
+                field.set(car, PORSCHE_PRICE);
+            }
+        }
 
-        Arrays.stream(fields)
-                .forEach(field -> {
-                    field.setAccessible(true);
-                    try {
-                        switch (field.getName()) {
-                            case "name" -> field.set(car, carName);
-                            case "price" -> field.set(car, carPrice);
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-        logger.info("car = {}", car);
-        assertThat(car.getName()).isEqualTo(carName);
-        assertThat(car.getPrice()).isEqualTo(carPrice);
+        assertThat(car.getName()).isEqualTo(PORSCHE_NAME);
+        assertThat(car.getPrice()).isEqualTo(PORSCHE_PRICE);
     }
 
-    @DisplayName("자바 Reflection API 를 활용해 Car 인스턴스를 생성한다.")
+    @DisplayName("자바 Reflection API 를 활용해 Car 인스턴스를 생성한다. - 기본 생성자 이용")
     @Test
-    void constructorWithArgs() {
+    void defaultConstructorTest() throws Exception {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
 
-        String carName = "포르쉐";
-        int carPrice = 1_000_000;
+        for (Constructor<?> constructor : constructors) {
+            if (constructor.getParameterTypes().length == 0) {
+                Car car = (Car) constructor.newInstance();
+                assertAll(
+                        () -> assertThat(car).isInstanceOf(Car.class),
+                        () -> assertThat(car.getName()).isNull(),
+                        () -> assertThat(car.getPrice()).isZero()
+                );
+            }
+        }
+    }
 
-        Arrays.stream(constructors)
-                .forEach(constructor -> {
-                    try {
-                        if (constructor.getParameterTypes().length == 0) {
-                            Car car = (Car) constructor.newInstance();
-                            logger.info("기본 생성자 = {}", car);
-                            assertThat(car).isInstanceOf(Car.class);
-                        } else {
-                            Car car = (Car) constructor.newInstance(carName, carPrice);
-                            logger.info("매개변수가 있는 생성자 = {}", car);
-                            assertThat(car.getName()).isEqualTo(carName);
-                            assertThat(car.getPrice()).isEqualTo(carPrice);
-                        }
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+    @DisplayName("자바 Reflection API 를 활용해 Car 인스턴스를 생성한다. - 매개변수가 존재하는 생성자 이용")
+    @Test
+    void constructorWithArgsTest() throws Exception {
+        Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+
+        for (Constructor<?> constructor : constructors) {
+            if (constructor.getParameterTypes().length == 2) {
+                Car car = (Car) constructor.newInstance(PORSCHE_NAME, PORSCHE_PRICE);
+                assertAll(
+                        () -> assertThat(car).isInstanceOf(Car.class),
+                        () -> assertThat(car.getName()).isEqualTo(PORSCHE_NAME),
+                        () -> assertThat(car.getPrice()).isEqualTo(PORSCHE_PRICE)
+                );
+            }
+        }
     }
 }

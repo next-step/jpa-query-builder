@@ -36,13 +36,4 @@ public class Car {
     public String testGetPrice() {
         return "test : " + price;
     }
-
-    @Override
-    public String toString() {
-        return "Car{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                '}';
-    }
 }
-
