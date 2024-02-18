@@ -2,6 +2,7 @@ package persistence.study;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,35 +29,38 @@ public class ReflectionTest {
         this.carInstance = createNewInstance(carClass);
     }
 
+    @Nested
+    @DisplayName("Car 클래스의 정보를 가져온다.")
+    class carInfo {
+        @Test
+        @DisplayName("Car 클래스의 필드이름을 가져온다.")
+        void showClass() {
+            List<String> result = Arrays.stream(carClass.getDeclaredFields())
+                    .map(Field::getName)
+                    .collect(Collectors.toList());
 
-    @Test
-    @DisplayName("Car 클래스의 필드이름을 가져온다.")
-    void showClass() {
-        List<String> result = Arrays.stream(carClass.getDeclaredFields())
-                .map(Field::getName)
-                .collect(Collectors.toList());
+            assertThat(result).containsExactlyInAnyOrder("name", "price");
+        }
 
-        assertThat(result).containsExactlyInAnyOrder("name", "price");
-    }
+        @Test
+        @DisplayName("Car class 생성자 정보를 반환한다.")
+        void showConstructor() {
+            List<Integer> result = Arrays.stream(carClass.getDeclaredConstructors())
+                    .map(Constructor::getParameterCount)
+                    .collect(Collectors.toList());
 
-    @Test
-    @DisplayName("Car class 생성자 정보를 반환한다.")
-    void showConstructor() {
-        List<Integer> result = Arrays.stream(carClass.getDeclaredConstructors())
-                .map(Constructor::getParameterCount)
-                .collect(Collectors.toList());
+            assertThat(result).containsExactlyInAnyOrder(0, 2);
+        }
 
-        assertThat(result).containsExactlyInAnyOrder(0, 2);
-    }
+        @Test
+        @DisplayName("Car class 메소드 정보를 반환한다.")
+        void showMethod() {
+            List<String> result = Arrays.stream(carClass.getDeclaredMethods())
+                    .map(Method::getName)
+                    .collect(Collectors.toList());
 
-    @Test
-    @DisplayName("Car class 메소드 정보를 반환한다.")
-    void showMethod() {
-        List<String> result = Arrays.stream(carClass.getDeclaredMethods())
-                .map(Method::getName)
-                .collect(Collectors.toList());
-
-        assertThat(result).containsExactlyInAnyOrder("printView", "testGetPrice", "testGetName");
+            assertThat(result).containsExactlyInAnyOrder("printView", "testGetPrice", "testGetName");
+        }
     }
 
     @Test
