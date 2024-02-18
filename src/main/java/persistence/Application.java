@@ -5,7 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.Person3;
+import persistence.sql.ddl.entity.Person3;
 import persistence.sql.ddl.impl.QueryBuilder4;
 
 public class Application {

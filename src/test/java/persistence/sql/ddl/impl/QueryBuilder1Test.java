@@ -1,27 +1,25 @@
 package persistence.sql.ddl.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
-import persistence.sql.ddl.Person1;
+import persistence.sql.ddl.entity.Person1;
+import persistence.sql.ddl.QueryBuilder;
 
 class QueryBuilder1Test {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilder2Test.class);
 
     private final Class<?> entityClass = Person1.class;
 
-    private final QueryBuilder1 queryBuilder = new QueryBuilder1();
+    private final QueryBuilder queryBuilder = new QueryBuilder1();
 
     @Test
+    @DisplayName("@Entity, @Id 어노테이션을 바탕으로 create 쿼리 만들어보기")
     void createDDL() {
         String ddl = queryBuilder.buildDDL(entityClass);
 
@@ -32,6 +30,7 @@ class QueryBuilder1Test {
     }
 
     @Test
+    @DisplayName("@Entity, @Id 어노테이션을 바탕으로 drop 쿼리 만들어보기")
     void buildDropQuery() {
         String dropQuery = queryBuilder.buildDropQuery(entityClass);
 
@@ -41,6 +40,7 @@ class QueryBuilder1Test {
     }
 
     @Test
+    @DisplayName("클래스 정보를 바탕으로 테이블명 가져오기")
     void getTableNameByClassName() {
         String tableName = queryBuilder.getTableNameFrom(entityClass);
 
@@ -51,6 +51,7 @@ class QueryBuilder1Test {
 
 
     @Test
+    @DisplayName("클래스 정보를 바탕으로 컬럼 선언문 가져오기")
     void getColumnDefinitionStatement() {
         String columnDefinitionStatement = queryBuilder.getTableColumnDefinitionFrom(entityClass);
 
@@ -59,37 +60,20 @@ class QueryBuilder1Test {
         assertThat(columnDefinitionStatement).isEqualTo("id BIGINT AUTO_INCREMENT, name VARCHAR(255), age INTEGER");
     }
 
-    @Test
-    void getColumnDefinitionStatementFromField() {
-        List<Field> columnFields = Arrays.stream(entityClass.getDeclaredFields())
-            .filter(field -> field.isAnnotationPresent(Column.class) || field.isAnnotationPresent(Id.class))
-            .collect(Collectors.toList());
+    @ParameterizedTest(name = "{0} 필드 정보를 바탕으로 컬럼 선언문 가져오기")
+    @CsvSource({
+        "id,id BIGINT AUTO_INCREMENT",
+        "name,name VARCHAR(255)",
+        "age,age INTEGER"
+    })
+    @DisplayName("클래스의 필드 정보를 바탕으로 컬럼 선언문 가져오기")
+    void getColumnDefinitionStatementFromField(
+        String fieldName, String expectedColumnDefinitionStatement
+    ) throws NoSuchFieldException {
+        Field field = entityClass.getDeclaredField(fieldName);
 
-        Map<String, String> fieldNameToColumnDefinitionStatement = columnFields.stream()
-            .collect(
-                Collectors.toMap(
-                    Field::getName,
-                    queryBuilder::getColumnDefinitionStatementFrom
-                )
-            );
+        String actualColumnDefinitionStatement = queryBuilder.getColumnDefinitionFrom(field);
 
-        fieldNameToColumnDefinitionStatement.forEach((fieldName, columnDefinitionStatement) -> {
-            log.debug("Field: {}", fieldName);
-            log.debug("Column definition statement: {}", columnDefinitionStatement);
-
-            switch (fieldName) {
-                case "id":
-                    assertThat(columnDefinitionStatement).isEqualTo("id BIGINT AUTO_INCREMENT");
-                    break;
-                case "name":
-                    assertThat(columnDefinitionStatement).isEqualTo("name VARCHAR(255)");
-                    break;
-                case "age":
-                    assertThat(columnDefinitionStatement).isEqualTo("age INTEGER");
-                    break;
-                default:
-                    fail("Unexpected field name: " + fieldName);
-            }
-        });
+        assertThat(actualColumnDefinitionStatement).isEqualTo(expectedColumnDefinitionStatement);
     }
 }

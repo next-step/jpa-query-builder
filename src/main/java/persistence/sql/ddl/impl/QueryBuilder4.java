@@ -5,7 +5,7 @@ import jakarta.persistence.Table;
 public class QueryBuilder4 extends QueryBuilder3 {
 
     @Override
-    protected String getTableNameFrom(Class<?> clazz) {
+    public String getTableNameFrom(Class<?> clazz) {
         StringBuilder sb = new StringBuilder();
 
         String schema = getSchemaNameFrom(clazz);

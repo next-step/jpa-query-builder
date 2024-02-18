@@ -1,16 +1,13 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
-@Table(name = "users")
 @Entity
-public class Person3 {
+public class Person2 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +20,4 @@ public class Person3 {
 
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Transient
-    private Integer index;
 }
