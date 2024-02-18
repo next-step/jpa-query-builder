@@ -22,7 +22,7 @@ class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
     @Test
-    @DisplayName("Car 객체 정보 가져오기")
+    @DisplayName("Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력한다.")
     void showClass() {
         // given
         String expectedClassName = "persistence.reflectiontest.Car";
@@ -62,7 +62,7 @@ class ReflectionTest {
     }
 
     @Test
-    @DisplayName("test로 시작하는 메소드를 실행한다.")
+    @DisplayName("Car 객체의 메소드 중 test로 시작하는 메소드를 실행한다.")
     void testMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         // given
         List<String> expectedResults = List.of("test : null", "test : 0");
