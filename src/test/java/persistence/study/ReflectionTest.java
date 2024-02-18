@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -74,12 +76,19 @@ public class ReflectionTest {
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
     void testAnnotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getConstructor().newInstance();
-        for (final Method method : carClass.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(PrintView.class)) {
-                method.invoke(car);
-            }
+
+        List<Method> annotationMethods = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .toList();
+
+        for (final Method method : annotationMethods) {
+            method.invoke(car);
+            assertThat(outputStreamCaptor.toString()).isEqualTo("자동차 정보를 출력 합니다.\n");
         }
     }
 
