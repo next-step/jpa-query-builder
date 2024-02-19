@@ -6,7 +6,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.Person;
-import persistence.sql.ddl.Query;
+import persistence.sql.ddl.DdlQuery;
 import persistence.sql.ddl.QueryType;
 
 public class Application {
@@ -19,10 +19,10 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            Query createQuery = new Query(QueryType.CREATE, Person.class);
+            DdlQuery createQuery = new DdlQuery(QueryType.CREATE, Person.class);
             jdbcTemplate.execute(createQuery.getSql());
 
-            Query dropQuery = new Query(QueryType.DROP, Person.class);
+            DdlQuery dropQuery = new DdlQuery(QueryType.DROP, Person.class);
             jdbcTemplate.execute(dropQuery.getSql());
 
             server.stop();

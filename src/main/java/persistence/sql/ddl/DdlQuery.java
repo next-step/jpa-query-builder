@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Query {
+public class DdlQuery {
     private static final String DELIMITER = " ";
     private final String sql;
 
-    public Query(QueryType queryType, Class<?> targetClass) {
+    public DdlQuery(QueryType queryType, Class<?> targetClass) {
         checkIsEntity(targetClass);
         String ddlType = queryType.getValue();
         String tableName = getTableName(targetClass);

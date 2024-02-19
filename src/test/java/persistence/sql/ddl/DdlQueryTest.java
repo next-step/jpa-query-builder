@@ -6,17 +6,12 @@ import org.junit.jupiter.api.Test;
 import persistence.exception.NotEntityException;
 import persistence.study.Car;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Query 의")
-class QueryTest {
+class DdlQueryTest {
 
     @Nested
     @DisplayName("생성자는")
@@ -29,7 +24,7 @@ class QueryTest {
             Class<Car> notEntityClass = Car.class;
 
             //when & then
-            assertThatThrownBy(() -> new Query(QueryType.CREATE, notEntityClass))
+            assertThatThrownBy(() -> new DdlQuery(QueryType.CREATE, notEntityClass))
                     .isInstanceOf(NotEntityException.class);
         }
     }
@@ -45,7 +40,7 @@ class QueryTest {
             QueryType type = QueryType.CREATE;
 
             //when
-            String sql = new Query(type, targetClass).getSql();
+            String sql = new DdlQuery(type, targetClass).getSql();
 
             //then
             assertThat(sql).contains(type.name());
@@ -59,7 +54,7 @@ class QueryTest {
             QueryType type = QueryType.DROP;
 
             //when
-            String sql = new Query(type, targetClass).getSql();
+            String sql = new DdlQuery(type, targetClass).getSql();
 
             //then
             assertThat(sql).contains(type.name());
