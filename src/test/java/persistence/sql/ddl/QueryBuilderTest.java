@@ -25,4 +25,14 @@ class QueryBuilderTest {
                 );
                 """);
     }
+
+    @Test
+    @DisplayName("@Entity 클래스의 drop 쿼리 만들기")
+    void makeDropQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+
+        String query = queryBuilder.generateDrop(Person.class);
+
+        assertThat(query).isEqualTo("drop table users;");
+    }
 }

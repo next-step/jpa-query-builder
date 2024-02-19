@@ -19,6 +19,10 @@ public class QueryBuilder {
                 """, getTableName(clazz), getColumns(clazz), getPK(clazz));
     }
 
+    public String generateDrop(Class<?> clazz) {
+        return String.format("drop table %s;", getTableName(clazz));
+    }
+
     private String getTableName(Class<?> clazz) {
         return new H2Table(clazz).getTableName();
     }
