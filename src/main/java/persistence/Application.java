@@ -5,6 +5,9 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.ddl.entity.Person;
+import persistence.sql.ddl.impl.DefaultQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -16,6 +19,10 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+
+            QueryBuilder queryBuilder = new DefaultQueryBuilder();
+
+            jdbcTemplate.execute(queryBuilder.buildDDL(Person.class));
 
             server.stop();
         } catch (Exception e) {

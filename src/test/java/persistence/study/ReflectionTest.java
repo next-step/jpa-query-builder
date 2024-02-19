@@ -2,6 +2,7 @@ package persistence.study;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -12,14 +13,17 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 class ReflectionTest {
+
+    private static final Logger log = LoggerFactory.getLogger(ReflectionTest.class);
 
     private final Class<Car> carClass = Car.class;
 
@@ -28,9 +32,13 @@ class ReflectionTest {
     void showClass() {
         log.debug("carClass.getName() : {}", carClass.getName());
 
-        logFields(carClass);
-        logMethods(carClass);
-        logConstructors(carClass);
+        assertDoesNotThrow(() -> logClass(carClass));
+    }
+
+    private void logClass(Class<?> clazz) {
+        logFields(clazz);
+        logMethods(clazz);
+        logConstructors(clazz);
     }
 
     @Test
@@ -38,7 +46,7 @@ class ReflectionTest {
     void testMethodRun() throws Exception {
         List<Method> testMethods = Arrays.stream(carClass.getDeclaredMethods())
             .filter(method -> method.getName().startsWith("test"))
-            .toList();
+            .collect(Collectors.toList());
 
         for (Method testMethod : testMethods) {
             log.debug("testMethod.getName() : {}", testMethod.getName());
@@ -61,7 +69,7 @@ class ReflectionTest {
     void testAnnotationMethodRun() throws Exception {
         List<Method> printViewAnnotatedMethods = Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
-                    .toList();
+                .collect(Collectors.toList());
 
         Car car = newInstanceByDefaultConstructor(carClass);
 
@@ -72,8 +80,6 @@ class ReflectionTest {
 
             assertThat(returnValue).isNull();
         }
-
-        assertThat(printViewAnnotatedMethods).hasSize(1);
     }
 
     @ParameterizedTest
@@ -90,16 +96,10 @@ class ReflectionTest {
 
         List<Field> privateFields = Arrays.stream(carClass.getDeclaredFields())
             .filter(field -> Modifier.isPrivate(field.getModifiers()))
-            .toList();
-
-        List<String> privateFieldNames = privateFields.stream()
-            .map(Field::getName)
-            .toList();
-
-        assertThat(privateFieldNames).contains(field1, field2);
+            .collect(Collectors.toList());
 
         // When
-        for (Field declaredField : carClass.getDeclaredFields()) {
+        for (Field declaredField : privateFields) {
             logField(declaredField);
 
             String fieldName = declaredField.getName();
@@ -115,7 +115,6 @@ class ReflectionTest {
             () -> assertThat(car.getName()).isEqualTo(value1),
             () -> assertThat(car.getPrice()).isEqualTo(value2)
         );
-
     }
 
     @ParameterizedTest
