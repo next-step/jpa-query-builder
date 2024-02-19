@@ -24,7 +24,8 @@ public enum Nullable {
         }
         if (field.getAnnotation(Column.class).nullable()) {
             return NULL.sql;
-        };
+        }
+        ;
         return NOT_NULL.sql;
     }
 }

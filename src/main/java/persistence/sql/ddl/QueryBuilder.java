@@ -1,5 +1,5 @@
 package persistence.sql.ddl;
 
 public interface QueryBuilder {
-    String generateSQL();
+    String generateSQL(final Class<?> clazz);
 }

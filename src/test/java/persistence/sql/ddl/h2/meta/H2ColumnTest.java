@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.h2.meta;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.h2.meta.H2Column;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

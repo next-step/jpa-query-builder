@@ -6,6 +6,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.domain.Person;
+import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.ddl.h2.builder.CreateQueryBuilder;
 import persistence.sql.ddl.h2.builder.DropQueryBuilder;
 
@@ -19,9 +20,12 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            QueryBuilder createQueryBuilder = new CreateQueryBuilder();
+            QueryBuilder dropQueryBuilder = new DropQueryBuilder();
 
-            jdbcTemplate.execute(new CreateQueryBuilder(Person.class).generateSQL());
-            jdbcTemplate.execute(new DropQueryBuilder(Person.class).generateSQL());
+
+            jdbcTemplate.execute(createQueryBuilder.generateSQL(Person.class));
+            jdbcTemplate.execute(dropQueryBuilder.generateSQL(Person.class));
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

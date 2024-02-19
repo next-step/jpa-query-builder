@@ -1,15 +1,10 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.h2.meta;
 
 import jakarta.persistence.Id;
-import persistence.sql.ddl.h2.meta.ColumnName;
-import persistence.sql.ddl.h2.meta.DataType;
-import persistence.sql.ddl.h2.meta.Nullable;
-import persistence.sql.ddl.h2.meta.PKGenerationType;
 
 import java.lang.reflect.Field;
 
 public class H2Column {
-    public static final String BLANK_STRING = "";
     private final Field field;
 
     public H2Column(final Field field) {
