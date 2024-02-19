@@ -20,7 +20,8 @@ class MySQLColumnTypeTest {
     @ParameterizedTest
     @MethodSource("mappingArguments")
     void should_convert_java_type_to_mysql_column(Class<?> javaType, String dbType) {
-        String type = MySQLColumnType.convert(javaType,null);
+
+        String type = MySQLColumnType.convert(javaType, null);
 
         Assertions.assertThat(type).isEqualTo(dbType);
     }
