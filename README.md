@@ -16,5 +16,5 @@
 ### step3 요구사항
 - [x] 요구사항 1 - Person 객체를 통해 insert 쿼리 만들어보기
 - [x] 요구사항 2 - Person 객체를 통해 findAll 기능 구현하기
-- [ ] 요구사항 3 - Person 객체를 통해 findById 기능 구현하기
+- [x] 요구사항 3 - Person 객체를 통해 findById 기능 구현하기
 - [ ] 요구사항 4 - Person 객체를 통해 delete 쿼리 만들어보기
