@@ -62,47 +62,47 @@ public class QueryBuilder {
                 .collect(Collectors.joining(", "));
     }
 
-    private static boolean nonTransientField(final Field f) {
-        return !f.isAnnotationPresent(Transient.class);
+    private static boolean nonTransientField(final Field field) {
+        return !field.isAnnotationPresent(Transient.class);
     }
 
-    private String createFieldName(final Field f) {
-        String fieldName = f.getName();
+    private String createFieldName(final Field field) {
+        String fieldName = field.getName();
 
-        if (f.isAnnotationPresent(Column.class) && isFieldNameNotBlank(f)) {
-            fieldName = f.getAnnotation(Column.class).name();
+        if (field.isAnnotationPresent(Column.class) && isFieldNameNotBlank(field)) {
+            fieldName = field.getAnnotation(Column.class).name();
         }
 
         return fieldName;
     }
 
-    private String createNotNullDDL(final Field f) {
-        if (f.isAnnotationPresent(Column.class) && isNotNullColumn(f)) {
+    private String createNotNullDDL(final Field field) {
+        if (field.isAnnotationPresent(Column.class) && isNotNullColumn(field)) {
             return SPACE + "not null";
         }
 
         return "";
     }
 
-    private boolean isNotNullColumn(final Field f) {
-        return !f.getAnnotation(Column.class).nullable();
+    private boolean isNotNullColumn(final Field field) {
+        return !field.getAnnotation(Column.class).nullable();
     }
 
-    private boolean isFieldNameNotBlank(final Field f) {
-        return !f.getAnnotation(Column.class).name().isBlank();
+    private boolean isFieldNameNotBlank(final Field field) {
+        return !field.getAnnotation(Column.class).name().isBlank();
     }
 
-    private String createPrimaryKeyGenerateDDL(final Field f) {
-        if (f.isAnnotationPresent(Id.class)) {
-            return createGenerateTypeDDL(f);
+    private String createPrimaryKeyGenerateDDL(final Field field) {
+        if (field.isAnnotationPresent(Id.class)) {
+            return createGenerateTypeDDL(field);
         }
 
         return "";
     }
 
-    private String createGenerateTypeDDL(final Field f) {
-        if (f.isAnnotationPresent(GeneratedValue.class)) {
-            return f.getAnnotation(GeneratedValue.class).strategy().generateDDL;
+    private String createGenerateTypeDDL(final Field field) {
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
+            return field.getAnnotation(GeneratedValue.class).strategy().generateDDL;
         }
 
         return SPACE + "not null";
@@ -115,9 +115,9 @@ public class QueryBuilder {
                 .collect(Collectors.joining());
     }
 
-    private String createPrimaryKey(final Field f) {
-        if (f.isAnnotationPresent(Id.class)) {
-            return  String.format(" primary key (%s)", f.getName());
+    private String createPrimaryKey(final Field field) {
+        if (field.isAnnotationPresent(Id.class)) {
+            return  String.format(" primary key (%s)", field.getName());
         }
 
         return "";
