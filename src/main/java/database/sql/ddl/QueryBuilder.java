@@ -20,7 +20,7 @@ public class QueryBuilder {
         return String.format("DROP TABLE %s", tableName);
     }
 
-    static String extractTableName(Class<?> entityClass) {
+    private String extractTableName(Class<?> entityClass) {
         Table tableAnnotation = entityClass.getAnnotation(Table.class);
         if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {
             return tableAnnotation.name();
@@ -29,19 +29,19 @@ public class QueryBuilder {
         }
     }
 
-    static List<String> extractFields(Class<?> entityClass) {
+    private List<String> extractFields(Class<?> entityClass) {
         Field[] fields = entityClass.getDeclaredFields();
         return Arrays.stream(fields)
-                .filter(QueryBuilder::notTransientField)
-                .map(QueryBuilder::convertFieldToDdl)
+                .filter(this::notTransientField)
+                .map(this::convertFieldToDdl)
                 .collect(Collectors.toList());
     }
 
-    static boolean notTransientField(Field field) {
+    private boolean notTransientField(Field field) {
         return field.getAnnotation(Transient.class) == null;
     }
 
-    static String convertFieldToDdl(Field field) {
+    private String convertFieldToDdl(Field field) {
         boolean isId = field.isAnnotationPresent(Id.class);
 
         List<String> list = new ArrayList<>();
@@ -63,7 +63,7 @@ public class QueryBuilder {
         return String.join(" ", list);
     }
 
-    static String extractName(Field field) {
+    private String extractName(Field field) {
         Column columnAnnotation = field.getAnnotation(Column.class);
         if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
             return columnAnnotation.name();
@@ -72,7 +72,7 @@ public class QueryBuilder {
         }
     }
 
-    static String convertType(Class<?> type) {
+    private String convertType(Class<?> type) {
         switch (type.getName()) {
             case "java.lang.Long":
                 return "BIGINT";
@@ -85,7 +85,7 @@ public class QueryBuilder {
         }
     }
 
-    static String extractNullability(Field field) {
+    private String extractNullability(Field field) {
         Column columnAnnotation = field.getAnnotation(Column.class);
         if (columnAnnotation != null && !columnAnnotation.nullable()) {
             return "NOT NULL";
