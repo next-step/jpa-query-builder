@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import database.sql.Person;
 import database.sql.dml.QueryBuilder;
+import database.sql.dml.SelectOneQueryBuilder;
 import database.sql.dml.SelectQueryBuilder;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
@@ -15,6 +16,11 @@ import java.util.Map;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
+    private static final RowMapper<Person> personRowMapper = resultSet ->
+            new Person(resultSet.getLong("id"),
+                    resultSet.getString("nick_name"),
+                    resultSet.getInt("old"),
+                    resultSet.getString("email"));
 
     public static void main(String[] args) {
         logger.info("Starting application...");
@@ -32,6 +38,9 @@ public class Application {
             List<Person> people = selectPeople(jdbcTemplate);
             System.out.println(people);
 
+            Person person = selectOnePerson(jdbcTemplate, people.get(1).getId());
+            System.out.println(person);
+
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
@@ -40,15 +49,10 @@ public class Application {
         }
     }
 
-    private static List<Person> selectPeople(JdbcTemplate jdbcTemplate) {
-        String selectQuery = new SelectQueryBuilder(Person.class).buildQuery();
-
-        RowMapper<Person> personRowMapper = resultSet ->
-                new Person(resultSet.getString("nick_name"),
-                        resultSet.getInt("old"),
-                        resultSet.getString("email"));
-
-        return jdbcTemplate.query(selectQuery, personRowMapper);
+    private static void createTable(JdbcTemplate jdbcTemplate, Class<?> entityClass) {
+        database.sql.ddl.QueryBuilder builder = new database.sql.ddl.QueryBuilder();
+        String query = builder.buildCreateQuery(entityClass);
+        jdbcTemplate.execute(query);
     }
 
     private static void insertPerson(JdbcTemplate jdbcTemplate, Person person) {
@@ -58,10 +62,14 @@ public class Application {
         insertRow(jdbcTemplate, entityClass, valueMap);
     }
 
-    private static void createTable(JdbcTemplate jdbcTemplate, Class<?> entityClass) {
-        database.sql.ddl.QueryBuilder builder = new database.sql.ddl.QueryBuilder();
-        String query = builder.buildCreateQuery(entityClass);
-        jdbcTemplate.execute(query);
+    private static List<Person> selectPeople(JdbcTemplate jdbcTemplate) {
+        String selectQuery = new SelectQueryBuilder(Person.class).buildQuery();
+        return jdbcTemplate.query(selectQuery, personRowMapper);
+    }
+
+    private static Person selectOnePerson(JdbcTemplate jdbcTemplate, Long id) {
+        String selectQuery = new SelectOneQueryBuilder(Person.class, id).buildQuery();
+        return jdbcTemplate.queryForObject(selectQuery, personRowMapper);
     }
 
     private static void insertRow(JdbcTemplate jdbcTemplate, Class<?> entityClass, Map<String, Object> valueMap) {

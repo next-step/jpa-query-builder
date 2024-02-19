@@ -17,4 +17,9 @@ public class QueryBuilder {
         IQueryBuilder selectQueryBuilder = new SelectQueryBuilder(entityClass);
         return selectQueryBuilder.buildQuery();
     }
+
+    public String buildSelectOneQuery(Class<?> entityClass, Long id) {
+        IQueryBuilder selectOneQueryBuilder = new SelectOneQueryBuilder(entityClass, id);
+        return selectOneQueryBuilder.buildQuery();
+    }
 }

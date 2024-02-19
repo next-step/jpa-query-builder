@@ -22,13 +22,21 @@ public class EntityClassInspector {
         }
     }
 
+    public EntityColumn getPrimaryKeyColumn() {
+        return getFields()
+                .filter(this::isPrimaryKeyField)
+                .map(this::getEntityColumn)
+                .findFirst()
+                .get();
+    }
+
     public Stream<EntityColumn> getVisibleColumns() {
         return getFields().map(this::getEntityColumn);
     }
 
     public Stream<EntityColumn> getColumnsForInserting() {
         return getFields()
-                .filter(this::notPrimaryKeyField)
+                .filter(field -> !isPrimaryKeyField(field))
                 .map(this::getEntityColumn);
     }
 
@@ -37,12 +45,12 @@ public class EntityClassInspector {
                 .filter(this::notTransientField);
     }
 
-    private boolean notTransientField(Field field) {
-        return field.getAnnotation(Transient.class) == null;
+    private boolean isPrimaryKeyField(Field field) {
+        return field.isAnnotationPresent(Id.class);
     }
 
-    private boolean notPrimaryKeyField(Field field) {
-        return !field.isAnnotationPresent(Id.class);
+    private boolean notTransientField(Field field) {
+        return field.getAnnotation(Transient.class) == null;
     }
 
     private EntityColumn getEntityColumn(Field field) {

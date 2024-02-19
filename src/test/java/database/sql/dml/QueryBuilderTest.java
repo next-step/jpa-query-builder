@@ -27,4 +27,11 @@ class QueryBuilderTest {
         String actual = queryBuilder.buildSelectQuery(Person4.class);
         assertThat(actual).isEqualTo("SELECT id, nick_name, old, email FROM users");
     }
+
+    @Test
+    void buildSelectOneQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String actual = queryBuilder.buildSelectOneQuery(Person4.class, 1L);
+        assertThat(actual).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
+    }
 }
