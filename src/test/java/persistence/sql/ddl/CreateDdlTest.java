@@ -6,15 +6,13 @@ import persistence.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-class QueryBuilderTest {
+class CreateDdlTest {
 
     @DisplayName("Person 클래스의 DDL을 생성한다.")
     @Test
     void createDdl() {
-
-        QueryBuilder queryBuilder = new QueryBuilder();
-        String ddl = queryBuilder.createDdl(Person.class);
+        QueryBuilder queryBuilder = new CreateDdl();
+        String ddl = queryBuilder.generate(Person.class);
 
         assertThat(ddl).isEqualTo("create table users (id bigint auto_increment primary key, nick_name varchar(255), old integer, email varchar(255) not null)");
     }

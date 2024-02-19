@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.column;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -14,7 +14,7 @@ public class JpaColumn {
     protected ColumnType columnType;
     private final String nullable;
 
-    public static JpaColumn from (Field field) {
+    public static JpaColumn from(Field field) {
         ColumnType columnType = ColumnType.toDdl(field.getType());
         if (field.isAnnotationPresent(Column.class)) {
             String name = convertName(field);

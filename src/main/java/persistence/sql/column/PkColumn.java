@@ -1,7 +1,7 @@
-package persistence.sql.ddl;
+package persistence.sql.column;
 
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import persistence.sql.ddl.GenerateType;
 
 import java.lang.reflect.Field;
 

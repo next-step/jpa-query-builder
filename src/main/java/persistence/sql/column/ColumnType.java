@@ -1,9 +1,9 @@
-package persistence.sql.ddl;
+package persistence.sql.column;
 
 import java.util.Arrays;
 import java.util.Set;
 
-import static persistence.sql.ddl.JpaColumn.SPACE;
+import static persistence.sql.column.JpaColumn.SPACE;
 
 public enum ColumnType {
 
@@ -33,7 +33,7 @@ public enum ColumnType {
     public String getColumnDefinition() {
         StringBuilder sb = new StringBuilder();
         sb.append(SPACE).append(value);
-        if(!defaultValue.isBlank()) {
+        if (!defaultValue.isBlank()) {
             sb.append("(").append(defaultValue).append(")");
         }
         return sb.toString();
