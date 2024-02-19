@@ -17,7 +17,7 @@ class DialectTest {
 
         String sql = dialect.createTable(Person1.class);
         final String expected = "CREATE TABLE Person1(\n" +
-                "id BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
+                "id BIGINT PRIMARY KEY,\n" +
                 "name VARCHAR,\n" +
                 "age INTEGER\n" +
                 ");";
