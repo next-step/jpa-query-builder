@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import persistence.sql.ddl.h2.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -48,14 +49,7 @@ public class H2Column {
     }
 
     public String getColumnNullable() {
-        if (isPK()) {
-            return Nullable.NOT_NULL.getSql();
-        }
-        if (!hasColumnAnnotation()) {
-            return BLANK_STRING;
-        }
-        Column annotation = field.getAnnotation(Column.class);
-        return Nullable.get(annotation).getSql();
+        return Nullable.getSQL(field);
     }
 
     public String getDataType() {
