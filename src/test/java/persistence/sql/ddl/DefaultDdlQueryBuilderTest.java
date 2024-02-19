@@ -2,48 +2,112 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.QueryException;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
+import persistence.sql.query.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class DefaultDdlQueryBuilderTest {
 
-    private final Dialect dialect= new H2Dialect();
-    private final DdlQueryBuilder<Object> queryBuilder = new DefaultDdlQueryBuilder<>(dialect);
+    private final Dialect dialect = new H2Dialect();
+    private final DdlQueryBuilder queryBuilder = new DefaultDdlQueryBuilder(dialect);
 
-    @DisplayName("PersonV1 Entity 정보로 create 쿼리 만들어보기")
+    @DisplayName("Entity 의 기본 JAVA 객체 정보만을 가지고 create 쿼리를 만든다")
     @Test
-    public void buildCreateQuery() throws Exception {
+    public void buildCreateQueryV1() throws Exception {
         // given
-        final PersonV1 person = new PersonV1(1L, "name", 20);
+        final Class<PersonV1> clazz = PersonV1.class;
+        final Query query = queryBuilder.generateQuery(clazz);
 
         final String ddl = """
-                CREATE TABLE PERSONV1 (
-                    ID BIGINT PRIMARY KEY,
-                    NAME VARCHAR(255),
-                    AGE INTEGER
+                CREATE TABLE PersonV1 (
+                    id BIGINT PRIMARY KEY,
+                    name VARCHAR(255),
+                    age INTEGER
                 );""".trim();
 
         // when
-        final String createQuery = queryBuilder.buildCreateQuery(person);
+        final String createQuery = queryBuilder.buildCreateQuery(query);
 
         // then
         assertThat(createQuery).isEqualTo(ddl);
     }
 
-    @DisplayName("")
+    @DisplayName("Entity 의 @Column, @GeneratedValue 정보를 추가로 create 쿼리를 만든다")
     @Test
-    public void throwExceptionWhenBuildNotEntityCreateQuery() throws Exception {
+    public void buildCreateQueryV2() throws Exception {
         // given
-        final PersonV0 person = new PersonV0();
+        final Class<PersonV2> clazz = PersonV2.class;
+        final Query query = queryBuilder.generateQuery(clazz);
 
-        // when then
-        assertThatThrownBy(() -> queryBuilder.buildCreateQuery(person))
-                .isInstanceOf(QueryException.class)
-                .hasMessage("PersonV0 is not entity");
+        final String ddl = """
+                CREATE TABLE PersonV2 (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    nick_name VARCHAR(255),
+                    old INTEGER,
+                    email VARCHAR(255) NOT NULL
+                );""".trim();
+
+        // when
+        final String createQuery = queryBuilder.buildCreateQuery(query);
+
+        // then
+        assertThat(createQuery).isEqualTo(ddl);
+    }
+
+    @DisplayName("Entity 의 @Table, @Transient 정보를 추가로 create 쿼리를 만든다")
+    @Test
+    public void buildCreateQueryV3() throws Exception {
+        // given
+        final Class<PersonV3> clazz = PersonV3.class;
+        final Query query = queryBuilder.generateQuery(clazz);
+
+        final String ddl = """
+                CREATE TABLE users (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    nick_name VARCHAR(255),
+                    old INTEGER,
+                    email VARCHAR(255) NOT NULL
+                );""".trim();
+
+        // when
+        final String createQuery = queryBuilder.buildCreateQuery(query);
+
+        // then
+        assertThat(createQuery).isEqualTo(ddl);
+    }
+
+    @DisplayName("Entity 의 기본 JAVA 객체 정보만을 가지고 drop 쿼리를 만든다")
+    @Test
+    public void buildPersonV1DropQuery() throws Exception {
+        // given
+        final Class<PersonV1> clazz = PersonV1.class;
+        final Query query = queryBuilder.generateQuery(clazz);
+
+        final String ddl = "DROP TABLE IF EXISTS PersonV1;";
+
+        // when
+        final String dropQuery = queryBuilder.buildDropQuery(query);
+
+        // then
+        assertThat(dropQuery).isEqualTo(ddl);
+    }
+
+    @DisplayName("Entity @Table 정보로 drop 쿼리를 만든다")
+    @Test
+    public void buildPersonV3DropQuery() throws Exception {
+        // given
+        final Class<PersonV3> clazz = PersonV3.class;
+        final Query query = queryBuilder.generateQuery(clazz);
+
+        final String ddl = "DROP TABLE IF EXISTS users;";
+
+        // when
+        final String dropQuery = queryBuilder.buildDropQuery(query);
+
+        // then
+        assertThat(dropQuery).isEqualTo(ddl);
     }
 
 }
