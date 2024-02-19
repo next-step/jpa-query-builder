@@ -10,9 +10,9 @@ class QueryBuilderTest {
     @Test
     @DisplayName("@Entity 클래스의 create 쿼리 만들기")
     void makeCreateQuery() {
-        QueryBuilder queryBuilder = new QueryBuilder();
+        QueryBuilder queryBuilder = new QueryBuilder(Person.class);
 
-        String query = queryBuilder.generateCreate(Person.class);
+        String query = queryBuilder.generateCreate();
 
         assertThat(query).isEqualTo("""
                 create table users
@@ -29,9 +29,9 @@ class QueryBuilderTest {
     @Test
     @DisplayName("@Entity 클래스의 drop 쿼리 만들기")
     void makeDropQuery() {
-        QueryBuilder queryBuilder = new QueryBuilder();
+        QueryBuilder queryBuilder = new QueryBuilder(Person.class);
 
-        String query = queryBuilder.generateDrop(Person.class);
+        String query = queryBuilder.generateDrop();
 
         assertThat(query).isEqualTo("drop table users;");
     }

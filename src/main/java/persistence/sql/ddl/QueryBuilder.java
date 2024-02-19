@@ -8,8 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class QueryBuilder {
+    private final Class<?> clazz;
 
-    public String generateCreate(Class<?> clazz) {
+    public QueryBuilder(Class<?> clazz) {
+        this.clazz = clazz;
+    }
+
+    public String generateCreate() {
         return String.format("""
                 create table %s
                 (
@@ -19,7 +24,7 @@ public class QueryBuilder {
                 """, getTableName(clazz), getColumns(clazz), getPK(clazz));
     }
 
-    public String generateDrop(Class<?> clazz) {
+    public String generateDrop() {
         return String.format("drop table %s;", getTableName(clazz));
     }
 
