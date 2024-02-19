@@ -6,8 +6,10 @@ import database.sql.util.EntityColumn;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+
+import static database.sql.Util.quote;
+
 
 public class InsertQueryBuilder implements IQueryBuilder {
     private final Class<?> entityClass;
@@ -29,7 +31,6 @@ public class InsertQueryBuilder implements IQueryBuilder {
         return String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columns, values);
     }
 
-
     private String columnClauses(List<EntityColumn> columnsForInserting) {
         return columnsForInserting.stream()
                 .map(EntityColumn::getColumnName)
@@ -40,12 +41,5 @@ public class InsertQueryBuilder implements IQueryBuilder {
         return columnsForInserting.stream()
                 .map(it -> quote(valueMap.get(it.getColumnName())))
                 .collect(Collectors.joining(", "));
-    }
-
-    private String quote(Object value) {
-        String str = value.toString();
-        Matcher m = QueryBuilder.numberPattern.matcher(str);
-        if (m.matches()) return str;
-        return "'" + str + "'";
     }
 }

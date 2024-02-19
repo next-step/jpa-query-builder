@@ -34,4 +34,27 @@ class QueryBuilderTest {
         String actual = queryBuilder.buildSelectOneQuery(Person4.class, 1L);
         assertThat(actual).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
     }
+
+    // TODO: 테스트간략화
+    @Test
+    void buildDeleteQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+
+        Map<String, Object> conditionMap = new HashMap<>();
+        conditionMap.put("id", 3L);
+        String actual = queryBuilder.buildDeleteQuery(Person4.class, conditionMap);
+        assertThat(actual).isEqualTo("DELETE FROM users WHERE id = 3");
+
+        Map<String, Object> conditionMap2 = new HashMap<>();
+        conditionMap2.put("nick_name", "foo");
+        String actual2 = queryBuilder.buildDeleteQuery(Person4.class, conditionMap2);
+        assertThat(actual2).isEqualTo("DELETE FROM users WHERE nick_name = 'foo'");
+
+        Map<String, Object> conditionMap3 = new HashMap<>();
+        conditionMap3.put("old", 18);
+        conditionMap3.put("email", "example@email.com");
+        String actual3 = queryBuilder.buildDeleteQuery(Person4.class, conditionMap3);
+        assertThat(actual3).isEqualTo("DELETE FROM users WHERE old = 18 AND email = 'example@email.com'");
+
+    }
 }

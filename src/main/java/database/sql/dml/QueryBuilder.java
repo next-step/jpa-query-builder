@@ -22,4 +22,9 @@ public class QueryBuilder {
         IQueryBuilder selectOneQueryBuilder = new SelectOneQueryBuilder(entityClass, id);
         return selectOneQueryBuilder.buildQuery();
     }
+
+    public String buildDeleteQuery(Class<?> entityClass, Map<String, Object> conditionMap) {
+        IQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entityClass, conditionMap);
+        return deleteQueryBuilder.buildQuery();
+    }
 }
