@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -43,5 +44,22 @@ public class ReflectionTest {
                 declaredMethod.invoke(carClass.getDeclaredConstructor(String.class, int.class).newInstance("기아자동차", 1000));
             }
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값을 할당하라")
+    void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException {
+        Car car = new Car();
+
+        Field name = car.getClass().getDeclaredField("name");
+        name.setAccessible(true);
+        name.set(car, "기아자동차");
+
+        Field price = car.getClass().getDeclaredField("price");
+        price.setAccessible(true);
+        price.set(car, 1000);
+
+        logger.debug(car.getName());
+        logger.debug(String.valueOf(car.getPrice()));
     }
 }
