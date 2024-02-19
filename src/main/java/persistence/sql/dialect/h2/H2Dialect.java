@@ -2,7 +2,7 @@ package persistence.sql.dialect.h2;
 
 import persistence.sql.dialect.Dialect;
 
-public class H2Dialect implements Dialect {
+public class H2Dialect extends Dialect {
 
     private static final String AUTO_INCREMENT_DEFINITION = "AUTO_INCREMENT";
 

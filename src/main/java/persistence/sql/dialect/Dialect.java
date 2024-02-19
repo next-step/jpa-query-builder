@@ -3,10 +3,16 @@ package persistence.sql.dialect;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface Dialect {
+public abstract class Dialect {
 
-    Map<Class<?>, String> typeMap = new HashMap<>();
+    protected static final Map<Class<?>, String> typeMap = new HashMap<>();
 
-    String getAutoIncrementDefinition();
-    String getSqlTypeDefinition(Class<?> clazz);
+    public abstract String getAutoIncrementDefinition();
+
+    public String getSqlTypeDefinition(Class<?> clazz) {
+        if (!typeMap.containsKey(clazz)) {
+            throw new IllegalArgumentException("존재하지 않은 타입입니다.");
+        }
+        return typeMap.get(clazz);
+    }
 }
