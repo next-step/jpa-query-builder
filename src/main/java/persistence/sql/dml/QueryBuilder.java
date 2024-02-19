@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import static persistence.sql.dml.ValueParser.parse;
+
 public class QueryBuilder {
 
     public String createInsertQuery(Object object) {
@@ -49,7 +51,7 @@ public class QueryBuilder {
         return Arrays.stream(object.getClass().getDeclaredFields())
                 .sorted(Comparator.comparing(this::idFirstOrdered))
                 .filter(this::isNotTransientField)
-                .map(field -> dataParser(field, object))
+                .map(f -> parse(f, object))
                 .collect(Collectors.joining(", "));
     }
 
@@ -59,25 +61,5 @@ public class QueryBuilder {
 
     private boolean isNotTransientField(final Field field) {
         return !field.isAnnotationPresent(Transient.class);
-    }
-
-    private String dataParser(Field field, Object object) {
-        if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class)) {
-            if (field.getAnnotation(GeneratedValue.class).strategy().equals(GenerationType.IDENTITY)) {
-                return "default";
-            }
-        }
-        field.setAccessible(true);
-        Object value;
-        try {
-            value = field.get(object);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        if (field.getType().equals(String.class)) {
-            return String.format("'%s'", value);
-        }
-
-        return (String) value;
     }
 }
