@@ -9,10 +9,6 @@ import persistence.sql.ddl.dialect.DialectResolution;
 import persistence.sql.ddl.dialect.DialectResolutionInfo;
 import persistence.sql.ddl.dialect.exception.NotFoundDatabase;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
