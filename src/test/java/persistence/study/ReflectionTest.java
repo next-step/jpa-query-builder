@@ -23,11 +23,23 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("test로 시작하는 메소드를 실행하라")
-    void pickMethodStartsWithTest() throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    void testMethodRun() throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Class<Car> carClass = Car.class;
 
         for (Method declaredMethod : carClass.getDeclaredMethods()) {
             if (declaredMethod.getName().startsWith("test")){
+                declaredMethod.invoke(carClass.getDeclaredConstructor(String.class, int.class).newInstance("기아자동차", 1000));
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션이 붙은 메소드를 실행하라")
+    void testAnnotationMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Class<Car> carClass = Car.class;
+
+        for (Method declaredMethod : carClass.getDeclaredMethods()) {
+            if (declaredMethod.isAnnotationPresent(PrintView.class)){
                 declaredMethod.invoke(carClass.getDeclaredConstructor(String.class, int.class).newInstance("기아자동차", 1000));
             }
         }
