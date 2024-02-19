@@ -1,9 +1,11 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
 
 public class QueryBuilder {
 
@@ -31,8 +33,9 @@ public class QueryBuilder {
     }
 
     private String getColumns(Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
+        List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .toList();
         return new H2Columns(fields).generateSQL();
     }
-
 }
