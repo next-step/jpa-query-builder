@@ -6,10 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.logging.LoggingPermission;
 
 
 public class ReflectionTest {
@@ -61,5 +63,11 @@ public class ReflectionTest {
 
         logger.debug(car.getName());
         logger.debug(String.valueOf(car.getPrice()));
+    }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성하라")
+    void constructorWithArgs() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        Car.class.getDeclaredConstructor(String.class, int.class).newInstance("기아자동차", 10000);
     }
 }
