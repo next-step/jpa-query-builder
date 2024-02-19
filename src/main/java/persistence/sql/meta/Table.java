@@ -1,9 +1,10 @@
-package persistence.sql.ddl.wrapper;
+package persistence.sql.meta;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.h2.util.StringUtils;
 
 public class Table {
@@ -19,7 +20,7 @@ public class Table {
     public static Table of(Class<?> clazz) {
         List<Column> columnList = Arrays.stream(clazz.getDeclaredFields())
             .filter(field -> !field.isAnnotationPresent(Transient.class))
-            .map(Column::from).toList();
+            .map(Column::from).collect(Collectors.toList());
 
         validate(clazz, columnList);
 

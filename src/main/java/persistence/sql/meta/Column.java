@@ -1,4 +1,4 @@
-package persistence.sql.ddl.wrapper;
+package persistence.sql.meta;
 
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
