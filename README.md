@@ -15,6 +15,6 @@ src>test>java>persistence>study 하위에 StringTest 클래스를 하나 생성�
 
 ## Step2 요구사항
 - [x] create 쿼리 만들어보기
-- [ ] 추가된 정보를 통해 create 쿼리 만들어보기
+- [x] 추가된 정보를 통해 create 쿼리 만들어보기
 - [ ] 추가된 정보를 통해 create 쿼리 만들어보기2
 - [ ] 정보를 바탕으로 drop 쿼리 만들어보기
