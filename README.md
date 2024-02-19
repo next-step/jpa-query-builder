@@ -13,6 +13,13 @@
     * @Entity 어노테이션이 달려 있는 클래스의 DROP TABLE 구문을 생성할 수 있습니다.
     * @Table 어노테이션의 name 을 인식해서 테이블명으로 사용합니다.
 
+## DML QueryBuilder
+
+* INSERT
+    * @Id 필드를 제외한 필드들에 대해 Map 으로 구성된 row 를 INSERT 하는 구문을 생성합니다.
+* SELECT
+    * 전체 row 를 조회하는 SELECT 구문을 생성합니다.
+
 ## 할 일들
 
 ### 1단계 - Reflection
@@ -29,15 +36,10 @@
 ## 3단계 - QueryBuilder DML
 
 - [v] 요구사항 1 - 위의 정보를 바탕으로 insert 구현해보기
-- [ ] 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
+- [v] 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
 - [ ] 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
 - [ ] 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
-- [ ] 2단계 리뷰 끝나면 코드 정리
-    - QueryBuilderTest -> QueryBuilderDdlTest
-    - OldPerson1,OldPerson2 -> Person1, Person2
-    - Person.java 삭제
-- [ ] ddl/dml 빌더를 인터페이스로 뽑아보기
--
+- [v] ddl/dml 빌더를 인터페이스로 뽑아보기
 
 ## 4단계 - Simple Entity Object
 

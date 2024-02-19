@@ -1,12 +1,20 @@
 package database.sql.ddl;
 
+import database.sql.IQueryBuilder;
 import database.sql.util.EntityClassInspector;
 import database.sql.util.EntityColumn;
 
 import java.util.stream.Collectors;
 
-public class DdlQueryBuilder {
-    public String buildCreateQuery(Class<?> entityClass) {
+public class CreateQueryBuilder implements IQueryBuilder {
+    private final Class<?> entityClass;
+
+    public CreateQueryBuilder(Class<?> entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    @Override
+    public String buildQuery() {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();
         String columnsWithDefinition = inspector.getVisibleColumns()
@@ -14,12 +22,5 @@ public class DdlQueryBuilder {
                 .collect(Collectors.joining(", "));
 
         return String.format("CREATE TABLE %s (%s)", tableName, columnsWithDefinition);
-    }
-
-    public String buildDeleteQuery(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        String tableName = inspector.getTableName();
-
-        return String.format("DROP TABLE %s", tableName);
     }
 }

@@ -1,19 +1,26 @@
 package database.sql.dml;
 
+import database.sql.IQueryBuilder;
 import database.sql.util.EntityClassInspector;
 import database.sql.util.EntityColumn;
 
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DmlQueryBuilder {
-    static Pattern numberPattern = Pattern.compile("^[0-9]+$");
+public class InsertQueryBuilder implements IQueryBuilder {
+    private final Class<?> entityClass;
+    private final Map<String, Object> valueMap;
 
-    public String buildInsertQuery(Class<?> clazz, Map<String, Object> valueMap) {
-        EntityClassInspector inspector = new EntityClassInspector(clazz);
+    public InsertQueryBuilder(Class<?> entityClass, Map<String, Object> valueMap) {
+        this.entityClass = entityClass;
+        this.valueMap = valueMap;
+    }
+
+    @Override
+    public String buildQuery() {
+        EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();
         List<EntityColumn> columnsForInserting = inspector.getColumnsForInserting().collect(Collectors.toList());
         String columns = columnClauses(columnsForInserting);
@@ -21,6 +28,7 @@ public class DmlQueryBuilder {
 
         return String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columns, values);
     }
+
 
     private String columnClauses(List<EntityColumn> columnsForInserting) {
         return columnsForInserting.stream()
@@ -36,7 +44,7 @@ public class DmlQueryBuilder {
 
     private String quote(Object value) {
         String str = value.toString();
-        Matcher m = numberPattern.matcher(str);
+        Matcher m = QueryBuilder.numberPattern.matcher(str);
         if (m.matches()) return str;
         return "'" + str + "'";
     }
