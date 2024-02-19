@@ -1,10 +1,10 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
-import persistence.sql.ddl.h2.ColumnName;
-import persistence.sql.ddl.h2.DataType;
-import persistence.sql.ddl.h2.Nullable;
-import persistence.sql.ddl.h2.PKGenerationType;
+import persistence.sql.ddl.h2.meta.ColumnName;
+import persistence.sql.ddl.h2.meta.DataType;
+import persistence.sql.ddl.h2.meta.Nullable;
+import persistence.sql.ddl.h2.meta.PKGenerationType;
 
 import java.lang.reflect.Field;
 

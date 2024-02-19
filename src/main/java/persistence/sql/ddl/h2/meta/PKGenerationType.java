@@ -1,4 +1,4 @@
-package persistence.sql.ddl.h2;
+package persistence.sql.ddl.h2.meta;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,13 +14,6 @@ public enum PKGenerationType {
 
     PKGenerationType(final String sql) {
         this.sql = sql;
-    }
-
-    public static PKGenerationType get(final GeneratedValue generatedValue) {
-        if (generatedValue.strategy().equals(GenerationType.IDENTITY)) {
-            return IDENTITY;
-        }
-        throw new IllegalArgumentException("Unsupported GenerationType");
     }
 
     public static String getSQL(final Field field) {

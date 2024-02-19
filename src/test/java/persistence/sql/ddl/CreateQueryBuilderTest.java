@@ -2,17 +2,19 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.domain.Person;
+import persistence.sql.ddl.h2.builder.CreateQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class QueryBuilderTest {
+class CreateQueryBuilderTest {
 
     @Test
     @DisplayName("@Entity 클래스의 create 쿼리 만들기")
     void makeCreateQuery() {
-        QueryBuilder queryBuilder = new QueryBuilder(Person.class);
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
 
-        String query = queryBuilder.generateCreate();
+        String query = createQueryBuilder.generateCreate();
 
         assertThat(query).isEqualTo("""
                 create table users
@@ -29,9 +31,9 @@ class QueryBuilderTest {
     @Test
     @DisplayName("@Entity 클래스의 drop 쿼리 만들기")
     void makeDropQuery() {
-        QueryBuilder queryBuilder = new QueryBuilder(Person.class);
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
 
-        String query = queryBuilder.generateDrop();
+        String query = createQueryBuilder.generateDrop();
 
         assertThat(query).isEqualTo("drop table users;");
     }
