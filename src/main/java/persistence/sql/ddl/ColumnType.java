@@ -3,6 +3,8 @@ package persistence.sql.ddl;
 import java.util.Arrays;
 import java.util.Set;
 
+import static persistence.sql.ddl.JpaColumn.SPACE;
+
 public enum ColumnType {
 
     BIGINT(Set.of(Long.class), "bigint", ""),
@@ -12,12 +14,12 @@ public enum ColumnType {
 
 
     private final Set<Class<?>> supportedTypes;
-    private final String name;
+    private final String value;
     private final String defaultValue;
 
-    ColumnType(Set<Class<?>> supportedTypes, String name, String defaultValue) {
+    ColumnType(Set<Class<?>> supportedTypes, String value, String defaultValue) {
         this.supportedTypes = supportedTypes;
-        this.name = name;
+        this.value = value;
         this.defaultValue = defaultValue;
     }
 
@@ -28,19 +30,11 @@ public enum ColumnType {
                 .orElseThrow(() -> new IllegalArgumentException("[INFO] No supported type"));
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
     public String getColumnDefinition() {
         StringBuilder sb = new StringBuilder();
-        sb.append(name);
+        sb.append(SPACE).append(value);
         if(!defaultValue.isBlank()) {
-            sb.append(" (").append(defaultValue).append(")");
+            sb.append("(").append(defaultValue).append(")");
         }
         return sb.toString();
     }

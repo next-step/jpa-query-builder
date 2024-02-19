@@ -23,20 +23,22 @@ public class QueryBuilder {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("[INFO] No @Id annotation"));
 
+        PkColumn pkColumn = new PkColumn(idField);
+
         StringBuilder sb = new StringBuilder();
         String tableName = clazz.getSimpleName().toLowerCase(Locale.ROOT);
-        sb.append("create table ").append(tableName).append(" ( ");
+        sb.append("create table ").append(tableName).append(" (");
 
-        Field[] declaredFields = clazz.getDeclaredFields();
-        Arrays.stream(declaredFields)
+        sb.append(pkColumn.getDefinition()).append(pkColumn.getGenerationTypeDefinition());
+
+        Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Id.class))
                 .forEach(field -> {
-                    ColumnType columnType = ColumnType.toDdl(field.getType());
-                    sb.append(field.getName())
-                            .append(" ")
-                            .append(columnType.getColumnDefinition())
-                            .append(", ");
+                    JpaColumn jpaColumn = new JpaColumn(field);
+                    sb.append(jpaColumn.getDefinition());
                 });
-        sb.append("primary key (").append(idField.getName()).append(")");
+
+        sb.append(pkColumn.getPkDefinition());
         sb.append(")");
 
         return sb.toString();
