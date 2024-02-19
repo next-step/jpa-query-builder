@@ -1,5 +1,6 @@
 package persistence.sql.ddl.query.model;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 public class DomainType {
@@ -35,4 +36,13 @@ public class DomainType {
     public Field getField() {
         return field;
     }
+
+    public boolean isAnnotation(Class<? extends Annotation> annotation) {
+        return field.isAnnotationPresent(annotation);
+    }
+
+    public <T extends Annotation> T getAnnotation(Class<T> annotation) {
+        return field.getAnnotation(annotation);
+    }
+
 }

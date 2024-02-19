@@ -1,5 +1,6 @@
 package persistence.sql.ddl.query.builder;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import persistence.sql.ddl.dialect.database.TypeMapper;
 import persistence.sql.ddl.query.model.ConstantType;
@@ -8,6 +9,7 @@ import persistence.sql.ddl.query.model.DomainType;
 public class ColumnBuilder {
 
     private static final String BLANK = " ";
+    private static final String EMPTY = "";
 
     private final DomainType domainType;
     private final TypeMapper typeMapper;
@@ -22,11 +24,16 @@ public class ColumnBuilder {
         return String.join(BLANK,
                 getColumnName(),
                 getColumnType(),
-                getPkConstantType()
+                getPkConstantType(),
+                getConstantType()
         ).trim();
     }
 
     private String getColumnName() {
+        Column columnAnnotation = domainType.getAnnotation(Column.class);
+        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
+            return columnAnnotation.name();
+        }
         return domainType.getName();
     }
 
@@ -35,9 +42,18 @@ public class ColumnBuilder {
     }
 
     private String getPkConstantType() {
-        return domainType.getField().isAnnotationPresent(Id.class) ?
+        return domainType.isAnnotation(Id.class) ?
                 ConstantType.PK.getType() :
-                BLANK;
+                EMPTY;
+    }
+
+    private String getConstantType() {
+        if(domainType.isAnnotation(Column.class)) {
+            Column column = domainType.getAnnotation(Column.class);
+            return column.nullable() ? EMPTY : ConstantType.NOT_NULL.getType();
+        }
+
+        return EMPTY;
     }
 
 }
