@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
 import persistence.sql.ddl.h2.ColumnName;
+import persistence.sql.ddl.h2.DataType;
 import persistence.sql.ddl.h2.Nullable;
 import persistence.sql.ddl.h2.PKGenerationType;
 
@@ -38,7 +39,7 @@ public class H2Column {
     }
 
     private String getDataType() {
-        return DataType.getDBType(field.getType().getSimpleName());
+        return DataType.getSQL(field);
     }
 
     private String getGenerationType() {
