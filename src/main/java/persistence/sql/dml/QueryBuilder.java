@@ -20,7 +20,7 @@ public class QueryBuilder {
         return String.format("insert into %s (%s) values (%s)", tableName, columns, values);
     }
 
-    public String createFindAll(final Class<?> clazz) {
+    public String createFindAllQuery(final Class<?> clazz) {
         return String.format("select %s from %s", columnsClause(clazz), createTableName(clazz));
     }
 
@@ -66,5 +66,9 @@ public class QueryBuilder {
 
     private boolean isNotTransientField(final Field field) {
         return !field.isAnnotationPresent(Transient.class);
+    }
+
+    public String createFindByIdQuery(final Person person) {
+        throw new UnsupportedOperationException("Unsupported createFindByIdQuery");
     }
 }

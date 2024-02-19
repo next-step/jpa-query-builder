@@ -30,4 +30,11 @@ public class Person {
         this.age = age;
         this.email = email;
     }
+
+    public Person(final long id, final String simpson, final int i, final String mail) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
 }
