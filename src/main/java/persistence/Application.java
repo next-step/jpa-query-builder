@@ -25,9 +25,12 @@ public class Application {
             Dialect dialect = StandardDialectResolver.resolveDialect(dialectResolutionInfo);
 
             String createTableSql = dialect.createTable(Person1.class);
+            String dropTableSql = dialect.dropTable(Person1.class);
 
             logger.debug(createTableSql);
+            logger.debug(dropTableSql);
             jdbcTemplate.execute(createTableSql);
+            jdbcTemplate.execute(dropTableSql);
 
             server.stop();
         } catch (Exception e) {
