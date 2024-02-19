@@ -10,7 +10,7 @@ class QueryBuilderTest {
     @CsvSource(value = {
             "database.sql.ddl.OldPerson1:CREATE TABLE OldPerson1 (id BIGINT PRIMARY KEY, name VARCHAR(255) NULL, age INT NULL)",
             "database.sql.ddl.OldPerson2:CREATE TABLE OldPerson2 (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255) NULL, old INT NULL, email VARCHAR(255) NOT NULL)",
-            "database.sql.ddl.Person:CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255) NULL, old INT NULL, email VARCHAR(255) NOT NULL)"
+            "database.sql.ddl.OldPerson3:CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255) NULL, old INT NULL, email VARCHAR(255) NOT NULL)"
     }, delimiter = ':')
     void buildCreateQuery(String entityClassCanonicalName, String expected) throws ClassNotFoundException {
         Class<?> entityClass = Class.forName(entityClassCanonicalName);
@@ -23,7 +23,7 @@ class QueryBuilderTest {
     @CsvSource(value = {
             "database.sql.ddl.OldPerson1:DROP TABLE OldPerson1",
             "database.sql.ddl.OldPerson2:DROP TABLE OldPerson2",
-            "database.sql.ddl.Person:DROP TABLE users"
+            "database.sql.ddl.OldPerson3:DROP TABLE users"
     }, delimiter = ':')
     void buildDeleteQuery(Class<?> entityClass, String expected) {
         QueryBuilder queryBuilder = new QueryBuilder();
