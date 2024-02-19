@@ -10,7 +10,6 @@ public class StringUtils {
 
     private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("([a-z])([A-Z])");
 
-
     public static String convertCamelToSnakeString(String str) {
         Matcher matcher = CAMEL_CASE_PATTERN.matcher(str);
         return matcher.replaceAll(matchResult -> String.format(
