@@ -50,8 +50,10 @@ public interface DdlQueryBuilder {
         final boolean isPk = field.isAnnotationPresent(Id.class);
 
         if (isPk) {
+            final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+            final GenerationType strategy = (generatedValue == null) ? GenerationType.AUTO : GenerationType.IDENTITY;
             builder.setPk(true)
-                    .setPkStrategy(field.getAnnotation(GeneratedValue.class));
+                    .setPkStrategy(strategy);
         }
 
         return builder.build();

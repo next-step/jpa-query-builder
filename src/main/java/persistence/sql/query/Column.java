@@ -1,6 +1,5 @@
 package persistence.sql.query;
 
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
@@ -152,13 +151,8 @@ public class Column {
             return this;
         }
 
-        public Builder setPkStrategy(final GeneratedValue pkStrategy) {
-            if (pkStrategy == null) {
-                this.pkStrategy = GenerationType.AUTO;
-                return this;
-            }
-
-            this.pkStrategy = pkStrategy.strategy();
+        public Builder setPkStrategy(final GenerationType pkStrategy) {
+            this.pkStrategy = pkStrategy;
             return this;
         }
 
