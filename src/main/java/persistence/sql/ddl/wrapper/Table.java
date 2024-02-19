@@ -26,7 +26,6 @@ public class Table {
         return new Table(clazz, columnList);
     }
 
-
     private static void validate(Class<?> clazz, List<Column> columnList) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("엔티티 객체가 아닙니다.");
@@ -34,8 +33,8 @@ public class Table {
 
         long idFieldCount = columnList.stream().filter(Column::isIdAnnotation).count();
 
-        if (idFieldCount > 1) {
-            throw new IllegalArgumentException("Id 필드는 한개만 가져야 합니다.");
+        if (idFieldCount != 1) {
+            throw new IllegalArgumentException("Id 필드는 필수로 1개를 가져야 합니다.");
         }
     }
 
