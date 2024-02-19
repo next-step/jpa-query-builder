@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.mysql;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
