@@ -1,4 +1,4 @@
-package persistence.domain;
+package persistence.sql.ddl.domain;
 
 public enum GenerationType {
     TABLE(""),

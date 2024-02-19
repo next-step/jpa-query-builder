@@ -1,4 +1,5 @@
-package persistence.domain;
+package persistence.sql.ddl.domain;
+
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +8,5 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GeneratedValue {
-    GenerationType strategy() default GenerationType.AUTO;
-
+public @interface Id {
 }

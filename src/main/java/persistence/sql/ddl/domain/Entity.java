@@ -1,4 +1,4 @@
-package persistence.domain;
+package persistence.sql.ddl.domain;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.domain.*;
+import persistence.sql.ddl.domain.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

@@ -2,9 +2,9 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.domain.Person1;
-import persistence.domain.Person2;
-import persistence.domain.Person3;
+import persistence.sql.ddl.domain.Person1;
+import persistence.sql.ddl.domain.Person2;
+import persistence.sql.ddl.domain.Person3;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
