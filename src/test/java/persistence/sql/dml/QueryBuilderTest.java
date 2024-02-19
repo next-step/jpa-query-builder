@@ -1,0 +1,25 @@
+package persistence.sql.dml;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import persistence.sql.dml.domain.Person;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class QueryBuilderTest {
+
+    @DisplayName("Person객체를 통해 insert를 구현한다.")
+    @Test
+    void dml_insert_create() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        Class<Person> personClass = Person.class;
+        List<Object> values = List.of("simpson", 31, "qwe5507@gmail.com");
+
+        String insertQuery = queryBuilder.createInsertQuery(personClass, values);
+
+        String expected = String.format("insert into users (id, nick_name, old, email) values (default, 'simpson', 31, 'qwe5507@gmail.com')");
+        assertThat(insertQuery).isEqualTo(expected);
+    }
+}
