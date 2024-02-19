@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class QueryBuilderTest {
 
-    @DisplayName("요구사항1, Person create ddl문 생성")
+    @DisplayName("요구사항1, @Id, @Entity가 존재하는 Person객체의 create ddl문을 생성한다.")
     @Test
     void persion_ddl_create1() {
         final QueryBuilder queryBuilder = new QueryBuilder();
@@ -22,7 +22,7 @@ class QueryBuilderTest {
         assertThat(actualDDL).isEqualTo(expectedDDL);
     }
 
-    @DisplayName("요구사항2, Person create ddl문 생성")
+    @DisplayName("요구사항2, @GeneratedValue와 @Column문이 추가된 Person객체의 create ddl문을 생성한다.")
     @Test
     void persion_ddl_create2() {
         final QueryBuilder queryBuilder = new QueryBuilder();
@@ -34,7 +34,7 @@ class QueryBuilderTest {
         assertThat(actualDDL).isEqualTo(expectedDDL);
     }
 
-    @DisplayName("요구사항3, Person create ddl문 생성")
+    @DisplayName("요구사항3, @Table과 @Transient이 추가된 Person객체의 create ddl문을 생성한다.")
     @Test
     void persion_ddl_create3() {
         final QueryBuilder queryBuilder = new QueryBuilder();
@@ -46,7 +46,7 @@ class QueryBuilderTest {
         assertThat(actualDDL).isEqualTo(expectedDDL);
     }
 
-    @DisplayName("요구사항4, Person drop ddl문 생성")
+    @DisplayName("요구사항4, Person객체의 drop ddl문을 생성한다.")
     @Test
     void persion_ddl_drop() {
         final QueryBuilder queryBuilder = new QueryBuilder();
