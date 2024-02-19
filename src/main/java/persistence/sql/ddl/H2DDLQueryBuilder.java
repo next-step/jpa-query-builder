@@ -14,6 +14,7 @@ public class H2DDLQueryBuilder implements DDLQueryBuilder {
     private static final String SEPARATOR = ", ";
     private static final String SPACE = " ";
     private static final String PK_QUERY = " NOT NULL PRIMARY KEY";
+    private static final String NOT_PK_QUERY = "";
 
     @Override
     public String create(Class<?> clz) {
@@ -36,29 +37,29 @@ public class H2DDLQueryBuilder implements DDLQueryBuilder {
 
         Arrays.stream(fields).forEach(field -> {
             StringBuilder query = new StringBuilder();
+            query.append(name(field));
+            query.append(type(field));
+            query.append(primaryKey(field));
 
-            addColumnName(query, field);
-            addColumnType(query, field);
-            addPrimaryKey(query, field);
             joiner.add(query);
         });
 
         return joiner.toString();
     }
 
-    private void addColumnName(StringBuilder query, Field field) {
-        query.append(field.getName());
+    private String name(Field field) {
+        return field.getName();
     }
 
-    private void addColumnType(StringBuilder query, Field field) {
-        final String type = H2Type.converter(field.getType());
-        query.append(SPACE).append(type);
+    private String type(Field field) {
+        return SPACE + H2Type.converter(field.getType());
     }
 
-    private void addPrimaryKey(StringBuilder query, Field field) {
+    private String primaryKey(Field field) {
         if (hasPKAnnotation(field)) {
-            query.append(PK_QUERY);
+            return PK_QUERY;
         }
+        return NOT_PK_QUERY;
     }
 
     private static boolean hasPKAnnotation(Field field) {
