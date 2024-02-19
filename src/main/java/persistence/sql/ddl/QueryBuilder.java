@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static util.StringUtils.convertCamelCaseToSnakeCase;
 
 public class QueryBuilder {
     public String createTableSql(Class<?> clazz) {
@@ -55,7 +55,7 @@ public class QueryBuilder {
 
         sb.append(generateColumnName(field))
                 .append(" ")
-                .append(generateDbColumnType(field.getType()))
+                .append(DataTypeMapper.getDataType(field.getType()))
                 .append(generateNotNull(field))
                 .append(generateAutoIncrement(field))
                 .append(", ");
@@ -90,30 +90,5 @@ public class QueryBuilder {
         }
 
         return "";
-    }
-
-    private String generateDbColumnType(Class<?> type) {
-        if (type == Long.class) {
-            return "BIGINT";
-        }
-        if (type == String.class) {
-            return "VARCHAR";
-        }
-        if (type == Integer.class) {
-            return "INTEGER";
-        }
-
-        throw new IllegalArgumentException("This type is not supported.");
-    }
-
-    public static String convertCamelCaseToSnakeCase(String input) {
-        String regex = "([a-z])([A-Z]+)";
-        String replacement = "$1_$2";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        String result = matcher.replaceAll(replacement);
-
-        return result.toLowerCase();
     }
 }
