@@ -4,7 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.dml.domain.Person;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,10 +16,9 @@ class QueryBuilderTest {
     @Test
     void dml_insert_create() {
         QueryBuilder queryBuilder = new QueryBuilder();
-        Class<Person> personClass = Person.class;
-        List<Object> values = List.of("simpson", 31, "qwe5507@gmail.com");
+        Person person = new Person("simpson", 31, "qwe5507@gmail.com");
 
-        String insertQuery = queryBuilder.createInsertQuery(personClass, values);
+        String insertQuery = queryBuilder.createInsertQuery(person);
 
         String expected = String.format("insert into users (id, nick_name, old, email) values (default, 'simpson', 31, 'qwe5507@gmail.com')");
         assertThat(insertQuery).isEqualTo(expected);
