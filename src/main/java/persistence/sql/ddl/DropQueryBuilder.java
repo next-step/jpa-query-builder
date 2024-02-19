@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import persistence.sql.QueryBuilder;
-import persistence.sql.ddl.wrapper.Table;
+import persistence.sql.meta.Table;
 
 public class DropQueryBuilder implements QueryBuilder {
 
@@ -15,8 +15,8 @@ public class DropQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String generateQuery(Class<?> clazz) {
-        Table table = Table.of(clazz);
+    public String generateQuery(Object object) {
+        Table table = Table.of(object.getClass());
         return String.format(DROP_TABLE_DEFINITION, table.getTableName());
     }
 }

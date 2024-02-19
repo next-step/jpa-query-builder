@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import java.util.stream.Collectors;
 import persistence.sql.QueryBuilder;
-import persistence.sql.ddl.wrapper.Table;
+import persistence.sql.meta.Table;
 import persistence.sql.dialect.Dialect;
 
 public class CreateQueryBuilder implements QueryBuilder {
@@ -20,9 +20,9 @@ public class CreateQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String generateQuery(Class<?> clazz) {
+    public String generateQuery(Object object) {
 
-        Table table = Table.of(clazz);
+        Table table = Table.of(object.getClass());
 
         String columnDefinitions = table.getColumns().stream()
             .map(fieldBuilder::generate)

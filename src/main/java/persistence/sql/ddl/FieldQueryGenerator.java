@@ -1,8 +1,6 @@
 package persistence.sql.ddl;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import persistence.sql.ddl.wrapper.Column;
+import persistence.sql.meta.Column;
 import persistence.sql.dialect.Dialect;
 
 public class FieldQueryGenerator {
@@ -20,7 +18,6 @@ public class FieldQueryGenerator {
 
     public static FieldQueryGenerator from(Dialect dialect) {
         return new FieldQueryGenerator(dialect);
-
     }
 
     public String generate(Column field) {
