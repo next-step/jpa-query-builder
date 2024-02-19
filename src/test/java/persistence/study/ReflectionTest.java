@@ -1,6 +1,5 @@
 package persistence.study;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,15 +9,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
     @Test
-    @DisplayName("Car 객체 정보 가져오기")
-    void showClass() {
+    void showCarClass() {
         Class<Car> carClass = Car.class;
         logger.debug(carClass.getName());
 
@@ -45,41 +45,43 @@ public class ReflectionTest {
     }
 
     @Test
-    @DisplayName("test 로 시작하는 메소드 실행")
-    void testMethodRun() throws InstantiationException, IllegalAccessException, InvocationTargetException {
+    void test_로_시작하는_메소드_실행() throws InstantiationException, IllegalAccessException, InvocationTargetException {
         Class<Car> carClass = Car.class;
+
         Constructor<?>[] constructors = carClass.getDeclaredConstructors();
+        Car car = (Car) findConstructorByArgumentCount(constructors, 0).get()
+                .newInstance();
+
         Method[] methods = carClass.getDeclaredMethods();
         for (Method method : methods) {
-            String s = method.getName();
-            if (s.startsWith("test")) {
-                Object invoke = method.invoke(constructors[0].newInstance());
-                System.out.println(invoke);
+            if (method.getName().startsWith("test")) {
+                method.invoke(car);
             }
         }
     }
 
     @Test
-    @DisplayName("@PrintView 애노테이션 메소드 실행")
-    void testAnnotationMethodRun() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    void PrintView_애노테이션_메소드_실행() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<Car> carClass = Car.class;
+
         Constructor<?>[] constructors = carClass.getDeclaredConstructors();
+        Car car = (Car) findConstructorByArgumentCount(constructors, 0).get()
+                .newInstance();
+
         Method[] methods = carClass.getDeclaredMethods();
         for (Method method : methods) {
-            String s = method.getName();
             if (method.isAnnotationPresent(PrintView.class)) {
-                method.invoke(constructors[0].newInstance());
+                method.invoke(car);
             }
         }
     }
 
-
     @Test
-    @DisplayName("private field에 값 할당")
-    public void privateFieldAccess() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    void private_field에_값_할당() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<Car> carClass = Car.class;
         Constructor<?>[] constructors = carClass.getDeclaredConstructors();
-        Car car = (Car) constructors[0].newInstance();
+        Car car = (Car) findConstructorByArgumentCount(constructors, 0).get()
+                .newInstance();
 
         // 필드
         Field[] fields = carClass.getDeclaredFields();
@@ -92,24 +94,28 @@ public class ReflectionTest {
             }
         }
 
-        assertThat(car.testGetName()).isEqualTo("test : 소나타");
-        assertThat(car.testGetPrice()).isEqualTo("test : 123");
+        assertAll(
+                () -> assertThat(car.testGetName()).isEqualTo("test : 소나타"),
+                () -> assertThat(car.testGetPrice()).isEqualTo("test : 123")
+        );
     }
 
     @Test
-    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
-    void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    void 인자를_가진_생성자의_인스턴스_생성() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<Car> carClass = Car.class;
         Constructor<?>[] constructors = carClass.getDeclaredConstructors();
-
-        Constructor<?> constructor = Arrays.stream(constructors).filter(constructor1 -> {
-            int count = constructor1.getParameterCount();
-            return count == 2;
-        }).findFirst().get();
-
+        Constructor<?> constructor = findConstructorByArgumentCount(constructors, 2).get();
         Car car = (Car) constructor.newInstance("소나타", 123);
 
-        assertThat(car.testGetName()).isEqualTo("test : 소나타");
-        assertThat(car.testGetPrice()).isEqualTo("test : 123");
+        assertAll(
+                () -> assertThat(car.testGetName()).isEqualTo("test : 소나타"),
+                () -> assertThat(car.testGetPrice()).isEqualTo("test : 123")
+        );
+    }
+
+    private static Optional<Constructor<?>> findConstructorByArgumentCount(Constructor<?>[] constructors, int count) {
+        return Arrays.stream(constructors)
+                .filter(constructor -> constructor.getParameterCount() == count)
+                .findFirst();
     }
 }
