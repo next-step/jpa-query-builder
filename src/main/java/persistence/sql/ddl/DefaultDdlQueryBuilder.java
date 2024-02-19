@@ -1,17 +1,12 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import persistence.sql.QueryException;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.query.Column;
+import persistence.sql.query.Query;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class DefaultDdlQueryBuilder<T> implements DdlQueryBuilder<T> {
-
-    private static final String SPACE = "    ";
+public class DefaultDdlQueryBuilder implements DdlQueryBuilder {
 
     private final Dialect dialect;
 
@@ -20,61 +15,47 @@ public class DefaultDdlQueryBuilder<T> implements DdlQueryBuilder<T> {
     }
 
     @Override
-    public String buildCreateQuery(final T entity) {
-
-        final Class<?> clazz = getEntityClass(entity);
-
-        final StringBuilder ddl = new StringBuilder();
-
-        final String tableName = createTableName(clazz);
-
-        ddl.append("CREATE TABLE ")
-                .append(tableName)
+    public String buildCreateQuery(final Query query) {
+        final StringBuilder ddl = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(query.getTableName())
                 .append(" (\n")
                 .append(SPACE);
 
-        final String columns = Arrays.stream(clazz.getDeclaredFields())
-                .map(this::generateColumnQuery)
+        final String columnsQuery = query.getColumns()
+                .stream()
+                .map(this::buildColumnQuery)
                 .collect(Collectors.joining(",\n" + SPACE));
 
-        ddl.append(columns)
+        ddl.append(columnsQuery)
                 .append("\n")
                 .append(");");
 
         return ddl.toString();
     }
 
-    private Class<?> getEntityClass(final T entity) {
-        final Class<?> clazz = entity.getClass();
-
-        if (!clazz.isAnnotationPresent(Entity.class)) throw new QueryException(clazz.getSimpleName() + " is not entity");
-
-        return clazz;
-    }
-
-    private String generateColumnQuery(final Field field) {
-        final String columnName = createColumnName(field);
-        final String typeName = field.getType().getSimpleName();
-        final boolean isPk = field.isAnnotationPresent(Id.class);
-        final String columnType = dialect.createColumnQuery(typeName);
+    private String buildColumnQuery(final Column column) {
+        final String columnType = dialect.convertColumnType(column.getType(), column.getLength());
 
         final StringBuilder columnQuery = new StringBuilder()
-                .append(columnName)
+                .append(column.getName())
                 .append(" ")
                 .append(columnType);
 
-        if (isPk) columnQuery.append(" ")
-                .append(dialect.getPk());
+        final String keywords = dialect.toDialectKeywords(column);
+
+        if (!keywords.isBlank()) columnQuery.append(" ")
+                .append(keywords);
+
 
         return columnQuery.toString();
     }
 
-    private String createTableName(final Class<?> clazz) {
-        return clazz.getSimpleName().toUpperCase();
-    }
-
-    private String createColumnName(final Field field) {
-        return field.getName().toUpperCase();
+    @Override
+    public String buildDropQuery(final Query query) {
+        return "DROP TABLE IF EXISTS " +
+                query.getTableName() +
+                ";";
     }
 
 }
