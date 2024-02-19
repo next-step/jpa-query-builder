@@ -23,7 +23,7 @@ public enum SqlDataType {
             .orElseThrow(() -> new IllegalArgumentException("Unsupported type: " + field.getType()));
     }
 
-    public boolean isSupported(Class<?> clazz) {
+    private boolean isSupported(Class<?> clazz) {
         return supportedClasses.contains(clazz);
     }
 }

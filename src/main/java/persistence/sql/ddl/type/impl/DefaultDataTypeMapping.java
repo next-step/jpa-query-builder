@@ -3,10 +3,12 @@ package persistence.sql.ddl.type.impl;
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import java.util.Optional;
-import persistence.sql.ddl.type.DataTypeBuilder;
+import persistence.sql.ddl.type.DataTypeMapping;
 import persistence.sql.ddl.type.SqlDataType;
 
-public class DefaultDataTypeBuilder implements DataTypeBuilder {
+public class DefaultDataTypeMapping implements DataTypeMapping {
+
+    private static final int VARCHAR_DEFAULT_LENGTH = 255;
 
     @Override
     public String getDataTypeDefinitionFrom(Field field) {
@@ -26,7 +28,6 @@ public class DefaultDataTypeBuilder implements DataTypeBuilder {
             return Optional.of(field.getAnnotation(Column.class).length());
         }
 
-        return Optional.of(255);
-
+        return Optional.of(VARCHAR_DEFAULT_LENGTH);
     }
 }

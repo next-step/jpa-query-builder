@@ -8,15 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
-import persistence.sql.ddl.entity.Person3;
 import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.ddl.entity.Person;
+import persistence.sql.ddl.entity.Person4;
 
-@DisplayName("3단계 요구사항 - @Entity, @Table, @Id, @Column, @Transient 어노테이션을 바탕으로 create 쿼리 만들어보기")
-class QueryBuilder3Test {
+class DefaultQueryBuilderTest {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(DefaultQueryBuilderTest.class);
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilder3Test.class);
-
-    private final Class<?> entityClass = Person3.class;
+    private final Class<?> entityClass = Person.class;
 
     private final QueryBuilder queryBuilder = new DefaultQueryBuilder();
 
@@ -32,6 +31,17 @@ class QueryBuilder3Test {
     }
 
     @Test
+    @DisplayName("@Entity, @Table(schema), @Id, @Column, @Transient 어노테이션을 바탕으로 create 쿼리 만들어보기")
+    void createDDLWithSchema() {
+        String ddl = queryBuilder.buildDDL(Person4.class);
+
+        log.debug("DDL: {}", ddl);
+
+        assertThat(ddl)
+            .isEqualTo("CREATE TABLE schema.users (id BIGINT AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) UNIQUE NOT NULL)");
+    }
+
+    @Test
     @DisplayName("@Entity, @Table, @Id, @Column, @Transient 어노테이션을 바탕으로 drop 쿼리 만들어보기")
     void buildDropQuery() {
         String dropQuery = queryBuilder.buildDropQuery(entityClass);
@@ -42,13 +52,33 @@ class QueryBuilder3Test {
     }
 
     @Test
+    @DisplayName("@Entity, @Table(schema), @Id, @Column, @Transient 어노테이션을 바탕으로 drop 쿼리 만들어보기")
+    void buildDropQueryWithSchema() {
+        String dropQuery = queryBuilder.buildDropQuery(Person4.class);
+
+        log.debug("Drop query: {}", dropQuery);
+
+        assertThat(dropQuery).isEqualTo("DROP TABLE schema.users");
+    }
+
+    @Test
     @DisplayName("클래스 정보와 @Table 어노테이션을 바탕으로 테이블명 가져오기")
-    void getTableNameByClassName() {
+    void getTableName() {
         String tableName = queryBuilder.getTableNameFrom(entityClass);
 
         log.debug("Table name: {}", tableName);
 
         assertThat(tableName).isEqualTo("users");
+    }
+
+    @Test
+    @DisplayName("클래스 정보와 @Table(schema) 어노테이션을 바탕으로 테이블명 가져오기")
+    void getTableNameWithSchema() {
+        String tableName = queryBuilder.getTableNameFrom(Person4.class);
+
+        log.debug("Table name: {}", tableName);
+
+        assertThat(tableName).isEqualTo("schema.users");
     }
 
     @Test

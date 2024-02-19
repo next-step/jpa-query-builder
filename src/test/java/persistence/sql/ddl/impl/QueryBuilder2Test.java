@@ -11,13 +11,14 @@ import org.slf4j.Logger;
 import persistence.sql.ddl.entity.Person2;
 import persistence.sql.ddl.QueryBuilder;
 
+@DisplayName("2단계 요구사항 - @Entity, @Id, @Column 어노테이션을 바탕으로 create 쿼리 만들어보기")
 class QueryBuilder2Test {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilder2Test.class);
 
     private final Class<?> entityClass = Person2.class;
 
-    private final QueryBuilder queryBuilder = new QueryBuilder2();
+    private final QueryBuilder queryBuilder = new DefaultQueryBuilder();
 
     @Test
     @DisplayName("@Entity, @Id, @Column 어노테이션을 바탕으로 create 쿼리 만들어보기")

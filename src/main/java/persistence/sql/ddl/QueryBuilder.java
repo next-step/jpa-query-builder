@@ -5,14 +5,23 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import persistence.sql.ddl.constraints.strategy.ConstraintsStrategy;
 import persistence.sql.ddl.constraints.strategy.DefaultConstraintsStrategy;
-import persistence.sql.ddl.type.DataTypeBuilder;
-import persistence.sql.ddl.type.impl.DefaultDataTypeBuilder;
+import persistence.sql.ddl.type.DataTypeMapping;
+import persistence.sql.ddl.type.impl.DefaultDataTypeMapping;
 
 public abstract class QueryBuilder {
 
-    private final ConstraintsStrategy constraintsStrategy = new DefaultConstraintsStrategy();
+    private final ConstraintsStrategy constraintsStrategy;
 
-    private final DataTypeBuilder dataTypeBuilder = new DefaultDataTypeBuilder();
+    private final DataTypeMapping dataTypeMapping;
+
+    protected QueryBuilder() {
+        this(new DefaultConstraintsStrategy(), new DefaultDataTypeMapping());
+    }
+
+    protected QueryBuilder(ConstraintsStrategy constraintsStrategy, DataTypeMapping dataTypeMapping) {
+        this.constraintsStrategy = constraintsStrategy;
+        this.dataTypeMapping = dataTypeMapping;
+    }
 
     public String buildDDL(final Class<?> clazz) {
         return String.format(
@@ -47,7 +56,7 @@ public abstract class QueryBuilder {
     public abstract String getColumnNameFrom(Field field);
 
     public String getColumnDataTypeDefinitionFrom(Field field) {
-        return dataTypeBuilder.getDataTypeDefinitionFrom(field);
+        return dataTypeMapping.getDataTypeDefinitionFrom(field);
     }
 
     public String getColumnConstraintsFrom(Field field) {
