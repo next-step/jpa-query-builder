@@ -1,7 +1,7 @@
-package entity;
+package domain;
 
-import persistence.ddl.Entity;
-import persistence.ddl.Id;
+import persistence.sql.ddl.Entity;
+import persistence.sql.ddl.Id;
 
 @Entity
 public class Person {
