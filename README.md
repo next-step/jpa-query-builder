@@ -30,4 +30,4 @@
   - [x] @Transient은 추가하지 않기
   - [x] @GeneratedValue strategy 값이 있으면 AUTO_INCREMENT 넣기
 
-- [ ] 정보를 바탕으로 drop 쿼리 만들어보기
+- [x] 정보를 바탕으로 drop 쿼리 만들어보기
