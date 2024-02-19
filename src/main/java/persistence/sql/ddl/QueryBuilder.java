@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import persistence.sql.ddl.h2.TableName;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class QueryBuilder {
     }
 
     private String getTableName(Class<?> clazz) {
-        return new H2Table(clazz).getTableName();
+        return new TableName(clazz).getTableName();
     }
 
     private String getPK(Class<?> clazz) {

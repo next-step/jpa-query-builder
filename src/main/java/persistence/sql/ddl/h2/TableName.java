@@ -1,11 +1,11 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.h2;
 
 import jakarta.persistence.Table;
 
-public class H2Table {
+public class TableName {
     private final Class<?> clazz;
 
-    public H2Table(Class<?> clazz) {
+    public TableName(Class<?> clazz) {
         this.clazz = clazz;
     }
 
