@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.StringJoiner;
 
-public class H2DDLQueryBuilder implements DDLQueryBuilder {
+public class CreateDDLQueryBuilder implements DDLQueryBuilder {
 
     private static final String CREATE_TABLE_PREFIX = "CREATE TABLE ";
     private static final String COLUMN_OPEN_BRACKET = " ( ";
@@ -16,8 +16,14 @@ public class H2DDLQueryBuilder implements DDLQueryBuilder {
     private static final String PK_QUERY = " NOT NULL PRIMARY KEY";
     private static final String NOT_PK_QUERY = "";
 
+    private final TypeConverter converter;
+
+    public CreateDDLQueryBuilder(TypeConverter converter) {
+        this.converter = converter;
+    }
+
     @Override
-    public String create(Class<?> clz) {
+    public String query(Class<?> clz) {
         return new StringBuilder()
                 .append(CREATE_TABLE_PREFIX)
                 .append(table(clz))
@@ -52,7 +58,7 @@ public class H2DDLQueryBuilder implements DDLQueryBuilder {
     }
 
     private String type(Field field) {
-        return SPACE + H2Type.converter(field.getType());
+        return SPACE + converter.convert(field.getType());
     }
 
     private String primaryKey(Field field) {
