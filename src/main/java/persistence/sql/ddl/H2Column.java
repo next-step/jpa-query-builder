@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import persistence.sql.ddl.h2.Nullable;
+import persistence.sql.ddl.h2.PKGenerationType;
 
 import java.lang.reflect.Field;
 
@@ -57,20 +57,12 @@ public class H2Column {
     }
 
     public String getGenerationType() {
-        if (!hasGenerationValueAnnotation()) {
-            return "";
-        }
-        GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
-        return PKGenerationType.get(annotation).getSql();
+        return PKGenerationType.getSQL(field);
     }
 
 
     private boolean hasColumnAnnotation() {
         return field.isAnnotationPresent(Column.class);
-    }
-
-    private boolean hasGenerationValueAnnotation() {
-        return field.isAnnotationPresent(GeneratedValue.class);
     }
 
     private boolean isPK() {
