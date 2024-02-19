@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,15 +11,23 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class ColumnTest {
+class H2ColumnTest {
     private static final Class<Person> personClass = Person.class;
 
     @Test
     @DisplayName("@Column이 없으면 필드명을 그대로 사용한다.")
     void useFieldName() throws NoSuchFieldException {
-        Column emailColumn = new Column(personClass.getDeclaredField("email"));
+        H2Column emailH2Column = new H2Column(personClass.getDeclaredField("email"));
 
-        assertThat(emailColumn.getColumnName()).isEqualTo("email");
+        assertThat(emailH2Column.getColumnName()).isEqualTo("email");
+    }
+
+    @Test
+    @DisplayName("@Column에서 name값이 있으면 해당 값을 필드로 사용한다.")
+    void useAnnotationName() throws NoSuchFieldException {
+        H2Column emailH2Column = new H2Column(personClass.getDeclaredField("name"));
+
+        assertThat(emailH2Column.getColumnName()).isEqualTo("nick_name");
     }
 
 
@@ -28,10 +37,10 @@ class ColumnTest {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @jakarta.persistence.Column(name = "nick_name")
+        @Column(name = "nick_name")
         private String name;
 
-        @jakarta.persistence.Column(nullable = false)
+        @Column(nullable = false)
         private String email;
     }
 }
