@@ -20,7 +20,7 @@ public class QueryBuilder {
     }
 
     private String getTableName(Class<?> clazz) {
-        return clazz.getSimpleName();
+        return new H2Table(clazz).getTableName();
     }
 
     private String getPK(Class<?> clazz) {
