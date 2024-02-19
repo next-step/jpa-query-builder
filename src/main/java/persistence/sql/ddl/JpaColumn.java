@@ -1,36 +1,54 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 
 public class JpaColumn {
     protected static final String SPACE = " ";
+    private static final String EMPTY = "";
+    private static final String NOT_NULL = "not null";
 
     protected String name;
-    private final String nullable;
     protected ColumnType columnType;
+    private final String nullable;
 
-    public JpaColumn(Field field) {
-        this.name = convertName(field);
-        this.nullable = getNullable(field.getAnnotation(Column.class).nullable());
-        this.columnType = ColumnType.toDdl(field.getType());
+    public static JpaColumn from (Field field) {
+        ColumnType columnType = ColumnType.toDdl(field.getType());
+        if (field.isAnnotationPresent(Column.class)) {
+            String name = convertName(field);
+            String nullable = getNullable(field);
+            return new JpaColumn(name, nullable, columnType);
+        }
+        if (field.isAnnotationPresent(Id.class)) {
+            return new PkColumn(field);
+        }
+        return new JpaColumn(field.getName(), columnType);
     }
 
-    public JpaColumn(String name, boolean nullable, ColumnType columnType) {
+    public JpaColumn(String name, ColumnType columnType) {
+        this(name, EMPTY, columnType);
+    }
+
+    public JpaColumn(String name, String nullable, ColumnType columnType) {
         this.name = name;
-        this.nullable = getNullable(nullable);
+        this.nullable = nullable;
         this.columnType = columnType;
     }
 
-    private String getNullable(boolean isNullable) {
+    private static String getNullable(Field field) {
+        boolean isNullable = field.getAnnotation(Column.class).nullable();
         if (isNullable) {
-            return "";
+            return EMPTY;
         }
-        return SPACE + "not null";
+        return SPACE + NOT_NULL;
     }
 
-    private String convertName(Field field) {
+    private static String convertName(Field field) {
+        if (!field.isAnnotationPresent(Column.class)) {
+            return field.getName();
+        }
         String columnName = field.getAnnotation(Column.class).name();
         if (columnName.isBlank() || columnName.isEmpty()) {
             return field.getName();
@@ -38,8 +56,8 @@ public class JpaColumn {
         return columnName;
     }
 
-    String getDefinition() {
-        return this.name + columnType.getColumnDefinition() + nullable + ", ";
+    public String getDefinition() {
+        return this.name + columnType.getColumnDefinition() + nullable;
     }
 
     public String getName() {
