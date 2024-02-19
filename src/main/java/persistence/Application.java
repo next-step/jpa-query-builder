@@ -5,7 +5,10 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.*;
+import persistence.sql.ddl.DatabaseDialect;
+import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.ddl.DdlQueryBuilderFactory;
+import persistence.sql.ddl.Person;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

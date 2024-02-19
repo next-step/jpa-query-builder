@@ -22,7 +22,7 @@ public enum MySQLColumnType {
         this.defaultSize = defaultSize;
     }
 
-    public static String convert(Class<?> type,Integer size) {
+    public static String convert(Class<?> type, Integer size) {
         return Arrays.stream(values())
                 .filter(value -> value.type.equals(type))
                 .findFirst()
