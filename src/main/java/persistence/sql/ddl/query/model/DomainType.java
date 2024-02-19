@@ -33,10 +33,6 @@ public class DomainType {
         return classType;
     }
 
-    public Field getField() {
-        return field;
-    }
-
     public boolean isAnnotation(Class<? extends Annotation> annotation) {
         return field.isAnnotationPresent(annotation);
     }

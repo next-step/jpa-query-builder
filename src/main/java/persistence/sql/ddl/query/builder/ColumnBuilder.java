@@ -1,6 +1,8 @@
 package persistence.sql.ddl.query.builder;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.ddl.dialect.database.TypeMapper;
 import persistence.sql.ddl.query.model.ConstantType;
@@ -42,9 +44,19 @@ public class ColumnBuilder {
     }
 
     private String getPkConstantType() {
-        return domainType.isAnnotation(Id.class) ?
-                ConstantType.PK.getType() :
-                EMPTY;
+        if(!domainType.isAnnotation(Id.class)) {
+            return EMPTY;
+        }
+
+        if(!domainType.isAnnotation(GeneratedValue.class)) {
+            return ConstantType.PRIMARY_KEY.getType();
+        }
+
+        if(domainType.getAnnotation(GeneratedValue.class).strategy() != GenerationType.IDENTITY) {
+            return ConstantType.PRIMARY_KEY.getType();
+        }
+
+        return ConstantType.PK.getType();
     }
 
     private String getConstantType() {

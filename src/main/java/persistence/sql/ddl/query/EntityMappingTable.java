@@ -1,8 +1,12 @@
 package persistence.sql.ddl.query;
 
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import persistence.sql.ddl.query.model.DomainType;
 import persistence.sql.ddl.query.model.DomainTypes;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 public class EntityMappingTable {
@@ -20,6 +24,10 @@ public class EntityMappingTable {
     }
 
     public String getTableName() {
+        if(clazz.isAnnotationPresent(Table.class)) {
+            return clazz.getAnnotation(Table.class).name();
+        }
+
         return tableName;
     }
 
@@ -30,8 +38,14 @@ public class EntityMappingTable {
     public static EntityMappingTable from(final Class<?> clazz) {
         return new EntityMappingTable(
                 clazz.getSimpleName(),
-                DomainTypes.from(clazz.getDeclaredFields()),
+                DomainTypes.from(getNotExistTransientField(clazz)),
                 clazz
         );
+    }
+
+    private static Field[] getNotExistTransientField(final Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .toArray(Field[]::new);
     }
 }
