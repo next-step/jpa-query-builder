@@ -1,13 +1,14 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.*;
+import persistence.sql.dml.domain.Person;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-import static persistence.sql.dml.ValueParser.parse;
+import static persistence.sql.dml.parser.ValueParser.parse;
 
 public class QueryBuilder {
 
@@ -61,5 +62,9 @@ public class QueryBuilder {
 
     private boolean isNotTransientField(final Field field) {
         return !field.isAnnotationPresent(Transient.class);
+    }
+
+    public String createFindAll(final Class<?> clazz) {
+        throw new UnsupportedOperationException("Unsupported createFindAll");
     }
 }
