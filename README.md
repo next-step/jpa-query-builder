@@ -25,7 +25,9 @@
 - [x] 추가된 정보를 통해 create 쿼리 만들어보기
   - [x] @Column으로 컬럼 이름을 지정할 수 있다.  
 
-- [ ] 추가된 정보를 통해 create 쿼리 만들어보기2
-  - [ ] @Table으로 테이블 이름을 지정할 수 있다.  
+- [x] 추가된 정보를 통해 create 쿼리 만들어보기2
+  - [x] @Table으로 테이블 이름을 지정할 수 있다.  
+  - [x] @Transient은 추가하지 않기
+  - [x] @GeneratedValue strategy 값이 있으면 AUTO_INCREMENT 넣기
 
 - [ ] 정보를 바탕으로 drop 쿼리 만들어보기
