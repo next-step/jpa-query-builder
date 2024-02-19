@@ -35,7 +35,10 @@ public class QueryBuilder {
     }
 
     public String createDeleteQuery(final Object object) {
-        throw new UnsupportedOperationException("Unsupported createDeleteQuery");
+        String tableName = createTableName(object.getClass());
+        final Field primaryField = getPrimaryField(object);
+        return String.format("delete from %s where %s = %s", tableName, primaryField.getName(),
+                valueParse(primaryField, object));
     }
 
     private Field getPrimaryField(final Object object) {
