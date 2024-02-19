@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import persistence.sql.ddl.wrapper.Column;
 import persistence.sql.dialect.Dialect;
 
@@ -11,6 +13,7 @@ public class FieldQueryGenerator {
     private static final String PRIMARY_KEY_DEFINITION = "PRIMARY KEY";
     private static final String NOTNULL_DEFINITION = "NOT NULL";
 
+
     private FieldQueryGenerator(Dialect dialect) {
         this.dialect = dialect;
     }
@@ -19,7 +22,7 @@ public class FieldQueryGenerator {
         return new FieldQueryGenerator(dialect);
 
     }
-    
+
     public String generate(Column field) {
         StringBuilder builder = new StringBuilder();
 

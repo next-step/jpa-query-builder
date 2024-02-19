@@ -3,9 +3,14 @@ package persistence.sql.ddl.wrapper;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.h2.util.StringUtils;
 
 public class Column {
+
+    private static final Pattern CAMEL_CASE_FIELD_NAME_PATTERN = Pattern.compile("([a-z])([A-Z])");
+    private static final String SNAKE_CASE_FORMAT = "%s_%s";
 
     private final Field field;
 
@@ -20,7 +25,7 @@ public class Column {
     public String getColumnName() {
         jakarta.persistence.Column column = field.getDeclaredAnnotation(jakarta.persistence.Column.class);
         if (column == null || StringUtils.isNullOrEmpty(column.name())) {
-            return utils.StringUtils.convertCamelToSnakeString(field.getName());
+            return convertCamelToSnakeString(field.getName());
         }
         return column.name();
     }
@@ -42,5 +47,14 @@ public class Column {
     public boolean isNullable() {
         jakarta.persistence.Column column = field.getDeclaredAnnotation(jakarta.persistence.Column.class);
         return column == null || column.nullable();
+    }
+
+    private String convertCamelToSnakeString(String str) {
+        Matcher matcher = CAMEL_CASE_FIELD_NAME_PATTERN.matcher(str);
+        return matcher.replaceAll(matchResult -> String.format(
+            SNAKE_CASE_FORMAT,
+            matchResult.group(1).toLowerCase(),
+            matchResult.group(2).toUpperCase()
+        )).toLowerCase();
     }
 }
