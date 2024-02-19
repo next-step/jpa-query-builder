@@ -12,16 +12,21 @@ public class H2Column {
     }
 
     public String getColumnName() {
-        // TODO Refactor Depth
         if (field.isAnnotationPresent(Column.class)) {
-            Column annotation = field.getAnnotation(Column.class);
-            if (annotation.name().isEmpty()) {
-                return field.getName();
-            }
-            return annotation.name();
+            return getColumnNameByAnnotation();
         }
-        return field.getName();
+        return getColumnNameByField();
     }
 
+    private String getColumnNameByAnnotation() {
+        Column annotation = field.getAnnotation(Column.class);
+        if (annotation.name().isEmpty()) {
+            return getColumnNameByField();
+        }
+        return annotation.name();
+    }
 
+    private String getColumnNameByField() {
+        return field.getName();
+    }
 }
