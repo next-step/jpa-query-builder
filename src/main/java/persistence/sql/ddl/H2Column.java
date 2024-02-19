@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 
@@ -19,7 +21,11 @@ public class H2Column {
         sb.append(getDataType());
         sb.append(" ");
         sb.append(getColumnNullable());
-        return sb.toString();
+        if (isPK()) {
+            sb.append(" ");
+            sb.append(getGenerationType());
+        }
+        return sb.toString().trim();
     }
 
     public String getColumnName() {
@@ -42,6 +48,9 @@ public class H2Column {
     }
 
     public String getColumnNullable() {
+        if (isPK()) {
+            return Nullable.NOT_NULL.getSql();
+        }
         if (!hasColumnAnnotation()) {
             return BLANK_STRING;
         }
@@ -53,8 +62,24 @@ public class H2Column {
         return DataType.getDBType(field.getType().getSimpleName());
     }
 
+    public String getGenerationType() {
+        if (!hasGenerationValueAnnotation()) {
+            return "";
+        }
+        GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
+        return PKGenerationType.get(annotation).getSql();
+    }
+
 
     private boolean hasColumnAnnotation() {
         return field.isAnnotationPresent(Column.class);
+    }
+
+    private boolean hasGenerationValueAnnotation() {
+        return field.isAnnotationPresent(GeneratedValue.class);
+    }
+
+    private boolean isPK() {
+        return field.isAnnotationPresent(Id.class);
     }
 }
