@@ -30,6 +30,22 @@ class H2ColumnTest {
         assertThat(emailH2Column.getColumnName()).isEqualTo("nick_name");
     }
 
+    @Test
+    @DisplayName("필드에 맞춰서 필드의 sql이 생성된다./ annotationName, null")
+    void generateSQL1() throws NoSuchFieldException {
+        H2Column emailH2Column = new H2Column(personClass.getDeclaredField("email"));
+
+        assertThat(emailH2Column.generateColumnSQL()).isEqualTo("email varchar(255) NOT NULL");
+    }
+
+    @Test
+    @DisplayName("필드에 맞춰서 필드의 sql이 생성된다./ fieldName, not null")
+    void generateSQL2() throws NoSuchFieldException {
+        H2Column emailH2Column = new H2Column(personClass.getDeclaredField("name"));
+
+        assertThat(emailH2Column.generateColumnSQL()).isEqualTo("nick_name varchar(255) NULL");
+    }
+
 
     @Entity
     private static class Person {
