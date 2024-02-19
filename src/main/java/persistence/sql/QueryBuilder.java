@@ -2,5 +2,5 @@ package persistence.sql;
 
 public interface QueryBuilder {
 
-    String builder(Class<?> clazz);
+    String generateQuery(Class<?> clazz);
 }
