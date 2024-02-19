@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import persistence.sql.ddl.h2.ColumnName;
 import persistence.sql.ddl.h2.Nullable;
 import persistence.sql.ddl.h2.PKGenerationType;
 
@@ -29,40 +29,20 @@ public class H2Column {
         return sb.toString().trim();
     }
 
-    public String getColumnName() {
-        if (hasColumnAnnotation()) {
-            return getColumnNameByAnnotation();
-        }
-        return getColumnNameByField();
+    private String getColumnName() {
+        return new ColumnName(field).getColumnName();
     }
 
-    private String getColumnNameByAnnotation() {
-        Column annotation = field.getAnnotation(Column.class);
-        if (annotation.name().isEmpty()) {
-            return getColumnNameByField();
-        }
-        return annotation.name();
-    }
-
-    private String getColumnNameByField() {
-        return field.getName();
-    }
-
-    public String getColumnNullable() {
+    private String getColumnNullable() {
         return Nullable.getSQL(field);
     }
 
-    public String getDataType() {
+    private String getDataType() {
         return DataType.getDBType(field.getType().getSimpleName());
     }
 
-    public String getGenerationType() {
+    private String getGenerationType() {
         return PKGenerationType.getSQL(field);
-    }
-
-
-    private boolean hasColumnAnnotation() {
-        return field.isAnnotationPresent(Column.class);
     }
 
     private boolean isPK() {
