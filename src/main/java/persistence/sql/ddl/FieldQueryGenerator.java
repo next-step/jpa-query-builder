@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import persistence.sql.ddl.wrapper.Column;
-import persistence.sql.dialet.Dialect;
+import persistence.sql.dialect.Dialect;
 
 public class FieldQueryGenerator {
 
@@ -19,7 +19,7 @@ public class FieldQueryGenerator {
         return new FieldQueryGenerator(dialect);
 
     }
-
+    
     public String generate(Column field) {
         StringBuilder builder = new StringBuilder();
 

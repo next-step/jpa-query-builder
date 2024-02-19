@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 import java.util.stream.Collectors;
 import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.wrapper.Table;
-import persistence.sql.dialet.Dialect;
+import persistence.sql.dialect.Dialect;
 
 public class CreateQueryBuilder implements QueryBuilder {
 

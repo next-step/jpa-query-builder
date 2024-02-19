@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.wrapper.Column;
-import persistence.sql.dialet.h2.H2Dialect;
+import persistence.sql.dialect.h2.H2Dialect;
 
 @DisplayName("FieldQueryGenerator class의")
 class FieldQueryGeneratorTest {
