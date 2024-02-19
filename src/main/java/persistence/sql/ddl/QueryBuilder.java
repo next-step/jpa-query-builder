@@ -31,18 +31,8 @@ public class QueryBuilder {
     }
 
     private String getColumns(Class<?> clazz) {
-        StringBuilder sb = new StringBuilder();
         Field[] fields = clazz.getDeclaredFields();
-        Arrays.stream(fields).forEach(field -> {
-            sb.append("    ");
-            sb.append(field.getName());
-            sb.append(" ");
-            // TODO Field 인자 정리
-            sb.append(DataType.getDBType(field.getType().getSimpleName()));
-            sb.append(",\n");
-        });
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        return new H2Columns(fields).generateSQL();
     }
 
 }
