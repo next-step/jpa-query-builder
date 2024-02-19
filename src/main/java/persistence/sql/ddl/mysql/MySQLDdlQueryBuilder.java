@@ -1,9 +1,10 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.mysql;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import persistence.sql.ddl.AbstractDdlQueryBuilder;
 
 import java.lang.reflect.Field;
 

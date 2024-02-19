@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.mysql.MySQLDdlQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

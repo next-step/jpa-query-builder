@@ -10,8 +10,8 @@ import java.util.Arrays;
 
 import static persistence.sql.ddl.CommonConstant.END_STR;
 import static persistence.sql.ddl.CommonConstant.SPACE;
-import static persistence.sql.ddl.MySQLColumnType.CLOSE_BRACKET;
-import static persistence.sql.ddl.MySQLColumnType.OPEN_BRACKET;
+import static persistence.sql.ddl.mysql.MySQLColumnType.CLOSE_BRACKET;
+import static persistence.sql.ddl.mysql.MySQLColumnType.OPEN_BRACKET;
 
 public abstract class AbstractDdlQueryBuilder implements DdlQueryBuilder {
 

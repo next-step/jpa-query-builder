@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.mysql.MySQLDdlQueryBuilder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
