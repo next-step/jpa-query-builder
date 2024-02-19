@@ -43,4 +43,16 @@ class QueryBuilderTest {
         String expected = "select id, nick_name, old, email from users where id = 1L";
         assertThat(findByIdQuery).isEqualTo(expected);
     }
+
+    @DisplayName("Person객체를 통해 delete를 구현한다.")
+    @Test
+    void dml_delete_create() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        Person person = new Person(1L, "simpson", 31, "qwe5507@gmail.com");
+
+        String deleteQuery = queryBuilder.createDeleteQuery(person);
+
+        String expected = "delete from users where id = 1L";
+        assertThat(deleteQuery).isEqualTo(expected);
+    }
 }

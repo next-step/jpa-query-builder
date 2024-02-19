@@ -34,6 +34,10 @@ public class QueryBuilder {
         return stringBuilder.toString();
     }
 
+    public String createDeleteQuery(final Object object) {
+        throw new UnsupportedOperationException("Unsupported createDeleteQuery");
+    }
+
     private Field getPrimaryField(final Object object) {
         return Arrays.stream(object.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(Id.class))
