@@ -1,4 +1,6 @@
-package persistence.sql.ddl.mysql;
+package persistence.sql.ddl.columntype;
+
+import persistence.sql.ddl.domain.DatabaseColumn;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -22,15 +24,15 @@ public enum MySQLColumnType {
         this.defaultSize = defaultSize;
     }
 
-    public static String convert(Class<?> type, Integer size) {
+    public static String convert(DatabaseColumn column) {
         return Arrays.stream(values())
-                .filter(value -> value.type.equals(type))
+                .filter(value -> value.type.equals(column.getJavaType()))
                 .findFirst()
                 .map(value -> {
                     if (value.defaultSize == null) {
                         return value.keyword;
                     }
-                    return value.keyword + OPEN_BRACKET + Objects.requireNonNullElseGet(size, () -> value.defaultSize) + CLOSE_BRACKET;
+                    return value.keyword + OPEN_BRACKET + Objects.requireNonNullElseGet(column.getSize(), () -> value.defaultSize) + CLOSE_BRACKET;
 
                 })
                 .orElseThrow(IllegalArgumentException::new);
