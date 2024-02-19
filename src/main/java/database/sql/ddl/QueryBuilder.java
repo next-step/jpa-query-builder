@@ -6,7 +6,7 @@ public class QueryBuilder {
     public String buildCreateQuery(Class<?> entityClass) {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();
-        String columnsWithDefinition = inspector.getVisibleColumns(entityClass)
+        String columnsWithDefinition = inspector.getVisibleColumns()
                 .map(EntityColumn::toColumnDefinition)
                 .collect(Collectors.joining(", "));
 

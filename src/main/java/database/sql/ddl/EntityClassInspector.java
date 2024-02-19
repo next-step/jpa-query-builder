@@ -22,8 +22,8 @@ public class EntityClassInspector {
         }
     }
 
-    public Stream<EntityColumn> getVisibleColumns(Class<?> entityClass) {
-        return Arrays.stream(entityClass.getDeclaredFields())
+    public Stream<EntityColumn> getVisibleColumns() {
+        return Arrays.stream(this.entityClass.getDeclaredFields())
                 .filter(this::notTransientField)
                 .map(this::getEntityColumn);
     }
@@ -56,7 +56,7 @@ public class EntityClassInspector {
         }
     }
 
-    private static Integer columnLength(Column columnAnnotation, Integer defaultValue) {
+    private Integer columnLength(Column columnAnnotation, Integer defaultValue) {
         if (columnAnnotation != null) {
             return columnAnnotation.length();
         } else {
