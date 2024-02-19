@@ -20,6 +20,10 @@ public class QueryBuilder {
         return String.format("insert into %s (%s) values (%s)", tableName, columns, values);
     }
 
+    public String createFindAll(final Class<?> clazz) {
+        return String.format("select %s from %s", columnsClause(clazz), createTableName(clazz));
+    }
+
     private String createTableName(Class<?> personClass) {
         if (!personClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalStateException();
@@ -62,9 +66,5 @@ public class QueryBuilder {
 
     private boolean isNotTransientField(final Field field) {
         return !field.isAnnotationPresent(Transient.class);
-    }
-
-    public String createFindAll(final Class<?> clazz) {
-        throw new UnsupportedOperationException("Unsupported createFindAll");
     }
 }
