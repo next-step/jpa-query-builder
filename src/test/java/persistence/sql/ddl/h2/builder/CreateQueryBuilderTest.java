@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.h2.builder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class CreateQueryBuilderTest {
     void makeCreateQuery() {
         CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
 
-        String query = createQueryBuilder.generateCreate();
+        String query = createQueryBuilder.generateSQL();
 
         assertThat(query).isEqualTo("""
                 create table users
@@ -26,15 +26,5 @@ class CreateQueryBuilderTest {
                     primary key (id)
                 );
                 """);
-    }
-
-    @Test
-    @DisplayName("@Entity 클래스의 drop 쿼리 만들기")
-    void makeDropQuery() {
-        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
-
-        String query = createQueryBuilder.generateDrop();
-
-        assertThat(query).isEqualTo("drop table users;");
     }
 }
