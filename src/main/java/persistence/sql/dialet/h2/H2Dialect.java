@@ -4,18 +4,23 @@ import persistence.sql.dialet.Dialect;
 
 public class H2Dialect implements Dialect {
 
-    private static H2Dialect instance = null;
     private static final String AUTO_INCREMENT_DEFINITION = "AUTO_INCREMENT";
 
-
-    private H2Dialect() {
+    static {
+        typeMap.put(String.class, "VARCHAR");
+        typeMap.put(Integer.class, "INTEGER");
+        typeMap.put(Long.class, "BIGINT");
     }
 
-    public static synchronized H2Dialect getInstance() {
-        if (instance == null) {
-            instance = new H2Dialect();
-        }
-        return instance;
+    private static class LazyHolder {
+        private static final H2Dialect INSTANCE = new H2Dialect();
+    }
+
+    public static H2Dialect getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
+    private H2Dialect() {
     }
 
     @Override
@@ -25,6 +30,9 @@ public class H2Dialect implements Dialect {
 
     @Override
     public String getSqlTypeDefinition(Class<?> clazz) {
-        return H2TypeDialect.getDialect(clazz).getSqlType();
+        if (!typeMap.containsKey(clazz)) {
+            throw new IllegalArgumentException("존재하지 않은 타입니다.");
+        }
+        return typeMap.get(clazz);
     }
 }
