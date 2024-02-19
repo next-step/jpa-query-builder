@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.sql.QueryBuilder;
-import persistence.sql.ddl.wrapper.Table;
+import persistence.sql.meta.Table;
 
 @DisplayName("DropQueryBuilder class 의")
 class DropQueryBuilderTest {
