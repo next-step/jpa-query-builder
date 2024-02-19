@@ -16,22 +16,22 @@ class DropQueryBuilderTest {
 
     @BeforeEach
     public void setup() {
-        builder = DropQueryBuilder.getInstance();
+        builder = DropQueryBuilder.from();
     }
 
-    @DisplayName("Builder 메서드는")
+    @DisplayName("generateQuery 메서드는")
     @Nested
-    class Builder {
+    class GenerateQuery {
 
         @DisplayName("Person Entity의 테이블 삭제 ddl이 만들어지는지 확인한다.")
         @Test
-        void testBuilder_WhenPersonEntity_ThenGenerateDdl() {
+        void testGenerateQuery_WhenPersonEntity_ThenGenerateDdl() {
             // given
             Class<?> clazz = Person.class;
             Table table = Table.of(Person.class);
 
             // when
-            String result = builder.builder(clazz);
+            String result = builder.generateQuery(clazz);
 
             // then
             String expectedQuery = "DROP TABLE " + table.getTableName();

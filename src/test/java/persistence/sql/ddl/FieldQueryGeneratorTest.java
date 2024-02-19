@@ -9,17 +9,17 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.wrapper.Column;
 import persistence.sql.dialet.h2.H2Dialect;
 
-@DisplayName("FieldBuilderor class의")
-class FieldBuilderTest {
+@DisplayName("FieldQueryGenerator class의")
+class FieldQueryGeneratorTest {
 
-    private FieldBuilder fieldBuilder;
+    private FieldQueryGenerator generator;
 
     @BeforeEach
     public void setup() {
-        fieldBuilder = FieldBuilder.getInstance(H2Dialect.getInstance());
+        generator = FieldQueryGenerator.from(H2Dialect.getInstance());
     }
 
-    @DisplayName("builder 메서드는")
+    @DisplayName("generate 메서드는")
     @Nested
     class Builder {
         @DisplayName("String 타입의 필드일 경우 필드명 VARCHAR가 리턴된다")
@@ -27,7 +27,7 @@ class FieldBuilderTest {
         void testBuilder_WhenFieldTypeIsString() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("stringField"));
 
-            String result = fieldBuilder.builder(field);
+            String result = generator.generate(field);
 
             assertEquals("string_field VARCHAR", result);
         }
@@ -37,7 +37,7 @@ class FieldBuilderTest {
         void testBuilder_WhenFieldTypeIsInteger() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("integerField"));
 
-            String result = fieldBuilder.builder(field);
+            String result = generator.generate(field);
 
             assertEquals("integer_field INTEGER", result);
         }
@@ -47,7 +47,7 @@ class FieldBuilderTest {
         void testBuilder_WhenFieldTypeIsLong() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("longField"));
 
-            String result = fieldBuilder.builder(field);
+            String result = generator.generate(field);
 
             assertEquals("long_field BIGINT", result);
         }
@@ -57,7 +57,7 @@ class FieldBuilderTest {
         void testBuilder_WhenFieldTypeIsNotSupported() throws NoSuchFieldException {
             Column field = Column.from(DummyClass.class.getDeclaredField("unsupportedField"));
 
-            assertThrows(IllegalArgumentException.class, () -> fieldBuilder.builder(field));
+            assertThrows(IllegalArgumentException.class, () -> generator.generate(field));
         }
     }
 
