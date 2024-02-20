@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @DisplayName("ColumnQueries 의")
-class ColumnQueriesTest {
+class TableTest {
 
     @Nested
     @DisplayName("toQuery 메서드는")
@@ -24,14 +24,14 @@ class ColumnQueriesTest {
         void fields() {
             //given
             Class<Person> personClass = Person.class;
-            ColumnQueries columnQueries = ColumnQueries.of(personClass);
+            Table table = Table.of(personClass);
             List<String> fieldNames = Arrays.stream(personClass.getDeclaredFields())
                     .filter(it -> it.isAnnotationPresent(Transient.class))
                     .map(Field::getName)
                     .collect(Collectors.toList());
 
             //when
-            String query = columnQueries.toQuery();
+            String query = table.getFieldQueries();
 
             //then
             Assertions.assertThat(query).doesNotContain(fieldNames);

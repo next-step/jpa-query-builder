@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Query 의")
-class DdlQueryTest {
+class CreateQueryBuilderTest {
 
     @Nested
     @DisplayName("생성자는")
@@ -24,14 +24,14 @@ class DdlQueryTest {
             Class<Car> notEntityClass = Car.class;
 
             //when & then
-            assertThatThrownBy(() -> new DdlQuery(QueryType.CREATE, notEntityClass))
+            assertThatThrownBy(() -> new CreateQueryBuilder(notEntityClass))
                     .isInstanceOf(NotEntityException.class);
         }
     }
 
     @Nested
-    @DisplayName("getSql 메서드는")
-    class GetSql {
+    @DisplayName("build 메서드는")
+    class Build {
         @Test
         @DisplayName("CREATE 쿼리를 반환한다.")
         void sqlForCreate() {
@@ -40,25 +40,10 @@ class DdlQueryTest {
             QueryType type = QueryType.CREATE;
 
             //when
-            String sql = new DdlQuery(type, targetClass).getSql();
+            String sql = new CreateQueryBuilder(targetClass).build();
 
             //then
             assertThat(sql).contains(type.name());
-        }
-
-        @Test
-        @DisplayName("Drop 쿼리를 반환한다.")
-        void sqlForDrop() {
-            //given
-            Class<Person> targetClass = Person.class;
-            QueryType type = QueryType.DROP;
-
-            //when
-            String sql = new DdlQuery(type, targetClass).getSql();
-
-            //then
-            assertThat(sql).contains(type.name());
-
         }
     }
 }

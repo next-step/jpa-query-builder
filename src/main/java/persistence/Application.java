@@ -6,8 +6,8 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.domain.Person;
-import persistence.sql.ddl.DdlQuery;
-import persistence.sql.ddl.QueryType;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -19,11 +19,11 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            DdlQuery createQuery = new DdlQuery(QueryType.CREATE, Person.class);
-            jdbcTemplate.execute(createQuery.getSql());
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
+            jdbcTemplate.execute(createQueryBuilder.build());
 
-            DdlQuery dropQuery = new DdlQuery(QueryType.DROP, Person.class);
-            jdbcTemplate.execute(dropQuery.getSql());
+            DropQueryBuilder dropQuery = new DropQueryBuilder(Person.class);
+            jdbcTemplate.execute(dropQuery.build());
 
             server.stop();
         } catch (Exception e) {
