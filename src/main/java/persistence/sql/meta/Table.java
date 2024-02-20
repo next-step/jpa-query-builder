@@ -1,10 +1,7 @@
 package persistence.sql.meta;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.h2.util.StringUtils;
 
 public class Table {
@@ -17,7 +14,7 @@ public class Table {
         this.columns = columns;
     }
 
-    public static Table of(Class<?> clazz) {
+    public static Table from(Class<?> clazz) {
         Columns columns = Columns.from(clazz.getDeclaredFields());
         validate(clazz, columns);
 

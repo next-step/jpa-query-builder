@@ -16,7 +16,7 @@ public class DropQueryBuilder implements QueryBuilder {
 
     @Override
     public String generateQuery(Object object) {
-        Table table = Table.of((Class<?>) object);
+        Table table = Table.from((Class<?>) object);
         return String.format(DROP_TABLE_DEFINITION, table.getTableName());
     }
 }

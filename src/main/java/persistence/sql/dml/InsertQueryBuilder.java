@@ -20,7 +20,7 @@ public class InsertQueryBuilder implements QueryBuilder {
 
     @Override
     public String generateQuery(Object object) {
-        Table table = Table.of(object.getClass());
+        Table table = Table.from(object.getClass());
 
         return String.format(INSERT_DEFINITION, table.getTableName(),
             columnsClause(table.getColumns()), valueClause(table.getColumns(), object));
