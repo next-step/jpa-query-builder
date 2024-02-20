@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Id;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
