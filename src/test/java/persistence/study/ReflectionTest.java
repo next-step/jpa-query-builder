@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -79,21 +82,19 @@ public class ReflectionTest {
     void privateFieldAccess() {
         Class<Car> clazz = Car.class;
         Car car = new Car();
-        Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> Modifier.isPrivate(field.getModifiers()))
-                .forEach(field -> {
-                    field.setAccessible(true);
-                    try {
-                        if (field.getName().equals("name")) {
-                            field.set(car, "테스트");
-                        }
-                        if (field.getName().equals("price")) {
-                            field.set(car, 1000);
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+
+        try {
+            Field name = clazz.getDeclaredField("name");
+            name.setAccessible(true);
+            name.set(car, "테스트");
+
+            Field price = clazz.getDeclaredField("price");
+            price.setAccessible(true);
+            price.set(car, 1000);
+
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
 
         assertThat(car).isEqualTo(new Car("테스트", 1000));
     }
