@@ -1,63 +1,59 @@
 package persistence.sql.column;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
 
-public class JpaColumn {
+public class JpaColumn implements Column {
     protected static final String SPACE = " ";
     private static final String EMPTY = "";
     private static final String NOT_NULL = "not null";
 
-    protected String name;
-    protected ColumnType columnType;
+    private final String name;
+    private final ColumnType mysqlColumn;
     private final String nullable;
 
-    public static JpaColumn from(Field field) {
-        ColumnType columnType = ColumnType.toDdl(field.getType());
-        if (field.isAnnotationPresent(Column.class)) {
-            String name = convertName(field);
-            String nullable = getNullable(field);
-            return new JpaColumn(name, nullable, columnType);
+    public static Column from(Field field, Dialect dialect) {
+        ColumnType columnType = dialect.getColumn(field.getType());
+        String name = field.getName();
+        String nullable = EMPTY;
+
+        if (field.isAnnotationPresent(jakarta.persistence.Column.class)) {
+            boolean isNullable = field.getAnnotation(jakarta.persistence.Column.class).nullable();
+            String columnName = field.getAnnotation(jakarta.persistence.Column.class).name();
+
+            name = convertName(columnName, name);
+            nullable = getNullable(isNullable);
         }
         if (field.isAnnotationPresent(Id.class)) {
-            return new PkColumn(field);
+            return new PkColumn(field, name, columnType);
         }
-        return new JpaColumn(field.getName(), columnType);
+        return new JpaColumn(name, columnType, nullable);
     }
 
-    public JpaColumn(String name, ColumnType columnType) {
-        this(name, EMPTY, columnType);
-    }
-
-    public JpaColumn(String name, String nullable, ColumnType columnType) {
+    private JpaColumn(String name, ColumnType mysqlColumn, String nullable) {
         this.name = name;
+        this.mysqlColumn = mysqlColumn;
         this.nullable = nullable;
-        this.columnType = columnType;
     }
 
-    private static String getNullable(Field field) {
-        boolean isNullable = field.getAnnotation(Column.class).nullable();
+    private static String getNullable(boolean isNullable) {
         if (isNullable) {
             return EMPTY;
         }
         return SPACE + NOT_NULL;
     }
 
-    private static String convertName(Field field) {
-        if (!field.isAnnotationPresent(Column.class)) {
-            return field.getName();
-        }
-        String columnName = field.getAnnotation(Column.class).name();
+    private static String convertName(String columnName, String fieldName) {
         if (columnName.isBlank() || columnName.isEmpty()) {
-            return field.getName();
+            return fieldName;
         }
         return columnName;
     }
 
     public String getDefinition() {
-        return this.name + columnType.getColumnDefinition() + nullable;
+        return this.name + mysqlColumn.getColumnDefinition() + nullable;
     }
 
     public String getName() {

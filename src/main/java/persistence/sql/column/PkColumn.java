@@ -5,15 +5,20 @@ import persistence.sql.ddl.GenerateType;
 
 import java.lang.reflect.Field;
 
-public class PkColumn extends JpaColumn {
+import static persistence.sql.column.JpaColumn.SPACE;
+
+public class PkColumn implements Column {
 
     private static final String PRIMARY_KEY = "primary key";
 
+    private final String name;
+    private final ColumnType mysqlColumn;
     private final GenerateType generateType;
 
-    public PkColumn(Field field) {
-        super(field.getName(), ColumnType.toDdl(field.getType()));
+    public PkColumn(Field field, String name, ColumnType mysqlColumn) {
         validateGeneratedValue(field);
+        this.name = name;
+        this.mysqlColumn = mysqlColumn;
         GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
         this.generateType = GenerateType.from(annotation.strategy());
     }
@@ -26,7 +31,7 @@ public class PkColumn extends JpaColumn {
 
     @Override
     public String getDefinition() {
-        return getName() + columnType.getColumnDefinition() + SPACE + generateType.getValue() +
+        return name + mysqlColumn.getColumnDefinition() + SPACE + generateType.getValue() +
                 SPACE + PRIMARY_KEY;
     }
 

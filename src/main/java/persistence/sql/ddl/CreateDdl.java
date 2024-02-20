@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Transient;
-import persistence.sql.column.Columnn;
+import persistence.sql.column.Column;
 import persistence.sql.column.JpaColumn;
 import persistence.sql.column.TableColumn;
 import persistence.sql.dialect.Database;
@@ -25,8 +25,8 @@ public class CreateDdl implements QueryBuilder {
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .forEach(field -> {
-                    Columnn columnn = JpaColumn.from(field, database.createDialect());
-                    sb.append(columnn.getDefinition());
+                    Column column = JpaColumn.from(field, database.createDialect());
+                    sb.append(column.getDefinition());
                     sb.append(COMMA);
                 });
         sb.delete(sb.length() - 2, sb.length());
