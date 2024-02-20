@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
+import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -9,6 +10,13 @@ import java.util.Objects;
 import static util.StringUtils.convertCamelCaseToSnakeCase;
 
 public class QueryBuilder {
+
+    private final Dialect dialect;
+
+    public QueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
+    }
+
     public String createTableSql(Class<?> clazz) {
         StringBuilder sb = new StringBuilder();
 
@@ -55,7 +63,7 @@ public class QueryBuilder {
 
         sb.append(generateColumnName(field))
                 .append(" ")
-                .append(DataTypeMapper.getDataType(field.getType()))
+                .append(dialect.getColumnType(field.getType()))
                 .append(generateNotNull(field))
                 .append(generateAutoIncrement(field))
                 .append(", ");
