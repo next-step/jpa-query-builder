@@ -49,29 +49,33 @@ public class DDLQueryGenerator {
 
     private String getColumnDefinition(Field field) {
         StringBuilder sb = new StringBuilder();
-        String columnName = field.getName();
-        String columnType = typeMapper.map(field.getType());
-
         Column column = field.getAnnotation(Column.class);
-        if(column != null) {
-            if(!column.name().isEmpty()){
-                columnName = column.name();
-            }
 
-            if(!column.nullable()){
-                columnType += " NOT NULL";
-            }
-        }
-
-        sb.append(columnName);
+        sb.append(getColumnName(field, column));
         sb.append(" ");
-        sb.append(columnType);
+        sb.append(getColumnType(field, column));
 
         if (field.isAnnotationPresent(GeneratedValue.class)) {
            sb.append(" auto_increment");
         }
 
         return sb.toString();
+    }
+
+    private String getColumnType(Field field, Column column) {
+        String columnType = typeMapper.map(field.getType());
+        if(column != null && !column.nullable()) {
+            columnType += " NOT NULL";
+        }
+        return columnType;
+    }
+
+    private static String getColumnName(Field field, Column column) {
+        String columnName = field.getName();
+        if(column != null && !column.name().isEmpty()) {
+            columnName = column.name();
+        }
+        return columnName;
     }
 
     private String getTableName(Class<?> entityClazz) {
