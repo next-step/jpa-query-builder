@@ -1,11 +1,11 @@
 package persistence.sql.dialect;
 
-import persistence.sql.query.Column;
+import persistence.sql.dialect.identity.IdentityColumnSupport;
 
 public interface Dialect {
 
-    String convertColumnType(final int type, final int length);
+    IdentityColumnSupport getIdentityColumnSupport();
 
-    String toDialectKeywords(final Column column);
+    String convertColumnType(final int type, final int length);
 
 }
