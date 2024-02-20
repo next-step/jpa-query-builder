@@ -120,7 +120,7 @@ public class Car {
 >
 > Method 클래스의 isAnnotationPresent(PrintView.class) 활용
 
-### [ ] 요구사항 4 - private field에 값 할당
+### [x] 요구사항 4 - private field에 값 할당
 
 * 자바 Reflection API를 활용해, Car 클래스의 name과 price 필드에 값을 할당한 후 getter 메소드를 통해 값을 확인한다.
 * 구현은 src/test/java/persistence/study > ReflectionTest 클래스의 `privateFieldAccess()` 메소드에 한다.
@@ -198,5 +198,16 @@ void constructorWithArgs() {
 >
 > constructor.newInstance(Object... args)로 인스턴스 생성
 
+## Feedback
+
+* Java에서 int.class와 Integer.class는 서로 다른 것으로 취급
+    * int.class는 Java의 기본 타입인 int의 Class 객체를 나타냅니다. int.class는 리플렉션과 같은 상황에서 기본 타입 int를 참조할 때 사용.
+    * Integer.class는 int의 래퍼 클래스인 Integer의 Class 객체를 나타냅니다.
+
+* 프라이빗 필드 값 할당법
+    * 원하는 필드를 리플렉션을 이용해 추출 및 set accessible.
+    * 객체 생성후, accessible해진 필드를 이용해 값을 set.
+* TODO : revise all commit msg
+* TODO : 코드 일부분만 커밋할수 있는 툴 확인
 
 
