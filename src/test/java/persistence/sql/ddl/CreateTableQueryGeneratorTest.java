@@ -31,6 +31,35 @@ class CreateTableQueryGeneratorTest {
     }
 
     @Test
+    @DisplayName("요구사항2: 추가된 정보 테이블 생성 쿼리 생성 테스트")
+    void testGenerateCreateQuery2() {
+        String expect = "CREATE TABLE person (id BIGINT auto_increment, nick_name VARCHAR, old INTEGER, email varchar not null, PRIMARY KEY (id))";
+        @Entity
+        class Person {
+
+            @Id
+            @GeneratedValue(strategy = GenerationType.IDENTITY)
+            private Long id;
+
+            @Column(name = "nick_name")
+            private String name;
+
+            @Column(name = "old")
+            private Integer age;
+
+            @Column(nullable = false)
+            private String email;
+
+        }
+
+        String query = sut.generateCreateQuery(Person.class);
+
+        assertThat(query.toLowerCase()).isEqualTo(expect.toLowerCase());
+    }
+
+
+
+    @Test
     @DisplayName("기본키 없으면 에러")
     void throwErrorWhenPrimaryKeyIsNotDefined() {
         @Entity

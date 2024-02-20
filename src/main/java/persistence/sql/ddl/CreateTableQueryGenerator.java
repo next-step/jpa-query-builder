@@ -1,8 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import persistence.sql.ddl.TypeMapper.H2TypeMapper;
 import persistence.sql.ddl.TypeMapper.TypeMapper;
 
@@ -15,7 +13,6 @@ public class CreateTableQueryGenerator {
     private final TypeMapper typeMapper;
     CreateTableQueryGenerator(TypeMapper typeMapper) {
         this.typeMapper = typeMapper;
-
     }
     public String generateCreateQuery(final Class<?> entityClazz) {
         if (!entityClazz.isAnnotationPresent(Entity.class)) {
@@ -41,10 +38,30 @@ public class CreateTableQueryGenerator {
     }
 
     private String getColumnDefinition(Field field) {
+        StringBuilder sb = new StringBuilder();
         String columnName = field.getName();
         String columnType = typeMapper.map(field.getType());
 
-        return columnName + " " + columnType;
+        Column column = field.getAnnotation(Column.class);
+        if(column != null) {
+            if(!column.name().isEmpty()){
+                columnName = column.name();
+            }
+
+            if(!column.nullable()){
+                columnType += " NOT NULL";
+            }
+        }
+
+        sb.append(columnName);
+        sb.append(" ");
+        sb.append(columnType);
+
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
+           sb.append(" auto_increment");
+        }
+
+        return sb.toString();
     }
 
     private String getTableName(Class<?> entityClazz) {
