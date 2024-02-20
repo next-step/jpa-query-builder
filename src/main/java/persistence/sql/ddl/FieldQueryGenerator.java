@@ -1,13 +1,14 @@
 package persistence.sql.ddl;
 
+import static persistence.sql.constant.SqlConstant.SPACE;
+import static persistence.sql.constant.SqlConstant.EMPTY;
 import persistence.sql.meta.Column;
 import persistence.sql.dialect.Dialect;
 
 public class FieldQueryGenerator {
 
     private final Dialect dialect;
-    private static final String SPACE = " ";
-    private static final String EMPTY = "";
+
     private static final String PRIMARY_KEY_DEFINITION = "PRIMARY KEY";
     private static final String NOTNULL_DEFINITION = "NOT NULL";
 

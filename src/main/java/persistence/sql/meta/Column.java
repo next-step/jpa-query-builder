@@ -73,4 +73,8 @@ public class Column {
         }
         return String.valueOf(object);
     }
+
+    public boolean isInsertable() {
+        return !isGeneratedValueAnnotation();
+    }
 }
