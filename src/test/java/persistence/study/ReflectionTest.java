@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 class ReflectionTest {
@@ -19,11 +21,10 @@ class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
     private static final Class<Car> carClass = Car.class;
 
-
     @DisplayName("Car 객체 정보 가져오기")
     @Test
     void showClass() {
-        logger.debug("className: {}",carClass.getName());
+        logger.debug("className: {}", carClass.getName());
 
         List<String> fieldNames = Arrays.stream(carClass.getDeclaredFields())
             .map(Field::getName)
@@ -63,18 +64,14 @@ class ReflectionTest {
 
         List<Object> results = Arrays.stream(carClass.getMethods())
             .filter(method -> method.getName().startsWith(targetMethodName))
-            .map(method -> {
-                try {
-                    return method.invoke(carInstance);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            })
+            .map(method -> methodInvoke(method, carInstance))
             .toList();
 
-        assertThat(results).hasSize(2);
-        assertThat(results.contains("test : null")).isTrue();
-        assertThat(results.contains("test : 0")).isTrue();
+        assertAll(() -> {
+            assertThat(results).hasSize(2);
+            assertThat(results.contains("test : null")).isTrue();
+            assertThat(results.contains("test : 0")).isTrue();
+        });
     }
 
     @DisplayName("Car 객체에 있는 PrintView 어노테이션이 적용된 메서드들을 실행한다.")
@@ -84,13 +81,7 @@ class ReflectionTest {
 
         List<Object> results = Arrays.stream(carClass.getMethods())
             .filter(carMethod -> carMethod.isAnnotationPresent(PrintView.class))
-            .map(carMethod -> {
-                try {
-                    return carMethod.invoke(carInstance);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            })
+            .map(carMethod -> methodInvoke(carMethod, carInstance))
             .toList();
 
         assertThat(results).hasSize(1);
@@ -107,19 +98,15 @@ class ReflectionTest {
         Field[] declaredFields = carClass.getDeclaredFields();
 
         for (Field declaredField : declaredFields) {
-            if (declaredField.getName().equals("name")) {
-                declaredField.setAccessible(true);
-                declaredField.set(carInstance, name);
-            }
-
-            if (declaredField.getName().equals("price")) {
-                declaredField.setAccessible(true);
-                declaredField.set(carInstance, price);
-            }
+            Object inputValue = declaredField.getName().equals("name") ? name : price;
+            declaredField.setAccessible(true);
+            declaredField.set(carInstance, inputValue);
         }
 
-        assertThat(carInstance.getName()).isEqualTo(name);
-        assertThat(carInstance.getPrice()).isEqualTo(price);
+        assertAll(() -> {
+            assertThat(carInstance.getName()).isEqualTo(name);
+            assertThat(carInstance.getPrice()).isEqualTo(price);
+        });
     }
 
     @DisplayName("인자가 있는 Car 생성자를 사용해 객체를 생성한다.")
@@ -134,9 +121,20 @@ class ReflectionTest {
             .orElseThrow();
 
         Car carInstance = (Car) constructor.newInstance(name, price);
-        assertThat(carInstance).isNotNull();
-        assertThat(carInstance.getName()).isEqualTo(name);
-        assertThat(carInstance.getPrice()).isEqualTo(price);
+
+        assertAll(() -> {
+            assertThat(carInstance).isNotNull();
+            assertThat(carInstance.getName()).isEqualTo(name);
+            assertThat(carInstance.getPrice()).isEqualTo(price);
+        });
     }
 
+
+    private static Object methodInvoke(Method method, Car carInstance) {
+        try {
+            return method.invoke(carInstance);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
