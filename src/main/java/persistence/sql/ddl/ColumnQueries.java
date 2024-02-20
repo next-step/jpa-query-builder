@@ -11,15 +11,15 @@ public class ColumnQueries {
     private static final String DELIMITER = ", ";
     private static final String START_SYMBOL = "(";
     private static final String END_SYMBOL = ")";
-    private final List<ColumnQuery> queries;
+    private final List<Column> queries;
 
-    public ColumnQueries(List<ColumnQuery> queries) {
+    public ColumnQueries(List<Column> queries) {
         this.queries = queries;
     }
 
     public static ColumnQueries of(Class<?> target) {
         return new ColumnQueries(getTargetFields(target).stream()
-                .map(ColumnQuery::of)
+                .map(Column::of)
                 .collect(Collectors.toList()));
     }
 
@@ -33,7 +33,7 @@ public class ColumnQueries {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(START_SYMBOL);
         List<String> columnQueries = queries.stream()
-                .map(ColumnQuery::toQuery)
+                .map(Column::toQuery)
                 .collect(Collectors.toList());
         stringBuilder.append(String.join(DELIMITER, columnQueries));
         stringBuilder.append(END_SYMBOL);
