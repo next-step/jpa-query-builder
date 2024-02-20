@@ -16,13 +16,15 @@ class SelectQueryBuilderTest {
         @DisplayName("Person Entity의 select 쿼리가 만들어지는지 확인한다.")
         @Test
         void testGenerateQuery() {
-            // Given
+            // given
             SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.from();
             Class<?> clazz = Person.class;
-            // When
-            String actual = selectQueryBuilder.generateQuery(clazz);
-            // Then
-            assertEquals("SELECT id,nick_name,old,email FROM users", actual);
+
+            // when
+            String query = selectQueryBuilder.generateQuery(clazz);
+
+            // then
+            assertEquals("SELECT id,nick_name,old,email FROM users", query);
         }
     }
 }

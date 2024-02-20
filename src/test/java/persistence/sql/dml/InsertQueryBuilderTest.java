@@ -21,11 +21,10 @@ class InsertQueryBuilderTest {
             InsertQueryBuilder builder = InsertQueryBuilder.from();
 
             // when
-            String result = builder.generateQuery(person);
+            String query = builder.generateQuery(person);
 
             // then
-            String expectedQuery = "INSERT INTO users (nick_name,old,email) VALUES ('user1',1,'abc@test.com')";
-            assertEquals(expectedQuery, result);
+            assertEquals("INSERT INTO users (nick_name,old,email) VALUES ('user1',1,'abc@test.com')", query);
         }
     }
 }
