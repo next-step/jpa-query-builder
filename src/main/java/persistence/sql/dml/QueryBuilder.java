@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.*;
+import persistence.sql.dml.keygenerator.KeyGenerator;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -12,10 +13,10 @@ import static persistence.sql.dml.parser.ValueParser.valueParse;
 
 public class QueryBuilder {
 
-    public String createInsertQuery(Object object) {
+    public String createInsertQuery(Object object, final KeyGenerator keyGenerator) {
         String tableName = createTableName(object.getClass());
         String columns = columnsClause(object.getClass());
-        String values = valueClause(object);
+        String values = valueClause(object, keyGenerator);
 
         return String.format("insert into %s (%s) values (%s)", tableName, columns, values);
     }
@@ -76,11 +77,11 @@ public class QueryBuilder {
         return field.getName();
     }
 
-    private String valueClause(Object object) {
+    private String valueClause(Object object, KeyGenerator keyGenerator) {
         return Arrays.stream(object.getClass().getDeclaredFields())
                 .sorted(Comparator.comparing(this::idFirstOrdered))
                 .filter(this::isNotTransientField)
-                .map(f -> insertValuesClauseParse(f, object))
+                .map(f -> insertValuesClauseParse(f, object, keyGenerator))
                 .collect(Collectors.joining(", "));
     }
 

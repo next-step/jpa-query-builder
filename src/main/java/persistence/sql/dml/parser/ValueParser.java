@@ -3,15 +3,15 @@ package persistence.sql.dml.parser;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import persistence.sql.dml.keygenerator.H2KeyGenerator;
+import persistence.sql.dml.keygenerator.KeyGenerator;
 
 import java.lang.reflect.Field;
 
 public class ValueParser {
 
-    public static String insertValuesClauseParse(Field field, Object object) {
+    public static String insertValuesClauseParse(Field field, Object object, KeyGenerator keyGenerator) {
         if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class)) {
-            final H2KeyGenerator h2KeyGenerator = new H2KeyGenerator();
-            return h2KeyGenerator.generator(field.getAnnotation(GeneratedValue.class).strategy());
+            return keyGenerator.generator(field.getAnnotation(GeneratedValue.class).strategy());
         }
 
         field.setAccessible(true);

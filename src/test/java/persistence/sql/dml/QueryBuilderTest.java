@@ -3,6 +3,7 @@ package persistence.sql.dml;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.dml.domain.Person;
+import persistence.sql.dml.keygenerator.H2KeyGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +15,7 @@ class QueryBuilderTest {
         QueryBuilder queryBuilder = new QueryBuilder();
         Person person = new Person("simpson", 31, "qwe5507@gmail.com");
 
-        String insertQuery = queryBuilder.createInsertQuery(person);
+        String insertQuery = queryBuilder.createInsertQuery(person, new H2KeyGenerator());
 
         String expected = String.format("insert into users (id, nick_name, old, email) values (default, 'simpson', 31, 'qwe5507@gmail.com')");
         assertThat(insertQuery).isEqualTo(expected);
