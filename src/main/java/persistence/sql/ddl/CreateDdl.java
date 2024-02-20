@@ -1,8 +1,10 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Transient;
+import persistence.sql.column.Columnn;
 import persistence.sql.column.JpaColumn;
 import persistence.sql.column.TableColumn;
+import persistence.sql.dialect.Database;
 
 import java.util.Arrays;
 
@@ -14,7 +16,7 @@ public class CreateDdl implements QueryBuilder {
     private static final String CLOSE_BRACKET = ")";
 
     @Override
-    public String generate(Class<?> clazz) {
+    public String generate(Class<?> clazz, Database database) {
 
         StringBuilder sb = new StringBuilder();
         TableColumn tableColumn = TableColumn.from(clazz);
@@ -23,8 +25,8 @@ public class CreateDdl implements QueryBuilder {
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .forEach(field -> {
-                    JpaColumn jpaColumn = JpaColumn.from(field);
-                    sb.append(jpaColumn.getDefinition());
+                    Columnn columnn = JpaColumn.from(field, database.createDialect());
+                    sb.append(columnn.getDefinition());
                     sb.append(COMMA);
                 });
         sb.delete(sb.length() - 2, sb.length());
