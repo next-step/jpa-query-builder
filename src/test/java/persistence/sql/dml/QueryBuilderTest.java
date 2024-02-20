@@ -25,9 +25,9 @@ class QueryBuilderTest {
     @Test
     void dml_findAll_create() {
         QueryBuilder queryBuilder = new QueryBuilder();
-        final Class<Person> personClass = Person.class;
+        Person person = new Person("simpson", 31, "qwe5507@gmail.com");
 
-        String findAllQuery = queryBuilder.createFindAllQuery(personClass);
+        String findAllQuery = queryBuilder.createFindAllQuery(person);
 
         String expected = "select id, nick_name, old, email from users";
         assertThat(findAllQuery).isEqualTo(expected);
