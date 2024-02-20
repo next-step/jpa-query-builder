@@ -39,6 +39,13 @@ public class EntityColumns {
                 .collect(Collectors.joining(", "));
     }
 
+    public Field primaryField() {
+        return Arrays.stream(this.object.getClass().getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+    }
+
     private String getFieldName(final Field field) {
         if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isBlank()) {
             return field.getAnnotation(Column.class).name();

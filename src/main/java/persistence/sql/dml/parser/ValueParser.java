@@ -2,7 +2,6 @@ package persistence.sql.dml.parser;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import persistence.sql.dml.keygenerator.H2KeyGenerator;
 import persistence.sql.dml.keygenerator.KeyGenerator;
 
 import java.lang.reflect.Field;

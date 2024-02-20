@@ -1,51 +1,43 @@
 package persistence.sql.dml;
 
-import jakarta.persistence.*;
 import persistence.sql.dml.keygenerator.KeyGenerator;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 import static persistence.sql.dml.parser.ValueParser.valueParse;
 
 public class QueryBuilder {
+    private Object object;
+    private EntityTableMeta entityTableMeta;
+    private EntityColumns entityColumns;
 
-    public String createInsertQuery(Object object, final KeyGenerator keyGenerator) {
-        EntityTableMeta entityTableMeta = EntityTableMeta.of(object.getClass());
-        EntityColumns entityColumns = EntityColumns.of(object);
+    public QueryBuilder(Object object) {
+        this.object = object;
+        this.entityTableMeta = EntityTableMeta.of(object.getClass());
+        this.entityColumns = EntityColumns.of(object);
+    }
 
-        return String.format("insert into %s (%s) values (%s)", entityTableMeta.name(), entityColumns.names(),
+    public String createInsertQuery(final KeyGenerator keyGenerator) {
+        return String.format("insert into %s (%s) values (%s)", this.entityTableMeta.name(), this.entityColumns.names(),
                 entityColumns.values(keyGenerator));
     }
 
-    public String createFindAllQuery(final Object object) {
-        EntityTableMeta entityTableMeta = EntityTableMeta.of(object.getClass());
-        EntityColumns entityColumns = EntityColumns.of(object);
-
-        return String.format("select %s from %s", entityColumns.names(), entityTableMeta.name());
+    public String createFindAllQuery() {
+        return String.format("select %s from %s", this.entityColumns.names(), this.entityTableMeta.name());
     }
 
-    public String createFindByIdQuery(final Object object) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(createFindAllQuery(object));
-        stringBuilder.append(" where ");
+    public String createFindByIdQuery() {
+        final Field primaryField = this.entityColumns.primaryField();
 
-        final Field primaryField = getPrimaryField(object);
-        stringBuilder.append(String.format("%s = %s", primaryField.getName(), valueParse(primaryField, object)));
-        return stringBuilder.toString();
-    }
-
-    public String createDeleteQuery(final Object object) {
-        EntityTableMeta entityTableMeta = EntityTableMeta.of(object.getClass());
-        final Field primaryField = getPrimaryField(object);
-        return String.format("delete from %s where %s = %s", entityTableMeta.name(), primaryField.getName(),
+        return String.format("%s where %s = %s", createFindAllQuery(), primaryField.getName(),
                 valueParse(primaryField, object));
     }
 
-    private Field getPrimaryField(final Object object) {
-        return Arrays.stream(object.getClass().getDeclaredFields())
-                .filter(f -> f.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+    public String createDeleteQuery() {
+        final Field primaryField = this.entityColumns.primaryField();
+
+        return String.format("delete from %s where %s = %s", this.entityTableMeta.name(), primaryField.getName(),
+                valueParse(primaryField, object));
     }
+
 }

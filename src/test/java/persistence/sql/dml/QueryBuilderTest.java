@@ -12,10 +12,10 @@ class QueryBuilderTest {
     @DisplayName("Person객체를 통해 insert를 구현한다.")
     @Test
     void dml_insert_create() {
-        QueryBuilder queryBuilder = new QueryBuilder();
         Person person = new Person("simpson", 31, "qwe5507@gmail.com");
+        QueryBuilder queryBuilder = new QueryBuilder(person);
 
-        String insertQuery = queryBuilder.createInsertQuery(person, new H2KeyGenerator());
+        String insertQuery = queryBuilder.createInsertQuery(new H2KeyGenerator());
 
         String expected = String.format("insert into users (id, nick_name, old, email) values (default, 'simpson', 31, 'qwe5507@gmail.com')");
         assertThat(insertQuery).isEqualTo(expected);
@@ -24,10 +24,10 @@ class QueryBuilderTest {
     @DisplayName("Person객체를 통해 findAll 기능을 구현한다.")
     @Test
     void dml_findAll_create() {
-        QueryBuilder queryBuilder = new QueryBuilder();
         Person person = new Person("simpson", 31, "qwe5507@gmail.com");
+        QueryBuilder queryBuilder = new QueryBuilder(person);
 
-        String findAllQuery = queryBuilder.createFindAllQuery(person);
+        String findAllQuery = queryBuilder.createFindAllQuery();
 
         String expected = "select id, nick_name, old, email from users";
         assertThat(findAllQuery).isEqualTo(expected);
@@ -36,10 +36,10 @@ class QueryBuilderTest {
     @DisplayName("Person객체를 통해 findById 기능을 구현한다.")
     @Test
     void dml_findById_create() {
-        QueryBuilder queryBuilder = new QueryBuilder();
         Person person = new Person(1L, "simpson", 31, "qwe5507@gmail.com");
+        QueryBuilder queryBuilder = new QueryBuilder(person);
 
-        String findByIdQuery = queryBuilder.createFindByIdQuery(person);
+        String findByIdQuery = queryBuilder.createFindByIdQuery();
 
         String expected = "select id, nick_name, old, email from users where id = 1L";
         assertThat(findByIdQuery).isEqualTo(expected);
@@ -48,10 +48,10 @@ class QueryBuilderTest {
     @DisplayName("Person객체를 통해 delete를 구현한다.")
     @Test
     void dml_delete_create() {
-        QueryBuilder queryBuilder = new QueryBuilder();
         Person person = new Person(1L, "simpson", 31, "qwe5507@gmail.com");
+        QueryBuilder queryBuilder = new QueryBuilder(person);
 
-        String deleteQuery = queryBuilder.createDeleteQuery(person);
+        String deleteQuery = queryBuilder.createDeleteQuery();
 
         String expected = "delete from users where id = 1L";
         assertThat(deleteQuery).isEqualTo(expected);
