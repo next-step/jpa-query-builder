@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
-import persistence.sql.ddl.TypeMapper.TypeMapper;
+import persistence.sql.ddl.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DDLQueryGenerator {
-    private final TypeMapper typeMapper;
+    private final Dialect dialect;
 
-    DDLQueryGenerator(TypeMapper typeMapper) {
-        this.typeMapper = typeMapper;
+    DDLQueryGenerator(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     public String generateCreateQuery(final Class<?> entityClazz) {
@@ -25,7 +25,8 @@ public class DDLQueryGenerator {
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .collect(Collectors.toList());
 
-        final String columnClause = fields.stream().map(this::getColumnDefinition)
+        final String columnClause = fields.stream()
+                .map(this::getColumnDefinition)
                 .collect(Collectors.joining(", "));
 
         Field primaryKeyField = fields.stream()
@@ -58,15 +59,17 @@ public class DDLQueryGenerator {
         sb.append(" ");
         sb.append(getColumnType(field, column));
 
-        if (field.isAnnotationPresent(GeneratedValue.class)) {
-           sb.append(" auto_increment");
+        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        if (generatedValue != null) {
+            sb.append(" ");
+            sb.append(dialect.mapGenerationType(generatedValue.strategy()));
         }
 
         return sb.toString();
     }
 
     private String getColumnType(Field field, Column column) {
-        String columnType = typeMapper.map(field.getType());
+        String columnType = dialect.mapDataType(field.getType());
         if(column != null && !column.nullable()) {
             columnType += " NOT NULL";
         }
