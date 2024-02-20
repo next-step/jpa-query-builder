@@ -5,9 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -90,6 +87,21 @@ public class ReflectionTest {
 		Field priceField = clazz.getDeclaredField("price");
 		priceField.setAccessible(true);
 		priceField.set(car, price);
+
+		assertThat(car.testGetName()).isEqualTo("test : " + name);
+		assertThat(car.testGetPrice()).isEqualTo("test : " + price);
+	}
+
+	@Test
+	void 인자를_가진_생성자의_인스턴스_생성() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+		Class<Car> clazz = Car.class;
+		String name = "모닝";
+		int price = 2000;
+
+		Constructor<?> constructor = Arrays.stream(clazz.getDeclaredConstructors())
+			.filter(x -> x.getParameterCount() > 0)
+			.findFirst().orElseThrow();
+		Car car = (Car) constructor.newInstance(name, price);
 
 		assertThat(car.testGetName()).isEqualTo("test : " + name);
 		assertThat(car.testGetPrice()).isEqualTo("test : " + price);
