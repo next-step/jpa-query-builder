@@ -89,6 +89,37 @@ class CreateTableQueryGeneratorTest {
     }
 
     @Test
+    @DisplayName("요구사항4: 정보를 바탕으로 drop 쿼리 만들어보기")
+    void testDropQueryGenerate() {
+        String expect = "drop table users";
+        @Table(name = "users")
+        @Entity
+        class Person {
+
+            @Id
+            @GeneratedValue(strategy = GenerationType.IDENTITY)
+            private Long id;
+
+            @Column(name = "nick_name")
+            private String name;
+
+            @Column(name = "old")
+            private Integer age;
+
+            @Column(nullable = false)
+            private String email;
+
+            @Transient
+            private Integer index;
+
+        }
+
+        String query = sut.dropTableQuery(Person.class);
+
+        assertThat(query.toLowerCase()).isEqualTo(expect.toLowerCase());
+    }
+
+    @Test
     @DisplayName("기본키 없으면 에러")
     void throwErrorWhenPrimaryKeyIsNotDefined() {
         @Entity
