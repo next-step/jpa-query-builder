@@ -3,8 +3,8 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.domain.Person;
-import persistence.sql.domain.Column;
+import persistence.sql.Person;
+import persistence.sql.domain.FieldColumn;
 import persistence.sql.domain.DataType;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +24,7 @@ class fieldColumnTest {
             Class<Person> personClass = Person.class;
             String fieldName = "id";
             String fieldType = DataType.BIGINT.name();
-            FieldColumn fieldColumn = FieldColumn.of(personClass.getDeclaredField(fieldName));
+            FieldColumn fieldColumn = FieldColumn.from(personClass.getDeclaredField(fieldName));
 
             //when
             String query = fieldColumn.toQuery();
@@ -42,7 +42,7 @@ class fieldColumnTest {
         void fieldWithPK() throws Exception {
             //given
             Class<Person> personClass = Person.class;
-            FieldColumn fieldColumn = FieldColumn.of(personClass.getDeclaredField("id"));
+            FieldColumn fieldColumn = FieldColumn.from(personClass.getDeclaredField("id"));
 
             //when
             String actual = fieldColumn.toQuery();
@@ -56,7 +56,7 @@ class fieldColumnTest {
         void fieldWithNullableFalse() throws Exception {
             //given
             Class<Person> personClass = Person.class;
-            FieldColumn fieldColumn = FieldColumn.of(personClass.getDeclaredField("email"));
+            FieldColumn fieldColumn = FieldColumn.from(personClass.getDeclaredField("email"));
 
             //when
             String actual = fieldColumn.toQuery();

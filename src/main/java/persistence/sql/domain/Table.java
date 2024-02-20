@@ -14,18 +14,18 @@ public class Table {
     private static final String DELIMITER = ", ";
 
     private final String name;
-    private final List<Column> columns;
+    private final List<Column> fieldColumns;
 
-    public Table(String name, List<Column> columns) {
+    public Table(String name, List<Column> fieldColumns) {
         this.name = name;
-        this.columns = columns;
+        this.fieldColumns = fieldColumns;
     }
 
     public static Table of(Class<?> target) {
         checkIsEntity(target);
         String tableName = getTableName(target);
-        List<Column> getColumns = getColumns(target);
-        return new Table(tableName, getColumns);
+        List<Column> columns = getColumns(target);
+        return new Table(tableName, columns);
     }
 
     private static void checkIsEntity(Class<?> targetClass) {
@@ -43,7 +43,7 @@ public class Table {
 
     private static List<Column> getColumns(Class<?> target) {
         return getTargetFields(target).stream()
-                .map(Column::of)
+                .map(Column::from)
                 .collect(Collectors.toList());
     }
 
@@ -57,8 +57,14 @@ public class Table {
         return name;
     }
 
+    public List<String> getColumnNames() {
+        return fieldColumns.stream()
+                .map(Column::getName)
+                .collect(Collectors.toList());
+    }
+
     public String getFieldQueries() {
-        return columns.stream()
+        return fieldColumns.stream()
                 .map(Column::toQuery)
                 .collect(Collectors.joining(DELIMITER));
     }

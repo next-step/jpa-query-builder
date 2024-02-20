@@ -1,47 +1,20 @@
 package persistence.sql.domain;
 
-import persistence.sql.ddl.strategy.AdditionalColumQueryStrategy;
-import persistence.sql.ddl.strategy.AdditionalColumnQueryFactory;
+import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Optional;
 
-public class Column {
-    private static final String SPACE = " ";
+public interface Column {
 
-    private final String name;
-    private final DataType type;
-    private final List<AdditionalColumQueryStrategy> strategies;
+    String getName();
 
-    public Column(String name, DataType type, List<AdditionalColumQueryStrategy> strategies) {
-        this.name = name;
-        this.type = type;
-        this.strategies = strategies;
-    }
+    String toQuery();
 
-    public static Column of(Field target) {
-        String name = getName(target);
-        DataType dataType = DataType.from(target.getType());
-        List<AdditionalColumQueryStrategy> strategies = AdditionalColumnQueryFactory.getStrategies(target);
-        return new Column(name, dataType, strategies);
-    }
 
-    private static String getName(Field target) {
-        return Optional.ofNullable(target.getAnnotation(jakarta.persistence.Column.class))
-                .map(jakarta.persistence.Column::name)
-                .filter(name -> !name.isBlank())
-                .orElse(target.getName());
-    }
-
-    public String toQuery() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(name)
-                .append(SPACE)
-                .append(type.getTypeQuery());
-        for (AdditionalColumQueryStrategy strategy : strategies) {
-            stringBuilder.append(strategy.fetchQueryPart());
+    static Column from(Field field) {
+        if (field.isAnnotationPresent(Id.class)) {
+            return IdColumn.from(field);
         }
-        return stringBuilder.toString();
+        return FieldColumn.from(field);
     }
 }
