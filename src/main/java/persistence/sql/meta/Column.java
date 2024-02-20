@@ -57,4 +57,20 @@ public class Column {
             matchResult.group(2).toUpperCase()
         )).toLowerCase();
     }
+
+    public String getFieldValue(Object object) {
+        try {
+            field.setAccessible(true);
+            return valueOf(field.get(object));
+        } catch (IllegalAccessException e) {
+            return "";
+        }
+    }
+
+    private String valueOf(Object object) {
+        if (object instanceof String) {
+            return String.format("'%s'", object);
+        }
+        return String.valueOf(object);
+    }
 }
