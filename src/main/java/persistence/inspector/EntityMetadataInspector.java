@@ -7,22 +7,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EntityMetadataInspector<T> {
+public class EntityMetadataInspector {
 
-    public final Class<T> clazz;
-
-    public EntityMetadataInspector(Class<T> clazz) {
-        this.clazz = clazz;
-    }
-
-    public String getTableName() {
+    public String getTableName(Class<?> clazz) {
         if (clazz.isAnnotationPresent(Table.class) && !clazz.getAnnotation(Table.class).name().isBlank()) {
             return clazz.getAnnotation(Table.class).name();
         }
         return clazz.getSimpleName().toLowerCase();
     }
 
-    public List<EntityColumn> getEntityColumns() {
+    public List<EntityColumn> getEntityColumns(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(this::isPersistable)
                 .map(field -> new EntityColumn(
@@ -36,15 +30,15 @@ public class EntityMetadataInspector<T> {
                 .collect(Collectors.toList());
     }
 
-    public List<EntityColumn> getPrimaryKeys() {
-        return getEntityColumns().stream().filter(EntityColumn::isPrimaryKey).collect(Collectors.toList());
+    public List<Field> getIdFields(Class<?> clazz) {
+        return getFields(clazz).stream().filter(this::isPrimaryKey).collect(Collectors.toList());
     }
 
-    private boolean isPersistable(Field field) {
+    public boolean isPersistable(Field field) {
         return !field.isAnnotationPresent(Transient.class);
     }
 
-    private String getColumnName(Field field) {
+    public String getColumnName(Field field) {
         return field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isBlank() ?
                 field.getAnnotation(Column.class).name() : field.getName();
     }
@@ -61,13 +55,12 @@ public class EntityMetadataInspector<T> {
         return field.isAnnotationPresent(Id.class);
     }
 
-    private boolean isAutoIncrement(Field field) {
+    public boolean isAutoIncrement(Field field) {
         return field.isAnnotationPresent(GeneratedValue.class);
     }
 
-    public Field getField(String fieldName) throws Exception {
-        return clazz.getDeclaredField(fieldName);
+    public List<Field> getFields(Class<?> clazz) {
+        return Arrays.asList(clazz.getDeclaredFields());
     }
-
 
 }

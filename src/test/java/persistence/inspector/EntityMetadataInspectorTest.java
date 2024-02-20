@@ -14,19 +14,19 @@ class EntityMetadataInspectorTest {
 
     @BeforeEach
     private void setUp() {
-        entityMetadataInspector = new EntityMetadataInspector(Person.class);
+        entityMetadataInspector = new EntityMetadataInspector();
     }
 
     @Test
     @DisplayName("tableName 가져오기")
     void getTableName() {
-        assertEquals("users", entityMetadataInspector.getTableName());
+        assertEquals("users", entityMetadataInspector.getTableName(Person.class));
     }
 
     @Test
     @DisplayName("columns의 개수 가져오기")
     void getColumns() {
-        assertThat(entityMetadataInspector.getEntityColumns()).hasSize(4);
+        assertThat(entityMetadataInspector.getEntityColumns(Person.class)).hasSize(4);
     }
 
 }

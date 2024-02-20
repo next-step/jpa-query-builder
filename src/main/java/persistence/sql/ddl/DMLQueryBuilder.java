@@ -4,14 +4,14 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import persistence.inspector.EntityMetadataInspectorNew;
+import persistence.inspector.EntityMetadataInspector;
 
 public class DMLQueryBuilder {
     private final static String COLUMN_SEPARATOR = ", ";
-    EntityMetadataInspectorNew entityMetadataInspector;
+    EntityMetadataInspector entityMetadataInspector;
 
     public DMLQueryBuilder() {
-        this.entityMetadataInspector = new EntityMetadataInspectorNew();
+        this.entityMetadataInspector = new EntityMetadataInspector();
     }
 
     public String insertSql(Object entity) {

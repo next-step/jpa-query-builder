@@ -1,6 +1,5 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.*;
 import persistence.inspector.EntityColumn;
 import persistence.inspector.EntityMetadataInspector;
 
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
 public class DDLQueryBuilder {
 
     private static final DDLQueryBuilder instance = new DDLQueryBuilder();
-    private EntityMetadataInspector<?> entityMetadataInspector;
+    private EntityMetadataInspector entityMetadataInspector;
 
     private DDLQueryBuilder() {
     }
@@ -20,11 +19,11 @@ public class DDLQueryBuilder {
     }
 
     public String createTableQuery(Class<?> clazz) {
-        entityMetadataInspector = new EntityMetadataInspector<>(clazz);
-        return String.format("%s (%s%s)",
-                createTablePreQuery(),
-                createColumnsSql(),
-                createPrimaryKeySql()
+        entityMetadataInspector = new EntityMetadataInspector();
+        return String.format("CREATE TABLE %s (%s%s)",
+                getTableName(clazz),
+                columnsClause(clazz),
+                primaryKeyClause(clazz)
         );
     }
 
@@ -32,34 +31,33 @@ public class DDLQueryBuilder {
         return String.format("DROP TABLE %s", getTableName(clazz));
     }
 
-    private String createTablePreQuery() {
-        return String.format("CREATE TABLE %s", getTableName());
-    }
-
     private String getTableName(Class<?> clazz) {
-        return clazz.isAnnotationPresent(Table.class) ? clazz.getAnnotation(Table.class).name() : clazz.getSimpleName().toLowerCase();
+        return entityMetadataInspector.getTableName(clazz);
     }
 
-    private String getTableName() {
-        return entityMetadataInspector.getTableName();
-    }
-
-    private String createColumnsSql() {
-        List<EntityColumn> entityColumns = entityMetadataInspector.getEntityColumns();
+    private String columnsClause(Class<?> clazz) {
+        List<EntityColumn> entityColumns = entityMetadataInspector.getEntityColumns(clazz);
 
         List<String> columns = entityColumns.stream().map(this::getColumn).collect(Collectors.toList());
 
         return String.join(", ", columns);
     }
 
-    private String createPrimaryKeySql() {
-        List<String> primaryKeys = entityMetadataInspector.getPrimaryKeys().stream().map(EntityColumn::getColumnName).collect(Collectors.toList());
+    private String primaryKeyClause(Class<?> clazz) {
+        List<String> primaryKeys = getPrimaryKeyColumns(clazz);
 
         if (!primaryKeys.isEmpty()) {
             return ", PRIMARY KEY (" + String.join(", ", primaryKeys) + ")";
         }
 
         return "";
+    }
+
+    private List<String> getPrimaryKeyColumns(Class<?> clazz) {
+        return entityMetadataInspector.getIdFields(clazz)
+                .stream()
+                .map(entityMetadataInspector::getColumnName)
+                .collect(Collectors.toList());
     }
 
     private String getColumn(EntityColumn column) {
