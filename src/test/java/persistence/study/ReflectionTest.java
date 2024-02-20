@@ -58,4 +58,19 @@ public class ReflectionTest {
 				}
 			});
 	}
+
+	@Test
+	void PrintView_어노테이션_메소드_실행() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		Class<Car> carClass = Car.class;
+		Car car = carClass.getConstructor().newInstance();
+		Arrays.stream(carClass.getDeclaredMethods())
+			.filter( x -> x.isAnnotationPresent(PrintView.class))
+			.forEach(x -> {
+				try {
+					x.invoke(car);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			});
+	}
 }
