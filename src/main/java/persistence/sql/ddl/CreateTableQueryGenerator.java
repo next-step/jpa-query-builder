@@ -22,6 +22,7 @@ public class CreateTableQueryGenerator {
 
         List<Field> fields = Arrays.stream(entityClazz.getDeclaredFields())
                 .filter(field -> !field.getName().equals("this$0"))
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .collect(Collectors.toList());
 
         String columnDefinitions = fields.stream().map(this::getColumnDefinition)
