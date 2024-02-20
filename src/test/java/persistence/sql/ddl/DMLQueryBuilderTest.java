@@ -21,12 +21,12 @@ public class DMLQueryBuilderTest {
         person.setAge(age);
         person.setEmail(email);
 
-        dmlQueryBuilder = new DMLQueryBuilder(person);
+        dmlQueryBuilder = new DMLQueryBuilder();
     }
 
     @Test
-    public void insertQueryTest() throws Exception {
-        String query = dmlQueryBuilder.insertQuery();
+    public void insertQueryTest() {
+        String query = dmlQueryBuilder.insertSql(person);
         assertEquals("INSERT INTO users (nick_name, old, email) VALUES ('"+name+"', "+age+", '"+email+"')", query);
     }
 

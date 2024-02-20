@@ -3,73 +3,79 @@ package persistence.sql.ddl;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
-import persistence.inspector.EntityColumn;
-import persistence.inspector.EntityMetadataInspector;
 
-public class DMLQueryBuilder<T> {
+import persistence.inspector.EntityMetadataInspectorNew;
+
+public class DMLQueryBuilder {
     private final static String COLUMN_SEPARATOR = ", ";
-    private final Object entity;
-    private final EntityMetadataInspector<? extends Object> entityMetadataInspector;
+    EntityMetadataInspectorNew entityMetadataInspector;
 
-    public DMLQueryBuilder(T entity) {
-        this.entity = entity;
-        this.entityMetadataInspector = new EntityMetadataInspector<>(entity.getClass());
+    public DMLQueryBuilder() {
+        this.entityMetadataInspector = new EntityMetadataInspectorNew();
     }
 
-    public String insertQuery() throws RuntimeException {
+    public String insertSql(Object entity) {
         final String insertQueryFormat = "INSERT INTO %s (%s) VALUES (%s)";
 
-        List<EntityColumn> targetColumns = getEntityColumns();
+        String tableName = entityMetadataInspector.getTableName(entity.getClass());
+        String columns = columnsClause(entity);
+        String values = valueClause(entity);
 
-        String tableName = entityMetadataInspector.getTableName();
-        String columns = columnsClause(targetColumns);
-        String values = valueClause(targetColumns);
-        
         return String.format(insertQueryFormat, tableName, columns, values);
     }
 
-    private List<EntityColumn> getEntityColumns() {
-        return entityMetadataInspector.getEntityColumns().stream()
-            .filter(EntityColumn::isInsertTargetColumn)
-            .collect(Collectors.toList());
-    }
 
-    private String columnsClause(List<EntityColumn> targetColumns) {
+    private String columnsClause(Object entity) {
         StringBuilder sql = new StringBuilder();
-        for (EntityColumn targetColumn : targetColumns) {
-            sql.append(targetColumn.getColumnName()).append(COLUMN_SEPARATOR);
+        for (Field targetField : getEntityFieldsForInsert(entity)) {
+            sql.append(entityMetadataInspector.getColumnName(targetField)).append(COLUMN_SEPARATOR);
         }
 
         return sql.toString().replaceAll(", $", "");
     }
 
-    public String valueClause(List<EntityColumn> targetColumns) throws RuntimeException {
+    public String valueClause(Object entity) {
         StringBuilder sql = new StringBuilder();
-        for (EntityColumn targetColumn : targetColumns) {
-            sql.append(getFieldValueWithSqlFormat(targetColumn.getFieldName())).append(COLUMN_SEPARATOR);
+        for (Field targetField : getEntityFieldsForInsert(entity)) {
+            sql.append(getFieldValueWithSqlFormat(entity, targetField)).append(COLUMN_SEPARATOR);
         }
 
         return sql.toString().replaceAll(", $", "");
     }
 
-    private Object getFieldValueWithSqlFormat(String fieldName) {
-        Object fieldValue = null;
+    private List<Field> getEntityFieldsForInsert(Object entity) {
         try {
-            fieldValue = getFieldValue(fieldName);
+            List<Field> fields = entityMetadataInspector.getFields(entity.getClass());
+            return fields.stream()
+                    .filter(this::isInsertTargetField)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
+    private boolean isInsertTargetField(Field field) {
+        return entityMetadataInspector.isPersistable(field) && !entityMetadataInspector.isAutoIncrement(field);
+    }
+
+    private Object getFieldValueWithSqlFormat(Object entity, Field field) {
+        return formatValue(getFieldValue(entity, field));
+    }
+
+    private Object getFieldValue(Object entity, Field field) {
+        try {
+            field.setAccessible(true);
+            return field.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object formatValue(Object fieldValue) {
         if (fieldValue instanceof String) {
             return "'" + fieldValue + "'";
         }
         return fieldValue;
-    }
-
-    private Object getFieldValue(String fieldName) throws Exception {
-        Field field = entityMetadataInspector.getField(fieldName);
-        field.setAccessible(true);
-        return field.get(entity);
     }
 
 
