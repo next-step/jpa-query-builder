@@ -1,9 +1,9 @@
 package persistence.sql.dialect;
 
-import jakarta.persistence.GenerationType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.query.Column;
+import persistence.sql.dialect.identity.H2IdentityColumnSupport;
+import persistence.sql.dialect.identity.IdentityColumnSupport;
 
 import java.sql.Types;
 
@@ -14,6 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class H2DialectTest {
 
     private final Dialect dialect = new H2Dialect();
+    
+    @DisplayName("H2IdentityColumnSupport 객체를 반환한다")
+    @Test
+    public void returnH2IdentityColumnSupport() throws Exception {
+        // when
+        final IdentityColumnSupport identityColumnSupport = dialect.getIdentityColumnSupport();
+
+        // then
+        assertThat(identityColumnSupport).isInstanceOf(H2IdentityColumnSupport.class);
+    }
 
     @DisplayName("Type 을 받아 H2 DB 의 column type 을 반환한다")
     @Test
@@ -30,9 +40,9 @@ class H2DialectTest {
 
         // then
         assertAll(
-                () -> assertThat(stringColumnType).isEqualTo("VARCHAR(255)"),
-                () -> assertThat(longColumnType).isEqualTo("BIGINT"),
-                () -> assertThat(integerColumnType).isEqualTo("INTEGER")
+                () -> assertThat(stringColumnType).isEqualTo("varchar(255)"),
+                () -> assertThat(longColumnType).isEqualTo("bigint"),
+                () -> assertThat(integerColumnType).isEqualTo("integer")
         );
     }
 
@@ -46,31 +56,5 @@ class H2DialectTest {
         assertThatThrownBy(() -> dialect.convertColumnType(doubleType, 255))
                 .isInstanceOf(DialectException.class)
                 .hasMessage("NotFount ColumnType for 8 in H2Dialect");
-    }
-
-    @DisplayName("Column 객체를 받아 H2 DB 에 맞는 예약어로 변환한다")
-    @Test
-    public void convertToKeywords() throws Exception {
-        // given
-        final Column notNullAndUnique = new Column.Builder()
-                .setNullable(false)
-                .setUnique(true)
-                .build();
-
-        final Column pkAndIdentityAndUnique = new Column.Builder()
-                .setPk(true)
-                .setPkStrategy(GenerationType.IDENTITY)
-                .setUnique(true)
-                .build();
-
-        // when
-        final String result1 = dialect.toDialectKeywords(notNullAndUnique);
-        final String result2 = dialect.toDialectKeywords(pkAndIdentityAndUnique);
-
-        // then
-        assertAll(
-                () -> assertThat(result1).isEqualTo("NOT NULL UNIQUE"),
-                () -> assertThat(result2).isEqualTo("AUTO_INCREMENT PRIMARY KEY")
-        );
     }
 }
