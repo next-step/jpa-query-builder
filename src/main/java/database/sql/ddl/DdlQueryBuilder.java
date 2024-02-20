@@ -5,7 +5,7 @@ import database.sql.util.EntityColumn;
 
 import java.util.stream.Collectors;
 
-public class QueryBuilder {
+public class DdlQueryBuilder {
     public String buildCreateQuery(Class<?> entityClass) {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();

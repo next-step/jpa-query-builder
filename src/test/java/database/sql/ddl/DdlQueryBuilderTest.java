@@ -5,7 +5,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class QueryBuilderTest {
+class DdlQueryBuilderTest {
     @ParameterizedTest
     @CsvSource(value = {
             "database.sql.ddl.OldPerson1:CREATE TABLE OldPerson1 (id BIGINT PRIMARY KEY, name VARCHAR(255) NULL, age INT NULL)",
@@ -14,8 +14,8 @@ class QueryBuilderTest {
     }, delimiter = ':')
     void buildCreateQuery(String entityClassCanonicalName, String expected) throws ClassNotFoundException {
         Class<?> entityClass = Class.forName(entityClassCanonicalName);
-        QueryBuilder queryBuilder = new QueryBuilder();
-        String actual = queryBuilder.buildCreateQuery(entityClass);
+        DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
+        String actual = ddlQueryBuilder.buildCreateQuery(entityClass);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -26,8 +26,8 @@ class QueryBuilderTest {
             "database.sql.ddl.OldPerson3:DROP TABLE users"
     }, delimiter = ':')
     void buildDeleteQuery(Class<?> entityClass, String expected) {
-        QueryBuilder queryBuilder = new QueryBuilder();
-        String actual = queryBuilder.buildDeleteQuery(entityClass);
+        DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
+        String actual = ddlQueryBuilder.buildDeleteQuery(entityClass);
         assertThat(actual).isEqualTo(expected);
     }
 }
