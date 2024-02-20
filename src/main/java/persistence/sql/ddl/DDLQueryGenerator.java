@@ -1,7 +1,6 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
-import persistence.sql.ddl.TypeMapper.H2TypeMapper;
 import persistence.sql.ddl.TypeMapper.TypeMapper;
 
 import java.lang.reflect.Field;
@@ -9,15 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateTableQueryGenerator {
+public class DDLQueryGenerator {
     private final TypeMapper typeMapper;
-    CreateTableQueryGenerator(TypeMapper typeMapper) {
+    DDLQueryGenerator(TypeMapper typeMapper) {
         this.typeMapper = typeMapper;
     }
     public String generateCreateQuery(final Class<?> entityClazz) {
-        if (!entityClazz.isAnnotationPresent(Entity.class)) {
-            throw new AnnotationMissingException("Entity 어노테이션이 없습니다.");
-        }
+        checkIsEntity(entityClazz);
         final String tableName = getTableName(entityClazz);
 
         List<Field> fields = Arrays.stream(entityClazz.getDeclaredFields())
@@ -36,6 +33,18 @@ public class CreateTableQueryGenerator {
         String primaryKeyDefinition = "PRIMARY KEY (" + primaryKeyField.getName() + ")";
 
         return String.format("CREATE TABLE %s (%s, %s)", tableName, columnDefinitions, primaryKeyDefinition);
+    }
+
+    public String dropTableQuery(final Class<?> entityClazz) {
+        checkIsEntity(entityClazz);
+        final String tableName = getTableName(entityClazz);
+        return String.format("DROP TABLE %s", tableName);
+    }
+
+    private void checkIsEntity(Class<?> entityClazz) {
+        if (!entityClazz.isAnnotationPresent(Entity.class)) {
+            throw new AnnotationMissingException("Entity 어노테이션이 없습니다.");
+        }
     }
 
     private String getColumnDefinition(Field field) {

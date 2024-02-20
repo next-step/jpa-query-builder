@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateTableQueryGeneratorTest {
-    CreateTableQueryGenerator sut = new CreateTableQueryGenerator(new H2TypeMapper());
+    DDLQueryGenerator sut = new DDLQueryGenerator(new H2TypeMapper());
 
     @Test
     @DisplayName("요구사항1: 기본 테이블 생성 쿼리 생성 테스트")
