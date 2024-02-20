@@ -9,7 +9,6 @@ import jdbc.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +57,7 @@ class DmlGeneratorIntegrationTest {
         jdbcTemplate.execute(dmlGenerator.generateInsertQuery(person));
     }
 
-    @DisplayName("generateSelectQuery 쿼리가 정상적으로 호출되는지 확인한다.")
+    @DisplayName("generateSelectQuery Select 쿼리가 정상적으로 호출되는지 확인한다.")
     @Test
     void selectQueryTest() {
         insertQueryTest("user1", 1, "abc@test.co", 1);
@@ -84,7 +83,7 @@ class DmlGeneratorIntegrationTest {
         );
     }
 
-    @DisplayName("generateSelectQuery id 조건 쿼리가 정상적으로 호출되는지 확인한다.")
+    @DisplayName("generateSelectQuery id 조건 select 쿼리가 정상적으로 호출되는지 확인한다.")
     @CsvSource({
         "user1, 1, test1@abc.com, 1, 1",
         "user2, 2, test2@abc.com, 2, 1",
@@ -107,6 +106,53 @@ class DmlGeneratorIntegrationTest {
             () -> assertThat(person.getName()).isEqualTo(name),
             () -> assertThat(person.getAge()).isEqualTo(age),
             () -> assertThat(person.getEmail()).isEqualTo(email)
+        );
+    }
+
+    @DisplayName("generateDeleteQuery Delete 쿼리가 정상적으로 호출되는지 확인한다.")
+    @Test
+    void deleteQueryTest() {
+        insertQueryTest("user1", 1, "abc@test.co", 1);
+        insertQueryTest("user2", 1, "abc@test.co", 1);
+        insertQueryTest("user3", 1, "abc@test.co", 1);
+        insertQueryTest("user4", 1, "abc@test.co", 1);
+
+        jdbcTemplate.execute(dmlGenerator.generateDeleteQuery(Person.class));
+
+        List<Person> people = jdbcTemplate.query(dmlGenerator.generateSelectQuery(Person.class), resultSet -> Person.of(
+            resultSet.getLong("id"),
+            resultSet.getString("nick_name"),
+            resultSet.getInt("old"),
+            resultSet.getString("email")
+        ));
+
+        assertAll(
+            () -> assertThat(people).isNotNull(),
+            () -> assertThat(people).isEmpty()
+        );
+    }
+
+    @DisplayName("generateDeleteQuery id 조건 Delete 쿼리가 정상적으로 호출되는지 확인한다.")
+    @Test
+    void deleteQueryWithIdTest() {
+        insertQueryTest("user1", 1, "abc@test.co", 1);
+        insertQueryTest("user2", 1, "abc@test.co", 1);
+        insertQueryTest("user3", 1, "abc@test.co", 1);
+        insertQueryTest("user4", 1, "abc@test.co", 1);
+
+        jdbcTemplate.execute(dmlGenerator.generateDeleteQuery(Person.class, 4));
+
+        List<Person> people = jdbcTemplate.query(dmlGenerator.generateSelectQuery(Person.class), resultSet -> Person.of(
+            resultSet.getLong("id"),
+            resultSet.getString("nick_name"),
+            resultSet.getInt("old"),
+            resultSet.getString("email")
+        ));
+
+        assertAll(
+            () -> assertThat(people).isNotNull(),
+            () -> assertThat(people).isNotEmpty(),
+            () -> assertThat(people).hasSize(3)
         );
     }
 }

@@ -9,12 +9,14 @@ public class DmlGenerator {
 
     private final QueryBuilder selectQueryBuilder;
     private final QueryBuilder insertQueryBuilder;
+    private final QueryBuilder deleteQueryBuilder;
 
     private static final String WHERE_CLAUSE = "WHERE";
 
     private DmlGenerator() {
         this.selectQueryBuilder = SelectQueryBuilder.from();
         this.insertQueryBuilder = InsertQueryBuilder.from();
+        this.deleteQueryBuilder = DeleteQueryBuilder.from();
     }
 
     public static DmlGenerator from() {
@@ -27,6 +29,19 @@ public class DmlGenerator {
 
     public String generateSelectQuery(Class<?> clazz) {
         return selectQueryBuilder.generateQuery(clazz);
+    }
+
+    public String generateDeleteQuery(Class<?> clazz) {
+        return deleteQueryBuilder.generateQuery(clazz);
+    }
+
+    public String generateDeleteQuery(Class<?> clazz, Object id) {
+        StringBuilder query = new StringBuilder();
+        query.append(deleteQueryBuilder.generateQuery(clazz));
+        query.append(SPACE);
+        query.append(whereClause(clazz, id));
+
+        return query.toString();
     }
 
     public String generateSelectQuery(Class<?> clazz, Object id) {
