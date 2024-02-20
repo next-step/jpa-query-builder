@@ -22,7 +22,7 @@ public class CreateQueryBuilder implements QueryBuilder {
     @Override
     public String generateQuery(Object object) {
 
-        Table table = Table.of(object.getClass());
+        Table table = Table.of((Class<?>) object);
 
         String columnDefinitions = table.getColumns().stream()
             .map(fieldBuilder::generate)
