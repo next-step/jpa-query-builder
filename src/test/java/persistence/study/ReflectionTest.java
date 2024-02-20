@@ -134,7 +134,7 @@ public class ReflectionTest {
 
     private Object generateTestValue(Class<?> targetClass) {
         if (targetClass.equals(String.class)) {
-            return "TEST VALUE";
+            return "carName";
         }
         if (targetClass.equals(int.class) || targetClass.equals(Integer.class)) {
             return 1000;
