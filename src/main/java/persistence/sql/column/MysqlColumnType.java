@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import static persistence.sql.column.MetaDataMapper.SPACE;
 
-
 public enum MysqlColumnType implements ColumnType {
     BIGINT(Long.class, "bigint", ""),
     VARCHAR(String.class, "varchar", "255"),
@@ -38,7 +37,4 @@ public enum MysqlColumnType implements ColumnType {
         return sb.toString();
     }
 
-    public String getSqlType() {
-        return sqlType;
-    }
 }
