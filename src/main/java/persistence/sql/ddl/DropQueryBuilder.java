@@ -1,11 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
-import persistence.exception.NotEntityException;
-
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import persistence.sql.domain.Table;
 
 public class DropQueryBuilder {
     private static final String QUERY_TEMPLATE = "DROP TABLE %s";
@@ -14,6 +9,7 @@ public class DropQueryBuilder {
     public DropQueryBuilder(Class<?> targetClass) {
         this.table = Table.of(targetClass);
     }
+
     public String build() {
         String tableName = table.getName();
         return String.format(QUERY_TEMPLATE, tableName);

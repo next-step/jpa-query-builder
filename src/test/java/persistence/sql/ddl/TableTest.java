@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.domain.Person;
+import persistence.sql.domain.Table;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

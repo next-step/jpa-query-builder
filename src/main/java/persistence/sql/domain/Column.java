@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.domain;
 
 import persistence.sql.ddl.strategy.AdditionalColumQueryStrategy;
 import persistence.sql.ddl.strategy.AdditionalColumnQueryFactory;

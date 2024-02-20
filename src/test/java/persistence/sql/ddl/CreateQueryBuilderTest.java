@@ -10,7 +10,7 @@ import persistence.study.Car;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("Query 의")
+@DisplayName("CreateQueryBuilder 의")
 class CreateQueryBuilderTest {
 
     @Nested
@@ -37,13 +37,12 @@ class CreateQueryBuilderTest {
         void sqlForCreate() {
             //given
             Class<Person> targetClass = Person.class;
-            QueryType type = QueryType.CREATE;
 
             //when
             String sql = new CreateQueryBuilder(targetClass).build();
 
             //then
-            assertThat(sql).contains(type.name());
+            assertThat(sql).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL)");
         }
     }
 }

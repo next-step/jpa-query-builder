@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.sql.domain.Table;
+
 public class CreateQueryBuilder {
     private static final String CREATE_QUERY_TEMPLATE = "CREATE TABLE %s (%s)";
 
