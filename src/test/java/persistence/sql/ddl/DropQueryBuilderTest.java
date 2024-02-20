@@ -1,7 +1,30 @@
 package persistence.sql.ddl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import persistence.sql.Person;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DisplayName("DropQueryBuilder 의")
 class DropQueryBuilderTest {
+
+    @Nested
+    @DisplayName("build 메서드는")
+    class Build {
+        @Test
+        @DisplayName("DROP 쿼리를 반환한다.")
+        void sqlForCreate() {
+            //given
+            Class<Person> targetClass = Person.class;
+
+            //when
+            String sql = new DropQueryBuilder(targetClass).build();
+
+            //then
+            assertThat(sql).isEqualTo("DROP TABLE users");
+        }
+    }
 
 }

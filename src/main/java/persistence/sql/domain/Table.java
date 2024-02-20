@@ -11,8 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Table {
-    private static final String DELIMITER = ", ";
-
     private final String name;
     private final List<Column> fieldColumns;
 
@@ -57,15 +55,7 @@ public class Table {
         return name;
     }
 
-    public List<String> getColumnNames() {
-        return fieldColumns.stream()
-                .map(Column::getName)
-                .collect(Collectors.toList());
-    }
-
-    public String getFieldQueries() {
-        return fieldColumns.stream()
-                .map(Column::toQuery)
-                .collect(Collectors.joining(DELIMITER));
+    public List<Column> getFieldColumns() {
+        return fieldColumns;
     }
 }

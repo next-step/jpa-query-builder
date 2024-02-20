@@ -1,30 +1,23 @@
 package persistence.sql.domain;
 
-import persistence.sql.ddl.strategy.AdditionalColumQueryStrategy;
-import persistence.sql.ddl.strategy.AdditionalColumnQueryFactory;
-
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Optional;
 
 public class FieldColumn implements Column {
-    private static final String SPACE = " ";
-
     private final String name;
     private final DataType type;
-    private final List<AdditionalColumQueryStrategy> strategies;
+    private final Field field;
 
-    public FieldColumn(String name, DataType type, List<AdditionalColumQueryStrategy> strategies) {
+    public FieldColumn(String name, DataType type, Field field) {
         this.name = name;
         this.type = type;
-        this.strategies = strategies;
+        this.field = field;
     }
 
     public static FieldColumn from(Field target) {
         String name = getName(target);
         DataType dataType = DataType.from(target.getType());
-        List<AdditionalColumQueryStrategy> strategies = AdditionalColumnQueryFactory.getStrategies(target);
-        return new FieldColumn(name, dataType, strategies);
+        return new FieldColumn(name, dataType, target);
     }
 
     private static String getName(Field target) {
@@ -35,19 +28,17 @@ public class FieldColumn implements Column {
     }
 
     @Override
-    public String toQuery() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(name)
-                .append(SPACE)
-                .append(type.getTypeQuery());
-        for (AdditionalColumQueryStrategy strategy : strategies) {
-            stringBuilder.append(strategy.fetchQueryPart());
-        }
-        return stringBuilder.toString();
+    public DataType getType() {
+        return type;
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Field getField() {
+        return field;
     }
 }

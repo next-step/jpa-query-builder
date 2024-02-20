@@ -13,27 +13,20 @@ public enum DataType {
 
     private static final String START_SYMBOL = "(";
     private static final String END_SYMBOL = ")";
-    private final List<Class<?>> targetClasses;
+
+    private final List<Class<?>> targets;
     private final String defaultValue;
 
-    DataType(List<Class<?>> targetClasses, String defaultValue) {
-        this.targetClasses = targetClasses;
+    DataType(List<Class<?>> targets, String defaultValue) {
+        this.targets = targets;
         this.defaultValue = defaultValue;
     }
 
-    public static DataType from(Class<?> targetClass) {
+    public static DataType from(Class<?> target) {
         return Arrays.stream(values())
-                .filter(it -> it.targetClasses.contains(targetClass))
+                .filter(it -> it.targets.contains(target))
                 .findAny()
                 .orElseThrow(NotAllowedDataTypeException::new);
-    }
-
-    public boolean containsDefaultValue() {
-        return !defaultValue.isBlank();
-    }
-
-    public String getDefaultValue() {
-        return START_SYMBOL + defaultValue + END_SYMBOL;
     }
 
     public String getTypeQuery() {
@@ -42,5 +35,13 @@ public enum DataType {
             query += this.getDefaultValue();
         }
         return query;
+    }
+
+    public boolean containsDefaultValue() {
+        return !defaultValue.isBlank();
+    }
+
+    private String getDefaultValue() {
+        return START_SYMBOL + defaultValue + END_SYMBOL;
     }
 }
