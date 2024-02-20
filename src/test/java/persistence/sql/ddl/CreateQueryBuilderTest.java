@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.domain.Person;
+import persistence.sql.Person;
 import persistence.exception.NotEntityException;
 import persistence.study.Car;
 

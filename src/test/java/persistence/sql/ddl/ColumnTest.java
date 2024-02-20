@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Column 의")
-class ColumnTest {
+class fieldColumnTest {
 
     @Nested
     @DisplayName("toQuery 메서드는")
@@ -24,10 +24,10 @@ class ColumnTest {
             Class<Person> personClass = Person.class;
             String fieldName = "id";
             String fieldType = DataType.BIGINT.name();
-            Column column = Column.of(personClass.getDeclaredField(fieldName));
+            FieldColumn fieldColumn = FieldColumn.of(personClass.getDeclaredField(fieldName));
 
             //when
-            String query = column.toQuery();
+            String query = fieldColumn.toQuery();
 
             //then
             assertAll(
@@ -42,10 +42,10 @@ class ColumnTest {
         void fieldWithPK() throws Exception {
             //given
             Class<Person> personClass = Person.class;
-            Column column = Column.of(personClass.getDeclaredField("id"));
+            FieldColumn fieldColumn = FieldColumn.of(personClass.getDeclaredField("id"));
 
             //when
-            String actual = column.toQuery();
+            String actual = fieldColumn.toQuery();
 
             //then
             assertThat(actual).endsWith("PRIMARY KEY");
@@ -56,10 +56,10 @@ class ColumnTest {
         void fieldWithNullableFalse() throws Exception {
             //given
             Class<Person> personClass = Person.class;
-            Column column = Column.of(personClass.getDeclaredField("email"));
+            FieldColumn fieldColumn = FieldColumn.of(personClass.getDeclaredField("email"));
 
             //when
-            String actual = column.toQuery();
+            String actual = fieldColumn.toQuery();
 
             //then
             assertThat(actual).endsWith("NOT NULL");
