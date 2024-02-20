@@ -73,4 +73,25 @@ public class ReflectionTest {
 				}
 			});
 	}
+
+	@Test
+	public void privateField_값_할당() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+		Class<Car> clazz = Car.class;
+		logger.debug(clazz.getName());
+
+		String name = "소나타";
+		int price = 1000;
+
+		Car car = clazz.getConstructor().newInstance();
+		Field nameField = clazz.getDeclaredField("name");
+		nameField.setAccessible(true);
+		nameField.set(car, name);
+
+		Field priceField = clazz.getDeclaredField("price");
+		priceField.setAccessible(true);
+		priceField.set(car, price);
+
+		assertThat(car.testGetName()).isEqualTo("test : " + name);
+		assertThat(car.testGetPrice()).isEqualTo("test : " + price);
+	}
 }
