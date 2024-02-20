@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import static persistence.sql.dml.parser.ValueParser.insertValuesClauseParse;
+import static persistence.sql.dml.parser.ValueParser.valueParse;
 
 public class EntityColumns {
     private final Object object;
@@ -31,12 +32,16 @@ public class EntityColumns {
                 .collect(Collectors.joining(", "));
     }
 
-    public String values(KeyGenerator keyGenerator) {
+    public String insertValues(KeyGenerator keyGenerator) {
         return Arrays.stream(this.object.getClass().getDeclaredFields())
                 .sorted(Comparator.comparing(this::idFirstOrdered))
                 .filter(this::isNotTransientField)
                 .map(f -> insertValuesClauseParse(f, object, keyGenerator))
                 .collect(Collectors.joining(", "));
+    }
+
+    public String values() {
+        return valueParse(primaryField(), object);
     }
 
     public Field primaryField() {
