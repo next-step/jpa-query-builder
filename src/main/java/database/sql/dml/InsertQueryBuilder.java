@@ -1,6 +1,5 @@
 package database.sql.dml;
 
-import database.sql.IQueryBuilder;
 import database.sql.util.EntityClassInspector;
 import database.sql.util.EntityColumn;
 
@@ -10,8 +9,7 @@ import java.util.stream.Collectors;
 
 import static database.sql.Util.quote;
 
-
-public class InsertQueryBuilder implements IQueryBuilder {
+public class InsertQueryBuilder {
     private final Class<?> entityClass;
     private final Map<String, Object> valueMap;
 
@@ -20,7 +18,6 @@ public class InsertQueryBuilder implements IQueryBuilder {
         this.valueMap = valueMap;
     }
 
-    @Override
     public String buildQuery() {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();

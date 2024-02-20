@@ -1,12 +1,11 @@
 package database.sql.dml;
 
-import database.sql.IQueryBuilder;
 import database.sql.util.EntityClassInspector;
 import database.sql.util.EntityColumn;
 
 import java.util.stream.Collectors;
 
-public class SelectOneQueryBuilder implements IQueryBuilder {
+public class SelectOneQueryBuilder {
     private final Class<?> entityClass;
     private final Long id;
 
@@ -15,7 +14,6 @@ public class SelectOneQueryBuilder implements IQueryBuilder {
         this.id = id;
     }
 
-    @Override
     public String buildQuery() {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();

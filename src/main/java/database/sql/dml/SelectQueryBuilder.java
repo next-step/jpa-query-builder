@@ -1,19 +1,17 @@
 package database.sql.dml;
 
-import database.sql.IQueryBuilder;
 import database.sql.util.EntityClassInspector;
 import database.sql.util.EntityColumn;
 
 import java.util.stream.Collectors;
 
-public class SelectQueryBuilder implements IQueryBuilder {
+public class SelectQueryBuilder {
     private final Class<?> entityClass;
 
     public SelectQueryBuilder(Class<?> entityClass) {
         this.entityClass = entityClass;
     }
 
-    @Override
     public String buildQuery() {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();

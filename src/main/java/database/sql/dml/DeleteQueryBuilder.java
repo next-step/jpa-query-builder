@@ -1,6 +1,5 @@
 package database.sql.dml;
 
-import database.sql.IQueryBuilder;
 import database.sql.util.EntityClassInspector;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.Map;
 
 import static database.sql.Util.quote;
 
-public class DeleteQueryBuilder implements IQueryBuilder {
+public class DeleteQueryBuilder {
     private final Class<?> entityClass;
     private final Map<String, Object> conditionMap;
 
@@ -18,7 +17,6 @@ public class DeleteQueryBuilder implements IQueryBuilder {
         this.conditionMap = conditionMap;
     }
 
-    @Override
     public String buildQuery() {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();
