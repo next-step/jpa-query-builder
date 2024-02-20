@@ -2,7 +2,8 @@ package persistence.sql.column;
 
 import java.util.Arrays;
 
-import static persistence.sql.column.JpaColumn.SPACE;
+import static persistence.sql.column.MetaDataMapper.SPACE;
+
 
 public enum MysqlColumnType implements ColumnType {
     BIGINT(Long.class, "bigint", ""),
@@ -35,5 +36,9 @@ public enum MysqlColumnType implements ColumnType {
             sb.append("(").append(defaultValue).append(")");
         }
         return sb.toString();
+    }
+
+    public String getSqlType() {
+        return sqlType;
     }
 }

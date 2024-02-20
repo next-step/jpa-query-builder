@@ -1,11 +1,12 @@
 package persistence.sql.column;
 
 import jakarta.persistence.GeneratedValue;
-import persistence.sql.ddl.GenerateType;
+import persistence.sql.ddl.MysqlIdGeneratedStrategy;
 
 import java.lang.reflect.Field;
 
-import static persistence.sql.column.JpaColumn.SPACE;
+import static persistence.sql.column.MetaDataMapper.SPACE;
+
 
 public class PkColumn implements Column {
 
@@ -13,14 +14,14 @@ public class PkColumn implements Column {
 
     private final String name;
     private final ColumnType mysqlColumn;
-    private final GenerateType generateType;
+    private final MysqlIdGeneratedStrategy mysqlIdGenerateStrategy;
 
     public PkColumn(Field field, String name, ColumnType mysqlColumn) {
         validateGeneratedValue(field);
         this.name = name;
         this.mysqlColumn = mysqlColumn;
         GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
-        this.generateType = GenerateType.from(annotation.strategy());
+        this.mysqlIdGenerateStrategy = MysqlIdGeneratedStrategy.from(annotation.strategy());
     }
 
     private void validateGeneratedValue(Field field) {
@@ -31,7 +32,7 @@ public class PkColumn implements Column {
 
     @Override
     public String getDefinition() {
-        return name + mysqlColumn.getColumnDefinition() + SPACE + generateType.getValue() +
+        return name + mysqlColumn.getColumnDefinition() + SPACE + mysqlIdGenerateStrategy.getValue() +
                 SPACE + PRIMARY_KEY;
     }
 
