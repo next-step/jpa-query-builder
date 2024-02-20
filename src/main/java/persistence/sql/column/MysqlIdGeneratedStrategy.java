@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.column;
 
 import jakarta.persistence.GenerationType;
 
@@ -22,6 +22,7 @@ public enum MysqlIdGeneratedStrategy implements IdGeneratedStrategy {
                 .orElseThrow(() -> new IllegalArgumentException("Not found GenerationType"));
     }
 
+    @Override
     public String getValue() {
         return value;
     }

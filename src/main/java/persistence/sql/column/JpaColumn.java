@@ -16,5 +16,4 @@ public class JpaColumn implements Column {
     public String getDefinition() {
         return this.name + columnType.getColumnDefinition() + nullable;
     }
-
 }

@@ -2,7 +2,7 @@ package persistence.sql.dialect;
 
 import jakarta.persistence.GenerationType;
 import persistence.sql.column.ColumnType;
-import persistence.sql.ddl.IdGeneratedStrategy;
+import persistence.sql.column.IdGeneratedStrategy;
 
 public interface Dialect {
 

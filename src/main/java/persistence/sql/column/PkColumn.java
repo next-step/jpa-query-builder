@@ -1,38 +1,25 @@
 package persistence.sql.column;
 
-import jakarta.persistence.GeneratedValue;
-import persistence.sql.ddl.MysqlIdGeneratedStrategy;
-
-import java.lang.reflect.Field;
-
 import static persistence.sql.column.MetaDataMapper.SPACE;
-
 
 public class PkColumn implements Column {
 
     private static final String PRIMARY_KEY = "primary key";
 
     private final String name;
-    private final ColumnType mysqlColumn;
-    private final MysqlIdGeneratedStrategy mysqlIdGenerateStrategy;
+    private final ColumnType columnType;
+    private final IdGeneratedStrategy idGeneratedStrategy;
 
-    public PkColumn(Field field, String name, ColumnType mysqlColumn) {
-        validateGeneratedValue(field);
+    public PkColumn(String name, ColumnType columnType, IdGeneratedStrategy idGeneratedStrategy) {
         this.name = name;
-        this.mysqlColumn = mysqlColumn;
-        GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
-        this.mysqlIdGenerateStrategy = MysqlIdGeneratedStrategy.from(annotation.strategy());
+        this.columnType = columnType;
+        this.idGeneratedStrategy = idGeneratedStrategy;
     }
 
-    private void validateGeneratedValue(Field field) {
-        if (!field.isAnnotationPresent(GeneratedValue.class)) {
-            throw new IllegalArgumentException("[INFO] No @GeneratedValue annotation");
-        }
-    }
 
     @Override
     public String getDefinition() {
-        return name + mysqlColumn.getColumnDefinition() + SPACE + mysqlIdGenerateStrategy.getValue() +
+        return name + columnType.getColumnDefinition() + SPACE + idGeneratedStrategy.getValue() +
                 SPACE + PRIMARY_KEY;
     }
 

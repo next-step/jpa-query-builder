@@ -3,8 +3,8 @@ package persistence.sql.dialect;
 import jakarta.persistence.GenerationType;
 import persistence.sql.column.ColumnType;
 import persistence.sql.column.MysqlColumnType;
-import persistence.sql.ddl.IdGeneratedStrategy;
-import persistence.sql.ddl.MysqlIdGeneratedStrategy;
+import persistence.sql.column.IdGeneratedStrategy;
+import persistence.sql.column.MysqlIdGeneratedStrategy;
 
 public class MysqlDialect implements Dialect {
 
