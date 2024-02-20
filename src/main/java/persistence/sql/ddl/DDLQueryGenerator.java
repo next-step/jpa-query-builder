@@ -35,8 +35,9 @@ public class DDLQueryGenerator {
         return String.format("CREATE TABLE %s (%s, %s)", tableName, columnDefinitions, primaryKeyDefinition);
     }
 
-    public String dropTableQuery(final Class<?> entityClazz) {
+    public String generateDropTableQuery(final Class<?> entityClazz) {
         checkIsEntity(entityClazz);
+
         final String tableName = getTableName(entityClazz);
         return String.format("DROP TABLE %s", tableName);
     }

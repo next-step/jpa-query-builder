@@ -114,7 +114,7 @@ class CreateTableQueryGeneratorTest {
 
         }
 
-        String query = sut.dropTableQuery(Person.class);
+        String query = sut.generateDropTableQuery(Person.class);
 
         assertThat(query.toLowerCase()).isEqualTo(expect.toLowerCase());
     }
