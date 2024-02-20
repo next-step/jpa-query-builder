@@ -32,7 +32,7 @@ public class DDLQueryBuilder {
         return String.format("DROP TABLE %s", getTableName(clazz));
     }
 
-    public String createTablePreQuery() {
+    private String createTablePreQuery() {
         return String.format("CREATE TABLE %s", getTableName());
     }
 
@@ -45,7 +45,7 @@ public class DDLQueryBuilder {
     }
 
     private String createColumnsSql() {
-        List<EntityColumn> entityColumns = entityMetadataInspector.getColumns();
+        List<EntityColumn> entityColumns = entityMetadataInspector.getEntityColumns();
 
         List<String> columns = entityColumns.stream().map(this::getColumn).collect(Collectors.toList());
 
@@ -53,7 +53,7 @@ public class DDLQueryBuilder {
     }
 
     private String createPrimaryKeySql() {
-        List<String> primaryKeys = entityMetadataInspector.getColumns().stream().filter(EntityColumn::isPrimaryKey).map(EntityColumn::getName).collect(Collectors.toList());
+        List<String> primaryKeys = entityMetadataInspector.getPrimaryKeys().stream().map(EntityColumn::getColumnName).collect(Collectors.toList());
 
         if (!primaryKeys.isEmpty()) {
             return ", PRIMARY KEY (" + String.join(", ", primaryKeys) + ")";
@@ -63,7 +63,7 @@ public class DDLQueryBuilder {
     }
 
     private String getColumn(EntityColumn column) {
-        return column.getName() + " " + column.getType().getMysqlType() + " " + getColumnProperty(column);
+        return column.getColumnName() + " " + column.getType().getMysqlType() + " " + getColumnProperty(column);
     }
 
     private String getColumnProperty(EntityColumn column) {

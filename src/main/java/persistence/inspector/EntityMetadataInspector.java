@@ -22,10 +22,11 @@ public class EntityMetadataInspector<T> {
         return clazz.getSimpleName().toLowerCase();
     }
 
-    public List<EntityColumn> getColumns() {
+    public List<EntityColumn> getEntityColumns() {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(this::isPersistable)
                 .map(field -> new EntityColumn(
+                        field.getName(),
                         getColumnName(field),
                         getColumnType(field),
                         isPrimaryKey(field),
@@ -33,6 +34,10 @@ public class EntityMetadataInspector<T> {
                         isAutoIncrement(field)
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public List<EntityColumn> getPrimaryKeys() {
+        return getEntityColumns().stream().filter(EntityColumn::isPrimaryKey).collect(Collectors.toList());
     }
 
     private boolean isPersistable(Field field) {
@@ -59,5 +64,10 @@ public class EntityMetadataInspector<T> {
     private boolean isAutoIncrement(Field field) {
         return field.isAnnotationPresent(GeneratedValue.class);
     }
+
+    public Field getField(String fieldName) throws Exception {
+        return clazz.getDeclaredField(fieldName);
+    }
+
 
 }
