@@ -10,29 +10,31 @@ import java.util.stream.Collectors;
 
 public class DDLQueryGenerator {
     private final TypeMapper typeMapper;
+
     DDLQueryGenerator(TypeMapper typeMapper) {
         this.typeMapper = typeMapper;
     }
+
     public String generateCreateQuery(final Class<?> entityClazz) {
         checkIsEntity(entityClazz);
-        final String tableName = getTableName(entityClazz);
+
+        final String tableNameClause = getTableName(entityClazz);
 
         List<Field> fields = Arrays.stream(entityClazz.getDeclaredFields())
                 .filter(field -> !field.getName().equals("this$0"))
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .collect(Collectors.toList());
 
-        String columnDefinitions = fields.stream().map(this::getColumnDefinition)
+        final String columnClause = fields.stream().map(this::getColumnDefinition)
                 .collect(Collectors.joining(", "));
 
         Field primaryKeyField = fields.stream()
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
                 .orElseThrow(IdAnnotationMissingException::new);
+        final String primaryKeyClause = "PRIMARY KEY (" + primaryKeyField.getName() + ")";
 
-        String primaryKeyDefinition = "PRIMARY KEY (" + primaryKeyField.getName() + ")";
-
-        return String.format("CREATE TABLE %s (%s, %s)", tableName, columnDefinitions, primaryKeyDefinition);
+        return String.format("CREATE TABLE %s (%s, %s)", tableNameClause, columnClause, primaryKeyClause);
     }
 
     public String generateDropTableQuery(final Class<?> entityClazz) {
