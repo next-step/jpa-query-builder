@@ -1,6 +1,6 @@
-package database.sql.util;
+package database.sql.util.type;
 
-public class MysqlEntityFieldTypeConverter implements EntityFieldTypeConverter {
+public class MySQLTypeConverter implements TypeConverter {
     @Override
     public String convert(Class<?> type, Integer columnLength) {
         switch (type.getName()) {

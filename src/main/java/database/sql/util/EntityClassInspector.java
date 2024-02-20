@@ -1,5 +1,8 @@
 package database.sql.util;
 
+import database.sql.util.column.GeneralColumn;
+import database.sql.util.column.IColumn;
+import database.sql.util.column.PrimaryKeyColumn;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
@@ -7,6 +10,9 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class EntityClassInspector {
+    private static final boolean DEFAULT_NULLABLE = true;
+    private static final int DEFAULT_COLUMN_LENGTH = 255;
+
     private final Class<?> entityClass;
 
     public EntityClassInspector(Class<?> entityClass) {
@@ -17,88 +23,71 @@ public class EntityClassInspector {
         Table tableAnnotation = entityClass.getAnnotation(Table.class);
         if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {
             return tableAnnotation.name();
-        } else {
-            return entityClass.getSimpleName();
         }
+        return entityClass.getSimpleName();
     }
 
-    public EntityColumn getPrimaryKeyColumn() {
-        return getFields()
-                .filter(this::isPrimaryKeyField)
-                .map(this::getEntityColumn)
+    public Stream<IColumn> getColumns() {
+        return Arrays.stream(entityClass.getDeclaredFields())
+                .filter(this::notTransientField)
+                .map(this::toColumn);
+    }
+
+    public IColumn getPrimaryKeyColumn() {
+        return getColumns()
+                .filter(IColumn::isPrimaryKeyField)
                 .findFirst()
                 .get();
     }
 
-    public Stream<EntityColumn> getVisibleColumns() {
-        return getFields().map(this::getEntityColumn);
-    }
-
-    public Stream<EntityColumn> getColumnsForInserting() {
-        return getFields()
-                .filter(field -> !isPrimaryKeyField(field))
-                .map(this::getEntityColumn);
-    }
-
-    private Stream<Field> getFields() {
-        return Arrays.stream(entityClass.getDeclaredFields())
-                .filter(this::notTransientField);
-    }
-
-    private boolean isPrimaryKeyField(Field field) {
-        return field.isAnnotationPresent(Id.class);
+    public Stream<IColumn> getColumnsForInserting() {
+        return getColumns().filter(column -> !column.isPrimaryKeyField());
     }
 
     private boolean notTransientField(Field field) {
         return field.getAnnotation(Transient.class) == null;
     }
 
-    private EntityColumn getEntityColumn(Field field) {
+    private IColumn toColumn(Field field) {
         Column columnAnnotation = field.getAnnotation(Column.class);
-        Id idAnnotation = field.getAnnotation(Id.class);
-        GeneratedValue GeneratedValueAnnotation = field.getAnnotation(GeneratedValue.class);
-        EntityFieldTypeConverter entityFieldTypeConverter = new MysqlEntityFieldTypeConverter();
+        GeneratedValue generatedValueAnnotation = field.getAnnotation(GeneratedValue.class);
+        boolean isId = field.isAnnotationPresent(Id.class);
 
-        return new EntityColumn(
-                columnName(columnAnnotation, field.getName()),
-                field.getType(),
-                columnLength(columnAnnotation, 255),
-                idAnnotation != null,
-                isAutoIncrement(GeneratedValueAnnotation, false),
-                isNullable(columnAnnotation, true),
-                entityFieldTypeConverter);
+        String columnName = getColumnNameFromAnnotation(columnAnnotation, field.getName());
+        Class<?> type = field.getType();
+        Integer columnLength = getColumnLength(columnAnnotation);
+
+        if (isId) {
+            boolean autoIncrement = isAutoIncrement(generatedValueAnnotation);
+            return new PrimaryKeyColumn(columnName, type, columnLength, autoIncrement);
+        } else {
+            boolean nullable = isNullable(columnAnnotation);
+            return new GeneralColumn(columnName, type, columnLength, nullable);
+        }
     }
 
-    private String columnName(Column columnAnnotation, String defaultName) {
+    private String getColumnNameFromAnnotation(Column columnAnnotation, String defaultName) {
         if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
             return columnAnnotation.name();
-        } else {
-            return defaultName;
         }
+        return defaultName;
     }
 
-    private Integer columnLength(Column columnAnnotation, Integer defaultValue) {
+    private Integer getColumnLength(Column columnAnnotation) {
         if (columnAnnotation != null) {
             return columnAnnotation.length();
-        } else {
-            return defaultValue;
         }
+        return DEFAULT_COLUMN_LENGTH;
     }
 
-    private boolean isAutoIncrement(GeneratedValue generatedValueAnnotation, boolean defaultValue) {
-        if (generatedValueAnnotation != null && generatedValueAnnotation.strategy() == GenerationType.IDENTITY) {
-            return true;
-        } else {
-            return defaultValue;
-        }
+    private boolean isAutoIncrement(GeneratedValue generatedValueAnnotation) {
+        return generatedValueAnnotation != null && generatedValueAnnotation.strategy() == GenerationType.IDENTITY;
     }
 
-    private boolean isNullable(Column columnAnnotation, boolean defaultValue) {
+    private boolean isNullable(Column columnAnnotation) {
         if (columnAnnotation != null) {
             return columnAnnotation.nullable();
-        } else {
-            return defaultValue;
         }
+        return DEFAULT_NULLABLE;
     }
-
 }

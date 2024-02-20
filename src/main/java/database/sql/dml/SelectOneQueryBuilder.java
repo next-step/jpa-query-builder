@@ -1,7 +1,7 @@
 package database.sql.dml;
 
 import database.sql.util.EntityClassInspector;
-import database.sql.util.EntityColumn;
+import database.sql.util.column.IColumn;
 
 import java.util.stream.Collectors;
 
@@ -17,8 +17,8 @@ public class SelectOneQueryBuilder {
     public String buildQuery() {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();
-        String fieldsForSelecting = inspector.getVisibleColumns()
-                .map(EntityColumn::getColumnName)
+        String fieldsForSelecting = inspector.getColumns()
+                .map(IColumn::getColumnName)
                 .collect(Collectors.joining(", "));
         String whereClause = whereClause(inspector);
 
@@ -26,7 +26,7 @@ public class SelectOneQueryBuilder {
     }
 
     private String whereClause(EntityClassInspector inspector) {
-        EntityColumn primaryKeyColumn = inspector.getPrimaryKeyColumn();
+        IColumn primaryKeyColumn = inspector.getPrimaryKeyColumn();
         String fieldName = primaryKeyColumn.getColumnName();
         return fieldName + " = " + id;
     }

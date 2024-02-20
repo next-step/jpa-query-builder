@@ -8,6 +8,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QueryBuilderTest {
+
     @Test
     void buildInsertQuery() {
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -37,24 +38,34 @@ class QueryBuilderTest {
 
     // TODO: 테스트간략화
     @Test
-    void buildDeleteQuery() {
+    void deleteQueryWithPrimaryKeyField() {
+        HashMap<String, Object> where = new HashMap<>() {{
+            put("id", 3L);
+        }};
+        assertDeleteQuery(where, "DELETE FROM users WHERE id = 3");
+    }
+
+    @Test
+    void deleteQueryWithNotPrimaryKeyField() {
+        HashMap<String, Object> where = new HashMap<>() {{
+            put("nick_name", "foo");
+        }};
+        assertDeleteQuery(where, "DELETE FROM users WHERE nick_name = 'foo'");
+    }
+
+    @Test
+    void deleteQueryWithMultipleCond() {
+        HashMap<String, Object> where = new HashMap<>() {{
+            put("old", 18);
+            put("email", "example@email.com");
+        }};
+        assertDeleteQuery(where, "DELETE FROM users WHERE old = 18 AND email = 'example@email.com'");
+    }
+
+    void assertDeleteQuery(Map<String, Object> where, String expected) {
         QueryBuilder queryBuilder = new QueryBuilder();
+        String actual = queryBuilder.buildDeleteQuery(Person4.class, where);
 
-        Map<String, Object> conditionMap = new HashMap<>();
-        conditionMap.put("id", 3L);
-        String actual = queryBuilder.buildDeleteQuery(Person4.class, conditionMap);
-        assertThat(actual).isEqualTo("DELETE FROM users WHERE id = 3");
-
-        Map<String, Object> conditionMap2 = new HashMap<>();
-        conditionMap2.put("nick_name", "foo");
-        String actual2 = queryBuilder.buildDeleteQuery(Person4.class, conditionMap2);
-        assertThat(actual2).isEqualTo("DELETE FROM users WHERE nick_name = 'foo'");
-
-        Map<String, Object> conditionMap3 = new HashMap<>();
-        conditionMap3.put("old", 18);
-        conditionMap3.put("email", "example@email.com");
-        String actual3 = queryBuilder.buildDeleteQuery(Person4.class, conditionMap3);
-        assertThat(actual3).isEqualTo("DELETE FROM users WHERE old = 18 AND email = 'example@email.com'");
-
+        assertThat(actual).isEqualTo(expected);
     }
 }

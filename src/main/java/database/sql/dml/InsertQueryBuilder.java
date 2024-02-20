@@ -1,7 +1,7 @@
 package database.sql.dml;
 
 import database.sql.util.EntityClassInspector;
-import database.sql.util.EntityColumn;
+import database.sql.util.column.IColumn;
 
 import java.util.List;
 import java.util.Map;
@@ -21,20 +21,20 @@ public class InsertQueryBuilder {
     public String buildQuery() {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();
-        List<EntityColumn> columnsForInserting = inspector.getColumnsForInserting().collect(Collectors.toList());
+        List<IColumn> columnsForInserting = inspector.getColumnsForInserting().collect(Collectors.toList());
         String columns = columnClauses(columnsForInserting);
         String values = valueClauses(columnsForInserting, valueMap);
 
         return String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columns, values);
     }
 
-    private String columnClauses(List<EntityColumn> columnsForInserting) {
+    private String columnClauses(List<IColumn> columnsForInserting) {
         return columnsForInserting.stream()
-                .map(EntityColumn::getColumnName)
+                .map(IColumn::getColumnName)
                 .collect(Collectors.joining(", "));
     }
 
-    private String valueClauses(List<EntityColumn> columnsForInserting, Map<String, Object> valueMap) {
+    private String valueClauses(List<IColumn> columnsForInserting, Map<String, Object> valueMap) {
         return columnsForInserting.stream()
                 .map(it -> quote(valueMap.get(it.getColumnName())))
                 .collect(Collectors.joining(", "));

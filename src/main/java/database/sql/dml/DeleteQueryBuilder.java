@@ -27,7 +27,7 @@ public class DeleteQueryBuilder {
 
     private String whereClause(EntityClassInspector inspector) {
         List<String> whereCond = new ArrayList<>();
-        inspector.getVisibleColumns().forEach(entityColumn -> {
+        inspector.getColumns().forEach(entityColumn -> {
             String columnName = entityColumn.getColumnName();
             if (conditionMap.containsKey(columnName)) {
                 Object value = conditionMap.get(columnName);
