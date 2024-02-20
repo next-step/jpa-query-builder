@@ -174,7 +174,7 @@ public class ReflectionTest {
 >
 > 최종적으로 Car 인스턴스에 값이 할당되어 있는지 확인한다.
 
-### [ ] 요구사항 5 - 인자를 가진 생성자의 인스턴스 생성
+### [x] 요구사항 5 - 인자를 가진 생성자의 인스턴스 생성
 
 * 자바 Reflection API를 활용해 Car 인스턴스를 생성한다.
 * 구현은 src/test/java/persistence/study > ReflectionTest 클래스의 `constructorWithArgs()` 메소드에 한다.

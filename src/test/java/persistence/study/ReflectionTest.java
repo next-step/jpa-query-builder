@@ -106,7 +106,18 @@ public class ReflectionTest {
         priceField.set(car, 1);
 
         // then
-        assertThat(car.testGetName()).isEqualTo("test : 테슬라");
-        assertThat(car.testGetPrice()).isEqualTo("test : 1");
+        assertAll(
+                () -> assertThat(car.testGetName()).isEqualTo("test : 테슬라"),
+                () -> assertThat(car.testGetPrice()).isEqualTo("test : 1")
+        );
+    }
+
+    @Test
+    @DisplayName("Reflection을 이용해 인자를 가진 생성자의 인스턴스 생성이 가능해야 한다")
+    void constructorWithArgs() {
+        assertAll(
+                () -> assertThat(car.testGetName()).isEqualTo("test : " + CAR_NAME),
+                () -> assertThat(car.testGetPrice()).isEqualTo("test : " + CAR_PRICE)
+        );
     }
 }
