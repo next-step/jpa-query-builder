@@ -2,12 +2,19 @@ package persistence.study;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReflectionTest {
 	private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -35,5 +42,20 @@ public class ReflectionTest {
 		for (Method method : methods) {
 			System.out.println(method);
 		}
+	}
+
+	@Test
+	void test_로_시작하는_메소드_실행() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		Class<Car> carClass = Car.class;
+		Car car = carClass.getConstructor().newInstance();
+		Arrays.stream(carClass.getDeclaredMethods())
+			.filter(x -> x.getName().contains("test"))
+			.forEach(x -> {
+				try {
+					x.invoke(car);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			});
 	}
 }
