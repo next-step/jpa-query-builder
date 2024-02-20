@@ -8,7 +8,9 @@ import persistence.sql.JdbcServerTest;
 import persistence.sql.TestJdbcServerExtension;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
-import persistence.sql.query.Query;
+import persistence.sql.mapping.ColumnTypeMapper;
+import persistence.sql.mapping.Table;
+import persistence.sql.mapping.TableBinder;
 
 import java.util.List;
 
@@ -16,6 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcServerTest
 class DefaultDdlQueryBuilderIntegrationTest {
+
+    private final ColumnTypeMapper columnTypeMapper = ColumnTypeMapper.getInstance();
+
+    private final TableBinder tableBinder = new TableBinder(columnTypeMapper);
 
     private final Dialect dialect= new H2Dialect();
     private final DdlQueryBuilder queryBuilder = new DefaultDdlQueryBuilder(dialect);
@@ -37,9 +43,9 @@ class DefaultDdlQueryBuilderIntegrationTest {
     public void createTable() throws Exception {
         // given
         final Class<PersonV3> clazz = PersonV3.class;
-        final Query query = queryBuilder.generateQuery(clazz);
+        final Table table = tableBinder.createTable(clazz);
         final jdbc.JdbcTemplate jdbcTemplate = TestJdbcServerExtension.getJdbcTemplate();
-        final String createQuery = queryBuilder.buildCreateQuery(query);
+        final String createQuery = queryBuilder.buildCreateQuery(table);
 
         // when
         jdbcTemplate.execute(createQuery);
@@ -56,11 +62,11 @@ class DefaultDdlQueryBuilderIntegrationTest {
     public void dropTable() throws Exception {
         // given
         final Class<PersonV3> clazz = PersonV3.class;
-        final Query query = queryBuilder.generateQuery(clazz);
+        final Table table = tableBinder.createTable(clazz);
         final JdbcTemplate jdbcTemplate = TestJdbcServerExtension.getJdbcTemplate();
-        final String createQuery = queryBuilder.buildCreateQuery(query);
+        final String createQuery = queryBuilder.buildCreateQuery(table);
         jdbcTemplate.execute(createQuery);
-        final String dropQuery = queryBuilder.buildDropQuery(query);
+        final String dropQuery = queryBuilder.buildDropQuery(table);
 
         // when
         jdbcTemplate.execute(dropQuery);
