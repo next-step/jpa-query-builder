@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
 import persistence.sql.dialect.Dialect;
-import persistence.sql.query.Column;
-import persistence.sql.query.Query;
+import persistence.sql.mapping.Column;
+import persistence.sql.mapping.Table;
 
 import java.util.stream.Collectors;
 
@@ -15,46 +15,53 @@ public class DefaultDdlQueryBuilder implements DdlQueryBuilder {
     }
 
     @Override
-    public String buildCreateQuery(final Query query) {
-        final StringBuilder ddl = new StringBuilder()
-                .append("CREATE TABLE ")
-                .append(query.getTableName())
+    public String buildCreateQuery(final Table table) {
+        final StringBuilder statement = new StringBuilder()
+                .append("create table ")
+                .append(table.getName())
                 .append(" (\n")
                 .append(SPACE);
 
-        final String columnsQuery = query.getColumns()
+        final String columnsQuery = table.getColumns()
                 .stream()
                 .map(this::buildColumnQuery)
                 .collect(Collectors.joining(",\n" + SPACE));
 
-        ddl.append(columnsQuery)
-                .append("\n")
-                .append(");");
+        statement.append(columnsQuery);
 
-        return ddl.toString();
+        if (table.hasPrimaryKey()) {
+            statement.append(",\n")
+                    .append(SPACE)
+                    .append(table.getPrimaryKey().sqlConstraintString());
+        }
+
+        return statement.append("\n").append(")").toString();
     }
 
     private String buildColumnQuery(final Column column) {
-        final String columnType = dialect.convertColumnType(column.getType(), column.getLength());
+        final String columnType = column.getSqlType(dialect);
 
         final StringBuilder columnQuery = new StringBuilder()
                 .append(column.getName())
                 .append(" ")
                 .append(columnType);
 
-        final String keywords = dialect.toDialectKeywords(column);
-
-        if (!keywords.isBlank()) columnQuery.append(" ")
-                .append(keywords);
-
+        if (column.isIdentifierKey()) {
+            columnQuery.append(" ")
+                    .append(dialect.getIdentityColumnSupport().getIdentityColumnString());
+        } else {
+            if (column.isNotNull()) {
+                columnQuery.append(" not null");
+            }
+        }
 
         return columnQuery.toString();
     }
 
     @Override
-    public String buildDropQuery(final Query query) {
-        return "DROP TABLE IF EXISTS " +
-                query.getTableName() +
+    public String buildDropQuery(final Table table) {
+        return "drop table if exists " +
+                table.getName() +
                 ";";
     }
 
