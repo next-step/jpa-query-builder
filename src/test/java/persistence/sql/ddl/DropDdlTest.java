@@ -12,8 +12,8 @@ class DropDdlTest {
     @DisplayName("Person 클래스의 DDL을 삭제한다.")
     @Test
     void dropDdl() {
-        QueryBuilder queryBuilder = new DropDdl();
-        String ddl = queryBuilder.generate(Person.class, Database.MYSQL);
+        DdlQueryBuilder ddlQueryBuilder = new DropDdl();
+        String ddl = ddlQueryBuilder.generate(Person.class, Database.MYSQL);
 
         assertThat("drop table users").isEqualTo(ddl);
     }

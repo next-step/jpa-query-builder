@@ -1,37 +1,29 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Transient;
-import persistence.sql.column.Column;
-import persistence.sql.column.MetaDataMapper;
-import persistence.sql.column.TableColumn;
+import persistence.sql.column.*;
 import persistence.sql.dialect.Database;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class CreateDdl implements QueryBuilder {
+public class CreateDdl implements DdlQueryBuilder {
 
-    private static final String CREATE_TABLE_DDL = "create table ";
+    private static final String CREATE_TABLE_DDL = "create table %s (%s)";
     private static final String COMMA = ", ";
-    private static final String OPEN_BRACKET = " (";
-    private static final String CLOSE_BRACKET = ")";
 
     @Override
     public String generate(Class<?> clazz, Database database) {
 
-        StringBuilder sb = new StringBuilder();
+        ColumnGenerator columnGenerator = new ColumnGenerator(new GeneralColumnFactory());
         TableColumn tableColumn = TableColumn.from(clazz);
-        sb.append(CREATE_TABLE_DDL).append(tableColumn.getName()).append(OPEN_BRACKET);
+        String columns = columnGenerator.of(clazz.getDeclaredFields(), database.createDialect())
+                .stream()
+                .map(Column::getDefinition)
+                .collect(Collectors.joining(COMMA));
 
-        Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .forEach(field -> {
-                    Column column = MetaDataMapper.of(field, database.createDialect());
-                    sb.append(column.getDefinition());
-                    sb.append(COMMA);
-                });
-        sb.delete(sb.length() - 2, sb.length());
-        sb.append(CLOSE_BRACKET);
-
-        return sb.toString();
+        return String.format(CREATE_TABLE_DDL, tableColumn.getName(), columns);
     }
 }

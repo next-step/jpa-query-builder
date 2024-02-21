@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 import persistence.sql.column.TableColumn;
 import persistence.sql.dialect.Database;
 
-public class DropDdl implements QueryBuilder {
+public class DropDdl implements DdlQueryBuilder {
 
     private static final String DROP_TABLE = "drop table ";
 

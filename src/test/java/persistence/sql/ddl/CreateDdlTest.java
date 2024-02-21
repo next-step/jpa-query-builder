@@ -12,8 +12,8 @@ class CreateDdlTest {
     @DisplayName("Person 클래스의 DDL을 생성한다.")
     @Test
     void createDdl() {
-        QueryBuilder queryBuilder = new CreateDdl();
-        String ddl = queryBuilder.generate(Person.class, Database.MYSQL);
+        DdlQueryBuilder ddlQueryBuilder = new CreateDdl();
+        String ddl = ddlQueryBuilder.generate(Person.class, Database.MYSQL);
 
         assertThat(ddl).isEqualTo("create table users (id bigint auto_increment primary key, nick_name varchar(255), old integer, email varchar(255) not null)");
     }
