@@ -12,6 +12,15 @@
 
 1. @Entity, @Id 가 포함된 클래스를 이용하여 create 쿼리 만들기
    - @Id 가 붙은 컬럼이 반드시 존재해야한다.
+   - 컬럼 타입이 아래처럼 변환 되어야한다.
+     - String -> VARCHAR
+     - Integer -> INT
+     - Long -> BIGINT
+     - LocalDate -> DATETIME
+     - Boolean -> BIT
 2. @Column, @GeneratedValue 가 포함된 클래스를 이용하여 create 쿼리 만들기
+   - @Column 에 name 속성이 있을 경우, name 속성 값으로 저장된다.
+   - @Column 에 length 속성의 default 값은 255이다.
+   - @Column 에 nullable 속성의 default 값은 true 다.
 3. @Table, @Transient 가 포함된 클래스를 이용하여 create 쿼리 만들기
 4. @Entity, @Table 을 고려하여 drop 쿼리 만들기
