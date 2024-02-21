@@ -1,4 +1,4 @@
-package persistence.sql;
+package persistence.sql.ddl.dialect;
 
 import java.sql.Types;
 import java.util.Map;

@@ -2,7 +2,7 @@ package persistence.sql.ddl.h2;
 
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.h2.meta.H2Column;
-import persistence.sql.dialect.Dialect;
+import persistence.sql.ddl.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

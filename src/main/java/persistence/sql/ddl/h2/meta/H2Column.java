@@ -1,8 +1,8 @@
 package persistence.sql.ddl.h2.meta;
 
 import jakarta.persistence.Id;
-import persistence.sql.dialect.Dialect;
-import persistence.sql.dialect.H2Dialect;
+import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.ddl.dialect.H2Dialect;
 import persistence.sql.meta.ColumnName;
 
 import java.lang.reflect.Field;

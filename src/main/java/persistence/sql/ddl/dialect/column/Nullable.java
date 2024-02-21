@@ -1,4 +1,4 @@
-package persistence.sql.dialect.column;
+package persistence.sql.ddl.dialect.column;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;

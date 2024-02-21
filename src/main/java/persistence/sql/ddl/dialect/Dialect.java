@@ -1,10 +1,9 @@
-package persistence.sql.dialect;
+package persistence.sql.ddl.dialect;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.JdbcUtils;
-import persistence.sql.dialect.column.Nullable;
+import persistence.sql.ddl.dialect.column.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

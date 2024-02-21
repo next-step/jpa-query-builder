@@ -1,7 +1,7 @@
 package persistence.sql.ddl.builder;
 
 import persistence.sql.ddl.h2.ColumnGenerator;
-import persistence.sql.dialect.H2Dialect;
+import persistence.sql.ddl.dialect.H2Dialect;
 import persistence.sql.meta.TableName;
 
 public class CreateQueryBuilder implements QueryBuilder {
