@@ -1,6 +1,7 @@
 package persistence.sql.ddl.dialect.h2;
 
 import persistence.sql.ddl.dialect.database.TypeMapper;
+import persistence.sql.ddl.dialect.exception.InvalidJavaClassException;
 import persistence.sql.ddl.query.model.ColumnType;
 
 import java.util.Map;
@@ -27,6 +28,10 @@ public class H2TypeMapper implements TypeMapper {
 
     @Override
     public String toSqlType(Class<?> clazz) {
-        return javaClassToJdbcType.getOrDefault(clazz, "");
+        if(!this.javaClassToJdbcType.containsKey(clazz)) {
+            throw new InvalidJavaClassException();
+        }
+
+        return this.javaClassToJdbcType.get(clazz);
     }
 }
