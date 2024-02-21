@@ -1,9 +1,9 @@
 package persistence.sql.ddl.dialect;
 
-public abstract class Dialect {
+public interface Dialect {
 
-    public abstract String createTable(Class<?> clazz);
+    String createTable(Class<?> clazz);
 
-    public abstract String dropTable(Class<?> clazz);
+    String dropTable(Class<?> clazz);
 
 }

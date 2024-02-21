@@ -6,7 +6,7 @@ import persistence.sql.ddl.query.EntityMappingTable;
 import persistence.sql.ddl.query.builder.CreateQueryBuilder;
 import persistence.sql.ddl.query.builder.DropQueryBuilder;
 
-public class H2Dialect extends Dialect {
+public class H2Dialect implements Dialect {
     private final TypeMapper typeMapper;
 
     public H2Dialect() {
