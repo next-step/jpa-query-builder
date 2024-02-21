@@ -6,25 +6,29 @@ import persistence.sql.ddl.dialect.exception.NotFoundDatabase;
 import persistence.sql.ddl.dialect.h2.H2Dialect;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 public enum Database {
 
-    H2 {
-        @Override
-        public Dialect createDialect() {
-            return new H2Dialect();
-        }
-
+    H2(H2Dialect::new) {
         @Override
         public boolean productNameMatchers(String databaseName) {
-            return "H2".equals(databaseName);
+            return this.name().equals(databaseName);
         }
     };
 
-    public abstract Dialect createDialect();
+    private final Supplier<Dialect> dialectSupplier;
 
     public abstract boolean productNameMatchers(String databaseName);
 
+
+    Database(Supplier<Dialect> dialectSupplier) {
+        this.dialectSupplier = dialectSupplier;
+    }
+
+    public Supplier<Dialect> getDialectSupplier() {
+        return dialectSupplier;
+    }
 
     public static Database from(final DialectResolution dialectResolution) {
         return Arrays.stream(values())
