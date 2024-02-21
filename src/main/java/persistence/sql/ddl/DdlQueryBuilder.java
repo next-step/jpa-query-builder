@@ -6,15 +6,10 @@ import persistence.sql.ddl.view.QueryResolver;
 
 import java.util.List;
 
-import static persistence.sql.ddl.CommonConstant.END_STR;
-import static persistence.sql.ddl.CommonConstant.SPACE;
-import static persistence.sql.ddl.columntype.MySQLColumnType.CLOSE_BRACKET;
-import static persistence.sql.ddl.columntype.MySQLColumnType.OPEN_BRACKET;
-
 public class DdlQueryBuilder implements DdlQueryBuild {
 
-    private static final String CREATE_TABLE = "CREATE TABLE";
-    private static final String DROP_TABLE = "DROP TABLE";
+    private static final String CREATE_TABLE_TEMPLATE = "CREATE TABLE %s(%s);";
+    private static final String DROP_TABLE_TEMPLATE = "DROP TABLE %s;";
 
     private final QueryResolver queryResolver;
 
@@ -27,16 +22,7 @@ public class DdlQueryBuilder implements DdlQueryBuild {
         DatabaseTable table = new DatabaseTable(type);
         List<DatabaseColumn> columns = table.getColumns();
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(CREATE_TABLE)
-                .append(SPACE)
-                .append(table.getName())
-                .append(OPEN_BRACKET);
-
-        return sb.append(queryResolver.toQuery(columns))
-                .append(CLOSE_BRACKET)
-                .append(END_STR)
-                .toString();
+        return String.format(CREATE_TABLE_TEMPLATE, table.getName(), queryResolver.toQuery(columns));
     }
 
 
@@ -44,9 +30,7 @@ public class DdlQueryBuilder implements DdlQueryBuild {
     public String dropQuery(Class<?> type) {
         DatabaseTable table = new DatabaseTable(type);
 
-        return DROP_TABLE +
-                SPACE +
-                table.getName() +
-                END_STR;
+        return String.format(DROP_TABLE_TEMPLATE, table.getName());
+
     }
 }
