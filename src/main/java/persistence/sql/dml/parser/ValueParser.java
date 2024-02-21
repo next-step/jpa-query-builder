@@ -7,6 +7,8 @@ import persistence.sql.dml.keygenerator.KeyGenerator;
 import java.lang.reflect.Field;
 
 public class ValueParser {
+    private ValueParser() {
+    }
 
     public static String insertValuesClauseParse(Field field, Object object, KeyGenerator keyGenerator) {
         if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class)) {

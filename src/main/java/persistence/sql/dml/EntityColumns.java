@@ -52,11 +52,15 @@ public class EntityColumns {
     }
 
     private String getFieldName(final Field field) {
-        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isBlank()) {
+        if (isNotBlankOf(field)) {
             return field.getAnnotation(Column.class).name();
         }
 
         return field.getName();
+    }
+
+    private boolean isNotBlankOf(final Field field) {
+        return field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isBlank();
     }
 
     private Integer idFirstOrdered(Field field) {
