@@ -1,8 +1,11 @@
 package persistence.sql.ddl.query.builder;
 
+import persistence.sql.ddl.dialect.database.ConstraintsMapper;
 import persistence.sql.ddl.dialect.database.TypeMapper;
 import persistence.sql.ddl.query.EntityMappingTable;
+import persistence.sql.ddl.query.model.DomainType;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
@@ -10,19 +13,33 @@ public class CreateQueryBuilder {
     private static final String CREATE_SQL = "CREATE TABLE %s(\n%s\n);";
     private static final String DELIMITER = ",\n";
 
-    private final EntityMappingTable entityMappingTable;
+    private final String tableName;
+    private final List<ColumnBuilder> columnBuilders;
 
-    public CreateQueryBuilder(final EntityMappingTable entityMappingTable) {
-        this.entityMappingTable = entityMappingTable;
+    private CreateQueryBuilder(final String tableName,
+                               final List<ColumnBuilder> columnBuilders) {
+        this.tableName = tableName;
+        this.columnBuilders = columnBuilders;
     }
 
-    public String toSql(final TypeMapper typeMapper) {
-        String columns = entityMappingTable.getDomainTypes()
+    public static CreateQueryBuilder of(final EntityMappingTable entityMappingTable,
+                                        final TypeMapper typeMapper,
+                                        final ConstraintsMapper constantTypeMapper) {
+        List<ColumnBuilder> columnBuilders = entityMappingTable.getDomainTypes()
                 .stream()
-                .map(domainType -> new ColumnBuilder(domainType, typeMapper).build())
+                .filter(DomainType::isNotTransient)
+                .map(domainType -> new ColumnBuilder(domainType, typeMapper, constantTypeMapper))
+                .collect(Collectors.toList());
+
+        return new CreateQueryBuilder(entityMappingTable.getTableName(), columnBuilders);
+    }
+
+    public String toSql() {
+        String columns = columnBuilders.stream()
+                .map(ColumnBuilder::build)
                 .collect(Collectors.joining(DELIMITER));
 
-        return String.format(CREATE_SQL, entityMappingTable.getTableName(), columns);
+        return String.format(CREATE_SQL, tableName, columns);
     }
 
 
