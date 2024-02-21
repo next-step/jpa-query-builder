@@ -1,6 +1,10 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import persistence.sql.ddl.mapper.ConstraintMapper;
+import persistence.sql.ddl.mapper.H2ConstraintMapper;
+import persistence.sql.ddl.mapper.H2TypeMapper;
+import persistence.sql.ddl.mapper.TypeMapper;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
