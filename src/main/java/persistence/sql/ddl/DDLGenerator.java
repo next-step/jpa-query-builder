@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -15,7 +17,7 @@ public class DDLGenerator {
         String sql = "CREATE TABLE " + tableName + " (";
 
         sql += Arrays.stream(entity.getDeclaredFields())
-                .map(field -> field.getName() + " " + ColumnType.findColumnType(field.getType()))
+                .map(DDLGenerator::defineColumn)
                 .collect(Collectors.joining(", "));
 
         String id = Arrays.stream(entity.getDeclaredFields())
@@ -24,11 +26,25 @@ public class DDLGenerator {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Persistent entity '%s' should have primary key", entity.getName())));
 
-        sql += String.format(" CONSTRAINT %s_pk PRIMARY KEY(%s)", tableName, id);
+        sql += String.format(", PRIMARY KEY(%s)", id);
 
         sql += ");";
         return sql;
     }
+
+    private static String defineColumn(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+
+        String columnName = column != null ? column.name() : field.getName();
+        String columnType = ColumnType.findColumnType(field.getType());
+        String columnLength = column != null ? String.format("(%s)", column.length()) : "";
+        String generatedValueStrategy = generatedValue != null ? " " + generatedValue.strategy().name() + " " : "";
+        String nullable = column != null && !column.nullable() ? " not null" : " null";
+
+        return columnName + " " + columnType + columnLength + generatedValueStrategy + nullable;
+    }
+
 
     private static String getTableName(Class<?> entity) {
         String name = entity.getName();

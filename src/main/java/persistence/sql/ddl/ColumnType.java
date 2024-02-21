@@ -6,7 +6,7 @@ import java.util.Arrays;
 public enum ColumnType {
 
     VARCHAR(String.class),
-    INT(int.class),
+    INT(Integer.class),
     BIGINT(Long.class),
     DATETIME(LocalDate.class),
     BIT(Boolean.class);

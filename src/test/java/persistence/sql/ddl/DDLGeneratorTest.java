@@ -17,10 +17,11 @@ class DDLGeneratorTest {
 
         // then
         assertThat(createSql).isEqualTo("CREATE TABLE person (" +
-                "id BIGINT, " +
-                "name VARCHAR, " +
-                "age INT " +
-                "CONSTRAINT person_pk PRIMARY KEY(id));");
+                "id BIGINT AUTO_INCREMENT, " +
+                "nick_name VARCHAR(255), " +
+                "old INT, " +
+                "email VARCHAR(255) not null" +
+                ", PRIMARY KEY(id));");
     }
 
 }
