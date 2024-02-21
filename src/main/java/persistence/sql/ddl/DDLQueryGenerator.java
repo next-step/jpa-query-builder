@@ -21,7 +21,6 @@ public class DDLQueryGenerator {
         final String tableNameClause = getTableName(entityClazz);
 
         List<Field> fields = Arrays.stream(entityClazz.getDeclaredFields())
-                .filter(field -> !field.getName().equals("this$0"))
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .collect(Collectors.toList());
 
