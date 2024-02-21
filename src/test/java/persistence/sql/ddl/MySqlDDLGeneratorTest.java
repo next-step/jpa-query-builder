@@ -5,21 +5,21 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class DDLGeneratorTest {
+class MySqlDDLGeneratorTest {
 
     @Test
     void createPersonCreateQuery() {
         // given
-        DDLGenerator ddlGenerator = new DDLGenerator();
+        MySqlDDLGenerator mySqlDdlGenerator = new MySqlDDLGenerator();
 
         // when
-        String createSql = ddlGenerator.generateCreate(Person.class);
+        String createSql = mySqlDdlGenerator.generateCreate(Person.class);
 
         // then
         assertThat(createSql).isEqualTo("CREATE TABLE person (" +
-                "id BIGINT AUTO_INCREMENT, " +
-                "nick_name VARCHAR(255), " +
-                "old INT, " +
+                "id BIGINT AUTO_INCREMENT not null, " +
+                "nick_name VARCHAR(255) null, " +
+                "old INT null, " +
                 "email VARCHAR(255) not null" +
                 ", PRIMARY KEY(id));");
     }

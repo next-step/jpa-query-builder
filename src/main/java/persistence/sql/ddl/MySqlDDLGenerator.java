@@ -1,14 +1,12 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class DDLGenerator {
+public class MySqlDDLGenerator {
 
     public static final String DOT = "\\.";
 
@@ -17,7 +15,8 @@ public class DDLGenerator {
         String sql = "CREATE TABLE " + tableName + " (";
 
         sql += Arrays.stream(entity.getDeclaredFields())
-                .map(DDLGenerator::defineColumn)
+                .map(MySqlColumn::from)
+                .map(MySqlColumn::defineColumn)
                 .collect(Collectors.joining(", "));
 
         String id = Arrays.stream(entity.getDeclaredFields())
@@ -30,19 +29,6 @@ public class DDLGenerator {
 
         sql += ");";
         return sql;
-    }
-
-    private static String defineColumn(Field field) {
-        Column column = field.getAnnotation(Column.class);
-        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-
-        String columnName = column != null ? column.name() : field.getName();
-        String columnType = ColumnType.findColumnType(field.getType());
-        String columnLength = column != null ? String.format("(%s)", column.length()) : "";
-        String generatedValueStrategy = generatedValue != null ? " " + generatedValue.strategy().name() + " " : "";
-        String nullable = column != null && !column.nullable() ? " not null" : " null";
-
-        return columnName + " " + columnType + columnLength + generatedValueStrategy + nullable;
     }
 
 

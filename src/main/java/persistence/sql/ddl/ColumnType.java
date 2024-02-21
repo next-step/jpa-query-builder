@@ -18,10 +18,9 @@ public enum ColumnType {
         this.fieldType = fieldType;
     }
 
-    public static String findColumnType(Class<?> field) {
+    public static ColumnType findColumnType(Class<?> field) {
         return Arrays.stream(values())
                 .filter(columnType -> columnType.fieldType == field)
-                .map(Enum::name)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid field Type: %s", field.getTypeName())));
     }

@@ -18,10 +18,10 @@ class ColumnTypeTest {
         Class<String> string = String.class;
 
         // when
-        String columnType = ColumnType.findColumnType(string);
+        ColumnType columnType = ColumnType.findColumnType(string);
 
         // then
-        assertThat(columnType).isEqualTo(VARCHAR.name());
+        assertThat(columnType).isEqualTo(VARCHAR);
     }
 
     @Test
