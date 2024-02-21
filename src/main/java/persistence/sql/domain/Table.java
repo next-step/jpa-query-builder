@@ -26,17 +26,17 @@ public class Table {
         return new Table(tableName, columns);
     }
 
-    private static void checkIsEntity(Class<?> targetClass) {
-        if (!targetClass.isAnnotationPresent(Entity.class)) {
+    private static void checkIsEntity(Class<?> target) {
+        if (!target.isAnnotationPresent(Entity.class)) {
             throw new NotEntityException();
         }
     }
 
-    private static String getTableName(Class<?> targetClass) {
-        return Optional.ofNullable(targetClass.getAnnotation(jakarta.persistence.Table.class))
+    private static String getTableName(Class<?> target) {
+        return Optional.ofNullable(target.getAnnotation(jakarta.persistence.Table.class))
                 .map(jakarta.persistence.Table::name)
                 .filter(name -> !name.isBlank())
-                .orElse(targetClass.getSimpleName());
+                .orElse(target.getSimpleName());
     }
 
     private static List<Column> getColumns(Class<?> target) {

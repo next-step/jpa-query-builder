@@ -6,8 +6,8 @@ public class DropQueryBuilder {
     private static final String DROP_QUERY_TEMPLATE = "DROP TABLE %s";
     private final Table table;
 
-    public DropQueryBuilder(Class<?> targetClass) {
-        this.table = Table.of(targetClass);
+    public DropQueryBuilder(Class<?> target) {
+        this.table = Table.of(target);
     }
 
     public String build() {

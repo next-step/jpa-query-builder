@@ -23,8 +23,8 @@ public class CreateQueryBuilder {
 
     private final Table table;
 
-    public CreateQueryBuilder(Class<?> targetClass) {
-        this.table = Table.of(targetClass);
+    public CreateQueryBuilder(Class<?> target) {
+        this.table = Table.of(target);
     }
 
     public String build() {
