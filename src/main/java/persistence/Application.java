@@ -22,6 +22,7 @@ public class Application {
             MySqlDDLGenerator mySqlDDLGenerator = new MySqlDDLGenerator();
 
             jdbcTemplate.execute(mySqlDDLGenerator.generateCreate(Person.class));
+            jdbcTemplate.execute(mySqlDDLGenerator.generateDrop(Person.class));
 
             server.stop();
         } catch (Exception e) {
