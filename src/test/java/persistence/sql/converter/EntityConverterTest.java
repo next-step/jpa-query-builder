@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.dialect.H2Dialect;
 import persistence.sql.entity.Person;
 import persistence.sql.model.Column;
-import persistence.sql.converter.EntityConverter;
 import persistence.sql.model.NotEntityException;
 import persistence.sql.model.Table;
 
@@ -45,9 +44,7 @@ class EntityConverterTest {
 
         assertAll(() -> {
             assertThat(columns.size()).isEqualTo(declaredFieldNames.size());
-            columns.forEach((column) -> {
-                assertThat(declaredFieldNames.contains(column.getName())).isTrue();
-            });
+            columns.forEach((column) -> assertThat(declaredFieldNames.contains(column.getName())).isTrue());
         });
     }
 
