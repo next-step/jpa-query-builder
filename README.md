@@ -26,3 +26,4 @@
     - @Table 에 name 속성이 있을 경우, name 속성 값으로 저장된다.
     - @Transient 이 붙은 컬럼은 database 에 저장하지 않는다.
 4. @Entity, @Table 을 고려하여 drop 쿼리 만들기
+   - @Table 에 name 속성이 있을 경우, name 속성 값으로 삭제한다.
