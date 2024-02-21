@@ -41,8 +41,13 @@ public class MySqlTable implements Table {
     }
 
     private static String findName(Class<?> entity) {
-        String name = entity.getName();
+        jakarta.persistence.Table table = entity.getAnnotation(jakarta.persistence.Table.class);
 
+        if (table != null && !table.name().isBlank()) {
+            return table.name();
+        }
+
+        String name = entity.getName();
         String[] splitByDotName = name.split(DOT);
 
         return splitByDotName[splitByDotName.length - 1].toLowerCase();

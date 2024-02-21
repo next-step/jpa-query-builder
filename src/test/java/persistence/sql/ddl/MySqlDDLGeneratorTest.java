@@ -16,7 +16,7 @@ class MySqlDDLGeneratorTest {
         String createSql = mySqlDdlGenerator.generateCreate(Person.class);
 
         // then
-        assertThat(createSql).isEqualTo("CREATE TABLE person (" +
+        assertThat(createSql).isEqualTo("CREATE TABLE users (" +
                 "id BIGINT AUTO_INCREMENT not null, " +
                 "nick_name VARCHAR(255) null, " +
                 "old INT null, " +
