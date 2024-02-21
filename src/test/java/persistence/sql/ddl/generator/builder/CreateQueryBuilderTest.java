@@ -1,10 +1,11 @@
-package persistence.sql.ddl.h2.builder;
+package persistence.sql.ddl.generator.builder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.domain.Person;
 import persistence.sql.ddl.builder.QueryBuilder;
 import persistence.sql.ddl.builder.CreateQueryBuilder;
+import persistence.sql.ddl.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +14,7 @@ class CreateQueryBuilderTest {
     @Test
     @DisplayName("@Entity 클래스의 create 쿼리 만들기")
     void makeCreateQuery() {
-        QueryBuilder createQueryBuilder = new CreateQueryBuilder();
+        QueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
 
         String query = createQueryBuilder.generateSQL(Person.class);
 

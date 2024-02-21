@@ -9,6 +9,7 @@ import persistence.domain.Person;
 import persistence.sql.ddl.builder.CreateQueryBuilder;
 import persistence.sql.ddl.builder.DropQueryBuilder;
 import persistence.sql.ddl.builder.QueryBuilder;
+import persistence.sql.ddl.dialect.H2Dialect;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -20,7 +21,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            QueryBuilder createQueryBuilder = new CreateQueryBuilder();
+            QueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
             QueryBuilder dropQueryBuilder = new DropQueryBuilder();
 
 

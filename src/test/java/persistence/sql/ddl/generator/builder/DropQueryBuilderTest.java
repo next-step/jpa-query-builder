@@ -1,4 +1,4 @@
-package persistence.sql.ddl.h2.builder;
+package persistence.sql.ddl.generator.builder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,11 +1,16 @@
 package persistence.sql.ddl.builder;
 
-import persistence.sql.ddl.h2.ColumnGenerator;
-import persistence.sql.ddl.dialect.H2Dialect;
+import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.ddl.generator.ColumnGenerator;
+import persistence.sql.ddl.generator.ColumnGeneratorFactory;
 import persistence.sql.meta.TableName;
 
 public class CreateQueryBuilder implements QueryBuilder {
+    private final Dialect dialect;
 
+    public CreateQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
+    }
 
     @Override
     public String generateSQL(final Class<?> clazz) {
@@ -23,6 +28,7 @@ public class CreateQueryBuilder implements QueryBuilder {
     }
 
     private String getColumnSQL(final Class<?> clazz) {
-        return new ColumnGenerator(new H2Dialect(), clazz.getDeclaredFields()).generateSQL();
+        ColumnGenerator columnGenerator = ColumnGeneratorFactory.getColumnGenerator(dialect, clazz.getDeclaredFields());
+        return columnGenerator.generateColumns();
     }
 }
