@@ -17,7 +17,10 @@ public class ColumnNullable {
 
     public static ColumnNullable getInstance(Field field) {
         Column column = field.getAnnotation(Column.class);
-        return new ColumnNullable(column == null || column.nullable());
+        if (column == null || column.nullable()) {
+            return NULLABLE;
+        }
+        return NOT_NULLABLE;
     }
 
     public boolean isNullable() {
