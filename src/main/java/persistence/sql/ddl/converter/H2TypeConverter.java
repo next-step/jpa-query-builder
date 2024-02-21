@@ -1,4 +1,6 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.converter;
+
+import persistence.sql.ddl.model.H2Type;
 
 public class H2TypeConverter implements TypeConverter {
 
