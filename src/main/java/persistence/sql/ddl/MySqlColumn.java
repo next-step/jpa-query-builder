@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 
@@ -26,6 +27,10 @@ public class MySqlColumn implements Column {
     public static MySqlColumn from(Field field) {
         jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+
+        if (field.isAnnotationPresent(Transient.class)) {
+            return null;
+        }
 
         String name = findName(field, column);
         ColumnType type = ColumnType.findColumnType(field.getType());

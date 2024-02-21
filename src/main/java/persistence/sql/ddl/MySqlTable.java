@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MySqlTable implements Table {
@@ -26,6 +27,7 @@ public class MySqlTable implements Table {
 
         List<MySqlColumn> columns = Arrays.stream(entity.getDeclaredFields())
                 .map(MySqlColumn::from)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         Field idColumn = findIdColumn(entity);
