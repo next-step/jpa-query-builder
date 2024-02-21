@@ -7,6 +7,7 @@ import persistence.sql.ddl.query.model.DomainTypes;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EntityMappingTable {
@@ -32,20 +33,14 @@ public class EntityMappingTable {
     }
 
     public List<DomainType> getDomainTypes() {
-        return domainTypes.getDomainTypes();
+        return Collections.unmodifiableList(domainTypes.getDomainTypes());
     }
 
     public static EntityMappingTable from(final Class<?> clazz) {
         return new EntityMappingTable(
                 clazz.getSimpleName(),
-                DomainTypes.from(getNotExistTransientField(clazz)),
+                DomainTypes.from(clazz.getDeclaredFields()),
                 clazz
         );
-    }
-
-    private static Field[] getNotExistTransientField(final Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .toArray(Field[]::new);
     }
 }
