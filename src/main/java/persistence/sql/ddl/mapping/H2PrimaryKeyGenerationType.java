@@ -5,7 +5,7 @@ import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
 
-public class H2IdentityPrimaryKeyGenerationType implements PrimaryKeyGenerationType {
+public class H2PrimaryKeyGenerationType implements PrimaryKeyGenerationType {
 
     private static final String NOTHING = "";
     private static final String H2_IDENTITY = " AUTO_INCREMENT";

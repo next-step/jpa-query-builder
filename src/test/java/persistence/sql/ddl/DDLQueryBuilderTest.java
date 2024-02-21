@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.converter.H2TypeConverter;
 import persistence.sql.ddl.mapping.DDLQueryBuilder;
-import persistence.sql.ddl.mapping.H2IdentityPrimaryKeyGenerationType;
+import persistence.sql.ddl.mapping.H2PrimaryKeyGenerationType;
 import persistence.sql.ddl.mapping.QueryBuilder;
 import persistence.sql.ddl.model.Column;
 import persistence.sql.ddl.model.Table;
@@ -21,7 +21,7 @@ class DDLQueryBuilderTest {
     @BeforeEach
     void setUp() {
         table = new Table();
-        column = new Column(new H2TypeConverter(), new H2IdentityPrimaryKeyGenerationType());
+        column = new Column(new H2TypeConverter(), new H2PrimaryKeyGenerationType());
         queryBuilder = new DDLQueryBuilder(table, column);
     }
 
