@@ -1,6 +1,6 @@
 package persistence.sql.ddl.dialect.exception;
 
-public class NotFoundDatabase extends RuntimeException{
+public class NotFoundDatabase extends RuntimeException {
 
     private static final String MESSAGE = "찾을 수 없는 데이터베이스입니다.";
 
