@@ -2,6 +2,8 @@ package database.sql.util.column;
 
 import database.sql.util.type.TypeConverter;
 
+import java.util.StringJoiner;
+
 public class PrimaryKeyColumn implements Column {
     private final String columnName;
     private final Class<?> type;
@@ -25,14 +27,14 @@ public class PrimaryKeyColumn implements Column {
 
     @Override
     public String toColumnDefinition(TypeConverter typeConverter) {
-        StringBuilder definitionBuilder = new StringBuilder();
-        definitionBuilder.append(columnName).append(" ");
-        definitionBuilder.append(typeConverter.convert(type, columnLength)).append(" ");
+        StringJoiner definitionJoiner = new StringJoiner(" ");
+        definitionJoiner.add(columnName);
+        definitionJoiner.add(typeConverter.convert(type, columnLength));
         if (autoIncrement) {
-            definitionBuilder.append("AUTO_INCREMENT").append(" ");
+            definitionJoiner.add("AUTO_INCREMENT");
         }
-        definitionBuilder.append("PRIMARY KEY");
-        return definitionBuilder.toString();
+        definitionJoiner.add("PRIMARY KEY");
+        return definitionJoiner.toString();
     }
 
     @Override
