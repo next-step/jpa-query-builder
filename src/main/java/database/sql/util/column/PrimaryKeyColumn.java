@@ -2,7 +2,6 @@ package database.sql.util.column;
 
 import database.sql.util.type.TypeConverter;
 
-// TODO: 개별 테스트 추가
 public class PrimaryKeyColumn implements Column {
     private final String columnName;
     private final Class<?> type;

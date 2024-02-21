@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class UtilTest {
-    static Stream<Arguments> quoteTestSources() {
+    private static Stream<Arguments> quoteTestSources() {
         return Stream.of(
                 arguments("0", "0"),
                 arguments("1", "1"),
