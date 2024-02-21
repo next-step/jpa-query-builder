@@ -1,42 +1,11 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Id;
+public class MySqlDDLGenerator implements DDLGenerator {
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-public class MySqlDDLGenerator {
-
-    public static final String DOT = "\\.";
-
+    @Override
     public String generateCreate(Class<?> entity) {
-        String tableName = getTableName(entity);
-        String sql = "CREATE TABLE " + tableName + " (";
+        MySqlTable table = MySqlTable.from(entity);
 
-        sql += Arrays.stream(entity.getDeclaredFields())
-                .map(MySqlColumn::from)
-                .map(MySqlColumn::defineColumn)
-                .collect(Collectors.joining(", "));
-
-        String id = Arrays.stream(entity.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .map(Field::getName)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Persistent entity '%s' should have primary key", entity.getName())));
-
-        sql += String.format(", PRIMARY KEY(%s)", id);
-
-        sql += ");";
-        return sql;
-    }
-
-
-    private static String getTableName(Class<?> entity) {
-        String name = entity.getName();
-
-        String[] splitByDotName = name.split(DOT);
-
-        return splitByDotName[splitByDotName.length - 1].toLowerCase();
+        return table.createTable();
     }
 }
