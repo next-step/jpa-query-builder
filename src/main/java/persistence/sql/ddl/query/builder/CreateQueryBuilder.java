@@ -41,6 +41,5 @@ public class CreateQueryBuilder {
 
         return String.format(CREATE_SQL, tableName, columns);
     }
-
-
+    
 }

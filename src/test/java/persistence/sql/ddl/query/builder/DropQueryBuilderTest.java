@@ -38,5 +38,4 @@ class DropQueryBuilderTest {
 
         assertThat(dropQueryBuilder.toSql()).isEqualTo(expected);
     }
-
 }

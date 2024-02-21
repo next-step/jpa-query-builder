@@ -53,5 +53,4 @@ class TypeMapperTest {
                 .isInstanceOf(InvalidJavaClassException.class)
                 .hasMessage("지원하지 않는 타입이 들어왔습니다.");
     }
-
 }

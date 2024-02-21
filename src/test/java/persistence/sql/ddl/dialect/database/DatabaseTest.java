@@ -3,7 +3,6 @@ package persistence.sql.ddl.dialect.database;
 import database.DatabaseServer;
 import database.H2;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.dialect.DialectResolution;
@@ -46,5 +45,4 @@ class DatabaseTest {
             }
         };
     }
-
 }

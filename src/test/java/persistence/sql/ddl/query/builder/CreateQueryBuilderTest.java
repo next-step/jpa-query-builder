@@ -88,5 +88,4 @@ class CreateQueryBuilderTest {
 
         assertThat(createQueryBuilder.toSql()).isEqualTo(expected);
     }
-
 }

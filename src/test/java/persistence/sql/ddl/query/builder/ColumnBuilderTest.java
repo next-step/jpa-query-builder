@@ -37,5 +37,4 @@ class ColumnBuilderTest {
 
         assertThat(columnBuilder.build()).isEqualTo("email VARCHAR  NOT NULL");
     }
-
 }
