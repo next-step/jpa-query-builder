@@ -7,7 +7,7 @@ public class IdH2Constraint extends H2Constraint {
     private static final String PRIMARY_KEY_CONSTRAINT_QUERY = "PRIMARY KEY";
 
     @Override
-    public String getConstraintQuery(Field type) {
+    public String getConstraintQuery(Field field) {
         return PRIMARY_KEY_CONSTRAINT_QUERY;
     }
 

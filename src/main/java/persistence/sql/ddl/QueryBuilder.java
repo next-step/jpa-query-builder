@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import persistence.sql.ddl.mapper.ConstraintMapper;
 import persistence.sql.ddl.mapper.H2ConstraintMapper;
 import persistence.sql.ddl.mapper.H2TypeMapper;
@@ -37,7 +38,7 @@ public class QueryBuilder {
     }
 
     private String generateTableName(Class<?> clazz) {
-        if (!clazz.isAnnotationPresent(jakarta.persistence.Table.class)) {
+        if (!clazz.isAnnotationPresent(Table.class)) {
             return clazz.getSimpleName().toUpperCase();
         }
 
@@ -50,7 +51,7 @@ public class QueryBuilder {
 
     private String generateColumns(Field[] fields) {
         return Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(jakarta.persistence.Transient.class))
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::generateColumn)
                 .collect(Collectors.joining(COMMA));
     }
