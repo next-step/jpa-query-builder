@@ -1,6 +1,7 @@
 package database.sql.util;
 
 import database.sql.util.type.MySQLTypeConverter;
+import database.sql.util.type.TypeConverter;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +17,7 @@ class MySQLTypeConverterTest {
     }
 
     private void assertConversion(Class<?> entityType, Integer columnLength, String databaseType) {
-        MySQLTypeConverter converter = new MySQLTypeConverter();
+        TypeConverter converter = new MySQLTypeConverter();
 
         assertThat(converter.convert(entityType, columnLength)).isEqualTo(databaseType);
     }

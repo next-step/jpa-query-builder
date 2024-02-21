@@ -3,9 +3,18 @@ package database.sql.dml;
 import java.util.Map;
 
 public class QueryBuilder {
+    private static final QueryBuilder INSTANCE = new QueryBuilder();
+
+    private QueryBuilder() {
+    }
+
+    public static QueryBuilder getInstance() {
+        return INSTANCE;
+    }
+
     public String buildInsertQuery(Class<?> entityClass, Map<String, Object> valueMap) {
-        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entityClass, valueMap);
-        return insertQueryBuilder.buildQuery();
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entityClass);
+        return insertQueryBuilder.buildQuery(valueMap);
     }
 
     public String buildSelectQuery(Class<?> entityClass) {
@@ -14,12 +23,12 @@ public class QueryBuilder {
     }
 
     public String buildSelectOneQuery(Class<?> entityClass, Long id) {
-        SelectOneQueryBuilder selectOneQueryBuilder = new SelectOneQueryBuilder(entityClass, id);
-        return selectOneQueryBuilder.buildQuery();
+        SelectOneQueryBuilder selectOneQueryBuilder = new SelectOneQueryBuilder(entityClass);
+        return selectOneQueryBuilder.buildQuery(id);
     }
 
     public String buildDeleteQuery(Class<?> entityClass, Map<String, Object> conditionMap) {
-        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entityClass, conditionMap);
-        return deleteQueryBuilder.buildQuery();
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entityClass);
+        return deleteQueryBuilder.buildQuery(conditionMap);
     }
 }

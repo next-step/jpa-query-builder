@@ -2,7 +2,8 @@ package database.sql.util.column;
 
 import database.sql.util.type.TypeConverter;
 
-public class PrimaryKeyColumn implements IColumn {
+// TODO: 개별 테스트 추가
+public class PrimaryKeyColumn implements Column {
     private final String columnName;
     private final Class<?> type;
     private final Integer columnLength;
@@ -25,16 +26,18 @@ public class PrimaryKeyColumn implements IColumn {
 
     @Override
     public String toColumnDefinition(TypeConverter typeConverter) {
-        return columnName + " " + typeConverter.convert(type, columnLength) + " " + withBlank(autoIncrement, "AUTO_INCREMENT") + "PRIMARY KEY";
+        StringBuilder definitionBuilder = new StringBuilder();
+        definitionBuilder.append(columnName).append(" ");
+        definitionBuilder.append(typeConverter.convert(type, columnLength)).append(" ");
+        if (autoIncrement) {
+            definitionBuilder.append("AUTO_INCREMENT").append(" ");
+        }
+        definitionBuilder.append("PRIMARY KEY");
+        return definitionBuilder.toString();
     }
 
     @Override
     public boolean isPrimaryKeyField() {
         return true;
-    }
-
-    private String withBlank(boolean b, String sql) {
-        if (b) return sql + " ";
-        return "";
     }
 }

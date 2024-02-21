@@ -2,7 +2,7 @@ package database.sql.util;
 
 import database.sql.ddl.OldPerson1;
 import database.sql.dml.Person4;
-import database.sql.util.column.IColumn;
+import database.sql.util.column.Column;
 import database.sql.util.type.MySQLTypeConverter;
 import database.sql.util.type.TypeConverter;
 import org.junit.jupiter.api.Test;
@@ -28,14 +28,14 @@ class EntityClassInspectorTest {
 
     @Test
     void getColumnName() {
-        IColumn column = inspector.getPrimaryKeyColumn();
+        Column column = inspector.getPrimaryKeyColumn();
         assertThat(column.getColumnName()).isEqualTo("id");
     }
 
     @Test
     void toColumnDefinition() {
         TypeConverter typeConverter = new MySQLTypeConverter();
-        IColumn column = inspector.getPrimaryKeyColumn();
+        Column column = inspector.getPrimaryKeyColumn();
         assertThat(column.toColumnDefinition(typeConverter)).isEqualTo("id BIGINT AUTO_INCREMENT PRIMARY KEY");
     }
 

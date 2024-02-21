@@ -1,7 +1,7 @@
 package database.sql.util;
 
+import database.sql.util.column.Column;
 import database.sql.util.column.GeneralColumn;
-import database.sql.util.column.IColumn;
 import database.sql.util.column.PrimaryKeyColumn;
 import jakarta.persistence.*;
 
@@ -27,20 +27,20 @@ public class EntityClassInspector {
         return entityClass.getSimpleName();
     }
 
-    public Stream<IColumn> getColumns() {
+    public Stream<Column> getColumns() {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .filter(this::notTransientField)
                 .map(this::toColumn);
     }
 
-    public IColumn getPrimaryKeyColumn() {
+    public Column getPrimaryKeyColumn() {
         return getColumns()
-                .filter(IColumn::isPrimaryKeyField)
+                .filter(Column::isPrimaryKeyField)
                 .findFirst()
                 .get();
     }
 
-    public Stream<IColumn> getColumnsForInserting() {
+    public Stream<Column> getColumnsForInserting() {
         return getColumns().filter(column -> !column.isPrimaryKeyField());
     }
 
@@ -48,8 +48,8 @@ public class EntityClassInspector {
         return field.getAnnotation(Transient.class) == null;
     }
 
-    private IColumn toColumn(Field field) {
-        Column columnAnnotation = field.getAnnotation(Column.class);
+    private Column toColumn(Field field) {
+        jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
         GeneratedValue generatedValueAnnotation = field.getAnnotation(GeneratedValue.class);
         boolean isId = field.isAnnotationPresent(Id.class);
 
@@ -66,14 +66,14 @@ public class EntityClassInspector {
         }
     }
 
-    private String getColumnNameFromAnnotation(Column columnAnnotation, String defaultName) {
+    private String getColumnNameFromAnnotation(jakarta.persistence.Column columnAnnotation, String defaultName) {
         if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
             return columnAnnotation.name();
         }
         return defaultName;
     }
 
-    private Integer getColumnLength(Column columnAnnotation) {
+    private Integer getColumnLength(jakarta.persistence.Column columnAnnotation) {
         if (columnAnnotation != null) {
             return columnAnnotation.length();
         }
@@ -84,7 +84,7 @@ public class EntityClassInspector {
         return generatedValueAnnotation != null && generatedValueAnnotation.strategy() == GenerationType.IDENTITY;
     }
 
-    private boolean isNullable(Column columnAnnotation) {
+    private boolean isNullable(jakarta.persistence.Column columnAnnotation) {
         if (columnAnnotation != null) {
             return columnAnnotation.nullable();
         }

@@ -3,9 +3,6 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import database.sql.Person;
-import database.sql.dml.QueryBuilder;
-import database.sql.dml.SelectOneQueryBuilder;
-import database.sql.dml.SelectQueryBuilder;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
@@ -22,6 +19,9 @@ public class Application {
                     resultSet.getInt("old"),
                     resultSet.getString("email"));
 
+    private static final database.sql.dml.QueryBuilder dmlQueryBuilder = database.sql.dml.QueryBuilder.getInstance();
+    private static final database.sql.ddl.QueryBuilder ddlQueryBuilder = database.sql.ddl.QueryBuilder.getInstance();
+
     public static void main(String[] args) {
         logger.info("Starting application...");
         try {
@@ -30,7 +30,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            createTable(jdbcTemplate, Person.class);
+            createTable(jdbcTemplate);
             insertPerson(jdbcTemplate, new Person("abc123", 14, "c123@d.com"));
             insertPerson(jdbcTemplate, new Person("abc234", 15, "c234@d.com"));
             insertPerson(jdbcTemplate, new Person("abc345", 16, "c456@d.com"));
@@ -49,9 +49,8 @@ public class Application {
         }
     }
 
-    private static void createTable(JdbcTemplate jdbcTemplate, Class<?> entityClass) {
-        database.sql.ddl.QueryBuilder builder = new database.sql.ddl.QueryBuilder();
-        String query = builder.buildCreateQuery(entityClass);
+    private static void createTable(JdbcTemplate jdbcTemplate) {
+        String query = ddlQueryBuilder.buildCreateQuery(Person.class);
         jdbcTemplate.execute(query);
     }
 
@@ -63,18 +62,17 @@ public class Application {
     }
 
     private static List<Person> selectPeople(JdbcTemplate jdbcTemplate) {
-        String selectQuery = new SelectQueryBuilder(Person.class).buildQuery();
+        String selectQuery = dmlQueryBuilder.buildSelectQuery(Person.class);
         return jdbcTemplate.query(selectQuery, personRowMapper);
     }
 
     private static Person selectOnePerson(JdbcTemplate jdbcTemplate, Long id) {
-        String selectQuery = new SelectOneQueryBuilder(Person.class, id).buildQuery();
+        String selectQuery = dmlQueryBuilder.buildSelectOneQuery(Person.class, id);
         return jdbcTemplate.queryForObject(selectQuery, personRowMapper);
     }
 
     private static void insertRow(JdbcTemplate jdbcTemplate, Class<?> entityClass, Map<String, Object> valueMap) {
-        QueryBuilder builder = new QueryBuilder();
-        String query = builder.buildInsertQuery(entityClass, valueMap);
+        String query = dmlQueryBuilder.buildInsertQuery(entityClass, valueMap);
         jdbcTemplate.execute(query);
     }
 }

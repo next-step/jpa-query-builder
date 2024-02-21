@@ -3,16 +3,15 @@ package database.sql.ddl;
 import database.sql.util.EntityClassInspector;
 
 public class DropQueryBuilder {
-    private final Class<?> entityClass;
+    private final String query;
 
     public DropQueryBuilder(Class<?> entityClass) {
-        this.entityClass = entityClass;
+        EntityClassInspector inspector = new EntityClassInspector(entityClass);
+        String tableName = inspector.getTableName();
+        query = String.format("DROP TABLE %s", tableName);
     }
 
     public String buildQuery() {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        String tableName = inspector.getTableName();
-
-        return String.format("DROP TABLE %s", tableName);
+        return query;
     }
 }

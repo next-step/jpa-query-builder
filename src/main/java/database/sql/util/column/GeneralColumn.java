@@ -2,7 +2,8 @@ package database.sql.util.column;
 
 import database.sql.util.type.TypeConverter;
 
-public class GeneralColumn implements IColumn {
+// TODO: 개별 테스트 추가
+public class GeneralColumn implements Column {
     private final String columnName;
     private final Class<?> type;
     private final Integer columnLength;
@@ -25,7 +26,7 @@ public class GeneralColumn implements IColumn {
 
     @Override
     public String toColumnDefinition(TypeConverter typeConverter) {
-        return columnName + " " + typeConverter.convert(type, columnLength) + " " + nullableOrNot();
+        return columnName + " " + typeConverter.convert(type, columnLength) + " " + toNullableDefinition();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class GeneralColumn implements IColumn {
         return false;
     }
 
-    private String nullableOrNot() {
+    private String toNullableDefinition() {
         return nullable ? "NULL" : "NOT NULL";
     }
 }

@@ -1,33 +1,33 @@
 package database.sql.dml;
 
 import database.sql.util.EntityClassInspector;
+import database.sql.util.column.Column;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static database.sql.Util.quote;
 
 public class DeleteQueryBuilder {
-    private final Class<?> entityClass;
-    private final Map<String, Object> conditionMap;
+    private final List<Column> columns;
+    private final String queryPart;
 
-    public DeleteQueryBuilder(Class<?> entityClass, Map<String, Object> conditionMap) {
-        this.entityClass = entityClass;
-        this.conditionMap = conditionMap;
-    }
-
-    public String buildQuery() {
+    public DeleteQueryBuilder(Class<?> entityClass) {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
         String tableName = inspector.getTableName();
-        String whereClause = whereClause(inspector);
-
-        return String.format("DELETE FROM %s WHERE %s", tableName, whereClause);
+        this.columns = inspector.getColumns().collect(Collectors.toList());
+        this.queryPart = String.format("DELETE FROM %s", tableName);
     }
 
-    private String whereClause(EntityClassInspector inspector) {
+    public String buildQuery(Map<String, Object> conditionMap) {
+        return String.format("%s WHERE %s", queryPart, whereClause(conditionMap));
+    }
+
+    private String whereClause(Map<String, Object> conditionMap) {
         List<String> whereCond = new ArrayList<>();
-        inspector.getColumns().forEach(entityColumn -> {
+        columns.forEach(entityColumn -> {
             String columnName = entityColumn.getColumnName();
             if (conditionMap.containsKey(columnName)) {
                 Object value = conditionMap.get(columnName);
