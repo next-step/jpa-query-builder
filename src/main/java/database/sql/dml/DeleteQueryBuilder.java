@@ -1,39 +1,35 @@
 package database.sql.dml;
 
 import database.sql.util.EntityClassInspector;
-import database.sql.util.column.Column;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 
 import static database.sql.Util.quote;
 
 public class DeleteQueryBuilder {
-    private final List<Column> columns;
-    private final String queryPart;
+    private final String tableName;
+    private final List<String> columnNames;
 
     public DeleteQueryBuilder(Class<?> entityClass) {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        String tableName = inspector.getTableName();
-        this.columns = inspector.getColumns().collect(Collectors.toList());
-        this.queryPart = String.format("DELETE FROM %s", tableName);
+        this.tableName = inspector.getTableName();
+        this.columnNames = inspector.getColumnNames();
     }
 
     public String buildQuery(Map<String, Object> conditionMap) {
-        return String.format("%s WHERE %s", queryPart, whereClause(conditionMap));
+        return String.format("DELETE FROM %s WHERE %s", tableName, whereClause(conditionMap));
     }
 
     private String whereClause(Map<String, Object> conditionMap) {
-        List<String> whereCond = new ArrayList<>();
-        columns.forEach(entityColumn -> {
-            String columnName = entityColumn.getColumnName();
+        StringJoiner where = new StringJoiner(" AND ");
+        for (String columnName : columnNames) {
             if (conditionMap.containsKey(columnName)) {
-                Object value = conditionMap.get(columnName);
-                whereCond.add(String.format("%s = %s", columnName, quote(value)));
+                String quotedValue = quote(conditionMap.get(columnName));
+                where.add(String.format("%s = %s", columnName, quotedValue));
             }
-        });
-        return String.join(" AND ", whereCond);
+        }
+        return where.toString();
     }
 }

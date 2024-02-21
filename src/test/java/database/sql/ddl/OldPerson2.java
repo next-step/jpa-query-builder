@@ -1,7 +1,5 @@
 package database.sql.ddl;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,4 +19,3 @@ public class OldPerson2 {
     private String email;
 
 }
-

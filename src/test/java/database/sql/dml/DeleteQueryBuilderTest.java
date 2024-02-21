@@ -7,7 +7,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// TODO: 테스트 세밀하게
 class DeleteQueryBuilderTest {
     private final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(Person4.class);
 

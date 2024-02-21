@@ -5,7 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -13,8 +13,8 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 class GeneralColumnTest {
     private final MySQLTypeConverter typeConverter = new MySQLTypeConverter();
 
-    private static Stream<Arguments> sampleGeneralColumns() {
-        return Stream.of(
+    private static List<Arguments> sampleGeneralColumns() {
+        return List.of(
                 arguments(new GeneralColumn("abc", Long.class, null, false), "abc BIGINT NOT NULL"),
                 arguments(new GeneralColumn("email", String.class, 42, true), "email VARCHAR(42) NULL"),
                 arguments(new GeneralColumn("old", Integer.class, 42, false), "old INT NOT NULL")

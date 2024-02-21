@@ -1,7 +1,11 @@
 package database.sql.ddl;
 
+import database.sql.util.type.MySQLTypeConverter;
+import database.sql.util.type.TypeConverter;
+
 public class QueryBuilder {
     private static final QueryBuilder INSTANCE = new QueryBuilder();
+    private static final TypeConverter typeConverter = new MySQLTypeConverter();
 
     private QueryBuilder() {
     }
@@ -11,7 +15,7 @@ public class QueryBuilder {
     }
 
     public String buildCreateQuery(Class<?> entityClass) {
-        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(entityClass);
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(entityClass, typeConverter);
         return createQueryBuilder.buildQuery();
     }
 

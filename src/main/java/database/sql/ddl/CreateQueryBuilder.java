@@ -1,26 +1,20 @@
 package database.sql.ddl;
 
 import database.sql.util.EntityClassInspector;
-import database.sql.util.type.MySQLTypeConverter;
 import database.sql.util.type.TypeConverter;
 
-import java.util.stream.Collectors;
-
 public class CreateQueryBuilder {
-    private final String query;
+    private final String tableName;
+    private final String columnsWithDefinition;
 
-    public CreateQueryBuilder(Class<?> entityClass) {
+    public CreateQueryBuilder(Class<?> entityClass, TypeConverter typeConverter) {
         EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        TypeConverter mysqlTypeConverter = new MySQLTypeConverter();
 
-        String tableName = inspector.getTableName();
-        String columnsWithDefinition = inspector.getColumns()
-                .map(column -> column.toColumnDefinition(mysqlTypeConverter))
-                .collect(Collectors.joining(", "));
-        query = String.format("CREATE TABLE %s (%s)", tableName, columnsWithDefinition);
+        this.tableName = inspector.getTableName();
+        this.columnsWithDefinition = String.join(", ", inspector.getColumnDefinitions(typeConverter));
     }
 
     public String buildQuery() {
-        return query;
+        return String.format("CREATE TABLE %s (%s)", tableName, columnsWithDefinition);
     }
 }
