@@ -1,5 +1,8 @@
 package persistence.sql.dialect;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import persistence.sql.JdbcUtils;
 import persistence.sql.dialect.column.Nullable;
 
@@ -10,10 +13,12 @@ import java.util.Map;
 public abstract class Dialect {
     private final Map<Integer, String> columnDataTypes = new HashMap<>();
     private final Map<Nullable, String> columnNullableTypes = new HashMap<>();
+    private final Map<GenerationType, String> pkGenerationTypes = new HashMap<>();
 
     public Dialect() {
         setDefaultColumnDataTypes();
         setDefaultNullableTypes();
+        setDefaultPKGenerationTypes();
     }
 
     protected abstract void setDefaultColumnDataTypes();
@@ -51,5 +56,23 @@ public abstract class Dialect {
         return result;
     }
 
+    protected abstract void setDefaultPKGenerationTypes();
 
+    protected void registerPKGenerationTypes(GenerationType generationType, String name) {
+        pkGenerationTypes.put(generationType, name);
+    }
+
+    public String getPKGenerationType(final Field field) {
+        if (!field.isAnnotationPresent(Id.class)) {
+            throw new IllegalStateException("Not PK Field");
+        }
+        GenerationType generationType = field.isAnnotationPresent(GeneratedValue.class)
+                ? field.getAnnotation(GeneratedValue.class).strategy()
+                : GenerationType.AUTO;
+        String result = pkGenerationTypes.get(generationType);
+        if (result == null) {
+            throw new IllegalArgumentException("No Dialect mapping for PKGenerationTYpe: " + generationType.name());
+        }
+        return result;
+    }
 }

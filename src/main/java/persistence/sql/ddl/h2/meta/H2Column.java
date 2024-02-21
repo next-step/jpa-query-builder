@@ -36,7 +36,7 @@ public class H2Column {
     }
 
     private String getGenerationType() {
-        return PKGenerationType.getSQL(field);
+        return dialect.getPKGenerationType(field);
     }
 
     private boolean isPK() {
