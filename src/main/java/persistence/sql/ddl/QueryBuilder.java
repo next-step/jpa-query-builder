@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import persistence.sql.ddl.mapper.ConstraintMapper;
 import persistence.sql.ddl.mapper.H2ConstraintMapper;
 import persistence.sql.ddl.mapper.H2TypeMapper;
@@ -15,6 +16,7 @@ public class QueryBuilder {
 
     private static final String SPACE = " ";
     private static final String COMMA = ", ";
+    private static final String EMPTY_STRING = "";
 
     private static final String CREATE_TABLE_QUERY = "CREATE TABLE %s (%s);";
 
@@ -30,11 +32,20 @@ public class QueryBuilder {
     }
 
     private String generateTableName(Class<?> clazz) {
-        return clazz.getSimpleName().toUpperCase();
+        if (!clazz.isAnnotationPresent(jakarta.persistence.Table.class)) {
+            return clazz.getSimpleName().toUpperCase();
+        }
+
+        Table table = clazz.getAnnotation(Table.class);
+        if (table.name().isEmpty()) {
+            return clazz.getSimpleName().toUpperCase();
+        }
+        return table.name().toUpperCase();
     }
 
     private String generateColumns(Field[] fields) {
         return Arrays.stream(fields)
+                .filter(field -> !field.isAnnotationPresent(jakarta.persistence.Transient.class))
                 .map(this::generateColumn)
                 .collect(Collectors.joining(COMMA));
     }

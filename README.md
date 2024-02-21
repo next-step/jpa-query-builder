@@ -54,7 +54,7 @@ public class Person {
 
 }
 ```
-- [ ] 추가된 정보를 통해 create 쿼리 만들어보기2
+- [x] 추가된 정보를 통해 create 쿼리 만들어보기2
   - 아래의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
 ```java
 @Table(name = "users")
