@@ -10,7 +10,8 @@ public class StandardDialectResolver {
 
     public static Dialect resolveDialect(final DialectResolutionInfo dialectResolutionInfo) {
         return Database.from(dialectResolutionInfo)
-                .createDialect();
+                .getDialectSupplier()
+                .get();
     }
 
 }
