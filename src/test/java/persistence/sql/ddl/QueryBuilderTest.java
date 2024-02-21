@@ -50,4 +50,30 @@ class QueryBuilderTest {
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
     }
+
+    @Test
+    @DisplayName("Person 클래스를 이용한 DDL 삭제 테스트")
+    void DDLDropTest() {
+        // given
+        String expectedQuery = "DROP TABLE PERSON;";
+
+        // when
+        String actualQuery = queryBuilder.dropTable(Person.class);
+
+        // then
+        assertThat(actualQuery).isEqualTo(expectedQuery);
+    }
+
+    @Test
+    @DisplayName("@Table 선언된 Person3 클래스를 이용한 DDL 삭제 테스트")
+    void DDLDropTest2() {
+        // given
+        String expectedQuery = "DROP TABLE USERS;";
+
+        // when
+        String actualQuery = queryBuilder.dropTable(Person3.class);
+
+        // then
+        assertThat(actualQuery).isEqualTo(expectedQuery);
+    }
 }

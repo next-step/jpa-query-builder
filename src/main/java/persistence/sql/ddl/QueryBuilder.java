@@ -16,9 +16,10 @@ public class QueryBuilder {
 
     private static final String SPACE = " ";
     private static final String COMMA = ", ";
-    private static final String EMPTY_STRING = "";
 
     private static final String CREATE_TABLE_QUERY = "CREATE TABLE %s (%s);";
+    private static final String DROP_TABLE_QUERY = "DROP TABLE %s;";
+
 
     private final TypeMapper typeMapper = new H2TypeMapper();
     private final ConstraintMapper constraintMapper = new H2ConstraintMapper();
@@ -29,6 +30,10 @@ public class QueryBuilder {
                 generateTableName(clazz),
                 generateColumns(clazz.getDeclaredFields())
         );
+    }
+
+    public String dropTable(Class<?> clazz) {
+        return String.format(DROP_TABLE_QUERY, generateTableName(clazz));
     }
 
     private String generateTableName(Class<?> clazz) {
