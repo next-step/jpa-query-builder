@@ -14,15 +14,8 @@ public class InsertQueryBuilder {
     private static final String INSERT_QUERY_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
     private static final String CLAUSE_DELIMITER = ", ";
 
-    private final Table table;
-    private final Object object;
-
-    public InsertQueryBuilder(Object object) {
-        this.table = Table.of(object.getClass());
-        this.object = object;
-    }
-
-    public String build() {
+    public String build(Object object) {
+        Table table = Table.of(object.getClass());
         List<Column> columns = table.getColumns();
         Map<String, String> clause = getClause(object, columns);
         String columnsClause = String.join(CLAUSE_DELIMITER, clause.keySet());
@@ -42,13 +35,13 @@ public class InsertQueryBuilder {
         return column.isId() && ((IdColumn) column).isAutoIncrement();
     }
 
-    private static void checkNullableValue(Object object, Column column) {
+    private void checkNullableValue(Object object, Column column) {
         if (!column.isNullable() && (getObject(object, column) == null)) {
             throw new IllegalArgumentException("Not nullable column value is null");
         }
     }
 
-    private static Object getObject(Object object, Column column) {
+    private Object getObject(Object object, Column column) {
         try {
             Field field = column.getField();
             field.setAccessible(true);
