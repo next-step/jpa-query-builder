@@ -24,4 +24,15 @@ class MySqlDDLGeneratorTest {
                 ", PRIMARY KEY(id));");
     }
 
+    @Test
+    void createPersonDropQuery() {
+        // given
+        MySqlDDLGenerator mySqlDdlGenerator = new MySqlDDLGenerator();
+
+        // when
+        String dropSql = mySqlDdlGenerator.generateDrop(Person.class);
+
+        // then
+        assertThat(dropSql).isEqualTo("DROP TABLE users;");
+    }
 }

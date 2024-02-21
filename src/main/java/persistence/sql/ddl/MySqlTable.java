@@ -57,11 +57,12 @@ public class MySqlTable implements Table {
 
     @Override
     public String createTable() {
-        return "CREATE TABLE "
-                + name
-                + " ("
-                + getColumnsDefinition()
-                + getIdColumnDefinition();
+        return String.format("CREATE TABLE %s (%s, %s);", name, getColumnsDefinition(), getIdColumnDefinition());
+    }
+
+    @Override
+    public String dropTable() {
+        return String.format("DROP TABLE %s;", name);
     }
 
     private String getColumnsDefinition() {
@@ -71,6 +72,6 @@ public class MySqlTable implements Table {
     }
 
     public String getIdColumnDefinition() {
-        return String.format(", PRIMARY KEY(%s));", idColumn.getName());
+        return String.format("PRIMARY KEY(%s)", idColumn.getName());
     }
 }

@@ -8,4 +8,11 @@ public class MySqlDDLGenerator implements DDLGenerator {
 
         return table.createTable();
     }
+
+    @Override
+    public String generateDrop(Class<?> entity) {
+        MySqlTable table = MySqlTable.from(entity);
+
+        return table.dropTable();
+    }
 }
