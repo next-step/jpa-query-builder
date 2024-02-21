@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class DDLQueryGenerator {
     private final Dialect dialect;
 
-    DDLQueryGenerator(Dialect dialect) {
+    public DDLQueryGenerator(Dialect dialect) {
         this.dialect = dialect;
     }
 
