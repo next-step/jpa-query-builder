@@ -16,3 +16,67 @@
 - [x] 인자를 가진 생성자의 인스턴스 생성
   - Car 클래스의 인스턴스를 생성한다.
   - constructorWithArgs()
+
+## 2단계 - QueryBuilder DDL
+### 요구사항
+- [x] 아래 정보를 바탕으로 create 쿼리 만들어보기
+```java
+@Entity
+public class Person {
+    
+    @Id
+    private Long id;
+    
+    private String name;
+    
+    private Integer age;
+    
+}
+```
+- [x] 추가된 정보를 통해 create 쿼리 만들어보기
+  - 아래의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
+```java
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+    
+    @Column(nullable = false)
+    private String email;
+
+}
+```
+- [x] 추가된 정보를 통해 create 쿼리 만들어보기2
+  - 아래의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
+```java
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+```
+- [ ] 정보를 바탕으로 drop 쿼리 만들어보기

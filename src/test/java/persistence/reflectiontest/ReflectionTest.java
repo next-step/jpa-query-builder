@@ -1,6 +1,7 @@
 package persistence.reflectiontest;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ReflectionTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
+    private static final Class<Car> CAR_CLASS = Car.class;
 
     @Test
     @DisplayName("Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력한다.")
@@ -31,20 +33,19 @@ class ReflectionTest {
         List<String> expectedMethodNames = List.of("printView", "testGetName", "testGetPrice", "getName", "getPrice");
 
         // when
-        Class<Car> carClass = Car.class;
-        String className = carClass.getName();
+        String className = CAR_CLASS.getName();
 
-        List<String> fieldNames = Arrays.stream(carClass.getDeclaredFields())
+        List<String> fieldNames = Arrays.stream(CAR_CLASS.getDeclaredFields())
                 .map(Field::getName)
                 .collect(Collectors.toList());
 
 
-        List<String> constructorNames = Arrays.stream(carClass.getDeclaredConstructors())
+        List<String> constructorNames = Arrays.stream(CAR_CLASS.getDeclaredConstructors())
                 .map(Constructor::getName)
                 .collect(Collectors.toList());
 
 
-        List<String> methodNames = Arrays.stream(carClass.getDeclaredMethods())
+        List<String> methodNames = Arrays.stream(CAR_CLASS.getDeclaredMethods())
                 .map(Method::getName)
                 .collect(Collectors.toList());
 
@@ -66,11 +67,10 @@ class ReflectionTest {
     void testMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         // given
         List<String> expectedResults = List.of("test : null", "test : 0");
-        Class<Car> carClass = Car.class;
-        Car car = carClass.getDeclaredConstructor().newInstance();
+        Car car = CAR_CLASS.getDeclaredConstructor().newInstance();
 
         // when
-        List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
+        List<Method> methods = Arrays.stream(CAR_CLASS.getDeclaredMethods())
                 .filter(method -> method.getName().startsWith("test"))
                 .collect(Collectors.toList());
 
@@ -89,18 +89,15 @@ class ReflectionTest {
         // given
         final PrintStream originalOut = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
-
-        Class<Car> carClass = Car.class;
-        Car car = carClass.getDeclaredConstructor().newInstance();
+        Car car = CAR_CLASS.getDeclaredConstructor().newInstance();
         String expectedOutput = "자동차 정보를 출력 합니다.";
 
+        // when
+        List<Method> methods = Arrays.stream(CAR_CLASS.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .collect(Collectors.toList());
         try {
-            // when
-            List<Method> methods = Arrays.stream(carClass.getDeclaredMethods())
-                    .filter(method -> method.isAnnotationPresent(PrintView.class))
-                    .collect(Collectors.toList());
-
+            System.setOut(new PrintStream(outputStream));
             for (Method method : methods) {
                 method.invoke(car);
             }
@@ -119,12 +116,11 @@ class ReflectionTest {
     @DisplayName("Car 클래스의 name과 price 필드에 값을 할당한 후 getter 메소드를 통해 값을 확인한다.")
     void privateFieldAccess() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         // given
-        Class<Car> carClass = Car.class;
-        Car car = carClass.getDeclaredConstructor().newInstance();
+        Car car = CAR_CLASS.getDeclaredConstructor().newInstance();
         Map<String, Object> fieldMap = Map.of("name", "아반떼", "price", 24_000_000);
 
         // when
-        List<Field> fields = Arrays.stream(carClass.getDeclaredFields())
+        List<Field> fields = Arrays.stream(CAR_CLASS.getDeclaredFields())
                 .filter(field -> Modifier.isPrivate(field.getModifiers()))
                 .filter(field -> fieldMap.containsKey(field.getName()))
                 .collect(Collectors.toList());
@@ -145,12 +141,11 @@ class ReflectionTest {
     @DisplayName("인자를 가진 Car 인스턴스를 생성한다.")
     void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         // given
-        Class<Car> carClass = Car.class;
         String name = "아반떼";
         int price = 24_000_000;
 
         // when
-        Constructor<Car> constructor = carClass.getDeclaredConstructor(String.class, int.class);
+        Constructor<Car> constructor = CAR_CLASS.getDeclaredConstructor(String.class, int.class);
         Car car = constructor.newInstance(name, price);
 
         // then
@@ -159,4 +154,5 @@ class ReflectionTest {
                 () -> assertThat(car.getPrice()).isEqualTo(price)
         );
     }
+
 }
