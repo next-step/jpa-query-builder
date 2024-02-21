@@ -15,6 +15,15 @@ public class H2TypeMapper implements TypeMapper {
         this.javaClassToJdbcType = workMap;
     }
 
+    @Override
+    public String toSqlType(Class<?> clazz) {
+        if (!this.javaClassToJdbcType.containsKey(clazz)) {
+            throw new InvalidJavaClassException();
+        }
+
+        return this.javaClassToJdbcType.get(clazz);
+    }
+
     public static H2TypeMapper newInstance() {
         Map<Class<?>, String> workMap = new ConcurrentHashMap<>();
 
@@ -24,14 +33,5 @@ public class H2TypeMapper implements TypeMapper {
         workMap.put(Long.class, ColumnType.BIGINT.name());
 
         return new H2TypeMapper(workMap);
-    }
-
-    @Override
-    public String toSqlType(Class<?> clazz) {
-        if(!this.javaClassToJdbcType.containsKey(clazz)) {
-            throw new InvalidJavaClassException();
-        }
-
-        return this.javaClassToJdbcType.get(clazz);
     }
 }
