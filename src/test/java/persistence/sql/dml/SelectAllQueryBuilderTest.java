@@ -18,6 +18,6 @@ class SelectAllQueryBuilderTest {
         String query = selectAllQueryBuilder.build();
 
         //then
-        assertThat(query).isEqualTo("SELECT * FROM users");
+        assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users");
     }
 }

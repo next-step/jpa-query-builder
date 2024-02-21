@@ -18,6 +18,6 @@ class SelectQueryBuilderTest {
         String query = selectQueryBuilder.build(1L);
 
         //then
-        assertThat(query).isEqualTo("SELECT * FROM users WHERE id = 1");
+        assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
     }
 }
