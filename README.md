@@ -19,7 +19,7 @@
 
 ## 2단계 - QueryBuilder DDL
 ### 요구사항
-- [ ] 아래 정보를 바탕으로 create 쿼리 만들어보기
+- [x] 아래 정보를 바탕으로 create 쿼리 만들어보기
 ```java
 @Entity
 public class Person {
