@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 
 public class Table {
     private final String name;
-    private final List<Column> fieldColumns;
+    private final List<Column> columns;
 
-    public Table(String name, List<Column> fieldColumns) {
+    public Table(String name, List<Column> columns) {
         this.name = name;
-        this.fieldColumns = fieldColumns;
+        this.columns = columns;
     }
 
     public static Table of(Class<?> target) {
@@ -55,7 +55,7 @@ public class Table {
         return name;
     }
 
-    public List<Column> getFieldColumns() {
-        return fieldColumns;
+    public List<Column> getColumns() {
+        return columns;
     }
 }

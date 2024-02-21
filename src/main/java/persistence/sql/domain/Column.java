@@ -17,4 +17,8 @@ public interface Column {
         }
         return FieldColumn.from(field);
     }
+
+    boolean isId();
+
+    boolean isNullable();
 }

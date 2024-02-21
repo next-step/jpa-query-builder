@@ -21,7 +21,6 @@ public class CreateQueryBuilder {
             new PrimaryKeyColumnStrategy()
     );
 
-
     private final Table table;
 
     public CreateQueryBuilder(Class<?> targetClass) {
@@ -30,7 +29,7 @@ public class CreateQueryBuilder {
 
     public String build() {
         String tableName = table.getName();
-        List<Column> fieldColumns = table.getFieldColumns();
+        List<Column> fieldColumns = table.getColumns();
         String columnQueries = makeColumnQueries(fieldColumns);
         return String.format(CREATE_QUERY_TEMPLATE, tableName, columnQueries);
     }

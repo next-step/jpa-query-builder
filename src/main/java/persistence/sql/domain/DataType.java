@@ -44,4 +44,8 @@ public enum DataType {
     private String getDefaultValue() {
         return START_SYMBOL + defaultValue + END_SYMBOL;
     }
+
+    public boolean isVarchar() {
+        return this == VARCHAR;
+    }
 }

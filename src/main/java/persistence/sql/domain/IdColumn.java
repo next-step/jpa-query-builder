@@ -28,6 +28,16 @@ public class IdColumn implements Column {
     }
 
     @Override
+    public boolean isId() {
+        return true;
+    }
+
+    @Override
+    public boolean isNullable() {
+        return fieldColumn.isNullable();
+    }
+
+    @Override
     public DataType getType() {
         return fieldColumn.getType();
     }
@@ -40,5 +50,9 @@ public class IdColumn implements Column {
     @Override
     public Field getField() {
         return fieldColumn.getField();
+    }
+
+    public boolean isAutoIncrement() {
+        return generationType.equals(GenerationType.IDENTITY);
     }
 }
