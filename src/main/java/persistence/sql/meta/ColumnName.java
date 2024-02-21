@@ -1,4 +1,4 @@
-package persistence.sql.ddl.h2.meta;
+package persistence.sql.meta;
 
 import jakarta.persistence.Column;
 

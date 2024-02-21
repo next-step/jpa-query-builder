@@ -1,6 +1,7 @@
-package persistence.sql;
+package persistence.sql.dialect;
 
-import persistence.sql.ddl.h2.meta.Nullable;
+import persistence.sql.JdbcUtils;
+import persistence.sql.dialect.column.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

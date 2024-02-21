@@ -1,8 +1,9 @@
 package persistence.sql.ddl.h2.meta;
 
 import jakarta.persistence.Id;
-import persistence.sql.Dialect;
-import persistence.sql.ddl.h2.H2Dialect;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.H2Dialect;
+import persistence.sql.meta.ColumnName;
 
 import java.lang.reflect.Field;
 
@@ -24,6 +25,8 @@ public class H2Column {
         if (isPK()) {
             sb.append(" ");
             sb.append(getGenerationType());
+            sb.append(" ");
+            sb.append("PRIMARY KEY");
         }
         return sb.toString().trim();
     }

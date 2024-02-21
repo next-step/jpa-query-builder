@@ -1,8 +1,8 @@
-package persistence.sql.ddl.h2.builder;
+package persistence.sql.ddl.h2;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.Dialect;
+import persistence.sql.dialect.Dialect;
 import persistence.sql.ddl.h2.meta.H2Column;
 
 import java.lang.reflect.Field;
@@ -20,7 +20,7 @@ public class ColumnGenerator {
     }
 
     public String generateSQL() {
-        return this.generateColumns() + this.generatePK();
+        return this.generateColumns();
     }
 
     private String generateColumns() {
@@ -32,14 +32,8 @@ public class ColumnGenerator {
                     sb.append(new H2Column(field).generateColumnSQL());
                     sb.append(",\n");
                 });
+        sb.deleteCharAt(sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
-    }
-
-    public String generatePK() {
-        Field pkField = this.fields.stream()
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("PK must exists"));
-        return String.format("    primary key (%s)", pkField.getName());
     }
 }

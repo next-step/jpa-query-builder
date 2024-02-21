@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import persistence.sql.ddl.h2.H2Dialect;
+import persistence.sql.dialect.H2Dialect;
 
 import java.lang.reflect.Field;
 

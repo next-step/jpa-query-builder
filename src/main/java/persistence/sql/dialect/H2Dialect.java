@@ -1,7 +1,6 @@
-package persistence.sql.ddl.h2;
+package persistence.sql.dialect;
 
-import persistence.sql.Dialect;
-import persistence.sql.ddl.h2.meta.Nullable;
+import persistence.sql.dialect.column.Nullable;
 
 import java.sql.Types;
 

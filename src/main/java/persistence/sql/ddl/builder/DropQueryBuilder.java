@@ -1,7 +1,6 @@
-package persistence.sql.ddl.h2.builder;
+package persistence.sql.ddl.builder;
 
-import persistence.sql.ddl.QueryBuilder;
-import persistence.sql.ddl.h2.meta.TableName;
+import persistence.sql.meta.TableName;
 
 public class DropQueryBuilder implements QueryBuilder {
 
