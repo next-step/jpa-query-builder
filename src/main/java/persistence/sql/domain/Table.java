@@ -11,32 +11,24 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Table {
-    private final String name;
+    private final Class<?> clazz;
     private final List<Column> columns;
 
-    public Table(String name, List<Column> columns) {
-        this.name = name;
+    public Table(Class<?> clazz, List<Column> columns) {
+        this.clazz = clazz;
         this.columns = columns;
     }
 
     public static Table of(Class<?> target) {
         checkIsEntity(target);
-        String tableName = getTableName(target);
         List<Column> columns = getColumns(target);
-        return new Table(tableName, columns);
+        return new Table(target, columns);
     }
 
     private static void checkIsEntity(Class<?> target) {
         if (!target.isAnnotationPresent(Entity.class)) {
             throw new NotEntityException();
         }
-    }
-
-    private static String getTableName(Class<?> target) {
-        return Optional.ofNullable(target.getAnnotation(jakarta.persistence.Table.class))
-                .map(jakarta.persistence.Table::name)
-                .filter(name -> !name.isBlank())
-                .orElse(target.getSimpleName());
     }
 
     private static List<Column> getColumns(Class<?> target) {
@@ -52,7 +44,10 @@ public class Table {
     }
 
     public String getName() {
-        return name;
+        return Optional.ofNullable(clazz.getAnnotation(jakarta.persistence.Table.class))
+                .map(jakarta.persistence.Table::name)
+                .filter(name -> !name.isBlank())
+                .orElse(clazz.getSimpleName());
     }
 
     public List<Column> getColumns() {
