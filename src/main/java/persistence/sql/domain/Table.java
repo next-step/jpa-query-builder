@@ -58,4 +58,11 @@ public class Table {
     public List<Column> getColumns() {
         return columns;
     }
+
+    public IdColumn getIdColumn() {
+        return (IdColumn) columns.stream()
+                .filter(Column::isId)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Id not found"));
+    }
 }

@@ -59,4 +59,7 @@
 ## 요구사항 2 - findAll 구현해보기
 - [x] findAll 쿼리를 만들 수 있다.
 
+## 요구사항 3 - findById 구현해보기
+- [x] findById 쿼리를 만들 수 있다.
+
 
