@@ -1,0 +1,36 @@
+package persistence.sql.ddl;
+
+import persistence.sql.ddl.domain.DatabaseColumn;
+import persistence.sql.ddl.domain.DatabaseTable;
+import persistence.sql.ddl.view.QueryResolver;
+
+import java.util.List;
+
+public class DdlQueryBuilder implements DdlQueryBuild {
+
+    private static final String CREATE_TABLE_TEMPLATE = "CREATE TABLE %s(%s);";
+    private static final String DROP_TABLE_TEMPLATE = "DROP TABLE %s;";
+
+    private final QueryResolver queryResolver;
+
+    protected DdlQueryBuilder(QueryResolver queryResolver) {
+        this.queryResolver = queryResolver;
+    }
+
+    @Override
+    public String createQuery(Class<?> type) {
+        DatabaseTable table = new DatabaseTable(type);
+        List<DatabaseColumn> columns = table.getColumns();
+
+        return String.format(CREATE_TABLE_TEMPLATE, table.getName(), queryResolver.toQuery(columns));
+    }
+
+
+    @Override
+    public String dropQuery(Class<?> type) {
+        DatabaseTable table = new DatabaseTable(type);
+
+        return String.format(DROP_TABLE_TEMPLATE, table.getName());
+
+    }
+}
