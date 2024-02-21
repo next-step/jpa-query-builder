@@ -17,13 +17,14 @@ public class H2TypeMapper implements TypeMapper {
     }
 
     private String getTypeLength(Field field) {
-        if (H2DataType.of(field.getType()).getDefaultLength() != null) {
-            return String.format("(%d)", H2DataType.of(field.getType()).getDefaultLength());
+        if (H2DataType.of(field.getType()).getDefaultLength() == null) {
+            return EMPTY_STRING;
         }
 
-        if (field.isAnnotationPresent(Column.class)) {
-            return String.format("(%d)", field.getAnnotation(Column.class).length());
+        if (!field.isAnnotationPresent(Column.class)) {
+            return "(" + H2DataType.of(field.getType()).getDefaultLength() + ")";
         }
-        return EMPTY_STRING;
+
+        return "(" + field.getAnnotation(Column.class).length() + ")";
     }
 }

@@ -1,7 +1,9 @@
 package persistence.sql.ddl;
 
+import java.lang.reflect.Field;
+
 public interface ConstraintMapper {
 
-    String getConstraint(Class<?> type);
+    String getConstraints(Field type);
 
 }

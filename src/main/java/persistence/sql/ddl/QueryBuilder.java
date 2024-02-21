@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
-import java.lang.annotation.Annotation;
+import jakarta.persistence.Column;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -38,28 +39,29 @@ public class QueryBuilder {
         return Stream.of(
                         generateColumnName(field),
                         generateColumnType(field),
-                        generateColumnConstraints(field.getDeclaredAnnotations())
+                        generateColumnConstraints(field)
                 )
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.joining(SPACE));
     }
 
     private String generateColumnName(Field field) {
-        return field.getName().toUpperCase();
+        if (!field.isAnnotationPresent(Column.class)) {
+            return field.getName().toUpperCase();
+        }
+
+        Column column = field.getAnnotation(Column.class);
+        if (column.name().isEmpty()) {
+            return field.getName().toUpperCase();
+        }
+        return column.name().toUpperCase();
     }
 
     private String generateColumnType(Field field) {
         return typeMapper.getType(field);
     }
 
-    private String generateColumnConstraints(Annotation[] annotations) {
-        return Arrays.stream(annotations)
-                .map(this::generateConstraint)
-                .collect(Collectors.joining(SPACE));
+    private String generateColumnConstraints(Field field) {
+        return constraintMapper.getConstraints(field);
     }
-
-    private String generateConstraint(Annotation annotation) {
-        return constraintMapper.getConstraint(annotation.annotationType());
-    }
-
 }
