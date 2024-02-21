@@ -1,4 +1,4 @@
-package persistence.sql.ddl.generator.meta;
+package persistence.sql.meta;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import persistence.sql.meta.ColumnName;
 
 import java.lang.reflect.Field;
 
