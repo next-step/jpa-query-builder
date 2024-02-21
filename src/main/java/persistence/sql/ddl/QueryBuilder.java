@@ -12,10 +12,10 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class QueryBuilder {
+import static common.StringConstants.COMMA;
+import static common.StringConstants.SPACE;
 
-    private static final String SPACE = " ";
-    private static final String COMMA = ", ";
+public class QueryBuilder {
 
     private static final String CREATE_TABLE_QUERY = "CREATE TABLE %s (%s);";
     private static final String DROP_TABLE_QUERY = "DROP TABLE %s;";

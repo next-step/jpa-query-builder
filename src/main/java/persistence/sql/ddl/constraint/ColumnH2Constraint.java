@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
+import static common.StringConstants.EMPTY_STRING;
+
 public class ColumnH2Constraint extends H2Constraint {
 
     private static final String NOT_NULL_CONSTRAINT_QUERY = "NOT NULL";

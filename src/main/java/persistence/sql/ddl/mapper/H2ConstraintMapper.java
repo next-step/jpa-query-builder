@@ -13,9 +13,9 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class H2ConstraintMapper implements ConstraintMapper {
+import static common.StringConstants.SPACE;
 
-    private static final String SPACE = " ";
+public class H2ConstraintMapper implements ConstraintMapper {
 
     private static final Map<Class<?>, H2Constraint> constraints = Map.of(
             Id.class, new IdH2Constraint(),
