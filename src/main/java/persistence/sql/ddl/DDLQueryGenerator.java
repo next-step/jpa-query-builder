@@ -2,9 +2,9 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.*;
 import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.ddl.extractor.ColumnExtractor;
+import persistence.sql.ddl.extractor.TableExtractor;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,79 +15,58 @@ public class DDLQueryGenerator {
         this.dialect = dialect;
     }
 
-    public String generateCreateQuery(final Class<?> entityClazz) {
-        checkIsEntity(entityClazz);
-
-        final String tableNameClause = getTableName(entityClazz);
-
-        List<Field> fields = Arrays.stream(entityClazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .collect(Collectors.toList());
-
-        final String columnClause = fields.stream()
-                .map(this::getColumnDefinition)
-                .collect(Collectors.joining(", "));
-
-        Field primaryKeyField = fields.stream()
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(IdAnnotationMissingException::new);
-        final String primaryKeyClause = "PRIMARY KEY (" + primaryKeyField.getName() + ")";
-
-        return String.format("CREATE TABLE %s (%s, %s)", tableNameClause, columnClause, primaryKeyClause);
-    }
-
     public String generateDropTableQuery(final Class<?> entityClazz) {
         checkIsEntity(entityClazz);
 
-        final String tableName = getTableName(entityClazz);
+        final String tableName = new TableExtractor(entityClazz).getTableName();
         return String.format("DROP TABLE %s", tableName);
+    }
+
+    public String generateCreateQuery(final Class<?> entityClazz) {
+        checkIsEntity(entityClazz);
+        List<ColumnExtractor> columnExtractors = ColumnExtractor.from(entityClazz, dialect);
+
+        final String tableNameClause = new TableExtractor(entityClazz).getTableName();
+        final String columnClause = getColumnClause(columnExtractors);
+        final String keyClause = getKeyClause(columnExtractors);
+
+        return String.format("CREATE TABLE %s (%s, %s)", tableNameClause, columnClause, keyClause);
+    }
+
+    private String getColumnClause(List<ColumnExtractor> columnExtractors) {
+        return columnExtractors
+                .stream()
+                .map(this::getColumnString)
+                .collect(Collectors.joining(", "));
+    }
+
+    private String getColumnString(ColumnExtractor extractor) {
+        String result = String.format("%s %s", extractor.getName(), extractor.getColumnType());
+        String generationType = extractor.getGenerationType();
+        if (generationType != null) {
+            result += String.format(" %s", generationType);
+        }
+        return result;
+    }
+
+    private String getKeyClause(List<ColumnExtractor> columnExtractors) {
+        if(columnExtractors.stream().noneMatch(ColumnExtractor::isPrimaryKey)) {
+            throw new IdAnnotationMissingException();
+        }
+
+        return columnExtractors.stream()
+                .filter(extractor -> extractor.getKeyType() != null)
+                .map(this::getKeyString)
+                .collect(Collectors.joining(" ,"));
+    }
+
+    private String getKeyString(ColumnExtractor extractor) {
+        return String.format("%s KEY (%s)", extractor.getKeyType(), extractor.getName());
     }
 
     private void checkIsEntity(Class<?> entityClazz) {
         if (!entityClazz.isAnnotationPresent(Entity.class)) {
             throw new AnnotationMissingException("Entity 어노테이션이 없습니다.");
         }
-    }
-
-    private String getColumnDefinition(Field field) {
-        StringBuilder sb = new StringBuilder();
-        Column column = field.getAnnotation(Column.class);
-
-        sb.append(getColumnName(field, column));
-        sb.append(" ");
-        sb.append(getColumnType(field, column));
-
-        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-        if (generatedValue != null) {
-            sb.append(" ");
-            sb.append(dialect.mapGenerationType(generatedValue.strategy()));
-        }
-
-        return sb.toString();
-    }
-
-    private String getColumnType(Field field, Column column) {
-        String columnType = dialect.mapDataType(field.getType());
-        if(column != null && !column.nullable()) {
-            columnType += " NOT NULL";
-        }
-        return columnType;
-    }
-
-    private static String getColumnName(Field field, Column column) {
-        String columnName = field.getName();
-        if(column != null && !column.name().isEmpty()) {
-            columnName = column.name();
-        }
-        return columnName;
-    }
-
-    private String getTableName(Class<?> entityClazz) {
-        Table table = entityClazz.getAnnotation(Table.class);
-        if (table == null) {
-            return entityClazz.getSimpleName().toLowerCase();
-        }
-        return table.name();
     }
 }

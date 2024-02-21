@@ -45,7 +45,7 @@ class DDLQueryGeneratorTest {
     @DisplayName("요구사항4: 정보를 바탕으로 drop 쿼리 만들어보기")
     void testDropQueryGenerate() {
         String expect = "drop table users";
-        
+
         String query = sut.generateDropTableQuery(Requirement4.class);
 
         assertThat(query.toLowerCase()).isEqualTo(expect.toLowerCase());
