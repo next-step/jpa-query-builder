@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -28,7 +29,7 @@ class ReflectionTest {
 
         List<String> fieldNames = Arrays.stream(carClass.getDeclaredFields())
             .map(Field::getName)
-            .toList();
+            .collect(Collectors.toList());
         logger.debug("fields: {}", fieldNames);
 
         List<String> constructorInfos = Arrays.stream(carClass.getDeclaredConstructors())
@@ -39,7 +40,7 @@ class ReflectionTest {
                     Arrays.toString(constructor.getParameterTypes())
                 )
             )
-            .toList();
+            .collect(Collectors.toList());
         logger.debug("constructors: {}", constructorInfos);
 
         List<String> methodInfos = Arrays.stream(carClass.getDeclaredMethods())
@@ -51,7 +52,7 @@ class ReflectionTest {
                     Arrays.toString(method.getParameterTypes())
                 )
             )
-            .toList();
+            .collect(Collectors.toList());
         logger.debug("methods: {}", methodInfos);
     }
 
@@ -65,7 +66,7 @@ class ReflectionTest {
         List<Object> results = Arrays.stream(carClass.getMethods())
             .filter(method -> method.getName().startsWith(targetMethodName))
             .map(method -> methodInvoke(method, carInstance))
-            .toList();
+            .collect(Collectors.toList());
 
         assertAll(() -> {
             assertThat(results).hasSize(2);
@@ -82,7 +83,7 @@ class ReflectionTest {
         List<Object> results = Arrays.stream(carClass.getMethods())
             .filter(carMethod -> carMethod.isAnnotationPresent(PrintView.class))
             .map(carMethod -> methodInvoke(carMethod, carInstance))
-            .toList();
+            .collect(Collectors.toList());
 
         assertThat(results).hasSize(1);
     }
