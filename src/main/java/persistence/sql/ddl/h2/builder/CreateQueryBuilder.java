@@ -8,12 +8,13 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     @Override
     public String generateSQL(final Class<?> clazz) {
-        return String.format("""
-                create table %s
-                (
-                %s
-                );
-                """, getTableName(clazz), getColumnSQL(clazz));
+        StringBuilder sb = new StringBuilder();
+        sb.append("create table ");
+        sb.append(getTableName(clazz));
+        sb.append("\n(\n");
+        sb.append(getColumnSQL(clazz));
+        sb.append("\n);\n");
+        return sb.toString();
     }
 
     private String getTableName(final Class<?> clazz) {

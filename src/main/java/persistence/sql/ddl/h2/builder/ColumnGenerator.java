@@ -7,12 +7,13 @@ import persistence.sql.ddl.h2.meta.H2Column;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ColumnGenerator {
     private final List<Field> fields;
 
     public ColumnGenerator(Field[] fields) {
-        this.fields = Arrays.stream(fields).toList();
+        this.fields = Arrays.stream(fields).collect(Collectors.toList());
     }
 
     public String generateSQL() {
