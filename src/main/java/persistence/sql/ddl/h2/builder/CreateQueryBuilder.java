@@ -1,6 +1,7 @@
 package persistence.sql.ddl.h2.builder;
 
 import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.ddl.h2.H2Dialect;
 import persistence.sql.ddl.h2.meta.TableName;
 
 public class CreateQueryBuilder implements QueryBuilder {
@@ -22,6 +23,6 @@ public class CreateQueryBuilder implements QueryBuilder {
     }
 
     private String getColumnSQL(final Class<?> clazz) {
-        return new ColumnGenerator(clazz.getDeclaredFields()).generateSQL();
+        return new ColumnGenerator(new H2Dialect(), clazz.getDeclaredFields()).generateSQL();
     }
 }

@@ -2,6 +2,7 @@ package persistence.sql.ddl.h2.builder;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import persistence.sql.Dialect;
 import persistence.sql.ddl.h2.meta.H2Column;
 
 import java.lang.reflect.Field;
@@ -10,9 +11,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ColumnGenerator {
+    private final Dialect dialect;
     private final List<Field> fields;
 
-    public ColumnGenerator(Field[] fields) {
+    public ColumnGenerator(Dialect dialect, Field[] fields) {
+        this.dialect = dialect;
         this.fields = Arrays.stream(fields).collect(Collectors.toList());
     }
 

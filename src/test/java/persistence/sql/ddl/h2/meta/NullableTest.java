@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import persistence.sql.ddl.h2.H2Dialect;
 
 import java.lang.reflect.Field;
 
@@ -13,6 +14,8 @@ class NullableTest {
 
     private static final Class<Person> personClass = Person.class;
 
+
+    // TODO 테스트 추가 수정 필요
     @ParameterizedTest()
     @CsvSource({
             "id,              NOT NULL",
@@ -22,8 +25,7 @@ class NullableTest {
     })
     void nullableSQL(String fieldName, String sql) throws NoSuchFieldException {
         Field field = personClass.getDeclaredField(fieldName);
-
-        assertThat(Nullable.getSQL(field)).isEqualTo(sql);
+        assertThat(new H2Dialect().getColumnNullableType(field)).isEqualTo(sql);
     }
 
     private static class Person {
