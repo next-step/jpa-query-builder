@@ -2,15 +2,15 @@ package persistence.sql.ddl.domain;
 
 public class DatabaseColumn {
 
-    private final String name;
+    private final ColumnName name;
 
     private final Class<?> javaType;
 
-    private final Integer size;
+    private final ColumnLength size;
 
-    private final boolean nullable;
+    private final ColumnNullable nullable;
 
-    public DatabaseColumn(String name, Class<?> javaType, Integer size, boolean nullable) {
+    public DatabaseColumn(ColumnName name, Class<?> javaType, ColumnLength size, ColumnNullable nullable) {
         this.name = name;
         this.javaType = javaType;
         this.size = size;
@@ -18,7 +18,7 @@ public class DatabaseColumn {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public Class<?> getJavaType() {
@@ -26,10 +26,10 @@ public class DatabaseColumn {
     }
 
     public Integer getSize() {
-        return size;
+        return size.getSize();
     }
 
     public boolean isNullable() {
-        return nullable;
+        return this.nullable.isNullable();
     }
 }

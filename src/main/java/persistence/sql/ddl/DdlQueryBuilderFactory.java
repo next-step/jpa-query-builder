@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.view.mysql.MySQLQueryResolver;
+import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ public class DdlQueryBuilderFactory {
 
     public DdlQueryBuilderFactory() {
         factory = new HashMap<>();
-        factory.put(DatabaseDialect.MYSQL, new DdlQueryBuilder(new MySQLQueryResolver()));
+        factory.put(DatabaseDialect.MYSQL, new DdlQueryBuilder(new MySQLPrimaryKeyResolver()));
     }
 
     public DdlQueryBuilder getInstance(DatabaseDialect dialect) {

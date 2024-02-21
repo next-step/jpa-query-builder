@@ -1,14 +1,14 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.view.mysql.MySQLQueryResolver;
+import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DdlQueryBuilderTest {
 
-    private final DdlQueryBuilder builder = new DdlQueryBuilder(new MySQLQueryResolver());
+    private final DdlQueryBuilder builder = new DdlQueryBuilder(new MySQLPrimaryKeyResolver());
 
     @Test
     void should_create_create_query() {

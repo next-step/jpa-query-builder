@@ -6,13 +6,13 @@ import persistence.sql.ddl.view.AbstractQueryResolver;
 
 import static persistence.sql.ddl.CommonConstant.SPACE;
 
-public class MySQLQueryResolver extends AbstractQueryResolver {
+public class MySQLPrimaryKeyResolver extends AbstractQueryResolver {
 
     private static final String PRIMARY_KEY = "PRIMARY KEY";
     private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
     private static final String NOT_NULL = "NOT NULL";
 
-    public MySQLQueryResolver() {
+    public MySQLPrimaryKeyResolver() {
         super(MySQLColumnType::convert);
     }
 

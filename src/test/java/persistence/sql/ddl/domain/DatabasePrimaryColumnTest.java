@@ -22,7 +22,8 @@ class DatabasePrimaryColumnTest {
     @ParameterizedTest
     @MethodSource("generateStrategyArguments")
     void should_return_true_if_identity_strategy(GenerationType type, boolean expectResult) {
-        DatabasePrimaryColumn primaryColumn = new DatabasePrimaryColumn("test", Integer.class, null, type);
+        ColumnName name = new ColumnName("test");
+        DatabasePrimaryColumn primaryColumn = new DatabasePrimaryColumn(name, Integer.class, null, type);
 
         assertThat(primaryColumn.hasIdentityStrategy()).isEqualTo(expectResult);
     }

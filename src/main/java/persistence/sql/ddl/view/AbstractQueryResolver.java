@@ -26,8 +26,8 @@ public abstract class AbstractQueryResolver implements QueryResolver {
                             .append(SPACE)
                             .append(databaseTypeConverter.convert(column));
 
-                    if (column instanceof DatabasePrimaryColumn primaryColumn) {
-
+                    if (column instanceof DatabasePrimaryColumn) {
+                        DatabasePrimaryColumn primaryColumn = (DatabasePrimaryColumn) column;
                         sb.append(addPrimaryConstraint(primaryColumn));
                         return sb.toString();
                     }
