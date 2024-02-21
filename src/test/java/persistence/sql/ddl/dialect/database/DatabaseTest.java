@@ -2,6 +2,7 @@ package persistence.sql.ddl.dialect.database;
 
 import database.DatabaseServer;
 import database.H2;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class DatabaseTest {
 
-    private DatabaseServer server;
+    private static DatabaseServer server;
 
-    @BeforeEach
-    void setUp() throws Exception {
-        this.server = new H2();
+    @BeforeAll
+    static void setUp() throws Exception {
+        server = new H2();
     }
 
     @DisplayName("h2 DB에 연결한다.")
