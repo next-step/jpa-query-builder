@@ -47,7 +47,7 @@ public class CreateQueryBuilder {
 
     private String getColumn(Field field) {
         if (field.getType().equals(Long.class) && field.getName().equals("id")) {
-            return String.format(SQL_CREATE_ID_COLUMN, field.getName());
+            return SQL_CREATE_ID_COLUMN;
         }
         if (field.getType().equals(String.class)) {
             return String.format(SQL_CREATE_STRING_COLUMN, field.getName());
