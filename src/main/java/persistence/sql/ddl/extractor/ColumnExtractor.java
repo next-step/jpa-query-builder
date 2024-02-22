@@ -61,11 +61,12 @@ public class ColumnExtractor {
         return generatedValue.strategy();
     }
 
+    // TODO: Key 관련부분 하이버네이트 참고해보기
     public KeyType getKeyType() {
         if(isPrimaryKey()) {
             return KeyType.PRIMARY;
         }
-        if(isUnique()) {
+        if(isUniqueKey()) {
             return KeyType.UNIQUE;
         }
         return null;
@@ -75,7 +76,7 @@ public class ColumnExtractor {
         return field.isAnnotationPresent(Id.class);
     }
 
-    private boolean isUnique() {
+    private boolean isUniqueKey() {
         return column != null && column.unique();
     }
 }
