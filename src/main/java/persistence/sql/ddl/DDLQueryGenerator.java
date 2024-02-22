@@ -20,7 +20,7 @@ public class DDLQueryGenerator {
     public String generateDropTableQuery(final Class<?> entityClazz) {
         checkIsEntity(entityClazz);
 
-        final String tableName = new TableExtractor(entityClazz).getTableName();
+        final String tableName = new TableExtractor(entityClazz).getName();
         return String.format("DROP TABLE %s", tableName);
     }
 
@@ -28,7 +28,7 @@ public class DDLQueryGenerator {
         checkIsEntity(entityClazz);
         List<ColumnExtractor> columnExtractors = ColumnExtractor.from(entityClazz, dialect);
 
-        final String tableNameClause = new TableExtractor(entityClazz).getTableName();
+        final String tableNameClause = new TableExtractor(entityClazz).getName();
         final String columnClause = getColumnClause(columnExtractors);
         final String keyClause = getKeyClause(columnExtractors);
 

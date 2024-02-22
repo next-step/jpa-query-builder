@@ -8,7 +8,7 @@ public class TableExtractor {
     public TableExtractor(Class<?> entityClazz) {
         this.entityClazz = entityClazz;
     }
-    public String getTableName() {
+    public String getName() {
         Table table = entityClazz.getAnnotation(Table.class);
         if (table == null) {
             return entityClazz.getSimpleName().toLowerCase();
