@@ -15,12 +15,13 @@ public class PkColumn implements Column {
     private final IdGeneratedStrategy idGeneratedStrategy;
 
 
-    public static PkColumn of(GeneralColumn generalColumn, Field field, Dialect dialect){
+    public static PkColumn of(GeneralColumn generalColumn, Field field, Dialect dialect) {
         validateGeneratedValue(field);
         GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
         IdGeneratedStrategy idGeneratedStrategy = dialect.getIdGeneratedStrategy(annotation.strategy());
         return new PkColumn(generalColumn, idGeneratedStrategy);
     }
+
     private PkColumn(GeneralColumn generalColumn, IdGeneratedStrategy idGeneratedStrategy) {
         this.generalColumn = generalColumn;
         this.idGeneratedStrategy = idGeneratedStrategy;
@@ -40,6 +41,16 @@ public class PkColumn implements Column {
     @Override
     public Column convertPk(Field field, Dialect dialect) {
         throw new UnsupportedOperationException("This operation is not supported for PkColumn");
+    }
+
+    @Override
+    public boolean isPk() {
+        return true;
+    }
+
+    @Override
+    public String getColumnName() {
+        return generalColumn.getColumnName();
     }
 
 }

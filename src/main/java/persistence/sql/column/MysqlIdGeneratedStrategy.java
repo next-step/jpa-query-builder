@@ -26,4 +26,9 @@ public enum MysqlIdGeneratedStrategy implements IdGeneratedStrategy {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public boolean isAutoIncrement() {
+        return "auto_increment".equals(value);
+    }
 }

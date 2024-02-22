@@ -9,4 +9,9 @@ public interface Column {
     String getDefinition();
 
     Column convertPk(Field field, Dialect dialect);
+
+    boolean isPk();
+
+    String getColumnName();
+
 }

@@ -18,7 +18,6 @@ public final class GeneralColumnFactory {
             String columnName = field.getAnnotation(jakarta.persistence.Column.class).name();
             name.setColumnName(columnName);
         }
-
         return new GeneralColumn(name, columnType, nullable);
     }
 

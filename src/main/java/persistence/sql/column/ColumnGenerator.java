@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public final class ColumnGenerator {
 
     private final GeneralColumnFactory columnFactory;
+
     public ColumnGenerator(GeneralColumnFactory columnFactory) {
         this.columnFactory = columnFactory;
     }
@@ -20,7 +21,7 @@ public final class ColumnGenerator {
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(field -> {
                     Column column = columnFactory.create(field, dialect);
-                    if(columnFactory.canCreatePkColumn(field)) {
+                    if (columnFactory.canCreatePkColumn(field)) {
                         column = columnFactory.createPkColumn(column, field, dialect);
                     }
                     return column;

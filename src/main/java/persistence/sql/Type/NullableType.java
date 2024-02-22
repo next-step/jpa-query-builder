@@ -4,7 +4,7 @@ public class NullableType {
 
     private boolean isNullable;
 
-    public NullableType(){
+    public NullableType() {
         this(true);
     }
 
