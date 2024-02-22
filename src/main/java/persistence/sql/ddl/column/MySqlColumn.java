@@ -5,18 +5,18 @@ import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 
+
 public class MySqlColumn implements Column {
 
-    private static final int DEFAULT_LENGTH = 255;
     private static final String BLANK = " ";
 
     private final ColumnName name;
     private final ColumnType type;
-    private final int length;
+    private final ColumnLength length;
     private final GenerationTypeStrategy generatedValueStrategy;
     private final boolean nullable;
 
-    private MySqlColumn(ColumnName name, ColumnType type, int length, GenerationTypeStrategy generatedValueStrategy, boolean nullable) {
+    private MySqlColumn(ColumnName name, ColumnType type, ColumnLength length, GenerationTypeStrategy generatedValueStrategy, boolean nullable) {
         this.name = name;
         this.type = type;
         this.length = length;
@@ -35,22 +35,10 @@ public class MySqlColumn implements Column {
         ColumnName name = ColumnName.from(field);
         ColumnType type = ColumnType.findColumnType(field.getType());
         GenerationTypeStrategy generatedValueStrategy = GenerationTypeStrategy.from(generatedValue);
-        int length = findLength(column);
-        boolean nullable = findNullable(column);
+        ColumnLength length = ColumnLength.from(field);
+        boolean nullable = column != null && column.nullable();
 
         return new MySqlColumn(name, type, length, generatedValueStrategy, nullable);
-    }
-
-    private static int findLength(jakarta.persistence.Column column) {
-        if (column == null) {
-            return DEFAULT_LENGTH;
-        }
-
-        return column.length();
-    }
-
-    private static boolean findNullable(jakarta.persistence.Column column) {
-        return column != null && column.nullable();
     }
 
     @Override
@@ -69,7 +57,7 @@ public class MySqlColumn implements Column {
             return "";
         }
 
-        return String.format("(%d)", length);
+        return String.format("(%d)", length.getLength());
     }
 
     private String getGeneratedValueStrategyDefinition() {
