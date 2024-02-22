@@ -79,4 +79,39 @@ public class Person {
 
 }
 ```
-- [ ] 정보를 바탕으로 drop 쿼리 만들어보기
+- [x] 정보를 바탕으로 drop 쿼리 만들어보기
+
+## 3단계 - QueryBuilder DML
+### 요구사항
+```java
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+```
+- [ ] Person 클래스를 바탕으로 insert 쿼리 만들어보기
+  - @Entity, @Table, @Id, @Column, @Transient 를 고려
+  - columns 과 values 를 나누어서 구현해보자
+- [ ] Person 클래스를 바탕으로 모두 조회(findAll) 기능 구현해보기
+  - 쿼리 실행을 통해 데이터를 여러 row 를 넣어 정상적으로 나오는지 확인해보자
+- [ ] Person 클래스를 바탕으로 단건 조회(findById) 기능 구현해보기
+- [ ] Person 클래스를 바탕으로 delete 쿼리 만들어보기
+  - @Entity, @Table, @Id, @Column, @Transient 를 고려
+
