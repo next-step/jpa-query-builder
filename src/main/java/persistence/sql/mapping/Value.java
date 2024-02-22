@@ -10,14 +10,17 @@ public class Value implements Serializable {
 
     private Object value;
 
+    private String valueClause;
+
     public Value(final Class<?> originalType, final int sqlType) {
-        this(originalType, sqlType, null);
+        this(originalType, sqlType, null, null);
     }
 
-    public Value(final Class<?> originalType, final int sqlType, final Object value) {
+    public Value(final Class<?> originalType, final int sqlType, final Object value, final String valueClause) {
         this.originalType = originalType;
         this.sqlType = sqlType;
         this.value = value;
+        this.valueClause = valueClause;
     }
 
     public Class<?> getOriginalType() {
@@ -32,12 +35,19 @@ public class Value implements Serializable {
         return this.value;
     }
 
+    public String getValueClause() {
+        return this.valueClause;
+    }
+
     public void setValue(final Object value) {
         this.value = value;
     }
 
-    public Value clone() {
-        return new Value(this.originalType, this.sqlType, this.value);
+    public void setValueClause(final String valueClause) {
+        this.valueClause = valueClause;
     }
 
+    public Value clone() {
+        return new Value(this.originalType, this.sqlType, this.value, this.valueClause);
+    }
 }
