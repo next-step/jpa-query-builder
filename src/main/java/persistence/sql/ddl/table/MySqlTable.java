@@ -1,6 +1,7 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.table;
 
 import jakarta.persistence.Id;
+import persistence.sql.ddl.column.MySqlColumn;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

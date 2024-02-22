@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.column;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

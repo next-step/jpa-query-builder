@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.table.MySqlTable;
+
 public class MySqlDDLGenerator implements DDLGenerator {
 
     @Override

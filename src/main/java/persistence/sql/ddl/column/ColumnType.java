@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.column;
 
 import java.time.LocalDate;
 import java.util.Arrays;

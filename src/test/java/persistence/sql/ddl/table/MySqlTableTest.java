@@ -1,7 +1,8 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.table;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.MySqlDDLGenerator;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
@@ -20,6 +21,6 @@ class MySqlTableTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Persistent entity 'persistence.sql.ddl.PersonNotHaveIdAnnotation' should have primary key");
+                .hasMessage("Persistent entity 'persistence.sql.ddl.table.PersonNotHaveIdAnnotation' should have primary key");
     }
 }
