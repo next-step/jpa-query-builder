@@ -53,4 +53,14 @@ class DatabaseTableTest {
 
         assertThat(idColumnName).isEqualTo("id");
     }
+
+    @Test
+    void should_return_where_clause() {
+        Person person = new Person(1l, "cs", 29, "katd216@gmail.com", 1);
+        DatabaseTable table = new DatabaseTable(person);
+
+        String whereClause = table.whereClause();
+
+        assertThat(whereClause).isEqualTo("id=1 and nick_name='cs' and old=29 and email='katd216@gmail.com'");
+    }
 }
