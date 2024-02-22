@@ -10,3 +10,7 @@
    - `@Table`의 `name`속성대로 table 명이 생성된다.
    - `@Transient` 는 column으로 매핑되지 않는다.
 4. [x] 요구사항 4 : drop query를 생성한다.
+
+### Step3 미션
+
+1. [x] 요구사항 1 : Entity Class의 Annotation정보를 바탕으로 insert query를 생성한다.
