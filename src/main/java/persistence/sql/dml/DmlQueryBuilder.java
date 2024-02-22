@@ -4,9 +4,10 @@ import persistence.sql.domain.DatabaseTable;
 
 public class DmlQueryBuilder {
 
-    private static String INSERT_TEMPLATE = "insert into %s(%s) values(%s);";
-    private static String FIND_ALL_TEMPLATE = "select * from %s;";
-    private static String FIND_BY_ID_TEMPLATE = "select * from %s where %s=%s;";
+    private static final String INSERT_TEMPLATE = "insert into %s(%s) values(%s);";
+    private static final String FIND_ALL_TEMPLATE = "select * from %s;";
+    private static final String FIND_BY_ID_TEMPLATE = "select * from %s where %s=%s;";
+    private static final String DELETE_TEMPLATE = "delete %s where %s;";
 
     public <T> String insert(T entity) {
         DatabaseTable table = new DatabaseTable(entity);
@@ -27,14 +28,23 @@ public class DmlQueryBuilder {
     }
 
     public String findById(Class<?> entity, Object id) {
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("database id can not be null");
         }
         DatabaseTable table = new DatabaseTable(entity);
 
         String name = table.getName();
-        String idColumn = table.getIdColumnName();
+        String idColumnValue = table.getIdColumnName();
 
-        return String.format(FIND_BY_ID_TEMPLATE, name, idColumn, id);
+        return String.format(FIND_BY_ID_TEMPLATE, name, idColumnValue, id);
+    }
+
+    public <T> String delete(T entity) {
+        DatabaseTable table = new DatabaseTable(entity);
+
+        String name = table.getName();
+        String whereClause = table.whereClause();
+
+        return String.format(DELETE_TEMPLATE, name, whereClause);
     }
 }

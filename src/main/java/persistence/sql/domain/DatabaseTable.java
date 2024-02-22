@@ -104,4 +104,12 @@ public class DatabaseTable {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
     }
+
+    public String whereClause() {
+        return columns.stream()
+                .map(DatabaseColumn::whereClause)
+                .reduce((columnA,columnB)->String.join(" and ",columnA,columnB))
+                .orElseThrow(IllegalStateException::new);
+    }
+
 }

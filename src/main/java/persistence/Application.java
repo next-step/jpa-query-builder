@@ -15,6 +15,7 @@ import persistence.sql.dml.DmlQueryBuilder;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -39,9 +40,14 @@ public class Application {
             jdbcTemplate.execute(dmlQueryBuilder.insert(person));
             jdbcTemplate.execute(dmlQueryBuilder.insert(person));
 
-            jdbcTemplate.query(dmlQueryBuilder.findAll(Person.class), printResultSet());
-            System.out.println("###########");
-            jdbcTemplate.query(dmlQueryBuilder.findById(Person.class,1l), printResultSet());
+            PersonRowMapper mapper = new PersonRowMapper();
+            List<Person> foundPerson = jdbcTemplate.query(dmlQueryBuilder.findById(Person.class, 1l), mapper);
+            System.out.println("foundPerson = " + foundPerson);
+            System.out.println("dmlQueryBuilder.delete(foundPerson.get(0)) = " + dmlQueryBuilder.delete(foundPerson.get(0)));
+            jdbcTemplate.execute(dmlQueryBuilder.delete(foundPerson.get(0)));
+            List<Person> deletePerson = jdbcTemplate.query(dmlQueryBuilder.findById(Person.class,1l), mapper);
+            System.out.println("foundPerson = " + deletePerson);
+
 
             jdbcTemplate.execute(ddlQueryBuilder.dropQuery(Person.class));
 
@@ -53,18 +59,16 @@ public class Application {
         }
     }
 
-    private static RowMapper<Object> printResultSet() {
-        return resultSet -> {
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = metaData.getColumnName(i);
-                Object value = resultSet.getObject(i);
-                System.out.println(columnName + ": " + value);
-            }
-            System.out.println("-------------");
-            return null;
-        };
+    private static class PersonRowMapper implements RowMapper<Person> {
+        @Override
+        public Person mapRow(ResultSet resultSet) throws SQLException {
+            return new Person(
+                    resultSet.getLong("id"),
+                    resultSet.getString("nick_name"),
+                    resultSet.getInt("old"),
+                    resultSet.getString("email"),
+                    0
+            );
+        }
     }
 }

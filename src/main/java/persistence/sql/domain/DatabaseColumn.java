@@ -36,4 +36,8 @@ public class DatabaseColumn {
     public String getValue() {
         return value.getValue();
     }
+
+    public String whereClause() {
+        return this.getName()+"="+this.getValue();
+    }
 }

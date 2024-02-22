@@ -39,4 +39,13 @@ class DmlQueryBuilderTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("database id can not be null");
     }
+
+    @Test
+    void should_create_delete_query() {
+        Person person = new Person(1l, "cs", 29, "katd216@gmail.com", 1);
+        String query = dmlQueryBuilder.delete(person);
+
+        assertThat(query).isEqualTo("delete users where id=1 and nick_name='cs' and old=29 and email='katd216@gmail.com';");
+    }
+
 }
