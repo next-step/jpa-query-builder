@@ -29,4 +29,8 @@ public class DatabasePrimaryColumn extends DatabaseColumn {
         }
         return field.getAnnotation(GeneratedValue.class).strategy();
     }
+
+    public static DatabasePrimaryColumn copy(DatabasePrimaryColumn primaryColumn) {
+        return new DatabasePrimaryColumn(primaryColumn.name, primaryColumn.value, primaryColumn.size, primaryColumn.generationType);
+    }
 }

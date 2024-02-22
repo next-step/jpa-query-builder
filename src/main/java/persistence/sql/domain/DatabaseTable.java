@@ -72,7 +72,9 @@ public class DatabaseTable {
     }
 
     public List<DatabaseColumn> getColumns() {
-        return columns;
+        return columns.stream()
+                .map(DatabaseColumn::copy)
+                .collect(Collectors.toList());
     }
 
     public String columnClause() {

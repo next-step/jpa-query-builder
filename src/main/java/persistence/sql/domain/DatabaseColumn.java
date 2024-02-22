@@ -4,19 +4,26 @@ public class DatabaseColumn {
 
     private static final String EQUAL = "=";
 
-    private final ColumnName name;
+    protected final ColumnName name;
 
-    private final ColumnValue value;
+    protected final ColumnValue value;
 
-    private final ColumnLength size;
+    protected final ColumnLength size;
 
-    private final ColumnNullable nullable;
+    protected final ColumnNullable nullable;
 
     public DatabaseColumn(ColumnName name, ColumnValue value, ColumnLength size, ColumnNullable nullable) {
         this.name = name;
         this.value = value;
         this.size = size;
         this.nullable = nullable;
+    }
+
+    public static DatabaseColumn copy(DatabaseColumn databaseColumn) {
+        if (databaseColumn instanceof DatabasePrimaryColumn) {
+            return DatabasePrimaryColumn.copy((DatabasePrimaryColumn) databaseColumn);
+        }
+        return new DatabaseColumn(databaseColumn.name, databaseColumn.value, databaseColumn.size, databaseColumn.nullable);
     }
 
     public String getName() {
