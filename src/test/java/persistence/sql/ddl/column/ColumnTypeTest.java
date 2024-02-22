@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
-import static persistence.sql.ddl.column.ColumnType.VARCHAR;
+import static persistence.sql.ddl.column.ColumnType.STRING;
 
 class ColumnTypeTest {
 
@@ -21,7 +21,7 @@ class ColumnTypeTest {
         ColumnType columnType = ColumnType.findColumnType(string);
 
         // then
-        assertThat(columnType).isEqualTo(VARCHAR);
+        assertThat(columnType).isEqualTo(STRING);
     }
 
     @Test

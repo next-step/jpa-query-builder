@@ -45,7 +45,7 @@ public class MySqlColumn implements Column {
     public String defineColumn() {
         return name.getName() +
                 BLANK +
-                type +
+                type.getMysqlColumnType() +
                 getLengthDefinition() +
                 BLANK +
                 getGeneratedValueStrategyDefinition() +
@@ -53,7 +53,7 @@ public class MySqlColumn implements Column {
     }
 
     private String getLengthDefinition() {
-        if (type != ColumnType.VARCHAR) {
+        if (type != ColumnType.STRING) {
             return "";
         }
 
