@@ -3,7 +3,7 @@ package persistence.sql.ddl.extractor;
 import jakarta.persistence.Table;
 
 public class TableExtractor {
-    Class<?> entityClazz;
+    private final Class<?> entityClazz;
 
     public TableExtractor(Class<?> entityClazz) {
         this.entityClazz = entityClazz;
