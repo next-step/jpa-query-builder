@@ -4,7 +4,7 @@ import persistence.sql.ddl.columntype.MySQLColumnType;
 import persistence.sql.domain.DatabasePrimaryColumn;
 import persistence.sql.ddl.view.AbstractQueryResolver;
 
-import static persistence.sql.ddl.CommonConstant.SPACE;
+import static persistence.sql.CommonConstant.SPACE;
 
 public class MySQLPrimaryKeyResolver extends AbstractQueryResolver {
 

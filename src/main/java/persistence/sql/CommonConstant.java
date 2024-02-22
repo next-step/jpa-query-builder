@@ -1,7 +1,7 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 public interface CommonConstant {
 
-    String END_STR = ";";
     String SPACE = " ";
+    String COLUMN_SEPARATOR= ",";
 }

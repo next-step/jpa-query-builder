@@ -6,11 +6,10 @@ import persistence.sql.domain.DatabasePrimaryColumn;
 
 import java.util.List;
 
-import static persistence.sql.ddl.CommonConstant.SPACE;
+import static persistence.sql.CommonConstant.COLUMN_SEPARATOR;
+import static persistence.sql.CommonConstant.SPACE;
 
 public abstract class AbstractQueryResolver implements QueryResolver {
-
-    private static final String COLUMN_SEPARATOR = ", ";
 
     private final DatabaseTypeConverter databaseTypeConverter;
 

@@ -8,7 +8,10 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static persistence.sql.CommonConstant.COLUMN_SEPARATOR;
 
 public class DatabaseTable {
 
@@ -18,7 +21,7 @@ public class DatabaseTable {
 
     public DatabaseTable(Class<?> clazz) {
         this.name = getTableName(clazz);
-        this.columns = buildColumns(clazz,null);
+        this.columns = buildColumns(clazz, null);
     }
 
     public <T> DatabaseTable(T entity) {
@@ -27,7 +30,7 @@ public class DatabaseTable {
         this.columns = buildColumns(clazz, entity);
     }
 
-    private String getTableName(Class<?> clazz){
+    private String getTableName(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("entity annotation is required");
         }
@@ -41,7 +44,7 @@ public class DatabaseTable {
     private List<DatabaseColumn> buildColumns(Class<?> clazz, Object object) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(this::isMappingColumn)
-                .map(column->buildColumn(column,object))
+                .map(column -> buildColumn(column, object))
                 .collect(Collectors.toList());
     }
 
@@ -71,26 +74,27 @@ public class DatabaseTable {
     }
 
     public String columnClause() {
+        return getClause(DatabaseColumn::getName);
+    }
+
+    public String valueClause() {
+        return getClause(DatabaseColumn::getValue);
+    }
+
+    private String getClause(Function<DatabaseColumn, String> convert) {
         return columns.stream()
                 .filter(this::notAutoIncrementColumn)
-                .map(DatabaseColumn::getName)
-                .reduce((columnA,columnB)->String.join(",",columnA,columnB))
+                .map(convert)
+                .reduce((columnA, columnB) -> String.join(COLUMN_SEPARATOR, columnA, columnB))
                 .orElseThrow(IllegalStateException::new);
     }
 
     private boolean notAutoIncrementColumn(DatabaseColumn column) {
-         if(column instanceof DatabasePrimaryColumn){
-             DatabasePrimaryColumn primaryColumn = (DatabasePrimaryColumn) column;
-             return primaryColumn.getValue() != null;
-         }
-         return true;
+        if (column instanceof DatabasePrimaryColumn) {
+            DatabasePrimaryColumn primaryColumn = (DatabasePrimaryColumn) column;
+            return primaryColumn.getValue() != null;
+        }
+        return true;
     }
 
-    public String valueClause() {
-        return columns.stream()
-                .filter(this::notAutoIncrementColumn)
-                .map(DatabaseColumn::getValue)
-                .reduce((columnA,columnB)->String.join(",",columnA,columnB))
-                .orElseThrow(IllegalStateException::new);
-    }
 }

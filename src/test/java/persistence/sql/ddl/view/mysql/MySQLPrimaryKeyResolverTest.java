@@ -23,7 +23,7 @@ class MySQLPrimaryKeyResolverTest {
 
         String query = queryResolver.toQuery(columns);
 
-        assertThat(query).isEqualTo("id BIGINT PRIMARY KEY AUTO_INCREMENT, test VARCHAR(300)");
+        assertThat(query).isEqualTo("id BIGINT PRIMARY KEY AUTO_INCREMENT,test VARCHAR(300)");
     }
 
 }
