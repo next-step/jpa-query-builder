@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import static common.StringConstants.EMPTY_STRING;
 
-public class GeneratedValueH2Constraint extends H2Constraint {
+public class GeneratedValueH2Constraint implements H2Constraint {
 
     private static final Map<GenerationType, String> strategies = Map.of(
             GenerationType.IDENTITY, "AUTO_INCREMENT"
@@ -27,7 +27,6 @@ public class GeneratedValueH2Constraint extends H2Constraint {
     private String getStrategy(GeneratedValue generatedValue) {
         return Optional.ofNullable(strategies.get(generatedValue.strategy()))
                 .orElse(EMPTY_STRING);
-
     }
 
 }

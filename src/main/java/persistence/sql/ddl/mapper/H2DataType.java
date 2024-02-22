@@ -6,7 +6,9 @@ import java.util.List;
 
 public enum H2DataType {
 
-    INTEGER(List.of(Integer.class, int.class, Short.class, short.class, byte.class, Byte.class), null),
+    TINYINT(List.of(Byte.class, byte.class), null),
+    SMALLINT(List.of(Short.class, short.class), null),
+    INTEGER(List.of(Integer.class, int.class), null),
     VARCHAR(List.of(String.class), 255),
     BIGINT(List.of(BigInteger.class, Long.class, long.class), null);
 

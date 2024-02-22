@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 
 import static common.StringConstants.EMPTY_STRING;
 
-public class ColumnH2Constraint extends H2Constraint {
+public class ColumnH2Constraint implements H2Constraint {
 
     private static final String NOT_NULL_CONSTRAINT_QUERY = "NOT NULL";
 
