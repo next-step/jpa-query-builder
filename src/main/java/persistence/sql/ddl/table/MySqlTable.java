@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class MySqlTable implements Table {
+public class MySqlTable {
 
     private final TableName name;
     private final List<MySqlColumn> columns;
@@ -28,17 +28,11 @@ public class MySqlTable implements Table {
         return new MySqlTable(name, columns);
     }
 
-    @Override
-    public String createTable() {
-        return String.format("CREATE TABLE %s (%s);", name.getName(), getColumnsDefinition());
+    public String getName() {
+        return name.getName();
     }
 
-    @Override
-    public String dropTable() {
-        return String.format("DROP TABLE %s;", name.getName());
-    }
-
-    private String getColumnsDefinition() {
+    public String getColumnsDefinition() {
         return columns.stream()
                 .map(MySqlColumn::defineColumn)
                 .collect(Collectors.joining(", "));
