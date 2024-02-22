@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import persistence.sql.mapping.Value;
 
-public interface InsertQueryValueBinder {
+public interface QueryValueBinder {
 
     boolean support(final Value value);
 

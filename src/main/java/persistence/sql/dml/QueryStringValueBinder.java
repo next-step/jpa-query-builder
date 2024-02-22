@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import persistence.sql.mapping.Value;
 
-public class InsertQueryStringValueBinder implements InsertQueryValueBinder {
+public class QueryStringValueBinder implements QueryValueBinder {
     @Override
     public boolean support(final Value value) {
         return value.getOriginalType().equals(String.class);

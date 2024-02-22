@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import persistence.sql.mapping.Value;
 
-public class InsertQueryNumberValueBinder implements InsertQueryValueBinder {
+public class QueryNumberValueBinder implements QueryValueBinder {
     @Override
     public boolean support(final Value value) {
         final Class<?> type = value.getOriginalType();
@@ -11,6 +11,6 @@ public class InsertQueryNumberValueBinder implements InsertQueryValueBinder {
 
     @Override
     public String bind(final Object value) {
-        return "'" + value + "'";
+        return value.toString();
     }
 }
