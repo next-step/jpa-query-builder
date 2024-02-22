@@ -14,4 +14,5 @@
 ### Step3 미션
 
 1. [x] 요구사항 1 : Entity Class의 Annotation정보를 바탕으로 insert query를 생성한다.
-1. [x] 요구사항 2 : Entity Class를 넣어주면 해당 테이블의 모든 데이터가 반환되는 find all query를 생성한다.
+2. [x] 요구사항 2 : Entity Class를 넣어주면 해당 테이블의 모든 데이터가 반환되는 find all query를 생성한다.
+3. [x] 요구사항 3 : Entity Class와 Id를 넣어주면 해당 테이블의 Id 에 해당하는 단건의 findById query를 생성한다.
