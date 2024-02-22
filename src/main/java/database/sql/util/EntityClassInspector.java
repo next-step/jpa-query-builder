@@ -1,8 +1,8 @@
 package database.sql.util;
 
-import database.sql.util.column.Column;
-import database.sql.util.column.GeneralColumn;
-import database.sql.util.column.PrimaryKeyColumn;
+import database.sql.util.column.EntityColumn;
+import database.sql.util.column.GeneralEntityColumn;
+import database.sql.util.column.PrimaryKeyEntityColumn;
 import database.sql.util.type.TypeConverter;
 import jakarta.persistence.*;
 
@@ -33,8 +33,8 @@ public class EntityClassInspector {
 
     public List<String> getColumnNames() {
         List<String> list = new ArrayList<>();
-        for (Column column : getColumns()) {
-            list.add(column.getColumnName());
+        for (EntityColumn entityColumn : getColumns()) {
+            list.add(entityColumn.getColumnName());
         }
         return list;
     }
@@ -45,16 +45,16 @@ public class EntityClassInspector {
 
     public List<String> getColumnDefinitions(TypeConverter typeConverter) {
         List<String> list = new ArrayList<>();
-        for (Column column : getColumns()) {
-            list.add(column.toColumnDefinition(typeConverter));
+        for (EntityColumn entityColumn : getColumns()) {
+            list.add(entityColumn.toColumnDefinition(typeConverter));
         }
         return list;
     }
 
     public String getPrimaryKeyColumnName() {
-        for (Column column : getColumns()) {
-            if (column.isPrimaryKeyField()) {
-                return column.getColumnName();
+        for (EntityColumn entityColumn : getColumns()) {
+            if (entityColumn.isPrimaryKeyField()) {
+                return entityColumn.getColumnName();
             }
         }
         throw new UnsupportedOperationException("primary key 컬럼이 없는 경우는 지원하지 않습니다.");
@@ -62,9 +62,9 @@ public class EntityClassInspector {
 
     public List<String> getColumnNamesForInserting() {
         List<String> list = new ArrayList<>();
-        for (Column column : getColumns()) {
-            if (!column.isPrimaryKeyField()) {
-                list.add(column.getColumnName());
+        for (EntityColumn entityColumn : getColumns()) {
+            if (!entityColumn.isPrimaryKeyField()) {
+                list.add(entityColumn.getColumnName());
             }
         }
         return list;
@@ -74,7 +74,7 @@ public class EntityClassInspector {
         return String.join(", ", getColumnNamesForInserting());
     }
 
-    private Collection<Column> getColumns() {
+    private Collection<EntityColumn> getColumns() {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .filter(this::notTransientField)
                 .map(this::fieldToColumn)
@@ -85,8 +85,8 @@ public class EntityClassInspector {
         return field.getAnnotation(Transient.class) == null;
     }
 
-    private Column fieldToColumn(Field field) {
-        jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
+    private EntityColumn fieldToColumn(Field field) {
+        Column columnAnnotation = field.getAnnotation(Column.class);
         GeneratedValue generatedValueAnnotation = field.getAnnotation(GeneratedValue.class);
         boolean isId = field.isAnnotationPresent(Id.class);
 
@@ -96,21 +96,21 @@ public class EntityClassInspector {
 
         if (isId) {
             boolean autoIncrement = isAutoIncrement(generatedValueAnnotation);
-            return new PrimaryKeyColumn(columnName, type, columnLength, autoIncrement);
+            return new PrimaryKeyEntityColumn(columnName, type, columnLength, autoIncrement);
         }
 
         boolean nullable = isNullable(columnAnnotation);
-        return new GeneralColumn(columnName, type, columnLength, nullable);
+        return new GeneralEntityColumn(columnName, type, columnLength, nullable);
     }
 
-    private String getColumnNameFromAnnotation(jakarta.persistence.Column columnAnnotation, String defaultName) {
+    private String getColumnNameFromAnnotation(Column columnAnnotation, String defaultName) {
         if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
             return columnAnnotation.name();
         }
         return defaultName;
     }
 
-    private Integer getColumnLength(jakarta.persistence.Column columnAnnotation) {
+    private Integer getColumnLength(Column columnAnnotation) {
         if (columnAnnotation != null) {
             return columnAnnotation.length();
         }
@@ -121,7 +121,7 @@ public class EntityClassInspector {
         return generatedValueAnnotation != null && generatedValueAnnotation.strategy() == GenerationType.IDENTITY;
     }
 
-    private boolean isNullable(jakarta.persistence.Column columnAnnotation) {
+    private boolean isNullable(Column columnAnnotation) {
         if (columnAnnotation != null) {
             return columnAnnotation.nullable();
         }

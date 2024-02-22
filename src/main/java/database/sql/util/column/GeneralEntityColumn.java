@@ -2,16 +2,16 @@ package database.sql.util.column;
 
 import database.sql.util.type.TypeConverter;
 
-public class GeneralColumn implements Column {
+public class GeneralEntityColumn implements EntityColumn {
     private final String columnName;
     private final Class<?> type;
     private final Integer columnLength;
     private final boolean nullable;
 
-    public GeneralColumn(String columnName,
-                         Class<?> type,
-                         Integer columnLength,
-                         boolean nullable) {
+    public GeneralEntityColumn(String columnName,
+                               Class<?> type,
+                               Integer columnLength,
+                               boolean nullable) {
         this.columnName = columnName;
         this.type = type;
         this.columnLength = columnLength;

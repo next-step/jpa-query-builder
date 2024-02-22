@@ -4,16 +4,16 @@ import database.sql.util.type.TypeConverter;
 
 import java.util.StringJoiner;
 
-public class PrimaryKeyColumn implements Column {
+public class PrimaryKeyEntityColumn implements EntityColumn {
     private final String columnName;
     private final Class<?> type;
     private final Integer columnLength;
     private final boolean autoIncrement;
 
-    public PrimaryKeyColumn(String columnName,
-                            Class<?> type,
-                            Integer columnLength,
-                            boolean autoIncrement) {
+    public PrimaryKeyEntityColumn(String columnName,
+                                  Class<?> type,
+                                  Integer columnLength,
+                                  boolean autoIncrement) {
         this.columnName = columnName;
         this.type = type;
         this.columnLength = columnLength;

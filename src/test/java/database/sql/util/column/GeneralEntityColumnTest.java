@@ -10,27 +10,27 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class GeneralColumnTest {
+class GeneralEntityColumnTest {
     private final MySQLTypeConverter typeConverter = new MySQLTypeConverter();
 
     private static List<Arguments> sampleGeneralColumns() {
         return List.of(
-                arguments(new GeneralColumn("abc", Long.class, null, false), "abc BIGINT NOT NULL"),
-                arguments(new GeneralColumn("email", String.class, 42, true), "email VARCHAR(42) NULL"),
-                arguments(new GeneralColumn("old", Integer.class, 42, false), "old INT NOT NULL")
+                arguments(new GeneralEntityColumn("abc", Long.class, null, false), "abc BIGINT NOT NULL"),
+                arguments(new GeneralEntityColumn("email", String.class, 42, true), "email VARCHAR(42) NULL"),
+                arguments(new GeneralEntityColumn("old", Integer.class, 42, false), "old INT NOT NULL")
         );
     }
 
     @ParameterizedTest
     @MethodSource("sampleGeneralColumns")
-    void toColumnDefinition(Column column, String expected) {
-        String columnDefinition = column.toColumnDefinition(typeConverter);
+    void toColumnDefinition(EntityColumn entityColumn, String expected) {
+        String columnDefinition = entityColumn.toColumnDefinition(typeConverter);
         assertThat(columnDefinition).isEqualTo(expected);
     }
 
     @ParameterizedTest
     @MethodSource("sampleGeneralColumns")
-    void isPrimaryKeyColumn(Column column) {
-        assertThat(column.isPrimaryKeyField()).isFalse();
+    void isPrimaryKeyColumn(EntityColumn entityColumn) {
+        assertThat(entityColumn.isPrimaryKeyField()).isFalse();
     }
 }
