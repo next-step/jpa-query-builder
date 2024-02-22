@@ -1,5 +1,7 @@
 package persistence.sql.ddl.column;
 
+import persistence.sql.ddl.util.StringUtil;
+
 import java.lang.reflect.Field;
 
 public class ColumnName {
@@ -7,7 +9,7 @@ public class ColumnName {
     private final String name;
 
     private ColumnName(String name) {
-        this.name = name;
+        this.name = StringUtil.camelToSnake(name);
     }
 
     public static ColumnName from(Field field) {
