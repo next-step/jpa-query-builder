@@ -18,18 +18,27 @@ public class DDLQueryBuilder {
     }
 
     public String createTableQuery(Class<?> clazz) {
-        return String.format("CREATE TABLE %s (%s%s)",
-                getTableName(clazz),
-                createColumnClause(clazz),
-                createPrimaryKeyClause(clazz)
-            );
+
+        return createTableQuery(getTableName(clazz), createColumnClause(clazz), createPrimaryKeyClause(clazz));
+    }
+
+    private String createTableQuery(String tableName, String columnClause, String primaryKeyClause) {
+
+        return String.format("CREATE TABLE %s (%s%s)", tableName, columnClause, primaryKeyClause);
     }
 
     public String dropTableQuery(Class<?> clazz) {
-        return String.format("DROP TABLE %s", getTableName(clazz));
+
+        return createDropTableQuery(getTableName(clazz));
+    }
+
+    private String createDropTableQuery(String tableName) {
+
+        return String.format("DROP TABLE %s", tableName);
     }
 
     private String getTableName(Class<?> clazz) {
+
         return EntityMetadataInspector.getTableName(clazz);
     }
 
@@ -58,6 +67,7 @@ public class DDLQueryBuilder {
     }
 
     private String getPrimaryKeyColumnName(Class<?> clazz) {
+
         return EntityMetadataInspector.getColumnName(EntityMetadataInspector.getIdField(clazz));
     }
 
