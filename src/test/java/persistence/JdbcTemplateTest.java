@@ -42,8 +42,8 @@ public class JdbcTemplateTest {
         jdbcTemplate.execute(ddlQueryBuilder.createTableQuery(Person.class));
         jdbcTemplate.execute(dmlQueryBuilder.insertSql(person));
         jdbcTemplate.query(dmlQueryBuilder.selectSql(Person.class), new RowMapperImpl());
-        System.out.println(dmlQueryBuilder.selectByKeySql(Person.class, 1L));
         jdbcTemplate.query(dmlQueryBuilder.selectByKeySql(Person.class, 1L), new RowMapperImpl());
+
 
         server.stop();
     }

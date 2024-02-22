@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
-import persistence.inspector.EntityColumn;
 import persistence.inspector.EntityMetadataInspector;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +18,11 @@ public class DDLQueryBuilder {
     }
 
     public String createTableQuery(Class<?> clazz) {
-        return DDLQueryFormatter.createTableQuery(getTableName(clazz), columnsClause(clazz), primaryKeyClause(clazz));
+        return String.format("CREATE TABLE %s (%s%s)",
+                getTableName(clazz),
+                createColumnClause(clazz),
+                createPrimaryKeyClause(clazz)
+            );
     }
 
     public String dropTableQuery(Class<?> clazz) {
@@ -29,47 +33,40 @@ public class DDLQueryBuilder {
         return EntityMetadataInspector.getTableName(clazz);
     }
 
-    private String columnsClause(Class<?> clazz) {
-        List<EntityColumn> entityColumns = EntityMetadataInspector.getEntityColumns(clazz);
+    private String createColumnClause(Class<?> clazz) {
+        List<String> columnClauses = EntityMetadataInspector.getFields(clazz).stream()
+                .map(this::createColumnClause)
+                .collect(Collectors.toList());
 
-        List<String> columns = entityColumns.stream().map(this::createColumnsClause).collect(Collectors.toList());
-
-        return String.join(", ", columns);
+        return String.join(", ", columnClauses);
     }
 
-    private String primaryKeyClause(Class<?> clazz) {
-        List<String> primaryKeys = getPrimaryKeyColumnNames(clazz);
-
-        if (!primaryKeys.isEmpty()) {
-            return ", PRIMARY KEY (" + String.join(", ", primaryKeys) + ")";
-        }
-
-        return "";
-    }
-
-    private List<String> getPrimaryKeyColumnNames(Class<?> clazz) {
-        return EntityMetadataInspector.getIdFields(clazz)
-            .stream()
-            .map(EntityMetadataInspector::getColumnName)
-            .collect(Collectors.toList());
-    }
-
-    private String createColumnsClause(EntityColumn column) {
+    private String createColumnClause(Field field) {
         String columnTypeFormat = "%s %s %s";
 
         return String.format(columnTypeFormat,
-            column.getColumnName(),
-            column.getType().getMysqlType(),
-            getColumnProperty(column)
+                EntityMetadataInspector.getColumnName(field),
+                EntityMetadataInspector.getColumnType(field).getMysqlType(),
+                getColumnProperty(field)
         );
     }
 
-    private String getColumnProperty(EntityColumn column) {
+    private String createPrimaryKeyClause(Class<?> clazz) {
+        final String primaryKeyClauseFormat = ", PRIMARY KEY (%s)";
+
+        return String.format(primaryKeyClauseFormat, getPrimaryKeyColumnName(clazz));
+    }
+
+    private String getPrimaryKeyColumnName(Class<?> clazz) {
+        return EntityMetadataInspector.getColumnName(EntityMetadataInspector.getIdField(clazz));
+    }
+
+    private String getColumnProperty(Field field) {
         StringBuilder columnProperty = new StringBuilder();
-        if (!column.isNullable()) {
+        if (!EntityMetadataInspector.isNullable(field)) {
             columnProperty.append("NOT NULL ");
         }
-        if (column.isAutoIncrement()) {
+        if (EntityMetadataInspector.isAutoIncrement(field)) {
             columnProperty.append("AUTO_INCREMENT ");
         }
         return columnProperty.toString();
