@@ -1,7 +1,6 @@
 package persistence.study;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -9,13 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.LoggingPermission;
 import java.util.stream.Stream;
 
 
@@ -26,8 +23,11 @@ public class ReflectionTest {
     @Test
     @DisplayName("Car 객체 정보를 출력하라")
     void showClass() {
+        // given
         Class<Car> carClass = Car.class;
-        Assertions.assertEquals(carClass.getName(), "persistence.study.Car");
+
+        // then
+        Assertions.assertEquals("persistence.study.Car", carClass.getName());
     }
 
     @Test
@@ -74,8 +74,10 @@ public class ReflectionTest {
     @Test
     @DisplayName("private field에 값을 할당하라")
     void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException {
+        // given
         Car car = new Car();
 
+        // when
         Field name = car.getClass().getDeclaredField("name");
         name.setAccessible(true);
         name.set(car, "기아자동차");
@@ -84,13 +86,20 @@ public class ReflectionTest {
         price.setAccessible(true);
         price.set(car, 1000);
 
-        logger.debug(car.getName());
-        logger.debug(String.valueOf(car.getPrice()));
+        // then
+        Assertions.assertEquals("기아자동차", car.getName());
+        Assertions.assertEquals(1000, car.getPrice());
     }
 
     @Test
     @DisplayName("인자를 가진 생성자의 인스턴스 생성하라")
-    void constructorWithArgs() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
-        Car.class.getDeclaredConstructor(String.class, int.class).newInstance("기아자동차", 10000);
+    void constructorWithArgs() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        // given
+        Car expected = new Car("기아자동차", 1000);
+        Car actual = Car.class.getDeclaredConstructor(String.class, int.class).newInstance("기아자동차", 1000);
+
+        // then
+        Assertions.assertEquals(expected.getName(), actual.getName());
+        Assertions.assertEquals(expected.getPrice(), actual.getPrice());
     }
 }
