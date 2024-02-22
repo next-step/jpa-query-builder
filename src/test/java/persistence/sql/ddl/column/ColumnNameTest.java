@@ -11,7 +11,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class ColumnNameTest {
 
     @Test
-    @DisplayName("필드에 @Column 이 없는 경우 필드명이 name 이 된다.")
+    @DisplayName("필드에 @Column 이 없는 경우 컬럼명이 name 이 된다.")
     void from_1() throws NoSuchFieldException {
         // given
         Class<NotHaveColumnAnnotation> aClass = NotHaveColumnAnnotation.class;
@@ -25,7 +25,7 @@ class ColumnNameTest {
     }
 
     @Test
-    @DisplayName("필드에 @Column 가 있고 name 속성이 없는 경우 필드명이 name 이 된다.")
+    @DisplayName("필드에 @Column 가 있고 name 속성이 없는 경우 컬럼명이 name 이 된다.")
     void from_2() throws NoSuchFieldException {
         // given
         Class<UnspecifiedName> aClass = UnspecifiedName.class;
@@ -39,7 +39,7 @@ class ColumnNameTest {
     }
 
     @Test
-    @DisplayName("필드에 @Column 가 있고 name 속성이 있는 경우 필드명이 user 가 된다.")
+    @DisplayName("필드에 @Column 가 있고 name 속성이 있는 경우 컬럼명이 user 가 된다.")
     void from_3() throws NoSuchFieldException {
         // given
         Class<SpecifiedName> aClass = SpecifiedName.class;
