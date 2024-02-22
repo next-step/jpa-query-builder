@@ -4,22 +4,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.constant.ColumnType;
-import persistence.sql.dialect.Dialect;
+import persistence.sql.model.contstraint.NullableConstraint;
+import persistence.sql.model.contstraint.PrimaryKeyConstraint;
+import persistence.sql.model.contstraint.SqlConstraint;
 
 import java.lang.reflect.Field;
 
 public class Column {
 
-    private static final String NOT_NULL = "NOT NULL";
-    private static final String PRIMARY_KEY = "PRIMARY KEY";
-
     private final String name;
     private final ColumnType type;
-    private final boolean nullable;
-    private final boolean primary;
+    private final SqlConstraint nullable;
+    private final SqlConstraint primary;
     private final GenerationType generationType;
 
-    private Column(String name, ColumnType type, boolean nullable, boolean primary, GenerationType generationType) {
+    private Column(String name, ColumnType type, SqlConstraint nullable, SqlConstraint primary, GenerationType generationType) {
         this.name = name;
         this.type = type;
         this.nullable = nullable;
@@ -33,7 +32,7 @@ public class Column {
         boolean primary = field.isAnnotationPresent(Id.class);
         GenerationType generationType = getGenerationType(field);
 
-        return new Column(columnName, columnType, nullable, primary, generationType);
+        return new Column(columnName, columnType, new NullableConstraint(nullable), new PrimaryKeyConstraint(primary), generationType);
     }
 
     private static String getColumnName(Field field) {
@@ -61,11 +60,11 @@ public class Column {
         return type;
     }
 
-    public boolean isNullable() {
+    public SqlConstraint getNullableConstraint() {
         return nullable;
     }
 
-    public boolean isPrimary() {
+    public SqlConstraint getPrimaryKeyConstraint() {
         return primary;
     }
 
@@ -73,20 +72,4 @@ public class Column {
         return generationType;
     }
 
-    public String getDefinition(Dialect dialect) {
-
-        StringBuilder definition = new StringBuilder();
-        definition.append(this.name).append(" ");
-        definition.append(dialect.getTypeName(type)).append(" ");
-
-        if (!nullable) {
-            definition.append(NOT_NULL).append(" ");
-        }
-
-        if (primary) {
-            definition.append(dialect.getGenerationStrategy(generationType)).append(" ");
-            definition.append(PRIMARY_KEY).append(" ");
-        }
-        return definition.toString();
-    }
 }

@@ -24,7 +24,7 @@ class ColumnTest {
         Field idField = testEntityClass.getDeclaredField("id");
         Column column = Column.create(idField, ColumnType.BIGINT);
 
-        assertThat(column.isPrimary()).isTrue();
+        assertThat(column.getPrimaryKeyConstraint().getConstraintStatus()).isTrue();
     }
 
     @DisplayName("필드가 @GeneratedValue 어노테이션이 있을 경우 generationType 값을 가지고 있는 인스턴스를 생성한다.")
@@ -55,7 +55,7 @@ class ColumnTest {
         jakarta.persistence.Column annotation = ageField.getDeclaredAnnotation(jakarta.persistence.Column.class);
         Column column = Column.create(ageField, ColumnType.INTEGER);
 
-        assertThat(column.isNullable()).isEqualTo(annotation.nullable());
+        assertThat(column.getNullableConstraint().getConstraintStatus()).isEqualTo(annotation.nullable());
     }
 
     @Entity
