@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InsertDml {
+public class InsertQueryBuilder {
 
     private static final String INSERT_QUERY_FORMAT = "insert into %s (%s) values (%s)";
     private static final String COMMA = ", ";
@@ -31,7 +31,6 @@ public class InsertDml {
                 valueClause(clazz.getDeclaredFields(), entity, dialect)
         );
     }
-
 
     private String columnsClause(List<Column> columns) {
         return columns.stream()
@@ -69,5 +68,4 @@ public class InsertDml {
         }
         return String.valueOf(value);
     }
-
 }

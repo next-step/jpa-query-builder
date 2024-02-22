@@ -7,13 +7,12 @@ import persistence.sql.dialect.Database;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DropDdlTest {
+class DropQueryBuilderTest {
 
     @DisplayName("Person 클래스의 DDL을 삭제한다.")
     @Test
     void dropDdl() {
-        DdlQueryBuilder ddlQueryBuilder = new DropDdl();
-        String ddl = ddlQueryBuilder.generate(Person.class, Database.MYSQL);
+        String ddl = DropQueryBuilder.generate(Person.class).build();
 
         assertThat("drop table users").isEqualTo(ddl);
     }
