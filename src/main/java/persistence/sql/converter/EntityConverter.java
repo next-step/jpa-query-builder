@@ -1,9 +1,8 @@
 package persistence.sql.converter;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.dialect.Dialect;
+import persistence.sql.constant.ClassType;
 import persistence.sql.model.Column;
 import persistence.sql.model.NotEntityException;
 import persistence.sql.model.Table;
@@ -15,10 +14,10 @@ import java.util.stream.Collectors;
 
 public class EntityConverter {
 
-    private final Dialect dialect;
+    private final TypeMapper typeMapper;
 
-    public EntityConverter(Dialect dialect) {
-        this.dialect = dialect;
+    public EntityConverter(TypeMapper typeMapper) {
+        this.typeMapper = typeMapper;
     }
 
     public Table convertEntityToTable(Class<?> clazz) {
@@ -37,17 +36,8 @@ public class EntityConverter {
     private List<Column> convertFieldsToColumn(Field[] fields) {
         return Arrays.stream(fields)
             .filter(field -> !field.isAnnotationPresent(Transient.class))
-            .map(this::convertFieldToColumn)
+            .map(field -> Column.create(field, typeMapper.getBasicColumnType(ClassType.valueOf(field.getType().getSimpleName().toUpperCase()))))
             .collect(Collectors.toList());
-    }
-
-    private Column convertFieldToColumn(Field field) {
-
-        if (field.isAnnotationPresent(Id.class)) {
-            return Column.create(field.getName(), dialect.convertDataType(field.getType()), false, true);
-        }
-
-        return Column.create(field.getName(), dialect.convertDataType(field.getType()), true, false);
     }
 
 }
