@@ -1,9 +1,6 @@
 package persistence.sql.ddl.extractor;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,6 +25,10 @@ class TestClass {
     private Long generated;
 
     private Long notGenerated;
+
+    private Long nullable;
+    @Column(nullable = false)
+    private Long notNullable;
 
 }
 
@@ -72,5 +73,18 @@ class ColumnExtractorTest {
         ColumnExtractor columnExtractor =
                 new ColumnExtractor(dialect, TestClass.class.getDeclaredField(GENERATED_VALUE_FIELD_NAME));
         assertThat(columnExtractor.getGenerationType()).isNotNull();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "nullable, true",
+            "notNullable, false"
+    })
+    @DisplayName("isNullable 테스트")
+    void testIsNullable(String fieldName, boolean expected) throws Exception {
+        ColumnExtractor columnExtractor =
+                new ColumnExtractor(dialect, TestClass.class.getDeclaredField(fieldName));
+
+        assertThat(columnExtractor.isNullable()).isEqualTo(expected);
     }
 }
