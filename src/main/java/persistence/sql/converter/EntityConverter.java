@@ -26,11 +26,7 @@ public class EntityConverter {
             throw new NotEntityException();
         }
 
-        String tableName = clazz.getSimpleName();
-        Field[] fields = clazz.getDeclaredFields();
-        List<Column> columns = convertFieldsToColumn(fields);
-
-        return Table.create(tableName, columns);
+        return Table.create(clazz, convertFieldsToColumn(clazz.getDeclaredFields()));
     }
 
     private List<Column> convertFieldsToColumn(Field[] fields) {

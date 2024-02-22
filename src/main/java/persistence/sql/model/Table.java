@@ -15,9 +15,18 @@ public class Table {
         this.columns = columns;
     }
 
-    public static Table create(String name, List<Column> columns) {
+    public static Table create(Class<?> clazz, List<Column> columns) {
+        String tableName = getTableName(clazz);
         validatePrimaryKey(columns);
-        return new Table(name.toUpperCase(), columns);
+        return new Table(tableName, columns);
+    }
+
+    private static String getTableName(Class<?> clazz) {
+
+        if (clazz.isAnnotationPresent(jakarta.persistence.Table.class) && !clazz.getDeclaredAnnotation(jakarta.persistence.Table.class).name().isEmpty()) {
+            return clazz.getDeclaredAnnotation(jakarta.persistence.Table.class).name().toLowerCase();
+        }
+        return clazz.getSimpleName().toLowerCase();
     }
 
     private static void validatePrimaryKey(List<Column> columns) {
