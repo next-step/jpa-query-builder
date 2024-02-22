@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.exception.AnnotationMissingException;
 import persistence.sql.ddl.exception.IdAnnotationMissingException;
-import persistence.sql.ddl.extractor.ColumnExtractor;
-import persistence.sql.ddl.extractor.TableExtractor;
+import persistence.sql.extractor.ColumnExtractor;
+import persistence.sql.extractor.TableExtractor;
 
 import java.util.List;
 import java.util.stream.Collectors;

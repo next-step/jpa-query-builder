@@ -1,4 +1,4 @@
-package persistence.sql.ddl.extractor;
+package persistence.sql.extractor;
 
 import jakarta.persistence.Table;
 

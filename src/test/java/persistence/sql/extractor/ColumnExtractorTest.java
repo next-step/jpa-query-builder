@@ -1,4 +1,4 @@
-package persistence.sql.ddl.extractor;
+package persistence.sql.extractor;
 
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
@@ -7,8 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.dialect.H2Dialect;
-import persistence.sql.ddl.extractor.exception.ColumExtractorCreateException;
-import persistence.sql.ddl.extractor.exception.GenerationTypeMissingException;
+import persistence.sql.extractor.exception.ColumExtractorCreateException;
+import persistence.sql.extractor.exception.GenerationTypeMissingException;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
