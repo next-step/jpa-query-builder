@@ -24,4 +24,11 @@ class DmlQueryBuilderTest {
 
         assertThat(query).isEqualTo("select * from users;");
     }
+
+    @Test
+    void should_create_find_by_id_query() {
+        String query = dmlQueryBuilder.findById(Person.class,1l);
+
+        assertThat(query).isEqualTo("select * from users where id=1;");
+    }
 }
