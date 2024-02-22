@@ -1,9 +1,6 @@
 package persistence.sql.ddl.extractor;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import persistence.sql.ddl.dialect.Dialect;
 
 import java.lang.reflect.Field;
@@ -12,15 +9,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ColumnExtractor {
-    private final Dialect dialect;
     private final Column column;
     private final Field field;
 
-    public ColumnExtractor(Dialect dialect, Field field) {
+    public ColumnExtractor(Field field) {
         if(field.isAnnotationPresent(Transient.class)) {
             throw new ColumExtractorCreateException("Transient 필드는 컬럼으로 생성할 수 없습니다.");
         }
-        this.dialect = dialect;
         this.field = field;
         this.column = field.getAnnotation(Column.class);
     }
@@ -28,7 +23,7 @@ public class ColumnExtractor {
     public static List<ColumnExtractor> from(Class<?> entityClazz, Dialect dialect){
         return Arrays.stream(entityClazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> new ColumnExtractor(dialect, field))
+                .map(ColumnExtractor::new)
                 .collect(Collectors.toList());
     }
 
@@ -40,8 +35,8 @@ public class ColumnExtractor {
         return columnName;
     }
 
-    public String getColumnType() {
-        return dialect.mapDataType(field.getType());
+    public Class<?> getColumnType() {
+        return field.getType();
     }
 
     public boolean isNullable() {
@@ -54,12 +49,13 @@ public class ColumnExtractor {
     public boolean hasGenerationType() {
         return field.isAnnotationPresent(GeneratedValue.class);
     }
-    public String getGenerationType() {
+
+    public GenerationType getGenerationType() {
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         if(generatedValue == null) {
             throw new GenerationTypeMissingException();
         }
-        return dialect.mapGenerationType(generatedValue.strategy());
+        return generatedValue.strategy();
     }
 
     public String getKeyType() {

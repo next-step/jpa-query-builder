@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.dialect.H2Dialect;
 
@@ -41,7 +40,7 @@ class ColumnExtractorTest {
     @DisplayName("Transient 필드로 생성자 직접호출시 에러")
     void errorWhenHasTransientField() {
         assertThrows(ColumExtractorCreateException.class, () -> {
-            new ColumnExtractor(dialect, TestClass.class.getDeclaredField("ignore"));
+            new ColumnExtractor(TestClass.class.getDeclaredField("ignore"));
         });
     }
 
@@ -53,7 +52,7 @@ class ColumnExtractorTest {
     @DisplayName("hasGenerationType 테스트")
     void testHasGenerationType(String fieldName, boolean expected) throws Exception {
         ColumnExtractor columnExtractor =
-                new ColumnExtractor(dialect, TestClass.class.getDeclaredField(fieldName));
+                new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
 
         assertThat(columnExtractor.hasGenerationType()).isEqualTo(expected);
     }
@@ -62,7 +61,7 @@ class ColumnExtractorTest {
     @DisplayName("GeneratedValue 아닌데 getGenerationType 호출시 에러")
     void errorWhenGetGenerationTypeInvokedButIsNotGeneratedValue() throws Exception {
         ColumnExtractor columnExtractor =
-                new ColumnExtractor(dialect, TestClass.class.getDeclaredField(NOT_GENERATED_VALUE_FIELD_NAME));
+                new ColumnExtractor(TestClass.class.getDeclaredField(NOT_GENERATED_VALUE_FIELD_NAME));
 
         assertThrows(GenerationTypeMissingException.class, columnExtractor::getGenerationType);
     }
@@ -71,7 +70,7 @@ class ColumnExtractorTest {
     @DisplayName("getGenerationType 테스트")
     void testGetGenerationType() throws Exception {
         ColumnExtractor columnExtractor =
-                new ColumnExtractor(dialect, TestClass.class.getDeclaredField(GENERATED_VALUE_FIELD_NAME));
+                new ColumnExtractor(TestClass.class.getDeclaredField(GENERATED_VALUE_FIELD_NAME));
         assertThat(columnExtractor.getGenerationType()).isNotNull();
     }
 
@@ -83,7 +82,7 @@ class ColumnExtractorTest {
     @DisplayName("isNullable 테스트")
     void testIsNullable(String fieldName, boolean expected) throws Exception {
         ColumnExtractor columnExtractor =
-                new ColumnExtractor(dialect, TestClass.class.getDeclaredField(fieldName));
+                new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
 
         assertThat(columnExtractor.isNullable()).isEqualTo(expected);
     }
