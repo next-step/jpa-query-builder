@@ -21,6 +21,6 @@ class MySqlTableTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Persistent entity 'persistence.sql.ddl.table.PersonNotHaveIdAnnotation' should have primary key");
+                .hasMessage("person_not_have_id_annotation table should have primary key");
     }
 }

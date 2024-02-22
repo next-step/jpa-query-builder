@@ -15,6 +15,8 @@ public class MySqlTable {
     private MySqlTable(TableName name, List<MySqlColumn> columns) {
         this.name = name;
         this.columns = columns;
+
+        checkHasIdAnnotation(columns);
     }
 
     public static MySqlTable from(Class<?> entity) {
@@ -26,6 +28,15 @@ public class MySqlTable {
                 .collect(Collectors.toList());
 
         return new MySqlTable(name, columns);
+    }
+
+    private void checkHasIdAnnotation(List<MySqlColumn> columns) {
+        boolean hasId = columns.stream()
+                .anyMatch(MySqlColumn::hasId);
+
+        if (!hasId) {
+            throw new IllegalArgumentException(String.format("%s table should have primary key", name.getName()));
+        }
     }
 
     public String getName() {

@@ -81,4 +81,8 @@ public class MySqlColumn implements Column {
 
         return "not null";
     }
+
+    public boolean hasId() {
+        return hasId;
+    }
 }
