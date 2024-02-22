@@ -1,28 +1,22 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import persistence.sql.column.*;
 import persistence.sql.dialect.Database;
 import persistence.sql.dialect.Dialect;
 
-import javax.annotation.processing.Generated;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InsertDml implements DmlQueryBuilder {
-
-    //INSERT INTO users (nick_name,old,email) VALUES ('user1',1,'abc@test.com);
-    private IdGeneratedStrategy idGeneratedStrategy;
+public class InsertDml {
 
     private static final String INSERT_QUERY_FORMAT = "insert into %s (%s) values (%s)";
     private static final String COMMA = ", ";
+    private static final String QUOTES = "'";
 
-    @Override
     public String generate(Object entity, Database database) {
         ColumnGenerator columnGenerator = new ColumnGenerator(new GeneralColumnFactory());
 
@@ -71,7 +65,7 @@ public class InsertDml implements DmlQueryBuilder {
             throw new RuntimeException(e);
         }
         if (value instanceof String) {
-            return "'" + value + "'";
+            return QUOTES + value + QUOTES;
         }
         return String.valueOf(value);
     }

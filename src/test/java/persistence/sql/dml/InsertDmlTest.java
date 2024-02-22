@@ -23,9 +23,9 @@ class InsertDmlTest {
     @Test
     void testInsertDmlWhenSpecificField() {
         InsertDml insertDml = new InsertDml();
-        Person person = new Person("username", 1);
+        Person person = new Person("username",  "email2@test.com", 12);
         String insert = insertDml.generate(person, Database.MYSQL);
 
-        assertThat(insert).isEqualTo("insert into users (nick_name, old, email) values ('username', null, null)");
+        assertThat(insert).isEqualTo("insert into users (nick_name, old, email) values ('username', null, 'email2@test.com')");
     }
 }
