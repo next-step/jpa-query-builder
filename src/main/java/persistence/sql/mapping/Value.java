@@ -8,9 +8,13 @@ public class Value implements Serializable {
 
     private final int sqlType;
 
-    private final Object value;
+    private Object value;
 
-    private Value(final Class<?> originalType, final int sqlType, final Object value) {
+    public Value(final Class<?> originalType, final int sqlType) {
+        this(originalType, sqlType, null);
+    }
+
+    public Value(final Class<?> originalType, final int sqlType, final Object value) {
         this.originalType = originalType;
         this.sqlType = sqlType;
         this.value = value;
@@ -26,6 +30,10 @@ public class Value implements Serializable {
 
     public Object getValue() {
         return this.value;
+    }
+
+    public void setValue(final Object value) {
+        this.value = value;
     }
 
     public Value clone() {
