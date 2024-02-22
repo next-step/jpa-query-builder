@@ -1,9 +1,6 @@
 package persistence.sql.model;
 
-import persistence.sql.dialect.Dialect;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Table {
 
@@ -31,7 +28,7 @@ public class Table {
 
     private static void validatePrimaryKey(List<Column> columns) {
         columns.stream()
-            .filter(Column::isPrimary)
+            .filter(column -> column.getPrimaryKeyConstraint().getConstraintStatus())
             .findAny()
             .orElseThrow(PrimaryKeyNotFoundException::new);
     }
@@ -44,9 +41,4 @@ public class Table {
         return this.columns;
     }
 
-    public List<String> getColumnDefinitions(Dialect dialect) {
-        return this.columns.stream()
-            .map(column -> column.getDefinition(dialect))
-            .collect(Collectors.toList());
-    }
 }
