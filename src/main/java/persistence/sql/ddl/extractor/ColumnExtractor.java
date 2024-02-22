@@ -16,7 +16,10 @@ public class ColumnExtractor {
     private final Column column;
     private final Field field;
 
-    private ColumnExtractor(Dialect dialect, Field field) {
+    public ColumnExtractor(Dialect dialect, Field field) {
+        if(field.isAnnotationPresent(Transient.class)) {
+            throw new ColumExtractorCreateException("Transient 필드는 컬럼으로 생성할 수 없습니다.");
+        }
         this.dialect = dialect;
         this.field = field;
         this.column = field.getAnnotation(Column.class);
