@@ -32,11 +32,9 @@ public class EntityClassInspector {
     }
 
     public List<String> getColumnNames() {
-        List<String> list = new ArrayList<>();
-        for (EntityColumn entityColumn : getColumns()) {
-            list.add(entityColumn.getColumnName());
-        }
-        return list;
+        return getColumns().stream()
+                .map(EntityColumn::getColumnName)
+                .collect(Collectors.toList());
     }
 
     public String getJoinedColumnNames() {
@@ -68,10 +66,6 @@ public class EntityClassInspector {
             }
         }
         return list;
-    }
-
-    public String getJoinedColumnNamesForInserting() {
-        return String.join(", ", getColumnNamesForInserting());
     }
 
     private Collection<EntityColumn> getColumns() {

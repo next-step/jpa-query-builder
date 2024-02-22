@@ -52,5 +52,4 @@ class QueryBuilderTest {
         assertThat(actual).isEqualTo("DELETE FROM users WHERE id = 3");
     }
 
-
 }

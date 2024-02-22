@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// TODO: 테스트 세밀하게
 class SelectOneQueryBuilderTest {
     private final SelectOneQueryBuilder selectOneQueryBuilder = new SelectOneQueryBuilder(Person4.class);
 

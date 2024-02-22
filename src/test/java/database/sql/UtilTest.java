@@ -15,7 +15,8 @@ class UtilTest {
                 arguments("0", "0"),
                 arguments("1", "1"),
                 arguments("abc", "'abc'"),
-                arguments("1f", "'1f'")
+                arguments("1f", "'1f'"),
+                arguments(null, "NULL")
         );
     }
 
