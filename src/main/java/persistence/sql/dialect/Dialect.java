@@ -6,6 +6,7 @@ import persistence.sql.constant.BasicColumnType;
 public abstract class Dialect {
 
     private static final String CREATE_TABLE_COMMAND = "CREATE TABLE";
+    private static final String DROP_TABLE_COMMAND = "DROP TABLE";
 
     public abstract String getTypeName(BasicColumnType columnType);
 
@@ -15,4 +16,7 @@ public abstract class Dialect {
         return CREATE_TABLE_COMMAND;
     }
 
+    public String getDropTableCommand() {
+        return DROP_TABLE_COMMAND;
+    }
 }
