@@ -1,11 +1,9 @@
 package persistence.sql.dml;
 
-import util.StringUtils;
-import persistence.sql.QueryException;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.mapping.Column;
 import persistence.sql.mapping.Table;
-import persistence.sql.mapping.Value;
+import util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,21 +15,14 @@ public class DefaultDmlQueryBuilder implements DmlQueryBuilder {
 
     private final Dialect dialect;
 
-    private final List<InsertQueryValueBinder> insertQueryValueBinders = initInsertQueryValueBinders();
-
     public DefaultDmlQueryBuilder(Dialect dialect) {
         this.dialect = dialect;
     }
 
-    private List<InsertQueryValueBinder> initInsertQueryValueBinders() {
-        return List.of(
-                new InsertQueryStringValueBinder(),
-                new InsertQueryNumberValueBinder()
-        );
-    }
-
     @Override
-    public String buildInsertQuery(final Table table) {
+    public String buildInsertQuery(final Insert insert) {
+
+        final Table table = insert.getTable();
 
         final StringBuilder statement = new StringBuilder()
                 .append("insert")
@@ -44,10 +35,9 @@ public class DefaultDmlQueryBuilder implements DmlQueryBuilder {
                 .append(SPACE)
                 .append("(");
 
-        final List<Column> columns = table.getColumns();
-        final String columnsClause = columnsClause(columns);
+        final String columnNameClause = insert.columnNameClause(dialect);
 
-        statement.append(columnsClause)
+        statement.append(columnNameClause)
                 .append(")")
                 .append(ENTER)
                 .append("values")
@@ -55,10 +45,7 @@ public class DefaultDmlQueryBuilder implements DmlQueryBuilder {
                 .append(SPACE)
                 .append("(");
 
-        final String valuesClause = columns.stream()
-                .map(this::valueClause)
-                .filter(StringUtils::isNotBlank)
-                .collect(Collectors.joining("," + ENTER + SPACE));
+        final String valuesClause = insert.columnValueClause(dialect);
 
         return statement
                 .append(valuesClause)
@@ -66,37 +53,75 @@ public class DefaultDmlQueryBuilder implements DmlQueryBuilder {
                 .toString();
     }
 
-    private String columnsClause(final List<Column> columns) {
+    private String insertColumnsClause(final List<Column> columns) {
 
         return columns.stream()
-                .map(this::toInsertQueryColumnName)
+                .map(this::columnClause)
                 .filter(StringUtils::isNotBlank)
-                .collect(Collectors.joining("," + ENTER + SPACE));
+                .collect(Collectors.joining(", "));
     }
 
-    private String toInsertQueryColumnName(final Column column) {
-        if (isIdentityColumnWithInsertKeyword(column)) {
-            return "";
-        }
+    private String columnClause(final Column column) {
 
         return column.getName();
     }
 
-    private String valueClause(final Column column) {
-        if (isIdentityColumnWithInsertKeyword(column)) {
-            return "";
+    @Override
+    public String buildSelectQuery(final Select select) {
+        final Table table = select.getTable();
+
+        final StringBuilder statement = new StringBuilder()
+                .append("select")
+                .append(ENTER)
+                .append(SPACE);
+
+        final String columnsClause = insertColumnsClause(table.getColumns());
+
+        statement.append(columnsClause)
+                .append(ENTER)
+                .append("from")
+                .append(ENTER)
+                .append(SPACE)
+                .append(table.getName());
+
+        appendWhereClause(statement, select.getWhereClause());
+
+        return statement.toString();
+    }
+
+    private void appendWhereClause(final StringBuilder statement, final List<Where> wheres) {
+        final String whereClause = wheresClause(wheres);
+
+        if (StringUtils.isNotBlank(whereClause)) {
+            statement.append(ENTER)
+                    .append("where")
+                    .append(ENTER)
+                    .append(SPACE)
+                    .append(whereClause);
         }
-
-        final Value value = column.getValue();
-
-        return insertQueryValueBinders.stream()
-                .filter(binder -> binder.support(value))
-                .findFirst()
-                .orElseThrow(() -> new QueryException("not found InsertQueryValueBinder for " + value.getOriginalType() + " type"))
-                .bind(value.getValue());
     }
 
-    private boolean isIdentityColumnWithInsertKeyword(final Column column) {
-        return column.isIdentifierKey() && !dialect.getIdentityColumnSupport().hasIdentityInsertKeyword();
+    private String wheresClause(final List<Where> wheres) {
+        return wheres.stream()
+                .map(Where::getWhereClause)
+                .collect(Collectors.joining(ENTER + SPACE));
     }
+
+    @Override
+    public String buildDeleteQuery(final Delete delete) {
+        final Table table = delete.getTable();
+
+        final StringBuilder statement = new StringBuilder()
+                .append("delete")
+                .append(ENTER)
+                .append("from")
+                .append(ENTER)
+                .append(SPACE)
+                .append(table.getName());
+
+        appendWhereClause(statement, delete.getWhereClause());
+
+        return statement.toString();
+    }
+
 }
