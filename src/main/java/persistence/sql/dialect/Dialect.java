@@ -3,20 +3,10 @@ package persistence.sql.dialect;
 import jakarta.persistence.GenerationType;
 import persistence.sql.constant.ColumnType;
 
-public abstract class Dialect {
+public interface Dialect {
 
-    private static final String CREATE_TABLE_COMMAND = "CREATE TABLE";
-    private static final String DROP_TABLE_COMMAND = "DROP TABLE";
+    String getTypeName(ColumnType columnType);
 
-    public abstract String getTypeName(ColumnType columnType);
+    String getGenerationStrategy(GenerationType generationType);
 
-    public abstract String getGenerationStrategy(GenerationType generationType);
-
-    public String getCreateTableCommand() {
-        return CREATE_TABLE_COMMAND;
-    }
-
-    public String getDropTableCommand() {
-        return DROP_TABLE_COMMAND;
-    }
 }

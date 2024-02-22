@@ -5,6 +5,8 @@ import persistence.sql.model.Table;
 
 public class QueryBuilder {
 
+    private static final String CREATE_TABLE_COMMAND = "CREATE TABLE";
+    private static final String DROP_TABLE_COMMAND = "DROP TABLE";
     private static final String OPEN_PARENTHESIS = "(";
     private static final String CLOSE_PARENTHESIS = ")";
 
@@ -15,7 +17,7 @@ public class QueryBuilder {
     }
 
     public String buildCreateQuery(Table table) {
-        StringBuilder statement = new StringBuilder(dialect.getCreateTableCommand()).append(" ");
+        StringBuilder statement = new StringBuilder(CREATE_TABLE_COMMAND).append(" ");
         statement.append(table.getName());
         statement.append(OPEN_PARENTHESIS);
         statement.append(String.join(",", table.getColumnDefinitions(dialect)));
@@ -26,7 +28,7 @@ public class QueryBuilder {
 
     public String buildDropQuery(Table table) {
 
-        StringBuilder statement = new StringBuilder(dialect.getDropTableCommand()).append(" ");
+        StringBuilder statement = new StringBuilder(DROP_TABLE_COMMAND).append(" ");
         statement.append(table.getName());
 
         return statement.toString();

@@ -3,7 +3,7 @@ package persistence.sql.dialect;
 import jakarta.persistence.GenerationType;
 import persistence.sql.constant.ColumnType;
 
-public class H2Dialect extends Dialect {
+public class H2Dialect implements Dialect {
 
     @Override
     public String getTypeName(ColumnType columnType) {
