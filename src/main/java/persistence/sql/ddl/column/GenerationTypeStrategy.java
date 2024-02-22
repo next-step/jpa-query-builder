@@ -7,10 +7,11 @@ import java.util.Arrays;
 public enum GenerationTypeStrategy {
 
     TABLE(""),
-    SEQUENCE("seq.NEXTVAL"),
-    IDENTITY("AUTO_INCREMENT"),
+    SEQUENCE("seq.NEXTVAL "),
+    IDENTITY("AUTO_INCREMENT "),
     UUID(""),
-    AUTO("AUTO_INCREMENT"),
+    AUTO("AUTO_INCREMENT "),
+    NONE(""),
     ;
 
     private final String mySqlStrategyDDL;
@@ -21,13 +22,13 @@ public enum GenerationTypeStrategy {
 
     public static GenerationTypeStrategy from(GeneratedValue generatedValue) {
         if (generatedValue == null) {
-            return null;
+            return NONE;
         }
 
         return Arrays.stream(values())
                 .filter(generationTypeStrategy -> generationTypeStrategy.name().equals(generatedValue.strategy().name()))
                 .findFirst()
-                .orElse(null);
+                .orElse(NONE);
     }
 
     public String getMySqlStrategyDDL() {

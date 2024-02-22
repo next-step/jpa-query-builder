@@ -48,7 +48,7 @@ public class MySqlColumn implements Column {
                 type.getMysqlColumnType() +
                 getLengthDefinition() +
                 BLANK +
-                getGeneratedValueStrategyDefinition() +
+                generatedValueStrategy.getMySqlStrategyDDL() +
                 getNullableDefinition();
     }
 
@@ -58,16 +58,6 @@ public class MySqlColumn implements Column {
         }
 
         return String.format("(%d)", length.getLength());
-    }
-
-    private String getGeneratedValueStrategyDefinition() {
-        String generatedValueStrategyDefinition = "";
-
-        if (generatedValueStrategy != null) {
-            generatedValueStrategyDefinition = generatedValueStrategy.getMySqlStrategyDDL() + BLANK;
-        }
-
-        return generatedValueStrategyDefinition;
     }
 
     private String getNullableDefinition() {
