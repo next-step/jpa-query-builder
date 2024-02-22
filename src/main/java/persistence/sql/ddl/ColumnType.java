@@ -9,8 +9,8 @@ public enum ColumnType {
     INT(Integer.class),
     BIGINT(Long.class),
     DATETIME(LocalDate.class),
-    BIT(Boolean.class);
-
+    BIT(Boolean.class),
+    ;
 
     private final Class<?> fieldType;
 

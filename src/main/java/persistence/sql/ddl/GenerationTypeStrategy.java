@@ -10,7 +10,8 @@ public enum GenerationTypeStrategy {
     SEQUENCE("seq.NEXTVAL"),
     IDENTITY("AUTO_INCREMENT"),
     UUID(""),
-    AUTO("AUTO_INCREMENT");
+    AUTO("AUTO_INCREMENT"),
+    ;
 
     private final String mySqlStrategyDDL;
 
