@@ -1,7 +1,7 @@
 package persistence.sql.ddl.view.mysql;
 
 import persistence.sql.ddl.columntype.MySQLColumnType;
-import persistence.sql.ddl.domain.DatabasePrimaryColumn;
+import persistence.sql.domain.DatabasePrimaryColumn;
 import persistence.sql.ddl.view.AbstractQueryResolver;
 
 import static persistence.sql.ddl.CommonConstant.SPACE;

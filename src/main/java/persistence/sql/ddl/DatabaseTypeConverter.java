@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.domain.DatabaseColumn;
+import persistence.sql.domain.DatabaseColumn;
 
 public interface DatabaseTypeConverter {
 

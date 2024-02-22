@@ -1,4 +1,4 @@
-package persistence.sql.ddl.domain;
+package persistence.sql.domain;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,13 +9,13 @@ public class DatabasePrimaryColumn extends DatabaseColumn {
 
     private final GenerationType generationType;
 
-    public DatabasePrimaryColumn(ColumnName name, ColumnLength length, Field field) {
-        super(name, field.getType(), length, ColumnNullable.NOT_NULLABLE);
+    public DatabasePrimaryColumn(ColumnName name, ColumnValue value, ColumnLength length, Field field) {
+        super(name, value, length, ColumnNullable.NOT_NULLABLE);
         this.generationType = getGenerationType(field);
     }
 
-    public DatabasePrimaryColumn(ColumnName name, Class<?> javaType, ColumnLength size, GenerationType generationType) {
-        super(name, javaType, size, ColumnNullable.NOT_NULLABLE);
+    public DatabasePrimaryColumn(ColumnName name, ColumnValue value, ColumnLength size, GenerationType generationType) {
+        super(name, value, size, ColumnNullable.NOT_NULLABLE);
         this.generationType = generationType;
     }
 

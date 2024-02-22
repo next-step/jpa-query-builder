@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.domain.DatabaseColumn;
-import persistence.sql.ddl.domain.DatabaseTable;
+import persistence.sql.domain.DatabaseColumn;
+import persistence.sql.domain.DatabaseTable;
 import persistence.sql.ddl.view.QueryResolver;
 
 import java.util.List;

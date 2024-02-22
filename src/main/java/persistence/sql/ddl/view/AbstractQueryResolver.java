@@ -1,8 +1,8 @@
 package persistence.sql.ddl.view;
 
 import persistence.sql.ddl.DatabaseTypeConverter;
-import persistence.sql.ddl.domain.DatabaseColumn;
-import persistence.sql.ddl.domain.DatabasePrimaryColumn;
+import persistence.sql.domain.DatabaseColumn;
+import persistence.sql.domain.DatabasePrimaryColumn;
 
 import java.util.List;
 

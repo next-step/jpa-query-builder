@@ -9,6 +9,7 @@ import persistence.sql.ddl.DatabaseDialect;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.DdlQueryBuilderFactory;
 import persistence.sql.ddl.Person;
+import persistence.sql.dml.DmlQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -26,6 +27,10 @@ public class Application {
             DdlQueryBuilder ddlQueryBuilder = factory.getInstance(DatabaseDialect.MYSQL);
 
             jdbcTemplate.execute(ddlQueryBuilder.createQuery(Person.class));
+
+            Person person = new Person("cs",29,"katd216@gmail.com",0);
+            jdbcTemplate.execute(new DmlQueryBuilder().insert(person));
+
             jdbcTemplate.execute(ddlQueryBuilder.dropQuery(Person.class));
 
             server.stop();
