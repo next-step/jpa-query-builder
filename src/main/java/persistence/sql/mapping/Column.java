@@ -55,7 +55,7 @@ public class Column {
     }
 
     public Value getValue() {
-        return value.clone();
+        return value;
     }
 
     public int getLength() {
@@ -88,10 +88,6 @@ public class Column {
 
     public void setValue(final Value value) {
         this.value = value;
-    }
-
-    public void setValue(final Object value) {
-        this.value.setValue(value);
     }
 
     public void setPk(final boolean pk) {
