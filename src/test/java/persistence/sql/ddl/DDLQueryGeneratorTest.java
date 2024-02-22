@@ -1,9 +1,10 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.dialect.H2Dialect;
+import persistence.sql.ddl.exception.AnnotationMissingException;
+import persistence.sql.ddl.exception.IdAnnotationMissingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

@@ -7,6 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.dialect.H2Dialect;
+import persistence.sql.ddl.extractor.exception.ColumExtractorCreateException;
+import persistence.sql.ddl.extractor.exception.GenerationTypeMissingException;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static org.assertj.core.api.Assertions.assertThat;

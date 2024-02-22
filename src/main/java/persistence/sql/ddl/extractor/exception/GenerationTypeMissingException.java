@@ -1,4 +1,4 @@
-package persistence.sql.ddl.extractor;
+package persistence.sql.ddl.extractor.exception;
 
 public class GenerationTypeMissingException extends RuntimeException {
     public GenerationTypeMissingException() {
