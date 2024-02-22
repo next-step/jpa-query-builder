@@ -11,7 +11,7 @@ public class Column {
 
     private int type;
 
-    private Object value;
+    private Value value;
 
     private int length = 255;
 
@@ -46,7 +46,7 @@ public class Column {
         final Column copy = new Column();
         copy.name = this.name;
         copy.type = this.type;
-        copy.value = this.value;
+        copy.value = this.getValue();
         copy.length = this.length;
         copy.nullable = this.nullable;
         copy.unique = this.unique;
@@ -72,8 +72,8 @@ public class Column {
         return dialect.convertColumnType(this.type, this.getLength());
     }
 
-    public Object getValue() {
-        return value;
+    public Value getValue() {
+        return value.clone();
     }
 
     public int getLength() {
@@ -94,6 +94,10 @@ public class Column {
 
     public boolean isPk() {
         return pk;
+    }
+
+    public boolean isNotPk() {
+        return !pk;
     }
 
     public boolean isIdentifierKey() {
