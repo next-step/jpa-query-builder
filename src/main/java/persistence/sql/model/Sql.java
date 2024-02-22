@@ -64,12 +64,12 @@ public enum Sql {
                     .append(' ');
 
             SqlType sqlType = column.type();
-            String dbType = dialect.get(sqlType);
+            String dbType = dialect.getType(sqlType);
             queryBuilder.append(dbType);
 
             List<SqlConstraint> sqlConstraints = column.constraints();
             sqlConstraints.forEach(constraint -> {
-                String query = dialect.get(constraint);
+                String query = dialect.getConstraint(constraint);
                 queryBuilder.append(' ')
                         .append(query);
             });

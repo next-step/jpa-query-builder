@@ -1,6 +1,5 @@
 package persistence.sql.dialect;
 
-import jakarta.persistence.GenerationType;
 import persistence.sql.model.SqlConstraint;
 import persistence.sql.model.SqlType;
 
@@ -46,7 +45,7 @@ public abstract class Dialect {
         constraints.put(constraint, query);
     }
 
-    public String get(final SqlType type) {
+    public String getType(final SqlType type) {
         final String result = types.get(type);
         if (result == null) {
             throw new IllegalArgumentException("No Dialect mapping for type: " + type.name());
@@ -54,7 +53,7 @@ public abstract class Dialect {
         return result;
     }
 
-    public String get(final SqlConstraint constraint) {
+    public String getConstraint(final SqlConstraint constraint) {
         final String result = constraints.get(constraint);
         if (result == null) {
             throw new IllegalArgumentException("No Dialect mapping for constraint: " + constraint.name());
