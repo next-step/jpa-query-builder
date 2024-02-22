@@ -10,13 +10,13 @@ public class MySqlColumn implements Column {
     private static final int DEFAULT_LENGTH = 255;
     private static final String BLANK = " ";
 
-    private final String name;
+    private final ColumnName name;
     private final ColumnType type;
     private final int length;
     private final GenerationTypeStrategy generatedValueStrategy;
     private final boolean nullable;
 
-    private MySqlColumn(String name, ColumnType type, int length, GenerationTypeStrategy generatedValueStrategy, boolean nullable) {
+    private MySqlColumn(ColumnName name, ColumnType type, int length, GenerationTypeStrategy generatedValueStrategy, boolean nullable) {
         this.name = name;
         this.type = type;
         this.length = length;
@@ -32,21 +32,13 @@ public class MySqlColumn implements Column {
             return null;
         }
 
-        String name = findName(field, column);
+        ColumnName name = ColumnName.from(field);
         ColumnType type = ColumnType.findColumnType(field.getType());
         GenerationTypeStrategy generatedValueStrategy = GenerationTypeStrategy.from(generatedValue);
         int length = findLength(column);
         boolean nullable = findNullable(column);
 
         return new MySqlColumn(name, type, length, generatedValueStrategy, nullable);
-    }
-
-    private static String findName(Field field, jakarta.persistence.Column column) {
-        if (column == null || column.name().isEmpty()) {
-            return field.getName();
-        }
-
-        return column.name();
     }
 
     private static int findLength(jakarta.persistence.Column column) {
@@ -63,7 +55,7 @@ public class MySqlColumn implements Column {
 
     @Override
     public String defineColumn() {
-        return name +
+        return name.getName() +
                 BLANK +
                 type +
                 getLengthDefinition() +
