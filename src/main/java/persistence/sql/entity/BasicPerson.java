@@ -3,7 +3,7 @@ package persistence.sql.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class Person {
+public class BasicPerson {
 
     @Id
     private Long id;

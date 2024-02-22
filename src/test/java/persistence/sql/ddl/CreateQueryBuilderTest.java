@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import persistence.sql.entity.Person;
+import persistence.sql.entity.BasicPerson;
 
 class CreateQueryBuilderTest {
     private static final Logger logger = LoggerFactory.getLogger(CreateQueryBuilderTest.class);
@@ -38,14 +38,14 @@ class CreateQueryBuilderTest {
         server.stop();
     }
     @Test
-    @DisplayName("Person 클래스를 생성한다.")
+    @DisplayName("BasicPerson 클래스를 생성한다.")
     void createQueryTest() throws SQLException {
         //given
         List<String> expectedColumnNames = List.of("ID", "NAME", "AGE");
         String expectedTableName = "PERSON";
 
         // when
-        jdbcTemplate.execute(new CreateQueryBuilder(Person.class).build());
+        jdbcTemplate.execute(new CreateQueryBuilder(BasicPerson.class).build());
 
         // then
         ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery("SELECT * FROM person");
