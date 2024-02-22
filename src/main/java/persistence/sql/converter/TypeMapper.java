@@ -1,23 +1,22 @@
 package persistence.sql.converter;
 
-import persistence.sql.constant.BasicColumnType;
-import persistence.sql.constant.ClassType;
+import persistence.sql.constant.ColumnType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TypeMapper {
 
-    private final Map<ClassType, BasicColumnType> typeMap = new HashMap<>();
+    private final Map<Class<?>, ColumnType> typeMap = new HashMap<>();
 
     public TypeMapper() {
-        typeMap.put(ClassType.STRING, BasicColumnType.VARCHAR);
-        typeMap.put(ClassType.LONG, BasicColumnType.BIGINT);
-        typeMap.put(ClassType.BOOLEAN, BasicColumnType.BOOLEAN);
-        typeMap.put(ClassType.INTEGER, BasicColumnType.INTEGER);
+        typeMap.put(String.class, ColumnType.VARCHAR);
+        typeMap.put(Long.class, ColumnType.BIGINT);
+        typeMap.put(Boolean.class, ColumnType.BOOLEAN);
+        typeMap.put(Integer.class, ColumnType.INTEGER);
     }
 
-    public BasicColumnType getBasicColumnType(ClassType type) {
+    public ColumnType getBasicColumnType(Class<?> type) {
         return typeMap.get(type);
     }
 

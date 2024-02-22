@@ -2,7 +2,7 @@ package persistence.sql.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.constant.BasicColumnType;
+import persistence.sql.constant.ColumnType;
 import persistence.sql.entity.Person;
 
 import java.util.List;
@@ -17,7 +17,7 @@ class TableTest {
     @Test
     void primary_key_not_found() throws NoSuchFieldException {
 
-        List<Column> columns = List.of(Column.create(Person.class.getDeclaredField("name"), BasicColumnType.VARCHAR));
+        List<Column> columns = List.of(Column.create(Person.class.getDeclaredField("name"), ColumnType.VARCHAR));
 
         assertThatThrownBy(() -> Table.create(Person.class, columns))
             .isInstanceOf(PrimaryKeyNotFoundException.class);
@@ -27,7 +27,7 @@ class TableTest {
     @Test
     void create_with_table_name() throws NoSuchFieldException {
 
-        List<Column> columns = List.of(Column.create(Person.class.getDeclaredField("id"), BasicColumnType.BIGINT));
+        List<Column> columns = List.of(Column.create(Person.class.getDeclaredField("id"), ColumnType.BIGINT));
 
         jakarta.persistence.Table annotation = Person.class.getDeclaredAnnotation(jakarta.persistence.Table.class);
         Table table = Table.create(Person.class, columns);

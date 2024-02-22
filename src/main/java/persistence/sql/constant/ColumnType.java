@@ -1,10 +1,8 @@
 package persistence.sql.constant;
 
-public enum ClassType {
-
-    STRING,
+public enum ColumnType {
+    VARCHAR,
     INTEGER,
-    LONG,
+    BIGINT,
     BOOLEAN
-
 }

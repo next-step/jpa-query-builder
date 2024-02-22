@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.constant.BasicColumnType;
+import persistence.sql.constant.ColumnType;
 
 import java.lang.reflect.Field;
 
@@ -22,7 +22,7 @@ class ColumnTest {
     void create_column_with_primary_true() throws NoSuchFieldException {
 
         Field idField = testEntityClass.getDeclaredField("id");
-        Column column = Column.create(idField, BasicColumnType.BIGINT);
+        Column column = Column.create(idField, ColumnType.BIGINT);
 
         assertThat(column.isPrimary()).isTrue();
     }
@@ -31,7 +31,7 @@ class ColumnTest {
     @Test
     void create_column_with_generation_type() throws NoSuchFieldException {
         Field idField = testEntityClass.getDeclaredField("id");
-        Column column = Column.create(idField, BasicColumnType.BIGINT);
+        Column column = Column.create(idField, ColumnType.BIGINT);
 
         assertThat(column.getGenerationType()).isEqualTo(GenerationType.IDENTITY);
     }
@@ -42,7 +42,7 @@ class ColumnTest {
 
         Field ageField = testEntityClass.getDeclaredField("age");
         jakarta.persistence.Column annotation = ageField.getDeclaredAnnotation(jakarta.persistence.Column.class);
-        Column column = Column.create(ageField, BasicColumnType.INTEGER);
+        Column column = Column.create(ageField, ColumnType.INTEGER);
 
         assertThat(column.getName()).isEqualTo(annotation.name());
     }
@@ -53,7 +53,7 @@ class ColumnTest {
 
         Field ageField = testEntityClass.getDeclaredField("age");
         jakarta.persistence.Column annotation = ageField.getDeclaredAnnotation(jakarta.persistence.Column.class);
-        Column column = Column.create(ageField, BasicColumnType.INTEGER);
+        Column column = Column.create(ageField, ColumnType.INTEGER);
 
         assertThat(column.isNullable()).isEqualTo(annotation.nullable());
     }

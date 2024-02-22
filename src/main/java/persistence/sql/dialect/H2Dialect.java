@@ -1,12 +1,12 @@
 package persistence.sql.dialect;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.constant.BasicColumnType;
+import persistence.sql.constant.ColumnType;
 
 public class H2Dialect extends Dialect {
 
     @Override
-    public String getTypeName(BasicColumnType columnType) {
+    public String getTypeName(ColumnType columnType) {
         String typeName;
         switch (columnType) {
             case VARCHAR:

@@ -3,7 +3,7 @@ package persistence.sql.model;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.constant.BasicColumnType;
+import persistence.sql.constant.ColumnType;
 import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
@@ -14,12 +14,12 @@ public class Column {
     private static final String PRIMARY_KEY = "PRIMARY KEY";
 
     private final String name;
-    private final BasicColumnType type;
+    private final ColumnType type;
     private final boolean nullable;
     private final boolean primary;
     private final GenerationType generationType;
 
-    private Column(String name, BasicColumnType type, boolean nullable, boolean primary, GenerationType generationType) {
+    private Column(String name, ColumnType type, boolean nullable, boolean primary, GenerationType generationType) {
         this.name = name;
         this.type = type;
         this.nullable = nullable;
@@ -27,7 +27,7 @@ public class Column {
         this.generationType = generationType;
     }
 
-    public static Column create(Field field, BasicColumnType columnType) {
+    public static Column create(Field field, ColumnType columnType) {
         String columnName = getColumnName(field);
         boolean nullable = getNullableStatus(field);
         boolean primary = field.isAnnotationPresent(Id.class);
@@ -57,7 +57,7 @@ public class Column {
         return name;
     }
 
-    public BasicColumnType getType() {
+    public ColumnType getType() {
         return type;
     }
 

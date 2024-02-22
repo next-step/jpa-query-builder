@@ -1,14 +1,14 @@
 package persistence.sql.dialect;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.constant.BasicColumnType;
+import persistence.sql.constant.ColumnType;
 
 public abstract class Dialect {
 
     private static final String CREATE_TABLE_COMMAND = "CREATE TABLE";
     private static final String DROP_TABLE_COMMAND = "DROP TABLE";
 
-    public abstract String getTypeName(BasicColumnType columnType);
+    public abstract String getTypeName(ColumnType columnType);
 
     public abstract String getGenerationStrategy(GenerationType generationType);
 

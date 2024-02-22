@@ -2,7 +2,6 @@ package persistence.sql.converter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import persistence.sql.constant.ClassType;
 import persistence.sql.model.Column;
 import persistence.sql.model.NotEntityException;
 import persistence.sql.model.Table;
@@ -32,7 +31,7 @@ public class EntityConverter {
     private List<Column> convertFieldsToColumn(Field[] fields) {
         return Arrays.stream(fields)
             .filter(field -> !field.isAnnotationPresent(Transient.class))
-            .map(field -> Column.create(field, typeMapper.getBasicColumnType(ClassType.valueOf(field.getType().getSimpleName().toUpperCase()))))
+            .map(field -> Column.create(field, typeMapper.getBasicColumnType(field.getType())))
             .collect(Collectors.toList());
     }
 
