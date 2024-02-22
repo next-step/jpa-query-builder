@@ -28,9 +28,14 @@ class TestClass {
     private Long notGenerated;
 
     private Long nullable;
+
     @Column(nullable = false)
     private Long notNullable;
 
+    @Column(name = "has_column")
+    private Long hasColumn;
+
+    private Long hasNotColumn;
 }
 
 class ColumnExtractorTest {
@@ -53,8 +58,7 @@ class ColumnExtractorTest {
     })
     @DisplayName("hasGenerationType 테스트")
     void testHasGenerationType(String fieldName, boolean expected) throws Exception {
-        ColumnExtractor columnExtractor =
-                new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
 
         assertThat(columnExtractor.hasGenerationType()).isEqualTo(expected);
     }
@@ -83,9 +87,25 @@ class ColumnExtractorTest {
     })
     @DisplayName("isNullable 테스트")
     void testIsNullable(String fieldName, boolean expected) throws Exception {
-        ColumnExtractor columnExtractor =
-                new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
 
         assertThat(columnExtractor.isNullable()).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("getName: 재정의 된 컬럼이름 있을시 필드명 대신 반환.")
+    void testGetColumnNameWithAnnotation() throws Exception {
+        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField("hasColumn"));
+
+        assertThat(columnExtractor.getName()).isEqualTo("has_column");
+    }
+
+    @Test
+    @DisplayName("getName: 재정의 된 컬럼이름 없으면 필드명 반환.")
+    void testGetColumnName() throws Exception {
+        String fieldName = "hasNotColumn";
+        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+
+        assertThat(columnExtractor.getName()).isEqualTo(fieldName);
     }
 }
