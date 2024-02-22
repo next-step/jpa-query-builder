@@ -5,6 +5,8 @@ import persistence.sql.ddl.strategy.AutoIncrementColumnStrategy;
 import persistence.sql.ddl.strategy.NullableFalseColumnStrategy;
 import persistence.sql.ddl.strategy.PrimaryKeyColumnStrategy;
 import persistence.sql.domain.Column;
+import persistence.sql.domain.DataType;
+import persistence.sql.domain.Dialect;
 import persistence.sql.domain.Table;
 
 import java.lang.reflect.Field;
@@ -41,9 +43,10 @@ public class CreateQueryBuilder {
     }
 
     private String makeColumnQuery(Column column) {
+        DataType columnType = column.getType();
         return column.getName() +
                 SPACE +
-                column.getType().getTypeQuery() +
+                columnType.getDataTypeForDialect(Dialect.H2) +
                 getColumnOptions(column.getField());
     }
 

@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import persistence.sql.domain.Column;
+import persistence.sql.domain.DataType;
 import persistence.sql.domain.IdColumn;
 import persistence.sql.domain.Table;
 
@@ -53,7 +54,8 @@ public class InsertQueryBuilder {
 
     private String getDmlName(Object object, Column column) {
         Object value = getObject(object, column);
-        if (column.getType().isVarchar()) {
+        DataType columnType = column.getType();
+        if (columnType.isVarchar()) {
             return String.format("'%s'", value);
         }
         return value.toString();
