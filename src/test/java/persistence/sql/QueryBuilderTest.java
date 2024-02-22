@@ -8,8 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.DatabaseDialect;
-import persistence.sql.ddl.Person;
+import persistence.sql.entity.Person;
 
 import java.sql.SQLException;
 import java.util.List;

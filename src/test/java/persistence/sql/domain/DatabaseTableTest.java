@@ -1,7 +1,7 @@
 package persistence.sql.domain;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.Person;
+import persistence.sql.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -3,18 +3,12 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import jdbc.PersonMapper;
-import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.QueryBuilder;
 import persistence.sql.QueryBuilderFactory;
-import persistence.sql.ddl.DatabaseDialect;
-import persistence.sql.ddl.Person;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
+import persistence.sql.DatabaseDialect;
+import persistence.sql.entity.Person;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

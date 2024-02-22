@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
+import persistence.sql.entity.Person;
 import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;

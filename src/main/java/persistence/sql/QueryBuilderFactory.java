@@ -1,6 +1,5 @@
 package persistence.sql;
 
-import persistence.sql.ddl.DatabaseDialect;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 import persistence.sql.dml.DmlQueryBuilder;

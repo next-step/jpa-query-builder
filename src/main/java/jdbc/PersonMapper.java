@@ -1,6 +1,6 @@
 package jdbc;
 
-import persistence.sql.ddl.Person;
+import persistence.sql.entity.Person;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
