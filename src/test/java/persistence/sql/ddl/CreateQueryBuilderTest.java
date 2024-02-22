@@ -13,9 +13,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import persistence.sql.entity.Person;
 
-class CreatePersonCommandTest {
-    private static final Logger logger = LoggerFactory.getLogger(CreatePersonCommandTest.class);
+class CreateQueryBuilderTest {
+    private static final Logger logger = LoggerFactory.getLogger(CreateQueryBuilderTest.class);
     DatabaseServer server;
     private JdbcTemplate jdbcTemplate;
 
@@ -44,7 +45,7 @@ class CreatePersonCommandTest {
         String expectedTableName = "PERSON";
 
         // when
-        new CreatePersonCommand(jdbcTemplate).execute();
+        jdbcTemplate.execute(new CreateQueryBuilder(Person.class).build());
 
         // then
         ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery("SELECT * FROM person");
