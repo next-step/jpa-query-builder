@@ -1,9 +1,6 @@
 package util;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import persistence.sql.model.Column;
 import persistence.sql.model.SqlConstraint;
 import persistence.sql.model.SqlType;
@@ -29,13 +26,18 @@ public class EntityAnalyzer {
 
         Field[] declaredFields = clazz.getDeclaredFields();
         return Arrays.stream(declaredFields)
+                .filter(declaredField -> !hasTransientAnnotation(declaredField))
                 .map(declaredField -> {
                     SqlType columnType = getColumnType(declaredField);
                     String columnName = getColumnName(declaredField);
-                    List<SqlConstraint> columnConstraints = getConstraints(declaredField);
+                    List<SqlConstraint> columnConstraints = getColumnConstraints(declaredField);
                     return new Column(columnType, columnName, columnConstraints);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private static boolean hasTransientAnnotation(Field field) {
+        return field.isAnnotationPresent(Transient.class);
     }
 
     private static void validateEntity(Class<?> clazz) {
@@ -65,17 +67,17 @@ public class EntityAnalyzer {
         return !name.isEmpty();
     }
 
-    private static List<SqlConstraint> getConstraints(Field field) {
+    private static List<SqlConstraint> getColumnConstraints(Field field) {
         List<SqlConstraint> columnConstraints = new ArrayList<>();
 
-        extractColumnAnnotation(field, columnConstraints);
-        extractGeneratedValueAnnotation(field, columnConstraints);
-        extractIdAnnotation(field, columnConstraints);
+        extractColumnConstraint(field, columnConstraints);
+        extractGenerationValueConstraint(field, columnConstraints);
+        extractIdConstraint(field, columnConstraints);
 
         return columnConstraints;
     }
 
-    private static void extractColumnAnnotation(Field field, List<SqlConstraint> columnConstraints) {
+    private static void extractColumnConstraint(Field field, List<SqlConstraint> columnConstraints) {
         jakarta.persistence.Column column = field.getDeclaredAnnotation(jakarta.persistence.Column.class);
 
         if (column == null) {
@@ -88,7 +90,7 @@ public class EntityAnalyzer {
         }
     }
 
-    private static void extractGeneratedValueAnnotation(Field field, List<SqlConstraint> columnConstraints) {
+    private static void extractGenerationValueConstraint(Field field, List<SqlConstraint> columnConstraints) {
         GeneratedValue generatedValue = field.getDeclaredAnnotation(GeneratedValue.class);
 
         if (generatedValue == null) {
@@ -100,7 +102,7 @@ public class EntityAnalyzer {
         columnConstraints.add(constraint);
     }
 
-    private static void extractIdAnnotation(Field field, List<SqlConstraint> columnConstraints) {
+    private static void extractIdConstraint(Field field, List<SqlConstraint> columnConstraints) {
         Id id = field.getDeclaredAnnotation(Id.class);
 
         if (id == null) {
