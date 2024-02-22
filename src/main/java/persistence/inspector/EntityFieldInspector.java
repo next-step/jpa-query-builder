@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 public class EntityFieldInspector {
@@ -34,4 +35,7 @@ public class EntityFieldInspector {
         return field.isAnnotationPresent(GeneratedValue.class);
     }
 
+    public static boolean hasAnnotation(Field field, Class<? extends Annotation> annotation) {
+        return field.isAnnotationPresent(annotation);
+    }
 }

@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
 import jdbc.PersonRowMapper;
+import jdbc.RowMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,11 +35,13 @@ public class JdbcTemplateTest {
         jdbcTemplate = new JdbcTemplate(server.getConnection());
 
         ddlQueryBuilder = DDLQueryBuilder.getInstance();
-        dmlQueryBuilder = new DMLQueryBuilder();
+        dmlQueryBuilder = DMLQueryBuilder.getInstance();
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
+        dropTable();
+
         server.stop();
     }
 
@@ -64,7 +67,7 @@ public class JdbcTemplateTest {
         List<Person> persons = List.of(
                 createPerson("kassy", 30, "kassy@gmail.com"),
                 createPerson("jinny", 24, "jinny@gmail.com"));
-        createTableTest();
+        createTable();
 
         insert(persons);
     }
@@ -99,6 +102,21 @@ public class JdbcTemplateTest {
 
     }
 
+    @Test
+    @DisplayName("delete 실행")
+    public void deleteTest() throws SQLException {
+        createTable();
+        List<Person> persons = List.of(
+                createPerson("kassy", 30, "kassy@gmail.com"),
+                createPerson("jinny", 24, "jinny@gmail.com"));
+        insert(persons);
+
+        final Person person = new Person();
+        person.setId(1L);
+
+        delete(person);
+    }
+
     private void createTable() throws SQLException {
         jdbcTemplate.execute(ddlQueryBuilder.createTableQuery(Person.class));
     }
@@ -109,8 +127,16 @@ public class JdbcTemplateTest {
         }
     }
 
+    private <T> T selectById(Class<T> tClass, Long id, RowMapper<T> rowMapper) {
+        return jdbcTemplate.queryForObject(dmlQueryBuilder.selectByIdQuery(tClass, id), rowMapper);
+    }
+
     private void delete(Person entity) throws SQLException {
         jdbcTemplate.execute(dmlQueryBuilder.deleteSql(entity));
+    }
+
+    private void dropTable() throws SQLException {
+        jdbcTemplate.execute(ddlQueryBuilder.dropTableQuery(Person.class));
     }
 
 }

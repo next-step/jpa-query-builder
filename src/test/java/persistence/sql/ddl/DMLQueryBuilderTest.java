@@ -24,7 +24,7 @@ public class DMLQueryBuilderTest {
         person.setAge(age);
         person.setEmail(email);
 
-        dmlQueryBuilder = new DMLQueryBuilder();
+        dmlQueryBuilder = DMLQueryBuilder.getInstance();
     }
 
     @Test
@@ -57,6 +57,6 @@ public class DMLQueryBuilderTest {
         person.setId(1L);
         String query = dmlQueryBuilder.deleteSql(person);
 
-        assertEquals("DELETE FROM users WHERE id = 1 AND nick_name = '"+name+"' AND old = "+age+" AND email = '"+email+"'", query);
+        assertEquals("DELETE FROM users WHERE id = 1", query);
     }
 }
