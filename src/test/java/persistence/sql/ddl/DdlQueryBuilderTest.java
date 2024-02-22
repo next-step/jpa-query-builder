@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.entity.Person;
 import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
+import persistence.sql.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

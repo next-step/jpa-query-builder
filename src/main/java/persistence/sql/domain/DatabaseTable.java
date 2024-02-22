@@ -101,7 +101,7 @@ public class DatabaseTable {
 
     public String getIdColumnName() {
         return columns.stream()
-                .filter(column->column instanceof DatabasePrimaryColumn)
+                .filter(column -> column instanceof DatabasePrimaryColumn)
                 .map(DatabaseColumn::getName)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
@@ -110,7 +110,7 @@ public class DatabaseTable {
     public String whereClause() {
         return columns.stream()
                 .map(DatabaseColumn::whereClause)
-                .reduce((columnA,columnB)->String.join(AND,columnA,columnB))
+                .reduce((columnA, columnB) -> String.join(AND, columnA, columnB))
                 .orElseThrow(IllegalStateException::new);
     }
 

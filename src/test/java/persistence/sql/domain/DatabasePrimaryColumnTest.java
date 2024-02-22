@@ -4,8 +4,6 @@ import jakarta.persistence.GenerationType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import persistence.sql.domain.ColumnName;
-import persistence.sql.domain.DatabasePrimaryColumn;
 
 import java.util.stream.Stream;
 
@@ -25,7 +23,7 @@ class DatabasePrimaryColumnTest {
     @MethodSource("generateStrategyArguments")
     void should_return_true_if_identity_strategy(GenerationType type, boolean expectResult) {
         ColumnName name = new ColumnName("test");
-        DatabasePrimaryColumn primaryColumn = new DatabasePrimaryColumn(name,null , null, type);
+        DatabasePrimaryColumn primaryColumn = new DatabasePrimaryColumn(name, null, null, type);
 
         assertThat(primaryColumn.hasIdentityStrategy()).isEqualTo(expectResult);
     }

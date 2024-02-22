@@ -17,7 +17,7 @@ class MySQLPrimaryKeyResolverTest {
     void should_convert_column_domain_into_query_string() {
 
         List<DatabaseColumn> columns = List.of(
-                new DatabasePrimaryColumn(new ColumnName("id"), new ColumnValue(Long.class,null), null, GenerationType.IDENTITY),
+                new DatabasePrimaryColumn(new ColumnName("id"), new ColumnValue(Long.class, null), null, GenerationType.IDENTITY),
                 new DatabaseColumn(new ColumnName("test"), new ColumnValue(String.class, null), new ColumnLength(300), ColumnNullable.NULLABLE)
         );
 

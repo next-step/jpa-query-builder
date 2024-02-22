@@ -35,7 +35,7 @@ public class QueryBuilder implements DmlQueryBuild, DdlQueryBuild {
 
     @Override
     public String findById(Class<?> entity, Object id) {
-        return dmlQueryBuilder.findById(entity,id);
+        return dmlQueryBuilder.findById(entity, id);
     }
 
     @Override

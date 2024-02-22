@@ -20,7 +20,7 @@ class MySQLColumnTypeTest {
 
     @ParameterizedTest
     @MethodSource("mappingArguments")
-    void should_convert_java_type_to_mysql_column(Class<?> javaType,String dbType) {
+    void should_convert_java_type_to_mysql_column(Class<?> javaType, String dbType) {
         ColumnName name = new ColumnName("test");
         ColumnValue value = new ColumnValue(javaType, null);
         ColumnLength length = new ColumnLength(255);
