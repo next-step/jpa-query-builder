@@ -1,9 +1,7 @@
 package persistence.sql.ddl.table;
 
-import jakarta.persistence.Id;
 import persistence.sql.ddl.column.MySqlColumn;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -13,12 +11,10 @@ public class MySqlTable implements Table {
 
     private final TableName name;
     private final List<MySqlColumn> columns;
-    private final Field idColumn;
 
-    private MySqlTable(TableName name, List<MySqlColumn> columns, Field idColumn) {
+    private MySqlTable(TableName name, List<MySqlColumn> columns) {
         this.name = name;
         this.columns = columns;
-        this.idColumn = idColumn;
     }
 
     public static MySqlTable from(Class<?> entity) {
@@ -29,21 +25,12 @@ public class MySqlTable implements Table {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        Field idColumn = findIdColumn(entity);
-
-        return new MySqlTable(name, columns, idColumn);
-    }
-
-    private static Field findIdColumn(Class<?> entity) {
-        return Arrays.stream(entity.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Persistent entity '%s' should have primary key", entity.getName())));
+        return new MySqlTable(name, columns);
     }
 
     @Override
     public String createTable() {
-        return String.format("CREATE TABLE %s (%s, %s);", name.getName(), getColumnsDefinition(), getIdColumnDefinition());
+        return String.format("CREATE TABLE %s (%s);", name.getName(), getColumnsDefinition());
     }
 
     @Override
@@ -55,9 +42,5 @@ public class MySqlTable implements Table {
         return columns.stream()
                 .map(MySqlColumn::defineColumn)
                 .collect(Collectors.joining(", "));
-    }
-
-    public String getIdColumnDefinition() {
-        return String.format("PRIMARY KEY(%s)", idColumn.getName());
     }
 }

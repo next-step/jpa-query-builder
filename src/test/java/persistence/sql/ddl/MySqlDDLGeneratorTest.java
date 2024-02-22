@@ -17,11 +17,10 @@ class MySqlDDLGeneratorTest {
 
         // then
         assertThat(createSql).isEqualTo("CREATE TABLE users (" +
-                "id BIGINT AUTO_INCREMENT not null, " +
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY not null, " +
                 "nick_name VARCHAR(255) null, " +
                 "old INT null, " +
-                "email VARCHAR(255) not null" +
-                ", PRIMARY KEY(id));");
+                "email VARCHAR(255) not null);");
     }
 
     @Test

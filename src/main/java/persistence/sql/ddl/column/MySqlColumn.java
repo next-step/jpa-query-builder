@@ -1,6 +1,7 @@
 package persistence.sql.ddl.column;
 
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
@@ -15,18 +16,21 @@ public class MySqlColumn implements Column {
     private final ColumnLength length;
     private final GenerationTypeStrategy generatedValueStrategy;
     private final boolean nullable;
+    private final boolean hasId;
 
-    private MySqlColumn(ColumnName name, ColumnType type, ColumnLength length, GenerationTypeStrategy generatedValueStrategy, boolean nullable) {
+    private MySqlColumn(ColumnName name, ColumnType type, ColumnLength length, GenerationTypeStrategy generatedValueStrategy, boolean nullable, boolean hasId) {
         this.name = name;
         this.type = type;
         this.length = length;
         this.generatedValueStrategy = generatedValueStrategy;
         this.nullable = nullable;
+        this.hasId = hasId;
     }
 
     public static MySqlColumn from(Field field) {
         jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        Id id = field.getAnnotation(Id.class);
 
         if (field.isAnnotationPresent(Transient.class)) {
             return null;
@@ -37,8 +41,9 @@ public class MySqlColumn implements Column {
         GenerationTypeStrategy generatedValueStrategy = GenerationTypeStrategy.from(generatedValue);
         ColumnLength length = ColumnLength.from(field);
         boolean nullable = column != null && column.nullable();
+        boolean hasId = id != null;
 
-        return new MySqlColumn(name, type, length, generatedValueStrategy, nullable);
+        return new MySqlColumn(name, type, length, generatedValueStrategy, nullable, hasId);
     }
 
     @Override
@@ -49,6 +54,7 @@ public class MySqlColumn implements Column {
                 getLengthDefinition() +
                 BLANK +
                 generatedValueStrategy.getMySqlStrategyDDL() +
+                getIdDefinition() +
                 getNullableDefinition();
     }
 
@@ -58,6 +64,14 @@ public class MySqlColumn implements Column {
         }
 
         return String.format("(%d)", length.getLength());
+    }
+
+    private String getIdDefinition() {
+        if (hasId) {
+            return "PRIMARY KEY ";
+        }
+
+        return "";
     }
 
     private String getNullableDefinition() {
