@@ -17,7 +17,7 @@ import persistence.sql.dml.DMLQueryBuilder;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JdbcTemplateTest {
 
@@ -97,8 +97,10 @@ public class JdbcTemplateTest {
 
         Person person = jdbcTemplate.queryForObject(dmlQueryBuilder.selectByIdQuery(Person.class, 1L), new PersonRowMapper());
 
-        Assertions.assertThat(person.getId()).isNotNull();
-        Assertions.assertThat(person.getName()).isEqualTo("kassy");
+        assertAll(
+                () -> assertNotNull(person.getId()),
+                () -> assertEquals("kassy", person.getName()),
+                () -> assertEquals(30, person.getAge()));
 
     }
 
