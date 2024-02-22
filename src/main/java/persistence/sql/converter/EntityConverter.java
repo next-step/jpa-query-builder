@@ -34,7 +34,6 @@ public class EntityConverter {
         return Table.create(tableName, columns);
     }
 
-
     private List<Column> convertFieldsToColumn(Field[] fields) {
         return Arrays.stream(fields)
             .filter(field -> !field.isAnnotationPresent(Transient.class))

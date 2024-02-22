@@ -14,7 +14,15 @@ public class Table {
     }
 
     public static Table create(String name, List<Column> columns) {
+        validatePrimaryKey(columns);
         return new Table(name.toUpperCase(), columns);
+    }
+
+    private static void validatePrimaryKey(List<Column> columns) {
+        columns.stream()
+            .filter(Column::isPrimary)
+            .findAny()
+            .orElseThrow(PrimaryKeyNotFoundException::new);
     }
 
     public String getName() {
