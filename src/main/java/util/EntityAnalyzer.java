@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 
 public class EntityAnalyzer {
 
+    private EntityAnalyzer() {
+    }
+
     public static String getTableName(Class<?> clazz) {
         validateEntity(clazz);
 

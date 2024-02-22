@@ -4,6 +4,9 @@ import java.util.regex.Pattern;
 
 public class CaseConverter {
 
+    private CaseConverter() {
+    }
+
     private final static Pattern caseSensitiveWordPattern = Pattern.compile("([a-z])([A-Z])");
 
     public static String pascalToSnake(String pascalCase) {
