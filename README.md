@@ -2,6 +2,10 @@
 
 ## Step2
 - [x] step1 리뷰 사항 반영
+- [ ] 요구사항 1 - Person create 쿼리 만들기
+- [ ] 요구사항 2 - Person update 쿼리 만들기
+- [ ] 요구사항 3 - Person update 쿼리 만들기 (transient 사용)
+- [ ] 요구사항 4 - Person drop 쿼리 만들기
 
 ## Step1
 - [x] Car 클래스 추가
