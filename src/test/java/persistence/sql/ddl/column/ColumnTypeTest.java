@@ -35,7 +35,7 @@ class ColumnTypeTest {
 
         // then
         assertThat(throwable)
-                .hasMessage("Invalid field Type: java.time.LocalDateTime")
+                .hasMessage("invalid field type: java.time.LocalDateTime")
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

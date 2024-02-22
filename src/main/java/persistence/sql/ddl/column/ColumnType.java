@@ -22,6 +22,6 @@ public enum ColumnType {
         return Arrays.stream(values())
                 .filter(columnType -> columnType.fieldType == field)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid field Type: %s", field.getTypeName())));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("invalid field type: %s", field.getTypeName())));
     }
 }
