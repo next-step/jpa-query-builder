@@ -26,6 +26,10 @@ public class Table {
         return this.columns.values().stream().map(Column::clone).collect(Collectors.toList());
     }
 
+    public Column getColumn(final String columnName) {
+        return this.columns.get(columnName).clone();
+    }
+
     public void setPrimaryKey(final PrimaryKey primaryKey) {
         this.primaryKey = primaryKey;
     }
