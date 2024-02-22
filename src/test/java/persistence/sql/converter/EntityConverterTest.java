@@ -1,5 +1,7 @@
 package persistence.sql.converter;
 
+import jakarta.persistence.Transient;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.entity.Person;
@@ -24,9 +26,10 @@ class EntityConverterTest {
     @Test
     void convert_success() {
 
+        String tableName = Person.class.isAnnotationPresent(jakarta.persistence.Table.class) ? Person.class.getDeclaredAnnotation(jakarta.persistence.Table.class).name() : "PERSON";
         Table table = entityConverter.convertEntityToTable(Person.class);
 
-        assertThat(table.getName()).isEqualTo("PERSON");
+        assertThat(table.getName()).isEqualTo(tableName);
     }
 
     @DisplayName("Entity 어노테이션이 적용된 클래스가 전달될 경우 해당 클래스의 필드를 column으로 가진 Table 타입의 객체를 반환한다.")
@@ -34,6 +37,7 @@ class EntityConverterTest {
     void convert_success_check_column() {
 
         List<String> declaredFieldNames = Arrays.stream(Person.class.getDeclaredFields())
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
             .map(Field::getName)
             .collect(Collectors.toList());
 
@@ -51,5 +55,21 @@ class EntityConverterTest {
             .hasMessage("해당 클래스는 Entity가 아닙니다.");
     }
 
+    @DisplayName("전달된 클래스의 @Transient 어노테이션이 적용된 필드는 제외한 컬럼의 목록을 가진 Table 타입의 객체를 반환한다.")
+    @Test
+    void convert_success_with_transient_excluded() {
+
+        String fieldName = Arrays.stream(Person.class.getDeclaredFields())
+            .filter(field -> field.isAnnotationPresent(Transient.class))
+            .map(Field::getName)
+            .findFirst()
+            .orElseThrow();
+
+        Table table = entityConverter.convertEntityToTable(Person.class);
+        List<String> columns = table.getColumns().stream().map(Column::getName).collect(Collectors.toList());
+
+        assertThat(columns).doesNotContain(fieldName);
+
+    }
 
 }
