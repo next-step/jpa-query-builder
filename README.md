@@ -22,8 +22,10 @@
     - @Column 에 name 속성이 있을 경우, name 속성 값으로 저장된다.
     - @Column 에 length 속성의 default 값은 255이다.
     - @Column 에 nullable 속성의 default 값은 true 다.
+    - @Column 에 name 속성이 없을 경우 필드 명에 스네이크케이스를 컬럼 명으로 한다.
 3. @Table, @Transient 가 포함된 클래스를 이용하여 create 쿼리 만들기
     - @Table 에 name 속성이 있을 경우, name 속성 값으로 저장된다.
     - @Transient 이 붙은 컬럼은 database 에 저장하지 않는다.
 4. @Entity, @Table 을 고려하여 drop 쿼리 만들기
    - @Table 에 name 속성이 있을 경우, name 속성 값으로 삭제한다.
+   - @Table 에 name 속성이 없을 경우 클래스 명에 스네이크케이스를 테이블 명으로 한다.
