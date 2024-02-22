@@ -7,6 +7,7 @@ import persistence.sql.entity.Person;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("[Unit] Table Class Create Test")
@@ -18,8 +19,19 @@ class TableTest {
 
         List<Column> columns = List.of(Column.create(Person.class.getDeclaredField("name"), BasicColumnType.VARCHAR));
 
-        assertThatThrownBy(() -> Table.create("test", columns))
+        assertThatThrownBy(() -> Table.create(Person.class, columns))
             .isInstanceOf(PrimaryKeyNotFoundException.class);
     }
 
+    @DisplayName("전달된 클래스의 @Table 어노테이션에 name 옵션이 있을 경우 인스턴스의 name을 옵션값으로 설정하여 생성한다.")
+    @Test
+    void create_with_table_name() throws NoSuchFieldException {
+
+        List<Column> columns = List.of(Column.create(Person.class.getDeclaredField("id"), BasicColumnType.BIGINT));
+
+        jakarta.persistence.Table annotation = Person.class.getDeclaredAnnotation(jakarta.persistence.Table.class);
+        Table table = Table.create(Person.class, columns);
+
+        assertThat(table.getName()).isEqualTo(annotation.name());
+    }
 }
