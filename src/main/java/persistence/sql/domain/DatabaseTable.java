@@ -15,6 +15,8 @@ import static persistence.sql.CommonConstant.COLUMN_SEPARATOR;
 
 public class DatabaseTable {
 
+    private static final String AND = " and ";
+
     private final String name;
 
     private final List<DatabaseColumn> columns;
@@ -74,14 +76,14 @@ public class DatabaseTable {
     }
 
     public String columnClause() {
-        return getClause(DatabaseColumn::getName);
+        return insertClause(DatabaseColumn::getName);
     }
 
     public String valueClause() {
-        return getClause(DatabaseColumn::getValue);
+        return insertClause(DatabaseColumn::getValue);
     }
 
-    private String getClause(Function<DatabaseColumn, String> convert) {
+    private String insertClause(Function<DatabaseColumn, String> convert) {
         return columns.stream()
                 .filter(this::notAutoIncrementColumn)
                 .map(convert)
@@ -108,7 +110,7 @@ public class DatabaseTable {
     public String whereClause() {
         return columns.stream()
                 .map(DatabaseColumn::whereClause)
-                .reduce((columnA,columnB)->String.join(" and ",columnA,columnB))
+                .reduce((columnA,columnB)->String.join(AND,columnA,columnB))
                 .orElseThrow(IllegalStateException::new);
     }
 

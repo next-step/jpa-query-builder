@@ -13,7 +13,7 @@ public class DdlQueryBuilder implements DdlQueryBuild {
 
     private final QueryResolver queryResolver;
 
-    protected DdlQueryBuilder(QueryResolver queryResolver) {
+    public DdlQueryBuilder(QueryResolver queryResolver) {
         this.queryResolver = queryResolver;
     }
 

@@ -2,6 +2,8 @@ package persistence.sql.domain;
 
 import java.lang.reflect.Field;
 
+import static persistence.sql.CommonConstant.COLON;
+
 public class ColumnValue {
 
     private final Class<?> javaType;
@@ -10,7 +12,7 @@ public class ColumnValue {
 
     public ColumnValue(Field field, Object instance) {
         javaType = field.getType();
-        if (instance == null){
+        if (instance == null) {
             value = null;
             return;
         }
@@ -30,11 +32,11 @@ public class ColumnValue {
     }
 
     public String getValue() {
-        if (value == null){
+        if (value == null) {
             return null;
         }
-        if (javaType.equals(String.class)){
-            return "'" + value + "'";
+        if (javaType.equals(String.class)) {
+            return COLON + value + COLON;
         }
         return String.valueOf(value);
     }

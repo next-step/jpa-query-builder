@@ -2,6 +2,8 @@ package persistence.sql.domain;
 
 public class DatabaseColumn {
 
+    private static final String EQUAL = "=";
+
     private final ColumnName name;
 
     private final ColumnValue value;
@@ -38,6 +40,6 @@ public class DatabaseColumn {
     }
 
     public String whereClause() {
-        return this.getName()+"="+this.getValue();
+        return this.getName() + EQUAL + this.getValue();
     }
 }
