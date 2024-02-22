@@ -33,4 +33,11 @@ class DDLQueryBuilderTest {
         String createQuery = ddlQueryBuilder.buildCreateQuery(Person3.class);
         assertThat(createQuery).isEqualTo("CREATE TABLE person3 (id bigint auto_increment primary key,nick_name varchar,old integer,email varchar not null);");
     }
+
+    @Test
+    @DisplayName("drop 쿼리 생성하기")
+    void buildDropQuery() {
+        String dropQuery = ddlQueryBuilder.buildDropQuery(Person3.class);
+        assertThat(dropQuery).isEqualTo("DROP TABLE person3;");
+    }
 }

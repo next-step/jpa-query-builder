@@ -7,6 +7,7 @@ import java.util.List;
 public enum Sql {
 
     CREATE,
+    DROP,
     TABLE;
 
     public static class Builder {
@@ -20,26 +21,34 @@ public enum Sql {
         }
 
         public Builder create() {
-            queryBuilder.append(CREATE.name())
-                    .append(" ");
+            queryBuilder.append(CREATE.name());
+            return this;
+        }
+
+        public Builder drop() {
+            queryBuilder.append(DROP.name());
             return this;
         }
 
         public Builder leftParenthesis() {
-            queryBuilder.append("(");
+            queryBuilder.append('(');
             return this;
         }
 
         public Builder rightParenthesis() {
-            queryBuilder.append(")");
+            queryBuilder.append(')');
+            return this;
+        }
+
+        public Builder and() {
+            queryBuilder.append(' ');
             return this;
         }
 
         public Builder table(String name) {
             queryBuilder.append(TABLE.name())
-                    .append(" ")
-                    .append(name)
-                    .append(" ");
+                    .append(' ')
+                    .append(name);
             return this;
         }
 
@@ -68,14 +77,14 @@ public enum Sql {
             queryBuilder.append(',');
         }
 
-        public String build() {
-            queryBuilder.append(';');
-            return queryBuilder.toString();
-        }
-
         private void removeLastChar() {
             int length = queryBuilder.length();
             queryBuilder.delete(length - 1, length);
+        }
+
+        public String build() {
+            queryBuilder.append(';');
+            return queryBuilder.toString();
         }
     }
 }
