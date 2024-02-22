@@ -1,5 +1,6 @@
 package persistence.study;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.LoggingPermission;
 
 
@@ -21,7 +23,7 @@ public class ReflectionTest {
     @DisplayName("Car 객체 정보를 출력하라")
     void showClass() {
         Class<Car> carClass = Car.class;
-        logger.debug(carClass.getName());
+        Assertions.assertEquals(carClass.getName(), "persistence.study.Car");
     }
 
     @Test
