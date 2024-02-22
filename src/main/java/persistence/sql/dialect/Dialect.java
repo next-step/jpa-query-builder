@@ -1,5 +1,6 @@
 package persistence.sql.dialect;
 
+import jakarta.persistence.GenerationType;
 import persistence.sql.model.SqlConstraint;
 import persistence.sql.model.SqlType;
 
@@ -17,7 +18,7 @@ public abstract class Dialect {
         SqlType[] sqlTypes = SqlType.values();
         Arrays.stream(sqlTypes)
                 .forEach(sqlType -> {
-                    String query = sqlType.getQuery();
+                    String query = sqlType.query();
                     types.put(sqlType, query);
                 });
 
@@ -30,7 +31,7 @@ public abstract class Dialect {
         SqlConstraint[] sqlConstraints = SqlConstraint.values();
         Arrays.stream(sqlConstraints)
                 .forEach(sqlConstraint -> {
-                    String query = sqlConstraint.getQuery();
+                    String query = sqlConstraint.query();
                     constraints.put(sqlConstraint, query);
                 });
 

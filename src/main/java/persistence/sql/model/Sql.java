@@ -60,7 +60,7 @@ public enum Sql {
 
             List<SqlConstraint> sqlConstraints = column.constraints();
             sqlConstraints.forEach(constraint -> {
-                String query = constraint.getQuery();
+                String query = constraint.query();
                 queryBuilder.append(' ')
                         .append(query);
             });
