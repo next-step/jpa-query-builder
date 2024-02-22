@@ -63,7 +63,7 @@ public class DDLQueryGenerator {
     }
 
     private String getKeyString(ColumnExtractor extractor) {
-        return String.format("%s KEY (%s)", extractor.getKeyType(), extractor.getName());
+        return String.format("%s KEY (%s)", dialect.mapKeyType(extractor.getKeyType()), extractor.getName());
     }
 
     private void checkIsEntity(Class<?> entityClazz) {

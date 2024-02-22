@@ -1,6 +1,7 @@
 package persistence.sql.ddl.extractor;
 
 import jakarta.persistence.*;
+import persistence.sql.ddl.KeyType;
 import persistence.sql.ddl.dialect.Dialect;
 
 import java.lang.reflect.Field;
@@ -58,12 +59,12 @@ public class ColumnExtractor {
         return generatedValue.strategy();
     }
 
-    public String getKeyType() {
+    public KeyType getKeyType() {
         if(isPrimaryKey()) {
-            return "PRIMARY";
+            return KeyType.PRIMARY;
         }
         if(isUnique()) {
-            return "UNIQUE";
+            return KeyType.UNIQUE;
         }
         return null;
     }
