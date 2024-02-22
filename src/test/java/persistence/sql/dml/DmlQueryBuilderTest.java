@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DmlQueryBuilderTest {
 
@@ -27,8 +28,15 @@ class DmlQueryBuilderTest {
 
     @Test
     void should_create_find_by_id_query() {
-        String query = dmlQueryBuilder.findById(Person.class,1l);
+        String query = dmlQueryBuilder.findById(Person.class, 1l);
 
         assertThat(query).isEqualTo("select * from users where id=1;");
+    }
+
+    @Test
+    void should_throw_exception_when_id_is_null() {
+        assertThatThrownBy(() -> dmlQueryBuilder.findById(Person.class, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("database id can not be null");
     }
 }
