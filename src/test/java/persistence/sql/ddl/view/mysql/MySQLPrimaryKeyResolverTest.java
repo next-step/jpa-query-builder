@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MySQLQueryResolverTest {
+class MySQLPrimaryKeyResolverTest {
 
     private final QueryResolver queryResolver = new MySQLPrimaryKeyResolver();
 
