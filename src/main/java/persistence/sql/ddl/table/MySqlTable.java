@@ -11,20 +11,18 @@ import java.util.stream.Collectors;
 
 public class MySqlTable implements Table {
 
-    private static final String DOT = "\\.";
-
-    private final String name;
+    private final TableName name;
     private final List<MySqlColumn> columns;
     private final Field idColumn;
 
-    private MySqlTable(String name, List<MySqlColumn> columns, Field idColumn) {
+    private MySqlTable(TableName name, List<MySqlColumn> columns, Field idColumn) {
         this.name = name;
         this.columns = columns;
         this.idColumn = idColumn;
     }
 
     public static MySqlTable from(Class<?> entity) {
-        String name = findName(entity);
+        TableName name = TableName.from(entity);
 
         List<MySqlColumn> columns = Arrays.stream(entity.getDeclaredFields())
                 .map(MySqlColumn::from)
@@ -43,27 +41,14 @@ public class MySqlTable implements Table {
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Persistent entity '%s' should have primary key", entity.getName())));
     }
 
-    private static String findName(Class<?> entity) {
-        jakarta.persistence.Table table = entity.getAnnotation(jakarta.persistence.Table.class);
-
-        if (table != null && !table.name().isBlank()) {
-            return table.name();
-        }
-
-        String name = entity.getName();
-        String[] splitByDotName = name.split(DOT);
-
-        return splitByDotName[splitByDotName.length - 1].toLowerCase();
-    }
-
     @Override
     public String createTable() {
-        return String.format("CREATE TABLE %s (%s, %s);", name, getColumnsDefinition(), getIdColumnDefinition());
+        return String.format("CREATE TABLE %s (%s, %s);", name.getName(), getColumnsDefinition(), getIdColumnDefinition());
     }
 
     @Override
     public String dropTable() {
-        return String.format("DROP TABLE %s;", name);
+        return String.format("DROP TABLE %s;", name.getName());
     }
 
     private String getColumnsDefinition() {
