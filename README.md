@@ -1,5 +1,8 @@
 # jpa-query-builder
 
+## Step2
+- [x] step1 리뷰 사항 반영
+
 ## Step1
 - [x] Car 클래스 추가
 - [x] 요구사항 1 - 클래스 정보 출력
