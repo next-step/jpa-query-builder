@@ -97,4 +97,11 @@ public class DatabaseTable {
         return true;
     }
 
+    public String getIdColumnName() {
+        return columns.stream()
+                .filter(column->column instanceof DatabasePrimaryColumn)
+                .map(DatabaseColumn::getName)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+    }
 }

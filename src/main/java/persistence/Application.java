@@ -39,19 +39,9 @@ public class Application {
             jdbcTemplate.execute(dmlQueryBuilder.insert(person));
             jdbcTemplate.execute(dmlQueryBuilder.insert(person));
 
-            String all = dmlQueryBuilder.findAll(Person.class);
-            jdbcTemplate.query(all, resultSet -> {
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
-
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnName = metaData.getColumnName(i);
-                    Object value = resultSet.getObject(i);
-                    System.out.println(columnName + ": " + value);
-                }
-                System.out.println("-------------");
-                return null;
-            });
+            jdbcTemplate.query(dmlQueryBuilder.findAll(Person.class), printResultSet());
+            System.out.println("###########");
+            jdbcTemplate.query(dmlQueryBuilder.findById(Person.class,1l), printResultSet());
 
             jdbcTemplate.execute(ddlQueryBuilder.dropQuery(Person.class));
 
@@ -61,5 +51,20 @@ public class Application {
         } finally {
             logger.info("Application finished");
         }
+    }
+
+    private static RowMapper<Object> printResultSet() {
+        return resultSet -> {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i);
+                Object value = resultSet.getObject(i);
+                System.out.println(columnName + ": " + value);
+            }
+            System.out.println("-------------");
+            return null;
+        };
     }
 }
