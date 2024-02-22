@@ -54,7 +54,6 @@ class IntegrationTest {
         resultSet.next();
 
         assertThat(resultSet.getInt(1)).isNotZero();
-
     }
 
 }

@@ -11,10 +11,10 @@
 
 ### Step2: QueryBuilder DDL
 #### 기능 요구사항
-- [ ] 1.create 쿼리 만들기
+- [x] 1.create 쿼리 만들기
   - 엔티티를 바탕으로 테이블을 생성한다.
 
-- [ ] 2.추가된 정보를 통해 create 쿼리 만들어보기
+- [x] 2.추가된 정보를 통해 create 쿼리 만들어보기
   - pk인 id값은 DB의 AutoIncrement에 의해 생성된다.
   - @Column 어노테이션에 전달된 이름을 컬럼명으로 사용한다.
   - @Column 어노테이션에 전달된 옵션이 적용된다.

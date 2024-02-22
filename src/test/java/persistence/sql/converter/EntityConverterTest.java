@@ -49,7 +49,6 @@ class EntityConverterTest {
         assertThatThrownBy(() -> entityConverter.convertEntityToTable(String.class))
             .isInstanceOf(NotEntityException.class)
             .hasMessage("해당 클래스는 Entity가 아닙니다.");
-
     }
 
 
