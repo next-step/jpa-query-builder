@@ -1,22 +1,26 @@
 package database.sql.ddl;
 
-import java.util.stream.Collectors;
+import database.sql.util.type.MySQLTypeConverter;
+import database.sql.util.type.TypeConverter;
 
 public class QueryBuilder {
-    public String buildCreateQuery(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        String tableName = inspector.getTableName();
-        String columnsWithDefinition = inspector.getVisibleColumns()
-                .map(EntityColumn::toColumnDefinition)
-                .collect(Collectors.joining(", "));
+    private static final QueryBuilder INSTANCE = new QueryBuilder();
+    private static final TypeConverter typeConverter = new MySQLTypeConverter();
 
-        return String.format("CREATE TABLE %s (%s)", tableName, columnsWithDefinition);
+    private QueryBuilder() {
+    }
+
+    public static QueryBuilder getInstance() {
+        return INSTANCE;
+    }
+
+    public String buildCreateQuery(Class<?> entityClass) {
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(entityClass, typeConverter);
+        return createQueryBuilder.buildQuery();
     }
 
     public String buildDeleteQuery(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        String tableName = inspector.getTableName();
-
-        return String.format("DROP TABLE %s", tableName);
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(entityClass);
+        return dropQueryBuilder.buildQuery();
     }
 }
