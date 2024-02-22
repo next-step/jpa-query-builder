@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static persistence.sql.ddl.column.GenerationTypeStrategy.NONE;
 
 class GenerationTypeStrategyTest {
 
@@ -14,7 +15,7 @@ class GenerationTypeStrategyTest {
         GenerationTypeStrategy result = GenerationTypeStrategy.from(null);
 
         // then
-        assertThat(result).isNull();
+        assertThat(result).isEqualTo(NONE);
     }
 
 }
