@@ -1,13 +1,16 @@
 package persistence.inspector;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EntityMetadataInspector {
+public class EntityMetadataInspector2 {
 
     public static String getTableName(Class<?> clazz) {
         if (clazz.isAnnotationPresent(Table.class) && !clazz.getAnnotation(Table.class).name().isBlank()) {
@@ -18,7 +21,7 @@ public class EntityMetadataInspector {
 
     public static List<EntityColumn> getEntityColumns(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(EntityMetadataInspector::isPersistable)
+                .filter(EntityMetadataInspector2::isPersistable)
                 .map(field -> new EntityColumn(
                         field.getName(),
                         getColumnName(field),
@@ -31,11 +34,11 @@ public class EntityMetadataInspector {
     }
 
     public static List<Field> getIdFields(Class<?> clazz) {
-        return getFields(clazz).stream().filter(EntityMetadataInspector::isPrimaryKey).collect(Collectors.toList());
+        return getFields(clazz).stream().filter(EntityMetadataInspector2::isPrimaryKey).collect(Collectors.toList());
     }
 
     public static Field getIdField(Class<?> clazz) {
-        return getFields(clazz).stream().filter(EntityMetadataInspector::isPrimaryKey).findFirst().orElse(null);
+        return getFields(clazz).stream().filter(EntityMetadataInspector2::isPrimaryKey).findFirst().orElse(null);
     }
 
     public static boolean isPersistable(Field field) {

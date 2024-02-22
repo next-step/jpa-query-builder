@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 public class DDLQueryBuilder {
 
     private static final DDLQueryBuilder instance = new DDLQueryBuilder();
-    private EntityMetadataInspector entityMetadataInspector;
 
     private DDLQueryBuilder() {
     }
@@ -19,12 +18,7 @@ public class DDLQueryBuilder {
     }
 
     public String createTableQuery(Class<?> clazz) {
-        entityMetadataInspector = new EntityMetadataInspector();
-        return String.format("CREATE TABLE %s (%s%s)",
-                getTableName(clazz),
-                columnsClause(clazz),
-                primaryKeyClause(clazz)
-        );
+        return DDLQueryFormatter.createTableQuery(getTableName(clazz), columnsClause(clazz), primaryKeyClause(clazz));
     }
 
     public String dropTableQuery(Class<?> clazz) {
@@ -32,19 +26,19 @@ public class DDLQueryBuilder {
     }
 
     private String getTableName(Class<?> clazz) {
-        return entityMetadataInspector.getTableName(clazz);
+        return EntityMetadataInspector.getTableName(clazz);
     }
 
     private String columnsClause(Class<?> clazz) {
-        List<EntityColumn> entityColumns = entityMetadataInspector.getEntityColumns(clazz);
+        List<EntityColumn> entityColumns = EntityMetadataInspector.getEntityColumns(clazz);
 
-        List<String> columns = entityColumns.stream().map(this::getColumn).collect(Collectors.toList());
+        List<String> columns = entityColumns.stream().map(this::createColumnsClause).collect(Collectors.toList());
 
         return String.join(", ", columns);
     }
 
     private String primaryKeyClause(Class<?> clazz) {
-        List<String> primaryKeys = getPrimaryKeyColumns(clazz);
+        List<String> primaryKeys = getPrimaryKeyColumnNames(clazz);
 
         if (!primaryKeys.isEmpty()) {
             return ", PRIMARY KEY (" + String.join(", ", primaryKeys) + ")";
@@ -53,15 +47,21 @@ public class DDLQueryBuilder {
         return "";
     }
 
-    private List<String> getPrimaryKeyColumns(Class<?> clazz) {
-        return entityMetadataInspector.getIdFields(clazz)
-                .stream()
-                .map(entityMetadataInspector::getColumnName)
-                .collect(Collectors.toList());
+    private List<String> getPrimaryKeyColumnNames(Class<?> clazz) {
+        return EntityMetadataInspector.getIdFields(clazz)
+            .stream()
+            .map(EntityMetadataInspector::getColumnName)
+            .collect(Collectors.toList());
     }
 
-    private String getColumn(EntityColumn column) {
-        return column.getColumnName() + " " + column.getType().getMysqlType() + " " + getColumnProperty(column);
+    private String createColumnsClause(EntityColumn column) {
+        String columnTypeFormat = "%s %s %s";
+
+        return String.format(columnTypeFormat,
+            column.getColumnName(),
+            column.getType().getMysqlType(),
+            getColumnProperty(column)
+        );
     }
 
     private String getColumnProperty(EntityColumn column) {
@@ -76,3 +76,4 @@ public class DDLQueryBuilder {
     }
 
 }
+

@@ -27,7 +27,21 @@ public class DMLQueryBuilderTest {
     @Test
     public void insertQueryTest() {
         String query = dmlQueryBuilder.insertSql(person);
+
         assertEquals("INSERT INTO users (nick_name, old, email) VALUES ('"+name+"', "+age+", '"+email+"')", query);
+    }
+
+    @Test
+    public void selectQueryTest() {
+        String query = dmlQueryBuilder.selectSql(Person.class);
+
+        assertEquals("SELECT * FROM users", query);
+    }
+
+    @Test void selectByKeySqlTest() {
+        String query = dmlQueryBuilder.selectByKeySql(Person.class, 1L);
+
+        assertEquals("SELECT * FROM users WHERE id = 1", query);
     }
 
 }

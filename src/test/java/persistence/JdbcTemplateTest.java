@@ -39,9 +39,11 @@ public class JdbcTemplateTest {
 
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-        jdbcTemplate.execute(ddlQueryBuilder.createTableQuery(person.getClass()));
+        jdbcTemplate.execute(ddlQueryBuilder.createTableQuery(Person.class));
         jdbcTemplate.execute(dmlQueryBuilder.insertSql(person));
-        jdbcTemplate.query("SELECT * FROM users", new RowMapperImpl());
+        jdbcTemplate.query(dmlQueryBuilder.selectSql(Person.class), new RowMapperImpl());
+        System.out.println(dmlQueryBuilder.selectByKeySql(Person.class, 1L));
+        jdbcTemplate.query(dmlQueryBuilder.selectByKeySql(Person.class, 1L), new RowMapperImpl());
 
         server.stop();
     }
