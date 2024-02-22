@@ -1,8 +1,6 @@
 package persistence.sql.ddl;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
 public class CreateQueryBuilder {
 
@@ -10,7 +8,6 @@ public class CreateQueryBuilder {
     public static final String SQL_CREATE_STRING_COLUMN = "%s VARCHAR(30)";
     public static final String SQL_CREATE_INTEGER_COLUMN = "%s INT";
     public static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS %s (";
-    public static final String COLUMN_NAME_ID = "id";
     public static final String CLOSING_PARENTHESIS = ")";
     public static final String COMMA = ",";
     private final Class<?> entity;
