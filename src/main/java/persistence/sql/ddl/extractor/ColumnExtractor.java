@@ -38,11 +38,14 @@ public class ColumnExtractor {
     }
 
     public String getColumnType() {
-        String columnType = dialect.mapDataType(field.getType());
-        if(column != null && !column.nullable()) {
-            columnType += " NOT NULL";
+        return dialect.mapDataType(field.getType());
+    }
+
+    public boolean isNullable() {
+        if(column == null){
+            return true;
         }
-        return columnType;
+        return column.nullable();
     }
 
     public String getGenerationType() {
