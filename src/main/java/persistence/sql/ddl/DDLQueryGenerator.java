@@ -43,7 +43,7 @@ public class DDLQueryGenerator {
     }
 
     private String getColumnString(ColumnExtractor extractor) {
-        String result = String.format("%s %s", extractor.getName(), dialect.mapDataType(extractor.getColumnType()));
+        String result = String.format("%s %s", extractor.getName(), dialect.mapDataType(extractor.getDataType()));
         if(!extractor.isNullable()) {
             result += " NOT NULL";
         }

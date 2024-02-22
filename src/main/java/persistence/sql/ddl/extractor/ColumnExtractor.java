@@ -38,7 +38,7 @@ public class ColumnExtractor {
         return columnName;
     }
 
-    public Class<?> getColumnType() {
+    public Class<?> getDataType() {
         return field.getType();
     }
 
