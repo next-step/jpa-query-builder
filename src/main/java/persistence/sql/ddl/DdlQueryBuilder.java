@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-public interface QueryBuilder {
+public interface DdlQueryBuilder {
 
     String build();
 }

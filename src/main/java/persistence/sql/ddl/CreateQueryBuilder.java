@@ -6,7 +6,7 @@ import persistence.sql.dialect.Database;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateQueryBuilder implements QueryBuilder {
+public class CreateQueryBuilder implements DdlQueryBuilder {
 
     private static final String CREATE_TABLE_DDL = "create table %s (%s)";
     private static final String COMMA = ", ";

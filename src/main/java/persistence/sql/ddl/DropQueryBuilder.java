@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import persistence.sql.column.TableColumn;
 
-public class DropQueryBuilder implements QueryBuilder {
+public class DropQueryBuilder implements DdlQueryBuilder {
 
     private static final String DROP_TABLE = "drop table ";
 

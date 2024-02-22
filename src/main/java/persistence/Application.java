@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.dialect.Database;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
@@ -34,8 +35,8 @@ public class Application {
             jdbcTemplate.execute(insertQueryBuilder.generate(person1, Database.MYSQL));
             jdbcTemplate.execute(insertQueryBuilder.generate(person2, Database.MYSQL));
 
-            SelectQueryBuilder selectAllQueryBuilder = SelectQueryBuilder.generate(Person.class, Database.MYSQL).build();
-            String findAll = selectAllQueryBuilder.findAll();
+            SelectQueryBuilder queryBuilder = SelectQueryBuilder.generate(Person.class, Database.MYSQL);
+            String findAll = queryBuilder.build().findAll();
             RowMapper<Person> rowMapper = resultSet -> {
                 Long id = resultSet.getLong("id");
                 String name = resultSet.getString("nick_name");
@@ -44,6 +45,13 @@ public class Application {
                 return new Person(id, name, age, email, null);
             };
             List<Person> persons = jdbcTemplate.query(findAll, rowMapper);
+
+            String selectOneQuery = queryBuilder.build().findById(1L);
+            jdbcTemplate.queryForObject(selectOneQuery, rowMapper);
+
+            DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.generate(Person.class, Database.MYSQL);
+            String deleteQuery = deleteQueryBuilder.build().deleteById(1L);
+            jdbcTemplate.execute(deleteQuery);
 
             server.stop();
         } catch (Exception e) {

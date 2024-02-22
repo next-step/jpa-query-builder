@@ -23,7 +23,7 @@ class InsertQueryBuilderTest {
     @Test
     void testInsertDmlWhenSpecificField() {
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
-        Person person = new Person("username",  "email2@test.com", 12);
+        Person person = new Person("username", "email2@test.com", 12);
         String insert = insertQueryBuilder.generate(person, Database.MYSQL);
 
         assertThat(insert).isEqualTo("insert into users (nick_name, old, email) values ('username', null, 'email2@test.com')");
