@@ -15,8 +15,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import persistence.sql.entity.BasicPerson;
 
-class CreateQueryBuilderTest {
-    private static final Logger logger = LoggerFactory.getLogger(CreateQueryBuilderTest.class);
+class BasicEntityQueryBuilderTest {
+    private static final Logger logger = LoggerFactory.getLogger(BasicEntityQueryBuilderTest.class);
     DatabaseServer server;
     private JdbcTemplate jdbcTemplate;
 
@@ -45,7 +45,7 @@ class CreateQueryBuilderTest {
         String expectedTableName = "PERSON";
 
         // when
-        jdbcTemplate.execute(new CreateQueryBuilder(BasicPerson.class).build());
+        jdbcTemplate.execute(new BasicEntityQueryBuilder(BasicPerson.class).build());
 
         // then
         ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery("SELECT * FROM person");
