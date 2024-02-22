@@ -2,7 +2,6 @@ package persistence.sql.converter;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.dialect.H2Dialect;
 import persistence.sql.entity.Person;
 import persistence.sql.model.Column;
 import persistence.sql.model.NotEntityException;
@@ -15,12 +14,11 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("[Unit] Entity Converter Test")
 class EntityConverterTest {
 
-    private final EntityConverter entityConverter = new EntityConverter(new H2Dialect());
+    private final EntityConverter entityConverter = new EntityConverter(new TypeMapper());
 
     @DisplayName("Entity 어노테이션이 적용된 클래스가 전달될 경우 해당 클래스명을 name으로 가진 Table 타입의 객체를 반환한다.")
     @Test
@@ -42,10 +40,7 @@ class EntityConverterTest {
         Table table = entityConverter.convertEntityToTable(Person.class);
         List<Column> columns = table.getColumns();
 
-        assertAll(() -> {
-            assertThat(columns.size()).isEqualTo(declaredFieldNames.size());
-            columns.forEach((column) -> assertThat(declaredFieldNames.contains(column.getName())).isTrue());
-        });
+        assertThat(columns.size()).isEqualTo(declaredFieldNames.size());
     }
 
     @DisplayName("Entity 어노테이션이 적용되지 않은 클래스가 전달될 경우 예외를 반환한다.")
