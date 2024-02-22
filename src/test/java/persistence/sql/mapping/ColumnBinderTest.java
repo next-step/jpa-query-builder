@@ -1,6 +1,7 @@
 package persistence.sql.mapping;
 
 import jakarta.persistence.Transient;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.PersonV3;
@@ -27,7 +28,9 @@ class ColumnBinderTest {
         final List<Column> columns = columnBinder.createColumns(clazz);
 
         // then
-        assertThat(columns).hasSize(fieldsNum);
+        assertThat(columns).hasSize(fieldsNum)
+                .extracting("value.originalType")
+                .contains(Long.class, String.class, Integer.class, String.class);
     }
 
     @DisplayName("Entity 의 object 를 이용해 값이 있는 Column 리스트를 반환한다")
@@ -48,8 +51,13 @@ class ColumnBinderTest {
 
         // then
         assertThat(columns).hasSize(fieldsNum)
-                .extracting("value.value")
-                .containsExactlyInAnyOrder(id, name, age, mail);
+                .extracting("value.value", "value.originalType")
+                .contains(
+                        Tuple.tuple(id, Long.class),
+                        Tuple.tuple(name, name.getClass()),
+                        Tuple.tuple(age, Integer.class),
+                        Tuple.tuple(mail, mail.getClass())
+                );
     }
 
 }
