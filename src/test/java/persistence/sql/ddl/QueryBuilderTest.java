@@ -6,11 +6,9 @@ import persistence.sql.converter.EntityConverter;
 import persistence.sql.converter.TypeMapper;
 import persistence.sql.dialect.H2Dialect;
 import persistence.sql.entity.Person;
-import persistence.sql.model.NotEntityException;
 import persistence.sql.model.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("[Unit] Query Builder Test")
 class QueryBuilderTest {

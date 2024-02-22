@@ -1,7 +1,6 @@
 package persistence.sql.converter;
 
 import jakarta.persistence.Transient;
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.entity.Person;
