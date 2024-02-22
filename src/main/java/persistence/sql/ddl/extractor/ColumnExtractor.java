@@ -51,12 +51,15 @@ public class ColumnExtractor {
         return column.nullable();
     }
 
+    public boolean hasGenerationType() {
+        return field.isAnnotationPresent(GeneratedValue.class);
+    }
     public String getGenerationType() {
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-        if (generatedValue != null) {
-            return dialect.mapGenerationType(generatedValue.strategy());
+        if(generatedValue == null) {
+            throw new GenerationTypeMissingException();
         }
-        return null;
+        return dialect.mapGenerationType(generatedValue.strategy());
     }
 
     public String getKeyType() {

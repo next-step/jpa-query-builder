@@ -42,12 +42,11 @@ public class DDLQueryGenerator {
 
     private String getColumnString(ColumnExtractor extractor) {
         String result = String.format("%s %s", extractor.getName(), extractor.getColumnType());
-        String generationType = extractor.getGenerationType();
         if(!extractor.isNullable()) {
             result += " NOT NULL";
         }
-        if (generationType != null) {
-            result += String.format(" %s", generationType);
+        if (extractor.hasGenerationType()) {
+            result += String.format(" %s", extractor.getGenerationType());
         }
         return result;
     }
