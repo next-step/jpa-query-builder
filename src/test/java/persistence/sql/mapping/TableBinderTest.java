@@ -35,7 +35,7 @@ class TableBinderTest {
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .count();
 
-        when(columnTypeMapper.toSqlType(any(Type.class))).thenReturn(Types.VARCHAR);
+        when(columnTypeMapper.toSqlType(any(Class.class))).thenReturn(Types.VARCHAR);
 
         // when
         final persistence.sql.mapping.Table result = tableBinder.createTable(clazz);
