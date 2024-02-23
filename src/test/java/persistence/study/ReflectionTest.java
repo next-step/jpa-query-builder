@@ -90,10 +90,7 @@ public class ReflectionTest {
         );
     }
 
-
-
     private void methodRun(Object instance, Method method) throws Exception {
-
         method.setAccessible(true);
         method.invoke(instance);
     }

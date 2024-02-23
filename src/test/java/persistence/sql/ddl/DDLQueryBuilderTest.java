@@ -16,7 +16,7 @@ class DDLQueryBuilderTest {
     private DDLQueryBuilder ddlQueryBuilder = DDLQueryBuilder.getInstance();
 
     @Test
-    @DisplayName("요구사항1_Person Create Table Query")
+    @DisplayName("CreateTableQuery_id,name,age")
     void createTableQueryReq1() {
         String query = ddlQueryBuilder.createTableQuery(Person1.class);
 
@@ -24,15 +24,15 @@ class DDLQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("요구사항2_Person Create Table Query")
+    @DisplayName("CreateTableQuery_id,name,age,email")
     void createTableQueryReq2() {
         String query = ddlQueryBuilder.createTableQuery(Person2.class);
 
-        assertEquals("CREATE TABLE person (id BIGINT AUTO_INCREMENT , nick_name VARCHAR(255) , old INT , email VARCHAR(255) NOT NULL , PRIMARY KEY (id))", query);
+        assertEquals("CREATE TABLE person2 (id BIGINT AUTO_INCREMENT , nick_name VARCHAR(255) , old INT , email VARCHAR(255) NOT NULL , PRIMARY KEY (id))", query);
     }
 
     @Test
-    @DisplayName("요구사항3_Person Create Table Query2")
+    @DisplayName("CreateTableQuery_@Transient제외_id,name,age,email")
     void createTableQueryReq3() {
         String query = ddlQueryBuilder.createTableQuery(Person.class);
 
@@ -40,7 +40,7 @@ class DDLQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("요구사항4_Person Drop Table Query")
+    @DisplayName("DropTableQuery")
     void dropTableQuery() {
         String query = ddlQueryBuilder.dropTableQuery(Person.class);
 
