@@ -1,16 +1,22 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
-
-import static util.StringUtils.convertCamelCaseToSnakeCase;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class QueryBuilder {
 
+    private static final String DELIMITER_COMMA = ", ";
+    public static final String DELIMITER_SPACE = "%s %s";
     private final Dialect dialect;
 
     public QueryBuilder(Dialect dialect) {
@@ -24,13 +30,12 @@ public class QueryBuilder {
                 .append(generateTableName(clazz))
                 .append(" (");
 
-        Arrays.stream(clazz.getDeclaredFields())
-                .forEach(field -> generateColumn(field, sb));
+        sb.append(generateColumnsQuery(clazz.getDeclaredFields()));
 
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .forEach(field ->
-                        sb.append("PRIMARY KEY (")
+                        sb.append(", PRIMARY KEY (")
                                 .append(convertCamelCaseToSnakeCase(field.getName()))
                                 .append(")")
                 );
@@ -44,6 +49,23 @@ public class QueryBuilder {
         return "DROP TABLE " + generateTableName(clazz);
     }
 
+    private String generateColumnsQuery(Field[] fields) {
+        return Arrays.stream(fields)
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(this::generateColumnQuery)
+                .collect(Collectors.joining(DELIMITER_COMMA));
+    }
+
+    private String generateColumnQuery(Field field) {
+        field.setAccessible(true);
+
+        String string = String.format(DELIMITER_SPACE,
+                generateColumnName(field),
+                dialect.generateColumnSql(field));
+
+        return string;
+    }
+
     private String generateTableName(Class<?> clazz) {
         Table annotation = clazz.getDeclaredAnnotation(Table.class);
 
@@ -54,31 +76,6 @@ public class QueryBuilder {
         return convertCamelCaseToSnakeCase(clazz.getSimpleName());
     }
 
-    private void generateColumn(Field field, StringBuilder sb) {
-        field.setAccessible(true);
-
-        if (field.isAnnotationPresent(Transient.class)) {
-            return;
-        }
-
-        sb.append(generateColumnName(field))
-                .append(" ")
-                .append(dialect.getColumnType(field.getType()))
-                .append(generateNotNull(field))
-                .append(generateAutoIncrement(field))
-                .append(", ");
-    }
-
-    private String generateNotNull(Field field) {
-        Id primaryKeyAnnotation = field.getDeclaredAnnotation(Id.class);
-        Column annotation = field.getDeclaredAnnotation(Column.class);
-
-        if (Objects.nonNull(primaryKeyAnnotation) || Objects.nonNull(annotation) && !annotation.nullable()) {
-            return " NOT NULL";
-        }
-
-        return "";
-    }
 
     private String generateColumnName(Field field) {
         Column annotation = field.getDeclaredAnnotation(Column.class);
@@ -90,13 +87,14 @@ public class QueryBuilder {
         return convertCamelCaseToSnakeCase(field.getName());
     }
 
-    private String generateAutoIncrement(Field field) {
-        GeneratedValue annotation = field.getDeclaredAnnotation(GeneratedValue.class);
+    public static String convertCamelCaseToSnakeCase(String input) {
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
 
-        if (Objects.nonNull(annotation) && annotation.strategy() == GenerationType.IDENTITY) {
-            return " AUTO_INCREMENT";
-        }
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        String result = matcher.replaceAll(replacement);
 
-        return "";
+        return result.toLowerCase();
     }
 }
