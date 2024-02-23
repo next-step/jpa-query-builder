@@ -1,13 +1,16 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.domain.*;
+
+import jakarta.persistence.*;
+import persistence.sql.ddl.domain.DdlKeyGenerator;
+import persistence.sql.ddl.domain.H2DdlKeyGenerateor;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class QueryBuilder {
+public class DdlQueryBuilder {
 
     public static final String CREATE_DEFAULT_DDL = "create table %s (%s)";
     public static final String SPACE = " ";
@@ -16,7 +19,7 @@ public class QueryBuilder {
     public String createDdl(final Class<?> clazz) {
         String tableName = createTableName(clazz);
 
-        String fieldDDLSql = createFieldDDLSql(clazz);
+        String fieldDDLSql = createFieldDDLSql(clazz, new H2DdlKeyGenerateor());
 
         final String constraintDDLSql = createConstraintDDLSql(clazz);
 
@@ -44,10 +47,10 @@ public class QueryBuilder {
         }
     }
 
-    private String createFieldDDLSql(final Class<?> clazz) {
+    private String createFieldDDLSql(final Class<?> clazz, final DdlKeyGenerator ddlKeyGenerator) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .sorted(Comparator.comparing(f -> f.isAnnotationPresent(Id.class) ? 0 : 1))
-                .filter(QueryBuilder::nonTransientField)
+                .filter(DdlQueryBuilder::nonTransientField)
                 .map(f -> {
                     String fieldName = createFieldName(f);
 
@@ -55,7 +58,7 @@ public class QueryBuilder {
 
                     String notNullDDL = createNotNullDDL(f);
 
-                    String primaryKeyGenerateDDL = createPrimaryKeyGenerateDDL(f);
+                    String primaryKeyGenerateDDL = createPrimaryKeyGenerateDDL(f, ddlKeyGenerator);
 
                     return String.format("%s %s%s%s", fieldName, printType, notNullDDL, primaryKeyGenerateDDL);
                 })
@@ -92,17 +95,17 @@ public class QueryBuilder {
         return !field.getAnnotation(Column.class).name().isBlank();
     }
 
-    private String createPrimaryKeyGenerateDDL(final Field field) {
+    private String createPrimaryKeyGenerateDDL(final Field field, final DdlKeyGenerator ddlKeyGenerator) {
         if (field.isAnnotationPresent(Id.class)) {
-            return createGenerateTypeDDL(field);
+            return createGenerateTypeDDL(field, ddlKeyGenerator);
         }
 
         return "";
     }
 
-    private String createGenerateTypeDDL(final Field field) {
+    private String createGenerateTypeDDL(final Field field, final DdlKeyGenerator ddlKeyGenerator) {
         if (field.isAnnotationPresent(GeneratedValue.class)) {
-            return field.getAnnotation(GeneratedValue.class).strategy().generateDDL;
+            return ddlKeyGenerator.generator(field.getAnnotation(GeneratedValue.class).strategy());
         }
 
         return SPACE + "not null";

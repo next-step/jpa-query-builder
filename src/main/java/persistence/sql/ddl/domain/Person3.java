@@ -1,5 +1,6 @@
 package persistence.sql.ddl.domain;
 
+import jakarta.persistence.*;
 
 @Table(name = "users")
 @Entity
