@@ -1,20 +1,16 @@
-package persistence.sql.meta;
+package persistence.sql.meta.column;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.lang.reflect.Field;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class ColumnNameTest {
-
-    private static final Class<Person> personClass = Person.class;
 
     @ParameterizedTest
     @CsvSource({
@@ -23,9 +19,9 @@ public class ColumnNameTest {
             "noAnnotation,  noAnnotation"
     })
     void columName(String fieldName, String columnName) throws NoSuchFieldException {
-        Field field = personClass.getDeclaredField(fieldName);
+        Field field = Person.class.getDeclaredField(fieldName);
 
-        assertThat(new ColumnName(field).getColumnName()).isEqualTo(columnName);
+        Assertions.assertThat(new Column(field).getColumnName()).isEqualTo(columnName);
     }
 
     @Entity
@@ -34,10 +30,10 @@ public class ColumnNameTest {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(name = "nick_name")
+        @jakarta.persistence.Column(name = "nick_name")
         private String name;
 
-        @Column(nullable = false)
+        @jakarta.persistence.Column(nullable = false)
         private String email;
         private String noAnnotation;
     }

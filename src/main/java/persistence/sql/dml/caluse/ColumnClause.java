@@ -4,7 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.meta.ColumnName;
+import persistence.sql.meta.column.Column;
 
 import java.lang.reflect.Field;
 
@@ -22,7 +22,7 @@ public class ColumnClause {
         if (field.isAnnotationPresent(Transient.class)) {
             return "";
         }
-        return new ColumnName(field).getColumnName();
+        return new Column(field).getColumnName();
     }
 
     private String getPKColumn() {
@@ -30,7 +30,7 @@ public class ColumnClause {
                 ? field.getAnnotation(GeneratedValue.class).strategy()
                 : GenerationType.AUTO;
         if (generationType.equals(GenerationType.AUTO)) {
-            return new ColumnName(field).getColumnName();
+            return new Column(field).getColumnName();
         }
         return "";
     }

@@ -3,7 +3,7 @@ package persistence.sql.ddl.generator;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.meta.ColumnName;
+import persistence.sql.meta.column.Column;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class H2ColumnGenerator implements ColumnGenerator {
 
     private String generateColumn(Field field) {
         StringBuilder sb = new StringBuilder();
-        sb.append(new ColumnName(field).getColumnName());
+        sb.append(new Column(field).getColumnName());
         sb.append(" ");
         sb.append(dialect.getColumnDataType(field));
         sb.append(" ");
