@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
 import org.h2.jdbc.JdbcResultSet;
+import org.h2.jdbc.JdbcSQLSyntaxErrorException;
 import org.h2.result.ResultInterface;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ class QueryBuilderTest {
         String expectedTableName = "PERSON";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(Person.class).buildWithAnnotation());
+        jdbcTemplate.execute(new QueryBuilder(Person.class).getCreateQueryUsingAnnotation());
 
         // then
         ResultInterface tableSchema = getTableSchema(expectedTableName);
@@ -89,7 +90,7 @@ class QueryBuilderTest {
         String expectedTableName = "USERS";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).buildWithAnnotation());
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation());
 
         // then
         ResultInterface tableSchema = getTableSchema(expectedTableName);
@@ -104,7 +105,7 @@ class QueryBuilderTest {
         String expectedTableName = "USERS";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).buildWithAnnotation());
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation());
 
         // then
         ResultInterface tableSchema = getTableSchema(expectedTableName);
@@ -114,6 +115,21 @@ class QueryBuilderTest {
         Assertions.assertThat(hasNullableColumn("NICK_NAME", expectedTableName)).isTrue();
         Assertions.assertThat(hasNullableColumn("OLD", expectedTableName)).isTrue();
         Assertions.assertThat(hasNullableColumn("EMAIL", expectedTableName)).isFalse();
+    }
+
+    @Test
+    @DisplayName("[요구사항 3] 테이블을 생성후 drop하여라")
+    void 요구사항3_3_test() throws SQLException {
+        //given
+        List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");
+        String expectedTableName = "USERS";
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation());
+
+        // when
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).dropTable());
+
+        // then
+        Assertions.assertThatThrownBy(() -> getTableSchema(expectedTableName)).isInstanceOf(JdbcSQLSyntaxErrorException.class).hasMessageContaining("Table \"USERS\" not found");
     }
 
     /**

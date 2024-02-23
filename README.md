@@ -7,7 +7,7 @@
 - [x] 요구사항 3 
   - [x] 3.1 @Table 애노테이션이 붙은 필드의 name을 테이블명으로 가지는 create 쿼리 만들기
   - [x] 3.2 @Transient 애노테이션이 붙은 필드는 제하고 create 쿼리 만들기
-- [ ] 요구사항 4 - Person drop 쿼리 만들기
+- [x] 요구사항 4 - Person drop 쿼리 만들기
 
 ### step2 질문사항
 - 테스트코드 작성시 throws exception을 해도 될까? try catch로 에러를 일일히 처리하자니 테스트 코드가 지저분하다.
