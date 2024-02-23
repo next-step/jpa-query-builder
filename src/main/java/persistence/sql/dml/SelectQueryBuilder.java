@@ -1,57 +1,39 @@
 package persistence.sql.dml;
 
 import persistence.sql.QueryBuilder;
+import persistence.sql.ddl.domain.Column;
+import persistence.sql.ddl.domain.Columns;
+import persistence.sql.ddl.domain.Table;
 
-import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-public class SelectQueryBuilder extends QueryBuilder {
+public class SelectQueryBuilder implements QueryBuilder {
 
     private static final String SELECT_QUERY = "SELECT %s FROM %s%s;";
-    private static final String WHERE_CLAUSE = " WHERE %s";
 
-    public String getSelectQueryString(Class<?> clazz, List<String> whereColumns, List<Object> whereValues) {
-        return String.format(
-                SELECT_QUERY,
-                generateColumns(clazz.getDeclaredFields()),
-                generateTableName(clazz),
-                generateWhereClause(clazz, whereColumns, whereValues)
-        );
-    }
+    private final Table table;
+    private final Columns columns;
+    private final WhereQueryBuilder whereQueryBuilder;
 
-    @Override
-    public String generateColumn(Field field) {
-        return generateColumnName(field);
-    }
-
-    public Object generateWhereClause(Class<?> clazz, List<String> whereColumns, List<Object> whereValues) {
+    public SelectQueryBuilder(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, List<String> whereOperators) {
         if (whereColumns.size() != whereValues.size()) {
             throw new IllegalArgumentException("The number of columns and values corresponding to the condition statement do not match.");
         }
 
-        String columnsAndValues = generateColumnsAndValues(clazz, whereColumns, whereValues);
-        if (columnsAndValues.isEmpty()) {
-            return EMPTY_STRING;
-        }
-        return String.format(WHERE_CLAUSE, columnsAndValues);
+        this.table = new Table(clazz);
+        this.columns = new Columns(Arrays.stream(clazz.getDeclaredFields())
+                .map(field -> new Column(field, TYPE_MAPPER, CONSTRAINT_MAPPER)).collect(Collectors.toList()));
+        this.whereQueryBuilder = new WhereQueryBuilder(clazz, whereColumns, whereValues, whereOperators);
     }
 
-    private String generateColumnsAndValues(Class<?> clazz, List<String> whereColumns, List<Object> whereValues) {
-        return IntStream.range(0, whereColumns.size())
-                .mapToObj(i -> {
-                    try {
-                        Field field = clazz.getDeclaredField(whereColumns.get(i));
-                        String column = generateColumnName(field);
-                        String value = String.valueOf(whereValues.get(i));
-
-                        return column + " = " + convertValue(field.getType(), value);
-                    } catch (NoSuchFieldException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.joining(" AND "));
+    public String build() {
+        return String.format(
+                SELECT_QUERY,
+                columns.getSelectColumns(),
+                table.getName(),
+                whereQueryBuilder.build()
+        );
     }
-
 }

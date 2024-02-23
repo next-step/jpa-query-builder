@@ -10,17 +10,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class InsertQueryBuilderTest {
 
-    private static final InsertQueryBuilder INSERT_QUERY_BUILDER = new InsertQueryBuilder();
-
     @Test
     @DisplayName("Person 객체를 이용한 DML INSERT 생성 테스트")
     void DMLInsertTest() {
         // given
         String expectedQuery = "INSERT INTO USERS (NICK_NAME, OLD, EMAIL) VALUES ('Jamie', 34, 'jaesungahn91@gmail.com');";
         Person person = new Person("Jamie", 34, "jaesungahn91@gmail.com");
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(person);
 
         // when
-        String actualQuery = INSERT_QUERY_BUILDER.getInsertQueryString(person);
+        String actualQuery = insertQueryBuilder.build();
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -34,7 +33,7 @@ class InsertQueryBuilderTest {
         String message = "Does not have an @Entity annotation.";
 
         // when & then
-        assertThatThrownBy(() -> INSERT_QUERY_BUILDER.getInsertQueryString(notEntityPerson))
+        assertThatThrownBy(() -> new InsertQueryBuilder(notEntityPerson))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(message);
     }

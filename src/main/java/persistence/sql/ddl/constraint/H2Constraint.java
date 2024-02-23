@@ -6,6 +6,8 @@ public interface H2Constraint {
 
     String EMPTY_STRING = "";
 
-    String getConstraintQuery(Field type);
+    String generateConstraintQuery(Field field);
+
+    String getConstraintQuery();
 
 }

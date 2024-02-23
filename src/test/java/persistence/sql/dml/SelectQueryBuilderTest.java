@@ -12,16 +12,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SelectQueryBuilderTest {
 
-    private static final SelectQueryBuilder SELECT_QUERY_BUILDER = new SelectQueryBuilder();
-
     @Test
     @DisplayName("Person 객체로 SELECT 쿼리(findAll) 생성 테스트")
     void DMLSelectTest() {
         // given
         String expectedQuery = "SELECT ID, NICK_NAME, OLD, EMAIL FROM USERS;";
-
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         // when
-        String actualQuery = SELECT_QUERY_BUILDER.getSelectQueryString(Person.class, new ArrayList<>(), new ArrayList<>());
+        String actualQuery = selectQueryBuilder.build();
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -32,9 +30,10 @@ class SelectQueryBuilderTest {
     void DMLSelect2Test() {
         // given
         String expectedQuery = "SELECT ID, NICK_NAME, OLD, EMAIL FROM USERS WHERE ID = 1;";
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, List.of("id"), List.of(1L), new ArrayList<>());
 
         // when
-        String actualQuery = SELECT_QUERY_BUILDER.getSelectQueryString(Person.class, List.of("id"), List.of(1L));
+        String actualQuery = selectQueryBuilder.build();
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -45,9 +44,10 @@ class SelectQueryBuilderTest {
     void DMLSelect3Test() {
         // given
         String expectedQuery = "SELECT ID, NICK_NAME, OLD, EMAIL FROM USERS WHERE NICK_NAME = 'jamie' AND OLD = 34;";
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, List.of("name", "age"), List.of("jamie", 34), new ArrayList<>());
 
         // when
-        String actualQuery = SELECT_QUERY_BUILDER.getSelectQueryString(Person.class, List.of("name", "age"), List.of("jamie", 34));
+        String actualQuery = selectQueryBuilder.build();
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -60,8 +60,9 @@ class SelectQueryBuilderTest {
         String message = "The number of columns and values corresponding to the condition statement do not match.";
 
         // when & then
-        assertThatThrownBy(() -> SELECT_QUERY_BUILDER.getSelectQueryString(Person.class, List.of("name", "age"), List.of("jamie")))
+        assertThatThrownBy(() -> new SelectQueryBuilder(Person.class, List.of("name", "age"), List.of("jamie"), new ArrayList<>()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(message);
     }
+
 }

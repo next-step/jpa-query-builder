@@ -8,8 +8,14 @@ public class ColumnH2Constraint implements H2Constraint {
 
     private static final String NOT_NULL_CONSTRAINT_QUERY = "NOT NULL";
 
+    private final String constraintQuery;
+
+    public ColumnH2Constraint(Field field) {
+        this.constraintQuery = generateConstraintQuery(field);
+    }
+
     @Override
-    public String getConstraintQuery(Field field) {
+    public String generateConstraintQuery(Field field) {
         if (field.isAnnotationPresent(Column.class)) {
             Column column = field.getAnnotation(Column.class);
             return getNullable(column);
@@ -25,4 +31,8 @@ public class ColumnH2Constraint implements H2Constraint {
         return EMPTY_STRING;
     }
 
+    @Override
+    public String getConstraintQuery() {
+        return constraintQuery;
+    }
 }
