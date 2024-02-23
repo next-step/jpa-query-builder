@@ -1,7 +1,7 @@
-package persistence.sql.dialect;
+package domain.step2.dialect;
 
-import domain.H2DataType;
-import domain.H2GenerationType;
+import domain.step2.H2DataType;
+import domain.step2.H2GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
-import static domain.Constraints.NOT_NULL;
-import static domain.Constraints.NULL;
+import static domain.step2.Constraints.NOT_NULL;
+import static domain.step2.Constraints.NULL;
 
 public class H2Dialect implements Dialect {
 

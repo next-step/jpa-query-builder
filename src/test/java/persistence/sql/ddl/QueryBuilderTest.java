@@ -1,12 +1,12 @@
 package persistence.sql.ddl;
 
-import domain.Person1;
-import domain.Person2;
-import domain.Person3;
+import domain.step2.Person1;
+import domain.step2.Person2;
+import domain.step2.Person3;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
-import persistence.sql.dialect.H2Dialect;
+import domain.step2.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

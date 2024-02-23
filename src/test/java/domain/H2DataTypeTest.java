@@ -1,5 +1,6 @@
 package domain;
 
+import domain.step2.H2DataType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

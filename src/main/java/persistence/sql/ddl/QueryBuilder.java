@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.dialect.Dialect;
+import domain.step2.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static domain.Constraints.NOT_NULL;
-import static domain.Constraints.PRIMARY_KEY;
+import static domain.step2.Constraints.NOT_NULL;
+import static domain.step2.Constraints.PRIMARY_KEY;
 
 public class QueryBuilder {
 
