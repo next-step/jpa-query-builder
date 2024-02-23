@@ -28,4 +28,21 @@ public class Column {
     public List<SqlConstraint> constraints() {
         return Collections.unmodifiableList(constraints);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof Column)) {
+            return false;
+        }
+
+        Column column = (Column) obj;
+        return column.type.equals(this.type)
+                && column.name.equals(this.name)
+                && column.constraints.equals(this.constraints);
+
+    }
 }

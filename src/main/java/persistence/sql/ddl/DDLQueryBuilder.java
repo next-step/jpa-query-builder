@@ -3,7 +3,8 @@ package persistence.sql.ddl;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.model.Column;
 import persistence.sql.model.Sql;
-import util.EntityAnalyzer;
+import persistence.sql.model.Table;
+import persistence.sql.model.EntityAnalyzer;
 
 import java.util.List;
 
@@ -15,22 +16,24 @@ public class DDLQueryBuilder {
         this.dialect = dialect;
     }
 
-    public String buildCreateQuery(Class<?> clazz) {
-        String tableName = EntityAnalyzer.getTableName(clazz);
-        List<Column> columns = EntityAnalyzer.getColumns(clazz);
+    public String buildCreateQuery(Table table) {
+        String tableName = table.getName();
+        List<Column> tableColumns = table.getColumns();
+
         return new Sql.Builder(dialect)
                 .create()
                 .and()
                 .table(tableName)
                 .and()
                 .leftParenthesis()
-                .columns(columns)
+                .columns(tableColumns)
                 .rightParenthesis()
                 .build();
     }
 
-    public String buildDropQuery(Class<?> clazz) {
-        String tableName = EntityAnalyzer.getTableName(clazz);
+    public String buildDropQuery(Table table) {
+        String tableName = table.getName();
+
         return new Sql.Builder(dialect)
                 .drop()
                 .and()
