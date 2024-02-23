@@ -252,8 +252,12 @@ public class Person {
 
 > 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
 
+TODO List :
+
 - [ ] `@Id`가 붙은 필드에서, `@GeneratedValue`의 전략대로 PK 전략을 지정할 수 있어야 한다.
-- [ ] `@Column`가 붙은 필드와 매핑되는 컬럼 이름을 지정할 수 있어야 한다.
+- [ ] `@Column`이 붙은 필드와 매핑되는 컬럼 이름을 지정할 수 있어야 한다.
+    - [ ] name value가 지정되어 있다면 해당 value로 컬럼 이름을 지정해야 한다.
+    - [ ] nullable value가 지정되어 있다면 해당 필드 값의 nullable여부를 validate해야 한다.
 
 ```java
 
