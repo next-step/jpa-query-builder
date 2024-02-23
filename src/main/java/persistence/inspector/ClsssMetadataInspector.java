@@ -8,15 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EntityMetadataInspector extends EntityFieldInspector{
+public class ClsssMetadataInspector extends EntityFieldInspector{
 
     public static boolean hasAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
         return clazz.isAnnotationPresent(annotation);
     }
 
-    public static Annotation getAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
-        return clazz.getAnnotation(annotation);
-    }
     public static String getTableName(Class<?> clazz) {
         if (clazz.isAnnotationPresent(Table.class) && !clazz.getAnnotation(Table.class).name().isBlank()) {
             return clazz.getAnnotation(Table.class).name();
@@ -31,7 +28,7 @@ public class EntityMetadataInspector extends EntityFieldInspector{
     }
 
     public static Field getIdField(Class<?> clazz) {
-        return getFields(clazz).stream().filter(EntityMetadataInspector::isPrimaryKey).findFirst().orElse(null);
+        return getFields(clazz).stream().filter(ClsssMetadataInspector::isPrimaryKey).findFirst().orElse(null);
     }
 
 }

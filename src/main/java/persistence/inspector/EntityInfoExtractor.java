@@ -12,7 +12,7 @@ public class EntityInfoExtractor {
     public static List<Field> getEntityFieldsForInsert(Class<?> clazz) {
         try {
 
-            return EntityMetadataInspector.getFields(clazz).stream()
+            return ClsssMetadataInspector.getFields(clazz).stream()
                     .filter(EntityInfoExtractor::isInsertTargetField)
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -25,14 +25,14 @@ public class EntityInfoExtractor {
     }
 
     public static String getIdColumnName(Class<?> clazz) {
-        return getColumnName(EntityMetadataInspector.getIdField(clazz));
+        return getColumnName(ClsssMetadataInspector.getIdField(clazz));
     }
     public static String getColumnName(Field field) {
         return EntityFieldInspector.getColumnName(field);
     }
 
     public static String getTableName(Class<?> clazz) {
-        if (EntityMetadataInspector.hasAnnotation(clazz, jakarta.persistence.Table.class) && (!clazz.getAnnotation(Table.class).name().isBlank())) {
+        if (ClsssMetadataInspector.hasAnnotation(clazz, jakarta.persistence.Table.class) && (!clazz.getAnnotation(Table.class).name().isBlank())) {
 
                 return clazz.getAnnotation(Table.class).name();
         }
@@ -41,7 +41,7 @@ public class EntityInfoExtractor {
 
     public static Field getIdField(Class<?> clazz) {
 
-        return EntityMetadataInspector.getFields(clazz).stream()
+        return ClsssMetadataInspector.getFields(clazz).stream()
                 .filter(EntityInfoExtractor::isPrimaryKey)
                 .findFirst().orElse(null);
     }

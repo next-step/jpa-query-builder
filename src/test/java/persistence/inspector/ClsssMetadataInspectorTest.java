@@ -8,25 +8,25 @@ import persistence.entity.Person;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class EntityMetadataInspectorTest {
+class ClsssMetadataInspectorTest {
 
-    private EntityMetadataInspector entityMetadataInspector;
+    private ClsssMetadataInspector clsssMetadataInspector;
 
     @BeforeEach
     private void setUp() {
-        entityMetadataInspector = new EntityMetadataInspector();
+        clsssMetadataInspector = new ClsssMetadataInspector();
     }
 
     @Test
     @DisplayName("tableName 가져오기")
     void getTableName() {
-        assertEquals("users", entityMetadataInspector.getTableName(Person.class));
+        assertEquals("users", clsssMetadataInspector.getTableName(Person.class));
     }
 
     @Test
     @DisplayName("columns의 개수 가져오기")
     void getColumns() {
-        assertThat(entityMetadataInspector.getFields(Person.class)).hasSize(4);
+        assertThat(clsssMetadataInspector.getFields(Person.class)).hasSize(4);
     }
 
 }

@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.inspector.EntityMetadataInspector;
+import persistence.inspector.ClsssMetadataInspector;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -39,11 +39,11 @@ public class DDLQueryBuilder {
 
     private String getTableName(Class<?> clazz) {
 
-        return EntityMetadataInspector.getTableName(clazz);
+        return ClsssMetadataInspector.getTableName(clazz);
     }
 
     private String createColumnClause(Class<?> clazz) {
-        List<String> columnClauses = EntityMetadataInspector.getFields(clazz).stream()
+        List<String> columnClauses = ClsssMetadataInspector.getFields(clazz).stream()
                 .map(this::createColumnClause)
                 .collect(Collectors.toList());
 
@@ -54,8 +54,8 @@ public class DDLQueryBuilder {
         String columnTypeFormat = "%s %s %s";
 
         return String.format(columnTypeFormat,
-                EntityMetadataInspector.getColumnName(field),
-                EntityMetadataInspector.getColumnType(field).getMysqlType(),
+                ClsssMetadataInspector.getColumnName(field),
+                ClsssMetadataInspector.getColumnType(field).getMysqlType(),
                 getColumnProperty(field)
         );
     }
@@ -68,15 +68,15 @@ public class DDLQueryBuilder {
 
     private String getPrimaryKeyColumnName(Class<?> clazz) {
 
-        return EntityMetadataInspector.getColumnName(EntityMetadataInspector.getIdField(clazz));
+        return ClsssMetadataInspector.getColumnName(ClsssMetadataInspector.getIdField(clazz));
     }
 
     private String getColumnProperty(Field field) {
         StringBuilder columnProperty = new StringBuilder();
-        if (!EntityMetadataInspector.isNullable(field)) {
+        if (!ClsssMetadataInspector.isNullable(field)) {
             columnProperty.append("NOT NULL ");
         }
-        if (EntityMetadataInspector.isAutoIncrement(field)) {
+        if (ClsssMetadataInspector.isAutoIncrement(field)) {
             columnProperty.append("AUTO_INCREMENT ");
         }
         return columnProperty.toString();
