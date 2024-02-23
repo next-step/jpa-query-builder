@@ -37,11 +37,11 @@ public abstract class Dialect {
         return constraints;
     }
 
-    protected void registerDialect(SqlType type, String query) {
+    protected void registerTypeDialect(SqlType type, String query) {
         types.put(type, query);
     }
 
-    protected void registerDialect(SqlConstraint constraint, String query) {
+    protected void registerConstraintDialect(SqlConstraint constraint, String query) {
         constraints.put(constraint, query);
     }
 
