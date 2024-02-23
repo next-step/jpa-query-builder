@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.domain.Table;
+
 public class DropQueryBuilder {
 
     private static final String DROP_TABLE_QUERY = "DROP TABLE %s;";

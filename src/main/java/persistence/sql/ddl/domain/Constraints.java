@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.domain;
 
 import persistence.sql.ddl.constraint.H2Constraint;
 

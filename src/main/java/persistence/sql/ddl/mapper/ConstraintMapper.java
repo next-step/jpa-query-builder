@@ -1,6 +1,6 @@
 package persistence.sql.ddl.mapper;
 
-import persistence.sql.ddl.Constraints;
+import persistence.sql.ddl.domain.Constraints;
 
 import java.lang.reflect.Field;
 

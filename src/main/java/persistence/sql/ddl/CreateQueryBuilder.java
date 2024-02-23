@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.domain.Column;
+import persistence.sql.ddl.domain.Columns;
+import persistence.sql.ddl.domain.Table;
 import persistence.sql.ddl.mapper.ConstraintMapper;
 import persistence.sql.ddl.mapper.H2ConstraintMapper;
 import persistence.sql.ddl.mapper.H2TypeMapper;

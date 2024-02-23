@@ -3,7 +3,7 @@ package persistence.sql.ddl.mapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.Constraints;
+import persistence.sql.ddl.domain.Constraints;
 import persistence.sql.ddl.constraint.ColumnH2Constraint;
 import persistence.sql.ddl.constraint.GeneratedValueH2Constraint;
 import persistence.sql.ddl.constraint.H2Constraint;
@@ -11,7 +11,6 @@ import persistence.sql.ddl.constraint.IdH2Constraint;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 

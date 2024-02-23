@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.domain;
 
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.mapper.ConstraintMapper;

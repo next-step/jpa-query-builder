@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.domain;
 
 import java.util.List;
 import java.util.stream.Collectors;
