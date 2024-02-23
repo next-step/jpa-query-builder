@@ -2,7 +2,6 @@ package persistence.sql.dml;
 
 import persistence.sql.domain.Column;
 import persistence.sql.domain.DataType;
-import persistence.sql.domain.IdColumn;
 import persistence.sql.domain.Table;
 
 import java.lang.reflect.Field;
@@ -26,14 +25,10 @@ public class InsertQueryBuilder {
 
     private Map<String, String> getClause(Object object, List<Column> columns) {
         return columns.stream()
-                .filter(column -> !isAutoIncrementId(column))
+                .filter(column -> !column.isAutoIncrementId())
                 .peek(column -> checkNullableValue(object, column))
                 .collect(Collectors.toMap(Column::getName, column -> getDmlName(object, column),
                         (existingValue, newValue) -> existingValue, LinkedHashMap::new));
-    }
-
-    private boolean isAutoIncrementId(Column column) {
-        return column.isId() && ((IdColumn) column).isAutoIncrement();
     }
 
     private void checkNullableValue(Object object, Column column) {

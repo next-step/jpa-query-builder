@@ -21,4 +21,6 @@ public interface Column {
     boolean isId();
 
     boolean isNullable();
+
+    boolean isAutoIncrementId();
 }
