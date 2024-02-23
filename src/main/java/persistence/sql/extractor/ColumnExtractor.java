@@ -37,6 +37,15 @@ public class ColumnExtractor {
         return columnName;
     }
 
+    public Object getValue(Object entity) {
+        try {
+            field.setAccessible(true);
+            return field.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Class<?> getDataType() {
         return field.getType();
     }

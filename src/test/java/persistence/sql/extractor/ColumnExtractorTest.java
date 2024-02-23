@@ -36,6 +36,10 @@ class TestClass {
     private Long hasColumn;
 
     private Long hasNotColumn;
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
 
 class ColumnExtractorTest {
@@ -108,4 +112,17 @@ class ColumnExtractorTest {
 
         assertThat(columnExtractor.getName()).isEqualTo(fieldName);
     }
+    @Test
+    @DisplayName("getValue 테스트")
+    void testGetValue() throws Exception {
+        int id = 1;
+        TestClass testClass = new TestClass();
+        testClass.setId(id);
+        String fieldName = "id";
+
+        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+
+        assertThat(columnExtractor.getValue(testClass)).isEqualTo(id);
+    }
+
 }
