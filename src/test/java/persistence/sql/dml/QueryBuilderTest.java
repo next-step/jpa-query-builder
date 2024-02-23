@@ -39,7 +39,7 @@ class QueryBuilderTest {
         Person person = new Person(1L, "simpson", 31, "qwe5507@gmail.com");
         QueryBuilder queryBuilder = new QueryBuilder(person.getClass());
 
-        String findByIdQuery = queryBuilder.createFindByIdQuery(person);
+        String findByIdQuery = queryBuilder.createFindByIdQuery(1L);
 
         String expected = "select id, nick_name, old, email from users where id = 1L";
         assertThat(findByIdQuery).isEqualTo(expected);

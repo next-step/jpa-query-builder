@@ -20,10 +20,9 @@ public class QueryBuilder {
         return String.format("select %s from %s", this.entityColumns.names(), this.entityTableMeta.name());
     }
 
-    public String createFindByIdQuery(Object object) {
-        return String.format("%s where %s = %s", createFindAllQuery(),
-                this.entityColumns.primaryFieldName(),
-                this.entityColumns.primaryFieldValue(object));
+    public String createFindByIdQuery(Long id) {
+        return String.format("%s where %s = %dL", createFindAllQuery(),
+                this.entityColumns.primaryFieldName(), id);
     }
 
     public String createDeleteQuery(Object object) {

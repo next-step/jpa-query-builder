@@ -49,7 +49,6 @@ public class EntityColumns {
         return valueParse(this.entityColumns.values().iterator().next(), object);
     }
 
-
     private String getFieldName(final Field field) {
         if (isNotBlankOf(field)) {
             return field.getAnnotation(Column.class).name();

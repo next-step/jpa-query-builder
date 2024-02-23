@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class EntityManagerImplTest {
     private JdbcTemplate jdbcTemplate;
@@ -34,13 +33,15 @@ class EntityManagerImplTest {
     @DisplayName("EntityManagerImpl find를 호출하면 엔티티가 리턴된다.")
     @Test
     void findTest() {
-        final Person person = new Person("simpson", 31, "simpson@naver.com");
-        final QueryBuilder queryBuilder = new QueryBuilder(person, new H2KeyGenerator());
-        jdbcTemplate.execute(queryBuilder.createInsertQuery());
+        final Person person = new Person( "simpson", 31, "simpson@naver.com");
+        final QueryBuilder queryBuilder = new QueryBuilder(Person.class);
+        jdbcTemplate.execute(queryBuilder.createInsertQuery(person, new H2KeyGenerator()));
 
-        final EntityManager entityManager = new EntityManagerImpl();
-        final Person findPerson = entityManager.find(Person.class, 1L);
+        final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
+        final Person findPerson = entityManager.find(person.getClass(), 1L);
 
-        assertThat(findPerson).isEqualTo(person);
+        assertThat(person.getName()).isEqualTo(findPerson.getName());
+        assertThat(person.getAge()).isEqualTo(findPerson.getAge());
+        assertThat(person.getEmail()).isEqualTo(findPerson.getEmail());
     }
 }
