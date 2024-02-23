@@ -28,3 +28,10 @@
     - @Transient 있는 필드는 무시하기
 4. 정보를 바탕으로 drop 쿼리 만들어보기
     - 테이블명으로 drop 쿼리 만들기
+
+### step3
+1. insert 구현해보기
+   - columns 과 values 를 나누어서 구현
+   - @Transient 무시하기
+   - @Column 에서 목표 테이블 이름 얻기
+   - @GeneratedValue 는 비워놓고 쿼리 생성
