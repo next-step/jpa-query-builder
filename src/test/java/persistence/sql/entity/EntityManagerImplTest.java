@@ -15,17 +15,22 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EntityManagerImplTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void init() throws SQLException {
-        final DatabaseServer databaseServer = new H2();
-        final Connection connection = databaseServer.getConnection();
-
-        jdbcTemplate = new JdbcTemplate(connection);
         final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
+        final DatabaseServer databaseServer = new H2();
+        databaseServer.start();
+        final Connection connection = databaseServer.getConnection();
+        jdbcTemplate = new JdbcTemplate(connection);
+
+        final String dropSql = ddlQueryBuilder.dropDdl(Person.class);
+        jdbcTemplate.execute(dropSql);
+
         final String createSql = ddlQueryBuilder.createDdl(Person.class);
         jdbcTemplate.execute(createSql);
     }
@@ -64,5 +69,8 @@ class EntityManagerImplTest {
         final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
 
         entityManager.remove(person);
+
+        assertThatThrownBy(() -> entityManager.find(person.getClass(), 1L))
+                .isInstanceOf(RuntimeException.class);
     }
 }
