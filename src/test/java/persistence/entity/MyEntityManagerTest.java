@@ -45,4 +45,22 @@ class MyEntityManagerTest {
         // then
         assertThat(person).isNotNull();
     }
+
+    @Test
+    @DisplayName("persist 메서드는 주어진 객체를 저장한다.")
+    void persist() {
+        // given
+        MyEntityManager entityManager = new MyEntityManager(jdbcTemplate);
+        Long id = 1L;
+        String expectedName = "John";
+        Person expected = new Person(id, expectedName, 25, "qwer@asdf.com", 1);
+        entityManager.persist(expected);
+
+        // when
+        Person person = entityManager.find(Person.class, id);
+
+        // then
+        assertThat(person).extracting("name")
+                .isEqualTo(expectedName);
+    }
 }

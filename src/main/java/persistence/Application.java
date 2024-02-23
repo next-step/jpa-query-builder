@@ -41,8 +41,8 @@ public class Application {
             EntityManager entityManager = new MyEntityManager(jdbcTemplate);
             Person person1 = entityManager.find(Person.class, 2L);
             System.out.println("person1.toString() = " + person1.toString());
+            entityManager.persist(new Person(1L, "새로운 사람", 900, "new@email.com", 1000));
 
-//
             SelectAllQueryBuilder selectAllQueryBuilder = new SelectAllQueryBuilder();
             String selectAllQuery = selectAllQueryBuilder.build(Person.class);
             RowMapper<Person> rowMapper = resultSet -> {

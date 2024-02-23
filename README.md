@@ -71,4 +71,7 @@
 ## 요구사항 1 - find
 - [x] find 기능을 구현
 
+## 요구사항 2 - persist (insert)
+- [x] persist 기능 구현
+
 

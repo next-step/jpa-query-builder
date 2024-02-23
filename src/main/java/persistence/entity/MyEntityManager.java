@@ -1,6 +1,7 @@
 package persistence.entity;
 
 import jdbc.JdbcTemplate;
+import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
 public class MyEntityManager implements EntityManager {
@@ -19,8 +20,10 @@ public class MyEntityManager implements EntityManager {
     }
 
     @Override
-    public Object persist(Object entity) {
-        return null;
+    public void persist(Object entity) {
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+        String query = insertQueryBuilder.build(entity);
+        jdbcTemplate.execute(query);
     }
 
     @Override
