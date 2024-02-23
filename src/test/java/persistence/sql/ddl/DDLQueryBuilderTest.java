@@ -8,9 +8,9 @@ import persistence.sql.ddl.entity.Person3;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class QueryBuilderTest {
+class DDLQueryBuilderTest {
 
-    private static final QueryBuilder queryBuilder = new QueryBuilder();
+    private static final DDLQueryBuilder DDL_QUERY_BUILDER = new DDLQueryBuilder();
 
     @Test
     @DisplayName("기본 Person 클래스를 이용한 DDL 생성 테스트")
@@ -19,7 +19,7 @@ class QueryBuilderTest {
         String expectedQuery = "CREATE TABLE PERSON (ID BIGINT PRIMARY KEY, NAME VARCHAR(255), AGE INTEGER);";
 
         // when
-        String actualQuery = queryBuilder.createTable(Person.class);
+        String actualQuery = DDL_QUERY_BUILDER.getCreateTableQueryString(Person.class);
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -32,7 +32,7 @@ class QueryBuilderTest {
         String expectedQuery = "CREATE TABLE PERSON2 (ID BIGINT PRIMARY KEY AUTO_INCREMENT, NICK_NAME VARCHAR(255), OLD INTEGER, EMAIL VARCHAR(255) NOT NULL);";
 
         // when
-        String actualQuery = queryBuilder.createTable(Person2.class);
+        String actualQuery = DDL_QUERY_BUILDER.getCreateTableQueryString(Person2.class);
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -45,7 +45,7 @@ class QueryBuilderTest {
         String expectedQuery = "CREATE TABLE USERS (ID BIGINT PRIMARY KEY AUTO_INCREMENT, NICK_NAME VARCHAR(255), OLD INTEGER, EMAIL VARCHAR(255) NOT NULL);";
 
         // when
-        String actualQuery = queryBuilder.createTable(Person3.class);
+        String actualQuery = DDL_QUERY_BUILDER.getCreateTableQueryString(Person3.class);
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -58,7 +58,7 @@ class QueryBuilderTest {
         String expectedQuery = "DROP TABLE PERSON;";
 
         // when
-        String actualQuery = queryBuilder.dropTable(Person.class);
+        String actualQuery = DDL_QUERY_BUILDER.getDropTableQueryString(Person.class);
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -71,7 +71,7 @@ class QueryBuilderTest {
         String expectedQuery = "DROP TABLE USERS;";
 
         // when
-        String actualQuery = queryBuilder.dropTable(Person3.class);
+        String actualQuery = DDL_QUERY_BUILDER.getDropTableQueryString(Person3.class);
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);

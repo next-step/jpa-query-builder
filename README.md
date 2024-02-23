@@ -106,7 +106,7 @@ public class Person {
 
 }
 ```
-- [ ] Person 클래스를 바탕으로 insert 쿼리 만들어보기
+- [x] Person 클래스를 바탕으로 insert 쿼리 만들어보기
   - @Entity, @Table, @Id, @Column, @Transient 를 고려
   - columns 과 values 를 나누어서 구현해보자
 - [ ] Person 클래스를 바탕으로 모두 조회(findAll) 기능 구현해보기
