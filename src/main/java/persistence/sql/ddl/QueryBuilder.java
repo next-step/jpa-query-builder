@@ -17,7 +17,7 @@ public class QueryBuilder {
     public QueryBuilder(Class<?> entity) {
         EntityValidator.validate(entity);
         this.fields = entity.getDeclaredFields();
-        this.queryBuilder = new StringBuilder(String.format(CREATE_TABLE_START, entity.getSimpleName()));
+        this.queryBuilder = new StringBuilder(String.format(CREATE_TABLE_START, new Table(entity).getName()));
     }
 
     public String buildWithoutAnnotation() {
