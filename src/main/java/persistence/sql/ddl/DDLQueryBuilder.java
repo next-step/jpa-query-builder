@@ -4,7 +4,6 @@ import persistence.sql.dialect.Dialect;
 import persistence.sql.model.Column;
 import persistence.sql.model.Sql;
 import persistence.sql.model.Table;
-import persistence.sql.model.EntityAnalyzer;
 
 import java.util.List;
 
