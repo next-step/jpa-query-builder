@@ -4,8 +4,6 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-import static common.StringConstants.EMPTY_STRING;
-
 public class H2TypeMapper implements TypeMapper {
 
     @Override
