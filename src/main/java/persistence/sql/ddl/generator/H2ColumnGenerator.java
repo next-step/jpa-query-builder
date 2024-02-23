@@ -36,11 +36,13 @@ public class H2ColumnGenerator implements ColumnGenerator {
 
     private String generateColumn(Field field) {
         StringBuilder sb = new StringBuilder();
-        sb.append(new Column(field).getColumnName());
+        Column column = new Column(field);
+
+        sb.append(column.getColumnName());
         sb.append(" ");
-        sb.append(dialect.getColumnDataType(field));
+        sb.append(dialect.getColumnDataType(column.getColumnType()));
         sb.append(" ");
-        sb.append(dialect.getColumnNullableType(field));
+        sb.append(dialect.getColumnNullableType(column.getNullable()));
         if (isPK(field)) {
             sb.append(" ");
             sb.append(dialect.getPKGenerationType(field));

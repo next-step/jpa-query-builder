@@ -15,6 +15,7 @@ public class JdbcTemplate {
 
     public void execute(final String sql) {
         try (final Statement statement = connection.createStatement()) {
+            System.out.println("sql = " + sql);
             statement.execute(sql);
         } catch (Exception e) {
             throw new RuntimeException(e);

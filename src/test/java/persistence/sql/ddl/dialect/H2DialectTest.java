@@ -1,12 +1,14 @@
 package persistence.sql.ddl.dialect;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import persistence.sql.meta.column.Column;
+import persistence.sql.meta.column.ColumnType;
+import persistence.sql.meta.column.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -26,7 +28,8 @@ class H2DialectTest {
     })
     void Nullable_SQL_변환(String fieldName, String sql) throws NoSuchFieldException {
         Field field = personClass.getDeclaredField(fieldName);
-        assertThat(new H2Dialect().getColumnNullableType(field)).isEqualTo(sql);
+        Nullable nullable = new Column(field).getNullable();
+        assertThat(new H2Dialect().getColumnNullableType(nullable)).isEqualTo(sql);
     }
 
     @ParameterizedTest()
@@ -37,7 +40,8 @@ class H2DialectTest {
     })
     void ColumnType_SQL_변환(String fieldName, String sql) throws NoSuchFieldException {
         Field field = personClass.getDeclaredField(fieldName);
-        assertThat(new H2Dialect().getColumnDataType(field)).isEqualTo(sql);
+        ColumnType columnType = new Column(field).getColumnType();
+        assertThat(new H2Dialect().getColumnDataType(columnType)).isEqualTo(sql);
     }
 
     @Test
@@ -51,10 +55,10 @@ class H2DialectTest {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(nullable = false)
+        @jakarta.persistence.Column(nullable = false)
         private String email;
 
-        @Column(nullable = true)
+        @jakarta.persistence.Column(nullable = true)
         private String name;
 
         private Integer age;

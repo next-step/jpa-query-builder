@@ -1,7 +1,7 @@
 package persistence.sql.ddl.dialect;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.dialect.column.Nullable;
+import persistence.sql.meta.column.Nullable;
 
 import java.sql.Types;
 
