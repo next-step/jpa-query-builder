@@ -7,12 +7,12 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
 
-import static common.StringConstants.EMPTY_STRING;
-
 public class GeneratedValueH2Constraint implements H2Constraint {
 
+    private static final String AUTO_INCREMENT_CONSTRAINT_QUERY = "AUTO_INCREMENT";
+
     private static final Map<GenerationType, String> strategies = Map.of(
-            GenerationType.IDENTITY, "AUTO_INCREMENT"
+            GenerationType.IDENTITY, AUTO_INCREMENT_CONSTRAINT_QUERY
     );
 
     @Override
@@ -26,7 +26,7 @@ public class GeneratedValueH2Constraint implements H2Constraint {
 
     private String getStrategy(GeneratedValue generatedValue) {
         return Optional.ofNullable(strategies.get(generatedValue.strategy()))
-                .orElse(EMPTY_STRING);
+                .orElseThrow(() -> new RuntimeException("지원하지 않는 전략이거나 전략값은 필수입니다."));
     }
 
 }

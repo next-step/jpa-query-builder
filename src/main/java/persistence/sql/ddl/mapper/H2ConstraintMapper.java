@@ -13,8 +13,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static common.StringConstants.SPACE;
-
 public class H2ConstraintMapper implements ConstraintMapper {
 
     private static final Map<Class<?>, H2Constraint> constraints = Map.of(

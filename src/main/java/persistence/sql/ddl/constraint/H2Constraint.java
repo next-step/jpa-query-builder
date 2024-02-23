@@ -3,6 +3,8 @@ package persistence.sql.ddl.constraint;
 import java.lang.reflect.Field;
 
 public interface H2Constraint {
-    public abstract String getConstraintQuery(Field type);
+
+    String EMPTY_STRING = "";
+    String getConstraintQuery(Field type);
 
 }

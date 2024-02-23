@@ -8,9 +8,11 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static common.StringConstants.COMMA;
-
 public abstract class QueryBuilder {
+
+    public static final String EMPTY_STRING = "";
+    public static final String COMMA = ", ";
+    public static final String SPACE = " ";
 
     protected String generateTableName(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Table.class)) {

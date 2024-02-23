@@ -7,12 +7,8 @@ import persistence.sql.ddl.mapper.H2TypeMapper;
 import persistence.sql.ddl.mapper.TypeMapper;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static common.StringConstants.COMMA;
-import static common.StringConstants.SPACE;
 
 public class DDLQueryBuilder extends QueryBuilder {
 
