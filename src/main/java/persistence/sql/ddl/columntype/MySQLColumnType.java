@@ -26,7 +26,7 @@ public enum MySQLColumnType {
 
     public static String convert(DatabaseColumn column) {
         return Arrays.stream(values())
-                .filter(value -> value.type.equals(column.getJavaType()))
+                .filter(value -> value.type.equals(column.getColumnObjectType()))
                 .findFirst()
                 .map(value -> {
                     if (value.defaultSize == null) {

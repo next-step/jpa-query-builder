@@ -9,28 +9,34 @@ public class DatabasePrimaryColumn extends DatabaseColumn {
 
     private final GenerationType generationType;
 
-    public DatabasePrimaryColumn(ColumnName name, ColumnValue value, ColumnLength length, Field field) {
-        super(name, value, length, ColumnNullable.NOT_NULLABLE);
-        this.generationType = getGenerationType(field);
-    }
-
-    public DatabasePrimaryColumn(ColumnName name, ColumnValue value, ColumnLength size, GenerationType generationType) {
+    private DatabasePrimaryColumn(ColumnName name, ColumnValue value, ColumnLength size, GenerationType generationType) {
         super(name, value, size, ColumnNullable.NOT_NULLABLE);
         this.generationType = generationType;
     }
 
-    public boolean hasIdentityStrategy() {
-        return generationType.equals(GenerationType.IDENTITY) || generationType.equals(GenerationType.AUTO);
+    public static DatabasePrimaryColumn fromField(Field field, Object object) {
+        ColumnName name = new ColumnName(field);
+        ColumnLength length = new ColumnLength(field);
+        ColumnValue value = new ColumnValue(field, object);
+        return new DatabasePrimaryColumn(name, value, length, getGenerationType(field));
     }
 
-    private GenerationType getGenerationType(Field field) {
+
+    public static DatabasePrimaryColumn copy(DatabasePrimaryColumn primaryColumn) {
+        return new DatabasePrimaryColumn(primaryColumn.name, primaryColumn.value, primaryColumn.size, primaryColumn.generationType);
+    }
+
+
+    private static GenerationType getGenerationType(Field field) {
         if (!field.isAnnotationPresent(GeneratedValue.class)) {
             return null;
         }
         return field.getAnnotation(GeneratedValue.class).strategy();
     }
 
-    public static DatabasePrimaryColumn copy(DatabasePrimaryColumn primaryColumn) {
-        return new DatabasePrimaryColumn(primaryColumn.name, primaryColumn.value, primaryColumn.size, primaryColumn.generationType);
+    public boolean hasIdentityStrategy() {
+        return generationType.equals(GenerationType.IDENTITY) || generationType.equals(GenerationType.AUTO);
     }
+
+
 }

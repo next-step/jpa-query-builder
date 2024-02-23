@@ -5,9 +5,10 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.AbstractQueryBuilderFactory;
 import persistence.sql.DatabaseDialect;
-import persistence.sql.QueryBuilder;
-import persistence.sql.QueryBuilderFactory;
+import persistence.sql.ddl.DdlQueryBuild;
+import persistence.sql.ddl.DdlQueryBuilderFactory;
 import persistence.sql.entity.Person;
 
 public class Application {
@@ -21,12 +22,12 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            QueryBuilderFactory factory = new QueryBuilderFactory();
+            AbstractQueryBuilderFactory<DdlQueryBuild> factory = new DdlQueryBuilderFactory();
 
-            QueryBuilder queryBuilder = factory.getInstance(DatabaseDialect.MYSQL);
+            DdlQueryBuild ddlQueryBuilder = factory.getInstance(DatabaseDialect.MYSQL);
 
-            jdbcTemplate.execute(queryBuilder.createQuery(Person.class));
-            jdbcTemplate.execute(queryBuilder.dropQuery(Person.class));
+            jdbcTemplate.execute(ddlQueryBuilder.createQuery(Person.class));
+            jdbcTemplate.execute(ddlQueryBuilder.dropQuery(Person.class));
 
             server.stop();
         } catch (Exception e) {

@@ -11,11 +11,15 @@ public class ColumnValue {
     private final Object value;
 
     public ColumnValue(Field field, Object instance) {
-        javaType = field.getType();
+        this.javaType = field.getType();
         if (instance == null) {
-            value = null;
+            this.value = null;
             return;
         }
+        this.value = getObjectValue(field, instance);
+    }
+
+    private Object getObjectValue(Field field, Object instance) {
         Object objectValue;
         try {
             field.setAccessible(true);
@@ -23,12 +27,7 @@ public class ColumnValue {
         } catch (IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
-        this.value = objectValue;
-    }
-
-    public ColumnValue(Class<?> javaType, Object value) {
-        this.javaType = javaType;
-        this.value = value;
+        return objectValue;
     }
 
     public String getValue() {
@@ -41,7 +40,7 @@ public class ColumnValue {
         return String.valueOf(value);
     }
 
-    public Class<?> getJavaType() {
+    public Class<?> getColumnObjectType() {
         return javaType;
     }
 }

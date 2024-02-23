@@ -1,54 +1,44 @@
 package persistence.sql.dml;
 
-import persistence.sql.domain.DatabaseTable;
+public class DmlQueryBuilder implements InsertQueryBuild, SelectQueryBuild, DeleteQueryBuild {
 
-public class DmlQueryBuilder implements DmlQueryBuild {
+    private final InsertQueryBuild insertQueryBuilder;
 
-    private static final String INSERT_TEMPLATE = "insert into %s(%s) values(%s);";
-    private static final String FIND_ALL_TEMPLATE = "select * from %s;";
-    private static final String FIND_BY_ID_TEMPLATE = "select * from %s where %s=%s;";
-    private static final String DELETE_TEMPLATE = "delete %s where %s;";
+    private final SelectQueryBuild selectQueryBuilder;
+
+    private final DeleteQueryBuild deleteQueryBuilder;
+
+    protected DmlQueryBuilder(InsertQueryBuild insertQueryBuilder, SelectQueryBuild selectQueryBuilder, DeleteQueryBuild deleteQueryBuilder) {
+        this.insertQueryBuilder = insertQueryBuilder;
+        this.selectQueryBuilder = selectQueryBuilder;
+        this.deleteQueryBuilder = deleteQueryBuilder;
+    }
+
+    protected DmlQueryBuilder() {
+        this.insertQueryBuilder = new InsertQueryBuilder();
+        this.selectQueryBuilder = new SelectQueryBuilder();
+        this.deleteQueryBuilder = new DeleteQueryBuilder();
+    }
+
 
     @Override
     public <T> String insert(T entity) {
-        DatabaseTable table = new DatabaseTable(entity);
-
-        String name = table.getName();
-        String columnClause = table.columnClause();
-        String valueClause = table.valueClause();
-
-        return String.format(INSERT_TEMPLATE, name, columnClause, valueClause);
+        return insertQueryBuilder.insert(entity);
     }
 
     @Override
     public String findAll(Class<?> entity) {
-        DatabaseTable table = new DatabaseTable(entity);
-
-        String name = table.getName();
-
-        return String.format(FIND_ALL_TEMPLATE, name);
+        return selectQueryBuilder.findAll(entity);
     }
 
     @Override
     public String findById(Class<?> entity, Object id) {
-        if (id == null) {
-            throw new IllegalArgumentException("database id can not be null");
-        }
-        DatabaseTable table = new DatabaseTable(entity);
+        return selectQueryBuilder.findById(entity, id);
 
-        String name = table.getName();
-        String idColumnValue = table.getIdColumnName();
-
-        return String.format(FIND_BY_ID_TEMPLATE, name, idColumnValue, id);
     }
 
     @Override
     public <T> String delete(T entity) {
-        DatabaseTable table = new DatabaseTable(entity);
-
-        String name = table.getName();
-        String whereClause = table.whereClause();
-
-        return String.format(DELETE_TEMPLATE, name, whereClause);
+        return deleteQueryBuilder.delete(entity);
     }
 }

@@ -30,10 +30,10 @@ public class Person {
     }
 
     public Person(Long id, String name, Integer age, String email, Integer index) {
+        this(name, age, email, index);
         this.id = id;
-        this.name = name;
-        this.age = age;
-        this.email = email;
-        this.index = index;
+    }
+
+    public Person() {
     }
 }
