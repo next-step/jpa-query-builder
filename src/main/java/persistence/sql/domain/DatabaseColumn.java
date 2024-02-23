@@ -1,5 +1,7 @@
 package persistence.sql.domain;
 
+import jakarta.persistence.Id;
+
 import java.lang.reflect.Field;
 
 public class DatabaseColumn {
@@ -25,6 +27,9 @@ public class DatabaseColumn {
         ColumnName name = new ColumnName(field);
         ColumnLength length = new ColumnLength(field);
         ColumnValue value = new ColumnValue(field, object);
+        if (field.isAnnotationPresent(Id.class)) {
+            return DatabasePrimaryColumn.fromField(field, object);
+        }
         ColumnNullable nullable = ColumnNullable.getInstance(field);
         return new DatabaseColumn(name, value, length, nullable);
     }

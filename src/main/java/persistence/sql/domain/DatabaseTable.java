@@ -51,9 +51,6 @@ public class DatabaseTable {
     }
 
     private DatabaseColumn buildColumn(Field field, Object object) {
-        if (field.isAnnotationPresent(Id.class)) {
-            return DatabasePrimaryColumn.fromField(field, object);
-        }
         return DatabaseColumn.fromField(field, object);
     }
 
