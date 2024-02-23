@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class QueryBuilder {
 
     private static final String DELIMITER_COMMA = ", ";
-    public static final String DELIMITER_SPACE = "%s %s";
     private final Dialect dialect;
 
     public QueryBuilder(Dialect dialect) {
@@ -59,11 +58,9 @@ public class QueryBuilder {
     private String generateColumnQuery(Field field) {
         field.setAccessible(true);
 
-        String string = String.format(DELIMITER_SPACE,
+        return String.format("%s %s",
                 generateColumnName(field),
                 dialect.generateColumnSql(field));
-
-        return string;
     }
 
     private String generateTableName(Class<?> clazz) {
