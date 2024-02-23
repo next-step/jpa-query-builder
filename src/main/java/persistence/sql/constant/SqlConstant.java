@@ -1,13 +1,19 @@
 package persistence.sql.constant;
 
-public class SqlConstant {
+public enum SqlConstant {
 
-    private SqlConstant() {
+    COMMA(","),
+    SPACE(" "),
+    EMPTY(""),
+    EQUALS("=");
+
+    private final String value;
+
+    SqlConstant(String value) {
+        this.value = value;
     }
 
-    public static final String COMMA = ",";
-    public static final String SPACE = " ";
-    public static final String EMPTY = "";
-    public static final String EQUALS = "=";
-
+    public String getValue() {
+        return value;
+    }
 }

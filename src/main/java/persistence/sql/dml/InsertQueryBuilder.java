@@ -30,13 +30,13 @@ public class InsertQueryBuilder implements QueryBuilder {
         return columns.stream()
             .filter(Column::isInsertable)
             .map(Column::getColumnName)
-            .collect(Collectors.joining(COMMA));
+            .collect(Collectors.joining(COMMA.getValue()));
     }
 
     private String valueClause(List<Column> columns, Object object) {
         return columns.stream()
             .filter(Column::isInsertable)
             .map(column -> column.getFieldValue(object))
-            .collect(Collectors.joining(COMMA));
+            .collect(Collectors.joining(COMMA.getValue()));
     }
 }

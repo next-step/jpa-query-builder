@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import java.util.stream.Collectors;
 import persistence.sql.QueryBuilder;
-import persistence.sql.constant.SqlConstant;
+import static persistence.sql.constant.SqlConstant.COMMA;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.meta.Table;
 
@@ -27,7 +27,7 @@ public class CreateQueryBuilder implements QueryBuilder {
 
         String columnDefinitions = table.getColumns().stream()
             .map(fieldBuilder::generate)
-            .collect(Collectors.joining(SqlConstant.COMMA));
+            .collect(Collectors.joining(COMMA.getValue()));
 
         return String.format(CREATE_TABLE_DEFINITION, table.getTableName(), columnDefinitions);
     }

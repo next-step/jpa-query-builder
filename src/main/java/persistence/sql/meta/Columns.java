@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class Columns {
 
+    private static final String ID_NOT_FOUND_MESSAGE =  "Id 필드가 존재하지 않습니다.";
     private List<Column> columns;
 
     public Columns(List<Column> columns) {
@@ -35,6 +36,6 @@ public class Columns {
         return columns.stream()
             .filter(Column::isIdAnnotation)
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Id 필드가 존재하지 않습니다."));
+            .orElseThrow(() -> new IllegalArgumentException(ID_NOT_FOUND_MESSAGE));
     }
 }

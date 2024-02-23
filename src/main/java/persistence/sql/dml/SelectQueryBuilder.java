@@ -28,6 +28,6 @@ public class SelectQueryBuilder implements QueryBuilder {
     private String columnsClause(List<Column> columns) {
         return columns.stream()
             .map(Column::getColumnName)
-            .collect(Collectors.joining(COMMA));
+            .collect(Collectors.joining(COMMA.getValue()));
     }
 }
