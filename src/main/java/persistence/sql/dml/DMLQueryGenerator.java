@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class DMLQueryGenerator {
     private final TableData table;
+    private String columnClause;
 
     public DMLQueryGenerator(Class<?> clazz, Dialect dialect) {
         this.table = new TableExtractor(clazz).createTable();
@@ -22,15 +23,20 @@ public class DMLQueryGenerator {
         return String.format(
                 "insert into %s (%s) values (%s)",
                 table.getName(),
-                columnsClause(columns),
+                columnClause(columns),
                 valueClause(columns)
         );
     }
-
-    private String columnsClause(List<ColumnData> columns) {
-        return columns.stream()
+    
+    private String columnClause(List<ColumnData> columns) {
+        if(columnClause != null){
+            return columnClause;
+        }
+        columnClause = columns.stream()
                 .map(ColumnData::getName)
                 .collect(Collectors.joining(", "));
+
+        return columnClause;
     }
 
     private String valueClause(List<ColumnData> columns) {
