@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import persistence.entity.annotatedentity.Person;
+import persistence.entity.annotated.Person;
 
 import static java.sql.ResultSetMetaData.columnNullable;
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
@@ -54,10 +54,10 @@ class QueryBuilderTest {
         String expectedTableName = "PERSON";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.baic.Person.class).buildWithoutAnnotation());
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.basic.Person.class).getCreateQuery());
 
         // then
-        ResultInterface tableSchema = getTableSchema();
+        ResultInterface tableSchema = getTableSchema(expectedTableName);
         Assertions.assertThat(getTableName(tableSchema)).isEqualTo(expectedTableName);
         Assertions.assertThat(getColumnNames(tableSchema).containsAll(expectedColumnNames)).isTrue();
     }
@@ -73,20 +73,54 @@ class QueryBuilderTest {
         jdbcTemplate.execute(new QueryBuilder(Person.class).buildWithAnnotation());
 
         // then
-        ResultInterface tableSchema = getTableSchema();
+        ResultInterface tableSchema = getTableSchema(expectedTableName);
         Assertions.assertThat(getTableName(tableSchema)).isEqualTo(expectedTableName);
         Assertions.assertThat(getColumnNames(tableSchema).containsAll(expectedColumnNames)).isTrue();
 
-        Assertions.assertThat(hasNullableColumn("NICK_NAME")).isTrue();
-        Assertions.assertThat(hasNullableColumn("OLD")).isTrue();
-        Assertions.assertThat(hasNullableColumn("EMAIL")).isFalse();
+        Assertions.assertThat(hasNullableColumn("NICK_NAME", expectedTableName)).isTrue();
+        Assertions.assertThat(hasNullableColumn("OLD", expectedTableName)).isTrue();
+        Assertions.assertThat(hasNullableColumn("EMAIL", expectedTableName)).isFalse();
+    }
+
+    @Test
+    @DisplayName("[요구사항 3] 3.1 @Table 애노테이션이 붙은 필드의 name을 테이블명으로 가지는 create 쿼리 만들")
+    void 요구사항3_1_test() throws SQLException {
+        //given
+        String expectedTableName = "USERS";
+
+        // when
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).buildWithAnnotation());
+
+        // then
+        ResultInterface tableSchema = getTableSchema(expectedTableName);
+        Assertions.assertThat(getTableName(tableSchema)).isEqualTo(expectedTableName);
+    }
+
+    @Test
+    @DisplayName("[요구사항 3.2] @Transient 애노테이션이 붙은 필드는 제하고 create 쿼리 만든다.")
+    void 요구사항3_2_test() throws SQLException {
+        //given
+        List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");
+        String expectedTableName = "USERS";
+
+        // when
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).buildWithAnnotation());
+
+        // then
+        ResultInterface tableSchema = getTableSchema(expectedTableName);
+        Assertions.assertThat(getColumnNames(tableSchema).containsAll(expectedColumnNames)).isTrue();
+
+        Assertions.assertThat(tableSchema.getVisibleColumnCount()).isEqualTo(4);
+        Assertions.assertThat(hasNullableColumn("NICK_NAME", expectedTableName)).isTrue();
+        Assertions.assertThat(hasNullableColumn("OLD", expectedTableName)).isTrue();
+        Assertions.assertThat(hasNullableColumn("EMAIL", expectedTableName)).isFalse();
     }
 
     /**
      * 주어진 컬럼이 nullable하면 true
      */
-    private boolean hasNullableColumn(String columnName) throws SQLException {
-        ResultSetMetaData meta = getQueryResult().getMetaData();
+    private boolean hasNullableColumn(String columnName, String tableName) throws SQLException {
+        ResultSetMetaData meta = getQueryResult(tableName).getMetaData();
         int columnCount = meta.getColumnCount();
 
         int columnIdx = 0;
@@ -103,16 +137,16 @@ class QueryBuilderTest {
     /**
      * 테이블 스키마를 리턴한다.
      */
-    private ResultInterface getTableSchema() throws SQLException {
-        ResultSet selectQueryResult = getQueryResult();
-        return ((JdbcResultSet) selectQueryResult).getResult();
+    private ResultInterface getTableSchema(String tableName) throws SQLException {
+        ResultSet resultSet = getQueryResult(tableName);
+        return ((JdbcResultSet) resultSet).getResult();
     }
 
     /**
      * 쿼리 결과 값을 리턴한다.
      */
-    private ResultSet getQueryResult() throws SQLException {
-        return server.getConnection().createStatement().executeQuery(SELECT_ALL_ROWS);
+    private ResultSet getQueryResult(String tableName) throws SQLException {
+        return server.getConnection().createStatement().executeQuery(String.format(SELECT_ALL_ROWS, tableName));
     }
 
     /**

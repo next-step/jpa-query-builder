@@ -1,4 +1,4 @@
-package persistence.entity.annotatedentity;
+package persistence.entity.annotated;
 
 import jakarta.persistence.*;
 

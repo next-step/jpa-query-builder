@@ -1,14 +1,9 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import persistence.sql.exception.InvalidFieldException;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 import static persistence.sql.common.SqlConstant.*;
 import static persistence.sql.ddl.utils.IdChecker.isId;
@@ -27,6 +22,10 @@ public class AnnotatedColumn {
         this.name = getName();
         this.type = field.getType();
         this.nullable = isNullable();
+    }
+
+    public static boolean isColumn(Field field) {
+        return field.isAnnotationPresent(jakarta.persistence.Column.class) || field.isAnnotationPresent(Id.class);
     }
 
     public String getColumn() {
@@ -53,17 +52,16 @@ public class AnnotatedColumn {
         if (isId(field)) {
             return "";
         }
-        if (field.getAnnotation(Column.class).name().isEmpty()) {
+        if (field.getAnnotation(jakarta.persistence.Column.class).name().isEmpty()) {
             return field.getName();
         }
-        return field.getAnnotation(Column.class).name();
+        return field.getAnnotation(jakarta.persistence.Column.class).name();
     }
 
     private boolean isNullable() {
         if (isId(field)) {
             return false;
         }
-        return field.getAnnotation(Column.class).nullable();
+        return field.getAnnotation(jakarta.persistence.Column.class).nullable();
     }
-
 }

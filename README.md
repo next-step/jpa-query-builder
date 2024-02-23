@@ -4,7 +4,9 @@
 - [x] step1 리뷰 사항 반영
 - [x] 요구사항 1 - @Column 애노테이션이 없는 Person 엔티티를 이용하여 create 쿼리 만들기
 - [x] 요구사항 2 - @Column 애노테이션이 있는 Person 엔티티를 이용하여 create 쿼리 만들기
-- [ ] 요구사항 3 - @Transient 애노테이션이 붙은 필드는 제하고 create 쿼리 만들기
+- [x] 요구사항 3 
+  - [x] 3.1 @Table 애노테이션이 붙은 필드의 name을 테이블명으로 가지는 create 쿼리 만들기
+  - [x] 3.2 @Transient 애노테이션이 붙은 필드는 제하고 create 쿼리 만들기
 - [ ] 요구사항 4 - Person drop 쿼리 만들기
 
 ### step2 질문사항
