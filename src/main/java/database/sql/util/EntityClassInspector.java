@@ -30,18 +30,6 @@ public class EntityClassInspector {
         return entityClass.getSimpleName();
     }
 
-    private List<Field> getFields() {
-        return Arrays.stream(entityClass.getDeclaredFields())
-                .filter(this::notTransientField)
-                .collect(Collectors.toList());
-    }
-
-    private List<EntityColumn> getColumns() {
-        return getFields().stream()
-                .map(this::fieldToColumn)
-                .collect(Collectors.toList());
-    }
-
     public List<String> getColumnNames() {
         return getColumns().stream()
                 .map(EntityColumn::getColumnName)
@@ -83,6 +71,18 @@ public class EntityClassInspector {
             }
         }
         return list;
+    }
+
+    private List<EntityColumn> getColumns() {
+        return getFields().stream()
+                .map(this::fieldToColumn)
+                .collect(Collectors.toList());
+    }
+
+    private List<Field> getFields() {
+        return Arrays.stream(entityClass.getDeclaredFields())
+                .filter(this::notTransientField)
+                .collect(Collectors.toList());
     }
 
     private boolean notTransientField(Field field) {
