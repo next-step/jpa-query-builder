@@ -2,32 +2,41 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import persistence.sql.exception.InvalidEntityException;
+import persistence.sql.validator.EntityValidator;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
-public class AnnotatedEntityQueryBuilder {
-    public static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS %s (";
+import static persistence.sql.common.SqlConstant.*;
+import static persistence.sql.utils.FieldConverter.getColumn;
 
-    public static final String CLOSING_PARENTHESIS = ")";
-    public static final String COMMA = ",";
+public class QueryBuilder {
     private final Class<?> entity;
 
-    public AnnotatedEntityQueryBuilder(Class<?> entity) {
-        if (!entity.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Entity가 아닌 클래스는 본 클래스의 생성자에 넣을 수 없습니다.");
-        }
+    public QueryBuilder(Class<?> entity) {
+        EntityValidator.validate(entity);
         this.entity = entity;
     }
 
-    public String build() {
-        StringBuilder queryBuilder = new StringBuilder(String.format(SQL_CREATE_TABLE, entity.getSimpleName()));
+    public String buildWithoutAnnotation() {
+        StringBuilder queryBuilder = new StringBuilder(String.format(CREATE_TABLE_START, entity.getSimpleName()));
+
+        Field[] fields = entity.getDeclaredFields();
+        int fieldsCount = fields.length;
+
+        IntStream.range(0, fieldsCount).forEach(x-> {
+            queryBuilder.append(getColumn(fields[x]));
+            addConnector(x, fieldsCount, queryBuilder);
+        });
+
+        return queryBuilder.toString();
+    }
+
+    public String buildWithAnnotation() {
+        StringBuilder queryBuilder = new StringBuilder(String.format(CREATE_TABLE_START, entity.getSimpleName()));
 
         Field[] fields = entity.getDeclaredFields();
 
@@ -60,10 +69,10 @@ public class AnnotatedEntityQueryBuilder {
 
     private static void addConnector(int currentIdx, int fieldsCount, StringBuilder queryBuilder) {
         if (isLastIndex(currentIdx, fieldsCount)) {
-            queryBuilder.append(CLOSING_PARENTHESIS);
+            queryBuilder.append(CREATE_TABLE_END);
             return;
         }
-        queryBuilder.append(COMMA);
+        queryBuilder.append(CRETE_TABLE_COMMA);
     }
 
     private static boolean isLastIndex(int currentIdx, int fieldsCount) {
