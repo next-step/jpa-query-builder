@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import persistence.sql.entity.annotatedentity.Person;
+import persistence.entity.annotatedentity.Person;
 
 import static java.sql.ResultSetMetaData.columnNullable;
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
@@ -47,14 +47,14 @@ class QueryBuilderTest {
     }
 
     @Test
-    @DisplayName("[요구사항1] @Column 애노테이션이 없는 Person 엔티티를 이용하여 create 쿼리 만든다.")
+    @DisplayName("[요구사항 1] @Column 애노테이션이 없는 Person 엔티티를 이용하여 create 쿼리 만든다.")
     void 요구사항1_test() throws SQLException {
         //given
         List<String> expectedColumnNames = List.of("ID", "NAME", "AGE");
         String expectedTableName = "PERSON";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.sql.entity.baic.Person.class).buildWithoutAnnotation());
+        jdbcTemplate.execute(new QueryBuilder(persistence.entity.baic.Person.class).buildWithoutAnnotation());
 
         // then
         ResultInterface tableSchema = getTableSchema();
@@ -63,7 +63,7 @@ class QueryBuilderTest {
     }
 
     @Test
-    @DisplayName("[요구사항2] @Column 애노테이션이 있는 Person 엔티티를 이용하여 create 쿼리 만든다.")
+    @DisplayName("[요구사항 2] @Column 애노테이션이 있는 Person 엔티티를 이용하여 create 쿼리 만든다.")
     void 요구사항2_test() throws SQLException {
         //given
         List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");

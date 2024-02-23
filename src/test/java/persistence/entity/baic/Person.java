@@ -1,4 +1,4 @@
-package persistence.sql.entity.baic;
+package persistence.entity.baic;
 
 import jakarta.persistence.*;
 

@@ -1,4 +1,4 @@
-package persistence.sql.entity.annotatedentity;
+package persistence.entity.annotatedentity;
 
 import jakarta.persistence.*;
 
