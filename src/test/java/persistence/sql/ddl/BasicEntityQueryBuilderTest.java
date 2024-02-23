@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import persistence.sql.entity.BasicPerson;
+import persistence.sql.entity.annotatedentity.Person;
 
 class BasicEntityQueryBuilderTest {
     private static final Logger logger = LoggerFactory.getLogger(BasicEntityQueryBuilderTest.class);
@@ -37,15 +37,16 @@ class BasicEntityQueryBuilderTest {
     void tearDown() {
         server.stop();
     }
+
     @Test
-    @DisplayName("BasicPerson 클래스를 생성한다.")
-    void createQueryTest() throws SQLException {
+    @DisplayName("[요구사항1] Person 클래스를 사용하여, person 테이블을 생성한다.")
+    void createQueryUsingEntityTest() throws SQLException {
         //given
         List<String> expectedColumnNames = List.of("ID", "NAME", "AGE");
         String expectedTableName = "PERSON";
 
         // when
-        jdbcTemplate.execute(new BasicEntityQueryBuilder(BasicPerson.class).build());
+        jdbcTemplate.execute(new BasicEntityQueryBuilder(persistence.sql.entity.baic.Person.class).build());
 
         // then
         ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery("SELECT * FROM person");
@@ -61,4 +62,28 @@ class BasicEntityQueryBuilderTest {
         Assertions.assertThat(actualColumnNames.containsAll(expectedColumnNames)).isTrue();
     }
 
+    @Test
+    @DisplayName("[요구사항2] Person 클래스를 사용하여, person 테이블을 생성한다.")
+    void createQueryUsingAnnotatedEntityTest() throws SQLException {
+        //given
+        List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");
+        String expectedTableName = "PERSON";
+
+        // when
+        jdbcTemplate.execute(new AnnotatedEntityQueryBuilder(Person.class).build());
+
+        // then
+        ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery("SELECT * FROM person");
+        ResultInterface tableSchema = ((JdbcResultSet) selectQueryResult).getResult();
+
+        String actualTableName = tableSchema.getTableName(0);
+        String columnName1 = tableSchema.getColumnName(0);
+        String columnName2 = tableSchema.getColumnName(1);
+        String columnName3 = tableSchema.getColumnName(2);
+        String columnName4 = tableSchema.getColumnName(3);
+        List<String> actualColumnNames = List.of(columnName1, columnName2, columnName3, columnName4);
+
+        Assertions.assertThat(actualTableName).isEqualTo(expectedTableName);
+        Assertions.assertThat(actualColumnNames.containsAll(expectedColumnNames)).isTrue();
+    }
 }

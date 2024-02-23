@@ -1,9 +1,9 @@
-package persistence.sql.entity;
+package persistence.sql.entity.baic;
 
 import jakarta.persistence.*;
 
 @Entity
-public class BasicPerson {
+public class Person {
 
     @Id
     private Long id;
