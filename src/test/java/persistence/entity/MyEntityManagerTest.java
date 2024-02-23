@@ -14,6 +14,7 @@ import persistence.sql.domain.Dialect;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MyEntityManagerTest {
 
@@ -62,5 +63,22 @@ class MyEntityManagerTest {
         // then
         assertThat(person).extracting("name")
                 .isEqualTo(expectedName);
+    }
+
+    @Test
+    @DisplayName("remove 메서드는 주어진 객체를 삭제한다.")
+    void remove() {
+        //given
+        MyEntityManager entityManager = new MyEntityManager(jdbcTemplate);
+        Person expected = new Person(1L, "name", 25, "qwer@asdf.com", 1);
+        String insertQuery = new InsertQueryBuilder().build(expected);
+        jdbcTemplate.execute(insertQuery);
+
+        //when
+        entityManager.remove(expected);
+
+        //then
+        assertThatThrownBy(() -> entityManager.find(Person.class, 1L))
+                .isInstanceOf(RuntimeException.class);
     }
 }

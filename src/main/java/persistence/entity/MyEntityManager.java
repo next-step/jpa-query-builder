@@ -1,6 +1,7 @@
 package persistence.entity;
 
 import jdbc.JdbcTemplate;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
@@ -28,6 +29,8 @@ public class MyEntityManager implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
+        String query = deleteQueryBuilder.build(entity);
+        jdbcTemplate.execute(query);
     }
 }

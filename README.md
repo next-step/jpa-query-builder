@@ -74,4 +74,7 @@
 ## 요구사항 2 - persist (insert)
 - [x] persist 기능 구현
 
+## 요구사항 3 - remove
+- [x] remove 기능 구현
+
 
