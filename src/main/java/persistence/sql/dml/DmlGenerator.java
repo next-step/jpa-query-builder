@@ -1,8 +1,10 @@
 package persistence.sql.dml;
 
+import java.util.Map;
 import persistence.sql.QueryBuilder;
 import static persistence.sql.constant.SqlConstant.EQUALS;
 import static persistence.sql.constant.SqlConstant.SPACE;
+import persistence.sql.meta.Column;
 import persistence.sql.meta.Columns;
 
 public class DmlGenerator {
@@ -12,6 +14,7 @@ public class DmlGenerator {
     private final QueryBuilder deleteQueryBuilder;
 
     private static final String WHERE_CLAUSE = "WHERE";
+    private static final String AND = "AND";
 
     private DmlGenerator() {
         this.selectQueryBuilder = SelectQueryBuilder.from();
@@ -31,42 +34,45 @@ public class DmlGenerator {
         return selectQueryBuilder.generateQuery(clazz);
     }
 
-    public String generateDeleteQuery(Class<?> clazz) {
-        return deleteQueryBuilder.generateQuery(clazz);
-    }
-
     public String generateDeleteQuery(Class<?> clazz, Object id) {
+        Columns columns = Columns.from(clazz.getDeclaredFields());
         StringBuilder query = new StringBuilder();
         query.append(deleteQueryBuilder.generateQuery(clazz));
-        query.append(SPACE);
-        query.append(whereClause(clazz, id));
+        query.append(SPACE.getValue());
+        query.append(whereClause(Map.of(columns.getIdColumn(), id)));
 
         return query.toString();
     }
 
     public String generateSelectQuery(Class<?> clazz, Object id) {
+        Columns columns = Columns.from(clazz.getDeclaredFields());
         StringBuilder query = new StringBuilder();
         query.append(selectQueryBuilder.generateQuery(clazz));
-        query.append(SPACE);
-        query.append(whereClause(clazz, id));
+        query.append(SPACE.getValue());
+        query.append(whereClause(Map.of(columns.getIdColumn(), id)));
 
         return query.toString();
     }
 
-    private String whereClause(Class<?> clazz, Object id) {
-        if (id == null) {
+    private String whereClause(Map<Column, Object> conditions) {
+        if (conditions == null || conditions.isEmpty()) {
             return "";
         }
 
-        StringBuilder whereClause = new StringBuilder(WHERE_CLAUSE + SPACE);
+        StringBuilder whereClause = new StringBuilder(WHERE_CLAUSE + SPACE.getValue());
 
-        Columns columns = Columns.from(clazz.getDeclaredFields());
+        conditions.forEach((key, value) -> {
+                whereClause.append(key.getColumnName());
+                whereClause.append(SPACE.getValue());
+                whereClause.append(EQUALS.getValue());
+                whereClause.append(SPACE.getValue());
+                whereClause.append(value);
+                whereClause.append(SPACE.getValue());
+                whereClause.append(AND);
+                whereClause.append(SPACE.getValue());
+        });
 
-        whereClause.append(columns.getIdColumn().getColumnName());
-        whereClause.append(SPACE);
-        whereClause.append(EQUALS);
-        whereClause.append(SPACE);
-        whereClause.append(id);
+        whereClause.setLength(whereClause.length() - AND.length() - 1);
 
         return whereClause.toString();
     }
