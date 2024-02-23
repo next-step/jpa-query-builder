@@ -1,16 +1,37 @@
 package persistence.study;
 
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@Slf4j
 public class ReflectionTest {
+    Logger log = LoggerFactory.getLogger(ReflectionTest.class);
+
+    private final PrintStream standardOut = System.out;
+    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+
+    @BeforeEach
+    public void setUp() {
+        System.setOut(new PrintStream(outputStreamCaptor));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        System.setOut(standardOut);
+    }
 
     @Test
     @DisplayName("요구사항 1 - 클래스 정보 출력")
@@ -33,11 +54,11 @@ public class ReflectionTest {
         Arrays.stream(clazz.getDeclaredMethods())
                 .filter(method -> method.getName().startsWith("test"))
                 .forEach(method -> {
-                    try {
-                        assertThat(method.invoke(clazz.getConstructor().newInstance())).isInstanceOf(String.class);
-                    } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Object result = invokeTargetMethod(method, clazz);
+
+                    assertThat(method.getName()).startsWith("test");
+                    assertThat(result).isInstanceOf(String.class);
+                    assertThat(String.valueOf(result)).startsWith("test : ");
                 });
     }
 
@@ -48,11 +69,11 @@ public class ReflectionTest {
         Arrays.stream(clazz.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                 .forEach(method -> {
-                    try {
-                        method.invoke(clazz.getConstructor().newInstance());
-                    } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Object result = invokeTargetMethod(method, clazz);
+
+                    assertThat(method.isAnnotationPresent(PrintView.class)).isTrue();
+                    assertThat(result).isNull();
+                    assertThat(outputStreamCaptor.toString().trim()).isEqualTo("자동차 정보를 출력 합니다.");
                 });
     }
 
@@ -61,21 +82,19 @@ public class ReflectionTest {
     void privateFieldAccess() {
         Class<Car> clazz = Car.class;
         Car car = new Car();
-        Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> Modifier.isPrivate(field.getModifiers()))
-                .forEach(field -> {
-                    field.setAccessible(true);
-                    try {
-                        if (field.getName().equals("name")) {
-                            field.set(car, "테스트");
-                        }
-                        if (field.getName().equals("price")) {
-                            field.set(car, 1000);
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+
+        try {
+            Field name = clazz.getDeclaredField("name");
+            name.setAccessible(true);
+            name.set(car, "테스트");
+
+            Field price = clazz.getDeclaredField("price");
+            price.setAccessible(true);
+            price.set(car, 1000);
+
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
 
         assertThat(car).isEqualTo(new Car("테스트", 1000));
     }
@@ -92,4 +111,11 @@ public class ReflectionTest {
         assertThat(findConstructor.newInstance("테스트", 1000)).isEqualTo(new Car("테스트", 1000));
     }
 
+    private static Object invokeTargetMethod(Method method, Class<Car> clazz) {
+        try {
+            return method.invoke(clazz.getConstructor().newInstance());
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
