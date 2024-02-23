@@ -26,7 +26,7 @@ public class DDLQueryGenerator {
 
     public String generateCreateQuery(final Class<?> entityClazz) {
         checkIsEntity(entityClazz);
-        List<ColumnExtractor> columnExtractors = ColumnExtractor.from(entityClazz, dialect);
+        List<ColumnExtractor> columnExtractors = ColumnExtractor.from(entityClazz);
 
         final String tableNameClause = new TableExtractor(entityClazz).getName();
         final String columnClause = getColumnClause(columnExtractors);

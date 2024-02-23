@@ -2,7 +2,6 @@ package persistence.sql.extractor;
 
 import jakarta.persistence.*;
 import persistence.sql.ddl.KeyType;
-import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.extractor.exception.ColumExtractorCreateException;
 import persistence.sql.extractor.exception.GenerationTypeMissingException;
 
@@ -23,7 +22,7 @@ public class ColumnExtractor {
         this.column = field.getAnnotation(Column.class);
     }
 
-    public static List<ColumnExtractor> from(Class<?> entityClazz, Dialect dialect){
+    public static List<ColumnExtractor> from(Class<?> entityClazz){
         return Arrays.stream(entityClazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(ColumnExtractor::new)
