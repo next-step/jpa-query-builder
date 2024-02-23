@@ -38,8 +38,13 @@ public class Application {
             jdbcTemplate.execute(insertQueryBuilder.build(person));
             jdbcTemplate.execute(insertQueryBuilder.build(person2));
 
-            SelectAllQueryBuilder selectAllQueryBuilder = new SelectAllQueryBuilder(Person.class);
-            String selectAllQuery = selectAllQueryBuilder.build();
+            EntityManager entityManager = new MyEntityManager(jdbcTemplate);
+            Person person1 = entityManager.find(Person.class, 2L);
+            System.out.println("person1.toString() = " + person1.toString());
+
+//
+            SelectAllQueryBuilder selectAllQueryBuilder = new SelectAllQueryBuilder();
+            String selectAllQuery = selectAllQueryBuilder.build(Person.class);
             RowMapper<Person> rowMapper = resultSet -> {
                 Long id = resultSet.getLong("id");
                 String name = resultSet.getString("nick_name");

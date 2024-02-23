@@ -66,3 +66,9 @@
 - [x] delete 쿼리를 만들 수 있다.
 
 
+# 4단계 - Simple Entity Object
+
+## 요구사항 1 - find
+- [x] find 기능을 구현
+
+
