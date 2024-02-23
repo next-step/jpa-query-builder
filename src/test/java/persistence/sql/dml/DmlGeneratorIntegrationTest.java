@@ -117,7 +117,10 @@ class DmlGeneratorIntegrationTest {
         insertQueryTest("user3", 1, "abc@test.co", 1);
         insertQueryTest("user4", 1, "abc@test.co", 1);
 
-        jdbcTemplate.execute(dmlGenerator.generateDeleteQuery(Person.class));
+        jdbcTemplate.execute(dmlGenerator.generateDeleteQuery(Person.class, 1));
+        jdbcTemplate.execute(dmlGenerator.generateDeleteQuery(Person.class, 2));
+        jdbcTemplate.execute(dmlGenerator.generateDeleteQuery(Person.class, 3));
+        jdbcTemplate.execute(dmlGenerator.generateDeleteQuery(Person.class, 4));
 
         List<Person> people = jdbcTemplate.query(dmlGenerator.generateSelectQuery(Person.class), resultSet -> Person.of(
             resultSet.getLong("id"),

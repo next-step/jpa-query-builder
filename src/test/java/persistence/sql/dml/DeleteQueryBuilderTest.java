@@ -17,11 +17,11 @@ class DeleteQueryBuilderTest {
         @Test
         void testGenerateQuery() {
             // given
-            SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.from();
+            DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.from();
             Class<?> clazz = Person.class;
 
             // when
-            String query = selectQueryBuilder.generateQuery(clazz);
+            String query = deleteQueryBuilder.generateQuery(clazz);
 
             // then
             assertEquals("DELETE FROM users", query);
