@@ -22,6 +22,7 @@ public enum DatabaseSchemaType implements DatabaseSchema {
             return DatabaseIdGenerationType.from(field.getAnnotation(GeneratedValue.class)).toSQL();
         }
     },
+
     COLUMN(Column.class) {
         @Override
         public String getName(Field field) {

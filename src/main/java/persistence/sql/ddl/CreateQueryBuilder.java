@@ -7,12 +7,12 @@ import persistence.sql.ddl.field.TableField;
 // note. 이름만 builder이지 builder 디자인 패턴을 칭하는 것 아님
 public class CreateQueryBuilder {
 
-    private static final String DDL_CREATE_FORMAT = "CREATE TABLE %s (\n%s\n);";
+    private static final String DDL_FORMAT = "CREATE TABLE %s (\n%s\n);";
 
     private final TableField tableField;
     private final QueryFields queryFields;
 
-    private CreateQueryBuilder(Class<?> klass) {
+    public CreateQueryBuilder(Class<?> klass) {
 
         if (!klass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("@Entity가 존재하지 않습니다");
@@ -23,13 +23,8 @@ public class CreateQueryBuilder {
         this.queryFields = new QueryFields(klass.getDeclaredFields());
     }
 
-    public static CreateQueryBuilder from(Class<?> klass) {
-        return new CreateQueryBuilder(klass);
-    }
-
     public String toSQL() {
-        return String.format(DDL_CREATE_FORMAT, tableField.toSQL(), queryFields.toSQL());
+        return String.format(DDL_FORMAT, tableField.toSQL(), queryFields.toSQL());
     }
-
 
 }

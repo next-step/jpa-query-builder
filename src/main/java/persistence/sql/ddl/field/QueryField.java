@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 
 public class QueryField {
 
-    public static final String DELIMITER = " ";
+    public static final String SPACE = " ";
     private final Field field;
     private final DatabaseSchema schema;
 
@@ -17,7 +17,7 @@ public class QueryField {
     }
 
     public String toSQL() {
-        return String.join(DELIMITER,
+        return String.join(SPACE,
                 schema.getName(field),
                 schema.getType(field),
                 schema.getConstraints(field)
