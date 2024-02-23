@@ -3,7 +3,7 @@ package persistence.sql.ddl.builder;
 import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.generator.ColumnGenerator;
 import persistence.sql.ddl.generator.ColumnGeneratorFactory;
-import persistence.sql.meta.TableName;
+import persistence.sql.meta.table.Table;
 
 public class CreateQueryBuilder implements QueryBuilder {
     private final Dialect dialect;
@@ -24,7 +24,7 @@ public class CreateQueryBuilder implements QueryBuilder {
     }
 
     private String getTableName(final Class<?> clazz) {
-        return new TableName(clazz).getTableName();
+        return new Table(clazz).getTableName();
     }
 
     private String getColumnSQL(final Class<?> clazz) {

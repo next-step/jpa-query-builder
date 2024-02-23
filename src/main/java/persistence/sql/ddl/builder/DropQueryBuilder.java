@@ -1,6 +1,6 @@
 package persistence.sql.ddl.builder;
 
-import persistence.sql.meta.TableName;
+import persistence.sql.meta.table.Table;
 
 public class DropQueryBuilder implements QueryBuilder {
 
@@ -10,6 +10,6 @@ public class DropQueryBuilder implements QueryBuilder {
     }
 
     private String getTableName(final Class<?> clazz) {
-        return new TableName(clazz).getTableName();
+        return new Table(clazz).getTableName();
     }
 }
