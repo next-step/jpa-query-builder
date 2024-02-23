@@ -31,6 +31,13 @@ public class EntityManagerImpl implements EntityManager {
     @Override
     public void persist(Object entity) {
         Map<String, Object> map = ((Person) entity).toMap(); // 하드코딩
+
+        EntityClassInspector inspector = getEntityClassInspector(entity.getClass());
+
+//        map.put("nick_name", name);
+//        map.put("old", age);
+//        map.put("email", email);
+
         String query = QueryBuilder.getInstance().buildInsertQuery(entity.getClass(), map);
         jdbcTemplate.execute(query);
     }
@@ -39,7 +46,7 @@ public class EntityManagerImpl implements EntityManager {
     public void remove(Object entity) {
         long id;
         Class<?> clazz = entity.getClass();
-        EntityClassInspector inspector = new EntityClassInspector(clazz);
+        EntityClassInspector inspector = getEntityClassInspector(clazz);
         Field field = inspector.getPrimaryKeyField();
         field.setAccessible(true);
         try {
@@ -50,5 +57,9 @@ public class EntityManagerImpl implements EntityManager {
 
         String query = QueryBuilder.getInstance().buildDeleteQuery(clazz, id);
         jdbcTemplate.execute(query);
+    }
+
+    private static EntityClassInspector getEntityClassInspector(Class<?> clazz) {
+        return new EntityClassInspector(clazz);
     }
 }
