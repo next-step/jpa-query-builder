@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReflectionTest {
 	private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -23,21 +23,21 @@ public class ReflectionTest {
 		logger.debug(carClass.getName());
 
 		Field[] fields = carClass.getDeclaredFields();
-		System.out.println("필드:");
+		logger.debug("필드:");
 		for (Field field : fields) {
-			System.out.println(field);
+			logger.debug(String.valueOf(field));
 		}
 
 		Constructor<?>[] constructors = carClass.getDeclaredConstructors();
-		System.out.println("생성자:");
+		logger.debug("생성자:");
 		for (Constructor<?> constructor : constructors) {
-			System.out.println(constructor);
+			logger.debug(String.valueOf(constructor));
 		}
 
 		Method[] methods = carClass.getDeclaredMethods();
-		System.out.println("메서드");
+		logger.debug("메서드:");
 		for (Method method : methods) {
-			System.out.println(method);
+			logger.debug(String.valueOf(method));
 		}
 	}
 
@@ -46,7 +46,7 @@ public class ReflectionTest {
 		Class<Car> carClass = Car.class;
 		Car car = carClass.getConstructor().newInstance();
 		Arrays.stream(carClass.getDeclaredMethods())
-			.filter(x -> x.getName().contains("test"))
+			.filter(x -> x.getName().startsWith("test"))
 			.forEach(x -> {
 				try {
 					x.invoke(car);
@@ -88,8 +88,12 @@ public class ReflectionTest {
 		priceField.setAccessible(true);
 		priceField.set(car, price);
 
-		assertThat(car.testGetName()).isEqualTo("test : " + name);
-		assertThat(car.testGetPrice()).isEqualTo("test : " + price);
+		assertAll(
+			() -> {
+				assertEquals(car.testGetName(), "test : " + name);
+				assertEquals(car.testGetPrice(), "test : " + price);
+			}
+		);
 	}
 
 	@Test
@@ -103,7 +107,11 @@ public class ReflectionTest {
 			.findFirst().orElseThrow();
 		Car car = (Car) constructor.newInstance(name, price);
 
-		assertThat(car.testGetName()).isEqualTo("test : " + name);
-		assertThat(car.testGetPrice()).isEqualTo("test : " + price);
+		assertAll(
+			() -> {
+				assertEquals(car.testGetName(), "test : " + name);
+				assertEquals(car.testGetPrice(), "test : " + price);
+			}
+		);
 	}
 }
