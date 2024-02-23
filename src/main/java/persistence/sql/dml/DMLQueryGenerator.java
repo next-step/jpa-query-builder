@@ -1,44 +1,48 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.extractor.ColumnData;
 import persistence.sql.extractor.ColumnExtractor;
+import persistence.sql.extractor.TableData;
 import persistence.sql.extractor.TableExtractor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DMLQueryGenerator {
-    private final Dialect dialect;
-    private final Class<?> clazz;
-    private final List<ColumnExtractor> columnExtractors;
+    private final TableData table;
 
     public DMLQueryGenerator(Class<?> clazz, Dialect dialect) {
-        this.dialect = dialect;
-        this.clazz = clazz;
-        this.columnExtractors = ColumnExtractor.from(clazz)
-                .stream()
-                .filter(columnExtractor -> !columnExtractor.isPrimaryKey())
-                .collect(Collectors.toList());
+        this.table = new TableExtractor(clazz).createTable();
     }
 
     public String generateInsertQuery(Object entity) {
+        List<ColumnData> columns = new ColumnExtractor(entity.getClass()).createColumnsWithValue(entity);
+
         return String.format(
                 "insert into %s (%s) values (%s)",
-                new TableExtractor(clazz).getName(),
-                columnsClause(),
-                valueClause(entity)
+                table.getName(),
+                columnsClause(columns),
+                valueClause(columns)
         );
     }
 
-    private String columnsClause() {
-        return columnExtractors.stream()
-                .map(ColumnExtractor::getName)
+    private String columnsClause(List<ColumnData> columns) {
+        return columns.stream()
+                .map(ColumnData::getName)
                 .collect(Collectors.joining(", "));
     }
 
-    private String valueClause(Object entity) {
-        return columnExtractors.stream()
-                .map(columnExtractor -> columnExtractor.getValue(entity).toString())
+    private String valueClause(List<ColumnData> columns) {
+        return columns.stream()
+                .map(column -> valueToString(column.getValue()))
                 .collect(Collectors.joining(", "));
+    }
+
+    private String valueToString(Object value){
+        if(value == null){
+            return "null";
+        }
+        return value.toString();
     }
 }

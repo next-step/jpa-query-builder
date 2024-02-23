@@ -1,10 +1,12 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
-import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.dialect.Dialect;
 import persistence.sql.ddl.exception.AnnotationMissingException;
 import persistence.sql.ddl.exception.IdAnnotationMissingException;
+import persistence.sql.extractor.ColumnData;
 import persistence.sql.extractor.ColumnExtractor;
+import persistence.sql.extractor.TableData;
 import persistence.sql.extractor.TableExtractor;
 
 import java.util.List;
@@ -12,60 +14,64 @@ import java.util.stream.Collectors;
 
 public class DDLQueryGenerator {
     private final Dialect dialect;
+    private final Class<?> clazz;
+    private final TableData tableData;
+    private final List<ColumnData> columns;
 
-    public DDLQueryGenerator(Dialect dialect) {
+    public DDLQueryGenerator(Dialect dialect, Class<?> clazz) {
         this.dialect = dialect;
+        this.clazz = clazz;
+        this.tableData = new TableExtractor(clazz).createTable();
+        this.columns = new ColumnExtractor(clazz).createColumns();
     }
 
-    public String generateDropTableQuery(final Class<?> entityClazz) {
-        checkIsEntity(entityClazz);
+    public String generateDropTableQuery() {
+        checkIsEntity(clazz);
 
-        final String tableName = new TableExtractor(entityClazz).getName();
-        return String.format("DROP TABLE %s", tableName);
+        return String.format("DROP TABLE %s", tableData.getName());
     }
 
-    public String generateCreateQuery(final Class<?> entityClazz) {
-        checkIsEntity(entityClazz);
-        List<ColumnExtractor> columnExtractors = ColumnExtractor.from(entityClazz);
+    public String generateCreateQuery() {
+        checkIsEntity(clazz);
 
-        final String tableNameClause = new TableExtractor(entityClazz).getName();
-        final String columnClause = getColumnClause(columnExtractors);
-        final String keyClause = getKeyClause(columnExtractors);
+        final String tableNameClause = new TableExtractor(clazz).getName();
+        final String columnClause = getColumnClause();
+        final String keyClause = getKeyClause();
 
         return String.format("CREATE TABLE %s (%s, %s)", tableNameClause, columnClause, keyClause);
     }
 
-    private String getColumnClause(List<ColumnExtractor> columnExtractors) {
-        return columnExtractors
+    private String getColumnClause() {
+        return columns
                 .stream()
                 .map(this::getColumnString)
                 .collect(Collectors.joining(", "));
     }
 
-    private String getColumnString(ColumnExtractor extractor) {
-        String result = String.format("%s %s", extractor.getName(), dialect.mapDataType(extractor.getDataType()));
-        if(!extractor.isNullable()) {
+    private String getColumnString(ColumnData columnData) {
+        String result = String.format("%s %s", columnData.getName(), dialect.mapDataType(columnData.getType()));
+        if(!columnData.isNullable()) {
             result += " NOT NULL";
         }
-        if (extractor.hasGenerationType()) {
-            result += String.format(" %s", dialect.mapGenerationType(extractor.getGenerationType()));
+        if (columnData.hasGenerationType()) {
+            result += String.format(" %s", dialect.mapGenerationType(columnData.getGenerationType()));
         }
         return result;
     }
 
-    private String getKeyClause(List<ColumnExtractor> columnExtractors) {
-        if(columnExtractors.stream().noneMatch(ColumnExtractor::isPrimaryKey)) {
+    private String getKeyClause() {
+        if(columns.stream().noneMatch(ColumnData::isPrimaryKey)) {
             throw new IdAnnotationMissingException();
         }
 
-        return columnExtractors.stream()
-                .filter(extractor -> extractor.getKeyType() != null)
+        return columns.stream()
+                .filter(columnData -> columnData.getKeyType() != null)
                 .map(this::getKeyString)
                 .collect(Collectors.joining(" ,"));
     }
 
-    private String getKeyString(ColumnExtractor extractor) {
-        return String.format("%s KEY (%s)", dialect.mapKeyType(extractor.getKeyType()), extractor.getName());
+    private String getKeyString(ColumnData columnData) {
+        return String.format("%s KEY (%s)", dialect.mapKeyType(columnData.getKeyType()), columnData.getName());
     }
 
     private void checkIsEntity(Class<?> entityClazz) {

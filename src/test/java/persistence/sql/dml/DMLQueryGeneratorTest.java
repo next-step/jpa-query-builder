@@ -3,10 +3,9 @@ package persistence.sql.dml;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.Person;
-import persistence.sql.ddl.dialect.H2Dialect;
+import persistence.sql.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DMLQueryGeneratorTest {
     DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(Person.class, new H2Dialect());
@@ -19,7 +18,8 @@ class DMLQueryGeneratorTest {
         String email = "email";
         Person person = new Person(null, nickName, age, email, null);
         String expected = String.format(
-                "insert into users (nick_name, old, email) values (%s, %s, %s)",
+                "insert into users (id, nick_name, old, email) values (%s, %s, %s, %s)",
+                "null",
                 nickName,
                 age,
                 email
