@@ -248,16 +248,23 @@ public class Person {
 }
 ```
 
-### [ ] 요구사항 2 - 추가된 정보를 통해 create 쿼리 만들어보기
+### [x] 요구사항 2 - 추가된 정보를 통해 create 쿼리 만들어보기
 
 > 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
 
 TODO List :
 
-- [ ] `@Id`가 붙은 필드에서, `@GeneratedValue`의 전략대로 PK 전략을 지정할 수 있어야 한다.
-- [ ] `@Column`이 붙은 필드와 매핑되는 컬럼 이름을 지정할 수 있어야 한다.
-    - [ ] name value가 지정되어 있다면 해당 value로 컬럼 이름을 지정해야 한다.
-    - [ ] nullable value가 지정되어 있다면 해당 필드 값의 nullable여부를 validate해야 한다.
+- [x] `@Id`가 붙은 필드에서, `@GeneratedValue`의 전략대로 PK 전략을 지정할 수 있어야 한다.
+    - [x] `@GeneratedValue`이 붙어있지 않은 경우
+    - [x] `@GeneratedValue = GenerationType.IDENTITY`
+- [x] `@Column`이 붙은 필드와 매핑되는 컬럼 이름을 지정할 수 있어야 한다.
+    - [x] name value가 지정되어 있다면 해당 value로 컬럼 이름을 지정해야 한다.
+    - [x] nullable value가 지정되어 있다면 해당 필드 값의 nullable여부를 validate해야 한다.
+
+Note :
+
+- IdField와 ColumnField를 별도로 나눌 필요가 있을까?
+    - 성급하게 합치는 것보단 조금 더 어떤 요구사항이 있는지 보고 판단.
 
 ```java
 
