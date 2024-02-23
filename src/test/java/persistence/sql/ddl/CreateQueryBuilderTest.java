@@ -3,8 +3,9 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.sql.Person;
 import persistence.exception.NotEntityException;
+import persistence.sql.Person;
+import persistence.sql.domain.Dialect;
 import persistence.study.Car;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,9 +23,10 @@ class CreateQueryBuilderTest {
         void fail_NotEntity() {
             //given
             Class<Car> notEntityClass = Car.class;
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Dialect.H2);
 
             //when & then
-            assertThatThrownBy(() -> new CreateQueryBuilder(notEntityClass))
+            assertThatThrownBy(() -> createQueryBuilder.build(notEntityClass))
                     .isInstanceOf(NotEntityException.class);
         }
     }
@@ -36,13 +38,14 @@ class CreateQueryBuilderTest {
         @DisplayName("CREATE 쿼리를 반환한다.")
         void sqlForCreate() {
             //given
-            Class<Person> targetClass = Person.class;
+            Class<Person> target = Person.class;
 
             //when
-            String sql = new CreateQueryBuilder(targetClass).build();
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Dialect.H2);
+            String query = createQueryBuilder.build(target);
 
             //then
-            assertThat(sql).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL)");
+            assertThat(query).isEqualTo("CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR, old INTEGER, email VARCHAR NOT NULL)");
         }
     }
 }

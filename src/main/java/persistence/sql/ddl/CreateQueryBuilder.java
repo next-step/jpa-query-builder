@@ -23,13 +23,14 @@ public class CreateQueryBuilder {
             new PrimaryKeyColumnStrategy()
     );
 
-    private final Table table;
+    private final Dialect dialect;
 
-    public CreateQueryBuilder(Class<?> target) {
-        this.table = Table.of(target);
+    public CreateQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
-    public String build() {
+    public String build(Class<?> clazz) {
+        Table table = Table.of(clazz);
         String tableName = table.getName();
         List<Column> fieldColumns = table.getColumns();
         String columnQueries = makeColumnQueries(fieldColumns);
@@ -46,7 +47,7 @@ public class CreateQueryBuilder {
         DataType columnType = column.getType();
         return column.getName() +
                 SPACE +
-                columnType.getDataTypeForDialect(Dialect.H2) +
+                columnType.getDataTypeForDialect(dialect) +
                 getColumnOptions(column.getField());
     }
 

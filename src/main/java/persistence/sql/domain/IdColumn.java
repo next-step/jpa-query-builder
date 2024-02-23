@@ -53,6 +53,6 @@ public class IdColumn implements Column {
     }
 
     public boolean isAutoIncrement() {
-        return generationType.equals(GenerationType.IDENTITY);
+        return GenerationType.IDENTITY.equals(generationType);
     }
 }

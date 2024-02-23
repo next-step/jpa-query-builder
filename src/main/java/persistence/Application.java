@@ -13,6 +13,7 @@ import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectAllQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.domain.Dialect;
 
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
-            jdbcTemplate.execute(createQueryBuilder.build());
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Dialect.H2);
+            jdbcTemplate.execute(createQueryBuilder.build(Person.class));
 
             Person person = new Person(1L, "John", 25, "email", 1);
             Person person2 = new Person(1L, "James", 45, "james@asdf.com", 10);
