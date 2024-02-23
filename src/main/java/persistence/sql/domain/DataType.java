@@ -3,44 +3,36 @@ package persistence.sql.domain;
 import persistence.exception.NotAllowedDataTypeException;
 
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public enum DataType {
-    BIGINT(List.of(Long.class), ""),
-    VARCHAR(List.of(String.class), "255"),
-    INTEGER(List.of(int.class, Integer.class), ""),
+    BIGINT(List.of(Long.class), new EnumMap<>(Map.of(Dialect.H2, "BIGINT"))),
+    VARCHAR(List.of(String.class), new EnumMap<>(Map.of(Dialect.H2, "VARCHAR"))),
+    INTEGER(List.of(int.class, Integer.class), new EnumMap<>(Map.of(Dialect.H2, "INTEGER"))),
     ;
 
-    private static final String START_SYMBOL = "(";
-    private static final String END_SYMBOL = ")";
-    private final List<Class<?>> targetClasses;
-    private final String defaultValue;
+    private final List<Class<?>> targets;
+    private final Map<Dialect, String> dialects;
 
-    DataType(List<Class<?>> targetClasses, String defaultValue) {
-        this.targetClasses = targetClasses;
-        this.defaultValue = defaultValue;
+    DataType(List<Class<?>> targets, Map<Dialect, String> dialects) {
+        this.targets = targets;
+        this.dialects = dialects;
     }
 
-    public static DataType from(Class<?> targetClass) {
+    public static DataType from(Class<?> target) {
         return Arrays.stream(values())
-                .filter(it -> it.targetClasses.contains(targetClass))
+                .filter(it -> it.targets.contains(target))
                 .findAny()
                 .orElseThrow(NotAllowedDataTypeException::new);
     }
 
-    public boolean containsDefaultValue() {
-        return !defaultValue.isBlank();
+    public String getDataTypeForDialect(Dialect dialect) {
+        return dialects.get(dialect);
     }
 
-    public String getDefaultValue() {
-        return START_SYMBOL + defaultValue + END_SYMBOL;
-    }
-
-    public String getTypeQuery() {
-        String query = this.name();
-        if (this.containsDefaultValue()) {
-            query += this.getDefaultValue();
-        }
-        return query;
+    public boolean isVarchar() {
+        return this == VARCHAR;
     }
 }

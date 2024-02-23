@@ -47,3 +47,22 @@
 ## 요구사항 4 - drop 쿼리 만들어 보기
 - [ ] drop 쿼리를 만들 수 있다.
 
+
+# 3단계 - QueryBuilder DML
+
+## 요구사항 1 - insert 구현해보기
+- [x] id의 생성 전략이 Identity 일 경우 쿼리문에 포함시키지 않는다.
+- [x] transient 컬럼은 포함시키지 않는다.
+- [x] not null 인데, null 일 경우 예외를 던진다.
+- [x] insert 쿼리를 만들 수 있다.
+
+## 요구사항 2 - findAll 구현해보기
+- [x] findAll 쿼리를 만들 수 있다.
+
+## 요구사항 3 - findById 구현해보기
+- [x] findById 쿼리를 만들 수 있다.
+
+## 요구사항 4 - delete 쿼리 만들어보기
+- [x] delete 쿼리를 만들 수 있다.
+
+
