@@ -30,6 +30,14 @@ public class Column {
     }
 
     @Override
+    public int hashCode() {
+        int result = Integer.hashCode(type.hashCode());
+        result = 31 * result + Integer.hashCode(name.hashCode());
+        result = 31 * result + Integer.hashCode(constraints.hashCode());
+        return result;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
