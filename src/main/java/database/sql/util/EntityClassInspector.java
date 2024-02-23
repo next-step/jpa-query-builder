@@ -14,6 +14,12 @@ public class EntityClassInspector {
         columnsMetadata = new ColumnsMetadata(entityClass);
     }
 
+    public EntityClassInspector(Object entity) {
+        Class<?> entityClass = entity.getClass();
+        tableMetadata = new TableMetadata(entityClass);
+        columnsMetadata = new ColumnsMetadata(entityClass);
+    }
+
     public String getTableName() {
         return tableMetadata.getTableName();
     }
@@ -30,15 +36,21 @@ public class EntityClassInspector {
         return columnsMetadata.getColumnDefinitions(typeConverter);
     }
 
-    public Field getPrimaryKeyField() {
-        return columnsMetadata.getPrimaryKeyField();
-    }
-
     public String getPrimaryKeyColumnName() {
         return columnsMetadata.getPrimaryKeyColumnName();
     }
 
     public List<String> getColumnNamesForInserting() {
         return columnsMetadata.getColumnNamesForInserting();
+    }
+
+    public long getPrimaryKeyValue(Object entity) {
+        Field primaryKeyField = columnsMetadata.getPrimaryKeyField();
+        primaryKeyField.setAccessible(true);
+        try {
+            return (long) primaryKeyField.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

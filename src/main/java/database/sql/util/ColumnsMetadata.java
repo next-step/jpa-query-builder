@@ -1,9 +1,6 @@
 package database.sql.util;
 
-import database.sql.util.column.EntityColumn;
-import database.sql.util.column.FieldToEntityColumnConverter;
 import database.sql.util.type.TypeConverter;
-import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
@@ -13,19 +10,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ColumnsMetadata {
-
-    private final List<Field> fields;
-    private final List<EntityColumn> columns;
+    private final List<ColumnMetadata> allColumnMetadatas;
+    private final ColumnMetadata primaryKeyColumnMetadata;
+    private final List<ColumnMetadata> generalColumnMetadata;
 
     public ColumnsMetadata(Class<?> entityClass) {
-        fields = getFields(entityClass);
-        columns = getColumns(fields);
+        allColumnMetadatas = Arrays.stream(entityClass.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(ColumnMetadata::new)
+                .collect(Collectors.toList());
+
+        primaryKeyColumnMetadata = allColumnMetadatas.stream()
+                .filter(ColumnMetadata::isPrimaryKeyField)
+                .findFirst()
+                .get();
+
+        generalColumnMetadata = allColumnMetadatas.stream()
+                .filter(columnMetadata -> !columnMetadata.isPrimaryKeyField())
+                .collect(Collectors.toList());
     }
 
     public List<String> getColumnNames() {
-        return columns.stream()
-                .map(EntityColumn::getColumnName)
-                .collect(Collectors.toList());
+        List<String> list = new ArrayList<>();
+        for (ColumnMetadata columnMetadata : allColumnMetadatas) {
+            list.add(columnMetadata.getColumnName());
+        }
+        return list;
     }
 
     public String getJoinedColumnNames() {
@@ -33,48 +43,25 @@ public class ColumnsMetadata {
     }
 
     public List<String> getColumnDefinitions(TypeConverter typeConverter) {
-        return columns.stream()
-                .map(entityColumn -> entityColumn.toColumnDefinition(typeConverter))
+        return allColumnMetadatas.stream()
+                .map(columnMetadata -> columnMetadata.toColumnDefinition(typeConverter))
                 .collect(Collectors.toList());
     }
 
+    // TODO: 이건 미리 필터로 뽑아놔도 될듯 PK, PK 아닌거
     public Field getPrimaryKeyField() {
-        return fields.stream()
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst().get();
+        return primaryKeyColumnMetadata.getField();
     }
 
     public String getPrimaryKeyColumnName() {
-        return columns.stream()
-                .filter(EntityColumn::isPrimaryKeyField)
-                .findFirst()
-                .get()
-                .getColumnName();
+        return primaryKeyColumnMetadata.getColumnName();
     }
 
     public List<String> getColumnNamesForInserting() {
         List<String> list = new ArrayList<>();
-        for (EntityColumn entityColumn : columns) {
-            if (!entityColumn.isPrimaryKeyField()) {
-                list.add(entityColumn.getColumnName());
-            }
+        for (ColumnMetadata columnMetadata : generalColumnMetadata) {
+            list.add(columnMetadata.getColumnName());
         }
         return list;
-    }
-
-    private List<Field> getFields(Class<?> entityClass) {
-        return Arrays.stream(entityClass.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .collect(Collectors.toList());
-    }
-
-    private List<EntityColumn> getColumns(List<Field> fields) {
-        return fields.stream()
-                .map(this::convertFieldToEntityColumn)
-                .collect(Collectors.toList());
-    }
-
-    private EntityColumn convertFieldToEntityColumn(Field field) {
-        return new FieldToEntityColumnConverter(field).convert();
     }
 }

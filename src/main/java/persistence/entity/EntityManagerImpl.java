@@ -6,7 +6,6 @@ import database.sql.util.EntityClassInspector;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 public class EntityManagerImpl implements EntityManager {
@@ -32,7 +31,7 @@ public class EntityManagerImpl implements EntityManager {
     public void persist(Object entity) {
         Map<String, Object> map = ((Person) entity).toMap(); // 하드코딩
 
-        EntityClassInspector inspector = getEntityClassInspector(entity.getClass());
+        EntityClassInspector inspector = new EntityClassInspector(entity);
 
 //        map.put("nick_name", name);
 //        map.put("old", age);
@@ -44,22 +43,12 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-        long id;
-        Class<?> clazz = entity.getClass();
-        EntityClassInspector inspector = getEntityClassInspector(clazz);
-        Field field = inspector.getPrimaryKeyField();
-        field.setAccessible(true);
-        try {
-            id = (long) field.get(entity); // 여기는 너무 entity 깊이 들어감
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        EntityClassInspector entityClassInspector = new EntityClassInspector(entity);
+        long id = entityClassInspector.getPrimaryKeyValue(entity);
 
-        String query = QueryBuilder.getInstance().buildDeleteQuery(clazz, id);
+        QueryBuilder instance = QueryBuilder.getInstance();
+        String query = instance.buildDeleteQuery(entity.getClass(), id);
+
         jdbcTemplate.execute(query);
-    }
-
-    private static EntityClassInspector getEntityClassInspector(Class<?> clazz) {
-        return new EntityClassInspector(clazz);
     }
 }
