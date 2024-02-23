@@ -16,7 +16,7 @@ public class InsertQueryBuilder {
     private static final String CLAUSE_DELIMITER = ", ";
 
     public String build(Object object) {
-        Table table = Table.of(object.getClass());
+        Table table = Table.from(object.getClass());
         List<Column> columns = table.getColumns();
         Map<String, String> clause = getClause(object, columns);
         String columnsClause = String.join(CLAUSE_DELIMITER, clause.keySet());

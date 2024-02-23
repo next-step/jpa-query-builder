@@ -6,6 +6,8 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entity.EntityManager;
+import persistence.entity.MyEntityManager;
 import persistence.sql.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
@@ -47,16 +49,16 @@ public class Application {
             };
             List<Person> persons = jdbcTemplate.query(selectAllQuery, rowMapper);
 
-            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
-            String selectQuery = selectQueryBuilder.build(1L);
+            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+            String selectQuery = selectQueryBuilder.build(Person.class, 1L);
             jdbcTemplate.queryForObject(selectQuery, rowMapper);
 
             DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
             String deleteQuery = deleteQueryBuilder.build(person);
             jdbcTemplate.execute(deleteQuery);
 
-            DropQueryBuilder dropQuery = new DropQueryBuilder(Person.class);
-            jdbcTemplate.execute(dropQuery.build());
+            DropQueryBuilder dropQuery = new DropQueryBuilder();
+            jdbcTemplate.execute(dropQuery.build(Person.class));
 
             server.stop();
         } catch (Exception e) {

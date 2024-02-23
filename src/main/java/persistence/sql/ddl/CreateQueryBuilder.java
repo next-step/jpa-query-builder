@@ -30,7 +30,7 @@ public class CreateQueryBuilder {
     }
 
     public String build(Class<?> clazz) {
-        Table table = Table.of(clazz);
+        Table table = Table.from(clazz);
         String tableName = table.getName();
         List<Column> fieldColumns = table.getColumns();
         String columnQueries = makeColumnQueries(fieldColumns);

@@ -20,7 +20,7 @@ class DropQueryBuilderTest {
             Class<Person> targetClass = Person.class;
 
             //when
-            String sql = new DropQueryBuilder(targetClass).build();
+            String sql = new DropQueryBuilder().build(targetClass);
 
             //then
             assertThat(sql).isEqualTo("DROP TABLE users");
