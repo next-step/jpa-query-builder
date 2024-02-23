@@ -8,13 +8,8 @@ public class DropQueryBuilder implements DdlQueryBuilder {
 
     private final TableColumn tableColumn;
 
-    private DropQueryBuilder(TableColumn tableColumn) {
+    public DropQueryBuilder(TableColumn tableColumn) {
         this.tableColumn = tableColumn;
-    }
-
-    public static DropQueryBuilder generate(Class<?> clazz) {
-        TableColumn tableColumn = TableColumn.from(clazz);
-        return new DropQueryBuilder(tableColumn);
     }
 
     @Override

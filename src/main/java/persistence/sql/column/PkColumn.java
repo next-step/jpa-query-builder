@@ -39,11 +39,6 @@ public class PkColumn implements Column {
     }
 
     @Override
-    public Column convertPk(Field field, Dialect dialect) {
-        throw new UnsupportedOperationException("This operation is not supported for PkColumn");
-    }
-
-    @Override
     public boolean isPk() {
         return true;
     }

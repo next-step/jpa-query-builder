@@ -7,7 +7,7 @@ public class NameType {
         this.value = value;
     }
 
-    public void setColumnName(String columnName) {
+    public void setName(String columnName) {
         if (columnName.isBlank() || columnName.isEmpty()) {
             return;
         }

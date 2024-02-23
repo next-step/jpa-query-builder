@@ -9,30 +9,15 @@ import java.util.stream.Collectors;
 public class CreateQueryBuilder implements DdlQueryBuilder {
 
     private static final String CREATE_TABLE_DDL = "create table %s (%s)";
-    private static final String COMMA = ", ";
 
     private final TableColumn tableColumn;
-    private final List<Column> columns;
 
-    private CreateQueryBuilder(TableColumn tableColumn, List<Column> columns) {
+    public CreateQueryBuilder(TableColumn tableColumn) {
         this.tableColumn = tableColumn;
-        this.columns = columns;
-    }
-
-    public static CreateQueryBuilder generate(Class<?> clazz, Database database) {
-        ColumnGenerator columnGenerator = new ColumnGenerator(new GeneralColumnFactory());
-        TableColumn tableColumn = TableColumn.from(clazz);
-        List<Column> columns = columnGenerator.of(clazz.getDeclaredFields(), database.createDialect());
-        return new CreateQueryBuilder(tableColumn, columns);
     }
 
     @Override
     public String build() {
-        String columnQuery = this.columns
-                .stream()
-                .map(Column::getDefinition)
-                .collect(Collectors.joining(COMMA));
-
-        return String.format(CREATE_TABLE_DDL, tableColumn.getName(), columnQuery);
+        return String.format(CREATE_TABLE_DDL, tableColumn.getName(), tableColumn.getColumns().getColumnsDefinition());
     }
 }

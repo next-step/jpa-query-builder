@@ -11,4 +11,6 @@ public interface Dialect {
     ColumnType getColumn(Class<?> type);
 
     IdGeneratedStrategy getIdGeneratedStrategy(GenerationType strategy);
+
+    boolean isNotAutoIncrement(Field field);
 }

@@ -3,6 +3,8 @@ package persistence.sql.dml;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.Person;
+import persistence.sql.column.Columns;
+import persistence.sql.column.TableColumn;
 import persistence.sql.dialect.Database;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,8 +15,15 @@ class SelectQueryBuilderTest {
     @Test
     void buildFindQuery() {
 
-        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.generate(Person.class, Database.MYSQL);
-        String selectOneQuery = selectQueryBuilder.build().findById(1L);
+        //given
+        TableColumn tableColumn = TableColumn.from(Person.class, Database.MYSQL);
+        Person person = new Person("username", 50, "test@test.com", 1);
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(tableColumn);
+
+        //when
+        String selectOneQuery = queryBuilder.build(person).findById(1L);
+
+        //then
         assertThat(selectOneQuery).isEqualTo("select id, nick_name, old, email from users where id = 1");
 
     }

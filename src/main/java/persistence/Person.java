@@ -22,7 +22,7 @@ public class Person {
     @Transient
     private Integer index;
 
-    public Person() {
+    protected Person() {
     }
 
     public Person(String name, String email, Integer index) {

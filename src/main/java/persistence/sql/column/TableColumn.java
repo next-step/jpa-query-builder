@@ -2,22 +2,29 @@ package persistence.sql.column;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import persistence.sql.Type.NameType;
+import persistence.sql.dialect.Database;
 
 public class TableColumn {
 
-    private final String name;
+    private final NameType name;
+    private final Columns columns;
+    private final Database database;
 
-    public TableColumn(String name) {
+    public TableColumn(NameType name, Columns columns, Database database) {
         this.name = name;
+        this.columns = columns;
+        this.database = database;
     }
 
-    public static TableColumn from(Class<?> clazz) {
+    public static TableColumn from(Class<?> clazz, Database database) {
         validateEntityAnnotation(clazz);
-        String tableName = clazz.getSimpleName();
+        NameType tableName = new NameType(clazz.getSimpleName());
         if (clazz.isAnnotationPresent(Table.class)) {
-            return new TableColumn(clazz.getAnnotation(Table.class).name());
+            tableName.setName(clazz.getAnnotation(Table.class).name());
         }
-        return new TableColumn(tableName);
+        Columns columns = Columns.of(clazz.getDeclaredFields(), database.createDialect());
+        return new TableColumn(tableName, columns, database);
     }
 
     private static void validateEntityAnnotation(Class<?> clazz) {
@@ -27,7 +34,15 @@ public class TableColumn {
     }
 
     public String getName() {
-        return changeSnakeCase(name);
+        return changeSnakeCase(name.getValue());
+    }
+
+    public Columns getColumns() {
+        return columns;
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 
     private String changeSnakeCase(String name) {

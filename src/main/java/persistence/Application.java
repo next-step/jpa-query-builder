@@ -6,6 +6,7 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.column.TableColumn;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.dialect.Database;
 import persistence.sql.dml.DeleteQueryBuilder;
@@ -25,18 +26,19 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            createPersonDdl(jdbcTemplate);
+            TableColumn tableColumn = TableColumn.from(Person.class, Database.MYSQL);
 
-            insertPerson(jdbcTemplate);
+            createPersonDdl(jdbcTemplate, tableColumn);
+            Person person1 = new Person("username", 30, "test@test.com", 1);
+            insertPerson(tableColumn, person1, jdbcTemplate);
 
             RowMapper<Person> rowMapper = getPersonRowMapper();
 
-            SelectQueryBuilder queryBuilder = SelectQueryBuilder.generate(Person.class, Database.MYSQL);
-            selectAll(queryBuilder, jdbcTemplate, rowMapper);
+            selectAll(tableColumn, person1, jdbcTemplate, rowMapper);
 
-            selectOne(queryBuilder, jdbcTemplate, rowMapper);
+            selectOne(tableColumn, person1, jdbcTemplate, rowMapper);
 
-            deletePerson(jdbcTemplate);
+            deletePerson(tableColumn, person1, jdbcTemplate);
 
             server.stop();
         } catch (Exception e) {
@@ -46,18 +48,18 @@ public class Application {
         }
     }
 
-    private static void createPersonDdl(JdbcTemplate jdbcTemplate) {
-        String ddl = CreateQueryBuilder.generate(Person.class, Database.MYSQL).build();
+    private static void createPersonDdl(JdbcTemplate jdbcTemplate, TableColumn tableColumn) {
+        String ddl = new CreateQueryBuilder(tableColumn).build();
         jdbcTemplate.execute(ddl);
     }
 
-    private static void insertPerson(JdbcTemplate jdbcTemplate) {
-        Person person1 = new Person("username", 30, "test@test.com", 1);
+    private static void insertPerson(TableColumn tableColumn, Person person1, JdbcTemplate jdbcTemplate) {
+
         Person person2 = new Person("username2", "email2@test.com", 12);
 
-        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
-        jdbcTemplate.execute(insertQueryBuilder.generate(person1, Database.MYSQL));
-        jdbcTemplate.execute(insertQueryBuilder.generate(person2, Database.MYSQL));
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(tableColumn);
+        jdbcTemplate.execute(insertQueryBuilder.build(person1));
+        jdbcTemplate.execute(insertQueryBuilder.build(person2));
     }
 
     private static RowMapper<Person> getPersonRowMapper() {
@@ -70,19 +72,23 @@ public class Application {
         };
     }
 
-    private static void selectAll(SelectQueryBuilder queryBuilder, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
-        String findAll = queryBuilder.build().findAll();
+    private static void selectAll(TableColumn tableColumn, Person person, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(tableColumn);
+        String findAll = queryBuilder.build(person).findAll();
         List<Person> persons = jdbcTemplate.query(findAll, rowMapper);
     }
 
-    private static void selectOne(SelectQueryBuilder queryBuilder, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
-        String selectOneQuery = queryBuilder.build().findById(1L);
+    private static void selectOne(TableColumn tableColumn, Person person, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(tableColumn);
+
+        String selectOneQuery = queryBuilder.build(person).findById(1L);
         jdbcTemplate.queryForObject(selectOneQuery, rowMapper);
     }
 
-    private static void deletePerson(JdbcTemplate jdbcTemplate) {
-        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.generate(Person.class, Database.MYSQL);
-        String deleteQuery = deleteQueryBuilder.build().deleteById(1L);
+    private static void deletePerson(TableColumn tableColumn, Person person, JdbcTemplate jdbcTemplate) {
+
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(tableColumn);
+        String deleteQuery = deleteQueryBuilder.build(person).deleteById(1L);
         jdbcTemplate.execute(deleteQuery);
     }
 }

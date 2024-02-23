@@ -19,21 +19,29 @@ public class GeneralColumn implements Column {
         this(name, null, columnType, nullable);
     }
 
-    public GeneralColumn(NameType name, String value, ColumnType columnType, NullableType nullable) {
+    private GeneralColumn(NameType name, String value, ColumnType columnType, NullableType nullable) {
         this.name = name;
         this.value = value;
         this.columnType = columnType;
         this.nullable = nullable;
     }
 
-    @Override
-    public String getDefinition() {
-        return String.format(DEFAULT_COLUMN_FORMAT, name.getValue(), columnType.getColumnDefinition() + nullable.getDefinition());
+    public static GeneralColumn create(Field field, Dialect dialect) {
+        ColumnType columnType = dialect.getColumn(field.getType());
+        NameType name = new NameType(field.getName());
+        NullableType nullable = new NullableType();
+        if (field.isAnnotationPresent(jakarta.persistence.Column.class)) {
+            boolean isNullable = field.getAnnotation(jakarta.persistence.Column.class).nullable();
+            nullable.update(isNullable);
+            String columnName = field.getAnnotation(jakarta.persistence.Column.class).name();
+            name.setName(columnName);
+        }
+        return new GeneralColumn(name, columnType, nullable);
     }
 
     @Override
-    public PkColumn convertPk(Field field, Dialect dialect) {
-        return PkColumn.of(this, field, dialect);
+    public String getDefinition() {
+        return String.format(DEFAULT_COLUMN_FORMAT, name.getValue(), columnType.getColumnDefinition() + nullable.getDefinition());
     }
 
     @Override
