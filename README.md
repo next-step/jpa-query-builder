@@ -21,6 +21,6 @@ src>test>java>persistence>study 하위에 StringTest 클래스를 하나 생성�
 
 ## Step3 요구사항
 - [x] insert 구현해보기
-- [ ] findAll 기능 구현해보기
-- [ ] 단건 조회(findBy Id) 기능 구현해보기
+- [x] findAll 기능 구현해보기
+- [x] 단건 조회(findBy Id) 기능 구현해보기
 - [ ] delete 쿼리 만들어보기

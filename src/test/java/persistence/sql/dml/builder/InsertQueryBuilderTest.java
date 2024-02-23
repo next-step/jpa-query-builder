@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InsertQueryBuilderTest {
     @Test
     void insertQueryBuilder() {
-        Person person = new Person("hoon25", 20, "hoon25@gmail.com", 0);
+        Person person = new Person("hoon25", 20, "hoon25@gmail.com");
         assertThat(new InsertQueryBuilder().generateSQL(person))
                 .isEqualTo("insert into users (id, nick_name, old, email) values (DEFAULT, 'hoon25', 20, 'hoon25@gmail.com')");
     }

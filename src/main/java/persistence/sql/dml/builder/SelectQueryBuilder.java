@@ -18,6 +18,16 @@ public class SelectQueryBuilder {
         return new SelectQueryDto<>(sql, rowMapper);
     }
 
+    public SelectQueryDto<?> findById(Class<?> clazz, Long id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(generateFindAllQuery(clazz));
+        sb.append(" where ");
+        sb.append(" id=");
+        sb.append(id.toString());
+        RowMapper<?> rowMapper = generateRowMapper(clazz);
+        return new SelectQueryDto<>(sb.toString(), rowMapper);
+    }
+
     private String generateFindAllQuery(Class<?> clazz) {
         return String.format("select %s from %s",
                 new ColumnsClause(clazz).getColumns(),
