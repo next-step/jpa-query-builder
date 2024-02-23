@@ -1,10 +1,11 @@
-package persistence.sql.ddl.dialect;
+package persistence.sql.dialect;
 
 import jakarta.persistence.GenerationType;
 import persistence.sql.ddl.KeyType;
+import persistence.sql.extractor.DataType;
 
 public interface Dialect {
-    String mapDataType(Class<?> type);
+    String mapDataType(DataType type);
     String mapGenerationType(GenerationType strategy);
     String mapKeyType(KeyType keyType);
 }
