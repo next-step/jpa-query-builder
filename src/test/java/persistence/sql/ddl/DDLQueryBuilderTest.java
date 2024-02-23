@@ -48,6 +48,6 @@ class DDLQueryBuilderTest {
 
         String dropQuery = ddlQueryBuilder.buildDropQuery(table);
 
-        assertThat(dropQuery).isEqualTo("DROP TABLE person3;");
+        assertThat(dropQuery).isEqualTo("DROP TABLE users;");
     }
 }
