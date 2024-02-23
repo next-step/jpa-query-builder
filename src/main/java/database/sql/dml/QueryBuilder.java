@@ -31,4 +31,8 @@ public class QueryBuilder {
         DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entityClass);
         return deleteQueryBuilder.buildQuery(conditionMap);
     }
+
+    public String buildDeleteQuery(Class<?> entityClass, Long id) {
+        return buildDeleteQuery(entityClass, Map.of("id", id));
+    }
 }

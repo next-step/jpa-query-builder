@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +30,18 @@ public class EntityClassInspector {
         return entityClass.getSimpleName();
     }
 
+    private List<Field> getFields() {
+        return Arrays.stream(entityClass.getDeclaredFields())
+                .filter(this::notTransientField)
+                .collect(Collectors.toList());
+    }
+
+    private List<EntityColumn> getColumns() {
+        return getFields().stream()
+                .map(this::fieldToColumn)
+                .collect(Collectors.toList());
+    }
+
     public List<String> getColumnNames() {
         return getColumns().stream()
                 .map(EntityColumn::getColumnName)
@@ -47,6 +58,12 @@ public class EntityClassInspector {
             list.add(entityColumn.toColumnDefinition(typeConverter));
         }
         return list;
+    }
+
+    public Field getPrimaryKeyField() {
+        return getFields().stream()
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst().get();
     }
 
     public String getPrimaryKeyColumnName() {
@@ -66,13 +83,6 @@ public class EntityClassInspector {
             }
         }
         return list;
-    }
-
-    private Collection<EntityColumn> getColumns() {
-        return Arrays.stream(entityClass.getDeclaredFields())
-                .filter(this::notTransientField)
-                .map(this::fieldToColumn)
-                .collect(Collectors.toList());
     }
 
     private boolean notTransientField(Field field) {
