@@ -33,7 +33,7 @@ public class Person {
         this.email = email;
     }
 
-    public Person(final long id, final String simpson, final int i, final String mail) {
+    public Person(final long id, final String name, final int age, final String email) {
         this.id = id;
         this.name = name;
         this.age = age;

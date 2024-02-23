@@ -33,29 +33,36 @@ class EntityManagerImplTest {
     @DisplayName("EntityManagerImpl find를 호출하면 엔티티가 리턴된다.")
     @Test
     void findTest() {
-        final Person person = new Person( "simpson", 31, "simpson@naver.com");
+        final Person person = new Person( 1L, "simpson", 31, "simpson@naver.com");
         final QueryBuilder queryBuilder = new QueryBuilder(Person.class);
         jdbcTemplate.execute(queryBuilder.createInsertQuery(person, new H2KeyGenerator()));
 
         final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
         final Person findPerson = entityManager.find(person.getClass(), 1L);
 
-        assertThat(person.getName()).isEqualTo(findPerson.getName());
-        assertThat(person.getAge()).isEqualTo(findPerson.getAge());
-        assertThat(person.getEmail()).isEqualTo(findPerson.getEmail());
+        assertThat(person).isEqualTo(findPerson);
     }
 
     @DisplayName("EntityManagerImpl persist를 호출하면 엔티티를 저장한다.")
     @Test
     void persistTest() {
-        final Person person = new Person( "simpson", 31, "simpson@naver.com");
+        final Person person = new Person( 1L, "simpson", 31, "simpson@naver.com");
         final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
 
         entityManager.persist(person);
 
         final Person savedPerson = entityManager.find(person.getClass(), 1L);
-        assertThat(savedPerson.getName()).isEqualTo(person.getName());
-        assertThat(savedPerson.getAge()).isEqualTo(person.getAge());
-        assertThat(savedPerson.getEmail()).isEqualTo(person.getEmail());
+        assertThat(savedPerson).isEqualTo(person);
+    }
+
+    @DisplayName("EntityManagerImpl delete를 호출하면 엔티티를 삭제한다.")
+    @Test
+    void removeTest() {
+        final Person person = new Person( 1L, "simpson", 31, "simpson@naver.com");
+        final QueryBuilder queryBuilder = new QueryBuilder(Person.class);
+        jdbcTemplate.execute(queryBuilder.createInsertQuery(person, new H2KeyGenerator()));
+        final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
+
+        entityManager.remove(person);
     }
 }

@@ -12,7 +12,7 @@ class QueryBuilderTest {
     @DisplayName("Person객체를 통해 insert를 구현한다.")
     @Test
     void dml_insert_create() {
-        Person person = new Person("simpson", 31, "qwe5507@gmail.com");
+        Person person = new Person(1L, "simpson", 31, "qwe5507@gmail.com");
         QueryBuilder queryBuilder = new QueryBuilder(person.getClass());
 
         String insertQuery = queryBuilder.createInsertQuery(person, new H2KeyGenerator());
