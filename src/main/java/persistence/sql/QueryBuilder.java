@@ -14,7 +14,7 @@ public abstract class QueryBuilder {
     public static final String COMMA = ", ";
     public static final String SPACE = " ";
 
-    protected String generateTableName(Class<?> clazz) {
+    public String generateTableName(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Table.class)) {
             return clazz.getSimpleName().toUpperCase();
         }
@@ -26,7 +26,7 @@ public abstract class QueryBuilder {
         return table.name().toUpperCase();
     }
 
-    protected String generateColumns(Field[] fields) {
+    public String generateColumns(Field[] fields) {
         return Arrays.stream(fields)
                 .filter(this::isNotTransientAnnotationPresent)
                 .map(this::generateColumn)
@@ -34,9 +34,9 @@ public abstract class QueryBuilder {
                 .collect(Collectors.joining(COMMA));
     }
 
-    protected abstract String generateColumn(Field field);
+    public abstract String generateColumn(Field field);
 
-    protected String generateColumnName(Field field) {
+    public String generateColumnName(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {
             return field.getName().toUpperCase();
         }
@@ -52,4 +52,11 @@ public abstract class QueryBuilder {
         return !field.isAnnotationPresent(Transient.class);
     }
 
+
+    public String convertValue(Class<?> type, String value) {
+        if (type.equals(String.class)) {
+            value = "'" + value + "'";
+        }
+        return value;
+    }
 }

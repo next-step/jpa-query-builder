@@ -31,11 +31,12 @@ class InsertQueryBuilderTest {
     void DMLInsertFailTest() {
         // given
         NotEntityPerson notEntityPerson = new NotEntityPerson("Jamie", 34, "jaesungahn91@gmail.com");
+        String message = "Does not have an @Entity annotation.";
 
         // when & then
         assertThatThrownBy(() -> INSERT_QUERY_BUILDER.getInsertQueryString(notEntityPerson))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Does not have an @Entity annotation.");
+                .hasMessage(message);
     }
 
 }

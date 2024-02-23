@@ -57,11 +57,4 @@ public class InsertQueryBuilder extends QueryBuilder {
         return GenerationType.UUID.equals(field.getAnnotation(GeneratedValue.class).strategy());
     }
 
-    private String convertValue(Class<?> type, String value) {
-        if (type.equals(String.class)) {
-            value = "'" + value + "'";
-        }
-        return value;
-    }
-
 }
