@@ -10,34 +10,34 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static persistence.sql.dml.parser.ValueParser.insertValuesClauseParse;
 import static persistence.sql.dml.parser.ValueParser.valueParse;
 
 public class EntityColumns {
-    private final Map<String, EntityValue> entityColumns;
+    private final Map<String, Field> entityColumns;
 
-    private EntityColumns(final Object object, final KeyGenerator keyGenerator) {
-        this.entityColumns = Arrays.stream(object.getClass().getDeclaredFields())
+    private EntityColumns(final Class<?> clazz) {
+        this.entityColumns = Arrays.stream(clazz.getDeclaredFields())
                 .sorted(Comparator.comparing(this::idFirstOrdered))
                 .filter(this::isNotTransientField)
-                .collect(Collectors.toMap(this::getFieldName,
-                        f -> new EntityValue(valueParse(f, object), insertValuesClauseParse(f, object, keyGenerator)),
-                        (e1, e2) -> e1, LinkedHashMap::new));
+                .collect(Collectors.toMap(this::getFieldName, Function.identity(),
+                        (f1, f2) -> f1, LinkedHashMap::new));
     }
 
-    public static EntityColumns of(final Object object, final KeyGenerator keyGenerator) {
-        return new EntityColumns(object, keyGenerator);
+    public static EntityColumns of(Class<?> clazz) {
+        return new EntityColumns(clazz);
     }
 
     public String names() {
         return String.join(", ", this.entityColumns.keySet());
     }
 
-    public String insertValues() {
+    public String insertValues(Object object, KeyGenerator keyGenerator) {
         return this.entityColumns.values().stream()
-                .map(EntityValue::getInsertClause)
+                .map(f -> insertValuesClauseParse(f, object, keyGenerator))
                 .collect(Collectors.joining(", "));
     }
 
@@ -45,8 +45,8 @@ public class EntityColumns {
         return this.entityColumns.keySet().iterator().next();
     }
 
-    public String primaryFieldValue() {
-        return this.entityColumns.values().iterator().next().getValue();
+    public String primaryFieldValue(Object object) {
+        return valueParse(this.entityColumns.values().iterator().next(), object);
     }
 
 

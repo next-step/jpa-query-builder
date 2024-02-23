@@ -6,29 +6,29 @@ public class QueryBuilder {
     private EntityTableMeta entityTableMeta;
     private EntityColumns entityColumns;
 
-    public QueryBuilder(Object object, KeyGenerator keyGenerator) {
-        this.entityTableMeta = EntityTableMeta.of(object.getClass());
-        this.entityColumns = EntityColumns.of(object, keyGenerator);
+    public QueryBuilder(Class<?> clazz) {
+        this.entityTableMeta = EntityTableMeta.of(clazz);
+        this.entityColumns = EntityColumns.of(clazz);
     }
 
-    public String createInsertQuery() {
+    public String createInsertQuery(Object object, KeyGenerator keyGenerator) {
         return String.format("insert into %s (%s) values (%s)", this.entityTableMeta.name(), this.entityColumns.names(),
-                entityColumns.insertValues());
+                entityColumns.insertValues(object, keyGenerator));
     }
 
     public String createFindAllQuery() {
         return String.format("select %s from %s", this.entityColumns.names(), this.entityTableMeta.name());
     }
 
-    public String createFindByIdQuery() {
+    public String createFindByIdQuery(Object object) {
         return String.format("%s where %s = %s", createFindAllQuery(),
                 this.entityColumns.primaryFieldName(),
-                this.entityColumns.primaryFieldValue());
+                this.entityColumns.primaryFieldValue(object));
     }
 
-    public String createDeleteQuery() {
+    public String createDeleteQuery(Object object) {
         return String.format("delete from %s where %s = %s", this.entityTableMeta.name(),
                 this.entityColumns.primaryFieldName(),
-                this.entityColumns.primaryFieldValue());
+                this.entityColumns.primaryFieldValue(object));
     }
 }

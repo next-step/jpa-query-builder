@@ -13,9 +13,9 @@ class QueryBuilderTest {
     @Test
     void dml_insert_create() {
         Person person = new Person("simpson", 31, "qwe5507@gmail.com");
-        QueryBuilder queryBuilder = new QueryBuilder(person, new H2KeyGenerator());
+        QueryBuilder queryBuilder = new QueryBuilder(person.getClass());
 
-        String insertQuery = queryBuilder.createInsertQuery();
+        String insertQuery = queryBuilder.createInsertQuery(person, new H2KeyGenerator());
 
         String expected = String.format("insert into users (id, nick_name, old, email) values (default, 'simpson', 31, 'qwe5507@gmail.com')");
         assertThat(insertQuery).isEqualTo(expected);
@@ -25,7 +25,7 @@ class QueryBuilderTest {
     @Test
     void dml_findAll_create() {
         Person person = new Person("simpson", 31, "qwe5507@gmail.com");
-        QueryBuilder queryBuilder = new QueryBuilder(person, new H2KeyGenerator());
+        QueryBuilder queryBuilder = new QueryBuilder(person.getClass());
 
         String findAllQuery = queryBuilder.createFindAllQuery();
 
@@ -37,9 +37,9 @@ class QueryBuilderTest {
     @Test
     void dml_findById_create() {
         Person person = new Person(1L, "simpson", 31, "qwe5507@gmail.com");
-        QueryBuilder queryBuilder = new QueryBuilder(person, new H2KeyGenerator());
+        QueryBuilder queryBuilder = new QueryBuilder(person.getClass());
 
-        String findByIdQuery = queryBuilder.createFindByIdQuery();
+        String findByIdQuery = queryBuilder.createFindByIdQuery(person);
 
         String expected = "select id, nick_name, old, email from users where id = 1L";
         assertThat(findByIdQuery).isEqualTo(expected);
@@ -49,9 +49,9 @@ class QueryBuilderTest {
     @Test
     void dml_delete_create() {
         Person person = new Person(1L, "simpson", 31, "qwe5507@gmail.com");
-        QueryBuilder queryBuilder = new QueryBuilder(person, new H2KeyGenerator());
+        QueryBuilder queryBuilder = new QueryBuilder(person.getClass());
 
-        String deleteQuery = queryBuilder.createDeleteQuery();
+        String deleteQuery = queryBuilder.createDeleteQuery(person);
 
         String expected = "delete from users where id = 1L";
         assertThat(deleteQuery).isEqualTo(expected);
