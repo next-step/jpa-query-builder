@@ -22,6 +22,11 @@ public abstract class Dialect {
 
     protected abstract void setDefaultColumnDataTypes();
 
+    protected abstract void setDefaultNullableTypes();
+
+    protected abstract void setDefaultPKGenerationTypes();
+
+
     protected void registerColumnDataType(int code, String name) {
         columnDataTypes.put(code, name);
     }
@@ -39,9 +44,6 @@ public abstract class Dialect {
         return result;
     }
 
-
-    protected abstract void setDefaultNullableTypes();
-
     protected void registerColumnNullableTypes(Nullable nullable, String name) {
         columnNullableTypes.put(nullable, name);
     }
@@ -54,8 +56,6 @@ public abstract class Dialect {
         }
         return result;
     }
-
-    protected abstract void setDefaultPKGenerationTypes();
 
     protected void registerPKGenerationTypes(GenerationType generationType, String name) {
         pkGenerationTypes.put(generationType, name);
