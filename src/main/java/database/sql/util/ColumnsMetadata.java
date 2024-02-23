@@ -1,10 +1,10 @@
 package database.sql.util;
 
 import database.sql.util.column.EntityColumn;
-import database.sql.util.column.GeneralEntityColumn;
-import database.sql.util.column.PrimaryKeyEntityColumn;
+import database.sql.util.column.FieldToEntityColumnConverter;
 import database.sql.util.type.TypeConverter;
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ColumnsMetadata {
-
-    private static final boolean DEFAULT_NULLABLE = true;
-    private static final int DEFAULT_COLUMN_LENGTH = 255;
 
     private final List<Field> fields;
     private final List<EntityColumn> columns;
@@ -48,7 +45,11 @@ public class ColumnsMetadata {
     }
 
     public String getPrimaryKeyColumnName() {
-        return convertFieldToEntityColumn(getPrimaryKeyField()).getColumnName();
+        return columns.stream()
+                .filter(EntityColumn::isPrimaryKeyField)
+                .findFirst()
+                .get()
+                .getColumnName();
     }
 
     public List<String> getColumnNamesForInserting() {
@@ -74,45 +75,6 @@ public class ColumnsMetadata {
     }
 
     private EntityColumn convertFieldToEntityColumn(Field field) {
-        Column columnAnnotation = field.getAnnotation(Column.class);
-        GeneratedValue generatedValueAnnotation = field.getAnnotation(GeneratedValue.class);
-        boolean isId = field.isAnnotationPresent(Id.class);
-
-        String columnName = getColumnNameFromAnnotation(columnAnnotation, field.getName());
-        Class<?> type = field.getType();
-        Integer columnLength = getColumnLength(columnAnnotation);
-
-        if (isId) {
-            boolean autoIncrement = isAutoIncrement(generatedValueAnnotation);
-            return new PrimaryKeyEntityColumn(columnName, type, columnLength, autoIncrement);
-        }
-
-        boolean nullable = isNullable(columnAnnotation);
-        return new GeneralEntityColumn(columnName, type, columnLength, nullable);
-    }
-
-    private String getColumnNameFromAnnotation(Column columnAnnotation, String defaultName) {
-        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
-            return columnAnnotation.name();
-        }
-        return defaultName;
-    }
-
-    private Integer getColumnLength(Column columnAnnotation) {
-        if (columnAnnotation != null) {
-            return columnAnnotation.length();
-        }
-        return DEFAULT_COLUMN_LENGTH;
-    }
-
-    private boolean isAutoIncrement(GeneratedValue generatedValueAnnotation) {
-        return generatedValueAnnotation != null && generatedValueAnnotation.strategy() == GenerationType.IDENTITY;
-    }
-
-    private boolean isNullable(Column columnAnnotation) {
-        if (columnAnnotation != null) {
-            return columnAnnotation.nullable();
-        }
-        return DEFAULT_NULLABLE;
+        return new FieldToEntityColumnConverter(field).convert();
     }
 }
