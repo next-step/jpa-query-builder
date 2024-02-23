@@ -40,7 +40,7 @@ public class AnnotatedEntityQueryBuilder {
             Class<?> type = field.getType();
 
             if (type.equals(String.class) && !nullable) {
-                return String.format("%s VARCHAR(30)", name);
+                return String.format("%s VARCHAR(30) NOT NULL", name);
             }
             if (type.equals(String.class) && nullable) {
                 return String.format("%s VARCHAR(30) NULL", name);
