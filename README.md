@@ -20,6 +20,6 @@
 - [x] 요구사항 4 - Person 객체를 통해 delete 쿼리 만들어보기
 
 ### step4 요구사항
-- [ ] 요구사항 1 - find 구현하기
+- [x] 요구사항 1 - find 구현하기
 - [ ] 요구사항 2 - persist (insert) 구현하기
 - [ ] 요구사항 3 - remove (delete) 구현하기

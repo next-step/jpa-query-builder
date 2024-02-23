@@ -44,4 +44,18 @@ class EntityManagerImplTest {
         assertThat(person.getAge()).isEqualTo(findPerson.getAge());
         assertThat(person.getEmail()).isEqualTo(findPerson.getEmail());
     }
+
+    @DisplayName("EntityManagerImpl persist를 호출하면 엔티티를 저장한다.")
+    @Test
+    void persistTest() {
+        final Person person = new Person( "simpson", 31, "simpson@naver.com");
+        final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
+
+        entityManager.persist(person);
+
+        final Person savedPerson = entityManager.find(person.getClass(), 1L);
+        assertThat(savedPerson.getName()).isEqualTo(person.getName());
+        assertThat(savedPerson.getAge()).isEqualTo(person.getAge());
+        assertThat(savedPerson.getEmail()).isEqualTo(person.getEmail());
+    }
 }
