@@ -17,6 +17,7 @@ import persistence.sql.entity.annotatedentity.Person;
 
 class BasicEntityQueryBuilderTest {
     private static final Logger logger = LoggerFactory.getLogger(BasicEntityQueryBuilderTest.class);
+    public static final String QUERY_SELECT_PERSON = "SELECT * FROM person";
     DatabaseServer server;
     private JdbcTemplate jdbcTemplate;
 
@@ -39,8 +40,8 @@ class BasicEntityQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("[요구사항1] Person 클래스를 사용하여, person 테이블을 생성한다.")
-    void createQueryUsingEntityTest() throws SQLException {
+    @DisplayName("[요구사항1] @Column 애노테이션이 없는 Person 엔티티를 이용하여 create 쿼리 만든다.")
+    void 요구사항1_test() throws SQLException {
         //given
         List<String> expectedColumnNames = List.of("ID", "NAME", "AGE");
         String expectedTableName = "PERSON";
@@ -49,7 +50,7 @@ class BasicEntityQueryBuilderTest {
         jdbcTemplate.execute(new BasicEntityQueryBuilder(persistence.sql.entity.baic.Person.class).build());
 
         // then
-        ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery("SELECT * FROM person");
+        ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery(QUERY_SELECT_PERSON);
         ResultInterface tableSchema = ((JdbcResultSet) selectQueryResult).getResult();
 
         String actualTableName = tableSchema.getTableName(0);
@@ -63,8 +64,8 @@ class BasicEntityQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("[요구사항2] Person 클래스를 사용하여, person 테이블을 생성한다.")
-    void createQueryUsingAnnotatedEntityTest() throws SQLException {
+    @DisplayName("[요구사항2] @Column 애노테이션이 있는 Person 엔티티를 이용하여 create 쿼리 만든다.")
+    void 요구사항2_test() throws SQLException {
         //given
         List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");
         String expectedTableName = "PERSON";
@@ -73,7 +74,7 @@ class BasicEntityQueryBuilderTest {
         jdbcTemplate.execute(new AnnotatedEntityQueryBuilder(Person.class).build());
 
         // then
-        ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery("SELECT * FROM person");
+        ResultSet selectQueryResult = server.getConnection().createStatement().executeQuery(QUERY_SELECT_PERSON);
         ResultInterface tableSchema = ((JdbcResultSet) selectQueryResult).getResult();
 
         String actualTableName = tableSchema.getTableName(0);
