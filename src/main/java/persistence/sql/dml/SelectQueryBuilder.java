@@ -12,7 +12,7 @@ public class SelectQueryBuilder {
     private Columns columns;
     private String query;
 
-    public SelectQueryBuilder (TableColumn tableColumn) {
+    public SelectQueryBuilder(TableColumn tableColumn) {
         this(tableColumn, null);
     }
 
