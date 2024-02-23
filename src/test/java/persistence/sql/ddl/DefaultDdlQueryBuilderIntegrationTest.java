@@ -8,9 +8,7 @@ import persistence.sql.JdbcServerTest;
 import persistence.sql.TestJdbcServerExtension;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
-import persistence.sql.mapping.ColumnTypeMapper;
-import persistence.sql.mapping.Table;
-import persistence.sql.mapping.TableBinder;
+import persistence.sql.mapping.*;
 
 import java.util.List;
 
@@ -19,9 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JdbcServerTest
 class DefaultDdlQueryBuilderIntegrationTest {
 
+    private final TableBinder tableBinder = new TableBinder();
+
     private final ColumnTypeMapper columnTypeMapper = ColumnTypeMapper.getInstance();
 
-    private final TableBinder tableBinder = new TableBinder(columnTypeMapper);
+    private final ColumnBinder columnBinder = new ColumnBinder(columnTypeMapper);
 
     private final Dialect dialect= new H2Dialect();
     private final DdlQueryBuilder queryBuilder = new DefaultDdlQueryBuilder(dialect);
@@ -44,6 +44,8 @@ class DefaultDdlQueryBuilderIntegrationTest {
         // given
         final Class<PersonV3> clazz = PersonV3.class;
         final Table table = tableBinder.createTable(clazz);
+        final List<Column> columns = columnBinder.createColumns(clazz);
+        table.addColumns(columns);
         final jdbc.JdbcTemplate jdbcTemplate = TestJdbcServerExtension.getJdbcTemplate();
         final String createQuery = queryBuilder.buildCreateQuery(table);
 
@@ -63,6 +65,8 @@ class DefaultDdlQueryBuilderIntegrationTest {
         // given
         final Class<PersonV3> clazz = PersonV3.class;
         final Table table = tableBinder.createTable(clazz);
+        final List<Column> columns = columnBinder.createColumns(clazz);
+        table.addColumns(columns);
         final JdbcTemplate jdbcTemplate = TestJdbcServerExtension.getJdbcTemplate();
         final String createQuery = queryBuilder.buildCreateQuery(table);
         jdbcTemplate.execute(createQuery);

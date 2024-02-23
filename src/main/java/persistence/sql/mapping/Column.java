@@ -3,15 +3,13 @@ package persistence.sql.mapping;
 import jakarta.persistence.GenerationType;
 import persistence.sql.dialect.Dialect;
 
-import java.lang.reflect.Field;
-
 public class Column {
 
     private String name;
 
     private int type;
 
-    private Object value;
+    private Value value;
 
     private int length = 255;
 
@@ -25,28 +23,20 @@ public class Column {
 
     private Column() {}
 
-    public Column(final Field field, final ColumnTypeMapper columnTypeMapper) {
-        final jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
-        final String columnName = toColumnName(field, columnAnnotation);
-        final int sqlType = columnTypeMapper.toSqlType(field.getType());
-
+    public Column(final String columnName, final int sqlType, final Value value, final int length, final boolean nullable, final boolean unique) {
         this.name = columnName;
         this.type = sqlType;
-
-        if (columnAnnotation == null) {
-            return;
-        }
-
-        this.length = columnAnnotation.length();
-        this.nullable = columnAnnotation.nullable();
-        this.unique = columnAnnotation.unique();
+        this.value = value;
+        this.length = length;
+        this.nullable = nullable;
+        this.unique = unique;
     }
 
     public Column clone() {
         final Column copy = new Column();
         copy.name = this.name;
         copy.type = this.type;
-        copy.value = this.value;
+        copy.value = this.getValue();
         copy.length = this.length;
         copy.nullable = this.nullable;
         copy.unique = this.unique;
@@ -54,14 +44,6 @@ public class Column {
         copy.pkStrategy = this.pkStrategy;
 
         return copy;
-    }
-
-    protected String toColumnName(final Field field, final jakarta.persistence.Column columnAnnotation) {
-        if (columnAnnotation == null || columnAnnotation.name().isBlank()) {
-            return field.getName();
-        }
-
-        return columnAnnotation.name();
     }
 
     public String getName() {
@@ -72,7 +54,7 @@ public class Column {
         return dialect.convertColumnType(this.type, this.getLength());
     }
 
-    public Object getValue() {
+    public Value getValue() {
         return value;
     }
 
@@ -96,8 +78,16 @@ public class Column {
         return pk;
     }
 
+    public boolean isNotPk() {
+        return !pk;
+    }
+
     public boolean isIdentifierKey() {
         return this.pk && this.pkStrategy == GenerationType.IDENTITY;
+    }
+
+    public void setValue(final Value value) {
+        this.value = value;
     }
 
     public void setPk(final boolean pk) {

@@ -3,22 +3,11 @@ package persistence.sql.mapping;
 import jakarta.persistence.Entity;
 import persistence.sql.QueryException;
 
-import java.util.Arrays;
-
 public class TableBinder {
 
-    final ColumnTypeMapper columnTypeMapper;
-
-    public TableBinder(ColumnTypeMapper columnTypeMapper) {
-        this.columnTypeMapper = columnTypeMapper;
-    }
-
     public Table createTable(final Class<?> clazz) {
-        final Table table = new Table(toTableName(clazz));
-        Arrays.stream(clazz.getDeclaredFields())
-                .forEach(field -> table.addColumn(field, columnTypeMapper));
 
-        return table;
+        return new Table(toTableName(clazz));
     }
 
     private String toTableName(final Class<?> clazz) {

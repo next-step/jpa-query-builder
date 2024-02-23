@@ -6,6 +6,9 @@ import persistence.sql.mapping.Table;
 
 import java.util.stream.Collectors;
 
+import static persistence.sql.QueryBuilderConst.ENTER;
+import static persistence.sql.QueryBuilderConst.SPACE;
+
 public class DefaultDdlQueryBuilder implements DdlQueryBuilder {
 
     private final Dialect dialect;
@@ -19,23 +22,25 @@ public class DefaultDdlQueryBuilder implements DdlQueryBuilder {
         final StringBuilder statement = new StringBuilder()
                 .append("create table ")
                 .append(table.getName())
-                .append(" (\n")
+                .append(" (")
+                .append(ENTER)
                 .append(SPACE);
 
         final String columnsQuery = table.getColumns()
                 .stream()
                 .map(this::buildColumnQuery)
-                .collect(Collectors.joining(",\n" + SPACE));
+                .collect(Collectors.joining("," + ENTER + SPACE));
 
         statement.append(columnsQuery);
 
         if (table.hasPrimaryKey()) {
-            statement.append(",\n")
+            statement.append(",")
+                    .append(ENTER)
                     .append(SPACE)
                     .append(table.getPrimaryKey().sqlConstraintString());
         }
 
-        return statement.append("\n").append(")").toString();
+        return statement.append(ENTER).append(")").toString();
     }
 
     private String buildColumnQuery(final Column column) {

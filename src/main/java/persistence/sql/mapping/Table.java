@@ -1,10 +1,5 @@
 package persistence.sql.mapping;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
-
-import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +26,10 @@ public class Table {
         return this.columns.values().stream().map(Column::clone).collect(Collectors.toList());
     }
 
+    public Column getColumn(final String columnName) {
+        return this.columns.get(columnName).clone();
+    }
+
     public void setPrimaryKey(final PrimaryKey primaryKey) {
         this.primaryKey = primaryKey;
     }
@@ -43,26 +42,15 @@ public class Table {
         return this.getPrimaryKey() != null;
     }
 
-    public void addColumn(final Field field, final ColumnTypeMapper columnTypeMapper) {
-        if (field.isAnnotationPresent(Transient.class)) {
-            return;
-        }
-
-        final Column column = new Column(field, columnTypeMapper);
-
-        final Id idAnnotation = field.getAnnotation(Id.class);
-
-        if (idAnnotation != null) {
-            column.setPk(true);
-            this.setPrimaryKey(new PrimaryKey());
-            this.getPrimaryKey().addColumn(column);
-
-            final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-            if (generatedValue != null) {
-                column.setStrategy(generatedValue.strategy());
-            }
-        }
-
+    public void addColumn(final Column column) {
         this.columns.put(column.getName(), column);
+
+        if (column.isPk()) {
+            setPrimaryKey(new PrimaryKey(column));
+        }
+    }
+
+    public void addColumns(final List<Column> columns) {
+        columns.forEach(this::addColumn);
     }
 }
