@@ -25,33 +25,18 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            String ddl = CreateQueryBuilder.generate(Person.class, Database.MYSQL).build();
-            jdbcTemplate.execute(ddl);
+            createPersonDdl(jdbcTemplate);
 
-            Person person1 = new Person("username", 30, "test@test.com", 1);
-            Person person2 = new Person("username2", "email2@test.com", 12);
+            insertPerson(jdbcTemplate);
 
-            InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
-            jdbcTemplate.execute(insertQueryBuilder.generate(person1, Database.MYSQL));
-            jdbcTemplate.execute(insertQueryBuilder.generate(person2, Database.MYSQL));
+            RowMapper<Person> rowMapper = getPersonRowMapper();
 
             SelectQueryBuilder queryBuilder = SelectQueryBuilder.generate(Person.class, Database.MYSQL);
-            String findAll = queryBuilder.build().findAll();
-            RowMapper<Person> rowMapper = resultSet -> {
-                Long id = resultSet.getLong("id");
-                String name = resultSet.getString("nick_name");
-                Integer age = resultSet.getInt("old");
-                String email = resultSet.getString("email");
-                return new Person(id, name, age, email, null);
-            };
-            List<Person> persons = jdbcTemplate.query(findAll, rowMapper);
+            selectAll(queryBuilder, jdbcTemplate, rowMapper);
 
-            String selectOneQuery = queryBuilder.build().findById(1L);
-            jdbcTemplate.queryForObject(selectOneQuery, rowMapper);
+            selectOne(queryBuilder, jdbcTemplate, rowMapper);
 
-            DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.generate(Person.class, Database.MYSQL);
-            String deleteQuery = deleteQueryBuilder.build().deleteById(1L);
-            jdbcTemplate.execute(deleteQuery);
+            deletePerson(jdbcTemplate);
 
             server.stop();
         } catch (Exception e) {
@@ -59,5 +44,45 @@ public class Application {
         } finally {
             logger.info("Application finished");
         }
+    }
+
+    private static void createPersonDdl(JdbcTemplate jdbcTemplate) {
+        String ddl = CreateQueryBuilder.generate(Person.class, Database.MYSQL).build();
+        jdbcTemplate.execute(ddl);
+    }
+
+    private static void insertPerson(JdbcTemplate jdbcTemplate) {
+        Person person1 = new Person("username", 30, "test@test.com", 1);
+        Person person2 = new Person("username2", "email2@test.com", 12);
+
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+        jdbcTemplate.execute(insertQueryBuilder.generate(person1, Database.MYSQL));
+        jdbcTemplate.execute(insertQueryBuilder.generate(person2, Database.MYSQL));
+    }
+
+    private static RowMapper<Person> getPersonRowMapper() {
+        return resultSet -> {
+            Long id = resultSet.getLong("id");
+            String name = resultSet.getString("nick_name");
+            Integer age = resultSet.getInt("old");
+            String email = resultSet.getString("email");
+            return new Person(id, name, age, email, null);
+        };
+    }
+
+    private static void selectAll(SelectQueryBuilder queryBuilder, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
+        String findAll = queryBuilder.build().findAll();
+        List<Person> persons = jdbcTemplate.query(findAll, rowMapper);
+    }
+
+    private static void selectOne(SelectQueryBuilder queryBuilder, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
+        String selectOneQuery = queryBuilder.build().findById(1L);
+        jdbcTemplate.queryForObject(selectOneQuery, rowMapper);
+    }
+
+    private static void deletePerson(JdbcTemplate jdbcTemplate) {
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.generate(Person.class, Database.MYSQL);
+        String deleteQuery = deleteQueryBuilder.build().deleteById(1L);
+        jdbcTemplate.execute(deleteQuery);
     }
 }
