@@ -36,7 +36,7 @@ class DDLQueryBuilderTest {
         return Stream.of(
                 Arguments.arguments(Person1.class, "CREATE TABLE person1 (id bigint primary key,name varchar,age integer);"),
                 Arguments.arguments(Person2.class, "CREATE TABLE person2 (id bigint auto_increment primary key,nick_name varchar,old integer,email varchar not null);"),
-                Arguments.arguments(Person3.class, "CREATE TABLE person3 (id bigint auto_increment primary key,nick_name varchar,old integer,email varchar not null);")
+                Arguments.arguments(Person3.class, "CREATE TABLE users (id bigint auto_increment primary key,nick_name varchar,old integer,email varchar not null);")
         );
     }
 

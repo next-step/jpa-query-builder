@@ -1,5 +1,6 @@
 package persistence.sql.model;
 
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import util.CaseConverter;
 
@@ -27,8 +28,24 @@ public class EntityAnalyzer {
     }
 
     public String analyzeTableName() {
-        String tableName = entity.getSimpleName();
+        String tableName = getTableName();
         return CaseConverter.pascalToSnake(tableName);
+    }
+
+    private String getTableName() {
+        Table table = entity.getDeclaredAnnotation(Table.class);
+
+        if (table != null && hasTableName(table)) {
+            return table.name();
+        }
+
+        String entityName = entity.getSimpleName();
+        return CaseConverter.camelToSnake(entityName);
+    }
+
+    private boolean hasTableName(Table table) {
+        String name = table.name();
+        return !name.isEmpty();
     }
 
     public List<Column> analyzeColumns() {
