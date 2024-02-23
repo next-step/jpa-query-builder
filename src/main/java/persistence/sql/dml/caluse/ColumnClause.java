@@ -1,8 +1,5 @@
 package persistence.sql.dml.caluse;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import persistence.sql.meta.column.Column;
 
@@ -16,22 +13,9 @@ public class ColumnClause {
     }
 
     public String getColumn() {
-        if (field.isAnnotationPresent(Id.class)) {
-            return getPKColumn();
-        }
         if (field.isAnnotationPresent(Transient.class)) {
             return "";
         }
         return new Column(field).getColumnName();
-    }
-
-    private String getPKColumn() {
-        GenerationType generationType = field.isAnnotationPresent(GeneratedValue.class)
-                ? field.getAnnotation(GeneratedValue.class).strategy()
-                : GenerationType.AUTO;
-        if (generationType.equals(GenerationType.AUTO)) {
-            return new Column(field).getColumnName();
-        }
-        return "";
     }
 }

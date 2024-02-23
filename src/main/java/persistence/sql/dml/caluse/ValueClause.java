@@ -8,6 +8,8 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 
 public class ValueClause {
+    public static final String DEFAULT_VALUE = "DEFAULT";
+    public static final String STRING_QUOTE = "'";
     private final Object object;
     private final Field field;
 
@@ -33,13 +35,18 @@ public class ValueClause {
         if (generationType.equals(GenerationType.AUTO)) {
             return getValueByField();
         }
-        return "";
+        return DEFAULT_VALUE;
     }
 
     private String getValueByField() {
         try {
             field.setAccessible(true);
-            return field.get(object).toString();
+            Class<?> type = field.getType();
+            Object value = field.get(object);
+            if (type.equals(Integer.class) || type.equals(Long.class)) {
+                return value.toString();
+            }
+            return STRING_QUOTE + value.toString() + STRING_QUOTE;
         } catch (IllegalAccessException e) {
             throw new RuntimeException("필드의 값에 접근할 수 없습니다.", e);
         }

@@ -18,9 +18,7 @@ public class ValuesClause {
             if (value.isBlank()) {
                 return;
             }
-            sb.append("'");
             sb.append(value);
-            sb.append("'");
             sb.append(", ");
         });
         sb.deleteCharAt(sb.length() - 1);

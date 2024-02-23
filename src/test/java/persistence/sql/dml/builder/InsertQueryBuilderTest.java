@@ -10,6 +10,6 @@ class InsertQueryBuilderTest {
     void insertQueryBuilder() {
         Person person = new Person("hoon25", 20, "hoon25@gmail.com", 0);
         assertThat(new InsertQueryBuilder().generateSQL(person))
-                .isEqualTo("insert into users (nick_name, old, email) values ('hoon25', '20', 'hoon25@gmail.com')");
+                .isEqualTo("insert into users (id, nick_name, old, email) values (DEFAULT, 'hoon25', 20, 'hoon25@gmail.com')");
     }
 }
