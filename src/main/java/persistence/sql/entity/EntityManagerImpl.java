@@ -24,8 +24,11 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public Object persist(final Object entity) {
-        return null;
+    public void persist(final Object entity) {
+        final QueryBuilder queryBuilder = new QueryBuilder(entity.getClass());
+        final String insertQuery = queryBuilder.createInsertQuery(entity, new H2KeyGenerator());
+
+        jdbcTemplate.execute(insertQuery);
     }
 
     @Override

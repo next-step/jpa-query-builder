@@ -21,5 +21,5 @@
 
 ### step4 요구사항
 - [x] 요구사항 1 - find 구현하기
-- [ ] 요구사항 2 - persist (insert) 구현하기
+- [x] 요구사항 2 - persist (insert) 구현하기
 - [ ] 요구사항 3 - remove (delete) 구현하기
