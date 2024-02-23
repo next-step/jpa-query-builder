@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class DMLQueryBuilder extends QueryBuilder {
+public class InsertQueryBuilder extends QueryBuilder {
 
     private static final String INSERT_QUERY = "INSERT INTO %s (%s) VALUES (%s);";
 

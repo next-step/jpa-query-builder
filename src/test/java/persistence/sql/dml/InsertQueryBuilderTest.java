@@ -8,9 +8,9 @@ import persistence.sql.dml.entity.Person;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DMLQueryBuilderTest {
+class InsertQueryBuilderTest {
 
-    private static final DMLQueryBuilder DML_QUERY_BUILDER = new DMLQueryBuilder();
+    private static final InsertQueryBuilder INSERT_QUERY_BUILDER = new InsertQueryBuilder();
 
     @Test
     @DisplayName("Person 객체를 이용한 DML INSERT 생성 테스트")
@@ -20,7 +20,7 @@ class DMLQueryBuilderTest {
         Person person = new Person("Jamie", 34, "jaesungahn91@gmail.com");
 
         // when
-        String actualQuery = DML_QUERY_BUILDER.getInsertQueryString(person);
+        String actualQuery = INSERT_QUERY_BUILDER.getInsertQueryString(person);
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -33,7 +33,7 @@ class DMLQueryBuilderTest {
         NotEntityPerson notEntityPerson = new NotEntityPerson("Jamie", 34, "jaesungahn91@gmail.com");
 
         // when & then
-        assertThatThrownBy(() -> DML_QUERY_BUILDER.getInsertQueryString(notEntityPerson))
+        assertThatThrownBy(() -> INSERT_QUERY_BUILDER.getInsertQueryString(notEntityPerson))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Does not have an @Entity annotation.");
     }
