@@ -1,5 +1,6 @@
 package persistence.sql.extractor;
 
+
 import jakarta.persistence.Table;
 
 public class TableExtractor {
@@ -8,6 +9,11 @@ public class TableExtractor {
     public TableExtractor(Class<?> entityClazz) {
         this.entityClazz = entityClazz;
     }
+
+    public TableData createTable() {
+        return new TableData(getName());
+    }
+
     public String getName() {
         Table table = entityClazz.getAnnotation(Table.class);
         if (table == null) {

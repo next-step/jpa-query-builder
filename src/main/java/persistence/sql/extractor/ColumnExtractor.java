@@ -2,7 +2,6 @@ package persistence.sql.extractor;
 
 import jakarta.persistence.*;
 import persistence.sql.ddl.KeyType;
-import persistence.sql.extractor.exception.ColumExtractorCreateException;
 import persistence.sql.extractor.exception.GenerationTypeMissingException;
 
 import java.lang.reflect.Field;
@@ -11,33 +10,51 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ColumnExtractor {
-    private final Column column;
-    private final Field field;
+    DataTypeMapper dataTypeMapper = new DataTypeMapper();
+    Class<?> clazz;
 
-    public ColumnExtractor(Field field) {
-        if(field.isAnnotationPresent(Transient.class)) {
-            throw new ColumExtractorCreateException("Transient 필드는 컬럼으로 생성할 수 없습니다.");
-        }
-        this.field = field;
-        this.column = field.getAnnotation(Column.class);
+    public ColumnExtractor(Class<?> clazz) {
+        this.clazz = clazz;
     }
 
-    public static List<ColumnExtractor> from(Class<?> entityClazz){
-        return Arrays.stream(entityClazz.getDeclaredFields())
+    public List<ColumnData> createColumns() {
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(ColumnExtractor::new)
+                .map(this::createColumn)
                 .collect(Collectors.toList());
     }
 
-    public String getName() {
+    public List<ColumnData> createColumnsWithValue(Object entity) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(field -> createColumn(field, entity))
+                .collect(Collectors.toList());
+    }
+
+    public ColumnData createColumn(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        ColumnData columnData = new ColumnData(getName(field, column), getDataType(field), isNullable(column));
+        columnData.setKeyType(getKeyType(field, column));
+        columnData.setGenerationType(getGenerationType(field));
+        return columnData;
+    }
+
+    public ColumnData createColumn(Field field, Object object) {
+        ColumnData columnData = createColumn(field);
+        columnData.setValue(getValue(field, object));
+        return columnData;
+    }
+
+    public String getName(Field field, Column column) {
+
         String columnName = field.getName();
-        if(column != null && !column.name().isEmpty()) {
+        if (column != null && !column.name().isEmpty()) {
             columnName = column.name();
         }
         return columnName;
     }
 
-    public Object getValue(Object entity) {
+    public Object getValue(Field field, Object entity) {
         try {
             field.setAccessible(true);
             return field.get(entity);
@@ -46,45 +63,41 @@ public class ColumnExtractor {
         }
     }
 
-    public Class<?> getDataType() {
-        return field.getType();
+    private DataType getDataType(Field field) {
+        return dataTypeMapper.map(field.getType());
     }
 
-    public boolean isNullable() {
-        if(column == null){
+    private boolean isNullable(Column column) {
+        if (column == null) {
             return true;
         }
         return column.nullable();
     }
 
-    public boolean hasGenerationType() {
-        return field.isAnnotationPresent(GeneratedValue.class);
-    }
-
-    public GenerationType getGenerationType() {
+    private GenerationType getGenerationType(Field field) {
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-        if(generatedValue == null) {
-            throw new GenerationTypeMissingException();
+        if (generatedValue == null) {
+            return null;
         }
         return generatedValue.strategy();
     }
 
     // TODO: Key 관련부분 하이버네이트 참고해보기
-    public KeyType getKeyType() {
-        if(isPrimaryKey()) {
+    private KeyType getKeyType(Field field, Column column) {
+        if (isPrimaryKey(field)) {
             return KeyType.PRIMARY;
         }
-        if(isUniqueKey()) {
+        if (isUniqueKey(column)) {
             return KeyType.UNIQUE;
         }
         return null;
     }
 
-    public boolean isPrimaryKey() {
+    private boolean isPrimaryKey(Field field) {
         return field.isAnnotationPresent(Id.class);
     }
 
-    private boolean isUniqueKey() {
+    private boolean isUniqueKey(Column column) {
         return column != null && column.unique();
     }
 }

@@ -5,9 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.H2Dialect;
-import persistence.sql.extractor.exception.ColumExtractorCreateException;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.H2Dialect;
 import persistence.sql.extractor.exception.GenerationTypeMissingException;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -44,16 +43,9 @@ class TestClass {
 
 class ColumnExtractorTest {
     Dialect dialect = new H2Dialect();
+    ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class);
     private static final String GENERATED_VALUE_FIELD_NAME = "generated";
     private static final String NOT_GENERATED_VALUE_FIELD_NAME = "notGenerated";
-
-    @Test
-    @DisplayName("Transient 필드로 생성자 직접호출시 에러")
-    void errorWhenHasTransientField() {
-        assertThrows(ColumExtractorCreateException.class, () -> {
-            new ColumnExtractor(TestClass.class.getDeclaredField("ignore"));
-        });
-    }
 
     @ParameterizedTest()
     @CsvSource({
@@ -62,26 +54,27 @@ class ColumnExtractorTest {
     })
     @DisplayName("hasGenerationType 테스트")
     void testHasGenerationType(String fieldName, boolean expected) throws Exception {
-        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+        ColumnData columnData = columnExtractor.createColumn(TestClass.class.getDeclaredField(fieldName));
 
-        assertThat(columnExtractor.hasGenerationType()).isEqualTo(expected);
+        assertThat(columnData.hasGenerationType()).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("GeneratedValue 아닌데 getGenerationType 호출시 에러")
     void errorWhenGetGenerationTypeInvokedButIsNotGeneratedValue() throws Exception {
-        ColumnExtractor columnExtractor =
-                new ColumnExtractor(TestClass.class.getDeclaredField(NOT_GENERATED_VALUE_FIELD_NAME));
+        ColumnData columnData =
+                columnExtractor.createColumn(TestClass.class.getDeclaredField(NOT_GENERATED_VALUE_FIELD_NAME));
 
-        assertThrows(GenerationTypeMissingException.class, columnExtractor::getGenerationType);
+        assertThrows(GenerationTypeMissingException.class, columnData::getGenerationType);
     }
 
     @Test
     @DisplayName("getGenerationType 테스트")
     void testGetGenerationType() throws Exception {
-        ColumnExtractor columnExtractor =
-                new ColumnExtractor(TestClass.class.getDeclaredField(GENERATED_VALUE_FIELD_NAME));
-        assertThat(columnExtractor.getGenerationType()).isNotNull();
+        ColumnData columnData =
+                columnExtractor.createColumn(TestClass.class.getDeclaredField(GENERATED_VALUE_FIELD_NAME));
+
+        assertThat(columnData.getGenerationType()).isNotNull();
     }
 
     @ParameterizedTest
@@ -91,26 +84,26 @@ class ColumnExtractorTest {
     })
     @DisplayName("isNullable 테스트")
     void testIsNullable(String fieldName, boolean expected) throws Exception {
-        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+        ColumnData columnData = columnExtractor.createColumn(TestClass.class.getDeclaredField(fieldName));
 
-        assertThat(columnExtractor.isNullable()).isEqualTo(expected);
+        assertThat(columnData.isNullable()).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("getName: 재정의 된 컬럼이름 있을시 필드명 대신 반환.")
     void testGetColumnNameWithAnnotation() throws Exception {
-        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField("hasColumn"));
+        ColumnData columnData = columnExtractor.createColumn(TestClass.class.getDeclaredField("hasColumn"));
 
-        assertThat(columnExtractor.getName()).isEqualTo("has_column");
+        assertThat(columnData.getName()).isEqualTo("has_column");
     }
 
     @Test
     @DisplayName("getName: 재정의 된 컬럼이름 없으면 필드명 반환.")
     void testGetColumnName() throws Exception {
         String fieldName = "hasNotColumn";
-        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+        ColumnData columnData = columnExtractor.createColumn(TestClass.class.getDeclaredField(fieldName));
 
-        assertThat(columnExtractor.getName()).isEqualTo(fieldName);
+        assertThat(columnData.getName()).isEqualTo(fieldName);
     }
     @Test
     @DisplayName("getValue 테스트")
@@ -120,9 +113,10 @@ class ColumnExtractorTest {
         testClass.setId(id);
         String fieldName = "id";
 
-        ColumnExtractor columnExtractor = new ColumnExtractor(TestClass.class.getDeclaredField(fieldName));
+        ColumnData columnData =
+                columnExtractor.createColumn(TestClass.class.getDeclaredField(fieldName), testClass);
 
-        assertThat(columnExtractor.getValue(testClass)).isEqualTo(id);
+        assertThat(columnData.getValue()).isEqualTo(id);
     }
 
 }
