@@ -22,7 +22,8 @@ public class SelectQueryBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append(generateFindAllQuery(clazz));
         sb.append(" where ");
-        sb.append(" id=");
+        sb.append(new ColumnsClause(clazz).getPkName());
+        sb.append(" = ");
         sb.append(id.toString());
         RowMapper<?> rowMapper = generateRowMapper(clazz);
         return new SelectQueryDto<>(sb.toString(), rowMapper);
