@@ -2,14 +2,15 @@ package persistence.sql.ddl;
 
 import java.util.stream.Collectors;
 import persistence.sql.QueryBuilder;
-import persistence.sql.meta.Table;
+import static persistence.sql.constant.SqlConstant.COMMA;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.meta.Table;
 
 public class CreateQueryBuilder implements QueryBuilder {
 
-    private final FieldQueryGenerator fieldBuilder;
     private static final String CREATE_TABLE_DEFINITION = "CREATE TABLE %s (%s)";
-    private static final String COMMA = ",";
+
+    private final FieldQueryGenerator fieldBuilder;
 
     private CreateQueryBuilder(Dialect dialect) {
         fieldBuilder = FieldQueryGenerator.from(dialect);
@@ -22,11 +23,11 @@ public class CreateQueryBuilder implements QueryBuilder {
     @Override
     public String generateQuery(Object object) {
 
-        Table table = Table.of(object.getClass());
+        Table table = Table.from((Class<?>) object);
 
         String columnDefinitions = table.getColumns().stream()
             .map(fieldBuilder::generate)
-            .collect(Collectors.joining(COMMA));
+            .collect(Collectors.joining(COMMA.getValue()));
 
         return String.format(CREATE_TABLE_DEFINITION, table.getTableName(), columnDefinitions);
     }

@@ -28,7 +28,7 @@ class DropQueryBuilderTest {
         void testGenerateQuery_WhenPersonEntity_ThenGenerateDdl() {
             // given
             Class<?> clazz = Person.class;
-            Table table = Table.of(Person.class);
+            Table table = Table.from(Person.class);
 
             // when
             String result = builder.generateQuery(clazz);
