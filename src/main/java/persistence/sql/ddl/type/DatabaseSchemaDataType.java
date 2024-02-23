@@ -1,4 +1,4 @@
-package persistence.sql.ddl.field;
+package persistence.sql.ddl.type;
 
 import java.util.Arrays;
 import java.util.Locale;

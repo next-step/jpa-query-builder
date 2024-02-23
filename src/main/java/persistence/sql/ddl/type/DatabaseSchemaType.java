@@ -1,8 +1,9 @@
-package persistence.sql.ddl.field;
+package persistence.sql.ddl.type;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import org.h2.util.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -35,8 +36,26 @@ public enum DatabaseSchemaType implements DatabaseSchema {
         public String getConstraints(Field field) {
             return DatabaseConstraintType.from(field.getAnnotation(Column.class)).toSQL();
         }
+    },
+
+    Transient(Transient.class) {
+        @Override
+        public String getName(Field field) {
+            return EMPTY;
+        }
+
+        @Override
+        public String getType(Field field) {
+            return EMPTY;
+        }
+
+        @Override
+        public String getConstraints(Field field) {
+            return EMPTY;
+        }
     };
 
+    private static final String EMPTY = "";
     private static final DatabaseSchemaType DEFAULT_SCHEMA_TYPE = DatabaseSchemaType.COLUMN;
     private final Class<? extends Annotation> jpaAnnotationClass;
 

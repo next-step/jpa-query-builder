@@ -287,12 +287,14 @@ public class Person {
 }
 ```
 
-### [ ] 요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기2
+### [x] 요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기2
 
 > 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
 
-- [ ] `@Table`가 붙은 클래스이름과 동일한 테이블을 지정할 수 있어야 한다?
-- [ ] `@Transient`가 붙은 필드는 XX해야 한다?
+TODO List :
+
+- [x] `@Table` name value를 통해 별도의 테이블 명을 지정가능해야 한다.
+- [x] `@Transient`가 붙은 필드는 영속화 되지 않아야 한다.
 
 ```java
 

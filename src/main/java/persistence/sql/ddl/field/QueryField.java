@@ -1,23 +1,26 @@
 package persistence.sql.ddl.field;
 
+import persistence.sql.ddl.type.DatabaseSchema;
+import persistence.sql.ddl.type.DatabaseSchemaType;
+
 import java.lang.reflect.Field;
 
 public class QueryField {
 
     public static final String DELIMITER = " ";
     private final Field field;
-    private final DatabaseSchemaType schemaType;
+    private final DatabaseSchema schema;
 
     public QueryField(Field field) {
         this.field = field;
-        this.schemaType = DatabaseSchemaType.from(field);
+        this.schema = DatabaseSchemaType.from(field);
     }
 
     public String toSQL() {
         return String.join(DELIMITER,
-                schemaType.getName(field),
-                schemaType.getType(field),
-                schemaType.getConstraints(field)
+                schema.getName(field),
+                schema.getType(field),
+                schema.getConstraints(field)
         ).trim();
     }
 }

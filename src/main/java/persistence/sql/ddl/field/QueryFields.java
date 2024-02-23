@@ -1,5 +1,7 @@
 package persistence.sql.ddl.field;
 
+import org.h2.util.StringUtils;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +20,7 @@ public class QueryFields {
     public String toSQL() {
         return values.stream()
                 .map(QueryField::toSQL)
+                .filter(sql -> !StringUtils.isNullOrEmpty(sql))
                 .distinct()
                 .collect(Collectors.joining(DELIMITER));
     }
