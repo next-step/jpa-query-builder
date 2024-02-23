@@ -11,7 +11,7 @@
 
 ### step2 질문사항
 - 테스트코드 작성시 throws exception을 해도 될까? try catch로 에러를 일일히 처리하자니 테스트 코드가 지저분하다.
-
+- 전략패턴을 사용해서 queryBuilder 내 getCreateQuery와 getCreateQueryUsingAnnotation를 공통화하는게 좋을까요?
 ## Step1
 - [x] Car 클래스 추가
 - [x] 요구사항 1 - 클래스 정보 출력
