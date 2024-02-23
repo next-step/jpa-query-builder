@@ -2,20 +2,18 @@ package persistence.sql.dml;
 
 import persistence.sql.dml.keygenerator.KeyGenerator;
 
-import java.lang.reflect.Field;
-
 public class QueryBuilder {
     private EntityTableMeta entityTableMeta;
     private EntityColumns entityColumns;
 
-    public QueryBuilder(Object object) {
+    public QueryBuilder(Object object, KeyGenerator keyGenerator) {
         this.entityTableMeta = EntityTableMeta.of(object.getClass());
-        this.entityColumns = EntityColumns.of(object);
+        this.entityColumns = EntityColumns.of(object, keyGenerator);
     }
 
-    public String createInsertQuery(final KeyGenerator keyGenerator) {
+    public String createInsertQuery() {
         return String.format("insert into %s (%s) values (%s)", this.entityTableMeta.name(), this.entityColumns.names(),
-                entityColumns.insertValues(keyGenerator));
+                entityColumns.insertValues());
     }
 
     public String createFindAllQuery() {
@@ -24,15 +22,13 @@ public class QueryBuilder {
 
     public String createFindByIdQuery() {
         return String.format("%s where %s = %s", createFindAllQuery(),
-                this.entityColumns.primaryField().getName(),
-                entityColumns.values());
+                this.entityColumns.primaryFieldName(),
+                this.entityColumns.primaryFieldValue());
     }
 
     public String createDeleteQuery() {
-        final Field primaryField = this.entityColumns.primaryField();
-
         return String.format("delete from %s where %s = %s", this.entityTableMeta.name(),
-                primaryField.getName(),
-                entityColumns.values());
+                this.entityColumns.primaryFieldName(),
+                this.entityColumns.primaryFieldValue());
     }
 }
