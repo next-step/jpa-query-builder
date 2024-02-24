@@ -12,11 +12,11 @@ import persistence.sql.ddl.query.builder.CreateQueryBuilder;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.DialectResolutionInfo;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
-import persistence.sql.dml.query.builder.SelectQueryBuilder;
 import persistence.sql.entity.EntityMappingTable;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,11 +65,20 @@ class RepositoryImplTest {
     void findAllTest() {
         Repository<Person> personRepository = new RepositoryImpl<>(jdbcTemplate, Person.class);
 
-        List<Person> result = personRepository.findAll(SelectQueryBuilder.from(entityMappingTable).toSql());
+        List<Person> result = personRepository.findAll();
 
         assertThat(result).isEqualTo(
                 List.of(person1, person2)
         );
+    }
+
+    @Test
+    void findByIdTest() {
+        Repository<Person> personRepository = new RepositoryImpl<>(jdbcTemplate, Person.class);
+
+        Optional<Person> person = personRepository.findById(1L);
+
+        assertThat(person.get()).isEqualTo(person1);
     }
 
 }
