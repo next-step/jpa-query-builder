@@ -2,8 +2,6 @@ package persistence.sql.column;
 
 import java.util.Arrays;
 
-import static persistence.sql.column.MetaDataMapper.SPACE;
-
 public enum MysqlColumnType implements ColumnType {
     BIGINT(Long.class, "bigint", ""),
     VARCHAR(String.class, "varchar", "255"),
@@ -30,7 +28,7 @@ public enum MysqlColumnType implements ColumnType {
     @Override
     public String getColumnDefinition() {
         StringBuilder sb = new StringBuilder();
-        sb.append(SPACE).append(sqlType);
+        sb.append(sqlType);
         if (!defaultValue.isBlank()) {
             sb.append("(").append(defaultValue).append(")");
         }
