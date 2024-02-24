@@ -30,6 +30,10 @@ public class Column {
         return column.name();
     }
 
+    public Field getField() {
+        return field;
+    }
+
     public Class<?> getType() {
         return field.getType();
     }
