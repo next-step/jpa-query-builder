@@ -1,0 +1,30 @@
+package persistence.sql.ddl;
+
+import jakarta.persistence.Entity;
+import persistence.sql.ddl.field.QueryFields;
+import persistence.sql.ddl.field.TableField;
+
+// note. 이름만 builder이지 builder 디자인 패턴을 칭하는 것 아님
+public class CreateQueryBuilder {
+
+    private static final String DDL_FORMAT = "CREATE TABLE %s (\n%s\n);";
+
+    private final TableField tableField;
+    private final QueryFields queryFields;
+
+    public CreateQueryBuilder(Class<?> klass) {
+
+        if (!klass.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("@Entity가 존재하지 않습니다");
+        }
+        // todo : Hibernate는 어떻게 Entity annotated class로부터 구현하고 있나?
+
+        this.tableField = new TableField(klass);
+        this.queryFields = new QueryFields(klass.getDeclaredFields());
+    }
+
+    public String toSQL() {
+        return String.format(DDL_FORMAT, tableField.toSQL(), queryFields.toSQL());
+    }
+
+}

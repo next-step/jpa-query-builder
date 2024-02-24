@@ -207,7 +207,135 @@ void constructorWithArgs() {
 * 프라이빗 필드 값 할당법
     * 원하는 필드를 리플렉션을 이용해 추출 및 set accessible.
     * 객체 생성후, accessible해진 필드를 이용해 값을 set.
-* TODO : revise all commit msg
-* TODO : 코드 일부분만 커밋할수 있는 툴 확인
+* revise all commit msg
+    * `git reasbe -i HEAD^N` and use `r(eword`
+* 코드 일부분만 커밋할수 있는 툴 확인
+    * Use patch mode `git add -p`
 
+## 🚀 2단계 - QueryBuilder DDL
 
+### [x] 요구사항 1 - create 쿼리 만들어보기
+
+> 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
+
+TODO list :
+
+- [x] `@Entity`가 붙은 class와 매핑되는 테이블을 만들수 있어야 한다.
+    - [x] Table Name : 클래스 명
+    - [x] Table PK Column Name : `@Id`가 붙은 필드 Name
+    - [x] Table PK Column Type : `@Id`가 붙은 필드 Type에 매핑되는 DB Type(예: Long이라면 BIGINT)
+    - [x] Table Columns : `@Id`가 붙지 않는 필드들
+        - [x] Column Name = 필드 Name
+        - [x] Column Type = 필드 Type에 매핑되는 DB Type(예: String이라면 VARCHAR)
+
+Note :
+
+- 최종적으론, Hibernate의 작동방식 흉내내는 것을 목표로 한다.
+- package.name이 주어졌을때, 해당 패키지 내의 `@Entity`가 붙은 클래스를 찾아, 해당 클래스의 정보를 바탕으로 create 쿼리를 만들어낸다.
+
+```java
+
+@Entity
+public class Person {
+
+    @Id
+    private Long id;
+
+    private String name;
+
+    private Integer age;
+
+}
+```
+
+### [x] 요구사항 2 - 추가된 정보를 통해 create 쿼리 만들어보기
+
+> 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
+
+TODO List :
+
+- [x] `@Id`가 붙은 필드에서, `@GeneratedValue`의 전략대로 PK 전략을 지정할 수 있어야 한다.
+    - [x] `@GeneratedValue`이 붙어있지 않은 경우
+    - [x] `@GeneratedValue = GenerationType.IDENTITY`
+- [x] `@Column`이 붙은 필드와 매핑되는 컬럼 이름을 지정할 수 있어야 한다.
+    - [x] name value가 지정되어 있다면 해당 value로 컬럼 이름을 지정해야 한다.
+    - [x] nullable value가 지정되어 있다면 해당 필드 값의 nullable여부를 validate해야 한다.
+
+Note :
+
+- IdField와 ColumnField를 별도로 나눌 필요가 있을까?
+    - 성급하게 합치는 것보단 조금 더 어떤 요구사항이 있는지 보고 판단.
+
+```java
+
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+}
+```
+
+### [x] 요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기2
+
+> 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
+
+TODO List :
+
+- [x] `@Table` name value를 통해 별도의 테이블 명을 지정가능해야 한다.
+- [x] `@Transient`가 붙은 필드는 영속화 되지 않아야 한다.
+
+```java
+
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+```
+
+### [x] 요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기
+
+- [x] DropQueryBuilder 구현
+
+> 구현은 src/main/java/persistence > sql/ddl > 하위에 구현한다
+
+@Entity, @Table를 고려해서 잘 작성해보자
+
+### 개인적 개선사항
+
+### [ ] 매번 규약을 따르지 않은 커밋메시지를 rebase하는 것보다 사전에 막아보자.
+
+- [ ] try Husky
+- [ ] try Commitlint
+
+### [x] 클래스의 마지막 줄에 자동으로 개행문자 추가
+
+Preferences -> Editor -> General -> Ensure line feed at file end on save 체크
