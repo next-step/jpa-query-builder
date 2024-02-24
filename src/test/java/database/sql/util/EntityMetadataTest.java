@@ -7,18 +7,18 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class EntityClassInspectorTest {
-    private final EntityClassInspector inspector = new EntityClassInspector(Person4.class);
+class EntityMetadataTest {
+    private final EntityMetadata metadata = new EntityMetadata(Person4.class);
 
     @Test
     void getTableName() {
-        String tableName = inspector.getTableName();
+        String tableName = metadata.getTableName();
         assertThat(tableName).isEqualTo("users");
     }
 
     @Test
     void getColumnNames() {
-        List<String> columnNames = inspector.getColumnNames();
+        List<String> columnNames = metadata.getColumnNames();
         assertThat(columnNames).containsExactly("id", "nick_name", "old", "email");
     }
 }

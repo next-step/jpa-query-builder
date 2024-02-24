@@ -1,6 +1,6 @@
 package database.sql.dml;
 
-import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityMetadata;
 
 public class SelectOneQueryBuilder {
     private final String tableName;
@@ -8,10 +8,10 @@ public class SelectOneQueryBuilder {
     private final String primaryKeyColumnName;
 
     public SelectOneQueryBuilder(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        this.tableName = inspector.getTableName();
-        this.fieldsForSelecting = inspector.getJoinedColumnNames();
-        this.primaryKeyColumnName = inspector.getPrimaryKeyColumnName();
+        EntityMetadata metadata = new EntityMetadata(entityClass);
+        this.tableName = metadata.getTableName();
+        this.fieldsForSelecting = metadata.getJoinedColumnNames();
+        this.primaryKeyColumnName = metadata.getPrimaryKeyColumnName();
     }
 
     public String buildQuery(Long id) {

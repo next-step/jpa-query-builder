@@ -2,7 +2,7 @@ package persistence.entity;
 
 import database.sql.Person;
 import database.sql.dml.QueryBuilder;
-import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityMetadata;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 
@@ -33,8 +33,8 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-        EntityClassInspector entityClassInspector = new EntityClassInspector(entity);
-        long id = entityClassInspector.getPrimaryKeyValue(entity);
+        EntityMetadata entityMetadata = new EntityMetadata(entity);
+        long id = entityMetadata.getPrimaryKeyValue(entity);
 
         QueryBuilder instance = QueryBuilder.getInstance();
         String query = instance.buildDeleteQuery(entity.getClass(), id);

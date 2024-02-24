@@ -1,6 +1,6 @@
 package database.sql.dml;
 
-import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityMetadata;
 
 import java.util.List;
 import java.util.Map;
@@ -13,9 +13,9 @@ public class DeleteQueryBuilder {
     private final List<String> columnNames;
 
     public DeleteQueryBuilder(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        this.tableName = inspector.getTableName();
-        this.columnNames = inspector.getColumnNames();
+        EntityMetadata metadata = new EntityMetadata(entityClass);
+        this.tableName = metadata.getTableName();
+        this.columnNames = metadata.getColumnNames();
     }
 
     public String buildQuery(Map<String, Object> conditionMap) {

@@ -1,15 +1,15 @@
 package database.sql.dml;
 
-import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityMetadata;
 
 public class SelectQueryBuilder {
     private final String tableName;
     private final String fieldsForSelecting;
 
     public SelectQueryBuilder(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        this.tableName = inspector.getTableName();
-        this.fieldsForSelecting = inspector.getJoinedColumnNames();
+        EntityMetadata metadata = new EntityMetadata(entityClass);
+        this.tableName = metadata.getTableName();
+        this.fieldsForSelecting = metadata.getJoinedColumnNames();
     }
 
     public String buildQuery() {

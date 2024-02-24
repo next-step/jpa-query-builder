@@ -16,8 +16,8 @@ class ColumnMetadataTest {
 
     @Test
     void getTableNameWithoutTableAnnotation() {
-        EntityClassInspector inspector = new EntityClassInspector(OldPerson1.class);
-        String tableName = inspector.getTableName();
+        EntityMetadata metadata = new EntityMetadata(OldPerson1.class);
+        String tableName = metadata.getTableName();
         assertThat(tableName).isEqualTo("OldPerson1");
     }
 

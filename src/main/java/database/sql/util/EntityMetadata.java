@@ -5,15 +5,15 @@ import database.sql.util.type.TypeConverter;
 
 import java.util.List;
 
-public class EntityClassInspector {
+public class EntityMetadata {
     private final TableMetadata tableMetadata;
     private final ColumnsMetadata columnsMetadata;
 
-    public EntityClassInspector(Object entity) {
+    public EntityMetadata(Object entity) {
         this(entity.getClass());
     }
 
-    public EntityClassInspector(Class<?> entityClass) {
+    public EntityMetadata(Class<?> entityClass) {
         tableMetadata = new TableMetadata(entityClass);
         columnsMetadata = new ColumnsMetadata(entityClass);
     }

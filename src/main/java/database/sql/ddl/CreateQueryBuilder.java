@@ -1,6 +1,6 @@
 package database.sql.ddl;
 
-import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityMetadata;
 import database.sql.util.type.TypeConverter;
 
 public class CreateQueryBuilder {
@@ -8,10 +8,10 @@ public class CreateQueryBuilder {
     private final String columnsWithDefinition;
 
     public CreateQueryBuilder(Class<?> entityClass, TypeConverter typeConverter) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
+        EntityMetadata metadata = new EntityMetadata(entityClass);
 
-        this.tableName = inspector.getTableName();
-        this.columnsWithDefinition = String.join(", ", inspector.getColumnDefinitions(typeConverter));
+        this.tableName = metadata.getTableName();
+        this.columnsWithDefinition = String.join(", ", metadata.getColumnDefinitions(typeConverter));
     }
 
     public String buildQuery() {

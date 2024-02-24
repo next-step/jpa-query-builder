@@ -1,6 +1,6 @@
 package database.sql.dml;
 
-import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityMetadata;
 
 import java.util.List;
 import java.util.Map;
@@ -13,9 +13,9 @@ public class InsertQueryBuilder {
     private final List<String> columnNamesForInserting;
 
     public InsertQueryBuilder(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        this.tableName = inspector.getTableName();
-        this.columnNamesForInserting = inspector.getColumnNamesForInserting();
+        EntityMetadata metadata = new EntityMetadata(entityClass);
+        this.tableName = metadata.getTableName();
+        this.columnNamesForInserting = metadata.getColumnNamesForInserting();
     }
 
     public String buildQuery(Map<String, Object> valueMap) {
