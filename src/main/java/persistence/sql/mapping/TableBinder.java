@@ -3,11 +3,20 @@ package persistence.sql.mapping;
 import jakarta.persistence.Entity;
 import persistence.sql.QueryException;
 
+import java.util.List;
+
 public class TableBinder {
 
     public Table createTable(final Class<?> clazz) {
 
         return new Table(toTableName(clazz));
+    }
+
+    public Table createTable(final Class<?> clazz, final List<Column> columns) {
+        final Table table = this.createTable(clazz);
+        table.addColumns(columns);
+
+        return table;
     }
 
     private String toTableName(final Class<?> clazz) {
