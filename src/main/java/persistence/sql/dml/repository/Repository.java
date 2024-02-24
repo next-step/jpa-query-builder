@@ -5,24 +5,31 @@ import persistence.sql.dml.exception.FieldSetValueException;
 import persistence.sql.dml.exception.InstanceException;
 import persistence.sql.dml.exception.InvalidFieldValueException;
 import persistence.sql.dml.exception.NotFoundFieldException;
+import persistence.sql.dml.query.builder.SelectQueryBuilder;
 import persistence.sql.entity.EntityMappingTable;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Repository<T> {
 
     protected final JdbcTemplate jdbcTemplate;
     protected final Class<T> clazz;
+    protected final EntityMappingTable entityMappingTable;
 
     public Repository(final JdbcTemplate jdbcTemplate,
                       final Class<T> clazz) {
         this.jdbcTemplate = jdbcTemplate;
         this.clazz = clazz;
+        this.entityMappingTable = EntityMappingTable.from(clazz);
     }
 
-    abstract List<T> findAll(String sql);
+    abstract List<T> findAll();
+
+    abstract Optional<T> findById(Long id);
+
 
     public T mapper(ResultSet resultSet) {
         EntityMappingTable entityMappingTable = EntityMappingTable.from(clazz);
