@@ -107,13 +107,10 @@
         * columns 과 values 를 나누어서 구현해보자
         * insert into table (column1, column2, column3) values (value1, value2, value3)
     * ```java
-
       private String columnsClause(Class<?> clazz) {
-      ...
       }
     
       private String valueClause(Object object) {
-      ...
       }
       ```
 
@@ -121,10 +118,9 @@
     * 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
     * 쿼리 실행을 통해 데이터를 여러 row 를 넣어 정상적으로 나오는지 확인해보자
     * ```java
-        public interface Database {
-        ...
-        ResultSet executeQuery(String sql);
-        }
+      public interface Database {
+          ResultSet executeQuery(String sql);
+      }
       ```
 
 * [ ] 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
