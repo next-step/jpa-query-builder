@@ -45,6 +45,21 @@ public class DMLQueryGenerator {
         return query.toString();
     }
 
+    public String generateDeleteQuery(BooleanBuilder booleanBuilder) {
+        StringBuilder query = new StringBuilder();
+        query.append("delete from ");
+        query.append(table.getName());
+
+        if(booleanBuilder.isEmpty()) {
+            return query.toString();
+        }
+
+        query.append(" where ");
+        query.append(whereClause(booleanBuilder));
+
+        return query.toString();
+    }
+
     private String whereClause(BooleanBuilder booleanBuilder) {
         StringBuilder stringBuilder = new StringBuilder();
         boolean firstLine = true;

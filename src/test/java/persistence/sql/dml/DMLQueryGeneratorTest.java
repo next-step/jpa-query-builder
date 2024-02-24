@@ -52,4 +52,16 @@ class DMLQueryGeneratorTest {
 
         assertThat(selectQuery).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("요구사항4: delete by id 쿼리 생성")
+    void testDeleteById() {
+        int id = 1;
+        String expected = String.format("delete from users where id = %s", id);
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(eq("id", id));
+        String selectQuery = dmlQueryGenerator.generateDeleteQuery(booleanBuilder);
+
+        assertThat(selectQuery).isEqualTo(expected);
+    }
 }
