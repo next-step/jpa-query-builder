@@ -6,11 +6,9 @@ import database.sql.util.type.MySQLTypeConverter;
 import database.sql.util.type.TypeConverter;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ColumnMetadataTest {
     private final TypeConverter typeConverter = new MySQLTypeConverter();
@@ -37,15 +35,6 @@ class ColumnMetadataTest {
                 "nick_name VARCHAR(255) NULL",
                 "old INT NULL",
                 "email VARCHAR(255) NOT NULL");
-    }
-
-    @Test
-    void getPrimaryKeyField() {
-        Field field = columnsMetadata.getPrimaryKeyField();
-        assertAll(
-                () -> assertThat(field.getName()).isEqualTo("id"),
-                () -> assertThat(field.getType()).isEqualTo(Long.class)
-        );
     }
 
     @Test

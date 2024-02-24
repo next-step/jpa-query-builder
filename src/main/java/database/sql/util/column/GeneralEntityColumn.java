@@ -2,25 +2,19 @@ package database.sql.util.column;
 
 import database.sql.util.type.TypeConverter;
 
-public class GeneralEntityColumn implements EntityColumn {
-    private final String columnName;
-    private final Class<?> type;
-    private final Integer columnLength;
+import java.lang.reflect.Field;
+
+public class GeneralEntityColumn extends AbstractEntityColumn {
     private final boolean nullable;
 
-    public GeneralEntityColumn(String columnName,
+    public GeneralEntityColumn(Field field,
+                               String columnName,
                                Class<?> type,
                                Integer columnLength,
                                boolean nullable) {
-        this.columnName = columnName;
-        this.type = type;
-        this.columnLength = columnLength;
-        this.nullable = nullable;
-    }
+        super(field, columnName, type, columnLength);
 
-    @Override
-    public String getColumnName() {
-        return columnName;
+        this.nullable = nullable;
     }
 
     @Override

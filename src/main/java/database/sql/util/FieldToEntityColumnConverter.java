@@ -1,5 +1,8 @@
-package database.sql.util.column;
+package database.sql.util;
 
+import database.sql.util.column.EntityColumn;
+import database.sql.util.column.GeneralEntityColumn;
+import database.sql.util.column.PrimaryKeyEntityColumn;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,11 +32,11 @@ public class FieldToEntityColumnConverter {
 
         if (isId) {
             boolean autoIncrement = isAutoIncrement(generatedValueAnnotation);
-            return new PrimaryKeyEntityColumn(columnName, type, columnLength, autoIncrement);
+            return new PrimaryKeyEntityColumn(field, columnName, type, columnLength, autoIncrement);
         }
 
         boolean nullable = isNullable(columnAnnotation);
-        return new GeneralEntityColumn(columnName, type, columnLength, nullable);
+        return new GeneralEntityColumn(field, columnName, type, columnLength, nullable);
     }
 
     private String getColumnNameFromAnnotation(Column columnAnnotation, String defaultName) {

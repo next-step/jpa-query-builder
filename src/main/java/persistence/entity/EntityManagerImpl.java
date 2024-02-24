@@ -9,6 +9,7 @@ import jdbc.RowMapper;
 import java.util.Map;
 
 public class EntityManagerImpl implements EntityManager {
+    // XXX: 여기 코드를 최소한 줄여놓기
     private static final RowMapper<Person> PERSON_ROW_MAPPER = resultSet -> new Person(
             resultSet.getLong("id"),
             resultSet.getString("nick_name"),
@@ -29,13 +30,8 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void persist(Object entity) {
-        Map<String, Object> map = ((Person) entity).toMap(); // 하드코딩
-
         EntityClassInspector inspector = new EntityClassInspector(entity);
-
-//        map.put("nick_name", name);
-//        map.put("old", age);
-//        map.put("email", email);
+        Map<String, Object> map = inspector.buildMap(entity);
 
         String query = QueryBuilder.getInstance().buildInsertQuery(entity.getClass(), map);
         jdbcTemplate.execute(query);

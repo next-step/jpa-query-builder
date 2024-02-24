@@ -2,9 +2,6 @@ package database.sql;
 
 import jakarta.persistence.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Table(name = "users")
 @Entity
 public class Person {
@@ -45,19 +42,31 @@ public class Person {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     public void setAge(Integer age) {
         this.age = age;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("nick_name", name);
-        map.put("old", age);
-        map.put("email", email);
-        return map;
     }
 }
