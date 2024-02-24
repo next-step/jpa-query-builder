@@ -1,7 +1,8 @@
 package persistence.sql.dml.repository;
 
 import jdbc.JdbcTemplate;
-import persistence.sql.dml.exception.NotFoundIdException;
+import persistence.sql.dml.query.builder.DeleteQueryBuilder;
+import persistence.sql.dml.query.builder.InsertQueryBuilder;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 import persistence.sql.entity.model.DomainType;
 
@@ -23,15 +24,32 @@ public class RepositoryImpl<T> extends Repository<T> {
 
     @Override
     Optional<T> findById(Long id) {
-        DomainType domainType = entityMappingTable.getDomainTypeList()
-                .stream()
-                .filter(DomainType::isExistsId)
-                .findFirst()
-                .orElseThrow(NotFoundIdException::new);
-
-        Map<DomainType, String> where = Map.of(domainType, id.toString());
+        Map<DomainType, String> where = Map.of(pkDomainType, id.toString());
 
         SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, where);
         return Optional.ofNullable(super.jdbcTemplate.queryForObject(selectQueryBuilder.toSql(), this::mapper));
+    }
+
+    @Override
+    T save(T t) {
+        InsertQueryBuilder insertQueryBuilder = InsertQueryBuilder.from(t);
+        jdbcTemplate.execute(insertQueryBuilder.toSql());
+        return t;
+    }
+
+    @Override
+    void deleteAll() {
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.from(entityMappingTable.getTableName());
+
+        jdbcTemplate.execute(deleteQueryBuilder.toSql());
+    }
+
+    @Override
+    void deleteById(Long id) {
+        Map<DomainType, String> where = Map.of(pkDomainType, id.toString());
+
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(entityMappingTable.getTableName(), where);
+
+        jdbcTemplate.execute(deleteQueryBuilder.toSql());
     }
 }
