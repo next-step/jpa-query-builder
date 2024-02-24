@@ -74,6 +74,15 @@ public class Column {
         return String.valueOf(object);
     }
 
+    public void setFieldValue(Object object, Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(object, value);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public boolean isInsertable() {
         return !isGeneratedValueAnnotation();
     }
