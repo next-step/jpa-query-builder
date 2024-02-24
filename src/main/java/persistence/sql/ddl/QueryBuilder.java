@@ -16,11 +16,13 @@ public class QueryBuilder {
         EntityValidator.validate(entity);
         this.fields = entity.getDeclaredFields();
         this.tableName = new Table(entity).getName();
-        this.queryBuilder = new StringBuilder(String.format(CREATE_TABLE_START, tableName));
+        this.queryBuilder = new StringBuilder();
     }
 
+    // TODO: ANNOTAITON이 있는 경우와 없는 경우를 하나의 함수로 관리해보자.
     public String getCreateQuery() {
-        initQueryBuilder();
+        queryBuilder.append(String.format(CREATE_TABLE_START, tableName));
+
         Arrays.stream(fields).forEach(field -> {
             queryBuilder.append(new AnnotationFreeColumn(field).getColumn());
             queryBuilder.append(CRETE_TABLE_COMMA);
@@ -30,11 +32,9 @@ public class QueryBuilder {
         return queryBuilder.toString();
     }
 
-    private void initQueryBuilder() {
-        queryBuilder.setLength(0);
-    }
-
     public String getCreateQueryUsingAnnotation() {
+        queryBuilder.append(String.format(CREATE_TABLE_START, tableName));
+
         Arrays.stream(fields).filter(AnnotatedColumn::isColumn).forEach(field -> {
             queryBuilder.append(new AnnotatedColumn(field).getColumn());
             queryBuilder.append(CRETE_TABLE_COMMA);
@@ -51,8 +51,7 @@ public class QueryBuilder {
         queryBuilder.append(CREATE_TABLE_END);
     }
 
-    public String dropTable() {
-        initQueryBuilder();
+    public String getDropTableQuery() {
         queryBuilder.append(String.format(DROP_TABLE, tableName));
         return queryBuilder.toString();
     }

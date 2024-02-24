@@ -51,137 +51,63 @@ class QueryBuilderTest {
     @DisplayName("[요구사항 1] @Column 애노테이션이 없는 Person 엔티티를 이용하여 create 쿼리 만든다.")
     void 요구사항1_test() throws SQLException {
         //given
-        List<String> expectedColumnNames = List.of("ID", "NAME", "AGE");
-        String expectedTableName = "PERSON";
-
+        String expectedQuery = "CREATE TABLE IF NOT EXISTS Person (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NULL,age INT)";
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.basic.Person.class).getCreateQuery());
+        String actualQuery = new QueryBuilder(persistence.entity.basic.Person.class).getCreateQuery();
 
         // then
-        ResultInterface tableSchema = getTableSchema(expectedTableName);
-        Assertions.assertThat(getTableName(tableSchema)).isEqualTo(expectedTableName);
-        Assertions.assertThat(getColumnNames(tableSchema).containsAll(expectedColumnNames)).isTrue();
+        Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 
     @Test
     @DisplayName("[요구사항 2] @Column 애노테이션이 있는 Person 엔티티를 이용하여 create 쿼리 만든다.")
     void 요구사항2_test() throws SQLException {
         //given
-        List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");
-        String expectedTableName = "PERSON";
+        String expectedQuery = "CREATE TABLE IF NOT EXISTS Person (id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT,email VARCHAR(30) NOT NULL)";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(Person.class).getCreateQueryUsingAnnotation());
+        String actualQuery = new QueryBuilder(Person.class).getCreateQueryUsingAnnotation();
 
         // then
-        ResultInterface tableSchema = getTableSchema(expectedTableName);
-        Assertions.assertThat(getTableName(tableSchema)).isEqualTo(expectedTableName);
-        Assertions.assertThat(getColumnNames(tableSchema).containsAll(expectedColumnNames)).isTrue();
-
-        Assertions.assertThat(hasNullableColumn("NICK_NAME", expectedTableName)).isTrue();
-        Assertions.assertThat(hasNullableColumn("OLD", expectedTableName)).isTrue();
-        Assertions.assertThat(hasNullableColumn("EMAIL", expectedTableName)).isFalse();
+        Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 
     @Test
     @DisplayName("[요구사항 3] 3.1 @Table 애노테이션이 붙은 필드의 name을 테이블명으로 가지는 create 쿼리 만들")
     void 요구사항3_1_test() throws SQLException {
         //given
-        String expectedTableName = "USERS";
+        String expectedQuery = "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT,email VARCHAR(30) NOT NULL)";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation());
+        String actualQuery = new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation();
 
         // then
-        ResultInterface tableSchema = getTableSchema(expectedTableName);
-        Assertions.assertThat(getTableName(tableSchema)).isEqualTo(expectedTableName);
+        Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 
     @Test
     @DisplayName("[요구사항 3.2] @Transient 애노테이션이 붙은 필드는 제하고 create 쿼리 만든다.")
     void 요구사항3_2_test() throws SQLException {
         //given
-        List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");
-        String expectedTableName = "USERS";
+        String expectedQuery = "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT,email VARCHAR(30) NOT NULL)";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation());
+        String actualQuery = new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation();
 
         // then
-        ResultInterface tableSchema = getTableSchema(expectedTableName);
-        Assertions.assertThat(getColumnNames(tableSchema).containsAll(expectedColumnNames)).isTrue();
-
-        Assertions.assertThat(tableSchema.getVisibleColumnCount()).isEqualTo(4);
-        Assertions.assertThat(hasNullableColumn("NICK_NAME", expectedTableName)).isTrue();
-        Assertions.assertThat(hasNullableColumn("OLD", expectedTableName)).isTrue();
-        Assertions.assertThat(hasNullableColumn("EMAIL", expectedTableName)).isFalse();
+        Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 
     @Test
-    @DisplayName("[요구사항 3] 테이블을 생성후 drop하여라")
+    @DisplayName("[요구사항 4] drop table 쿼리를 만들어라")
     void 요구사항3_3_test() throws SQLException {
         //given
-        List<String> expectedColumnNames = List.of("ID", "NICK_NAME", "OLD", "EMAIL");
-        String expectedTableName = "USERS";
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation());
+        String expectedQuery = "DROP TABLE IF EXISTS users";
 
         // when
-        jdbcTemplate.execute(new QueryBuilder(persistence.entity.notcolumn.Person.class).dropTable());
+        String actualQuery = new QueryBuilder(persistence.entity.notcolumn.Person.class).getDropTableQuery();
 
         // then
-        Assertions.assertThatThrownBy(() -> getTableSchema(expectedTableName)).isInstanceOf(JdbcSQLSyntaxErrorException.class).hasMessageContaining("Table \"USERS\" not found");
-    }
-
-    /**
-     * 주어진 컬럼이 nullable하면 true
-     */
-    private boolean hasNullableColumn(String columnName, String tableName) throws SQLException {
-        ResultSetMetaData meta = getQueryResult(tableName).getMetaData();
-        int columnCount = meta.getColumnCount();
-
-        int columnIdx = 0;
-        for (int i = 1; i <= columnCount; i++) {
-            if (!meta.getColumnName(i).equals(columnName)) {
-                continue;
-            }
-            columnIdx = i;
-            break;
-        }
-        return columnNullable == meta.isNullable(columnIdx);
-    }
-
-    /**
-     * 테이블 스키마를 리턴한다.
-     */
-    private ResultInterface getTableSchema(String tableName) throws SQLException {
-        ResultSet resultSet = getQueryResult(tableName);
-        return ((JdbcResultSet) resultSet).getResult();
-    }
-
-    /**
-     * 쿼리 결과 값을 리턴한다.
-     */
-    private ResultSet getQueryResult(String tableName) throws SQLException {
-        return server.getConnection().createStatement().executeQuery(String.format(SELECT_ALL_ROWS, tableName));
-    }
-
-    /**
-     * 컬럼 이름 목록을 리턴한다.
-     */
-    private static List<String> getColumnNames(ResultInterface tableSchema) {
-        List<String> actualColumnNames = new ArrayList<>();
-        int columnSize = tableSchema.getVisibleColumnCount();
-
-        for (int i = 0; i < columnSize; i++) {
-            actualColumnNames.add(tableSchema.getColumnName(i));
-        }
-        return actualColumnNames;
-    }
-
-    /**
-     * 테이블 이름을 리턴한다.
-     */
-    private static String getTableName(ResultInterface tableSchema) {
-        return tableSchema.getTableName(0);
+        Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
     }
 }
