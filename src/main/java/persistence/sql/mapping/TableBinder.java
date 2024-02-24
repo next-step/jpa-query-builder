@@ -7,9 +7,22 @@ import java.util.List;
 
 public class TableBinder {
 
-    public Table createTable(final Class<?> clazz) {
+    private final ColumnBinder columnBinder = new ColumnBinder(ColumnTypeMapper.getInstance());
 
-        return new Table(toTableName(clazz));
+    public Table createTable(final Object object) {
+        final Table table = new Table(toTableName(object.getClass()));
+        final List<Column> columns = columnBinder.createColumns(object);
+        table.addColumns(columns);
+
+        return table;
+    }
+
+    public Table createTable(final Class<?> clazz) {
+        final Table table = new Table(toTableName(clazz));
+        final List<Column> columns = columnBinder.createColumns(clazz);
+        table.addColumns(columns);
+
+        return table;
     }
 
     public Table createTable(final Class<?> clazz, final List<Column> columns) {

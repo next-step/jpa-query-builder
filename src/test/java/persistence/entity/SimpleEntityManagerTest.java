@@ -23,10 +23,9 @@ class SimpleEntityManagerTest {
     private static final JdbcTemplate jdbcTemplate = TestJdbcServerExtension.getJdbcTemplate();
 
     private final TableBinder tableBinder = new TableBinder();
-    private final ColumnBinder columnBinder = new ColumnBinder(ColumnTypeMapper.getInstance());
     private final Dialect dialect = new H2Dialect();
     private final DefaultDmlQueryBuilder dmlQueryBuilder = new DefaultDmlQueryBuilder(dialect);
-    private final EntityManager entityManager = new SimpleEntityManager(tableBinder, columnBinder, dmlQueryBuilder, jdbcTemplate);
+    private final EntityManager entityManager = new SimpleEntityManager(tableBinder, dmlQueryBuilder, jdbcTemplate);
 
     private final RowMapper<PersonV3> rowMapper = new EntityRowMapper<>(PersonV3.class);
 
@@ -94,9 +93,6 @@ class SimpleEntityManagerTest {
         final String email = "email@domain.com";
         final PersonV3 person = new PersonV3(0L, name, age, email, 1);
         final Class<?> clazz = person.getClass();
-        final Table table = tableBinder.createTable(clazz);
-        final List<Column> columns = columnBinder.createColumns(person);
-        table.addColumns(columns);
 
         // when
         entityManager.persist(person);
@@ -117,10 +113,6 @@ class SimpleEntityManagerTest {
         final int age = 20;
         final String email = "email@domain.com";
         final PersonV3 person = new PersonV3(0L, name, age, email, 1);
-        final Class<?> clazz = person.getClass();
-        final Table table = tableBinder.createTable(clazz);
-        final List<Column> columns = columnBinder.createColumns(person);
-        table.addColumns(columns);
 
         // when
         entityManager.remove(person);

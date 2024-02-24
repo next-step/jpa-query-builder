@@ -7,7 +7,9 @@ import persistence.sql.TestJdbcServerExtension;
 import persistence.sql.ddl.PersonV3;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
-import persistence.sql.mapping.*;
+import persistence.sql.mapping.Column;
+import persistence.sql.mapping.Table;
+import persistence.sql.mapping.TableBinder;
 
 import java.util.List;
 
@@ -20,10 +22,6 @@ public class DefaultDmlQueryBuilderIntegrationTest {
     final static JdbcTemplate jdbcTemplate = TestJdbcServerExtension.getJdbcTemplate();
 
     private final TableBinder tableBinder = new TableBinder();
-
-    private final ColumnTypeMapper columnTypeMapper = ColumnTypeMapper.getInstance();
-
-    private final ColumnBinder columnBinder = new ColumnBinder(columnTypeMapper);
 
     private final Dialect dialect = new H2Dialect();
 
@@ -61,10 +59,7 @@ public class DefaultDmlQueryBuilderIntegrationTest {
     public void insertEntity() throws Exception {
         // given
         final PersonV3 person = new PersonV3(0L, "name", 20, "email@domain.com", 1);
-        final Class<?> clazz = person.getClass();
-        final Table table = tableBinder.createTable(clazz);
-        final List<Column> columns = columnBinder.createColumns(person);
-        table.addColumns(columns);
+        final Table table = tableBinder.createTable(person);
 
         final Insert insert = new Insert(table);
         final String insertQuery = dmlQueryBuilder.buildInsertQuery(insert);
@@ -85,8 +80,6 @@ public class DefaultDmlQueryBuilderIntegrationTest {
         // given
         final PersonV3 person = new PersonV3(0L, "name", 20, "email@domain.com", 1);
         final Table table = tableBinder.createTable(person.getClass());
-        final List<Column> columns = columnBinder.createColumns(person);
-        table.addColumns(columns);
 
         final String insertQuery = "insert\n" +
                 "into\n" +
@@ -114,9 +107,7 @@ public class DefaultDmlQueryBuilderIntegrationTest {
     public void findById() throws Exception {
         // given
         final PersonV3 person = new PersonV3(1L, "name", 20, "email@domain.com", 1);
-        final Table table = tableBinder.createTable(person.getClass());
-        final List<Column> columns = columnBinder.createColumns(person);
-        table.addColumns(columns);
+        final Table table = tableBinder.createTable(person);
 
         final String insertQuery = "insert\n" +
                 "into\n" +
@@ -145,10 +136,7 @@ public class DefaultDmlQueryBuilderIntegrationTest {
     public void delete() throws Exception {
         // given
         final PersonV3 person = new PersonV3(0L, "name", 20, "email@domain.com", 1);
-        final Class<?> clazz = person.getClass();
-        final Table table = tableBinder.createTable(clazz);
-        final List<Column> columns = columnBinder.createColumns(person);
-        table.addColumns(columns);
+        final Table table = tableBinder.createTable(person);
 
         final Column idColumn = table.getColumn("id");
         final Where where = new Where(idColumn, idColumn.getValue(), LogicalOperator.NONE, new ComparisonOperator(ComparisonOperator.Comparisons.EQ));

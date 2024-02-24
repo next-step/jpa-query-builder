@@ -16,20 +16,18 @@ import java.util.List;
 public class SimpleEntityManager implements EntityManager {
 
     private final TableBinder tableBinder;
-    private final ColumnBinder columnBinder;
     private final DmlQueryBuilder dmlQueryBuilder;
     private final JdbcTemplate jdbcTemplate;
 
-    public SimpleEntityManager(TableBinder tableBinder, ColumnBinder columnBinder, DmlQueryBuilder dmlQueryBuilder, JdbcTemplate jdbcTemplate) {
+    public SimpleEntityManager(TableBinder tableBinder, DmlQueryBuilder dmlQueryBuilder, JdbcTemplate jdbcTemplate) {
         this.tableBinder = tableBinder;
-        this.columnBinder = columnBinder;
         this.dmlQueryBuilder = dmlQueryBuilder;
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public <T> T find(final Class<T> clazz, final Long id) {
-        final Table table = tableBinder.createTable(clazz, columnBinder.createColumns(clazz));
+        final Table table = tableBinder.createTable(clazz);
 
         final Field idField = findIdField(clazz);
         final Column idColumn = table.getColumn(ColumnBinder.toColumnName(idField));
@@ -53,7 +51,7 @@ public class SimpleEntityManager implements EntityManager {
 
     @Override
     public void persist(final Object entity) {
-        final Table table = tableBinder.createTable(entity.getClass(), columnBinder.createColumns(entity));
+        final Table table = tableBinder.createTable(entity);
 
         final String insertQuery = dmlQueryBuilder.buildInsertQuery(new Insert(table));
 
@@ -62,7 +60,7 @@ public class SimpleEntityManager implements EntityManager {
 
     @Override
     public void remove(final Object entity) {
-        final Table table = tableBinder.createTable(entity.getClass(), columnBinder.createColumns(entity));
+        final Table table = tableBinder.createTable(entity);
 
         final String deleteQuery = dmlQueryBuilder.buildDeleteQuery(new Delete(table));
 
