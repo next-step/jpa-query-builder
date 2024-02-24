@@ -1,4 +1,4 @@
-package persistence;
+package persistence.entity;
 
 public interface EntityManager {
 

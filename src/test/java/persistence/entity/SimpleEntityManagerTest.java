@@ -1,4 +1,4 @@
-package persistence;
+package persistence.entity;
 
 import database.DatabaseServer;
 import database.H2;
@@ -13,9 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import persistence.entity.EntityManager;
+import persistence.entity.SimpleEntityManager;
 import persistence.sql.ddl.DdlGenerator;
 import persistence.sql.dialect.h2.H2Dialect;
-import persistence.sql.dml.DmlGenerator;
 
 @DisplayName("SimpleEntityManager class 의")
 class SimpleEntityManagerTest {
@@ -76,7 +77,7 @@ class SimpleEntityManagerTest {
             // given
             Person person = Person.of("user1", 1, "abc@gtest.com", 1);
             entityManager.persist(person);
-            
+
             // when
             Person foundPerson = entityManager.find(Person.class, 1L);
 
@@ -93,7 +94,7 @@ class SimpleEntityManagerTest {
     @Nested
     class Remove {
 
-        @DisplayName("특정 Person을 삭제 할 수 있다,")
+        @DisplayName("특정 Person을 삭제 할 수 있다.")
         @Test
         void deleteTest() {
             //given
