@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.exception.NotEntityException;
 import persistence.sql.Person;
-import persistence.sql.domain.Dialect;
+import persistence.sql.domain.dialect.Dialect;
+import persistence.sql.domain.dialect.H2Dialect;
 import persistence.study.Car;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +24,7 @@ class CreateQueryBuilderTest {
         void fail_NotEntity() {
             //given
             Class<Car> notEntityClass = Car.class;
-            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Dialect.H2);
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
 
             //when & then
             assertThatThrownBy(() -> createQueryBuilder.build(notEntityClass))
@@ -41,7 +42,7 @@ class CreateQueryBuilderTest {
             Class<Person> target = Person.class;
 
             //when
-            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Dialect.H2);
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
             String query = createQueryBuilder.build(target);
 
             //then

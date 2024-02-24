@@ -15,7 +15,7 @@ import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectAllQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
-import persistence.sql.domain.Dialect;
+import persistence.sql.domain.dialect.H2Dialect;
 
 import java.util.List;
 
@@ -29,11 +29,11 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Dialect.H2);
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
             jdbcTemplate.execute(createQueryBuilder.build(Person.class));
 
             Person person = new Person(1L, "John", 25, "email", 1);
-            Person person2 = new Person(1L, "James", 45, "james@asdf.com", 10);
+            Person person2 = new Person(2L, "James", 45, "james@asdf.com", 10);
             InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
             jdbcTemplate.execute(insertQueryBuilder.build(person));
             jdbcTemplate.execute(insertQueryBuilder.build(person2));
@@ -63,7 +63,7 @@ public class Application {
             String deleteQuery = deleteQueryBuilder.build(person);
             jdbcTemplate.execute(deleteQuery);
 
-            DropQueryBuilder dropQuery = new DropQueryBuilder();
+            DropQueryBuilder dropQuery = new DropQueryBuilder(new H2Dialect());
             jdbcTemplate.execute(dropQuery.build(Person.class));
 
             server.stop();

@@ -11,7 +11,8 @@ import persistence.sql.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.domain.Dialect;
+import persistence.sql.domain.dialect.Dialect;
+import persistence.sql.domain.dialect.H2Dialect;
 
 import java.sql.SQLException;
 
@@ -27,14 +28,14 @@ class MyEntityManagerTest {
         DatabaseServer server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
-        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Dialect.H2);
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
         String createQuery = createQueryBuilder.build(Person.class);
         jdbcTemplate.execute(createQuery);
     }
 
     @AfterEach
     void tearDown() {
-        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder();
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(new H2Dialect());
         String dropQuery = dropQueryBuilder.build(Person.class);
         jdbcTemplate.execute(dropQuery);
     }
