@@ -19,19 +19,19 @@ public class QueryBuilder {
 
     // TODO: ANNOTAITON이 있는 경우와 없는 경우를 하나의 함수로 관리해보자.
     public String getCreateQuery() {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append(String.format(CREATE_TABLE_START, tableName));
-
-        Arrays.stream(fields).forEach(field -> {
-            queryBuilder.append(new AnnotationFreeColumn(field).getColumn());
-            queryBuilder.append(CRETE_TABLE_COMMA);
-        });
-        endQuery();
-
-        return queryBuilder.toString();
+        return String.format(CREATE_TABLE_START, tableName) +
+                getColumnQuery() +
+                CREATE_TABLE_END;
     }
 
-   )
+    private String getColumnQuery() {
+        return Arrays.stream(fields).map(field -> {
+                    return new AnnotationFreeColumn(field).getColumn();
+                })
+                .reduce((s1, s2) -> s1 + CRETE_TABLE_COMMA + s2)
+                .orElse("");
+    }
+
     public String getCreateQueryUsingAnnotation() {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(String.format(CREATE_TABLE_START, tableName));
