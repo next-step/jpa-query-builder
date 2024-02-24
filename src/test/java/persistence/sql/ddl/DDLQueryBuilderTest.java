@@ -16,7 +16,7 @@ class DDLQueryBuilderTest {
     private DDLQueryBuilder ddlQueryBuilder = DDLQueryBuilder.getInstance();
 
     @Test
-    @DisplayName("CreateTableQuery_id,name,age")
+    @DisplayName("CreateTableQuery_@Id 어노테이션은 Primary key 생성")
     void createTableQueryReq1() {
         String query = ddlQueryBuilder.createTableQuery(Person1.class);
 
@@ -24,7 +24,7 @@ class DDLQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("CreateTableQuery_id,name,age,email")
+    @DisplayName("CreateTableQuery_@GeneratedValue 어노테이션은 Auto Increment 생성 및 @Column 컬럼명 생성")
     void createTableQueryReq2() {
         String query = ddlQueryBuilder.createTableQuery(Person2.class);
 
@@ -32,7 +32,7 @@ class DDLQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("CreateTableQuery_@Transient제외_id,name,age,email")
+    @DisplayName("CreateTableQuery_@Transient제외")
     void createTableQueryReq3() {
         String query = ddlQueryBuilder.createTableQuery(Person.class);
 
