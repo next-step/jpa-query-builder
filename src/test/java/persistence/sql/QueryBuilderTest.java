@@ -9,9 +9,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.DdlQueryBuild;
-import persistence.sql.ddl.DdlQueryBuilderFactory;
+import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 import persistence.sql.dml.DmlQueryBuilder;
-import persistence.sql.dml.DmlQueryBuilderFactory;
 import persistence.sql.entity.Person;
 
 import java.sql.SQLException;
@@ -24,8 +24,8 @@ class QueryBuilderTest {
     private static DatabaseServer server;
     private static JdbcTemplate jdbcTemplate;
     private final PersonMapper personMapper = new PersonMapper();
-    private final DdlQueryBuild ddlQueryBuilder = new DdlQueryBuilderFactory().getInstance(DatabaseDialect.MYSQL);
-    private final DmlQueryBuilder dmlQueryBuild = new DmlQueryBuilderFactory().getInstance(DatabaseDialect.MYSQL);
+    private final DdlQueryBuild ddlQueryBuilder = new DdlQueryBuilder(new MySQLPrimaryKeyResolver());
+    private final DmlQueryBuilder dmlQueryBuild = new DmlQueryBuilder();
 
     @BeforeAll
     static void init() throws SQLException {

@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.DatabaseDialect;
+import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 import persistence.sql.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DdlQueryBuilderTest {
 
-    private final DdlQueryBuild ddlQueryBuilder = new DdlQueryBuilderFactory().getInstance(DatabaseDialect.MYSQL);
+    private final DdlQueryBuild ddlQueryBuilder = new DdlQueryBuilder(new MySQLPrimaryKeyResolver());
 
     @Test
     void should_create_create_query() {
