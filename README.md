@@ -37,3 +37,6 @@
    - @GeneratedValue 는 비워놓고 쿼리 생성
 2. findAll 구현해보기
    - `select * from 테이블명` 쿼리 생성
+3. findById 구현해보기
+    - `select * from 테이블명 where id = ?` 쿼리 생성
+    - BooleanBuilder로 동적으로 만들기

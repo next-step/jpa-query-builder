@@ -5,7 +5,7 @@ public class BooleanExpression {
     private final Object value;
     private final ComparisonOperator operator;
 
-    public BooleanExpression(String column, Object value, ComparisonOperator operator) {
+    private BooleanExpression(String column, Object value, ComparisonOperator operator) {
         this.column = column;
         this.value = value;
         this.operator = operator;

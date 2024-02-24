@@ -39,9 +39,8 @@ public class DMLQueryGenerator {
             return query.toString();
         }
 
-        query.append(" where(");
+        query.append(" where ");
         query.append(whereClause(booleanBuilder));
-        query.append(")");
 
         return query.toString();
     }
@@ -58,7 +57,9 @@ public class DMLQueryGenerator {
             }
             BooleanExpression expression = line.getExpression();
             stringBuilder.append(expression.getColumn());
+            stringBuilder.append(" ");
             stringBuilder.append(expression.getOperator().getSymbol());
+            stringBuilder.append(" ");
             stringBuilder.append(valueToString(expression.getValue()));
         }
 

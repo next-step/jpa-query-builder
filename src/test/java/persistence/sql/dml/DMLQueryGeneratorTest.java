@@ -6,6 +6,7 @@ import persistence.Person;
 import persistence.sql.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static persistence.sql.dml.BooleanExpression.eq;
 
 class DMLQueryGeneratorTest {
     DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(Person.class, new H2Dialect());
@@ -35,6 +36,18 @@ class DMLQueryGeneratorTest {
     void testFindAll() {
         String expected = "select * from users";
         BooleanBuilder booleanBuilder = new BooleanBuilder();
+        String selectQuery = dmlQueryGenerator.generateSelectQuery(booleanBuilder);
+
+        assertThat(selectQuery).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("요구사항3: findById 쿼리 생성")
+    void testFindById() {
+        int id = 1;
+        String expected = String.format("select * from users where id = %s", id);
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(eq("id", id));
         String selectQuery = dmlQueryGenerator.generateSelectQuery(booleanBuilder);
 
         assertThat(selectQuery).isEqualTo(expected);
