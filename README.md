@@ -36,5 +36,5 @@
 
 - [x] insert 구현해보기
 - [x] 모두 조회(findAll) 기능 구현해보기
-- [ ] 단건 조회(findById) 기능 구현해보기
-- [ ] delete 쿼리 만들어보기
+- [x] 단건 조회(findById) 기능 구현해보기
+- [x] delete 쿼리 만들어보기
