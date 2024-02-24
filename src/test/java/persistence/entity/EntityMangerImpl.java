@@ -45,6 +45,10 @@ public class EntityMangerImpl implements EntityManger {
 
     @Override
     public void remove(Object entity) {
-
+        Person person = (Person) entity;
+        DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(entity.getClass(), dialect);
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(BooleanExpression.eq("id", person.getId()));
+        jdbcTemplate.execute(dmlQueryGenerator.generateDeleteQuery(builder));
     }
 }

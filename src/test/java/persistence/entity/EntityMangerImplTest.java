@@ -45,6 +45,7 @@ class EntityMangerImplTest {
     public void cleanUp() {
         jdbcTemplate.execute(ddlQueryGenerator.generateDropTableQuery());
     }
+
     @Test
     @DisplayName("요구사항1: find")
     void testFind() {
@@ -66,4 +67,19 @@ class EntityMangerImplTest {
         assertThat(savedPerson.getId()).isEqualTo(1L);
     }
 
+    @Test
+    @DisplayName("요구사항3: delete")
+    void testDelete() {
+        Person person = new Person(1L, "nick_name", 10, "df", null);
+
+        entityManger.remove(person);
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            jdbcTemplate.queryForObject("select * from users where id = 1", rs ->
+                    new Person()
+            );
+        });
+
+        exception.printStackTrace();
+    }
 }
