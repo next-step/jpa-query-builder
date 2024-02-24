@@ -25,7 +25,7 @@ public class CreateQueryBuilder {
     public static CreateQueryBuilder of(final EntityMappingTable entityMappingTable,
                                         final TypeMapper typeMapper,
                                         final ConstraintsMapper constantTypeMapper) {
-        List<ColumnBuilder> columnBuilders = entityMappingTable.getDomainTypes()
+        List<ColumnBuilder> columnBuilders = entityMappingTable.getDomainTypeList()
                 .stream()
                 .filter(DomainType::isNotTransient)
                 .map(domainType -> new ColumnBuilder(domainType, typeMapper, constantTypeMapper))
@@ -41,5 +41,5 @@ public class CreateQueryBuilder {
 
         return String.format(CREATE_SQL, tableName, columns);
     }
-    
+
 }

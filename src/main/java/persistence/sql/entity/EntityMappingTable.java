@@ -29,7 +29,11 @@ public class EntityMappingTable {
         return tableName;
     }
 
-    public List<DomainType> getDomainTypes() {
+    public DomainTypes getDomainTypes() {
+        return domainTypes;
+    }
+
+    public List<DomainType> getDomainTypeList() {
         return Collections.unmodifiableList(domainTypes.getDomainTypes());
     }
 
