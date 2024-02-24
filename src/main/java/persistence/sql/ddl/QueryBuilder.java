@@ -33,17 +33,18 @@ public class QueryBuilder {
     }
 
     public String getCreateQueryUsingAnnotation() {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append(String.format(CREATE_TABLE_START, tableName));
+        return String.format(CREATE_TABLE_START, tableName) +
+                getColumnAnnotationQuery() +
+                CREATE_TABLE_END;
+    }
 
-        Arrays.stream(fields).filter(AnnotatedColumn::isColumn).forEach(field -> {
-            queryBuilder.append(new AnnotatedColumn(field).getColumn());
-            queryBuilder.append(CRETE_TABLE_COMMA);
-        });
-
-        endQuery(queryBuilder);
-
-        return queryBuilder.toString();
+    private String getColumnAnnotationQuery() {
+        return Arrays.stream(fields).filter(AnnotatedColumn::isColumn).
+                map(field -> {
+                    return new AnnotatedColumn(field).getColumn();
+                })
+                .reduce((s1, s2) -> s1 + CRETE_TABLE_COMMA + s2)
+                .orElse("");
     }
 
     private void endQuery(StringBuilder queryBuilder) {
