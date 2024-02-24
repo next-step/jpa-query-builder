@@ -18,6 +18,9 @@ public class Person {
     @Column(nullable = false)
     private String email;
 
+    public Person() {
+    }
+
     public Person(Long id, String name, Integer age, String email) {
         this.id = id;
         this.name = name;
