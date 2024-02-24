@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class WhereClause {
 
     private static final String FORMAT = "where %s";
-    private static final String WHERE_FORMAT = "%s=%s";
+    private static final String WHERE_FORMAT = "%s='%s'";
     private static final String DELIMITER = "AND";
     private static final String EMPTY = "";
 
