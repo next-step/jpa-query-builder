@@ -15,6 +15,10 @@ public class ColumnClause {
         this.columns = columns;
     }
 
+    public List<String> getColumns() {
+        return columns;
+    }
+
     public String toSql() {
         return String.join(DELIMITER, columns);
     }
@@ -22,6 +26,7 @@ public class ColumnClause {
     public static ColumnClause from(DomainTypes domainTypes) {
         return new ColumnClause(domainTypes.getDomainTypes()
                 .stream()
+                .filter(DomainType::isNotTransient)
                 .map(DomainType::getColumnName)
                 .collect(Collectors.toList()));
     }
