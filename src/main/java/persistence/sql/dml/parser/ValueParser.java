@@ -2,7 +2,7 @@ package persistence.sql.dml.parser;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import persistence.sql.dml.keygenerator.KeyGenerator;
+import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
 
@@ -10,9 +10,9 @@ public class ValueParser {
     private ValueParser() {
     }
 
-    public static String insertValuesClauseParse(Field field, Object object, KeyGenerator keyGenerator) {
+    public static String insertValuesClauseParse(Field field, Object object, Dialect dialect) {
         if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class)) {
-            return keyGenerator.generator(field.getAnnotation(GeneratedValue.class).strategy());
+            return dialect.generatorKeyValue(field.getAnnotation(GeneratedValue.class).strategy());
         }
 
         field.setAccessible(true);

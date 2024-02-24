@@ -1,10 +1,8 @@
 package persistence.sql.entity;
 
 import jdbc.JdbcTemplate;
+import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.QueryBuilder;
-import persistence.sql.dml.domain.Person;
-import persistence.sql.dml.keygenerator.H2KeyGenerator;
-import persistence.sql.dml.keygenerator.KeyGenerator;
 
 import static persistence.sql.entity.RowMapperFactory.createRowMapper;
 
@@ -17,7 +15,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> T find(final Class<T> clazz, final Long Id) {
-        final QueryBuilder queryBuilder = new QueryBuilder(clazz);
+        final QueryBuilder queryBuilder = new QueryBuilder(clazz, new H2Dialect());
         final String findByIdQuery = queryBuilder.createFindByIdQuery(Id);
 
         return jdbcTemplate.queryForObject(findByIdQuery, createRowMapper(clazz));
@@ -25,15 +23,15 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void persist(final Object entity) {
-        final QueryBuilder queryBuilder = new QueryBuilder(entity.getClass());
-        final String insertQuery = queryBuilder.createInsertQuery(entity, new H2KeyGenerator());
+        final QueryBuilder queryBuilder = new QueryBuilder(entity.getClass(), new H2Dialect());
+        final String insertQuery = queryBuilder.createInsertQuery(entity);
 
         jdbcTemplate.execute(insertQuery);
     }
 
     @Override
     public void remove(final Object entity) {
-        final QueryBuilder queryBuilder = new QueryBuilder(entity.getClass());
+        final QueryBuilder queryBuilder = new QueryBuilder(entity.getClass(), new H2Dialect());
         final String deleteQuery = queryBuilder.createDeleteQuery(entity);
 
         jdbcTemplate.execute(deleteQuery);

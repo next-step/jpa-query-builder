@@ -7,9 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.QueryBuilder;
 import persistence.sql.dml.domain.Person;
-import persistence.sql.dml.keygenerator.H2KeyGenerator;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,16 +22,16 @@ class EntityManagerImplTest {
 
     @BeforeEach
     void init() throws SQLException {
-        final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
+        final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(Person.class, new H2Dialect());
         final DatabaseServer databaseServer = new H2();
         databaseServer.start();
         final Connection connection = databaseServer.getConnection();
         jdbcTemplate = new JdbcTemplate(connection);
 
-        final String dropSql = ddlQueryBuilder.dropDdl(Person.class);
+        final String dropSql = ddlQueryBuilder.dropDdl();
         jdbcTemplate.execute(dropSql);
 
-        final String createSql = ddlQueryBuilder.createDdl(Person.class);
+        final String createSql = ddlQueryBuilder.createDdl();
         jdbcTemplate.execute(createSql);
     }
 
@@ -39,8 +39,8 @@ class EntityManagerImplTest {
     @Test
     void findTest() {
         final Person person = new Person( 1L, "simpson", 31, "simpson@naver.com");
-        final QueryBuilder queryBuilder = new QueryBuilder(Person.class);
-        jdbcTemplate.execute(queryBuilder.createInsertQuery(person, new H2KeyGenerator()));
+        final QueryBuilder queryBuilder = new QueryBuilder(Person.class, new H2Dialect());
+        jdbcTemplate.execute(queryBuilder.createInsertQuery(person));
 
         final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
         final Person findPerson = entityManager.find(person.getClass(), 1L);
@@ -64,8 +64,8 @@ class EntityManagerImplTest {
     @Test
     void removeTest() {
         final Person person = new Person( 1L, "simpson", 31, "simpson@naver.com");
-        final QueryBuilder queryBuilder = new QueryBuilder(Person.class);
-        jdbcTemplate.execute(queryBuilder.createInsertQuery(person, new H2KeyGenerator()));
+        final QueryBuilder queryBuilder = new QueryBuilder(Person.class, new H2Dialect());
+        jdbcTemplate.execute(queryBuilder.createInsertQuery(person));
         final EntityManager entityManager = new EntityManagerImpl(jdbcTemplate);
 
         entityManager.remove(person);

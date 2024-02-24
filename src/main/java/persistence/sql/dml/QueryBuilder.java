@@ -1,19 +1,21 @@
 package persistence.sql.dml;
 
-import persistence.sql.dml.keygenerator.KeyGenerator;
+import persistence.sql.dialect.Dialect;
 
 public class QueryBuilder {
     private final EntityTableMeta entityTableMeta;
     private final EntityColumns entityColumns;
+    private final Dialect dialect;
 
-    public QueryBuilder(Class<?> clazz) {
+    public QueryBuilder(Class<?> clazz, final Dialect dialect) {
         this.entityTableMeta = EntityTableMeta.of(clazz);
         this.entityColumns = EntityColumns.of(clazz);
+        this.dialect = dialect;
     }
 
-    public String createInsertQuery(Object object, KeyGenerator keyGenerator) {
+    public String createInsertQuery(Object object) {
         return String.format("insert into %s (%s) values (%s)", this.entityTableMeta.name(), this.entityColumns.names(),
-                entityColumns.insertValues(object, keyGenerator));
+                entityColumns.insertValues(object, dialect));
     }
 
     public String createFindAllQuery() {

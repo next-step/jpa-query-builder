@@ -3,7 +3,7 @@ package persistence.sql.dml;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.dml.keygenerator.KeyGenerator;
+import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -39,9 +39,9 @@ public class EntityColumns {
         return String.join(", ", this.entityColumns.keySet());
     }
 
-    public String insertValues(Object object, KeyGenerator keyGenerator) {
+    public String insertValues(Object object, Dialect dialect) {
         return this.entityColumns.values().stream()
-                .map(f -> insertValuesClauseParse(f, object, keyGenerator))
+                .map(f -> insertValuesClauseParse(f, object, dialect))
                 .collect(Collectors.joining(", "));
     }
 
