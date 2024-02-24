@@ -33,7 +33,7 @@ public class ColumnBuilder {
     }
 
     private String getColumnName() {
-        return domainType.getColumnName();
+        return domainType.getName();
     }
 
     private String getColumnType() {

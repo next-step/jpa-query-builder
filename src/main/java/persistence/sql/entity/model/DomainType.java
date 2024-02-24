@@ -17,10 +17,18 @@ public class DomainType {
                       final Class<?> classType,
                       final Field field,
                       final boolean isTransient) {
-        this.name = name;
+        this.name = getColumnName(field, name);
         this.classType = classType;
         this.field = field;
         this.isTransient = isTransient;
+    }
+
+    private String getColumnName(Field field, String name) {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
+            return columnAnnotation.name();
+        }
+        return name;
     }
 
     public String getName() {
@@ -43,13 +51,7 @@ public class DomainType {
         return field.getAnnotation(annotation);
     }
 
-    public String getColumnName() {
-        Column columnAnnotation = this.getAnnotation(Column.class);
-        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
-            return columnAnnotation.name();
-        }
-        return this.getName();
-    }
+
 
     public static DomainType from(Field field) {
         return new DomainType(
