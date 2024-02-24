@@ -31,4 +31,8 @@ public class Person {
 
     @Transient
     private Integer index;
+
+    public String getName() {
+        return name;
+    }
 }
