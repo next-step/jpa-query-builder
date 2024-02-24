@@ -3,8 +3,8 @@ package persistence.sql.dml;
 import persistence.sql.dml.keygenerator.KeyGenerator;
 
 public class QueryBuilder {
-    private EntityTableMeta entityTableMeta;
-    private EntityColumns entityColumns;
+    private final EntityTableMeta entityTableMeta;
+    private final EntityColumns entityColumns;
 
     public QueryBuilder(Class<?> clazz) {
         this.entityTableMeta = EntityTableMeta.of(clazz);

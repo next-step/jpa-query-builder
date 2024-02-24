@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.*;
 import persistence.sql.ddl.domain.DdlKeyGenerator;
-import persistence.sql.ddl.domain.H2DdlKeyGenerateor;
+import persistence.sql.ddl.domain.H2DdlKeyGenerator;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public class DdlQueryBuilder {
     public String createDdl(final Class<?> clazz) {
         String tableName = createTableName(clazz);
 
-        String fieldDDLSql = createFieldDDLSql(clazz, new H2DdlKeyGenerateor());
+        String fieldDDLSql = createFieldDDLSql(clazz, new H2DdlKeyGenerator());
 
         final String constraintDDLSql = createConstraintDDLSql(clazz);
 

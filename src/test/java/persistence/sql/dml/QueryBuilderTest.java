@@ -17,7 +17,7 @@ class QueryBuilderTest {
 
         String insertQuery = queryBuilder.createInsertQuery(person, new H2KeyGenerator());
 
-        String expected = String.format("insert into users (id, nick_name, old, email) values (default, 'simpson', 31, 'qwe5507@gmail.com')");
+        String expected = "insert into users (id, nick_name, old, email) values (default, 'simpson', 31, 'qwe5507@gmail.com')";
         assertThat(insertQuery).isEqualTo(expected);
     }
 

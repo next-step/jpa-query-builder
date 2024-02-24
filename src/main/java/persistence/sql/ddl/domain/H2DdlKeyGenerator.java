@@ -3,7 +3,7 @@ package persistence.sql.ddl.domain;
 
 import jakarta.persistence.GenerationType;
 
-public class H2DdlKeyGenerateor implements DdlKeyGenerator {
+public class H2DdlKeyGenerator implements DdlKeyGenerator {
 
     @Override
     public String generator(final GenerationType generationType) {

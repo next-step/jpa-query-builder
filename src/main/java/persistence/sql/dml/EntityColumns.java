@@ -16,9 +16,13 @@ import java.util.stream.Collectors;
 import static persistence.sql.dml.parser.ValueParser.insertValuesClauseParse;
 import static persistence.sql.dml.parser.ValueParser.valueParse;
 
+
 public class EntityColumns {
     private final Map<String, Field> entityColumns;
 
+    /**
+     * Id 어노테이션이 붙은 컬럼이 맨앞에 위치한다.
+     */
     private EntityColumns(final Class<?> clazz) {
         this.entityColumns = Arrays.stream(clazz.getDeclaredFields())
                 .sorted(Comparator.comparing(this::idFirstOrdered))
