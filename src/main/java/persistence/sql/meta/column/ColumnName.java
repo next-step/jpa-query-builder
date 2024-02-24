@@ -15,7 +15,7 @@ public class ColumnName {
         return name;
     }
 
-    public String extractName(Field field) {
+    private String extractName(Field field) {
         if (hasColumnAnnotation(field)) {
             return extractNameByAnnotation(field);
         }

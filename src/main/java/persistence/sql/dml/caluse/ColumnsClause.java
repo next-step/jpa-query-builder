@@ -1,25 +1,37 @@
 package persistence.sql.dml.caluse;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ColumnsClause {
+    private final List<ColumnClause> columns;
     private final Field[] fields;
 
     public ColumnsClause(Class<?> clazz) {
+        this.columns = columnClauses(clazz);
         this.fields = clazz.getDeclaredFields();
     }
 
+    private List<ColumnClause> columnClauses(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(ColumnClause::new)
+                .collect(Collectors.toList());
+    }
+
+
     public String getColumns() {
         StringBuilder sb = new StringBuilder();
-        Arrays.stream(fields).forEach(field -> {
-            String column = new ColumnClause(field).getColumn();
-            if (column.isBlank()) {
+        columns.forEach(column -> {
+            if (column.getColumnName().isBlank()) {
                 return;
             }
-            sb.append(column);
+            sb.append(column.getColumnName());
             sb.append(", ");
         });
         sb.deleteCharAt(sb.length() - 1);

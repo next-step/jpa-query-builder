@@ -1,21 +1,25 @@
 package persistence.sql.dml.caluse;
 
 import jakarta.persistence.Transient;
-import persistence.sql.meta.column.Column;
+import persistence.sql.meta.column.ColumnName;
 
 import java.lang.reflect.Field;
 
 public class ColumnClause {
-    private final Field field;
+    private final ColumnName columnName;
 
     public ColumnClause(Field field) {
-        this.field = field;
+        this.validateColumn(field);
+        this.columnName = new ColumnName(field);
     }
 
-    public String getColumn() {
+    private void validateColumn(Field field) {
         if (field.isAnnotationPresent(Transient.class)) {
-            return "";
+            throw new IllegalArgumentException(String.format("%s has Transient Annotation Can not Field", field.getName()));
         }
-        return new Column(field).getColumnName();
+    }
+
+    public String getColumnName() {
+        return columnName.getName();
     }
 }
