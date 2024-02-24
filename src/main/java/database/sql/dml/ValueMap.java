@@ -9,15 +9,18 @@ import java.util.Map;
 
 public class ValueMap {
 
-    private final Map<String, Object> values;
-    private final EntityMetadata entityMetadata;
+    private final Map<String, Object> valuesMap;
 
     public ValueMap(Object entity) {
-        entityMetadata = new EntityMetadata(entity);
-        values = extractValues(entity);
+        valuesMap = extractValues(entity);
+    }
+
+    public Map<String, Object> getValuesMap() {
+        return valuesMap;
     }
 
     private Map<String, Object> extractValues(Object entity) {
+        EntityMetadata entityMetadata = new EntityMetadata(entity);
         List<EntityColumn> generalColumns = entityMetadata.getGeneralColumns();
 
         Map<String, Object> map = new HashMap<>();
@@ -30,9 +33,5 @@ public class ValueMap {
             throw new RuntimeException(e);
         }
         return map;
-    }
-
-    public Map<String, Object> getValuesMap() {
-        return values;
     }
 }

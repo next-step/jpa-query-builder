@@ -10,6 +10,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class UtilTest {
+    @ParameterizedTest
+    @MethodSource("quoteTestSources")
+    void testQuote(String value, String expected) {
+        assertThat(Util.quote(value)).isEqualTo(expected);
+    }
+
     private static List<Arguments> quoteTestSources() {
         return List.of(
                 arguments("0", "0"),
@@ -18,11 +24,5 @@ class UtilTest {
                 arguments("1f", "'1f'"),
                 arguments(null, "NULL")
         );
-    }
-
-    @ParameterizedTest
-    @MethodSource("quoteTestSources")
-    void testQuote(String value, String expected) {
-        assertThat(Util.quote(value)).isEqualTo(expected);
     }
 }
