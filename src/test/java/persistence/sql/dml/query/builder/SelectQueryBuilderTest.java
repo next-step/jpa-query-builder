@@ -42,7 +42,7 @@ class SelectQueryBuilderTest {
 
         SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, where);
 
-        assertThat(selectQueryBuilder.toSql()).isEqualTo("SELECT id,nick_name,old,email FROM Person where id=1");
+        assertThat(selectQueryBuilder.toSql()).isEqualTo("SELECT id,nick_name,old,email FROM Person where id='1'");
     }
 
 }
