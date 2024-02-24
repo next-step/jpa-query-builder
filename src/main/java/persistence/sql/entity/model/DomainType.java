@@ -60,8 +60,12 @@ public class DomainType {
         return name;
     }
 
+    public boolean isExistsId() {
+        return this.isAnnotation(Id.class);
+    }
+
     public boolean isNotExistsId() {
-        return !this.isAnnotation(Id.class);
+        return !isExistsId();
     }
 
     public boolean isNotExistGenerateValue() {
