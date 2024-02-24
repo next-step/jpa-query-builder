@@ -57,7 +57,11 @@ public class ColumnsMetadata {
         return generalColumns;
     }
 
-    public Object getPrimaryKeyValue(Object entity) throws IllegalAccessException {
-        return primaryKey.getValue(entity);
+    public long getPrimaryKeyValue(Object entity) {
+        try {
+            return (long) primaryKey.getValue(entity);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
