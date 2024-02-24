@@ -30,10 +30,6 @@ public class Column {
         return column.name();
     }
 
-    public Field getField() {
-        return field;
-    }
-
     public Class<?> getType() {
         return field.getType();
     }
@@ -76,6 +72,15 @@ public class Column {
             return String.format("'%s'", object);
         }
         return String.valueOf(object);
+    }
+
+    public void setFieldValue(Object object, Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(object, value);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isInsertable() {
