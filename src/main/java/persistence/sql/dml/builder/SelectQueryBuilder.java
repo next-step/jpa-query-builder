@@ -3,8 +3,9 @@ package persistence.sql.dml.builder;
 import jakarta.persistence.Transient;
 import jdbc.RowMapper;
 import persistence.sql.dml.caluse.ColumnsClause;
+import persistence.sql.dml.caluse.PKClause;
+import persistence.sql.dml.caluse.TableClause;
 import persistence.sql.meta.column.Column;
-import persistence.sql.meta.table.Table;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -30,9 +31,9 @@ public class SelectQueryBuilder {
     }
 
     private String generateFindAllQuery(Class<?> clazz) {
-        return String.format("select %s from %s",
+        return String.format("select %s, %s from %s",
                 new ColumnsClause(clazz).getColumns(),
-                new Table(clazz).getTableName()
+                new TableClause(clazz).getTableName()
         );
     }
 
