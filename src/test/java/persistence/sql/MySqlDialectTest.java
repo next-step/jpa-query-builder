@@ -1,20 +1,22 @@
-package persistence.sql.ddl.columntype;
+package persistence.sql;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import persistence.sql.domain.DatabaseColumn;
 
-class MySQLColumnTypeTest {
+class MySqlDialectTest {
+
+    private final MySqlDialect dialect = new MySqlDialect();
 
     @ParameterizedTest
     @CsvSource(value = {"id,BIGINT", "age,INT", "name,VARCHAR(255)"}, delimiter = ',')
-    void should_convert_java_type_to_mysql_column(String columnName, String dbType) throws NoSuchFieldException {
+    void should_get_jdbc_type_from_java_class(String columnName, String expectJdbcType) throws NoSuchFieldException {
         DatabaseColumn column = DatabaseColumn.fromField(TestClass.class.getDeclaredField(columnName), null);
 
-        String type = MySQLColumnType.convert(column);
+        String jdbcType = dialect.getJdbcTypeFromJavaClass(column);
 
-        Assertions.assertThat(type).isEqualTo(dbType);
+        Assertions.assertThat(jdbcType).isEqualTo(expectJdbcType);
     }
 
     private class TestClass {

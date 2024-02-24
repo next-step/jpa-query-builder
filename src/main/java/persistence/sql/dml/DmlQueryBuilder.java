@@ -8,12 +8,6 @@ public class DmlQueryBuilder implements InsertQueryBuild, SelectQueryBuild, Dele
 
     private final DeleteQueryBuild deleteQueryBuilder;
 
-    public DmlQueryBuilder(InsertQueryBuild insertQueryBuilder, SelectQueryBuild selectQueryBuilder, DeleteQueryBuild deleteQueryBuilder) {
-        this.insertQueryBuilder = insertQueryBuilder;
-        this.selectQueryBuilder = selectQueryBuilder;
-        this.deleteQueryBuilder = deleteQueryBuilder;
-    }
-
     public DmlQueryBuilder() {
         this.insertQueryBuilder = new InsertQueryBuilder();
         this.selectQueryBuilder = new SelectQueryBuilder();
