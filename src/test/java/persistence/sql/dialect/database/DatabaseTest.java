@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect.database;
+package persistence.sql.dialect.database;
 
 import database.DatabaseServer;
 import database.H2;

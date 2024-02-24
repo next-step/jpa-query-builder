@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect.database;
+package persistence.sql.dialect.database;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
