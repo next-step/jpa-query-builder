@@ -27,9 +27,50 @@ public class DMLQueryGenerator {
                 valueClause(columns)
         );
     }
-    
+
+    public String generateSelectQuery(BooleanBuilder booleanBuilder) {
+        StringBuilder query = new StringBuilder();
+        query.append("select ");
+        query.append(selectClause());
+        query.append(" from ");
+        query.append(table.getName());
+
+        if(booleanBuilder.isEmpty()) {
+            return query.toString();
+        }
+
+        query.append(" where(");
+        query.append(whereClause(booleanBuilder));
+        query.append(")");
+
+        return query.toString();
+    }
+
+    private String whereClause(BooleanBuilder booleanBuilder) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean firstLine = true;
+
+        for (BooleanExpressionLine line : booleanBuilder.getExpressionLines()) {
+            if (!firstLine) {
+                stringBuilder.append(line.getLogicalOperator().name());
+                stringBuilder.append(" ");
+                firstLine = false;
+            }
+            BooleanExpression expression = line.getExpression();
+            stringBuilder.append(expression.getColumn());
+            stringBuilder.append(expression.getOperator().getSymbol());
+            stringBuilder.append(valueToString(expression.getValue()));
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private String selectClause() {
+        return "*";
+    }
+
     private String columnClause(List<ColumnData> columns) {
-        if(columnClause != null){
+        if (columnClause != null) {
             return columnClause;
         }
         columnClause = columns.stream()
@@ -45,8 +86,8 @@ public class DMLQueryGenerator {
                 .collect(Collectors.joining(", "));
     }
 
-    private String valueToString(Object value){
-        if(value == null){
+    private String valueToString(Object value) {
+        if (value == null) {
             return "null";
         }
         return value.toString();

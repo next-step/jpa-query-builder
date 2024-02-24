@@ -35,3 +35,5 @@
    - @Transient 무시하기
    - @Column 에서 목표 테이블 이름 얻기
    - @GeneratedValue 는 비워놓고 쿼리 생성
+2. findAll 구현해보기
+   - `select * from 테이블명` 쿼리 생성
