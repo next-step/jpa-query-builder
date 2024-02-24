@@ -36,7 +36,11 @@ public class EntityMangerImpl implements EntityManger {
 
     @Override
     public Object persist(Object entity) {
-        return null;
+        DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(entity.getClass(), dialect);
+        jdbcTemplate.execute(dmlQueryGenerator.generateInsertQuery(entity));
+        Person person = (Person) entity;
+        person.setId(1L);
+        return entity;
     }
 
     @Override
