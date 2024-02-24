@@ -6,8 +6,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 public class DomainType {
-    private static final String EMPTY = "";
-
     private final String name;
     private final Class<?> classType;
     private final Field field;
@@ -17,19 +15,12 @@ public class DomainType {
                       final Class<?> classType,
                       final Field field,
                       final boolean isTransient) {
-        this.name = getColumnName(field, name);
+        this.name = name;
         this.classType = classType;
         this.field = field;
         this.isTransient = isTransient;
     }
 
-    private String getColumnName(Field field, String name) {
-        Column columnAnnotation = field.getAnnotation(Column.class);
-        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
-            return columnAnnotation.name();
-        }
-        return name;
-    }
 
     public String getName() {
         return name;
@@ -52,7 +43,6 @@ public class DomainType {
     }
 
 
-
     public static DomainType from(Field field) {
         return new DomainType(
                 field.getName(),
@@ -60,6 +50,14 @@ public class DomainType {
                 field,
                 field.isAnnotationPresent(Transient.class)
         );
+    }
+
+    public String getColumnName() {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
+            return columnAnnotation.name();
+        }
+        return name;
     }
 
     public boolean isNotExistsId() {
