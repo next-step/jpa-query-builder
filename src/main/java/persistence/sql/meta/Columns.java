@@ -38,4 +38,8 @@ public class Columns {
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException(ID_NOT_FOUND_MESSAGE));
     }
+
+    public Object getIdValue(Object entity) {
+        return getIdColumn().getFieldValue(entity);
+    }
 }
