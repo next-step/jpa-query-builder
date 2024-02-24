@@ -8,7 +8,6 @@ import java.util.Arrays;
 import static persistence.sql.common.SqlConstant.*;
 
 public class QueryBuilder {
-    private final StringBuilder queryBuilder;
     private final Field[] fields;
     private final String tableName;
 
@@ -16,11 +15,11 @@ public class QueryBuilder {
         EntityValidator.validate(entity);
         this.fields = entity.getDeclaredFields();
         this.tableName = new Table(entity).getName();
-        this.queryBuilder = new StringBuilder();
     }
 
     // TODO: ANNOTAITON이 있는 경우와 없는 경우를 하나의 함수로 관리해보자.
     public String getCreateQuery() {
+        StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(String.format(CREATE_TABLE_START, tableName));
 
         Arrays.stream(fields).forEach(field -> {
@@ -32,7 +31,9 @@ public class QueryBuilder {
         return queryBuilder.toString();
     }
 
+   )
     public String getCreateQueryUsingAnnotation() {
+        StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(String.format(CREATE_TABLE_START, tableName));
 
         Arrays.stream(fields).filter(AnnotatedColumn::isColumn).forEach(field -> {
@@ -40,18 +41,19 @@ public class QueryBuilder {
             queryBuilder.append(CRETE_TABLE_COMMA);
         });
 
-        endQuery();
+        endQuery(queryBuilder);
 
         return queryBuilder.toString();
     }
 
-    private void endQuery() {
+    private void endQuery(StringBuilder queryBuilder) {
         int lastCommaIdx = queryBuilder.lastIndexOf(CRETE_TABLE_COMMA);
         queryBuilder.deleteCharAt(lastCommaIdx);
         queryBuilder.append(CREATE_TABLE_END);
     }
 
     public String getDropTableQuery() {
+        StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(String.format(DROP_TABLE, tableName));
         return queryBuilder.toString();
     }
