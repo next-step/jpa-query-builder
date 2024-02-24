@@ -29,12 +29,8 @@ public class ColumnsMetadata {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getColumnNames() {
+    public List<String> getAllColumnNames() {
         return allEntityColumns.stream().map(EntityColumn::getColumnName).collect(Collectors.toList());
-    }
-
-    public String getJoinedColumnNames() {
-        return String.join(", ", getColumnNames());
     }
 
     public List<String> getColumnDefinitions(TypeConverter typeConverter) {
@@ -47,13 +43,11 @@ public class ColumnsMetadata {
         return primaryKey.getColumnName();
     }
 
-    // 컬럼들 분류는 pk, columsn 이렇게 두개로
-    // Inserting 이란 이름 대신 그냥 컬럼으로.
-    public List<String> getColumnNamesForInserting() {
+    public List<String> getGeneralColumnNames() {
         return generalColumns.stream().map(EntityColumn::getColumnName).collect(Collectors.toList());
     }
 
-    public List<EntityColumn> getColumnsForInserting() {
+    public List<EntityColumn> getGeneralColumns() {
         return generalColumns;
     }
 

@@ -1,5 +1,7 @@
 package database.sql.dml;
 
+import database.sql.Person;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,5 +37,16 @@ class InsertQueryBuilderTest {
     void buildInsertQuery(Map<String, Object> valueMap, String expected) {
         String actual = insertQueryBuilder.buildQuery(valueMap);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void buildInsertQueryWithEntity() {
+        Person person = new Person();
+        person.setName("tom");
+        person.setAge(42);
+        person.setEmail("aaaa@bbbb.com");
+
+        String actual = insertQueryBuilder.buildQuery(person);
+        assertThat(actual).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('tom', 42, 'aaaa@bbbb.com')");
     }
 }

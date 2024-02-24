@@ -22,9 +22,9 @@ class ColumnMetadataTest {
     }
 
     @Test
-    void getColumnNames() {
-        List<String> columnNames = columnsMetadata.getColumnNames();
-        assertThat(columnNames).containsExactly("id", "nick_name", "old", "email");
+    void getAllColumnNames() {
+        List<String> allColumnNames = columnsMetadata.getAllColumnNames();
+        assertThat(allColumnNames).containsExactly("id", "nick_name", "old", "email");
     }
 
     @Test
@@ -44,8 +44,8 @@ class ColumnMetadataTest {
     }
 
     @Test
-    void getColumnNamesForInserting() {
-        List<String> columnsForInserting = columnsMetadata.getColumnNamesForInserting();
-        assertThat(columnsForInserting).containsExactly("nick_name", "old", "email");
+    void getGeneralColumnNames() {
+        List<String> generalColumnNames = columnsMetadata.getGeneralColumnNames();
+        assertThat(generalColumnNames).containsExactly("nick_name", "old", "email");
     }
 }

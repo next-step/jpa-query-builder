@@ -17,8 +17,8 @@ class EntityMetadataTest {
     }
 
     @Test
-    void getColumnNames() {
-        List<String> columnNames = metadata.getColumnNames();
-        assertThat(columnNames).containsExactly("id", "nick_name", "old", "email");
+    void getAllColumnNames() {
+        List<String> allColumnNames = metadata.getAllColumnNames();
+        assertThat(allColumnNames).containsExactly("id", "nick_name", "old", "email");
     }
 }

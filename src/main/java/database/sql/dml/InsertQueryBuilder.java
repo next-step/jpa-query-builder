@@ -10,12 +10,12 @@ import static database.sql.Util.quote;
 
 public class InsertQueryBuilder {
     private final String tableName;
-    private final List<String> columnNamesForInserting;
+    private final List<String> generalColumnNames;
 
     public InsertQueryBuilder(Class<?> entityClass) {
         EntityMetadata metadata = new EntityMetadata(entityClass);
         this.tableName = metadata.getTableName();
-        this.columnNamesForInserting = metadata.getColumnNamesForInserting();
+        this.generalColumnNames = metadata.getGeneralColumnNames();
     }
 
     public String buildQuery(Map<String, Object> valueMap) {
@@ -30,7 +30,7 @@ public class InsertQueryBuilder {
     }
 
     private List<String> columnClauses(Map<String, Object> valueMap) {
-        return columnNamesForInserting.stream()
+        return generalColumnNames.stream()
                 .filter(valueMap::containsKey)
                 .collect(Collectors.toList());
     }

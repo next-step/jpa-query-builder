@@ -10,12 +10,12 @@ import static database.sql.Util.quote;
 
 public class DeleteQueryBuilder {
     private final String tableName;
-    private final List<String> columnNames;
+    private final List<String> allColumnNames;
 
     public DeleteQueryBuilder(Class<?> entityClass) {
         EntityMetadata metadata = new EntityMetadata(entityClass);
         this.tableName = metadata.getTableName();
-        this.columnNames = metadata.getColumnNames();
+        this.allColumnNames = metadata.getAllColumnNames();
     }
 
     public String buildQuery(Map<String, Object> conditionMap) {
@@ -23,7 +23,7 @@ public class DeleteQueryBuilder {
     }
 
     private String whereClause(Map<String, Object> conditionMap) {
-        return columnNames.stream()
+        return allColumnNames.stream()
                 .filter(conditionMap::containsKey)
                 .map(columnName -> {
                     String quotedValue = quote(conditionMap.get(columnName));

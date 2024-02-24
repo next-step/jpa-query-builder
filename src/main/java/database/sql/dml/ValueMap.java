@@ -18,7 +18,7 @@ public class ValueMap {
     }
 
     private Map<String, Object> extractValues(Object entity) {
-        List<EntityColumn> generalColumns = entityMetadata.getColumnsForInserting();
+        List<EntityColumn> generalColumns = entityMetadata.getGeneralColumns();
 
         Map<String, Object> map = new HashMap<>();
         try {

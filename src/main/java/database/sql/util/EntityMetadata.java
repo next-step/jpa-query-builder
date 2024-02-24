@@ -22,12 +22,12 @@ public class EntityMetadata {
         return tableMetadata.getTableName();
     }
 
-    public List<String> getColumnNames() {
-        return columnsMetadata.getColumnNames();
+    public List<String> getAllColumnNames() {
+        return columnsMetadata.getAllColumnNames();
     }
 
-    public String getJoinedColumnNames() {
-        return columnsMetadata.getJoinedColumnNames();
+    public String getJoinedAllColumnNames() {
+        return String.join(", ", columnsMetadata.getAllColumnNames());
     }
 
     public List<String> getColumnDefinitions(TypeConverter typeConverter) {
@@ -38,12 +38,12 @@ public class EntityMetadata {
         return columnsMetadata.getPrimaryKeyColumnName();
     }
 
-    public List<String> getColumnNamesForInserting() {
-        return columnsMetadata.getColumnNamesForInserting();
+    public List<String> getGeneralColumnNames() {
+        return columnsMetadata.getGeneralColumnNames();
     }
 
-    public List<EntityColumn> getColumnsForInserting() {
-        return columnsMetadata.getColumnsForInserting();
+    public List<EntityColumn> getGeneralColumns() {
+        return columnsMetadata.getGeneralColumns();
     }
 
     public long getPrimaryKeyValue(Object entity) {
