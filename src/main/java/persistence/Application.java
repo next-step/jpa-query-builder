@@ -5,9 +5,8 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.ddl.query.QueryTranslator;
 import persistence.sql.ddl.entity.Person;
-import persistence.sql.ddl.impl.DefaultQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -20,9 +19,9 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            QueryBuilder queryBuilder = new DefaultQueryBuilder();
+            QueryTranslator queryTranslator = new QueryTranslator();
 
-            jdbcTemplate.execute(queryBuilder.buildDDL(Person.class));
+            jdbcTemplate.execute(queryTranslator.getCreateTableQuery(Person.class));
 
             server.stop();
         } catch (Exception e) {
