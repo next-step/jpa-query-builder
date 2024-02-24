@@ -90,6 +90,8 @@ public class DMLQueryGenerator {
             return columnClause;
         }
         columnClause = columns.stream()
+                // TODO: AUTO_INCREMENT 아닐때 대응하기
+                .filter(column -> !column.isPrimaryKey())
                 .map(ColumnData::getName)
                 .collect(Collectors.joining(", "));
 
@@ -98,6 +100,7 @@ public class DMLQueryGenerator {
 
     private String valueClause(List<ColumnData> columns) {
         return columns.stream()
+                .filter(column -> !column.isPrimaryKey())
                 .map(column -> valueToString(column.getValue()))
                 .collect(Collectors.joining(", "));
     }

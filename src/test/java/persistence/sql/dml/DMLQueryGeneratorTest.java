@@ -19,8 +19,7 @@ class DMLQueryGeneratorTest {
         String email = "email";
         Person person = new Person(null, nickName, age, email, null);
         String expected = String.format(
-                "insert into users (id, nick_name, old, email) values (%s, '%s', %s, '%s')",
-                "null",
+                "insert into users (nick_name, old, email) values ('%s', %s, '%s')",
                 nickName,
                 age,
                 email
