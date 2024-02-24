@@ -1,7 +1,7 @@
 package persistence.sql.dml.query.clause;
 
-import persistence.sql.dml.query.exception.IllegalFieldValueException;
-import persistence.sql.dml.query.exception.NotFoundFieldNameException;
+import persistence.sql.dml.exception.IllegalFieldValueException;
+import persistence.sql.dml.exception.NotFoundFieldNameException;
 import persistence.sql.entity.model.DomainTypes;
 
 import java.lang.reflect.Field;
