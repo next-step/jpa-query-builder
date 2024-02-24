@@ -3,6 +3,7 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,12 @@ class EntityManagerImplTest {
         server.start();
 
         entityManager = new EntityManagerImpl(new JdbcTemplate(server.getConnection()));
+    }
+
+    @AfterEach
+    public void tearDown() throws SQLException {
+        entityManager.dropTable(Person.class);
+        server.stop();
     }
 
 

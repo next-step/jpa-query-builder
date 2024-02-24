@@ -2,6 +2,7 @@ package persistence;
 
 import jdbc.JdbcTemplate;
 import jdbc.PersonRowMapper;
+import persistence.entity.Person;
 import persistence.sql.ddl.DDLQueryBuilder;
 import persistence.sql.dml.DMLQueryBuilder;
 
@@ -21,6 +22,11 @@ public class EntityManagerImpl implements EntityManager {
     @Override
     public <T> void createTable(Class<T> tClass) {
         jdbcTemplate.execute(ddlQueryBuilder.createTableQuery(tClass));
+    }
+
+    @Override
+    public void dropTable(Class<Person> personClass) {
+        jdbcTemplate.execute(ddlQueryBuilder.dropTableQuery(personClass));
     }
 
     @Override
