@@ -1,13 +1,10 @@
 package persistence.sql.ddl.query.builder;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import persistence.sql.ddl.dialect.database.ConstraintsMapper;
-import persistence.sql.ddl.dialect.database.TypeMapper;
-import persistence.sql.ddl.query.model.Constraints;
-import persistence.sql.ddl.query.model.DomainType;
+import persistence.sql.dialect.database.ConstraintsMapper;
+import persistence.sql.dialect.database.TypeMapper;
+import persistence.sql.entity.model.Constraints;
+import persistence.sql.entity.model.DomainType;
 
 public class ColumnBuilder {
 
@@ -36,11 +33,7 @@ public class ColumnBuilder {
     }
 
     private String getColumnName() {
-        Column columnAnnotation = domainType.getAnnotation(Column.class);
-        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
-            return columnAnnotation.name();
-        }
-        return domainType.getName();
+        return domainType.getColumnName();
     }
 
     private String getColumnType() {
@@ -48,15 +41,15 @@ public class ColumnBuilder {
     }
 
     private String getPkConstantType() {
-        if (!domainType.isAnnotation(Id.class)) {
+        if (domainType.isNotExistsId()) {
             return EMPTY;
         }
 
-        if (!domainType.isAnnotation(GeneratedValue.class)) {
+        if (domainType.isNotExistGenerateValue()) {
             return constantTypeMapper.getConstantType(Constraints.PRIMARY_KEY);
         }
 
-        if (domainType.getAnnotation(GeneratedValue.class).strategy() != GenerationType.IDENTITY) {
+        if (domainType.isExistsIdentity()) {
             return constantTypeMapper.getConstantType(Constraints.PRIMARY_KEY);
         }
 
@@ -64,7 +57,7 @@ public class ColumnBuilder {
     }
 
     private String getConstantType() {
-        if (domainType.isAnnotation(Column.class)) {
+        if (domainType.isColumnAnnotation()) {
             Column column = domainType.getAnnotation(Column.class);
             return column.nullable() ? EMPTY : constantTypeMapper.getConstantType(Constraints.NOT_NULL);
         }

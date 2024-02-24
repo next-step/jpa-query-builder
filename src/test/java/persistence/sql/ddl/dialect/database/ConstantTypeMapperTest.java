@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.exception.InvalidConstantTypeException;
-import persistence.sql.ddl.dialect.h2.H2Dialect;
-import persistence.sql.ddl.query.model.Constraints;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.database.ConstraintsMapper;
+import persistence.sql.dialect.exception.InvalidConstantTypeException;
+import persistence.sql.dialect.h2.H2Dialect;
+import persistence.sql.entity.model.Constraints;
 
 import java.util.stream.Stream;
 

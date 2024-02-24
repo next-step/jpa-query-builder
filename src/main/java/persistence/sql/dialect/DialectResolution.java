@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect;
+package persistence.sql.dialect;
 
 public interface DialectResolution {
 

@@ -6,10 +6,10 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.entity.LegacyPerson;
-import persistence.sql.ddl.StandardDialectResolver;
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.DialectResolutionInfo;
-import persistence.sql.ddl.query.EntityMappingTable;
+import persistence.sql.StandardDialectResolver;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.DialectResolutionInfo;
+import persistence.sql.entity.EntityMappingTable;
 import persistence.sql.ddl.query.builder.CreateQueryBuilder;
 import persistence.sql.ddl.query.builder.DropQueryBuilder;
 

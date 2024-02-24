@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query.model;
+package persistence.sql.entity.model;
 
 public enum Constraints {
 

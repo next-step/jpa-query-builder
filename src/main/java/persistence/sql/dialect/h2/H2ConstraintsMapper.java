@@ -1,8 +1,8 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
-import persistence.sql.ddl.dialect.database.ConstraintsMapper;
-import persistence.sql.ddl.dialect.exception.InvalidConstantTypeException;
-import persistence.sql.ddl.query.model.Constraints;
+import persistence.sql.dialect.database.ConstraintsMapper;
+import persistence.sql.dialect.exception.InvalidConstantTypeException;
+import persistence.sql.entity.model.Constraints;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

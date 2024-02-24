@@ -1,8 +1,8 @@
-package persistence.sql.ddl.dialect.h2;
+package persistence.sql.dialect.h2;
 
-import persistence.sql.ddl.dialect.database.TypeMapper;
-import persistence.sql.ddl.dialect.exception.InvalidJavaClassException;
-import persistence.sql.ddl.query.model.ColumnType;
+import persistence.sql.dialect.database.TypeMapper;
+import persistence.sql.dialect.exception.InvalidJavaClassException;
+import persistence.sql.entity.model.ColumnType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

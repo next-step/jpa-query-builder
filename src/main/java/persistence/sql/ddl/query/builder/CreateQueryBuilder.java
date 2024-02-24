@@ -1,9 +1,9 @@
 package persistence.sql.ddl.query.builder;
 
-import persistence.sql.ddl.dialect.database.ConstraintsMapper;
-import persistence.sql.ddl.dialect.database.TypeMapper;
-import persistence.sql.ddl.query.EntityMappingTable;
-import persistence.sql.ddl.query.model.DomainType;
+import persistence.sql.dialect.database.ConstraintsMapper;
+import persistence.sql.dialect.database.TypeMapper;
+import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.model.DomainType;
 
 import java.util.List;
 import java.util.stream.Collectors;

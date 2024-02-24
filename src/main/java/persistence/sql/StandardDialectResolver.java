@@ -1,9 +1,8 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.DialectResolution;
-import persistence.sql.ddl.dialect.DialectResolutionInfo;
-import persistence.sql.ddl.dialect.database.Database;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.DialectResolution;
+import persistence.sql.dialect.database.Database;
 
 public class StandardDialectResolver {
 

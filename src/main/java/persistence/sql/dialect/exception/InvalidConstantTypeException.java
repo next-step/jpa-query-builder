@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect.exception;
+package persistence.sql.dialect.exception;
 
 public class InvalidConstantTypeException extends RuntimeException {
 

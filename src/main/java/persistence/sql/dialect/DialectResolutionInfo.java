@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dialect;
+package persistence.sql.dialect;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;

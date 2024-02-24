@@ -1,9 +1,9 @@
-package persistence.sql.ddl.dialect.database;
+package persistence.sql.dialect.database;
 
-import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.ddl.dialect.DialectResolution;
-import persistence.sql.ddl.dialect.exception.NotFoundDatabase;
-import persistence.sql.ddl.dialect.h2.H2Dialect;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.DialectResolution;
+import persistence.sql.dialect.exception.NotFoundDatabase;
+import persistence.sql.dialect.h2.H2Dialect;
 
 import java.util.Arrays;
 import java.util.function.Supplier;

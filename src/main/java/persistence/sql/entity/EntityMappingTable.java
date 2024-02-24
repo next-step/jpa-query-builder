@@ -1,12 +1,9 @@
-package persistence.sql.ddl.query;
+package persistence.sql.entity;
 
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import persistence.sql.ddl.query.model.DomainType;
-import persistence.sql.ddl.query.model.DomainTypes;
+import persistence.sql.entity.model.DomainType;
+import persistence.sql.entity.model.DomainTypes;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class EntityMappingTable {
     }
 
     public String getTableName() {
-        if(clazz.isAnnotationPresent(Table.class)) {
+        if (clazz.isAnnotationPresent(Table.class)) {
             return clazz.getAnnotation(Table.class).name();
         }
 
