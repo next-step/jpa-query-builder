@@ -17,10 +17,6 @@ public class ColumnName {
         this.name = field.getName();
     }
 
-    public ColumnName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }

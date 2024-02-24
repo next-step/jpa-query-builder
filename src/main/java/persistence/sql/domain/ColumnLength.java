@@ -17,10 +17,6 @@ public class ColumnLength {
         this.length = null;
     }
 
-    public ColumnLength(Integer length) {
-        this.length = length;
-    }
-
     public Integer getSize() {
         return length;
     }
