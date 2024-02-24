@@ -1,4 +1,4 @@
-package persistence;
+package jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

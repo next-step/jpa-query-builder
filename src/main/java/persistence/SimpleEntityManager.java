@@ -2,6 +2,7 @@ package persistence;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
+import jdbc.FieldType;
 import jdbc.JdbcTemplate;
 import persistence.sql.dml.DmlGenerator;
 import persistence.sql.meta.Column;
