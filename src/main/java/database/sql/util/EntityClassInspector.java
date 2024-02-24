@@ -1,14 +1,13 @@
 package database.sql.util;
 
+import database.sql.util.column.EntityColumn;
 import database.sql.util.type.TypeConverter;
 
 import java.util.List;
-import java.util.Map;
 
 public class EntityClassInspector {
     private final TableMetadata tableMetadata;
     private final ColumnsMetadata columnsMetadata;
-    private final ValueMapBuilder valueMapBuilder;
 
     public EntityClassInspector(Object entity) {
         this(entity.getClass());
@@ -17,7 +16,6 @@ public class EntityClassInspector {
     public EntityClassInspector(Class<?> entityClass) {
         tableMetadata = new TableMetadata(entityClass);
         columnsMetadata = new ColumnsMetadata(entityClass);
-        valueMapBuilder = new ValueMapBuilder(this);
     }
 
     public String getTableName() {
@@ -44,16 +42,15 @@ public class EntityClassInspector {
         return columnsMetadata.getColumnNamesForInserting();
     }
 
+    public List<EntityColumn> getColumnsForInserting() {
+        return columnsMetadata.getColumnsForInserting();
+    }
+
     public long getPrimaryKeyValue(Object entity) {
         try {
             return (long) columnsMetadata.getPrimaryKeyValue(entity);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    // XXX 나중에 인스펙터가 아니라 다른 곳으로 옮기기
-    public Map<String, Object> buildMap(Object entity) {
-        return valueMapBuilder.buildMap(entity);
     }
 }

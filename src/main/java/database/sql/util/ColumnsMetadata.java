@@ -1,6 +1,7 @@
 package database.sql.util;
 
 import database.sql.util.column.EntityColumn;
+import database.sql.util.column.FieldToEntityColumnConverter;
 import database.sql.util.type.TypeConverter;
 import jakarta.persistence.Transient;
 
@@ -17,7 +18,7 @@ public class ColumnsMetadata {
     public ColumnsMetadata(Class<?> entityClass) {
         allEntityColumns = Arrays.stream(entityClass.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field1 -> new FieldToEntityColumnConverter(field1).convert())
+                .map(field -> new FieldToEntityColumnConverter(field).convert())
                 .collect(Collectors.toList());
 
         primaryKey = allEntityColumns.stream()
@@ -46,12 +47,17 @@ public class ColumnsMetadata {
         return primaryKey.getColumnName();
     }
 
+    // 컬럼들 분류는 pk, columsn 이렇게 두개로
+    // Inserting 이란 이름 대신 그냥 컬럼으로.
     public List<String> getColumnNamesForInserting() {
         return generalColumns.stream().map(EntityColumn::getColumnName).collect(Collectors.toList());
+    }
+
+    public List<EntityColumn> getColumnsForInserting() {
+        return generalColumns;
     }
 
     public Object getPrimaryKeyValue(Object entity) throws IllegalAccessException {
         return primaryKey.getValue(entity);
     }
-
 }

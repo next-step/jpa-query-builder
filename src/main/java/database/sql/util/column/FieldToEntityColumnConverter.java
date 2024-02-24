@@ -1,8 +1,5 @@
-package database.sql.util;
+package database.sql.util.column;
 
-import database.sql.util.column.EntityColumn;
-import database.sql.util.column.GeneralEntityColumn;
-import database.sql.util.column.PrimaryKeyEntityColumn;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

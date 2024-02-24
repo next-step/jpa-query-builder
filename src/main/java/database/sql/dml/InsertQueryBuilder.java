@@ -19,7 +19,14 @@ public class InsertQueryBuilder {
     }
 
     public String buildQuery(Map<String, Object> valueMap) {
-        return String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, String.join(", ", columnClauses(valueMap)), valueClauses(valueMap));
+        return String.format("INSERT INTO %s (%s) VALUES (%s)",
+                             tableName,
+                             String.join(", ", columnClauses(valueMap)),
+                             valueClauses(valueMap));
+    }
+
+    public String buildQuery(Object entity) {
+        return buildQuery(valuesFromEntity(entity));
     }
 
     private List<String> columnClauses(Map<String, Object> valueMap) {
@@ -32,5 +39,9 @@ public class InsertQueryBuilder {
         return columnClauses(valueMap).stream()
                 .map(columnName -> quote(valueMap.get(columnName)))
                 .collect(Collectors.joining(", "));
+    }
+
+    private Map<String, Object> valuesFromEntity(Object entity) {
+        return new ValueMap(entity).getValuesMap();
     }
 }
