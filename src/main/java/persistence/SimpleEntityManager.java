@@ -29,13 +29,15 @@ public class SimpleEntityManager implements EntityManager {
     }
 
     @Override
-    public Object persist(Object entity) {
-        return null;
+    public void persist(Object entity) {
+        jdbcTemplate.execute(ddlGenerator.generateInsertQuery(entity));
     }
 
     @Override
     public void remove(Object entity) {
-
+        Columns columns = Columns.from(entity.getClass().getDeclaredFields());
+        jdbcTemplate.execute(ddlGenerator.generateDeleteQuery(entity.getClass(),
+            columns.getIdColumn().getFieldValue(entity)));
     }
 
     private <T> T mapResultSetToEntity(ResultSet resultSet, Class<T> clazz) {
