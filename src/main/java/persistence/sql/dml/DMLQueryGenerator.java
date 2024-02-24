@@ -106,6 +106,9 @@ public class DMLQueryGenerator {
         if (value == null) {
             return "null";
         }
+        if (value instanceof String) {
+            return String.format("'%s'", value);
+        }
         return value.toString();
     }
 }
