@@ -36,7 +36,7 @@ class SelectQueryBuilderTest {
 
     @AfterEach
     void clean() throws SQLException {
-        String sql = new DropQueryBuilder().generateSQL(Person.class);
+        String sql = new DropQueryBuilder(new H2Dialect()).generateSQL(Person.class);
         jdbcTemplate.execute(sql);
         server.stop();
     }

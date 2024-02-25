@@ -9,6 +9,7 @@ import persistence.domain.Person;
 import persistence.sql.ddl.builder.CreateQueryBuilder;
 import persistence.sql.ddl.builder.DropQueryBuilder;
 import persistence.sql.ddl.builder.QueryBuilder;
+import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.dialect.H2Dialect;
 
 public class Application {
@@ -18,11 +19,12 @@ public class Application {
         logger.info("Starting application...");
         try {
             final DatabaseServer server = new H2();
+            final Dialect dialect = new H2Dialect();
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            QueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
-            QueryBuilder dropQueryBuilder = new DropQueryBuilder();
+            QueryBuilder createQueryBuilder = new CreateQueryBuilder(dialect);
+            QueryBuilder dropQueryBuilder = new DropQueryBuilder(dialect);
 
 
             jdbcTemplate.execute(createQueryBuilder.generateSQL(Person.class));

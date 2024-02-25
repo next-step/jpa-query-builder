@@ -3,7 +3,7 @@ package persistence.sql.dml.builder;
 import jakarta.persistence.Transient;
 import jdbc.RowMapper;
 import persistence.sql.dml.clause.DMLMeta;
-import persistence.sql.meta.column.Column;
+import persistence.sql.meta.column.ColumnName;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -59,7 +59,7 @@ public class SelectQueryBuilder {
 
     private void setValue(Object object, Field field, ResultSet resultSet) throws SQLException {
         try {
-            String columnName = new Column(field).getColumnName();
+            String columnName = new ColumnName(field).getName();
             if (field.getType().equals(Long.class)) {
                 field.set(object, resultSet.getLong(columnName));
             }
