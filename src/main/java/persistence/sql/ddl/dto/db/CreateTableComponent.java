@@ -2,7 +2,6 @@ package persistence.sql.ddl.dto.db;
 
 import java.util.List;
 
-// TODO: validation
 public class CreateTableComponent {
 
     private final TableName tableName;
@@ -19,9 +18,5 @@ public class CreateTableComponent {
 
     public List<DBColumn> getDBColumns() {
         return dbColumns;
-    }
-
-    public int getColumnCount() {
-        return dbColumns.size();
     }
 }

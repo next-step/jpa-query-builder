@@ -7,6 +7,8 @@ public class ClassField {
     private final boolean idAnnotationPresent;
 
     public ClassField(String name, Class<?> type, boolean idAnnotationPresent) {
+        validate(name, type);
+
         this.name = name;
         this.type = type;
         this.idAnnotationPresent = idAnnotationPresent;
@@ -22,5 +24,15 @@ public class ClassField {
 
     public boolean isIdAnnotationPresent() {
         return idAnnotationPresent;
+    }
+
+    private void validate(String name, Class<?> type) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("클래스 필드명이 비어있을 수 없습니다.");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("클래스 필드 타입이 비어있을 수 없습니다.");
+        }
     }
 }
