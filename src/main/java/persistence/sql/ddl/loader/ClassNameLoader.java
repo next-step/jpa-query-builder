@@ -13,7 +13,7 @@ public class ClassNameLoader implements ClassComponentLoader<ClassName> {
         if (clazz.isAnnotationPresent(Entity.class)) {
             return List.of(new ClassName(clazz.getSimpleName()));
         }
-        return List.of();
+        throw new IllegalStateException("엔티티로 지정된 클래스를 찾을 수 없습니다.");
     }
 
     @Override
