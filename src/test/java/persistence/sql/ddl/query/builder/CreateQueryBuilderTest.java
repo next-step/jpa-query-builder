@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import persistence.entity.LegacyPerson;
 import persistence.entity.Person;
 import persistence.entity.User;
-import persistence.sql.ddl.dialect.database.ConstraintsMapper;
-import persistence.sql.ddl.dialect.database.TypeMapper;
-import persistence.sql.ddl.dialect.h2.H2ConstraintsMapper;
-import persistence.sql.ddl.dialect.h2.H2TypeMapper;
-import persistence.sql.ddl.query.EntityMappingTable;
+import persistence.sql.dialect.database.ConstraintsMapper;
+import persistence.sql.dialect.database.TypeMapper;
+import persistence.sql.dialect.h2.H2ConstraintsMapper;
+import persistence.sql.dialect.h2.H2TypeMapper;
+import persistence.sql.entity.EntityMappingTable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

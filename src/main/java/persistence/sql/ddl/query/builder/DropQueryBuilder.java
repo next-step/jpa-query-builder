@@ -1,6 +1,6 @@
 package persistence.sql.ddl.query.builder;
 
-import persistence.sql.ddl.query.EntityMappingTable;
+import persistence.sql.entity.EntityMappingTable;
 
 public class DropQueryBuilder {
 

@@ -5,9 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.LegacyPerson;
 import persistence.entity.Person;
-import persistence.sql.ddl.dialect.h2.H2ConstraintsMapper;
-import persistence.sql.ddl.dialect.h2.H2TypeMapper;
-import persistence.sql.ddl.query.model.DomainType;
+import persistence.sql.dialect.h2.H2ConstraintsMapper;
+import persistence.sql.dialect.h2.H2TypeMapper;
+import persistence.sql.entity.model.DomainType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.LegacyPerson;
 import persistence.entity.User;
-import persistence.sql.ddl.query.EntityMappingTable;
+import persistence.sql.entity.EntityMappingTable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
