@@ -19,13 +19,6 @@ public class DeleteQueryBuilder {
         this.whereClause = whereClause;
     }
 
-    public String toSql() {
-        return String.format(FORMAT,
-                tableName,
-                whereClause.toSql()
-        );
-    }
-
     public static DeleteQueryBuilder from(String tableName) {
         return new DeleteQueryBuilder(
                 tableName,
@@ -39,5 +32,14 @@ public class DeleteQueryBuilder {
                 new WhereClause(where)
         );
     }
+
+    public String toSql() {
+        return String.format(FORMAT,
+                tableName,
+                whereClause.toSql()
+        );
+    }
+
+
 
 }

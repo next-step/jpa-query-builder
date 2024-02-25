@@ -18,10 +18,6 @@ public class ValueClause {
         this.values = values;
     }
 
-    public String toSql() {
-        return String.join(DELIMITER, values);
-    }
-
     public static ValueClause from(final Object instance, final DomainTypes domainTypes) {
         return new ValueClause(domainTypes.getDomainTypes()
                 .stream()
@@ -48,4 +44,10 @@ public class ValueClause {
             throw new IllegalFieldValueException();
         }
     }
+
+    public String toSql() {
+        return String.join(DELIMITER, values);
+    }
+
+
 }

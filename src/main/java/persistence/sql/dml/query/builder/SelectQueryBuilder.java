@@ -23,10 +23,6 @@ public class SelectQueryBuilder {
         this.whereClause = whereClause;
     }
 
-    public String toSql() {
-        return String.format(FORMAT, columnClause.toSql(), tableName, whereClause.toSql());
-    }
-
     public static SelectQueryBuilder of(EntityMappingTable entityMappingTable, Map<DomainType, String> whereClause) {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
@@ -42,6 +38,12 @@ public class SelectQueryBuilder {
                 new WhereClause(new HashMap())
         );
     }
+
+    public String toSql() {
+        return String.format(FORMAT, columnClause.toSql(), tableName, whereClause.toSql());
+    }
+
+
 
 
 }
