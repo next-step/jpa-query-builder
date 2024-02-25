@@ -1,38 +1,38 @@
 package persistence.sql.ddl.table;
 
-import persistence.sql.ddl.column.MySqlColumn;
+import persistence.sql.ddl.column.Column;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class MySqlTable {
+public class Table {
 
     private final TableName name;
-    private final List<MySqlColumn> columns;
+    private final List<Column> columns;
 
-    private MySqlTable(TableName name, List<MySqlColumn> columns) {
+    private Table(TableName name, List<Column> columns) {
         this.name = name;
         this.columns = columns;
 
         checkHasIdAnnotation(columns);
     }
 
-    public static MySqlTable from(Class<?> entity) {
+    public static Table from(Class<?> entity) {
         TableName name = TableName.from(entity);
 
-        List<MySqlColumn> columns = Arrays.stream(entity.getDeclaredFields())
-                .map(MySqlColumn::from)
+        List<Column> columns = Arrays.stream(entity.getDeclaredFields())
+                .map(Column::from)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        return new MySqlTable(name, columns);
+        return new Table(name, columns);
     }
 
-    private void checkHasIdAnnotation(List<MySqlColumn> columns) {
+    private void checkHasIdAnnotation(List<Column> columns) {
         boolean hasId = columns.stream()
-                .anyMatch(MySqlColumn::hasId);
+                .anyMatch(Column::hasId);
 
         if (!hasId) {
             throw new IllegalArgumentException(String.format("%s table should have primary key", name.getName()));
@@ -45,7 +45,7 @@ public class MySqlTable {
 
     public String getColumnsDefinition() {
         return columns.stream()
-                .map(MySqlColumn::defineColumn)
+                .map(Column::defineColumn)
                 .collect(Collectors.joining(", "));
     }
 }

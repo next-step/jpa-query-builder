@@ -6,7 +6,7 @@ import domain.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.MySqlDDLGenerator;
+import persistence.sql.ddl.DDLGenerator;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -19,10 +19,10 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            MySqlDDLGenerator mySqlDDLGenerator = new MySqlDDLGenerator();
+            DDLGenerator ddlGenerator = new DDLGenerator();
 
-            jdbcTemplate.execute(mySqlDDLGenerator.generateCreate(Person.class));
-            jdbcTemplate.execute(mySqlDDLGenerator.generateDrop(Person.class));
+            jdbcTemplate.execute(ddlGenerator.generateCreate(Person.class));
+            jdbcTemplate.execute(ddlGenerator.generateDrop(Person.class));
 
             server.stop();
         } catch (Exception e) {
