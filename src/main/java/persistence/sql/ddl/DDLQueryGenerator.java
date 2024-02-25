@@ -50,7 +50,7 @@ public class DDLQueryGenerator {
 
     private String getColumnString(ColumnData columnData) {
         String result = String.format("%s %s", columnData.getName(), dialect.mapDataType(columnData.getType()));
-        if(!columnData.isNullable()) {
+        if(columnData.isNotNullable()) {
             result += " NOT NULL";
         }
         if (columnData.hasGenerationType()) {

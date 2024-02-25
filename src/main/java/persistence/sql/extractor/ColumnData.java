@@ -30,6 +30,7 @@ public class ColumnData {
     public boolean isNullable() {
         return isNullable;
     }
+    public boolean isNotNullable() { return !isNullable; }
 
     public void setNullable(boolean nullable) {
         isNullable = nullable;
