@@ -62,5 +62,4 @@ class RepositoryImplTest extends H2Database {
 
         assertThat(person.isPresent()).isFalse();
     }
-
 }

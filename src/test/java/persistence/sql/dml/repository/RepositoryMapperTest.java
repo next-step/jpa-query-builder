@@ -59,5 +59,4 @@ class RepositoryMapperTest extends H2Database {
             throw new RuntimeException("SQL 에러가 발생하였습니다.");
         }
     }
-
 }

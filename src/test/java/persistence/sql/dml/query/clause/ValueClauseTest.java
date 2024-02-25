@@ -51,5 +51,4 @@ class ValueClauseTest {
                 .isInstanceOf(IllegalFieldValueException.class)
                 .hasMessage("적절하지 않은 필드 값 입니다.");
     }
-
 }

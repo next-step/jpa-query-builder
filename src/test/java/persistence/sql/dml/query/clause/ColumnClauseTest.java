@@ -25,5 +25,4 @@ class ColumnClauseTest {
 
         assertThat(columnClause.toSql()).isEqualTo("id,nick_name,old,email");
     }
-
 }

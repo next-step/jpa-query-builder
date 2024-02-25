@@ -40,5 +40,4 @@ public abstract class H2Database {
         jdbcTemplate.execute(dropQueryBuilder.toSql());
         jdbcTemplate.execute(createQueryBuilder.toSql());
     }
-
 }

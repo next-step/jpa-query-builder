@@ -17,6 +17,4 @@ class InsertQueryBuilderTest {
 
         assertThat(sql).isEqualTo("INSERT INTO Person (id,nick_name,old,email) VALUES (1,'신성수',20,'tlstjdtn@nextstep.com')");
     }
-
-
 }
