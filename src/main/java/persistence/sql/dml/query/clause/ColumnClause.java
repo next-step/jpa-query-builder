@@ -15,10 +15,6 @@ public class ColumnClause {
         this.columns = columns;
     }
 
-    public List<String> getColumns() {
-        return columns;
-    }
-
     public static ColumnClause from(DomainTypes domainTypes) {
         return new ColumnClause(domainTypes.getDomainTypes()
                 .stream()
