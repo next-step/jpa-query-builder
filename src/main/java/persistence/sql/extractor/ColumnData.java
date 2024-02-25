@@ -48,7 +48,14 @@ public class ColumnData {
         return value;
     }
 
+    public boolean hasKeyType() {
+        return keyType != null;
+    }
+
     public KeyType getKeyType() {
+        if(!hasKeyType()) {
+            throw new RuntimeException("Key type is not set");
+        }
         return keyType;
     }
 

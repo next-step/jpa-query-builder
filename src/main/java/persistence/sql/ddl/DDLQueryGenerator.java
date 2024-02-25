@@ -1,9 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.*;
 import persistence.sql.dialect.Dialect;
-import persistence.sql.ddl.exception.AnnotationMissingException;
-import persistence.sql.ddl.exception.IdAnnotationMissingException;
 import persistence.sql.extractor.ColumnData;
 import persistence.sql.extractor.ColumnExtractor;
 import persistence.sql.extractor.TableData;
@@ -55,7 +52,7 @@ public class DDLQueryGenerator {
 
     private String getKeyClause() {
         return columns.stream()
-                .filter(columnData -> columnData.getKeyType() != null)
+                .filter(ColumnData::hasKeyType)
                 .map(this::getKeyString)
                 .collect(Collectors.joining(" ,"));
     }
