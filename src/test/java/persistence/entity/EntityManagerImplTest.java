@@ -21,6 +21,7 @@ import persistence.sql.dml.InsertQueryBuilder;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EntityManagerImplTest {
@@ -121,5 +122,21 @@ class EntityManagerImplTest {
                 () -> assertThat(findPerson.getAge()).isEqualTo(person.getAge()),
                 () -> assertThat(findPerson.getEmail()).isEqualTo(person.getEmail())
         );
+    }
+
+    @DisplayName("remove 메서드를 통해 Person 객체를 삭제한다.")
+    @Test
+    void remove() {
+        // given
+        EntityManager entityManager = new EntityManagerImpl(jdbcTemplate, new MysqlDialect());
+        Person person = new Person(1L, "John", 99, "john@test.com", 1);
+        entityManager.persist(person);
+
+        // when
+        entityManager.remove(person);
+
+        // then
+        assertThatThrownBy(() -> entityManager.find(Person.class, person.getId()))
+                .isInstanceOf(RuntimeException.class);
     }
 }

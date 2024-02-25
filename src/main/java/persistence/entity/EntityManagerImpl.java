@@ -5,6 +5,7 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import persistence.sql.column.IdColumn;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 import persistence.sql.mapper.GenericRowMapper;
@@ -88,6 +89,12 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void remove(Object entity) {
+        DeleteQueryBuilder build = new DeleteQueryBuilder(dialect).build(entity);
+        IdColumn idColumn = new IdColumn(entity.getClass().getDeclaredFields(), dialect);
+        Field idField = getIdField(entity, idColumn);
+        Long id = getIdValue(entity, idField);
+        String deleteQuery = build.deleteById(id);
 
+        jdbcTemplate.execute(deleteQuery);
     }
 }

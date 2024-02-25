@@ -23,11 +23,13 @@ public class IdColumn implements Column {
                 .orElseThrow(() -> new IllegalArgumentException("[INFO] No @Id annotation"));
 
         validateGeneratedValue(idField);
-        GeneralColumn generalColumn = new GeneralColumn(idField, dialect);
+        this.generalColumn = new GeneralColumn(idField, dialect);
+        this.idGeneratedStrategy = getIdGeneratedStrategy(dialect, idField);
+    }
+
+    private IdGeneratedStrategy getIdGeneratedStrategy(Dialect dialect, Field idField) {
         GeneratedValue annotation = idField.getAnnotation(GeneratedValue.class);
-        IdGeneratedStrategy idGeneratedStrategy = dialect.getIdGeneratedStrategy(annotation.strategy());
-        this.generalColumn = generalColumn;
-        this.idGeneratedStrategy = idGeneratedStrategy;
+        return dialect.getIdGeneratedStrategy(annotation.strategy());
     }
 
     private void validateGeneratedValue(Field field) {
