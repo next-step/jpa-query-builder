@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import persistence.entity.Person;
 import persistence.sql.StandardDialectResolver;
 import persistence.sql.ddl.query.builder.CreateQueryBuilder;
+import persistence.sql.ddl.query.builder.DropQueryBuilder;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.DialectResolutionInfo;
 import persistence.sql.entity.EntityMappingTable;
@@ -34,7 +35,9 @@ public abstract class H2Database {
         Dialect dialect = StandardDialectResolver.resolveDialect(dialectResolutionInfo);
         entityMappingTable = EntityMappingTable.from(Person.class);
         CreateQueryBuilder createQueryBuilder = CreateQueryBuilder.of(entityMappingTable, dialect.getTypeMapper(), dialect.getConstantTypeMapper());
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(entityMappingTable);
 
+        jdbcTemplate.execute(dropQueryBuilder.toSql());
         jdbcTemplate.execute(createQueryBuilder.toSql());
     }
 
