@@ -18,9 +18,10 @@ class InsertQueryBuilderTest {
     private Dialect dialect;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         dialect = new MysqlDialect();
     }
+
     @DisplayName("Person 객체를 insert 쿼리로 변환한다.")
     @Test
     void testInsertDml() {

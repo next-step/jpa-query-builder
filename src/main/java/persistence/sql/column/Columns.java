@@ -16,10 +16,10 @@ public class Columns {
 
     public Columns(Field[] fields, Dialect dialect) {
         this.values = Arrays.stream(fields)
-            .filter(field -> !field.isAnnotationPresent(Transient.class))
-            .filter(field -> !field.isAnnotationPresent(Id.class))
-            .map(field -> new GeneralColumn(field, dialect))
-            .collect(Collectors.toList());
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .filter(field -> !field.isAnnotationPresent(Id.class))
+                .map(field -> new GeneralColumn(field, dialect))
+                .collect(Collectors.toList());
     }
 
     public String getColumnsDefinition() {

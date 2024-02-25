@@ -13,7 +13,7 @@ public class NameType {
     }
 
     public String getValue() {
-        if(this.columnName == null || this.columnName.isBlank() || this.columnName.isEmpty()) {
+        if (this.columnName == null || this.columnName.isBlank() || this.columnName.isEmpty()) {
             return this.fieldName;
         }
         return this.columnName;

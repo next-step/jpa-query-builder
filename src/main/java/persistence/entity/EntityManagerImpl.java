@@ -1,13 +1,15 @@
 package persistence.entity;
 
+import jakarta.persistence.GenerationType;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
-import persistence.Person;
-import persistence.sql.column.TableColumn;
-import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.column.IdColumn;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 import persistence.sql.mapper.GenericRowMapper;
+
+import java.lang.reflect.Field;
 
 public class EntityManagerImpl implements EntityManager {
     private final JdbcTemplate jdbcTemplate;
@@ -30,7 +32,58 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public Object persist(Object entity) {
-        return null;
+        IdColumn idColumn = new IdColumn(entity.getClass().getDeclaredFields(), dialect);
+
+        GenerationType generationType = idColumn.getIdGeneratedStrategy().getGenerationType();
+        if (!dialect.getIdGeneratedStrategy(generationType).isAutoIncrement()) {
+            executeQuery(entity);
+            return entity;
+        }
+
+        Field idField = getIdField(entity, idColumn);
+
+        if (getIdValue(entity, idField) == null) {
+            setIdValue(entity, idField, 1L);
+        }
+
+        executeQuery(entity);
+
+        return entity;
+    }
+
+    private Long getIdValue(Object entity, Field idField) {
+        Long idValue;
+        try {
+            idValue = (Long) idField.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return idValue;
+    }
+
+    private Field getIdField(Object entity, IdColumn idColumn) {
+        Field idField;
+        try {
+            idField = entity.getClass().getDeclaredField(idColumn.getName());
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        idField.setAccessible(true);
+        return idField;
+    }
+
+    private void setIdValue(Object entity, Field idField, long idValue) {
+        try {
+            idField.set(entity, idValue);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void executeQuery(Object entity) {
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(dialect);
+        String insertQuery = insertQueryBuilder.build(entity);
+        jdbcTemplate.execute(insertQuery);
     }
 
     @Override

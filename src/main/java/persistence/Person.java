@@ -58,8 +58,4 @@ public class Person {
         return email;
     }
 
-    public Integer getIndex() {
-        return index;
-    }
-
 }

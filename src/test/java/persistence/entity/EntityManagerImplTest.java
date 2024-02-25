@@ -80,4 +80,46 @@ class EntityManagerImplTest {
                 () -> assertThat(findPerson.getEmail()).isEqualTo(person.getEmail())
         );
     }
+
+    @DisplayName("persist 메서드를 통해 Person 객체를 저장한다. - autho_increment인 경우 id가 1씩 증가한다.")
+    @Test
+    void persist() {
+        // given
+        EntityManager entityManager = new EntityManagerImpl(jdbcTemplate, new MysqlDialect());
+        Person person = new Person("John", 99, "john@test.com", 1);
+
+        // when
+        entityManager.persist(person);
+
+        // then
+        Person findPerson = entityManager.find(Person.class, person.getId());
+        assertAll(
+                () -> assertThat(findPerson).isNotNull(),
+                () -> assertThat(findPerson.getId()).isEqualTo(1L),
+                () -> assertThat(findPerson.getName()).isEqualTo(person.getName()),
+                () -> assertThat(findPerson.getAge()).isEqualTo(person.getAge()),
+                () -> assertThat(findPerson.getEmail()).isEqualTo(person.getEmail())
+        );
+    }
+
+    @DisplayName("persist 메서드를 통해 Person 객체를 저장한다. - id가 있다면 증가하지 않는다.")
+    @Test
+    void persistWhenHasId() {
+        // given
+        EntityManager entityManager = new EntityManagerImpl(jdbcTemplate, new MysqlDialect());
+        Person person = new Person(1L, "John", 99, "john@test.com", 1);
+
+        // when
+        entityManager.persist(person);
+
+        // then
+        Person findPerson = entityManager.find(Person.class, person.getId());
+        assertAll(
+                () -> assertThat(findPerson).isNotNull(),
+                () -> assertThat(findPerson.getId()).isEqualTo(person.getId()),
+                () -> assertThat(findPerson.getName()).isEqualTo(person.getName()),
+                () -> assertThat(findPerson.getAge()).isEqualTo(person.getAge()),
+                () -> assertThat(findPerson.getEmail()).isEqualTo(person.getEmail())
+        );
+    }
 }

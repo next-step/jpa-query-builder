@@ -18,7 +18,7 @@ class SelectQueryBuilderTest {
     private Dialect dialect;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         dialect = Database.MYSQL.createDialect();
         person = new Person("username", 50, "test@test.com", 1);
     }
