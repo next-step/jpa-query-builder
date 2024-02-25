@@ -14,11 +14,11 @@ public class TableColumn {
 
     public TableColumn(Class<?> clazz) {
         validateEntityAnnotation(clazz);
-        NameType tableName = new NameType(clazz.getSimpleName());
+        String tableColumnName = clazz.getSimpleName();
         if (clazz.isAnnotationPresent(Table.class)) {
-            tableName.setColumnName(clazz.getAnnotation(Table.class).name());
+            tableColumnName = clazz.getAnnotation(Table.class).name();
         }
-        this.name = tableName;
+        this.name = new NameType(clazz.getSimpleName(), tableColumnName);
     }
 
     private void validateEntityAnnotation(Class<?> clazz) {

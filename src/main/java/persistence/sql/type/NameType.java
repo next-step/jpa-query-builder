@@ -2,13 +2,10 @@ package persistence.sql.type;
 
 public class NameType {
     private final String fieldName;
-    private String columnName;
+    private final String columnName;
 
-    public NameType(String fieldName) {
+    public NameType(String fieldName, String columnName) {
         this.fieldName = fieldName;
-    }
-
-    public void setColumnName(String columnName) {
         this.columnName = columnName;
     }
 

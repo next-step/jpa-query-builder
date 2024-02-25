@@ -16,15 +16,14 @@ public class GeneralColumn implements Column {
 
     public GeneralColumn(Field field, Dialect dialect) {
         this.columnType = dialect.getColumn(field.getType());
-        this.name = new NameType(field.getName());
         this.nullable = new NullableType();
-
+        String columnName = field.getName();
         if (field.isAnnotationPresent(jakarta.persistence.Column.class)) {
             boolean isNullable = field.getAnnotation(jakarta.persistence.Column.class).nullable();
             this.nullable.update(isNullable);
-            String columnName = field.getAnnotation(jakarta.persistence.Column.class).name();
-            this.name.setColumnName(columnName);
+            columnName = field.getAnnotation(jakarta.persistence.Column.class).name();
         }
+        this.name = new NameType(field.getName(), columnName);
     }
 
     @Override
