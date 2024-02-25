@@ -1,7 +1,7 @@
 package persistence.sql.ddl.mapping;
 
 import persistence.sql.ddl.model.Column;
-import persistence.sql.ddl.model.Table;
+import persistence.sql.Table;
 
 public class DDLQueryBuilder implements QueryBuilder {
 
@@ -15,15 +15,19 @@ public class DDLQueryBuilder implements QueryBuilder {
 
     @Override
     public String create(Class<?> clz) {
-        return new StringBuilder()
-                .append(table.create(clz))
-                .append(column.create(clz))
-                .toString();
+        return String.format(
+                "CREATE TABLE %s (%s);",
+                table.name(clz),
+                column.create(clz)
+        );
     }
 
     @Override
     public String drop(Class<?> clz) {
-        return table.drop(clz);
+        return String.format(
+                "DROP TABLE %s;",
+                table.name(clz)
+        );
     }
 
 }
