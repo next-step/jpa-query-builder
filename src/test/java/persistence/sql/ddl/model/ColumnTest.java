@@ -21,7 +21,7 @@ class ColumnTest {
 
     @Test
     void columnCreateQueryTest() {
-        final var expected = " ( id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL );";
+        final var expected = "id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL";
 
         final var actual = column.create(Person.class);
 
