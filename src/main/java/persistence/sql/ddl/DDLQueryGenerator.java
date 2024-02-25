@@ -34,7 +34,7 @@ public class DDLQueryGenerator {
     public String generateCreateQuery() {
         checkIsEntity(clazz);
 
-        final String tableNameClause = new TableExtractor(clazz).getName();
+        final String tableNameClause = tableData.getName();
         final String columnClause = getColumnClause();
         final String keyClause = getKeyClause();
 
