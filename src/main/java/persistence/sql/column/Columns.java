@@ -1,5 +1,6 @@
 package persistence.sql.column;
 
+import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import persistence.sql.dialect.Dialect;
 
@@ -11,18 +12,14 @@ import java.util.stream.Collectors;
 public class Columns {
     private static final String COMMA = ", ";
 
-    private final List<Column> values;
+    private final List<GeneralColumn> values;
 
-    private Columns(List<Column> values) {
-        this.values = values;
-    }
-
-    public static Columns of(Field[] fields, Dialect dialect) {
-        List<Column> columns = Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> ColumnFactory.create(field, dialect))
-                .collect(Collectors.toList());
-        return new Columns(columns);
+    public Columns(Field[] fields, Dialect dialect) {
+        this.values = Arrays.stream(fields)
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .filter(field -> !field.isAnnotationPresent(Id.class))
+            .map(field -> new GeneralColumn(field, dialect))
+            .collect(Collectors.toList());
     }
 
     public String getColumnsDefinition() {
@@ -30,21 +27,6 @@ public class Columns {
                 .stream()
                 .map(Column::getDefinition)
                 .collect(Collectors.joining(COMMA));
-    }
-
-    public String insertColumnsClause() {
-        return this.values
-                .stream()
-                .filter(column -> !column.isPk())
-                .map(Column::getColumnName)
-                .collect(Collectors.joining(COMMA));
-    }
-
-    public Column getPkColumn() {
-        return values.stream()
-                .filter(Column::isPk)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No primary key found"));
     }
 
     public String getColumnNames() {

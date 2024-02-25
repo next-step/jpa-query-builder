@@ -1,31 +1,31 @@
 package persistence.sql.dml;
 
-import persistence.sql.column.Column;
-import persistence.sql.column.Columns;
+import persistence.sql.column.IdColumn;
 import persistence.sql.column.TableColumn;
-
+import persistence.sql.dialect.Dialect;
 
 public class DeleteQueryBuilder {
 
     private static final String DELETE_QUERY_FORMAT = "delete from %s";
     private static final String WHERE_CLAUSE_FORMAT = " where %s = %d";
 
-    private final TableColumn tableColumn;
-    private Columns columns;
+    private final Dialect dialect;
+    private IdColumn idColumn;
     private String query;
 
-    public DeleteQueryBuilder(TableColumn tableColumn) {
-        this.tableColumn = tableColumn;
+    public DeleteQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     public DeleteQueryBuilder build(Object entity) {
-        this.columns = Columns.of(entity.getClass().getDeclaredFields(), tableColumn.getDatabase().createDialect());
+        Class<?> clazz = entity.getClass();
+        TableColumn tableColumn = TableColumn.from(clazz);
+        this.idColumn = new IdColumn(clazz.getDeclaredFields(), dialect);
         this.query = String.format(DELETE_QUERY_FORMAT, tableColumn.getName());
         return this;
     }
 
     public String deleteById(Long id) {
-        Column pkColumn = columns.getPkColumn();
-        return query + String.format(WHERE_CLAUSE_FORMAT, pkColumn.getColumnName(), id);
+        return query + String.format(WHERE_CLAUSE_FORMAT, idColumn.getColumnName(), id);
     }
 }
