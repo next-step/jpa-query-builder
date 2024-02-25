@@ -18,7 +18,7 @@ class CreateQueryBuilderTest {
     void createDdl() {
         //given
         Class<Person> personEntity = Person.class;
-        TableColumn table = TableColumn.from(personEntity);
+        TableColumn table = new TableColumn(personEntity);
         Dialect dialect = Database.MYSQL.createDialect();
         Columns columns = new Columns(personEntity.getDeclaredFields(), dialect);
         IdColumn idColumn = new IdColumn(personEntity.getDeclaredFields(), dialect);

@@ -19,13 +19,13 @@ public class DeleteQueryBuilder {
 
     public DeleteQueryBuilder build(Object entity) {
         Class<?> clazz = entity.getClass();
-        TableColumn tableColumn = TableColumn.from(clazz);
+        TableColumn tableColumn = new TableColumn(clazz);
         this.idColumn = new IdColumn(clazz.getDeclaredFields(), dialect);
         this.query = String.format(DELETE_QUERY_FORMAT, tableColumn.getName());
         return this;
     }
 
     public String deleteById(Long id) {
-        return query + String.format(WHERE_CLAUSE_FORMAT, idColumn.getColumnName(), id);
+        return query + String.format(WHERE_CLAUSE_FORMAT, idColumn.getName(), id);
     }
 }

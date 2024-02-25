@@ -24,7 +24,7 @@ public class InsertQueryBuilder {
 
 	public String build(Object entity) {
 		Class<?> clazz = entity.getClass();
-		TableColumn tableColumn = TableColumn.from(clazz);
+		TableColumn tableColumn = new TableColumn(clazz);
 		Columns columns = new Columns(entity.getClass().getDeclaredFields(), dialect);
 		return String.format(INSERT_QUERY_FORMAT,
 			tableColumn.getName(),

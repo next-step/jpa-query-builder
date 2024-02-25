@@ -32,7 +32,7 @@ public class Application {
 			final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
 			Class<Person> personEntity = Person.class;
-			TableColumn tableColumn = TableColumn.from(personEntity);
+			TableColumn tableColumn = new TableColumn(personEntity);
 			Dialect dialect = Database.MYSQL.createDialect();
 			Columns columns = new Columns(personEntity.getDeclaredFields(), dialect);
 			IdColumn idColumn = new IdColumn(personEntity.getDeclaredFields(), dialect);

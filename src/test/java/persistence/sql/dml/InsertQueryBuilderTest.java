@@ -9,18 +9,17 @@ import persistence.sql.column.IdColumn;
 import persistence.sql.column.TableColumn;
 import persistence.sql.dialect.Database;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.MysqlDialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class InsertQueryBuilderTest {
 
-    private Person person;
     private Dialect dialect;
 
     @BeforeEach
     void setUp(){
-        dialect = Database.MYSQL.createDialect();
-        person = new Person("username", 50, "test@test.com", 1);
+        dialect = new MysqlDialect();
     }
     @DisplayName("Person 객체를 insert 쿼리로 변환한다.")
     @Test

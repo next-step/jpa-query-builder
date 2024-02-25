@@ -12,16 +12,16 @@ public class TableColumn {
         this.name = name;
     }
 
-    public static TableColumn from(Class<?> clazz) {
+    public TableColumn(Class<?> clazz) {
         validateEntityAnnotation(clazz);
         NameType tableName = new NameType(clazz.getSimpleName());
         if (clazz.isAnnotationPresent(Table.class)) {
-            tableName.setName(clazz.getAnnotation(Table.class).name());
+            tableName.setColumnName(clazz.getAnnotation(Table.class).name());
         }
-        return new TableColumn(tableName);
+        this.name = tableName;
     }
 
-    private static void validateEntityAnnotation(Class<?> clazz) {
+    private void validateEntityAnnotation(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("[INFO] No @Entity annotation");
         }
