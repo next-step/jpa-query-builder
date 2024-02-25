@@ -1,6 +1,6 @@
 package persistence.sql.ddl.view;
 
-import persistence.sql.ddl.domain.DatabaseColumn;
+import persistence.sql.domain.DatabaseColumn;
 
 import java.util.List;
 

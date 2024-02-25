@@ -1,4 +1,4 @@
-package persistence.sql.ddl.domain;
+package persistence.sql.domain;
 
 import jakarta.persistence.Column;
 
@@ -15,10 +15,6 @@ public class ColumnLength {
             return;
         }
         this.length = null;
-    }
-
-    public ColumnLength(Integer length) {
-        this.length = length;
     }
 
     public Integer getSize() {

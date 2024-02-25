@@ -5,10 +5,10 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.DatabaseDialect;
+import persistence.sql.ddl.DdlQueryBuild;
 import persistence.sql.ddl.DdlQueryBuilder;
-import persistence.sql.ddl.DdlQueryBuilderFactory;
-import persistence.sql.ddl.Person;
+import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
+import persistence.sql.entity.Person;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -21,9 +21,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            DdlQueryBuilderFactory factory = new DdlQueryBuilderFactory();
-
-            DdlQueryBuilder ddlQueryBuilder = factory.getInstance(DatabaseDialect.MYSQL);
+            DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new MySQLPrimaryKeyResolver());
 
             jdbcTemplate.execute(ddlQueryBuilder.createQuery(Person.class));
             jdbcTemplate.execute(ddlQueryBuilder.dropQuery(Person.class));
@@ -35,4 +33,5 @@ public class Application {
             logger.info("Application finished");
         }
     }
+
 }

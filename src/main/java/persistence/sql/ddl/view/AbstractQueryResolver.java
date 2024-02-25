@@ -1,30 +1,30 @@
 package persistence.sql.ddl.view;
 
-import persistence.sql.ddl.DatabaseTypeConverter;
-import persistence.sql.ddl.domain.DatabaseColumn;
-import persistence.sql.ddl.domain.DatabasePrimaryColumn;
+import persistence.sql.Dialect;
+import persistence.sql.domain.DatabaseColumn;
+import persistence.sql.domain.DatabasePrimaryColumn;
 
 import java.util.List;
 
-import static persistence.sql.ddl.CommonConstant.SPACE;
+import static persistence.sql.CommonConstant.COLUMN_SEPARATOR;
+import static persistence.sql.CommonConstant.SPACE;
 
 public abstract class AbstractQueryResolver implements QueryResolver {
 
-    private static final String COLUMN_SEPARATOR = ", ";
+    private final Dialect dialect;
 
-    private final DatabaseTypeConverter databaseTypeConverter;
-
-    public AbstractQueryResolver(DatabaseTypeConverter databaseTypeConverter) {
-        this.databaseTypeConverter = databaseTypeConverter;
+    public AbstractQueryResolver(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     @Override
     public String toQuery(List<DatabaseColumn> columns) {
         return columns.stream().map((column) -> {
                     StringBuilder sb = new StringBuilder();
+                    String jdbcType = dialect.getJdbcTypeFromJavaClass(column);
                     sb.append(column.getName())
                             .append(SPACE)
-                            .append(databaseTypeConverter.convert(column));
+                            .append(jdbcType);
 
                     if (column instanceof DatabasePrimaryColumn) {
                         DatabasePrimaryColumn primaryColumn = (DatabasePrimaryColumn) column;

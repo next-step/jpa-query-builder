@@ -1,4 +1,4 @@
-package persistence.sql.ddl.domain;
+package persistence.sql.domain;
 
 import jakarta.persistence.Column;
 
@@ -15,10 +15,6 @@ public class ColumnName {
             return;
         }
         this.name = field.getName();
-    }
-
-    public ColumnName(String name) {
-        this.name = name;
     }
 
     public String getName() {

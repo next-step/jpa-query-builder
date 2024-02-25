@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.domain.DatabaseColumn;
-import persistence.sql.ddl.domain.DatabaseTable;
 import persistence.sql.ddl.view.QueryResolver;
+import persistence.sql.domain.DatabaseColumn;
+import persistence.sql.domain.DatabaseTable;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class DdlQueryBuilder implements DdlQueryBuild {
 
     private final QueryResolver queryResolver;
 
-    protected DdlQueryBuilder(QueryResolver queryResolver) {
+    public DdlQueryBuilder(QueryResolver queryResolver) {
         this.queryResolver = queryResolver;
     }
 
@@ -31,6 +31,5 @@ public class DdlQueryBuilder implements DdlQueryBuild {
         DatabaseTable table = new DatabaseTable(type);
 
         return String.format(DROP_TABLE_TEMPLATE, table.getName());
-
     }
 }

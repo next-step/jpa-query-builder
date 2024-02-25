@@ -1,10 +1,10 @@
 package persistence.sql.ddl.view.mysql;
 
-import persistence.sql.ddl.columntype.MySQLColumnType;
-import persistence.sql.ddl.domain.DatabasePrimaryColumn;
+import persistence.sql.MySqlDialect;
 import persistence.sql.ddl.view.AbstractQueryResolver;
+import persistence.sql.domain.DatabasePrimaryColumn;
 
-import static persistence.sql.ddl.CommonConstant.SPACE;
+import static persistence.sql.CommonConstant.SPACE;
 
 public class MySQLPrimaryKeyResolver extends AbstractQueryResolver {
 
@@ -13,7 +13,7 @@ public class MySQLPrimaryKeyResolver extends AbstractQueryResolver {
     private static final String NOT_NULL = "NOT NULL";
 
     public MySQLPrimaryKeyResolver() {
-        super(MySQLColumnType::convert);
+        super(new MySqlDialect());
     }
 
     @Override
