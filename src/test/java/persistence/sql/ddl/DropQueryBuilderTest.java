@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.sql.Person;
+import persistence.sql.domain.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +21,7 @@ class DropQueryBuilderTest {
             Class<Person> targetClass = Person.class;
 
             //when
-            String sql = new DropQueryBuilder(targetClass).build();
+            String sql = new DropQueryBuilder(new H2Dialect()).build(targetClass);
 
             //then
             assertThat(sql).isEqualTo("DROP TABLE users");

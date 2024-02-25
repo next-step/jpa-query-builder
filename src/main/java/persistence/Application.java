@@ -6,6 +6,8 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entity.EntityManager;
+import persistence.entity.MyEntityManager;
 import persistence.sql.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
@@ -13,6 +15,7 @@ import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectAllQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.domain.dialect.H2Dialect;
 
 import java.util.List;
 
@@ -26,17 +29,23 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
-            jdbcTemplate.execute(createQueryBuilder.build());
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
+            jdbcTemplate.execute(createQueryBuilder.build(Person.class));
 
             Person person = new Person(1L, "John", 25, "email", 1);
-            Person person2 = new Person(1L, "James", 45, "james@asdf.com", 10);
+            Person person2 = new Person(2L, "James", 45, "james@asdf.com", 10);
             InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
             jdbcTemplate.execute(insertQueryBuilder.build(person));
             jdbcTemplate.execute(insertQueryBuilder.build(person2));
 
-            SelectAllQueryBuilder selectAllQueryBuilder = new SelectAllQueryBuilder(Person.class);
-            String selectAllQuery = selectAllQueryBuilder.build();
+            EntityManager entityManager = new MyEntityManager(jdbcTemplate);
+            Person person1 = entityManager.find(Person.class, 2L);
+            System.out.println("person1.toString() = " + person1.toString());
+            entityManager.persist(new Person(1L, "새로운 사람", 900, "new@email.com", 1000));
+            entityManager.remove(person2);
+
+            SelectAllQueryBuilder selectAllQueryBuilder = new SelectAllQueryBuilder();
+            String selectAllQuery = selectAllQueryBuilder.build(Person.class);
             RowMapper<Person> rowMapper = resultSet -> {
                 Long id = resultSet.getLong("id");
                 String name = resultSet.getString("nick_name");
@@ -46,16 +55,16 @@ public class Application {
             };
             List<Person> persons = jdbcTemplate.query(selectAllQuery, rowMapper);
 
-            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
-            String selectQuery = selectQueryBuilder.build(1L);
+            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+            String selectQuery = selectQueryBuilder.build(Person.class, 1L);
             jdbcTemplate.queryForObject(selectQuery, rowMapper);
 
             DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
             String deleteQuery = deleteQueryBuilder.build(person);
             jdbcTemplate.execute(deleteQuery);
 
-            DropQueryBuilder dropQuery = new DropQueryBuilder(Person.class);
-            jdbcTemplate.execute(dropQuery.build());
+            DropQueryBuilder dropQuery = new DropQueryBuilder(new H2Dialect());
+            jdbcTemplate.execute(dropQuery.build(Person.class));
 
             server.stop();
         } catch (Exception e) {

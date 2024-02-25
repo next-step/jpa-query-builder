@@ -59,4 +59,9 @@ public class FieldColumn implements Column {
     public boolean isNullable() {
         return isNullable;
     }
+
+    @Override
+    public boolean isAutoIncrementId() {
+        return false;
+    }
 }

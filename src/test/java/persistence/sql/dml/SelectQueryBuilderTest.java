@@ -12,10 +12,10 @@ class SelectQueryBuilderTest {
     @DisplayName("select 쿼리를 만들 수 있다.")
     void buildFindQuery() {
         //given
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
 
         //when
-        String query = selectQueryBuilder.build(1L);
+        String query = selectQueryBuilder.build(Person.class, 1L);
 
         //then
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");

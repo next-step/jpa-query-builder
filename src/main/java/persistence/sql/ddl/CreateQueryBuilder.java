@@ -5,16 +5,14 @@ import persistence.sql.ddl.strategy.AutoIncrementColumnStrategy;
 import persistence.sql.ddl.strategy.NullableFalseColumnStrategy;
 import persistence.sql.ddl.strategy.PrimaryKeyColumnStrategy;
 import persistence.sql.domain.Column;
-import persistence.sql.domain.DataType;
-import persistence.sql.domain.Dialect;
 import persistence.sql.domain.Table;
+import persistence.sql.domain.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
-    private static final String CREATE_QUERY_TEMPLATE = "CREATE TABLE %s (%s)";
     private static final String COLUMN_QUERIES_DELIMITER = ", ";
     private static final String SPACE = " ";
     private static final List<AdditionalColumQueryStrategy> STRATEGIES = List.of(
@@ -23,17 +21,18 @@ public class CreateQueryBuilder {
             new PrimaryKeyColumnStrategy()
     );
 
-    private final Table table;
+    private final Dialect dialect;
 
-    public CreateQueryBuilder(Class<?> target) {
-        this.table = Table.of(target);
+    public CreateQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
-    public String build() {
+    public String build(Class<?> clazz) {
+        Table table = Table.from(clazz);
         String tableName = table.getName();
         List<Column> fieldColumns = table.getColumns();
         String columnQueries = makeColumnQueries(fieldColumns);
-        return String.format(CREATE_QUERY_TEMPLATE, tableName, columnQueries);
+        return String.format(dialect.getCreateQueryTemplate(), tableName, columnQueries);
     }
 
     private String makeColumnQueries(List<Column> fieldColumns) {
@@ -43,10 +42,9 @@ public class CreateQueryBuilder {
     }
 
     private String makeColumnQuery(Column column) {
-        DataType columnType = column.getType();
         return column.getName() +
                 SPACE +
-                columnType.getDataTypeForDialect(Dialect.H2) +
+                dialect.convertClassForDialect(column.getType()) +
                 getColumnOptions(column.getField());
     }
 

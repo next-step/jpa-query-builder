@@ -11,17 +11,12 @@ public class SelectQueryBuilder {
     private static final String WHERE_CLAUSE_TEMPLATE = " WHERE %s = %d";
     private static final String COLUMN_DELIMITER = ", ";
 
-    private final Table table;
-
-    public SelectQueryBuilder(Class<?> clazz) {
-        this.table = Table.of(clazz);
-    }
-
-    public String build(Object id) {
+    public String build(Class<?> target, Object id) {
+        Table table = Table.from(target);
         String columnsNames = getColumnsNames(table.getColumns());
 
         String selectQuery = String.format(SELECT_QUERY_TEMPLATE, columnsNames, table.getName());
-        return selectQuery + whereClause(id);
+        return selectQuery + whereClause(table, id);
     }
 
     private String getColumnsNames(List<Column> columns) {
@@ -30,7 +25,7 @@ public class SelectQueryBuilder {
                 .collect(Collectors.joining(COLUMN_DELIMITER));
     }
 
-    private String whereClause(Object id) {
+    private String whereClause(Table table, Object id) {
         String name = table.getIdColumn().getName();
         return String.format(WHERE_CLAUSE_TEMPLATE, name, id);
     }

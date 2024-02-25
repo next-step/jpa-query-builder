@@ -52,7 +52,8 @@ public class IdColumn implements Column {
         return fieldColumn.getField();
     }
 
-    public boolean isAutoIncrement() {
-        return generationType.equals(GenerationType.IDENTITY);
+    @Override
+    public boolean isAutoIncrementId() {
+        return GenerationType.IDENTITY.equals(generationType);
     }
 }

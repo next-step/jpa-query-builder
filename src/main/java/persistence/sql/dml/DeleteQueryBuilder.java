@@ -12,7 +12,7 @@ public class DeleteQueryBuilder {
     private static final String WHERE_CLAUSE_TEMPLATE = " WHERE %s = %s";
 
     public String build(Object object) {
-        Table table = Table.of(object.getClass());
+        Table table = Table.from(object.getClass());
         IdColumn idColumn = table.getIdColumn();
         String deleteQuery = String.format(DELETE_QUERY_TEMPLATE, table.getName());
         String whereClause = String.format(WHERE_CLAUSE_TEMPLATE, idColumn.getName(), getObject(object, idColumn));

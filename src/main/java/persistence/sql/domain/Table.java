@@ -19,7 +19,7 @@ public class Table {
         this.columns = columns;
     }
 
-    public static Table of(Class<?> target) {
+    public static Table from(Class<?> target) {
         checkIsEntity(target);
         List<Column> columns = getColumns(target);
         return new Table(target, columns);
