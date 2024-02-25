@@ -1,0 +1,4 @@
+- Query 들 빌드패턴 적용
+- JavaTypes 사용해서 타입 관련 코드 개선
+- EntityManagerImpl 에서 PERSON_ROW_MAPPER 구현을 일반화시키기
+- mock 대신 h2 사용한 방식으로 테스트코드 작성(delete test)

@@ -32,6 +32,7 @@
 * 생성자에 접근자를 잘 적용했나?
 * 일관되게 작성했나? (비슷한 일을 하는 클래스가 여러 스타일로 작성됐는가?)
 * 불필요하게 쪼개져있진 않은가?
+* public/private modifier 기준 소트
 
 ## 할 일들
 
@@ -55,6 +56,6 @@
 
 ## 4단계 - Simple Entity Object
 
-- [ ] 요구사항1 - find
-- [ ] 요구사항2 - persist (insert)
-- [ ] 요구사항3 - remove (delete)
+- [v] 요구사항1 - find
+- [v] 요구사항2 - persist (insert)
+- [v] 요구사항3 - remove (delete)

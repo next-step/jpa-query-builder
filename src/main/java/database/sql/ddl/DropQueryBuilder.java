@@ -1,13 +1,13 @@
 package database.sql.ddl;
 
-import database.sql.util.EntityClassInspector;
+import database.sql.util.EntityMetadata;
 
 public class DropQueryBuilder {
     private final String tableName;
 
     public DropQueryBuilder(Class<?> entityClass) {
-        EntityClassInspector inspector = new EntityClassInspector(entityClass);
-        this.tableName = inspector.getTableName();
+        EntityMetadata metadata = new EntityMetadata(entityClass);
+        this.tableName = metadata.getTableName();
     }
 
     public String buildQuery() {

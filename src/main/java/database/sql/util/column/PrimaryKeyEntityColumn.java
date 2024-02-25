@@ -2,27 +2,21 @@ package database.sql.util.column;
 
 import database.sql.util.type.TypeConverter;
 
+import java.lang.reflect.Field;
 import java.util.StringJoiner;
 
-public class PrimaryKeyEntityColumn implements EntityColumn {
-    private final String columnName;
-    private final Class<?> type;
-    private final Integer columnLength;
+public class PrimaryKeyEntityColumn extends AbstractEntityColumn {
     private final boolean autoIncrement;
 
-    public PrimaryKeyEntityColumn(String columnName,
+    // field 생성 후 주입이 어려워서 테스트가 쉽지 않다
+    public PrimaryKeyEntityColumn(Field field,
+                                  String columnName,
                                   Class<?> type,
                                   Integer columnLength,
                                   boolean autoIncrement) {
-        this.columnName = columnName;
-        this.type = type;
-        this.columnLength = columnLength;
-        this.autoIncrement = autoIncrement;
-    }
+        super(field, columnName, type, columnLength);
 
-    @Override
-    public String getColumnName() {
-        return columnName;
+        this.autoIncrement = autoIncrement;
     }
 
     @Override

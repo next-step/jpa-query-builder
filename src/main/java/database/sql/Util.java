@@ -10,9 +10,12 @@ public class Util {
     }
 
     public static String quote(Object value) {
+        if (value == null) return "NULL";
+
         String str = value.toString();
         Matcher matcher = NUMBER_PATTERN.matcher(str);
         if (matcher.matches()) return str;
+
         return "'" + str + "'";
     }
 }

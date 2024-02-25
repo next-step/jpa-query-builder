@@ -8,4 +8,8 @@ public interface EntityColumn {
     String toColumnDefinition(TypeConverter typeConverter);
 
     boolean isPrimaryKeyField();
+
+    String getFieldName();
+
+    Object getValue(Object entity) throws IllegalAccessException;
 }

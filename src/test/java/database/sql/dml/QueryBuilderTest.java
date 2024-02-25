@@ -43,14 +43,16 @@ class QueryBuilderTest {
     }
 
     @Test
+    void deleteQuery() {
+        String actual = builder.buildDeleteQuery(Person4.class, Map.of("email", "a@b.com"));
+
+        assertThat(actual).isEqualTo("DELETE FROM users WHERE email = 'a@b.com'");
+    }
+
+    @Test
     void deleteQueryWithPrimaryKeyField() {
-        HashMap<String, Object> where = new HashMap<>() {{
-            put("id", 3L);
-        }};
-        String actual = builder.buildDeleteQuery(Person4.class, where);
+        String actual = builder.buildDeleteQuery(Person4.class, 3L);
 
         assertThat(actual).isEqualTo("DELETE FROM users WHERE id = 3");
     }
-
-
 }

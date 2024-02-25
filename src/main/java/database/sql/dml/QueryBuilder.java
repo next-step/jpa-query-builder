@@ -17,6 +17,11 @@ public class QueryBuilder {
         return insertQueryBuilder.buildQuery(valueMap);
     }
 
+    public String buildInsertQuery(Object entity) {
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entity.getClass());
+        return insertQueryBuilder.buildQuery(entity);
+    }
+
     public String buildSelectQuery(Class<?> entityClass) {
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(entityClass);
         return selectQueryBuilder.buildQuery();
@@ -30,5 +35,9 @@ public class QueryBuilder {
     public String buildDeleteQuery(Class<?> entityClass, Map<String, Object> conditionMap) {
         DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entityClass);
         return deleteQueryBuilder.buildQuery(conditionMap);
+    }
+
+    public String buildDeleteQuery(Class<?> entityClass, Long id) {
+        return buildDeleteQuery(entityClass, Map.of("id", id));
     }
 }
