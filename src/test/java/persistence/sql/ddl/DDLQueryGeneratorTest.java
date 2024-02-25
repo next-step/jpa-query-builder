@@ -67,10 +67,8 @@ class DDLQueryGeneratorTest {
     @Test
     @DisplayName("Entity 클래스가 아니면 에러")
     void throwErrorWhenClassIsNotForEntity() {
-        DDLQueryGenerator sut = new DDLQueryGenerator(new H2Dialect(), NoEntityAnnotationTest.class);
-
         assertThrows(AnnotationMissingException.class, () -> {
-            sut.generateCreateQuery();
+            new DDLQueryGenerator(new H2Dialect(), NoEntityAnnotationTest.class);
         });
     }
 }

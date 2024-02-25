@@ -14,26 +14,20 @@ import java.util.stream.Collectors;
 
 public class DDLQueryGenerator {
     private final Dialect dialect;
-    private final Class<?> clazz;
     private final TableData tableData;
     private final List<ColumnData> columns;
 
     public DDLQueryGenerator(Dialect dialect, Class<?> clazz) {
         this.dialect = dialect;
-        this.clazz = clazz;
         this.tableData = new TableExtractor(clazz).createTable();
         this.columns = new ColumnExtractor(clazz).createColumns();
     }
 
     public String generateDropTableQuery() {
-        checkIsEntity(clazz);
-
         return String.format("DROP TABLE %s", tableData.getName());
     }
 
     public String generateCreateQuery() {
-        checkIsEntity(clazz);
-
         final String tableNameClause = tableData.getName();
         final String columnClause = getColumnClause();
         final String keyClause = getKeyClause();
@@ -72,11 +66,5 @@ public class DDLQueryGenerator {
 
     private String getKeyString(ColumnData columnData) {
         return String.format("%s KEY (%s)", dialect.mapKeyType(columnData.getKeyType()), columnData.getName());
-    }
-
-    private void checkIsEntity(Class<?> entityClazz) {
-        if (!entityClazz.isAnnotationPresent(Entity.class)) {
-            throw new AnnotationMissingException("Entity 어노테이션이 없습니다.");
-        }
     }
 }

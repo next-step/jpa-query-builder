@@ -2,6 +2,7 @@ package persistence.sql.extractor;
 
 import jakarta.persistence.*;
 import persistence.sql.ddl.KeyType;
+import persistence.sql.ddl.exception.AnnotationMissingException;
 import persistence.sql.extractor.exception.GenerationTypeMissingException;
 
 import java.lang.reflect.Field;
@@ -14,6 +15,7 @@ public class ColumnExtractor {
     Class<?> clazz;
 
     public ColumnExtractor(Class<?> clazz) {
+        checkIsEntity(clazz);
         this.clazz = clazz;
     }
 
@@ -60,6 +62,12 @@ public class ColumnExtractor {
             return field.get(entity);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void checkIsEntity(Class<?> entityClazz) {
+        if (!entityClazz.isAnnotationPresent(Entity.class)) {
+            throw new AnnotationMissingException("Entity 어노테이션이 없습니다.");
         }
     }
 
