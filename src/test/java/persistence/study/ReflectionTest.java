@@ -1,7 +1,7 @@
 package persistence.study;
 
 import annotation.PrintView;
-import domain.step1.Car;
+import domain.Car;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ class ReflectionTest {
         Arrays.stream(clazz.getConstructors())
                 .forEach(constructor -> {
                     assertAll(
-                            () -> assertThat(constructor.getName()).isEqualTo("domain.step1.Car"),
+                            () -> assertThat(constructor.getName()).isEqualTo("domain.Car"),
                             () -> assertThat(constructor.getModifiers()).isOne()
                     );
 
