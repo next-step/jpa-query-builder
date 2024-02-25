@@ -6,14 +6,14 @@ import domain.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.model.Column;
+import persistence.sql.Table;
+import persistence.sql.ddl.converter.H2TypeConverter;
+import persistence.sql.ddl.converter.TypeConverter;
 import persistence.sql.ddl.mapping.DDLQueryBuilder;
 import persistence.sql.ddl.mapping.H2PrimaryKeyGenerationType;
 import persistence.sql.ddl.mapping.PrimaryKeyGenerationType;
 import persistence.sql.ddl.mapping.QueryBuilder;
-import persistence.sql.ddl.converter.H2TypeConverter;
-import persistence.sql.ddl.model.Table;
-import persistence.sql.ddl.converter.TypeConverter;
+import persistence.sql.ddl.model.Column;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
