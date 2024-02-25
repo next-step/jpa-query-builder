@@ -91,4 +91,6 @@ public class Application {
         String deleteQuery = deleteQueryBuilder.build(person).deleteById(1L);
         jdbcTemplate.execute(deleteQuery);
     }
+
+		RowMapper<Person> rowMapper = new PersonMapper();
 }
