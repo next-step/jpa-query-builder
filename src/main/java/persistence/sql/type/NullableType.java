@@ -1,4 +1,4 @@
-package persistence.sql.Type;
+package persistence.sql.type;
 
 public class NullableType {
 

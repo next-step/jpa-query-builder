@@ -2,8 +2,8 @@ package persistence.sql.column;
 
 import java.lang.reflect.Field;
 
-import persistence.sql.Type.NameType;
-import persistence.sql.Type.NullableType;
+import persistence.sql.type.NameType;
+import persistence.sql.type.NullableType;
 import persistence.sql.dialect.Dialect;
 
 public class GeneralColumn implements Column {

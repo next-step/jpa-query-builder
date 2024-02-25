@@ -2,8 +2,7 @@ package persistence.sql.column;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import persistence.sql.Type.NameType;
-import persistence.sql.dialect.Database;
+import persistence.sql.type.NameType;
 
 public class TableColumn {
 
