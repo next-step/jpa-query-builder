@@ -1,6 +1,7 @@
 package persistence.sql.entity;
 
 import jakarta.persistence.Table;
+import persistence.sql.dml.exception.NotFoundIdException;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.DomainTypes;
 
@@ -21,6 +22,14 @@ public class EntityMappingTable {
         this.clazz = clazz;
     }
 
+    public static EntityMappingTable from(final Class<?> clazz) {
+        return new EntityMappingTable(
+                clazz.getSimpleName(),
+                DomainTypes.from(clazz.getDeclaredFields()),
+                clazz
+        );
+    }
+
     public String getTableName() {
         if (clazz.isAnnotationPresent(Table.class)) {
             return clazz.getAnnotation(Table.class).name();
@@ -37,11 +46,12 @@ public class EntityMappingTable {
         return Collections.unmodifiableList(domainTypes.getDomainTypes());
     }
 
-    public static EntityMappingTable from(final Class<?> clazz) {
-        return new EntityMappingTable(
-                clazz.getSimpleName(),
-                DomainTypes.from(clazz.getDeclaredFields()),
-                clazz
-        );
+    public DomainType getPkDomainTypes() {
+        return this.getDomainTypeList()
+                .stream()
+                .filter(DomainType::isExistsId)
+                .findFirst()
+                .orElseThrow(NotFoundIdException::new);
     }
+
 }

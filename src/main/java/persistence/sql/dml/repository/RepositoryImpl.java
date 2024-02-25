@@ -25,11 +25,7 @@ public class RepositoryImpl<T> implements Repository<T> {
         this.jdbcTemplate = jdbcTemplate;
         this.entityMappingTable = EntityMappingTable.from(clazz);
         this.repositoryMapper = new RepositoryMapper<>(clazz);
-        this.pkDomainType = entityMappingTable.getDomainTypeList()
-                .stream()
-                .filter(DomainType::isExistsId)
-                .findFirst()
-                .orElseThrow(NotFoundIdException::new);
+        this.pkDomainType = entityMappingTable.getPkDomainTypes();
     }
 
     @Override
