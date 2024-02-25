@@ -3,7 +3,6 @@ package persistence.entity;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +15,7 @@ import persistence.sql.entity.Person;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class EntityManagerImplTest {
 
@@ -46,9 +44,9 @@ class EntityManagerImplTest {
         Person person = new Person("cs", 29, "katd216@gmail.com", 0);
 
         entityManager.persist(person);
-
         Person foundPerson = entityManager.find(Person.class, 1l);
+        entityManager.remove(foundPerson);
 
-        assertThat(foundPerson).isNotNull();
+        assertThat(entityManager.find(Person.class, 1l)).isNull();
     }
 }
