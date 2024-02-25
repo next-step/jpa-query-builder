@@ -36,13 +36,17 @@ public class ValueClause {
     private static String getValue(final Object instance, final Field field) {
         try {
             field.setAccessible(true);
-            if(field.getType() == String.class) {
-                return String.format(FORMAT, field.get(instance));
-            }
-            return field.get(instance).toString();
+            return convertStringFormat(field.getType(), field.get(instance));
         } catch (Exception e) {
             throw new IllegalFieldValueException();
         }
+    }
+
+    private static String convertStringFormat(final Class<?> clazz, final Object value) {
+        if (clazz == String.class) {
+            return String.format(FORMAT, value);
+        }
+        return value.toString();
     }
 
     public String toSql() {
