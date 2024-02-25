@@ -3,60 +3,66 @@ package persistence.sql.dml;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.dml.keygenerator.KeyGenerator;
+import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static persistence.sql.dml.parser.ValueParser.insertValuesClauseParse;
 import static persistence.sql.dml.parser.ValueParser.valueParse;
 
-public class EntityColumns {
-    private final Object object;
 
-    private EntityColumns(final Object object) {
-        this.object = object;
+public class EntityColumns {
+    private final Map<String, Field> entityColumns;
+
+    /**
+     * Id 어노테이션이 붙은 컬럼이 맨앞에 위치한다.
+     */
+    private EntityColumns(final Class<?> clazz) {
+        this.entityColumns = Arrays.stream(clazz.getDeclaredFields())
+                .sorted(Comparator.comparing(this::idFirstOrdered))
+                .filter(this::isNotTransientField)
+                .collect(Collectors.toMap(this::getFieldName, Function.identity(),
+                        (f1, f2) -> f1, LinkedHashMap::new));
     }
 
-    public static EntityColumns of(final Object object) {
-        return new EntityColumns(object);
+    public static EntityColumns of(Class<?> clazz) {
+        return new EntityColumns(clazz);
     }
 
     public String names() {
-        return Arrays.stream(this.object.getClass().getDeclaredFields())
-                .sorted(Comparator.comparing(this::idFirstOrdered))
-                .filter(this::isNotTransientField)
-                .map(this::getFieldName)
+        return String.join(", ", this.entityColumns.keySet());
+    }
+
+    public String insertValues(Object object, Dialect dialect) {
+        return this.entityColumns.values().stream()
+                .map(f -> insertValuesClauseParse(f, object, dialect))
                 .collect(Collectors.joining(", "));
     }
 
-    public String insertValues(KeyGenerator keyGenerator) {
-        return Arrays.stream(this.object.getClass().getDeclaredFields())
-                .sorted(Comparator.comparing(this::idFirstOrdered))
-                .filter(this::isNotTransientField)
-                .map(f -> insertValuesClauseParse(f, object, keyGenerator))
-                .collect(Collectors.joining(", "));
+    public String primaryFieldName() {
+        return this.entityColumns.keySet().iterator().next();
     }
 
-    public String values() {
-        return valueParse(primaryField(), object);
-    }
-
-    public Field primaryField() {
-        return Arrays.stream(this.object.getClass().getDeclaredFields())
-                .filter(f -> f.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+    public String primaryFieldValue(Object object) {
+        return valueParse(this.entityColumns.values().iterator().next(), object);
     }
 
     private String getFieldName(final Field field) {
-        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isBlank()) {
+        if (isNotBlankOf(field)) {
             return field.getAnnotation(Column.class).name();
         }
 
         return field.getName();
+    }
+
+    private boolean isNotBlankOf(final Field field) {
+        return field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isBlank();
     }
 
     private Integer idFirstOrdered(Field field) {

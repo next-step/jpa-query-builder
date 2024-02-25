@@ -1,38 +1,35 @@
 package persistence.sql.dml;
 
-import persistence.sql.dml.keygenerator.KeyGenerator;
-
-import java.lang.reflect.Field;
+import persistence.sql.dialect.Dialect;
 
 public class QueryBuilder {
-    private EntityTableMeta entityTableMeta;
-    private EntityColumns entityColumns;
+    private final EntityTableMeta entityTableMeta;
+    private final EntityColumns entityColumns;
+    private final Dialect dialect;
 
-    public QueryBuilder(Object object) {
-        this.entityTableMeta = EntityTableMeta.of(object.getClass());
-        this.entityColumns = EntityColumns.of(object);
+    public QueryBuilder(Class<?> clazz, final Dialect dialect) {
+        this.entityTableMeta = EntityTableMeta.of(clazz);
+        this.entityColumns = EntityColumns.of(clazz);
+        this.dialect = dialect;
     }
 
-    public String createInsertQuery(final KeyGenerator keyGenerator) {
+    public String createInsertQuery(Object object) {
         return String.format("insert into %s (%s) values (%s)", this.entityTableMeta.name(), this.entityColumns.names(),
-                entityColumns.insertValues(keyGenerator));
+                entityColumns.insertValues(object, dialect));
     }
 
     public String createFindAllQuery() {
         return String.format("select %s from %s", this.entityColumns.names(), this.entityTableMeta.name());
     }
 
-    public String createFindByIdQuery() {
-        return String.format("%s where %s = %s", createFindAllQuery(),
-                this.entityColumns.primaryField().getName(),
-                entityColumns.values());
+    public String createFindByIdQuery(Long id) {
+        return String.format("%s where %s = %dL", createFindAllQuery(),
+                this.entityColumns.primaryFieldName(), id);
     }
 
-    public String createDeleteQuery() {
-        final Field primaryField = this.entityColumns.primaryField();
-
+    public String createDeleteQuery(Object object) {
         return String.format("delete from %s where %s = %s", this.entityTableMeta.name(),
-                primaryField.getName(),
-                entityColumns.values());
+                this.entityColumns.primaryFieldName(),
+                this.entityColumns.primaryFieldValue(object));
     }
 }
