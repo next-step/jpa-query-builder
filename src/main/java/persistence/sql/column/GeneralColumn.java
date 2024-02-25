@@ -23,7 +23,7 @@ public class GeneralColumn implements Column {
 			boolean isNullable = field.getAnnotation(jakarta.persistence.Column.class).nullable();
 			this.nullable.update(isNullable);
 			String columnName = field.getAnnotation(jakarta.persistence.Column.class).name();
-			this.name.setName(columnName);
+			this.name.setColumnName(columnName);
 		}
 	}
 
@@ -34,8 +34,13 @@ public class GeneralColumn implements Column {
 	}
 
 	@Override
-	public String getColumnName() {
+	public String getName() {
 		return name.getValue();
+	}
+
+	@Override
+	public String getFieldName() {
+		return name.getFieldName();
 	}
 
 }

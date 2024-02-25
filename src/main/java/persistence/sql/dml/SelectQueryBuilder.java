@@ -18,26 +18,25 @@ public class SelectQueryBuilder {
 		this.dialect = dialect;
 	}
 
-	public SelectQueryBuilder build(Object entity) {
-		Class<?> clazz = entity.getClass();
-		this.tableColumn = TableColumn.from(clazz);
-		this.columns = new Columns(entity.getClass().getDeclaredFields(), dialect);
-		this.idColumn = new IdColumn(clazz.getDeclaredFields(), dialect);
+	public SelectQueryBuilder build(Class<?> entity) {
+		this.tableColumn = new TableColumn(entity);
+		this.columns = new Columns(entity.getDeclaredFields(), dialect);
+		this.idColumn = new IdColumn(entity.getDeclaredFields(), dialect);
 		return this;
 	}
 
 	public String findById(Long id) {
-		return String.format(SELECT_QUERY_FORMAT, idColumn.getColumnName(), columns.getColumnNames(),
+		return String.format(SELECT_QUERY_FORMAT, idColumn.getName(), columns.getColumnNames(),
 			tableColumn.getName()) + whereClause(id);
 	}
 
 	public String findAll() {
-		return String.format(SELECT_QUERY_FORMAT, idColumn.getColumnName(), columns.getColumnNames(),
+		return String.format(SELECT_QUERY_FORMAT, idColumn.getName(), columns.getColumnNames(),
 			tableColumn.getName());
 	}
 
 	private String whereClause(Long id) {
-		return String.format(WHERE_CLAUSE_FORMAT, idColumn.getColumnName(), id);
+		return String.format(WHERE_CLAUSE_FORMAT, idColumn.getName(), id);
 	}
 
 }

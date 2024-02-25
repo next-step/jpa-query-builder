@@ -21,6 +21,6 @@
 
 ### step 4 - Simple Entity Object
 
-- [ ] 요구 사항 1 - persistence/entity 하위의 EntityManager 인터페이스를 생성 후 find 메서드 구현
+- [x] 요구 사항 1 - persistence/entity 하위의 EntityManager 인터페이스를 생성 후 find 메서드 구현
 - [ ] 요구 사항 2 - persistence/entity 하위의 EntityManager 인터페이스를 생성 후 persist(insert) 구현
 - [ ] 요구 사항 3 -  persistence/entity 하위의 EntityManager 인터페이스를 생성 후 remove(delete) 구현

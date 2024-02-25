@@ -71,20 +71,20 @@ public class Application {
 
 		RowMapper<Person> rowMapper = new PersonMapper();
 		SelectQueryBuilder queryBuilder = new SelectQueryBuilder(dialect);
-		selectAllPerson(person, jdbcTemplate, rowMapper, queryBuilder);
+		selectAllPerson(jdbcTemplate, rowMapper, queryBuilder);
 
-		selectOnePerson(person, jdbcTemplate, rowMapper, queryBuilder);
+		selectOnePerson(jdbcTemplate, rowMapper, queryBuilder);
 	}
 
-	private static void selectAllPerson(Person person, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper,
+	private static void selectAllPerson(JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper,
 		SelectQueryBuilder queryBuilder) {
-		String findAll = queryBuilder.build(person).findAll();
+		String findAll = queryBuilder.build(Person.class).findAll();
 		List<Person> persons = jdbcTemplate.query(findAll, rowMapper);
 	}
 
-	private static void selectOnePerson(Person person, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper,
+	private static void selectOnePerson(JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper,
 		SelectQueryBuilder queryBuilder) {
-		String selectOneQuery = queryBuilder.build(person).findById(1L);
+		String selectOneQuery = queryBuilder.build(Person.class).findById(1L);
 		jdbcTemplate.queryForObject(selectOneQuery, rowMapper);
 	}
 

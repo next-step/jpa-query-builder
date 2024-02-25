@@ -32,7 +32,11 @@ public class Columns {
     public String getColumnNames() {
         return this.values
                 .stream()
-                .map(Column::getColumnName)
+                .map(Column::getName)
                 .collect(Collectors.joining(COMMA));
+    }
+
+    public List<GeneralColumn> getValues() {
+        return values;
     }
 }

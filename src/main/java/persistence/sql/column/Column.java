@@ -4,5 +4,7 @@ public interface Column {
 
     String getDefinition();
 
-    String getColumnName();
+    String getName();
+
+    String getFieldName();
 }

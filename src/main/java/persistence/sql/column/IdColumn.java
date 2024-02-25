@@ -41,8 +41,12 @@ public class IdColumn implements Column {
 	}
 
 	@Override
-	public String getColumnName() {
-		return generalColumn.getColumnName();
+	public String getName() {
+		return generalColumn.getName();
 	}
 
+	@Override
+	public String getFieldName() {
+		return generalColumn.getFieldName();
+	}
 }

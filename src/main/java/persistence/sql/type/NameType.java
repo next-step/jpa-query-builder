@@ -1,20 +1,26 @@
 package persistence.sql.type;
 
 public class NameType {
-    private String value;
+    private final String fieldName;
+    private String columnName;
 
-    public NameType(String value) {
-        this.value = value;
+    public NameType(String fieldName) {
+        this.fieldName = fieldName;
     }
 
-    public void setName(String columnName) {
-        if (columnName.isBlank() || columnName.isEmpty()) {
-            return;
-        }
-        this.value = columnName;
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
     }
 
     public String getValue() {
-        return value;
+        if(this.columnName == null || this.columnName.isBlank() || this.columnName.isEmpty()) {
+            return this.fieldName;
+        }
+        return this.columnName;
     }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
 }
