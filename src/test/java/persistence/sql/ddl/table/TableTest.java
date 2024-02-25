@@ -21,6 +21,6 @@ class TableTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("person_not_have_id_annotation table should have primary key");
+                .hasMessage("table should have primary key");
     }
 }
