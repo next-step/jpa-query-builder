@@ -19,9 +19,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import persistence.entity.annotated.Person;
 
-import static java.sql.ResultSetMetaData.columnNullable;
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
-import static persistence.sql.ddl.common.TestSqlConstant.SELECT_ALL_ROWS;
 
 class QueryBuilderTest {
     private static final Logger logger = LoggerFactory.getLogger(QueryBuilderTest.class);
@@ -52,7 +50,7 @@ class QueryBuilderTest {
     void 요구사항1_test() throws SQLException {
         //given
         String expectedQuery = "CREATE TABLE IF NOT EXISTS Person " +
-                "(id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NULL,age INT)";
+                "(id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NULL,age INT NULL)";
         // when
         String actualQuery = new QueryBuilder(persistence.entity.basic.Person.class).getCreateQuery();
 
@@ -65,10 +63,10 @@ class QueryBuilderTest {
     void 요구사항2_test() throws SQLException {
         //given
         String expectedQuery = "CREATE TABLE IF NOT EXISTS Person " +
-                "(id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT,email VARCHAR(30) NOT NULL)";
+                "(id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT NULL,email VARCHAR(30) NOT NULL)";
 
         // when
-        String actualQuery = new QueryBuilder(Person.class).getCreateQueryUsingAnnotation();
+        String actualQuery = new QueryBuilder(Person.class).getCreateQuery();
 
         // then
         Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -79,10 +77,10 @@ class QueryBuilderTest {
     void 요구사항3_1_test() throws SQLException {
         //given
         String expectedQuery = "CREATE TABLE IF NOT EXISTS users " +
-                "(id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT,email VARCHAR(30) NOT NULL)";
+                "(id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT NULL,email VARCHAR(30) NOT NULL)";
 
         // when
-        String actualQuery = new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation();
+        String actualQuery = new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQuery();
 
         // then
         Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -93,10 +91,10 @@ class QueryBuilderTest {
     void 요구사항3_2_test() throws SQLException {
         //given
         String expectedQuery = "CREATE TABLE IF NOT EXISTS users " +
-                "(id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT,email VARCHAR(30) NOT NULL)";
+                "(id INT AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT NULL,email VARCHAR(30) NOT NULL)";
 
         // when
-        String actualQuery = new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQueryUsingAnnotation();
+        String actualQuery = new QueryBuilder(persistence.entity.notcolumn.Person.class).getCreateQuery();
 
         // then
         Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);

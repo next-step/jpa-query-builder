@@ -1,4 +1,4 @@
-package persistence.sql.ddl.utils;
+package persistence.sql.ddl.column;
 
 import jakarta.persistence.Column;
 
@@ -14,7 +14,11 @@ public class Nullable {
     }
 
     public String getQuery() {
-        boolean isNullable = field.getAnnotation(Column.class).nullable();
+        Column column = field.getAnnotation(Column.class);
+        if (column == null) {
+            return NULL;
+        }
+        boolean isNullable = column.nullable();
         if (isNullable) {
             return NULL;
         }
