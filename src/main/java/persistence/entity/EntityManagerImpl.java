@@ -6,6 +6,7 @@ import persistence.sql.domain.QueryResult;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class EntityManagerImpl implements EntityManager{
 
@@ -26,6 +27,18 @@ public class EntityManagerImpl implements EntityManager{
         try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
             QueryResult queryResult = new QueryResult(resultSet, query.getTable());
             return queryResult.getSingleEntity(clazz);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void persist(Object entity) {
+        Query query = dmlQueryBuilder.insert(entity);
+        String sql = query.getSql();
+
+        try (final Statement statement = connection.createStatement()) {
+            statement.execute(sql);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
