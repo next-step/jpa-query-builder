@@ -13,13 +13,22 @@ public class DomainTypes {
         this.domainTypes = domainTypes;
     }
 
-    public List<DomainType> getDomainTypes() {
-        return domainTypes;
-    }
-
     public static DomainTypes from(Field[] fields) {
         return new DomainTypes(Arrays.stream(fields)
                 .map(DomainType::from)
                 .collect(Collectors.toList()));
     }
+
+    public List<DomainType> getDomainTypes() {
+        return domainTypes;
+    }
+
+    public List<String> getColumnName() {
+        return this.getDomainTypes()
+                .stream()
+                .filter(DomainType::isNotTransient)
+                .map(DomainType::getColumnName)
+                .collect(Collectors.toList());
+    }
+
 }
