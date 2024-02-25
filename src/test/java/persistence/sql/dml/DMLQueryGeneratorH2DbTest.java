@@ -35,7 +35,6 @@ class DMLQueryGeneratorH2DbTest {
     public void setUp() {
         ddlQueryGenerator = new DDLQueryGenerator(new H2Dialect(), Person.class);
         String sql = ddlQueryGenerator.generateCreateQuery();
-        System.out.println(sql);
         jdbcTemplate.execute(sql);
     }
 
