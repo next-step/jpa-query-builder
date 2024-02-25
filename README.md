@@ -23,4 +23,5 @@
 1. [x] 요구사항 1 : `EntityManager` 의 find method를 구현한다. 
    1. find method는 entity instance를 반환해야한다.
 1. [x] 요구사항 2 : `EntityManager` 의 persist method를 구현한다. 
+1. [x] 요구사항 3 : `EntityManager` 의 remove method를 구현한다. 
 
