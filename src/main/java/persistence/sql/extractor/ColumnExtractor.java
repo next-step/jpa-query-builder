@@ -3,6 +3,7 @@ package persistence.sql.extractor;
 import jakarta.persistence.*;
 import persistence.sql.ddl.KeyType;
 import persistence.sql.ddl.exception.AnnotationMissingException;
+import persistence.sql.ddl.exception.IdAnnotationMissingException;
 import persistence.sql.extractor.exception.GenerationTypeMissingException;
 
 import java.lang.reflect.Field;
@@ -20,17 +21,23 @@ public class ColumnExtractor {
     }
 
     public List<ColumnData> createColumns() {
-        return Arrays.stream(clazz.getDeclaredFields())
+        List<ColumnData> columns = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::createColumn)
                 .collect(Collectors.toList());
+
+        checkHasPrimaryKey(columns);
+        return columns;
     }
 
     public List<ColumnData> createColumnsWithValue(Object entity) {
-        return Arrays.stream(clazz.getDeclaredFields())
+        List<ColumnData> columns = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(field -> createColumn(field, entity))
                 .collect(Collectors.toList());
+
+        checkHasPrimaryKey(columns);
+        return columns;
     }
 
     public ColumnData createColumn(Field field) {
@@ -48,7 +55,6 @@ public class ColumnExtractor {
     }
 
     public String getName(Field field, Column column) {
-
         String columnName = field.getName();
         if (column != null && !column.name().isEmpty()) {
             columnName = column.name();
@@ -68,6 +74,12 @@ public class ColumnExtractor {
     private void checkIsEntity(Class<?> entityClazz) {
         if (!entityClazz.isAnnotationPresent(Entity.class)) {
             throw new AnnotationMissingException("Entity 어노테이션이 없습니다.");
+        }
+    }
+
+    private void checkHasPrimaryKey(List<ColumnData> columns) {
+        if(columns.stream().noneMatch(ColumnData::isPrimaryKey)) {
+            throw new IdAnnotationMissingException();
         }
     }
 

@@ -57,10 +57,8 @@ class DDLQueryGeneratorTest {
     @Test
     @DisplayName("기본키 없으면 에러")
     void throwErrorWhenPrimaryKeyIsNotDefined() {
-        DDLQueryGenerator sut = new DDLQueryGenerator(new H2Dialect(), NoPrimaryKeyTest.class);
-
         assertThrows(IdAnnotationMissingException.class, () -> {
-            sut.generateCreateQuery();
+            DDLQueryGenerator sut = new DDLQueryGenerator(new H2Dialect(), NoPrimaryKeyTest.class);
         });
     }
 

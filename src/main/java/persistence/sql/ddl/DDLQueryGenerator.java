@@ -54,10 +54,6 @@ public class DDLQueryGenerator {
     }
 
     private String getKeyClause() {
-        if(columns.stream().noneMatch(ColumnData::isPrimaryKey)) {
-            throw new IdAnnotationMissingException();
-        }
-
         return columns.stream()
                 .filter(columnData -> columnData.getKeyType() != null)
                 .map(this::getKeyString)
