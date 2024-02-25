@@ -1,5 +1,7 @@
 package persistence.sql.dml;
 
+import persistence.sql.domain.Query;
+
 public class DmlQueryBuilder implements InsertQueryBuild, SelectQueryBuild, DeleteQueryBuild {
 
     private final InsertQueryBuild insertQueryBuilder;
@@ -16,23 +18,23 @@ public class DmlQueryBuilder implements InsertQueryBuild, SelectQueryBuild, Dele
 
 
     @Override
-    public <T> String insert(T entity) {
+    public <T> Query insert(T entity) {
         return insertQueryBuilder.insert(entity);
     }
 
     @Override
-    public String findAll(Class<?> entity) {
+    public Query findAll(Class<?> entity) {
         return selectQueryBuilder.findAll(entity);
     }
 
     @Override
-    public String findById(Class<?> entity, Object id) {
+    public Query findById(Class<?> entity, Object id) {
         return selectQueryBuilder.findById(entity, id);
 
     }
 
     @Override
-    public <T> String delete(T entity) {
+    public <T> Query delete(T entity) {
         return deleteQueryBuilder.delete(entity);
     }
 }

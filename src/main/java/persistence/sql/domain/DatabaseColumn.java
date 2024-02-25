@@ -41,8 +41,12 @@ public class DatabaseColumn {
         return new DatabaseColumn(databaseColumn.name, databaseColumn.value, databaseColumn.size, databaseColumn.nullable);
     }
 
-    public String getName() {
-        return name.getName();
+    public String getJdbcColumnName() {
+        return name.getJdbcColumnName();
+    }
+
+    public String getJavaFieldName() {
+        return name.getJavaFieldName();
     }
 
     public Class<?> getColumnObjectType() {
@@ -62,6 +66,6 @@ public class DatabaseColumn {
     }
 
     public String whereClause() {
-        return this.getName() + EQUAL + this.getValue();
+        return this.getJdbcColumnName() + EQUAL + this.getValue();
     }
 }

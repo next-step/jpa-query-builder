@@ -17,7 +17,7 @@ public class DatabaseTable {
 
     public DatabaseTable(Class<?> clazz) {
         this.name = getTableName(clazz);
-        this.columns = buildColumns(clazz, null);
+        this.columns = buildColumns(clazz,null);
     }
 
     public <T> DatabaseTable(T entity) {

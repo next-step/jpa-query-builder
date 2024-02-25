@@ -22,7 +22,7 @@ public abstract class AbstractQueryResolver implements QueryResolver {
         return columns.stream().map((column) -> {
                     StringBuilder sb = new StringBuilder();
                     String jdbcType = dialect.getJdbcTypeFromJavaClass(column);
-                    sb.append(column.getName())
+                    sb.append(column.getJdbcColumnName())
                             .append(SPACE)
                             .append(jdbcType);
 

@@ -19,7 +19,7 @@ public class DatabaseColumns {
     public String getIdColumnName() {
         return columns.stream()
                 .filter(column -> column instanceof DatabasePrimaryColumn)
-                .map(DatabaseColumn::getName)
+                .map(DatabaseColumn::getJdbcColumnName)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
     }
@@ -33,7 +33,7 @@ public class DatabaseColumns {
 
 
     public String columnClause() {
-        return insertClause(DatabaseColumn::getName);
+        return insertClause(DatabaseColumn::getJdbcColumnName);
     }
 
     public String valueClause() {

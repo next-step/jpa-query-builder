@@ -8,16 +8,20 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.entity.EntityManager;
+import persistence.entity.EntityManagerImpl;
 import persistence.sql.ddl.DdlQueryBuild;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 import persistence.sql.dml.DmlQueryBuilder;
+import persistence.sql.domain.Query;
 import persistence.sql.entity.Person;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 class QueryBuilderTest {
 
@@ -45,12 +49,18 @@ class QueryBuilderTest {
         jdbcTemplate.execute(ddlQueryBuilder.createQuery(Person.class));
         Person person = new Person("cs", 29, "katd216@gmail.com", 0);
 
-        jdbcTemplate.execute(dmlQueryBuild.insert(person));
-        jdbcTemplate.execute(dmlQueryBuild.insert(person));
-        List<Person> foundPerson = jdbcTemplate.query(dmlQueryBuild.findById(Person.class, 1l), personMapper);
-        jdbcTemplate.execute(dmlQueryBuild.delete(foundPerson.get(0)));
+        Query insertQuery = dmlQueryBuild.insert(person);
+        jdbcTemplate.execute(insertQuery.getSql());
+        jdbcTemplate.execute(insertQuery.getSql());
 
-        int totalSize = jdbcTemplate.query(dmlQueryBuild.findAll(Person.class), personMapper).size();
+        Query findQuery = dmlQueryBuild.findById(Person.class, 1l);
+        List<Person> foundPerson = jdbcTemplate.query(findQuery.getSql(), personMapper);
+
+        Query deleteQuery = dmlQueryBuild.delete(foundPerson.get(0));
+        jdbcTemplate.execute(deleteQuery.getSql());
+
+        Query findAllQuery = dmlQueryBuild.findAll(Person.class);
+        int totalSize = jdbcTemplate.query(findAllQuery.getSql(), personMapper).size();
 
         assertThat(totalSize).isEqualTo(1);
     }

@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import org.junit.jupiter.api.Test;
+import persistence.sql.domain.Query;
 import persistence.sql.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,23 +15,23 @@ class DmlQueryBuilderTest {
     void should_create_insert_query() {
         Person person = new Person("cs", 29, "katd216@gmail.com", 1);
 
-        String query = dmlQueryBuilder.insert(person);
+        Query query = dmlQueryBuilder.insert(person);
 
-        assertThat(query).isEqualTo("insert into users(nick_name,old,email) values('cs',29,'katd216@gmail.com');");
+        assertThat(query.getSql()).isEqualTo("insert into users(nick_name,old,email) values('cs',29,'katd216@gmail.com');");
     }
 
     @Test
     void should_create_find_all_query() {
-        String query = dmlQueryBuilder.findAll(Person.class);
+        Query query = dmlQueryBuilder.findAll(Person.class);
 
-        assertThat(query).isEqualTo("select * from users;");
+        assertThat(query.getSql()).isEqualTo("select * from users;");
     }
 
     @Test
     void should_create_find_by_id_query() {
-        String query = dmlQueryBuilder.findById(Person.class, 1l);
+        Query query = dmlQueryBuilder.findById(Person.class, 1l);
 
-        assertThat(query).isEqualTo("select * from users where id=1;");
+        assertThat(query.getSql()).isEqualTo("select * from users where id=1;");
     }
 
     @Test
@@ -43,9 +44,9 @@ class DmlQueryBuilderTest {
     @Test
     void should_create_delete_query() {
         Person person = new Person(1l, "cs", 29, "katd216@gmail.com", 1);
-        String query = dmlQueryBuilder.delete(person);
+        Query query = dmlQueryBuilder.delete(person);
 
-        assertThat(query).isEqualTo("delete users where id=1 and nick_name='cs' and old=29 and email='katd216@gmail.com';");
+        assertThat(query.getSql()).isEqualTo("delete users where id=1 and nick_name='cs' and old=29 and email='katd216@gmail.com';");
     }
 
 }
