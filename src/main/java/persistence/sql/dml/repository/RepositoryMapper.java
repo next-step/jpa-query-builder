@@ -5,9 +5,12 @@ import persistence.sql.dml.exception.InstanceException;
 import persistence.sql.dml.exception.InvalidFieldValueException;
 import persistence.sql.dml.exception.NotFoundFieldException;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.model.DomainType;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
+import java.util.Spliterator;
+import java.util.stream.StreamSupport;
 
 public class RepositoryMapper<T> {
 
@@ -21,7 +24,8 @@ public class RepositoryMapper<T> {
         EntityMappingTable entityMappingTable = EntityMappingTable.from(clazz);
         T instance = createInstance();
 
-        entityMappingTable.getDomainTypeList()
+        Spliterator<DomainType> spliterator = entityMappingTable.getDomainTypes().spliterator();
+        StreamSupport.stream(spliterator, false)
                 .forEach(domainType -> {
                     Field field = getField(clazz, domainType.getName());
                     setField(instance, field, getValue(resultSet, domainType.getColumnName()));

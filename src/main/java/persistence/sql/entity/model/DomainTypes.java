@@ -2,10 +2,11 @@ package persistence.sql.entity.model;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DomainTypes {
+public class DomainTypes implements Iterable<DomainType> {
 
     private final List<DomainType> domainTypes;
 
@@ -31,4 +32,8 @@ public class DomainTypes {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Iterator<DomainType> iterator() {
+        return domainTypes.iterator();
+    }
 }

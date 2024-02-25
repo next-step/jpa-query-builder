@@ -32,11 +32,7 @@ class SelectQueryBuilderTest {
     @DisplayName("조건문 있는 SELECT문을 반환한다.")
     @Test
     void whereSqlTest() {
-        DomainType domainType = entityMappingTable.getDomainTypeList()
-                .stream()
-                .filter(DomainType::isExistsId)
-                .findFirst()
-                .orElseThrow(NotFoundIdException::new);
+        DomainType domainType = entityMappingTable.getPkDomainTypes();
         Map<DomainType, String> where = Map.of(domainType, "1");
 
 

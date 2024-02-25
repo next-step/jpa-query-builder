@@ -23,7 +23,8 @@ class DeleteQueryBuilderTest {
     @DisplayName("삭제 쿼리문을 반환한다.")
     @Test
     void deleteById() {
-        Map<DomainType, String> where =  Map.of(entityMappingTable.getDomainTypeList().get(0), "1");
+        DomainType pkDomainTypes = entityMappingTable.getPkDomainTypes();
+        Map<DomainType, String> where =  Map.of(pkDomainTypes, "1");
         DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of("person", where);
 
         assertThat(deleteQueryBuilder.toSql()).isEqualTo("DELETE FROM person where id='1'");

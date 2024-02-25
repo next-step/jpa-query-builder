@@ -7,6 +7,9 @@ import persistence.sql.entity.model.DomainTypes;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class EntityMappingTable {
 
@@ -42,13 +45,9 @@ public class EntityMappingTable {
         return domainTypes;
     }
 
-    public List<DomainType> getDomainTypeList() {
-        return Collections.unmodifiableList(domainTypes.getDomainTypes());
-    }
-
     public DomainType getPkDomainTypes() {
-        return this.getDomainTypeList()
-                .stream()
+        Spliterator<DomainType> spliterator = domainTypes.spliterator();
+        return StreamSupport.stream(spliterator, false)
                 .filter(DomainType::isExistsId)
                 .findFirst()
                 .orElseThrow(NotFoundIdException::new);
