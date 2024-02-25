@@ -16,10 +16,6 @@ class DefaultDmlQueryBuilderTest {
 
     private final TableBinder tableBinder = new TableBinder();
 
-    private final ColumnTypeMapper columnTypeMapper = ColumnTypeMapper.getInstance();
-
-    private final ColumnBinder columnBinder = new ColumnBinder(columnTypeMapper);
-
     private final Dialect dialect = new H2Dialect();
 
     private final DmlQueryBuilder queryBuilder = new DefaultDmlQueryBuilder(dialect);
@@ -29,9 +25,7 @@ class DefaultDmlQueryBuilderTest {
     public void buildInsertQuery() throws Exception {
         // given
         final PersonV3 person = new PersonV3(1L, "name", 1, "email@domain.com", 0);
-        final Table table = tableBinder.createTable(person.getClass());
-        final List<Column> columns = columnBinder.createColumns(person);
-        table.addColumns(columns);
+        final Table table = tableBinder.createTable(person);
 
         final Insert insert = new Insert(table);
 
@@ -55,8 +49,6 @@ class DefaultDmlQueryBuilderTest {
         // given
         final Class<PersonV3> clazz = PersonV3.class;
         final Table table = tableBinder.createTable(clazz);
-        final List<Column> columns = columnBinder.createColumns(clazz);
-        table.addColumns(columns);
         final Select select = new Select(table);
 
         final String dml = "select\n" +
@@ -77,8 +69,6 @@ class DefaultDmlQueryBuilderTest {
         // given
         final Class<PersonV3> clazz = PersonV3.class;
         final Table table = tableBinder.createTable(clazz);
-        final List<Column> columns = columnBinder.createColumns(clazz);
-        table.addColumns(columns);
         final Column column = table.getColumn("id");
         final Value value = new Value(Long.class, Types.BIGINT, 1, "1");
         final List<Where> wheres = List.of(new Where(column, value, LogicalOperator.NONE, new ComparisonOperator(ComparisonOperator.Comparisons.EQ)));
@@ -104,8 +94,6 @@ class DefaultDmlQueryBuilderTest {
         // given
         final Class<PersonV3> clazz = PersonV3.class;
         final Table table = tableBinder.createTable(clazz);
-        final List<Column> columns = columnBinder.createColumns(clazz);
-        table.addColumns(columns);
         final Column column = table.getColumn("id");
         final Value value = new Value(Long.class, Types.BIGINT, 1, "1");
         final List<Where> wheres = List.of(new Where(column, value, LogicalOperator.NONE, new ComparisonOperator(ComparisonOperator.Comparisons.EQ)));

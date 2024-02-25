@@ -6,10 +6,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.PersonV3;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ColumnBinderTest {
 
@@ -58,6 +60,27 @@ class ColumnBinderTest {
                         Tuple.tuple(age, Integer.class),
                         Tuple.tuple(mail, mail.getClass())
                 );
+    }
+
+    @DisplayName("필드와 컬럼 애너테이션을 이용해 컬럼 이름을 추출한다")
+    @Test
+    public void toColumnName() throws Exception {
+        // given
+        final Class<PersonV3> clazz = PersonV3.class;
+        final Field idField = clazz.getDeclaredField("id");
+        final String idFieldName = idField.getName();
+        final Field nameField = clazz.getDeclaredField("name");
+        final String nameAnnotationName = nameField.getAnnotation(jakarta.persistence.Column.class).name();
+
+        // when
+        final String idColumnName = ColumnBinder.toColumnName(idField);
+        final String nameColumnName = ColumnBinder.toColumnName(nameField);
+
+        // then
+        assertAll(
+                () -> assertThat(idColumnName).isEqualTo(idFieldName),
+                () -> assertThat(nameColumnName).isEqualTo(nameAnnotationName)
+        );
     }
 
 }

@@ -36,7 +36,7 @@ public class Value implements Serializable {
     }
 
     public String getValueClause() {
-        return this.valueClause;
+        return (this.valueClause != null) ? this.valueClause : this.value.toString();
     }
 
     public void setValue(final Object value) {

@@ -52,21 +52,10 @@ public class ColumnBinder {
             return null;
         }
 
-        final jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
-        final String columnName = toColumnName(field, columnAnnotation);
+        final String columnName = toColumnName(field);
         final int sqlType = columnTypeMapper.toSqlType(field.getType());
 
-        int length = 255;
-        boolean nullable = true;
-        boolean unique = false;
-
-        if (columnAnnotation != null) {
-            length = columnAnnotation.length();
-            nullable = columnAnnotation.nullable();
-            unique = columnAnnotation.unique();
-        }
-
-        final Column column = new Column(columnName, sqlType, new Value(field.getType(), sqlType), length, nullable, unique);
+        final Column column = getColumn(field, columnName, sqlType);
 
         final Id idAnnotation = field.getAnnotation(Id.class);
 
@@ -82,6 +71,21 @@ public class ColumnBinder {
         return column;
     }
 
+    private Column getColumn(final Field field, final String columnName, final int sqlType) {
+        int length = 255;
+        boolean nullable = true;
+        boolean unique = false;
+
+        final jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
+        if (columnAnnotation != null) {
+            length = columnAnnotation.length();
+            nullable = columnAnnotation.nullable();
+            unique = columnAnnotation.unique();
+        }
+
+        return new Column(columnName, sqlType, new Value(field.getType(), sqlType), length, nullable, unique);
+    }
+
     private Column createColumn(final Field field, final Object object) {
         final Column column = createColumn(field);
 
@@ -94,9 +98,11 @@ public class ColumnBinder {
         return column;
     }
 
-    private String toColumnName(final Field field, final jakarta.persistence.Column columnAnnotation) {
+    public static String toColumnName(final Field field) {
+        final jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
+
         if (columnAnnotation == null || columnAnnotation.name().isBlank()) {
-            return field.getName();
+            return field.getName().toLowerCase();
         }
 
         return columnAnnotation.name();
