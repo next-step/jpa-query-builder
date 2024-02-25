@@ -3,7 +3,8 @@ package persistence.sql.ddl.dialect;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.dialect.column.Nullable;
+import persistence.sql.meta.column.ColumnType;
+import persistence.sql.meta.column.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -22,40 +23,35 @@ public abstract class Dialect {
 
     protected abstract void setDefaultColumnDataTypes();
 
+    protected abstract void setDefaultNullableTypes();
+
+    protected abstract void setDefaultPKGenerationTypes();
+
+
     protected void registerColumnDataType(int code, String name) {
         columnDataTypes.put(code, name);
     }
 
-    public String getColumnDataType(final Field field) {
-        Integer typeCode = JdbcUtils.convertJavaClassToJdbcTypeCode(field.getType());
-        return getColumnDataType(typeCode);
-    }
-
-    public String getColumnDataType(final int typeCode) {
-        final String result = columnDataTypes.get(typeCode);
+    public String getColumnDataType(final ColumnType columnType) {
+        final int typeCode = columnType.getType();
+        final String result = columnDataTypes.get(columnType.getType());
         if (result == null) {
             throw new IllegalArgumentException("No Dialect mapping for type: " + typeCode);
         }
         return result;
     }
 
-
-    protected abstract void setDefaultNullableTypes();
-
     protected void registerColumnNullableTypes(Nullable nullable, String name) {
         columnNullableTypes.put(nullable, name);
     }
 
-    public String getColumnNullableType(final Field field) {
-        Nullable nullable = Nullable.getNullable(field);
+    public String getColumnNullableType(final Nullable nullable) {
         String result = columnNullableTypes.get(nullable);
         if (result == null) {
             throw new IllegalArgumentException("No Dialect mapping for nullableType: " + nullable.name());
         }
         return result;
     }
-
-    protected abstract void setDefaultPKGenerationTypes();
 
     protected void registerPKGenerationTypes(GenerationType generationType, String name) {
         pkGenerationTypes.put(generationType, name);
