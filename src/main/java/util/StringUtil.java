@@ -1,4 +1,4 @@
-package persistence.sql.ddl.util;
+package util;
 
 public class StringUtil {
 

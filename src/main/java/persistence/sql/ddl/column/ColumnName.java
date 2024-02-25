@@ -1,6 +1,6 @@
 package persistence.sql.ddl.column;
 
-import persistence.sql.ddl.util.StringUtil;
+import util.StringUtil;
 
 import java.lang.reflect.Field;
 

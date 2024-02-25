@@ -1,6 +1,6 @@
 package persistence.sql.ddl.table;
 
-import persistence.sql.ddl.util.StringUtil;
+import util.StringUtil;
 
 public class TableName {
 
