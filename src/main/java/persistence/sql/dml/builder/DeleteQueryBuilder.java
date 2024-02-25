@@ -1,14 +1,14 @@
 package persistence.sql.dml.builder;
 
-import persistence.sql.dml.caluse.ColumnsClause;
-import persistence.sql.dml.caluse.TableClause;
-import persistence.sql.dml.caluse.ValuesClause;
+import persistence.sql.dml.clause.DMLMeta;
+import persistence.sql.dml.clause.ValuesClause;
 
 public class DeleteQueryBuilder {
     public String generateSQL(Object object) throws IllegalAccessException {
+        DMLMeta table = new DMLMeta(object.getClass());
         return String.format("delete %s where %s = %s",
-                new TableClause(object.getClass()).getTableName(),
-                new ColumnsClause(object.getClass()).getPkName(),
+                table.getTableName(),
+                table.getPKName(),
                 new ValuesClause(object).getPkValue()
         );
     }

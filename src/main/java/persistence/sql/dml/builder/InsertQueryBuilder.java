@@ -1,15 +1,14 @@
 package persistence.sql.dml.builder;
 
-import persistence.sql.dml.caluse.ColumnsClause;
-import persistence.sql.dml.caluse.TableClause;
-import persistence.sql.dml.caluse.ValuesClause;
-import persistence.sql.meta.table.Table;
+import persistence.sql.dml.clause.DMLMeta;
+import persistence.sql.dml.clause.ValuesClause;
 
 public class InsertQueryBuilder {
     public String generateSQL(Object object) {
+        DMLMeta table = new DMLMeta(object.getClass());
         return String.format("insert into %s (%s) values (%s)",
-                new TableClause(object.getClass()).getTableName(),
-                new ColumnsClause(object.getClass()).getColumns(),
+                table.getTableName(),
+                table.getColumns(),
                 new ValuesClause(object).getValues()
         );
     }
