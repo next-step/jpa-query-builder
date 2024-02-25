@@ -22,9 +22,12 @@ public class EntityManagerImpl implements EntityManager{
     @Override
     public <T> T find(Class<T> clazz, Long id) {
         Query query = dmlQueryBuilder.findById(clazz, id);
-        String sql = query.getSql();
 
-        try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
+        return executeQueryForEntity(clazz, query);
+    }
+
+    private <T> T executeQueryForEntity(Class<T> clazz, Query query) {
+        try (final ResultSet resultSet = connection.prepareStatement(query.getSql()).executeQuery()) {
             QueryResult queryResult = new QueryResult(resultSet, query.getTable());
             return queryResult.getSingleEntity(clazz);
         } catch (Exception e) {
@@ -35,10 +38,20 @@ public class EntityManagerImpl implements EntityManager{
     @Override
     public void persist(Object entity) {
         Query query = dmlQueryBuilder.insert(entity);
-        String sql = query.getSql();
 
+        executeQuery(query);
+    }
+
+    @Override
+    public void remove(Object entity) {
+        Query query = dmlQueryBuilder.delete(entity);
+
+        executeQuery(query);
+    }
+
+    private void executeQuery(Query query) {
         try (final Statement statement = connection.createStatement()) {
-            statement.execute(sql);
+            statement.execute(query.getSql());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
