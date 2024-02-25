@@ -23,9 +23,8 @@ class EntityManagerImplTest {
     private static DatabaseServer server;
     private static EntityManager entityManager;
 
-
     @BeforeAll
-    static void init() throws SQLException {
+    static void initDatabase() throws SQLException {
         server = new H2();
         server.start();
         DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new MySQLPrimaryKeyResolver());
@@ -33,6 +32,7 @@ class EntityManagerImplTest {
         new JdbcTemplate(connection).execute(ddlQueryBuilder.createQuery(Person.class));
         entityManager = new EntityManagerImpl(connection, new DmlQueryBuilder());
     }
+
     @AfterAll
     static void destroy() {
         server.stop();
