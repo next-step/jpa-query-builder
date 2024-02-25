@@ -18,7 +18,7 @@ import persistence.sql.dialect.Dialect;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
-import persistence.sql.mapper.PersonMapper;
+import persistence.sql.mapper.GenericRowMapper;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -40,7 +40,7 @@ public class Application {
             createPersonDdl(jdbcTemplate, tableColumn, columns, idColumn);
             Person person1 = new Person("username", 30, "test@test.com", 1);
             insertPerson(person1, jdbcTemplate, dialect);
-            selectPerson(person1, jdbcTemplate, dialect);
+            selectPerson(jdbcTemplate, dialect);
             deletePerson(person1, jdbcTemplate, dialect);
 
             server.stop();
@@ -66,10 +66,8 @@ public class Application {
         jdbcTemplate.execute(insertQueryBuilder.build(person2));
     }
 
-    private static void selectPerson(Person person,
-                                     JdbcTemplate jdbcTemplate, Dialect dialect) {
-
-        RowMapper<Person> rowMapper = new PersonMapper();
+    private static void selectPerson(JdbcTemplate jdbcTemplate, Dialect dialect) {
+        GenericRowMapper<Person> rowMapper = new GenericRowMapper<>(Person.class, dialect);
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(dialect);
         selectAllPerson(jdbcTemplate, rowMapper, queryBuilder);
 
