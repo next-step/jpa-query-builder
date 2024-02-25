@@ -1,4 +1,4 @@
-package domain.step2;
+package domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

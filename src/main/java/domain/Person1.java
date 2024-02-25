@@ -1,4 +1,4 @@
-package domain.step2;
+package domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -12,4 +12,14 @@ public class Person1 {
     private String name;
 
     private Integer age;
+
+    public Person1() {
+
+    }
+
+    public Person1(Long id, String name, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
 }

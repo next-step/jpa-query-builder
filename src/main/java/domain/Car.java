@@ -1,4 +1,4 @@
-package domain.step1;
+package domain;
 
 import annotation.PrintView;
 
