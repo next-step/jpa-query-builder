@@ -4,12 +4,12 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public class Nullable {
+public class NullClause {
     private static final String NULL = "NULL";
     private static final String NOT_NULL = "NOT NULL";
     private final Field field;
 
-    public Nullable(Field field) {
+    public NullClause(Field field) {
         this.field = field;
     }
 

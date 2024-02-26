@@ -13,16 +13,16 @@ public class Column {
     );
     private final String name;
     private final Class<?> type;
-    private final Nullable nullable;
+    private final NullClause nullClause;
 
     public Column(Field field) {
         this.name = getName(field);
         this.type = field.getType();
-        this.nullable = new Nullable(field);
+        this.nullClause = new NullClause(field);
     }
 
     public String getQuery() {
-        return annotationFreeMap.get(type).apply(name) + " " + nullable.getQuery();
+        return annotationFreeMap.get(type).apply(name) + " " + nullClause.getQuery();
     }
 
     private String getName(Field field) {
