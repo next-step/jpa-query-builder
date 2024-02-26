@@ -4,8 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.notcolumn.Person;
-
-import static org.junit.jupiter.api.Assertions.*;
+import persistence.sql.dml.InsertQueryBuilder;
 
 class InsertQueryBuilderTest {
     @Test

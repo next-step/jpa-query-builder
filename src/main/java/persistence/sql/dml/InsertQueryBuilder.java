@@ -1,6 +1,7 @@
-package persistence.sql.ddl;
+package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
+import persistence.sql.ddl.Table;
 import persistence.sql.ddl.column.Column;
 import persistence.sql.ddl.column.Columns;
 import persistence.sql.ddl.column.Values;
