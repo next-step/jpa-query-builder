@@ -45,16 +45,7 @@ public class QueryTest {
 
         ddlQueryBuilder = new DDLQueryBuilder(table, dialect);
         dmlQueryBuilder = new DMLQueryBuilder(table);
-    }
 
-    @AfterEach
-    void setDown() {
-        server.stop();
-    }
-
-    @Test
-    @DisplayName("쿼리 빌더 통합 테스트")
-    void queryTest() {
         String createTableQuery = ddlQueryBuilder.buildCreateQuery();
         jdbcTemplate.execute(createTableQuery);
 
@@ -64,7 +55,24 @@ public class QueryTest {
             String insertQuery = dmlQueryBuilder.buildInsertQuery(person);
             jdbcTemplate.execute(insertQuery);
         });
+    }
 
+    @AfterEach
+    void setDown() {
+        server.stop();
+    }
+
+    private Stream<Person3> createPersons() {
+        return Stream.of(
+                new Person3("qwer1", 1, "email1@email.com"),
+                new Person3("qwer2", 2, "email2@email.com"),
+                new Person3("qwer3", 3, "email3@email.com")
+        );
+    }
+
+    @Test
+    @DisplayName("findAll 쿼리 통합 테스트")
+    void findAllQuery() {
         String findAllQuery = dmlQueryBuilder.buildFindAllQuery();
         List<Person3> findPersons = jdbcTemplate.query(findAllQuery, new Person3RowMapper());
 
@@ -75,11 +83,14 @@ public class QueryTest {
         assertThat(findPersons).containsExactlyInAnyOrder(expectPerson1, expectPerson2, expectPerson3);
     }
 
-    private Stream<Person3> createPersons() {
-        return Stream.of(
-                new Person3("qwer1", 1, "email1@email.com"),
-                new Person3("qwer2", 2, "email2@email.com"),
-                new Person3("qwer3", 3, "email3@email.com")
-        );
+    @Test
+    @DisplayName("findById 쿼리 통합 테스트")
+    void findByIdQuery() {
+        Person3 person = new Person3(3L, "qwer3", 3, "email3@email.com");
+
+        String findByIdQuery = dmlQueryBuilder.buildFindByIdQuery(person);
+        Person3 result = jdbcTemplate.queryForObject(findByIdQuery, new Person3RowMapper());
+
+        assertThat(result).isEqualTo(person);
     }
 }
