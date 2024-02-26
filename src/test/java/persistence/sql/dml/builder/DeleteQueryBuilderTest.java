@@ -3,6 +3,8 @@ package persistence.sql.dml.builder;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
+import jdbc.RowMapperImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +23,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DeleteQueryBuilderTest {
     private JdbcTemplate jdbcTemplate;
     private DatabaseServer server;
+    private final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+    private final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+    private final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
+    private final RowMapper<Person> rowMapper = new RowMapperImpl<>(Person.class);
+
 
     @BeforeEach
     void setup() throws SQLException {
@@ -40,22 +47,19 @@ class DeleteQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("delete/데이터 insert2회 delete1회/데이터 1개 조회 성공")
+    @DisplayName("delete/데이터 insert2회 delete1회/findAll 데이터 1개")
     void delete() throws IllegalAccessException {
+        // given insert2회
         Person person = new Person("hoon25", 20, "hoon25@gmail.com");
-        jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
-        jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
+        jdbcTemplate.execute(insertQueryBuilder.generateSQL(person));
+        jdbcTemplate.execute(insertQueryBuilder.generateSQL(person));
 
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
-        SelectQueryDto<?> dto = selectQueryBuilder.findById(Person.class, 1L);
-        Person findPerson = (Person) jdbcTemplate.queryForObject(dto.getSql(), dto.getRowMapper());
-
-        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
+        // when delete1회
+        Person findPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(Person.class, 1L), rowMapper);
         jdbcTemplate.execute(deleteQueryBuilder.generateSQL(findPerson));
 
-        SelectQueryDto<?> dto2 = selectQueryBuilder.findAll(Person.class);
-        List<Person> persons = (List<Person>) jdbcTemplate.query(dto2.getSql(), dto2.getRowMapper());
-
+        // then findAll 데이터1개
+        List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(Person.class), new RowMapperImpl<>(Person.class));
         assertThat(persons).hasSize(1);
     }
 }

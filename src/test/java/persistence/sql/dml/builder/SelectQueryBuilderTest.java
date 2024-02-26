@@ -3,6 +3,8 @@ package persistence.sql.dml.builder;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
+import jdbc.RowMapperImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,11 +20,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class SelectQueryBuilderTest {
     private JdbcTemplate jdbcTemplate;
     private DatabaseServer server;
+    private final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+    private final RowMapper<Person> rowMapper = new RowMapperImpl<>(Person.class);
+
 
     @BeforeEach
     void setup() throws SQLException {
@@ -48,9 +52,7 @@ class SelectQueryBuilderTest {
         jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
         jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
 
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
-        SelectQueryDto<?> dto = selectQueryBuilder.findAll(Person.class);
-        List<Person> persons = (List<Person>) jdbcTemplate.query(dto.getSql(), dto.getRowMapper());
+        List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(Person.class), rowMapper);
 
         assertThat(persons).hasSize(2);
     }
@@ -61,14 +63,9 @@ class SelectQueryBuilderTest {
         Person person = new Person("hoon25", 20, "hoon25@gmail.com");
         jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
 
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
-        SelectQueryDto<?> dto = selectQueryBuilder.findById(Person.class, 1L);
-        Person findPerson = (Person) jdbcTemplate.queryForObject(dto.getSql(), dto.getRowMapper());
+        Person findPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(Person.class, 1L), rowMapper);
 
-        assertAll(
-                () -> assertThat(findPerson.getId()).isEqualTo(findPerson.getId()),
-                () -> assertThat(findPerson.getName()).isEqualTo(findPerson.getName())
-        );
+        assertThat(person.getName()).isEqualTo(findPerson.getName());
     }
 
     @Test
@@ -77,9 +74,7 @@ class SelectQueryBuilderTest {
         Person person = new Person("hoon25", 20, "hoon25@gmail.com");
         jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
 
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
-        SelectQueryDto<?> dto = selectQueryBuilder.findById(Person.class, 2L);
-        assertThatThrownBy(() -> jdbcTemplate.queryForObject(dto.getSql(), dto.getRowMapper()))
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject(selectQueryBuilder.findById(Person.class, 2L), rowMapper))
                 .isInstanceOf(RuntimeException.class);
     }
 }
