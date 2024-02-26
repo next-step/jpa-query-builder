@@ -1,12 +1,8 @@
 package persistence.sql.domain;
 
-import jakarta.persistence.Id;
-
 import java.lang.reflect.Field;
 
-public class DatabaseColumn {
-
-    private static final String EQUAL = "=";
+public class DatabaseColumn implements ColumnOperation {
 
     protected final ColumnName name;
 
@@ -27,45 +23,52 @@ public class DatabaseColumn {
         ColumnName name = new ColumnName(field);
         ColumnLength length = new ColumnLength(field);
         ColumnValue value = new ColumnValue(field, object);
-        if (field.isAnnotationPresent(Id.class)) {
-            return DatabasePrimaryColumn.fromField(field, object);
-        }
         ColumnNullable nullable = ColumnNullable.getInstance(field);
         return new DatabaseColumn(name, value, length, nullable);
     }
 
     public static DatabaseColumn copy(DatabaseColumn databaseColumn) {
-        if (databaseColumn instanceof DatabasePrimaryColumn) {
-            return DatabasePrimaryColumn.copy((DatabasePrimaryColumn) databaseColumn);
-        }
         return new DatabaseColumn(databaseColumn.name, databaseColumn.value, databaseColumn.size, databaseColumn.nullable);
     }
 
+    @Override
     public String getJdbcColumnName() {
         return name.getJdbcColumnName();
     }
 
-    public String getJavaFieldName() {
-        return name.getJavaFieldName();
+    @Override
+    public String getColumnValue() {
+        return value.getValue();
     }
 
+    @Override
+    public boolean hasColumnValue() {
+        return value.getValue() != null;
+    }
+
+    @Override
     public Class<?> getColumnObjectType() {
         return value.getColumnObjectType();
     }
 
-    public Integer getSize() {
+    @Override
+    public Integer getColumnSize() {
         return size.getSize();
     }
 
+    @Override
+    public boolean isPrimaryColumn() {
+        return false;
+    }
+
+    @Override
+    public String getJavaFieldName() {
+        return name.getJavaFieldName();
+    }
+
+    @Override
     public boolean isNullable() {
         return this.nullable.isNullable();
     }
 
-    public String getValue() {
-        return value.getValue();
-    }
-
-    public String whereClause() {
-        return this.getJdbcColumnName() + EQUAL + this.getValue();
-    }
 }

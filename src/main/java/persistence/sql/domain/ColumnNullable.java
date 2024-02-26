@@ -1,13 +1,14 @@
 package persistence.sql.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 
 public class ColumnNullable {
 
-    public static ColumnNullable NOT_NULLABLE = new ColumnNullable(false);
-    public static ColumnNullable NULLABLE = new ColumnNullable(true);
+    private static final ColumnNullable NOT_NULLABLE = new ColumnNullable(false);
+    private static final ColumnNullable NULLABLE = new ColumnNullable(true);
 
     private final boolean nullable;
 
@@ -17,10 +18,14 @@ public class ColumnNullable {
 
     public static ColumnNullable getInstance(Field field) {
         Column column = field.getAnnotation(Column.class);
-        if (column == null || column.nullable()) {
-            return NULLABLE;
+        if (isNotNullable(field, column)) {
+            return NOT_NULLABLE;
         }
-        return NOT_NULLABLE;
+        return NULLABLE;
+    }
+
+    private static boolean isNotNullable(Field field, Column column) {
+        return field.isAnnotationPresent(Id.class) || column != null && !column.nullable();
     }
 
     public boolean isNullable() {

@@ -5,25 +5,25 @@ import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
 
-public class DatabasePrimaryColumn extends DatabaseColumn {
+public class DatabasePrimaryColumn implements ColumnOperation {
+
+    private final DatabaseColumn databaseColumn;
 
     private final GenerationType generationType;
 
-    private DatabasePrimaryColumn(ColumnName name, ColumnValue value, ColumnLength size, GenerationType generationType) {
-        super(name, value, size, ColumnNullable.NOT_NULLABLE);
+    private DatabasePrimaryColumn(DatabaseColumn databaseColumn, GenerationType generationType) {
+        this.databaseColumn = databaseColumn;
         this.generationType = generationType;
     }
 
     public static DatabasePrimaryColumn fromField(Field field, Object object) {
-        ColumnName name = new ColumnName(field);
-        ColumnLength length = new ColumnLength(field);
-        ColumnValue value = new ColumnValue(field, object);
-        return new DatabasePrimaryColumn(name, value, length, getGenerationType(field));
+        DatabaseColumn databaseColumn = DatabaseColumn.fromField(field, object);
+        return new DatabasePrimaryColumn(databaseColumn, getGenerationType(field));
     }
 
 
     public static DatabasePrimaryColumn copy(DatabasePrimaryColumn primaryColumn) {
-        return new DatabasePrimaryColumn(primaryColumn.name, primaryColumn.value, primaryColumn.size, primaryColumn.generationType);
+        return new DatabasePrimaryColumn(primaryColumn.databaseColumn, primaryColumn.generationType);
     }
 
 
@@ -39,4 +39,43 @@ public class DatabasePrimaryColumn extends DatabaseColumn {
     }
 
 
+    @Override
+    public String getJdbcColumnName() {
+        return databaseColumn.getJdbcColumnName();
+    }
+
+    @Override
+    public String getColumnValue() {
+        return databaseColumn.getColumnValue();
+    }
+
+    @Override
+    public boolean hasColumnValue() {
+        return databaseColumn.hasColumnValue();
+    }
+
+    @Override
+    public Class<?> getColumnObjectType() {
+        return databaseColumn.getColumnObjectType();
+    }
+
+    @Override
+    public Integer getColumnSize() {
+        return databaseColumn.getColumnSize();
+    }
+
+    @Override
+    public boolean isPrimaryColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean isNullable() {
+        return false;
+    }
+
+    @Override
+    public String getJavaFieldName() {
+        return databaseColumn.getJavaFieldName();
+    }
 }

@@ -1,7 +1,5 @@
 package persistence.sql.domain;
 
-import java.sql.Connection;
-
 public class Query {
 
     private final String sql;

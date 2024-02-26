@@ -21,10 +21,10 @@ public class QueryResult {
 
     public <T> T getSingleEntity(Class<T> entityClassType) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         List<T> entities = getEntities(entityClassType);
-        if (entities.size() > 1){
+        if (entities.size() > 1) {
             throw new SQLDataException("duplicate id exist in database");
         }
-        if (entities.isEmpty()){
+        if (entities.isEmpty()) {
             return null;
         }
         return entities.get(0);
@@ -32,7 +32,7 @@ public class QueryResult {
 
     private <T> List<T> getEntities(Class<T> entityClassType) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
         List<T> result = new ArrayList<>();
-        while(resultSet.next()){
+        while (resultSet.next()) {
             T entity = getEntity(entityClassType);
             result.add(entity);
         }
@@ -41,11 +41,11 @@ public class QueryResult {
 
     private <T> T getEntity(Class<T> entityClassType) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         T entity = entityClassType.getConstructor().newInstance();
-        table.getColumns().forEach(column-> setEntityFieldValue(entityClassType, entity, column));
+        table.getAllColumns().forEach(column -> setEntityFieldValue(entityClassType, entity, column));
         return entity;
     }
 
-    private <T> void setEntityFieldValue(Class<T> entityClassType, T entity, DatabaseColumn column) {
+    private <T> void setEntityFieldValue(Class<T> entityClassType, T entity, ColumnOperation column) {
         String jdbcColumnName = column.getJdbcColumnName();
         String javaFieldName = column.getJavaFieldName();
         try {

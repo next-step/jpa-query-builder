@@ -1,7 +1,8 @@
 package persistence.sql.dml;
 
-import persistence.sql.domain.DatabaseTable;
-import persistence.sql.domain.Query;
+import persistence.sql.domain.*;
+
+import java.util.List;
 
 public class DeleteQueryBuilder implements DeleteQueryBuild {
 
@@ -11,10 +12,10 @@ public class DeleteQueryBuilder implements DeleteQueryBuild {
     public <T> Query delete(T entity) {
         DatabaseTable table = new DatabaseTable(entity);
 
-        String name = table.getName();
-        String whereClause = table.whereClause();
+        Where where = Where.from(table.getName());
+        table.getAllColumns().forEach(column-> where.and(Condition.equal(column)));
 
-        String sql = String.format(DELETE_TEMPLATE, name, whereClause);
+        String sql = String.format(DELETE_TEMPLATE, where.getTableName(), where.getWhereClause());
 
         return new Query(sql, table);
     }

@@ -1,5 +1,6 @@
 package persistence.sql;
 
+import persistence.sql.domain.ColumnOperation;
 import persistence.sql.domain.DatabaseColumn;
 
 import java.sql.Types;
@@ -34,9 +35,9 @@ public class MySqlDialect extends Dialect {
     }
 
     @Override
-    public String getJdbcTypeFromJavaClass(DatabaseColumn column) {
+    public String getJdbcTypeFromJavaClass(ColumnOperation column) {
         Class<?> clazz = column.getColumnObjectType();
-        Integer size = column.getSize();
+        Integer size = column.getColumnSize();
 
         return Optional.ofNullable(javaClassToJdbcType.get(clazz))
                 .map(jdbcType -> {

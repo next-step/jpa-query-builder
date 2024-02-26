@@ -1,10 +1,13 @@
 package persistence.sql.ddl;
 
 import persistence.sql.ddl.view.QueryResolver;
+import persistence.sql.domain.ColumnOperation;
 import persistence.sql.domain.DatabaseColumn;
+import persistence.sql.domain.DatabasePrimaryColumn;
 import persistence.sql.domain.DatabaseTable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class DdlQueryBuilder implements DdlQueryBuild {
 
@@ -20,7 +23,7 @@ public class DdlQueryBuilder implements DdlQueryBuild {
     @Override
     public String createQuery(Class<?> type) {
         DatabaseTable table = new DatabaseTable(type);
-        List<DatabaseColumn> columns = table.getColumns();
+        List<ColumnOperation> columns = table.getAllColumns();
 
         return String.format(CREATE_TABLE_TEMPLATE, table.getName(), queryResolver.toQuery(columns));
     }

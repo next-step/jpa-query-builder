@@ -27,6 +27,7 @@ public class EntityManagerImpl implements EntityManager{
     }
 
     private <T> T executeQueryForEntity(Class<T> clazz, Query query) {
+        System.out.println("query.getSql() = " + query.getSql());
         try (final ResultSet resultSet = connection.prepareStatement(query.getSql()).executeQuery()) {
             QueryResult queryResult = new QueryResult(resultSet, query.getTable());
             return queryResult.getSingleEntity(clazz);
@@ -50,6 +51,7 @@ public class EntityManagerImpl implements EntityManager{
     }
 
     private void executeQuery(Query query) {
+        System.out.println("query = " + query.getSql());
         try (final Statement statement = connection.createStatement()) {
             statement.execute(query.getSql());
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package persistence.sql;
 
+import persistence.sql.domain.ColumnOperation;
 import persistence.sql.domain.DatabaseColumn;
 
 import java.sql.Types;
@@ -22,5 +23,5 @@ public abstract class Dialect {
         javaClassToJdbcType.put(javaType, jdbcType);
     }
 
-    public abstract String getJdbcTypeFromJavaClass(DatabaseColumn column);
+    public abstract String getJdbcTypeFromJavaClass(ColumnOperation column);
 }
