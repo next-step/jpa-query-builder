@@ -6,8 +6,12 @@ import persistence.sql.dml.query.builder.DeleteQueryBuilder;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.model.Criteria;
+import persistence.sql.entity.model.Criterias;
 import persistence.sql.entity.model.DomainType;
+import persistence.sql.entity.model.Operators;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,9 +40,10 @@ public class RepositoryImpl<T> implements Repository<T> {
 
     @Override
     public Optional<T> findById(Long id) {
-        Map<DomainType, String> where = Map.of(pkDomainType, id.toString());
+        Criteria criteria = new Criteria(pkDomainType.getColumnName(), id.toString(), Operators.EQUALS);
+        Criterias criterias = new Criterias(Collections.singletonList(criteria));
 
-        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, where);
+        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, criterias);
         return Optional.ofNullable(jdbcTemplate.queryForObject(selectQueryBuilder.toSql(), repositoryMapper::mapper));
     }
 
@@ -58,9 +63,9 @@ public class RepositoryImpl<T> implements Repository<T> {
 
     @Override
     public void deleteById(Long id) {
-        Map<DomainType, String> where = Map.of(pkDomainType, id.toString());
+        Criterias criterias = new Criterias(List.of(new Criteria(pkDomainType.getColumnName(), id.toString(), Operators.EQUALS)));
 
-        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(entityMappingTable.getTableName(), where);
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(entityMappingTable.getTableName(), criterias);
 
         jdbcTemplate.execute(deleteQueryBuilder.toSql());
     }

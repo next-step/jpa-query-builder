@@ -3,6 +3,7 @@ package persistence.sql.dml.query.builder;
 import persistence.sql.dml.query.clause.ColumnClause;
 import persistence.sql.dml.query.clause.WhereClause;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.model.Criterias;
 import persistence.sql.entity.model.DomainType;
 
 import java.util.HashMap;
@@ -23,11 +24,11 @@ public class SelectQueryBuilder {
         this.whereClause = whereClause;
     }
 
-    public static SelectQueryBuilder of(EntityMappingTable entityMappingTable, Map<DomainType, String> whereClause) {
+    public static SelectQueryBuilder of(EntityMappingTable entityMappingTable, Criterias criterias) {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
-                new WhereClause(whereClause)
+                new WhereClause(criterias)
         );
     }
 
@@ -35,7 +36,7 @@ public class SelectQueryBuilder {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
-                new WhereClause(new HashMap())
+                new WhereClause(Criterias.emptyInstance())
         );
     }
 

@@ -5,8 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.model.Criteria;
+import persistence.sql.entity.model.Criterias;
 import persistence.sql.entity.model.DomainType;
+import persistence.sql.entity.model.Operators;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +38,10 @@ class SelectQueryBuilderTest {
         DomainType domainType = entityMappingTable.getPkDomainTypes();
         Map<DomainType, String> where = Map.of(domainType, "1");
 
+        Criteria criteria = new Criteria(domainType.getColumnName(), "1", Operators.EQUALS);
+        Criterias criterias = new Criterias(Collections.singletonList(criteria));
 
-        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, where);
+        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, criterias);
 
         assertThat(selectQueryBuilder.toSql()).isEqualTo("SELECT id,nick_name,old,email FROM Person where id='1'");
     }

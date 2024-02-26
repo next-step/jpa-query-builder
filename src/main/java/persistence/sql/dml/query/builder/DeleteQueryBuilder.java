@@ -1,10 +1,7 @@
 package persistence.sql.dml.query.builder;
 
 import persistence.sql.dml.query.clause.WhereClause;
-import persistence.sql.entity.model.DomainType;
-
-import java.util.HashMap;
-import java.util.Map;
+import persistence.sql.entity.model.Criterias;
 
 public class DeleteQueryBuilder {
 
@@ -22,14 +19,14 @@ public class DeleteQueryBuilder {
     public static DeleteQueryBuilder from(String tableName) {
         return new DeleteQueryBuilder(
                 tableName,
-                new WhereClause(new HashMap<>())
+                new WhereClause(Criterias.emptyInstance())
         );
     }
 
-    public static DeleteQueryBuilder of(String tableName, Map<DomainType, String> where) {
+    public static DeleteQueryBuilder of(String tableName, Criterias criterias) {
         return new DeleteQueryBuilder(
                 tableName,
-                new WhereClause(where)
+                new WhereClause(criterias)
         );
     }
 
@@ -39,7 +36,6 @@ public class DeleteQueryBuilder {
                 whereClause.toSql()
         );
     }
-
 
 
 }

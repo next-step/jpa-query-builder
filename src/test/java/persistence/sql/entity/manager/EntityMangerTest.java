@@ -1,5 +1,6 @@
 package persistence.sql.entity.manager;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,17 +16,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 class EntityMangerTest extends H2Database {
 
     private EntityManger<Person, Long> entityManger;
-    private Repository<Person> personRepository;
 
     private Person person;
 
     @BeforeEach
     void setUp() {
-        this.entityManger = new EntityManagerImpl<>(jdbcTemplate);
-        this.personRepository = new RepositoryImpl<>(jdbcTemplate, Person.class);
+        this.entityManger = new EntityManagerImpl<Person, Long>(jdbcTemplate);
 
         this.person = new Person(1L, "박재성", 10, "jason");
-        this.personRepository.save(person);
+
+        entityManger.remove(person);
+        entityManger.persist(person);
     }
 
     @DisplayName("디비를 조회하여, 한건의 결과를 반환한다.")
