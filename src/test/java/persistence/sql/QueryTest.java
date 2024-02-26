@@ -59,6 +59,9 @@ public class QueryTest {
 
     @AfterEach
     void setDown() {
+        String dropQuery = ddlQueryBuilder.buildDropQuery();
+        jdbcTemplate.execute(dropQuery);
+
         server.stop();
     }
 
