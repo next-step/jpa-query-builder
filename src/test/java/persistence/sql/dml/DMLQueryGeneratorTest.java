@@ -3,13 +3,12 @@ package persistence.sql.dml;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.Person;
-import persistence.sql.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static persistence.sql.dml.BooleanExpression.eq;
 
 class DMLQueryGeneratorTest {
-    DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(Person.class, new H2Dialect());
+    DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(Person.class);
 
     @Test
     @DisplayName("요구사항1: insert 쿼리 생성")

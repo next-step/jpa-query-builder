@@ -17,7 +17,7 @@ class DMLQueryGeneratorH2DbTest {
     private static JdbcTemplate jdbcTemplate;
     private static DatabaseServer server;
     private DDLQueryGenerator ddlQueryGenerator;
-    private final DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(Person.class, new H2Dialect());
+    private final DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(Person.class);
 
     @BeforeAll
     public static void tearUp() throws Exception {

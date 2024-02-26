@@ -13,7 +13,7 @@ public class DMLQueryGenerator {
     private final TableData table;
     private String columnClause;
 
-    public DMLQueryGenerator(Class<?> clazz, Dialect dialect) {
+    public DMLQueryGenerator(Class<?> clazz) {
         this.table = new TableExtractor(clazz).createTable();
     }
 
