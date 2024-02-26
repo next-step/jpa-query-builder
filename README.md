@@ -114,3 +114,9 @@ public class Person {
 - [x] Person 클래스를 바탕으로 단건 조회(findById) 기능 구현해보기
 - [x] Person 클래스를 바탕으로 delete 쿼리 만들어보기
   - @Entity, @Table, @Id, @Column, @Transient 를 고려
+
+## 4단계 - Simple Entity Object
+### 요구사항
+- [ ] EntityManager find
+- [ ] EntityManager persist (insert)
+- [ ] EntityManager remove (delete)
