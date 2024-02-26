@@ -1,5 +1,12 @@
 # jpa-query-builder
 
+## Step3
+- [ ] 요구사항 1 - insert 쿼리 구현하기
+- [ ] 요구사항 2 - findAll 기능 구현하기
+- [ ] 요구사항 3 - findById 구현하기
+- [ ] 요구사항 4 - delete 쿼리 구현하
+
+
 ## Step2
 - [x] step1 리뷰 사항 반영
 - [x] 요구사항 1 - @Column 애노테이션이 없는 Person 엔티티를 이용하여 create 쿼리 만들기
