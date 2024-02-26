@@ -4,7 +4,9 @@
 - [x] 요구사항 1 - insert 쿼리 구현하기
 - [x] 요구사항 2 - findAll 기능 구현하기
 - [x] 요구사항 3 - findById 구현하기
-- [ ] 요구사항 4 - delete 쿼리 구현하
+- [x] 요구사항 4 - delete 쿼리 구현히라
+  - [x] 4.1 deleteAll 구현하라
+  - [x] 4.2 deleteById 구현하라
 
 
 ## Step2
