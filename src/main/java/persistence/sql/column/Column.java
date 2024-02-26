@@ -4,8 +4,7 @@ public interface Column {
 
     String getDefinition();
 
-    boolean isPk();
+    String getName();
 
-    String getColumnName();
-
+    String getFieldName();
 }

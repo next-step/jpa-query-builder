@@ -1,15 +1,14 @@
 package persistence.sql.dml;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Transient;
-import persistence.sql.column.*;
-import persistence.sql.dialect.Database;
-import persistence.sql.dialect.Dialect;
-
-import javax.xml.crypto.Data;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
+import jakarta.persistence.Transient;
+import persistence.sql.column.Columns;
+import persistence.sql.column.IdColumn;
+import persistence.sql.column.TableColumn;
+import persistence.sql.dialect.Dialect;
 
 public class InsertQueryBuilder {
 
@@ -17,21 +16,20 @@ public class InsertQueryBuilder {
     private static final String COMMA = ", ";
     private static final String QUOTES = "'";
 
-    private final TableColumn tableColumn;
+    private final Dialect dialect;
 
-    public InsertQueryBuilder(TableColumn tableColumn) {
-        this.tableColumn = tableColumn;
+    public InsertQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     public String build(Object entity) {
         Class<?> clazz = entity.getClass();
-        Database database = this.tableColumn.getDatabase();
-        TableColumn tableColumn = TableColumn.from(clazz, database);
-
+        TableColumn tableColumn = new TableColumn(clazz);
+        Columns columns = new Columns(entity.getClass().getDeclaredFields(), dialect);
         return String.format(INSERT_QUERY_FORMAT,
                 tableColumn.getName(),
-                tableColumn.getColumns().insertColumnsClause(),
-                valueClause(clazz.getDeclaredFields(), entity, database.createDialect())
+                columns.getColumnNames(),
+                valueClause(clazz.getDeclaredFields(), entity, dialect)
         );
     }
 

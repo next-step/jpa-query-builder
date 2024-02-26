@@ -23,6 +23,11 @@ public enum MysqlIdGeneratedStrategy implements IdGeneratedStrategy {
     }
 
     @Override
+    public GenerationType getGenerationType() {
+        return generationType;
+    }
+
+    @Override
     public String getValue() {
         return value;
     }

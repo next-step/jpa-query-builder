@@ -14,7 +14,7 @@ class DropQueryBuilderTest {
     @Test
     void dropDdl() {
         //given
-        TableColumn tableColumn = TableColumn.from(Person.class, Database.MYSQL);
+        TableColumn tableColumn = new TableColumn(Person.class);
 
         //when
         String ddl = new DropQueryBuilder(tableColumn).build();

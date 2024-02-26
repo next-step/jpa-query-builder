@@ -1,43 +1,42 @@
 package persistence.sql.dml;
 
-import persistence.sql.column.Column;
 import persistence.sql.column.Columns;
+import persistence.sql.column.IdColumn;
 import persistence.sql.column.TableColumn;
+import persistence.sql.dialect.Dialect;
 
 public class SelectQueryBuilder {
-    private static final String SELECT_QUERY_FORMAT = "select %s from %s";
+    private static final String SELECT_QUERY_FORMAT = "select %s, %s from %s";
     private static final String WHERE_CLAUSE_FORMAT = " where %s = %d";
 
-    private final TableColumn tableColumn;
+    private TableColumn tableColumn;
     private Columns columns;
-    private String query;
+    private IdColumn idColumn;
+    private final Dialect dialect;
 
-    public SelectQueryBuilder(TableColumn tableColumn) {
-        this(tableColumn, null);
+    public SelectQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
-    private SelectQueryBuilder(TableColumn tableColumn, String query) {
-        this.tableColumn = tableColumn;
-        this.query = query;
-    }
-
-    public SelectQueryBuilder build(Object entity) {
-        this.columns = Columns.of(entity.getClass().getDeclaredFields(), tableColumn.getDatabase().createDialect());
-        this.query = String.format(SELECT_QUERY_FORMAT, columns.getColumnNames(), tableColumn.getName());
+    public SelectQueryBuilder build(Class<?> entity) {
+        this.tableColumn = new TableColumn(entity);
+        this.columns = new Columns(entity.getDeclaredFields(), dialect);
+        this.idColumn = new IdColumn(entity.getDeclaredFields(), dialect);
         return this;
     }
 
     public String findById(Long id) {
-        return this.query + whereClause(id);
+        return String.format(SELECT_QUERY_FORMAT, idColumn.getName(), columns.getColumnNames(),
+                tableColumn.getName()) + whereClause(id);
     }
 
     public String findAll() {
-        return this.query;
+        return String.format(SELECT_QUERY_FORMAT, idColumn.getName(), columns.getColumnNames(),
+                tableColumn.getName());
     }
 
     private String whereClause(Long id) {
-        Column pkColumn = columns.getPkColumn();
-        return String.format(WHERE_CLAUSE_FORMAT, pkColumn.getColumnName(), id);
+        return String.format(WHERE_CLAUSE_FORMAT, idColumn.getName(), id);
     }
 
 }

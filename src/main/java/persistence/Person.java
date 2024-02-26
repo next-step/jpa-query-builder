@@ -22,7 +22,7 @@ public class Person {
     @Transient
     private Integer index;
 
-    protected Person() {
+    public Person() {
     }
 
     public Person(String name, String email, Integer index) {
@@ -41,4 +41,21 @@ public class Person {
         this.email = email;
         this.index = index;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
 }

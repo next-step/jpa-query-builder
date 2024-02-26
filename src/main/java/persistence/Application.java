@@ -1,19 +1,24 @@
 package persistence;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import persistence.sql.column.Columns;
+import persistence.sql.column.IdColumn;
 import persistence.sql.column.TableColumn;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.dialect.Database;
+import persistence.sql.dialect.Dialect;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
-
-import java.util.List;
+import persistence.sql.mapper.GenericRowMapper;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -26,19 +31,17 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            TableColumn tableColumn = TableColumn.from(Person.class, Database.MYSQL);
+            Class<Person> personEntity = Person.class;
+            TableColumn tableColumn = new TableColumn(personEntity);
+            Dialect dialect = Database.MYSQL.createDialect();
+            Columns columns = new Columns(personEntity.getDeclaredFields(), dialect);
+            IdColumn idColumn = new IdColumn(personEntity.getDeclaredFields(), dialect);
 
-            createPersonDdl(jdbcTemplate, tableColumn);
+            createPersonDdl(jdbcTemplate, tableColumn, columns, idColumn);
             Person person1 = new Person("username", 30, "test@test.com", 1);
-            insertPerson(tableColumn, person1, jdbcTemplate);
-
-            RowMapper<Person> rowMapper = getPersonRowMapper();
-
-            selectAll(tableColumn, person1, jdbcTemplate, rowMapper);
-
-            selectOne(tableColumn, person1, jdbcTemplate, rowMapper);
-
-            deletePerson(tableColumn, person1, jdbcTemplate);
+            insertPerson(person1, jdbcTemplate, dialect);
+            selectPerson(jdbcTemplate, dialect);
+            deletePerson(person1, jdbcTemplate, dialect);
 
             server.stop();
         } catch (Exception e) {
@@ -48,46 +51,45 @@ public class Application {
         }
     }
 
-    private static void createPersonDdl(JdbcTemplate jdbcTemplate, TableColumn tableColumn) {
-        String ddl = new CreateQueryBuilder(tableColumn).build();
+    private static void createPersonDdl(JdbcTemplate jdbcTemplate, TableColumn tableColumn, Columns columns, IdColumn idColumn) {
+        String ddl = new CreateQueryBuilder(tableColumn, columns, idColumn).build();
         jdbcTemplate.execute(ddl);
     }
 
-    private static void insertPerson(TableColumn tableColumn, Person person1, JdbcTemplate jdbcTemplate) {
+    private static void insertPerson(Person person1,
+                                     JdbcTemplate jdbcTemplate, Dialect dialect) {
 
         Person person2 = new Person("username2", "email2@test.com", 12);
 
-        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(tableColumn);
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(dialect);
         jdbcTemplate.execute(insertQueryBuilder.build(person1));
         jdbcTemplate.execute(insertQueryBuilder.build(person2));
     }
 
-    private static RowMapper<Person> getPersonRowMapper() {
-        return resultSet -> {
-            Long id = resultSet.getLong("id");
-            String name = resultSet.getString("nick_name");
-            Integer age = resultSet.getInt("old");
-            String email = resultSet.getString("email");
-            return new Person(id, name, age, email, null);
-        };
+    private static void selectPerson(JdbcTemplate jdbcTemplate, Dialect dialect) {
+        GenericRowMapper<Person> rowMapper = new GenericRowMapper<>(Person.class, dialect);
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(dialect);
+        selectAllPerson(jdbcTemplate, rowMapper, queryBuilder);
+
+        selectOnePerson(jdbcTemplate, rowMapper, queryBuilder);
     }
 
-    private static void selectAll(TableColumn tableColumn, Person person, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(tableColumn);
-        String findAll = queryBuilder.build(person).findAll();
+    private static void selectAllPerson(JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper,
+                                        SelectQueryBuilder queryBuilder) {
+        String findAll = queryBuilder.build(Person.class).findAll();
         List<Person> persons = jdbcTemplate.query(findAll, rowMapper);
     }
 
-    private static void selectOne(TableColumn tableColumn, Person person, JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper) {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(tableColumn);
-
-        String selectOneQuery = queryBuilder.build(person).findById(1L);
+    private static void selectOnePerson(JdbcTemplate jdbcTemplate, RowMapper<Person> rowMapper,
+                                        SelectQueryBuilder queryBuilder) {
+        String selectOneQuery = queryBuilder.build(Person.class).findById(1L);
         jdbcTemplate.queryForObject(selectOneQuery, rowMapper);
     }
 
-    private static void deletePerson(TableColumn tableColumn, Person person, JdbcTemplate jdbcTemplate) {
+    private static void deletePerson(Person person,
+                                     JdbcTemplate jdbcTemplate, Dialect dialect) {
 
-        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(tableColumn);
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(dialect);
         String deleteQuery = deleteQueryBuilder.build(person).deleteById(1L);
         jdbcTemplate.execute(deleteQuery);
     }

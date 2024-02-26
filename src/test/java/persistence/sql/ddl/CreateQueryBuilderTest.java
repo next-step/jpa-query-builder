@@ -4,10 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.Person;
 import persistence.sql.column.Columns;
+import persistence.sql.column.IdColumn;
 import persistence.sql.column.TableColumn;
 import persistence.sql.dialect.Database;
-
-import java.lang.reflect.Field;
+import persistence.sql.dialect.Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,8 +17,12 @@ class CreateQueryBuilderTest {
     @Test
     void createDdl() {
         //given
-        TableColumn table = TableColumn.from(Person.class, Database.MYSQL);
-        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(table);
+        Class<Person> personEntity = Person.class;
+        TableColumn table = new TableColumn(personEntity);
+        Dialect dialect = Database.MYSQL.createDialect();
+        Columns columns = new Columns(personEntity.getDeclaredFields(), dialect);
+        IdColumn idColumn = new IdColumn(personEntity.getDeclaredFields(), dialect);
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(table, columns, idColumn);
 
         //when
         String ddl = createQueryBuilder.build();
