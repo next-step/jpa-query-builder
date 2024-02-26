@@ -20,20 +20,19 @@ public class InsertQueryBuilder {
 
     public String build() {
         String tableName = table.getName();
-        PKColumn pkColumn = table.getPKColumn();
-        List<Column> columns = table.getColumns();
-
-        String columnsClause = buildColumnsClause(pkColumn, columns);
-        String valueClause = valueClause(columns);
+        String columnsClause = buildColumnsClause();
+        String valueClause = buildValueClause();
         return String.format(INSERT_QUERY_FORMAT, tableName, columnsClause, valueClause);
     }
 
-    private String buildColumnsClause(PKColumn pkColumn, List<Column> columns) {
+    private String buildColumnsClause() {
         StringBuilder columnsClauseBuilder = new StringBuilder();
 
+        PKColumn pkColumn = table.getPKColumn();
         String pkColumnName = pkColumn.getName();
         columnsClauseBuilder.append(pkColumnName);
 
+        List<Column> columns = table.getColumns();
         columns.forEach(column -> {
             String name = column.getName();
             columnsClauseBuilder.append(',')
@@ -43,11 +42,12 @@ public class InsertQueryBuilder {
         return columnsClauseBuilder.toString();
     }
 
-    private String valueClause(List<Column> columns) {
+    private String buildValueClause() {
         StringBuilder valueClauseBuilder = new StringBuilder();
 
         valueClauseBuilder.append("null");
 
+        List<Column> columns = table.getColumns();
         columns.forEach(column -> {
             Object value = column.getValue(instance);
             valueClauseBuilder

@@ -20,12 +20,12 @@ public class Column {
 
     public Column(Field field) {
         this.field = field;
-        this.name = getName(field);
-        this.type = getType(field);
-        this.constraints = getConstraints(field);
+        this.name = buildName();
+        this.type = buildType();
+        this.constraints = buildConstraints();
     }
 
-    private String getName(Field field) {
+    private String buildName() {
         jakarta.persistence.Column column = field.getDeclaredAnnotation(jakarta.persistence.Column.class);
 
         if (column != null && hasName(column)) {
@@ -41,13 +41,12 @@ public class Column {
         return !name.isEmpty();
     }
 
-    private SqlType getType(Field field) {
+    private SqlType buildType() {
         Class<?> type = field.getType();
         return SqlType.of(type);
     }
 
-    private List<SqlConstraint> getConstraints(Field field) {
-
+    private List<SqlConstraint> buildConstraints() {
         List<SqlConstraint> constraints = new ArrayList<>();
 
         jakarta.persistence.Column column = field.getDeclaredAnnotation(jakarta.persistence.Column.class);
