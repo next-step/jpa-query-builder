@@ -1,10 +1,7 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.column.Column;
-import persistence.sql.validator.EntityValidator;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
+import jakarta.persistence.Entity;
+import persistence.sql.exception.InvalidEntityException;
 
 import static persistence.sql.common.SqlConstant.*;
 
@@ -12,7 +9,9 @@ public class QueryBuilder {
     private final Table table;
 
     public QueryBuilder(Class<?> entity) {
-        EntityValidator.validate(entity);
+        if (!entity.isAnnotationPresent(Entity.class)) {
+            throw new InvalidEntityException();
+        }
         this.table = new Table(entity);
     }
 
