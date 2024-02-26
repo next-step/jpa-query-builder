@@ -6,7 +6,9 @@ import persistence.sql.ddl.domain.Columns;
 import persistence.sql.ddl.domain.Table;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CreateQueryBuilder implements QueryBuilder {
 
@@ -16,9 +18,15 @@ public class CreateQueryBuilder implements QueryBuilder {
     private final Table table;
 
     public CreateQueryBuilder(Class<?> clazz) {
-        this.columns = new Columns(Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> new Column(field, TYPE_MAPPER, CONSTRAINT_MAPPER)).collect(Collectors.toList()));
+        this.columns = new Columns(createColumns(clazz));
         this.table = new Table(clazz);
+    }
+
+    private List<Column> createColumns(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(this::isNotTransientAnnotationPresent)
+                .map(Column::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -26,7 +34,22 @@ public class CreateQueryBuilder implements QueryBuilder {
         return String.format(
                 CREATE_TABLE_QUERY,
                 table.getName(),
-                columns.getDDLColumns());
+                generateColumns()
+        );
+    }
+
+    private String generateColumns() {
+        return columns.getColumns().stream()
+                .map(this::generateColumn)
+                .collect(Collectors.joining(COMMA));
+    }
+
+    private String generateColumn(Column column) {
+        return Stream.of(column.getName(),
+                        column.getType(),
+                        column.getConstraintString())
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(SPACE));
     }
 
 }

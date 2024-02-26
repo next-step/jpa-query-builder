@@ -19,28 +19,49 @@ public class WhereQueryBuilder implements QueryBuilder {
     private final Values values;
 
     public WhereQueryBuilder(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, List<String> whereOperators) {
-        this.values = new Values(
-                IntStream.range(0, whereColumns.size())
-                        .mapToObj(index -> {
-                            try {
-                                Field field = clazz.getDeclaredField(whereColumns.get(index));
-                                return new Value(new Column(field, TYPE_MAPPER, CONSTRAINT_MAPPER),
-                                        field.getType(), whereValues.get(index));
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .collect(Collectors.toList())
-        );
+        validate(whereColumns, whereValues);
+
+        this.values = new Values(createValues(clazz, whereColumns, whereValues));
+    }
+
+    private void validate(List<String> whereColumns, List<Object> whereValues) {
+        if (whereColumns.size() != whereValues.size()) {
+            throw new IllegalArgumentException("The number of columns and values corresponding to the condition statement do not match.");
+        }
+    }
+
+    private List<Value> createValues(Class<?> clazz, List<String> whereColumns, List<Object> whereValues) {
+        return IntStream.range(0, whereColumns.size())
+                .mapToObj(index -> createValue(clazz, whereColumns, whereValues, index))
+                .collect(Collectors.toList());
+    }
+
+    private Value createValue(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, int index) {
+        try {
+            return getValue(clazz, whereColumns.get(index), whereValues.get(index));
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Value getValue(Class<?> clazz, String column, Object value) throws NoSuchFieldException {
+        Field field = clazz.getDeclaredField(column);
+        return new Value(new Column(field), field.getType(), value);
     }
 
     @Override
     public String build() {
-        String whereValues = values.getWhereValues();
-        if (whereValues.isEmpty()) {
+        String whereClause = generateWhereClause();
+        if (whereClause.isEmpty()) {
             return EMPTY_STRING;
         }
-        return String.format(WHERE_CLAUSE, whereValues);
+        return String.format(WHERE_CLAUSE, whereClause);
+    }
+
+    private String generateWhereClause() {
+        return values.getValues().stream()
+                .map(x -> x.getColumn().getName() + " = " + x.getValue())
+                .collect(Collectors.joining(" AND "));
     }
 
 }

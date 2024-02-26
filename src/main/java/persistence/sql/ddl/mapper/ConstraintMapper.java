@@ -1,10 +1,8 @@
 package persistence.sql.ddl.mapper;
 
-import persistence.sql.ddl.domain.Constraints;
-
-import java.lang.reflect.Field;
+import persistence.sql.ddl.domain.Constraint;
 
 public interface ConstraintMapper {
-    Constraints getConstraints(Field type);
+    String getConstraintString(Constraint constraint);
 
 }

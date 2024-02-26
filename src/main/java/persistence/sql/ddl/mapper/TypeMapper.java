@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 
 public interface TypeMapper {
 
-    String EMPTY_STRING = "";
-
-    String getType(Field field);
+    String getTypeString(Field field);
 
 }

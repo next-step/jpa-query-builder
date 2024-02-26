@@ -1,11 +1,20 @@
 package persistence.sql.ddl.domain;
 
+import jakarta.persistence.Entity;
+
 public class Table {
 
     private final String name;
 
     public Table(Class<?> clazz) {
+        validate(clazz);
         this.name = generateTableName(clazz);
+    }
+
+    private void validate(Class<?> clazz) {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("Does not have an @Entity annotation.");
+        }
     }
 
     private String generateTableName(Class<?> clazz) {

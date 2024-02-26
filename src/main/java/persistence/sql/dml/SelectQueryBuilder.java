@@ -18,16 +18,19 @@ public class SelectQueryBuilder implements QueryBuilder {
     private final WhereQueryBuilder whereQueryBuilder;
 
     public SelectQueryBuilder(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, List<String> whereOperators) {
-        if (whereColumns.size() != whereValues.size()) {
-            throw new IllegalArgumentException("The number of columns and values corresponding to the condition statement do not match.");
-        }
-
         this.table = new Table(clazz);
-        this.columns = new Columns(Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> new Column(field, TYPE_MAPPER, CONSTRAINT_MAPPER)).collect(Collectors.toList()));
+        this.columns = new Columns(createColumns(clazz));
         this.whereQueryBuilder = new WhereQueryBuilder(clazz, whereColumns, whereValues, whereOperators);
     }
 
+    private List<Column> createColumns(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(this::isNotTransientAnnotationPresent)
+                .map(Column::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public String build() {
         return String.format(
                 SELECT_QUERY,

@@ -6,8 +6,10 @@ import java.lang.reflect.Field;
 
 public class H2TypeMapper implements TypeMapper {
 
+    private static final String EMPTY_STRING = "";
+
     @Override
-    public String getType(Field field) {
+    public String getTypeString(Field field) {
         return String.join(EMPTY_STRING,
                 H2DataType.of(field.getType()).name(),
                 getTypeLength(field)
