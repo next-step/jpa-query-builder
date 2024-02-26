@@ -21,7 +21,7 @@ public class InsertQueryBuilder {
     public String build() {
         String tableName = table.getName();
         String columnsClause = buildColumnsClause();
-        String valueClause = buildValueClause();
+        String valueClause = buildColumnsValueClause();
         return String.format(INSERT_QUERY_FORMAT, tableName, columnsClause, valueClause);
     }
 
@@ -42,7 +42,7 @@ public class InsertQueryBuilder {
         return columnsClauseBuilder.toString();
     }
 
-    private String buildValueClause() {
+    private String buildColumnsValueClause() {
         StringBuilder valueClauseBuilder = new StringBuilder();
 
         valueClauseBuilder.append("null");
@@ -50,11 +50,26 @@ public class InsertQueryBuilder {
         List<Column> columns = table.getColumns();
         columns.forEach(column -> {
             Object value = column.getValue(instance);
+            String columnValueClause = buildColumnValueClause(value);
             valueClauseBuilder
                     .append(',')
-                    .append(value);
+                    .append(columnValueClause);
         });
 
+        return valueClauseBuilder.toString();
+    }
+
+    private String buildColumnValueClause(Object value) {
+        StringBuilder valueClauseBuilder = new StringBuilder();
+
+        if (value instanceof String) {
+            return valueClauseBuilder.append('\'')
+                    .append(value)
+                    .append('\'')
+                    .toString();
+        }
+
+        valueClauseBuilder.append(value);
         return valueClauseBuilder.toString();
     }
 }

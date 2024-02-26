@@ -5,15 +5,18 @@ import persistence.sql.model.Table;
 public class DMLQueryBuilder {
 
     private final Table table;
-    private final Object entity;
 
-    public DMLQueryBuilder(Table table, Object entity) {
+    public DMLQueryBuilder(Table table) {
         this.table = table;
-        this.entity = entity;
     }
 
-    public String buildInsertQuery() {
+    public String buildInsertQuery(Object entity) {
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(table, entity);
         return insertQueryBuilder.build();
+    }
+
+    public String buildFindAllQuery() {
+        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(table);
+        return findAllQueryBuilder.build();
     }
 }
