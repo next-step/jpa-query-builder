@@ -2,7 +2,7 @@ package persistence.sql.dml.builder;
 
 import jakarta.persistence.Transient;
 import jdbc.RowMapper;
-import persistence.sql.dml.clause.DMLMeta;
+import persistence.sql.dml.clause.Select;
 import persistence.sql.meta.column.ColumnName;
 
 import java.lang.reflect.Field;
@@ -21,7 +21,7 @@ public class SelectQueryBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append(generateFindAllQuery(clazz));
         sb.append(" where ");
-        sb.append(new DMLMeta(clazz).getPKName());
+        sb.append(new Select(clazz).getPKName());
         sb.append(" = ");
         sb.append(id.toString());
         RowMapper<?> rowMapper = generateRowMapper(clazz);
@@ -29,10 +29,10 @@ public class SelectQueryBuilder {
     }
 
     private String generateFindAllQuery(Class<?> clazz) {
-        DMLMeta table = new DMLMeta(clazz);
+        Select select = new Select(clazz);
         return String.format("select %s from %s",
-                table.getColumns(),
-                table.getTableName()
+                select.getColumns(),
+                select.getTableName()
         );
     }
 

@@ -1,6 +1,6 @@
 package persistence.sql.ddl.builder;
 
-import persistence.sql.ddl.clause.DDLMeta;
+import persistence.sql.ddl.clause.Create;
 import persistence.sql.ddl.dialect.Dialect;
 
 public class CreateQueryBuilder implements QueryBuilder {
@@ -12,12 +12,12 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     @Override
     public String generateSQL(final Class<?> clazz) {
-        DDLMeta ddlMeta = new DDLMeta(clazz, dialect);
+        Create create = new Create(clazz, dialect);
         StringBuilder sb = new StringBuilder();
         sb.append("create table ");
-        sb.append(ddlMeta.getTableName());
+        sb.append(create.getTableName());
         sb.append("\n(\n");
-        sb.append(ddlMeta.getColumns());
+        sb.append(create.getColumns());
         sb.append("\n);\n");
         return sb.toString();
     }

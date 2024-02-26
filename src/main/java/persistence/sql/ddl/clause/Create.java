@@ -11,13 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DDLMeta {
+public class Create {
     private final TableName tableName;
     private final PKField pkField;
     private final List<ColumnClause> columns;
     private final Dialect dialect;
 
-    public DDLMeta(Class<?> clazz, Dialect dialect) {
+    public Create(Class<?> clazz, Dialect dialect) {
         this.tableName = new TableName(clazz);
         this.pkField = new PKField(clazz);
         this.columns = Arrays.stream(clazz.getDeclaredFields())
