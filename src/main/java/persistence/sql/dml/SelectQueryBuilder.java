@@ -20,14 +20,12 @@ public class SelectQueryBuilder {
     public static final String SELECT_ALL_QUERY = "SELECT * FROM %s";
     public static final String SELECT_BY_ID_QUERY = "SELECT * FROM %s where %s = %d";
     private final Table table; // TODO: (질문) table을 다 가지고 있는게 나을까? 아니면 필요한 정보만?
-    private final Class<?> clazz;
 
     public SelectQueryBuilder(Class<?> entity) {
         if (!entity.isAnnotationPresent(Entity.class)) {
             throw new InvalidEntityException();
         }
         this.table = new Table(entity);
-        this.clazz = entity.getClass();
     }
 
     public String getFindAllQuery() {
