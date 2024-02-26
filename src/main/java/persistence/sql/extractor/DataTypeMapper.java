@@ -10,10 +10,10 @@ public class DataTypeMapper {
     );
 
     public DataType map(Class<?> type) {
-        try {
-            return mappingTable.get(type);
-        } catch (NullPointerException e) {
+        DataType dataType = mappingTable.get(type);
+        if(dataType == null) {
             throw new IllegalArgumentException("지원하지 않는 타입입니다.");
         }
+        return mappingTable.get(type);
     }
 }
