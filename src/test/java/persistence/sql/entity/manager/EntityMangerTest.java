@@ -27,12 +27,22 @@ class EntityMangerTest extends H2Database {
         this.personRepository.save(person);
     }
 
-    @DisplayName("EntityManger으로 디비 조회시 결과를 반환한다.")
+    @DisplayName("디비를 조회하여, 한건의 결과를 반환한다.")
     @Test
     void findTest() {
         Person actual = entityManger.find(Person.class, 1L);
 
         assertThat(person).isEqualTo(actual);
+    }
+
+    @DisplayName("디비에 데이터가 저장이된다.")
+    @Test
+    void insertTest() {
+        Person newPerson = new Person(2L, "이동규", 11, "cu");
+        entityManger.persist(newPerson);
+
+        Person findPerson = entityManger.find(Person.class, 2L);
+        assertThat(findPerson).isEqualTo(newPerson);
     }
 
 }
