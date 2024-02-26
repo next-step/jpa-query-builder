@@ -23,4 +23,12 @@ public class Columns {
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.joining(COMMA));
     }
+
+    public Column getPrimaryKey() {
+        return columns.stream()
+                .filter(Column::isPrimaryKey)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Primary key not found."));
+    }
+
 }

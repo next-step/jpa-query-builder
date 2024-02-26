@@ -19,6 +19,11 @@ public class Value {
         }
     }
 
+    public Value(Column column, String value) {
+        this.column = column;
+        this.value = value;
+    }
+
     public Value(Column column, Class<?> valueType, Object value) {
         this.column = column;
         this.value = convertValue(valueType, String.valueOf(value));

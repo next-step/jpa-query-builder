@@ -1,0 +1,30 @@
+package persistence.entity;
+
+import jdbc.GenericRowMapper;
+import jdbc.JdbcTemplate;
+import persistence.sql.dml.SelectQueryBuilder;
+
+public class EntityManagerImpl implements EntityManager {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public EntityManagerImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public <T> T find(Class<T> clazz, Long Id) {
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(clazz, Id);
+        return jdbcTemplate.queryForObject(selectQueryBuilder.build(), resultSet -> new GenericRowMapper<T>(clazz).mapRow(resultSet));
+    }
+
+    @Override
+    public Object persist(Object entity) {
+        return null;
+    }
+
+    @Override
+    public void remove(Object entity) {
+
+    }
+}

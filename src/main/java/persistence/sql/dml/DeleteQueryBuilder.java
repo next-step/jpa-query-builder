@@ -13,9 +13,9 @@ public class DeleteQueryBuilder implements QueryBuilder {
 
     private final WhereQueryBuilder whereQueryBuilder;
 
-    public DeleteQueryBuilder(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, List<String> whereOperators) {
+    public DeleteQueryBuilder(Class<?> clazz, List<String> whereColumns, List<Object> whereValues) {
         this.table = new Table(clazz);
-        this.whereQueryBuilder = new WhereQueryBuilder(clazz, whereColumns, whereValues, whereOperators);
+        this.whereQueryBuilder = new WhereQueryBuilder(clazz, whereColumns, whereValues);
     }
 
     @Override

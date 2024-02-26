@@ -117,6 +117,6 @@ public class Person {
 
 ## 4단계 - Simple Entity Object
 ### 요구사항
-- [ ] EntityManager find
+- [x] EntityManager find
 - [ ] EntityManager persist (insert)
 - [ ] EntityManager remove (delete)

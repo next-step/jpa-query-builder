@@ -18,10 +18,13 @@ public class WhereQueryBuilder implements QueryBuilder {
 
     private final Values values;
 
-    public WhereQueryBuilder(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, List<String> whereOperators) {
+    public WhereQueryBuilder(Class<?> clazz, List<String> whereColumns, List<Object> whereValues) {
         validate(whereColumns, whereValues);
-
         this.values = new Values(createValues(clazz, whereColumns, whereValues));
+    }
+
+    public WhereQueryBuilder(Value value) {
+        this.values = new Values(List.of(value));
     }
 
     private void validate(List<String> whereColumns, List<Object> whereValues) {

@@ -17,7 +17,7 @@ class SelectQueryBuilderTest {
     void DMLSelectTest() {
         // given
         String expectedQuery = "SELECT ID, NICK_NAME, OLD, EMAIL FROM USERS;";
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, new ArrayList<>(), new ArrayList<>());
         // when
         String actualQuery = selectQueryBuilder.build();
 
@@ -30,7 +30,7 @@ class SelectQueryBuilderTest {
     void DMLSelect2Test() {
         // given
         String expectedQuery = "SELECT ID, NICK_NAME, OLD, EMAIL FROM USERS WHERE ID = 1;";
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, List.of("id"), List.of(1L), new ArrayList<>());
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, 1L);
 
         // when
         String actualQuery = selectQueryBuilder.build();
@@ -44,7 +44,7 @@ class SelectQueryBuilderTest {
     void DMLSelect3Test() {
         // given
         String expectedQuery = "SELECT ID, NICK_NAME, OLD, EMAIL FROM USERS WHERE NICK_NAME = 'jamie' AND OLD = 34;";
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, List.of("name", "age"), List.of("jamie", 34), new ArrayList<>());
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class, List.of("name", "age"), List.of("jamie", 34));
 
         // when
         String actualQuery = selectQueryBuilder.build();
@@ -60,7 +60,7 @@ class SelectQueryBuilderTest {
         String message = "The number of columns and values corresponding to the condition statement do not match.";
 
         // when & then
-        assertThatThrownBy(() -> new SelectQueryBuilder(Person.class, List.of("name", "age"), List.of("jamie"), new ArrayList<>()))
+        assertThatThrownBy(() -> new SelectQueryBuilder(Person.class, List.of("name", "age"), List.of("jamie")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(message);
     }

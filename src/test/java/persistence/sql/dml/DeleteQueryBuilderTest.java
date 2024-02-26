@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.dml.entity.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +17,7 @@ class DeleteQueryBuilderTest {
         String expectedQuery = "DELETE FROM USERS WHERE ID = 1;";
 
         // when
-        String actualQuery = new DeleteQueryBuilder(Person.class, List.of("id"), List.of(1L), new ArrayList<>()).build();
+        String actualQuery = new DeleteQueryBuilder(Person.class, List.of("id"), List.of(1L)).build();
 
         // then
         assertThat(actualQuery).isEqualTo(expectedQuery);
