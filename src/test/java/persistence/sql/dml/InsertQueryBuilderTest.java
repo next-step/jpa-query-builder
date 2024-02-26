@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import persistence.entity.notcolumn.Person;
 import persistence.sql.dml.InsertQueryBuilder;
 
+import static persistence.sql.dml.TestFixture.person_철수;
+
 class InsertQueryBuilderTest {
     @Test
     @DisplayName("[요구사항 1] insert 쿼리를 구현하라")
@@ -13,8 +15,7 @@ class InsertQueryBuilderTest {
         //given
         String expectedQuery = "INSERT INTO users (id,nick_name,old,email) VALUES (김철수,21,chulsoo.kim@gmail.com)";
         // when
-        String actualQuery = new InsertQueryBuilder(Person.class)
-                .getInsertQuery(new Person("김철수", 21, "chulsoo.kim@gmail.com", 11));
+        String actualQuery = new InsertQueryBuilder(Person.class).getInsertQuery(person_철수);
 
         // then
         Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);

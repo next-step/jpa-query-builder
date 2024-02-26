@@ -2,7 +2,6 @@ package persistence.sql.ddl;
 
 
 import jakarta.persistence.Id;
-import persistence.sql.ddl.column.Column;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -53,11 +52,19 @@ public class Table {
         return entity.getAnnotation(jakarta.persistence.Table.class).name();
     }
 
-    public String getIdQuery() {
+    public String getIdCreateQuery() {
         return id.getQuery();
+    }
+
+    public String getIdName() {
+        return id.getName();
     }
 
     public List<String> getColumnQueries() {
         return columns.getQueries();
+    }
+
+    public List<String> columnNames() {
+        return columns.getNames();
     }
 }

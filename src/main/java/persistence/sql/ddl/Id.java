@@ -39,13 +39,13 @@ public class Id {
         if (!field.isAnnotationPresent(jakarta.persistence.Id.class)) {
             throw new NotIdException();
         }
-        this.name = getName(field);
+        this.name = field.getName();
         this.dataType = field.getType().getSimpleName();
         this.generationType = getType(field);
     }
 
-    private String getName(Field field) {
-        return field.getName();
+    public String getName() {
+        return this.name;
     }
 
     private static GenerationType getType(Field field) {

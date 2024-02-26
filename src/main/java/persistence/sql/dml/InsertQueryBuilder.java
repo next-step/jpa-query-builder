@@ -32,7 +32,7 @@ public class InsertQueryBuilder {
         List<Field> fields = Arrays.stream(value.getClass().getDeclaredFields()).toList();
 
         return String.format(INSERT_QUERY_START, table.getName()) +
-                String.join(COMMA, new Columns(fields).getNames()) +
+                String.join(COMMA, table.columnNames()) +
                 CLOSING_PARENTHESIS +
                 VALUES +
                 String.join(COMMA, new Values(fields, value).getQueries()) +

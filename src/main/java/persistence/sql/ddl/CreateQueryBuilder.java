@@ -25,7 +25,7 @@ public class CreateQueryBuilder {
     }
 
     private String getIdQuery() {
-        return table.getIdQuery() + COMMA;
+        return table.getIdCreateQuery() + COMMA;
     }
 
     private String getColumnQuery() {
