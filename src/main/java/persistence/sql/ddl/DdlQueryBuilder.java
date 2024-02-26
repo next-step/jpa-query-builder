@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
+import domain.step2.dialect.Dialect;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -11,22 +11,22 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static domain.Constraints.NOT_NULL;
-import static domain.Constraints.PRIMARY_KEY;
+import static domain.step2.Constraints.NOT_NULL;
+import static domain.step2.Constraints.PRIMARY_KEY;
 
-public class QueryBuilder {
+public class DdlQueryBuilder {
 
     private final Dialect dialect;
 
     private static final String CREATE_TABLE_QUERY = "CREATE TABLE %s ( %s );";
-    private static final String DROP_TABLE_QUERY = "DROP TABLE %s;";
+    private static final String DROP_TABLE_QUERY = "DROP TABLE %s IF EXISTS;";
     private static final String COMMA = ", ";
 
-    public QueryBuilder(Dialect dialect) {
+    public DdlQueryBuilder(Dialect dialect) {
         this.dialect = dialect;
     }
 
-    public String createDdl(Class<?> clazz) {
+    public String createTable(Class<?> clazz) {
         checkEntityClass(clazz);
 
         StringBuilder sb = new StringBuilder();

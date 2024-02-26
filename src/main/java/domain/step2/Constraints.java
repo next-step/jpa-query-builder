@@ -1,4 +1,4 @@
-package domain;
+package domain.step2;
 
 public enum Constraints {
 

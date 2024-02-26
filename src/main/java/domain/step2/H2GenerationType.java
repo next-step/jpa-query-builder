@@ -1,4 +1,4 @@
-package domain;
+package domain.step2;
 
 import jakarta.persistence.GenerationType;
 

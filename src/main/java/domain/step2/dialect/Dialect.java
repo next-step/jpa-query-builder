@@ -1,4 +1,4 @@
-package persistence.sql.dialect;
+package domain.step2.dialect;
 
 import java.lang.reflect.Field;
 
