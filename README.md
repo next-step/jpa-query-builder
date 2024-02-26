@@ -119,4 +119,4 @@ public class Person {
 ### 요구사항
 - [x] EntityManager find
 - [x] EntityManager persist (insert)
-- [ ] EntityManager remove (delete)
+- [x] EntityManager remove (delete)

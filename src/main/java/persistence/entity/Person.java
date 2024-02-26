@@ -31,6 +31,13 @@ public class Person {
         this.email = email;
     }
 
+    public Person(Long id, String name, Integer age, String email) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "Person{" +

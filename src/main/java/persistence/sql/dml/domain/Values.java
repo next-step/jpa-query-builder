@@ -14,4 +14,11 @@ public class Values {
         return values;
     }
 
+    public Value getPrimaryKeyValue() {
+        return values.stream()
+                .filter(value -> value.getColumn().isPrimaryKey())
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Primary key not found."));
+    }
+
 }
