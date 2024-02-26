@@ -12,12 +12,13 @@ import java.util.stream.Collectors;
 public class DDLQueryGenerator {
     private final Dialect dialect;
     private final TableData tableData;
-    private final List<ColumnData> columns;
+    private final Columns columns;
+
 
     public DDLQueryGenerator(Dialect dialect, Class<?> clazz) {
         this.dialect = dialect;
         this.tableData = new TableExtractor(clazz).createTable();
-        this.columns = new ColumnExtractor(clazz).createColumns();
+        this.columns = Columns.createColumns(clazz);
     }
 
     public String generateDropTableQuery() {
@@ -33,26 +34,33 @@ public class DDLQueryGenerator {
     }
 
     private String getColumnClause() {
-        return columns
-                .stream()
-                .map(this::getColumnString)
-                .collect(Collectors.joining(", "));
+        ArrayList<String> columnStrings = new ArrayList<>();
+        for(ColumnData columnData : columns) {
+            columnStrings.add(getColumnString(columnData));
+        }
+        return String.join(", ", columnStrings);
     }
 
     private String getColumnString(ColumnData columnData) {
-        String result = String.format("%s %s", columnData.getName(), dialect.mapDataType(columnData.getType()));
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(columnData.getName());
+        stringBuilder.append(" ");
+        stringBuilder.append(dialect.mapDataType(columnData.getType()));
+
         if(columnData.isNotNullable()) {
-            result += " NOT NULL";
+            stringBuilder.append(" NOT NULL");
         }
         if (columnData.hasGenerationType()) {
-            result += String.format(" %s", dialect.mapGenerationType(columnData.getGenerationType()));
+            stringBuilder.append(" ");
+            stringBuilder.append(dialect.mapGenerationType(columnData.getGenerationType()));
         }
-        return result;
+
+        return stringBuilder.toString();
     }
 
     private String getKeyClause() {
-        return columns.stream()
-                .filter(ColumnData::hasKeyType)
+        return columns.getKeyColumns().stream()
                 .map(this::getKeyString)
                 .collect(Collectors.joining(" ,"));
     }

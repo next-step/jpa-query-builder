@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 
 public class DMLQueryGenerator {
     private final TableData table;
-    private String columnClause;
+    private final DataTypeMapper dataTypeMapper = new DataTypeMapper();
 
     public DMLQueryGenerator(Class<?> clazz) {
         this.table = new TableExtractor(clazz).createTable();
     }
 
     public String generateInsertQuery(Object entity) {
-        List<ColumnData> columns = new ColumnExtractor(entity.getClass()).createColumnsWithValue(entity);
+        Columns columns = Columns.createColumnsWithValue(entity.getClass(), entity);
 
         return String.format(
                 "insert into %s (%s) values (%s)",
@@ -71,7 +71,7 @@ public class DMLQueryGenerator {
             stringBuilder.append(" ");
             stringBuilder.append(expression.getOperator().getSymbol());
             stringBuilder.append(" ");
-            stringBuilder.append(valueToString(expression.getValue()));
+            stringBuilder.append(getValueString(expression.getValue()));
         }
 
         return stringBuilder.toString();
@@ -81,27 +81,18 @@ public class DMLQueryGenerator {
         return "*";
     }
 
-    private String columnClause(List<ColumnData> columns) {
-        if (columnClause != null) {
-            return columnClause;
-        }
-        columnClause = columns.stream()
-                // TODO: AUTO_INCREMENT 아닐때 대응하기
-                .filter(column -> !column.isPrimaryKey())
-                .map(ColumnData::getName)
-                .collect(Collectors.joining(", "));
-
-        return columnClause;
+    private String columnClause(Columns columns) {
+        return String.join(", ", columns.getNames());
     }
 
-    private String valueClause(List<ColumnData> columns) {
-        return columns.stream()
-                .filter(column -> !column.isPrimaryKey())
-                .map(column -> valueToString(column.getValue()))
+    private String valueClause(Columns columns) {
+        return columns.getValues()
+                .stream()
+                .map(this::getValueString)
                 .collect(Collectors.joining(", "));
     }
 
-    private String valueToString(Object value) {
+    public String getValueString(Object value) {
         if (value == null) {
             return "null";
         }
