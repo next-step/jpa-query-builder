@@ -13,4 +13,12 @@ public class Person1 {
 
     private Integer age;
 
+    protected Person1() {
+
+    }
+
+    public Person1(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
 }

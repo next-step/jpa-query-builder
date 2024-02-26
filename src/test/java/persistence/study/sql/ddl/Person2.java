@@ -18,4 +18,13 @@ public class Person2 {
     @Column(nullable = false)
     private String email;
 
+    protected Person2() {
+
+    }
+
+    public Person2(String name, Integer age, String email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
 }
