@@ -1,7 +1,6 @@
 package persistence.sql.entity.manager;
 
 import jdbc.JdbcTemplate;
-import persistence.sql.dml.exception.NotFoundIdException;
 import persistence.sql.dml.query.builder.DeleteQueryBuilder;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
@@ -12,8 +11,8 @@ import persistence.sql.entity.model.Criterias;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.Operators;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.List;
 
 public class EntityManagerImpl<T, K> implements EntityManger<T, K> {
 
@@ -24,7 +23,16 @@ public class EntityManagerImpl<T, K> implements EntityManger<T, K> {
     }
 
     @Override
-    public T find(Class<T> clazz, K id) {
+    public List<T> findAll(final Class<T> clazz) {
+        final EntityMappingTable entityMappingTable = EntityMappingTable.from(clazz);
+        final RepositoryMapper<T> repositoryMapper = new RepositoryMapper<>(clazz);
+
+        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.from(entityMappingTable);
+        return jdbcTemplate.query(selectQueryBuilder.toSql(), repositoryMapper::mapper);
+    }
+
+    @Override
+    public T find(final Class<T> clazz, final K id) {
         final EntityMappingTable entityMappingTable = EntityMappingTable.from(clazz);
         final RepositoryMapper<T> repositoryMapper = new RepositoryMapper<>(clazz);
         final DomainType pkDomainType = entityMappingTable.getPkDomainTypes();
@@ -37,31 +45,29 @@ public class EntityManagerImpl<T, K> implements EntityManger<T, K> {
     }
 
     @Override
-    public void persist(T entity) {
+    public void persist(final T entity) {
         InsertQueryBuilder insertQueryBuilder = InsertQueryBuilder.from(entity);
         jdbcTemplate.execute(insertQueryBuilder.toSql());
     }
 
     @Override
-    public void remove(T entity) {
+    public void remove(final T entity) {
         final EntityMappingTable entityMappingTable = EntityMappingTable.from(entity.getClass());
         final DomainType pkDomainType = entityMappingTable.getPkDomainTypes();
+        final EntityManagerMapper<T> entityManagerMapper = new EntityManagerMapper<T>(entity, entity.getClass(), pkDomainType.getName());
 
-        Criteria criteria = new Criteria(pkDomainType.getColumnName(), getFieldValue(entity, entity.getClass(), pkDomainType.getName()), Operators.EQUALS);
+        Criteria criteria = new Criteria(pkDomainType.getColumnName(), entityManagerMapper.getFieldValue(), Operators.EQUALS);
         Criterias criterias = new Criterias(Collections.singletonList(criteria));
 
         DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(entityMappingTable.getTableName(), criterias);
         jdbcTemplate.execute(deleteQueryBuilder.toSql());
     }
 
-    private String getFieldValue(T entity, Class<?> clazz, String name) {
-        try {
-            Field field = clazz.getDeclaredField(name);
-            field.setAccessible(true);
-            return field.get(entity).toString();
-        } catch (Exception e) {
-            throw new NotFoundIdException();
-        }
-    }
+    @Override
+    public void removeAll(final Class<T> clazz) {
+        final EntityMappingTable entityMappingTable = EntityMappingTable.from(clazz);
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.from(entityMappingTable.getTableName());
 
+        jdbcTemplate.execute(deleteQueryBuilder.toSql());
+    }
 }
