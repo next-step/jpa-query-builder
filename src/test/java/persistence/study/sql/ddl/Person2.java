@@ -23,6 +23,11 @@ public class Person2 {
     }
 
     public Person2(String name, Integer age, String email) {
+        this(null, name, age, email);
+    }
+
+    public Person2(Long id, String name, Integer age, String email) {
+        this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
