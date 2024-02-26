@@ -18,3 +18,10 @@
 - [x] 요구사항 2 - 추가된 정보를 통해 createQueryBuilder 쿼리 만들어보기
 - [x] 요구사항 3 - 추가된 정보를 통해 createQueryBuilder 쿼리 만들어보기2
 - [x] 요구사항 4 - 정보를 바탕으로 dropQueryBuilder 쿼리 만들어보기
+
+### step3
+
+- [ ] 요구사항 1 - Person 객체를 이용하여 insert 쿼리 구현하기
+- [ ] 요구사항 2 - Person 객체를 바탕으로 findAll 기능 구현하기
+- [ ] 요구사항 3 - Person 객체를 바탕으로 findById 기능 구현하기
+- [ ] 요구사항 4 - Person 객체를 바탕으로 delete 쿼리 만들기
