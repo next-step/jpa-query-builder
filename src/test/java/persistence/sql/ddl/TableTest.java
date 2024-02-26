@@ -46,7 +46,7 @@ class TableTest {
                 "(id Long AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT NULL,email VARCHAR(30) NOT NULL)";
 
         // when
-        String actualQuery = new CreateQueryBuilder(Person.class).getCreateQuery();
+        String actualQuery = new CreateQueryBuilder(Person.class).getQuery();
 
         // then
         Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);

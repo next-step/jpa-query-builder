@@ -16,7 +16,7 @@ public class Column {
     private final NullClause nullClause;
 
     public Column(Field field) {
-        this.name = getName(field);
+        this.name = getNameFrom(field);
         this.type = field.getType();
         this.nullClause = new NullClause(field);
     }
@@ -25,7 +25,7 @@ public class Column {
         return typeToSqlMap.get(type).apply(name) + " " + nullClause.getQuery();
     }
 
-    private String getName(Field field) {
+    public String getNameFrom(Field field) {
         jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
         if (column == null) {
             return field.getName();
@@ -34,5 +34,9 @@ public class Column {
             return field.getName();
         }
         return column.name();
+    }
+
+    public String getName() {
+        return this.name;
     }
 }
