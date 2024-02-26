@@ -28,7 +28,7 @@ src>test>java>persistence>study 하위에 StringTest 클래스를 하나 생성�
 ## Step4 요구사항
 - [ ] Step3리뷰반영
   - [x] dml의 clause 객체 묶기
-  - [ ] dml의 clause 객체 재사용 하도록 구현
+  - [x] dml의 clause 객체 재사용 하도록 구현
   - [x] ddl에서 Column 종속성 제거 후 삭제
   - [ ] RowMapper 함수 분리
 - [ ] find 구현

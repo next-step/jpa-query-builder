@@ -3,6 +3,7 @@ package persistence.sql.dml.builder;
 import jakarta.persistence.Transient;
 import jdbc.RowMapper;
 import persistence.sql.dml.clause.Select;
+import persistence.sql.dml.factory.SelectFactory;
 import persistence.sql.meta.column.ColumnName;
 
 import java.lang.reflect.Field;
@@ -18,10 +19,11 @@ public class SelectQueryBuilder {
     }
 
     public SelectQueryDto<?> findById(Class<?> clazz, Long id) {
+        Select select = SelectFactory.getSelect(clazz);
         StringBuilder sb = new StringBuilder();
         sb.append(generateFindAllQuery(clazz));
         sb.append(" where ");
-        sb.append(new Select(clazz).getPKName());
+        sb.append(select.getPKName());
         sb.append(" = ");
         sb.append(id.toString());
         RowMapper<?> rowMapper = generateRowMapper(clazz);
@@ -29,7 +31,7 @@ public class SelectQueryBuilder {
     }
 
     private String generateFindAllQuery(Class<?> clazz) {
-        Select select = new Select(clazz);
+        Select select = SelectFactory.getSelect(clazz);
         return String.format("select %s from %s",
                 select.getColumns(),
                 select.getTableName()
