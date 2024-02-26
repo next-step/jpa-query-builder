@@ -6,24 +6,46 @@ import persistence.sql.exception.NotIdException;
 import persistence.sql.exception.NotSupportedIdException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Id {
-    public static final String ID_AUTO_INCREMENT = "id INT AUTO_INCREMENT PRIMARY KEY";
-    public static Map<GenerationType, String> idMap = Map.of(
+    public static final String ID_AUTO_INCREMENT = "%s %s AUTO_INCREMENT PRIMARY KEY";
+    public static Map<GenerationType, String> sqlMap = Map.of(
             GenerationType.AUTO, ID_AUTO_INCREMENT,
             GenerationType.IDENTITY, ID_AUTO_INCREMENT,
-            //GenerationType.SEQUENCE, "",
-            GenerationType.TABLE, "id INT PRIMARY KEY, seq_value INT", // TODO: (질문) map 내의 String도 상수화 해야할까요?
-            GenerationType.UUID, "id UUID PRIMARY KEY"
+            GenerationType.TABLE, "%s %s PRIMARY KEY, seq_value INT",
+            GenerationType.UUID, "%s UUID PRIMARY KEY"
     );
-    private final GenerationType type;
+
+    public static final String INT = "INT";
+    public static final String BIGINT = "BIGINT";
+    private static final Map<Type, String> numberTypeMap = Map.of(
+            Integer.class, INT,
+            int.class, INT,
+            Long.class, BIGINT,
+            long.class, BIGINT,
+            float.class, "FLOAT",
+            double.class, "DOUBLE",
+            byte.class, "TINYINT"
+    );
+
+    private final String name;
+    private final String dataType;
+    private final GenerationType generationType;
 
     public Id(Field field) {
         if (!field.isAnnotationPresent(jakarta.persistence.Id.class)) {
             throw new NotIdException();
         }
-        this.type = getType(field);
+        this.name = getName(field);
+        this.dataType = field.getType().getSimpleName();
+        this.generationType = getType(field);
+    }
+
+    private String getName(Field field) {
+        return field.getName();
     }
 
     private static GenerationType getType(Field field) {
@@ -34,9 +56,12 @@ public class Id {
     }
 
     public String getQuery() {
-        if (idMap.get(type) == null) {
+        if (sqlMap.get(generationType) == null) {
             throw new NotSupportedIdException();
         }
-        return idMap.get(type);
+        if (generationType == GenerationType.UUID) {
+            return String.format(sqlMap.get(generationType), name);
+        }
+        return String.format(sqlMap.get(generationType), name, dataType);
     }
 }
