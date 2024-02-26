@@ -11,7 +11,6 @@ import persistence.sql.dialect.H2Dialect;
 import java.util.List;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DMLQueryGeneratorH2DbTest {
     private static JdbcTemplate jdbcTemplate;
@@ -57,7 +56,7 @@ class DMLQueryGeneratorH2DbTest {
         jdbcTemplate.execute(dmlQueryGenerator.generateInsertQuery(person2));
 
         List<Person> persons = jdbcTemplate.query(
-                dmlQueryGenerator.generateSelectQuery(new BooleanBuilder()),
+                dmlQueryGenerator.generateSelectQuery(new WhereBuilder()),
                 rs -> new Person(
                         rs.getLong("id"),
                         rs.getString("nick_name"),

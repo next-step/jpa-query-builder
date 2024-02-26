@@ -33,7 +33,7 @@ class DMLQueryGeneratorTest {
     @DisplayName("요구사항2: findAll 쿼리 생성")
     void testFindAll() {
         String expected = "select * from users";
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        WhereBuilder booleanBuilder = new WhereBuilder();
         String selectQuery = dmlQueryGenerator.generateSelectQuery(booleanBuilder);
 
         assertThat(selectQuery).isEqualTo(expected);
@@ -44,7 +44,7 @@ class DMLQueryGeneratorTest {
     void testFindById() {
         int id = 1;
         String expected = String.format("select * from users where id = %s", id);
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        WhereBuilder booleanBuilder = new WhereBuilder();
         booleanBuilder.and(eq("id", id));
         String selectQuery = dmlQueryGenerator.generateSelectQuery(booleanBuilder);
 
@@ -56,7 +56,7 @@ class DMLQueryGeneratorTest {
     void testDeleteById() {
         int id = 1;
         String expected = String.format("delete from users where id = %s", id);
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        WhereBuilder booleanBuilder = new WhereBuilder();
         booleanBuilder.and(eq("id", id));
         String selectQuery = dmlQueryGenerator.generateDeleteQuery(booleanBuilder);
 
