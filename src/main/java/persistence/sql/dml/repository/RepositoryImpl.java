@@ -1,72 +1,47 @@
 package persistence.sql.dml.repository;
 
 import jdbc.JdbcTemplate;
-import persistence.sql.dml.exception.NotFoundIdException;
-import persistence.sql.dml.query.builder.DeleteQueryBuilder;
-import persistence.sql.dml.query.builder.InsertQueryBuilder;
-import persistence.sql.dml.query.builder.SelectQueryBuilder;
-import persistence.sql.entity.EntityMappingTable;
-import persistence.sql.entity.model.Criteria;
-import persistence.sql.entity.model.Criterias;
-import persistence.sql.entity.model.DomainType;
-import persistence.sql.entity.model.Operators;
+import persistence.sql.entity.manager.EntityManagerImpl;
+import persistence.sql.entity.manager.EntityManger;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-public class RepositoryImpl<T> implements Repository<T> {
+public class RepositoryImpl<T, K> implements Repository<T, K> {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final EntityMappingTable entityMappingTable;
-    private RepositoryMapper<T> repositoryMapper;
-    private final DomainType pkDomainType;
-
+    private final EntityManger<T, K> entityManger;
+    private final Class<T> clazz;
 
     public RepositoryImpl(final JdbcTemplate jdbcTemplate,
                           final Class<T> clazz) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.entityMappingTable = EntityMappingTable.from(clazz);
-        this.repositoryMapper = new RepositoryMapper<>(clazz);
-        this.pkDomainType = entityMappingTable.getPkDomainTypes();
+        this.entityManger = new EntityManagerImpl<>(jdbcTemplate);
+        this.clazz = clazz;
     }
 
     @Override
     public List<T> findAll() {
-        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.from(entityMappingTable);
-        return jdbcTemplate.query(selectQueryBuilder.toSql(), repositoryMapper::mapper);
+        return entityManger.findAll(clazz);
     }
 
     @Override
-    public Optional<T> findById(Long id) {
-        Criteria criteria = new Criteria(pkDomainType.getColumnName(), id.toString(), Operators.EQUALS);
-        Criterias criterias = new Criterias(Collections.singletonList(criteria));
-
-        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, criterias);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(selectQueryBuilder.toSql(), repositoryMapper::mapper));
+    public Optional<T> findById(K id) {
+        return Optional.ofNullable(entityManger.find(clazz, id));
     }
 
     @Override
     public T save(T t) {
-        InsertQueryBuilder insertQueryBuilder = InsertQueryBuilder.from(t);
-        jdbcTemplate.execute(insertQueryBuilder.toSql());
+        entityManger.persist(t);
         return t;
     }
 
     @Override
     public void deleteAll() {
-        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.from(entityMappingTable.getTableName());
-
-        jdbcTemplate.execute(deleteQueryBuilder.toSql());
+        entityManger.removeAll(clazz);
     }
 
     @Override
-    public void deleteById(Long id) {
-        Criterias criterias = new Criterias(List.of(new Criteria(pkDomainType.getColumnName(), id.toString(), Operators.EQUALS)));
-
-        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(entityMappingTable.getTableName(), criterias);
-
-        jdbcTemplate.execute(deleteQueryBuilder.toSql());
+    public void deleteById(K id) {
+        T t = entityManger.find(clazz, id);
+        entityManger.remove(t);
     }
 }
