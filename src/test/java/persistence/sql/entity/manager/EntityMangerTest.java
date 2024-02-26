@@ -1,6 +1,5 @@
 package persistence.sql.entity.manager;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,11 +8,13 @@ import persistence.sql.db.H2Database;
 import persistence.sql.dml.repository.Repository;
 import persistence.sql.dml.repository.RepositoryImpl;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class EntityMangerTest extends H2Database {
 
-    private EntityManger<Person> entityManger;
+    private EntityManger<Person, Long> entityManger;
     private Repository<Person> personRepository;
 
     private Person person;
@@ -43,6 +44,16 @@ class EntityMangerTest extends H2Database {
 
         Person findPerson = entityManger.find(Person.class, 2L);
         assertThat(findPerson).isEqualTo(newPerson);
+    }
+
+    @DisplayName("디비에 데이터가 삭제가 된다.")
+    @Test
+    void deleteTest() {
+        entityManger.remove(person);
+
+        Optional<Person> optionalPerson = Optional.ofNullable(entityManger.find(Person.class, person.getId()));
+
+        assertThat(optionalPerson.isPresent()).isFalse();
     }
 
 }
