@@ -3,7 +3,7 @@
 ## Step3
 - [x] 요구사항 1 - insert 쿼리 구현하기
 - [x] 요구사항 2 - findAll 기능 구현하기
-- [ ] 요구사항 3 - findById 구현하기
+- [x] 요구사항 3 - findById 구현하기
 - [ ] 요구사항 4 - delete 쿼리 구현하
 
 

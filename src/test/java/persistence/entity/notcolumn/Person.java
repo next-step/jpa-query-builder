@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 @Table(name = "users")
 @Entity
 public class Person {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,5 +30,9 @@ public class Person {
         this.age = age;
         this.email = email;
         this.index = index;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

@@ -48,9 +48,9 @@ class SelectQueryBuilderTest {
         server.stop();
     }
 
-    @DisplayName("3건의 person insert 후, findAll을 실행시, 3건이 조회된다.")
+    @DisplayName("[요구사항2] 3건의 person insert 후, findAll을 실행시, 3건이 조회된다.")
     @Test
-    void 요구사항3_test() throws SQLException {
+    void 요구사항2_test() throws SQLException {
         // given
         jdbcTemplate.execute(new CreateQueryBuilder(Person.class).getQuery());
 
@@ -68,6 +68,28 @@ class SelectQueryBuilderTest {
 
         // then
         Assertions.assertThat(persons).hasSize(3);
+    }
+
+    @DisplayName("[요구사항3] 3건의 person insert 후, findById를 실행시, 1건이 조회된다.")
+    @Test
+    void 요구사항3_test() {
+        // given
+        jdbcTemplate.execute(new CreateQueryBuilder(Person.class).getQuery());
+
+        List<String> insertQueries = Stream.of(person_철수, person_영희, person_짱구)
+                .map(person -> new InsertQueryBuilder(Person.class).getInsertQuery(person)).toList();
+
+        for (String query : insertQueries) {
+            jdbcTemplate.execute(query);
+        }
+
+        // when
+        String query = new SelectQueryBuilder(Person.class).getFindById(1L);
+        jdbcTemplate.query(query, new DtoMapper<Person>(Person.class));
+        Person selectedPerson = (Person) jdbcTemplate.queryForObject(query, new DtoMapper<Person>(Person.class));
+
+        // then
+        Assertions.assertThat(selectedPerson.getId()).isEqualTo(1L);
     }
 
 }
