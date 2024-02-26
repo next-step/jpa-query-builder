@@ -46,7 +46,7 @@ class EntityManagerImplTest {
         Person person = new Person("hoon25", 20, "hoon25@gmail.com");
         jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
 
-        EntityManager<Person> entityManager = new EntityManagerImpl<>();
+        EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
         Person findPerson = entityManager.find(Person.class, 1L);
 
         assertThat(person.getName()).isEqualTo(findPerson.getName());
