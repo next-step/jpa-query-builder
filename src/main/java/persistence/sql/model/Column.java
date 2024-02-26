@@ -10,6 +10,8 @@ import java.util.List;
 
 public class Column {
 
+    private final Field field;
+
     private final String name;
 
     private final SqlType type;
@@ -17,6 +19,7 @@ public class Column {
     private final List<SqlConstraint> constraints;
 
     public Column(Field field) {
+        this.field = field;
         this.name = getName(field);
         this.type = getType(field);
         this.constraints = getConstraints(field);
@@ -71,6 +74,15 @@ public class Column {
 
     public List<SqlConstraint> getConstraints() {
         return Collections.unmodifiableList(constraints);
+    }
+
+    public Object getValue(Object instance) {
+        try {
+            field.setAccessible(true);
+            return field.get(instance);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("This instance does not have any of the fields in that column.");
+        }
     }
 
     @Override

@@ -58,6 +58,10 @@ public class PKColumn {
         return generationType;
     }
 
+    public Object getValue(Object instance) {
+        return column.getValue(instance);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
