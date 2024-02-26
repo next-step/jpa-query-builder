@@ -19,10 +19,9 @@ class RepositoryMapperTest extends H2Database {
     private RepositoryMapper<Person> repositoryMapper;
     private Connection connection;
     private SelectQueryBuilder selectQueryBuilder;
-    private Repository<Person> personRepository;
+    private Repository<Person, Long> personRepository;
 
     private Person person1;
-    private Person person2;
 
 
     @BeforeEach
