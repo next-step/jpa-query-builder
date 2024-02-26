@@ -1,11 +1,7 @@
 package persistence.sql.ddl;
 
 import persistence.sql.dialect.Dialect;
-import persistence.sql.model.Column;
-import persistence.sql.model.Sql;
 import persistence.sql.model.Table;
-
-import java.util.List;
 
 public class DDLQueryBuilder {
 
@@ -16,27 +12,13 @@ public class DDLQueryBuilder {
     }
 
     public String buildCreateQuery(Table table) {
-        String tableName = table.getName();
-        List<Column> tableColumns = table.getColumns();
-
-        return new Sql.Builder(dialect)
-                .create()
-                .and()
-                .table(tableName)
-                .and()
-                .leftParenthesis()
-                .columns(tableColumns)
-                .rightParenthesis()
-                .build();
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(table, dialect);
+        return createQueryBuilder.build();
     }
 
-    public String buildDropQuery(Table table) {
-        String tableName = table.getName();
 
-        return new Sql.Builder(dialect)
-                .drop()
-                .and()
-                .table(tableName)
-                .build();
+    public String buildDropQuery(Table table) {
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(table);
+        return dropQueryBuilder.build();
     }
 }

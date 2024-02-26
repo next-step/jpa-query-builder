@@ -6,7 +6,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import persistence.sql.dialect.H2Dialect;
-import persistence.sql.model.EntityAnalyzer;
 import persistence.sql.model.Table;
 import persistence.study.sql.ddl.Person1;
 import persistence.study.sql.ddl.Person2;
@@ -24,8 +23,7 @@ class DDLQueryBuilderTest {
     @ParameterizedTest
     @MethodSource
     void buildCreateQuery(Class<?> person, String createQuery) {
-        EntityAnalyzer analyzer = new EntityAnalyzer(person);
-        Table table = new Table(analyzer);
+        Table table = new Table(person);
 
         String result = ddlQueryBuilder.buildCreateQuery(table);
 
@@ -40,14 +38,22 @@ class DDLQueryBuilderTest {
         );
     }
 
-    @Test
-    @DisplayName("drop 쿼리 생성하기")
-    void buildDropQuery() {
-        EntityAnalyzer analyzer = new EntityAnalyzer(Person3.class);
-        Table table = new Table(analyzer);
+    @DisplayName("Person을 이용하여 drop 쿼리 생성하기")
+    @ParameterizedTest
+    @MethodSource
+    void buildDropQuery(Class<?> person, String dropQuery) {
+        Table table = new Table(person);
 
-        String dropQuery = ddlQueryBuilder.buildDropQuery(table);
+        String result = ddlQueryBuilder.buildDropQuery(table);
 
-        assertThat(dropQuery).isEqualTo("DROP TABLE users;");
+        assertThat(result).isEqualTo(dropQuery);
+    }
+
+    private static Stream<Arguments> buildDropQuery() {
+        return Stream.of(
+                Arguments.arguments(Person1.class, "DROP TABLE person1;"),
+                Arguments.arguments(Person2.class, "DROP TABLE person2;"),
+                Arguments.arguments(Person3.class, "DROP TABLE users;")
+        );
     }
 }
