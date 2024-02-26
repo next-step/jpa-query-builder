@@ -1,9 +1,12 @@
 package persistence.sql;
 
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import persistence.sql.domain.DatabaseColumn;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MySqlDialectTest {
 
@@ -16,7 +19,16 @@ class MySqlDialectTest {
 
         String jdbcType = dialect.getJdbcTypeFromJavaClass(column);
 
-        Assertions.assertThat(jdbcType).isEqualTo(expectJdbcType);
+        assertThat(jdbcType).isEqualTo(expectJdbcType);
+    }
+
+    @Test
+    void should_throw_exception_when_matching_jdbc_type_not_exist() throws NoSuchFieldException {
+        DatabaseColumn column = DatabaseColumn.fromField(TestClass.class.getDeclaredField("test"), null);
+
+        assertThatThrownBy(() -> dialect.getJdbcTypeFromJavaClass(column))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("does not defined in Dialect");
     }
 
     private class TestClass {
@@ -25,5 +37,7 @@ class MySqlDialectTest {
         private Integer age;
 
         private String name;
+
+        private Object test;
     }
 }

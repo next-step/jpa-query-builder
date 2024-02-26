@@ -44,7 +44,7 @@ public class MySqlDialect extends Dialect {
                     Integer typeSize = getSize(jdbcType, size);
                     return String.format(typeValue, typeSize);
                 })
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("jdbc type of " + clazz + " does not defined in Dialect"));
     }
 
     private Integer getSize(Integer jdbcType, Integer size) {
