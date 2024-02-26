@@ -52,4 +52,15 @@ class EntityManagerImplTest {
         assertThat(person.getName()).isEqualTo(findPerson.getName());
     }
 
+    @DisplayName("persist/entity 저장/저장 성공")
+    @Test
+    void persist() {
+        Person person = new Person("hoon25", 20, "hoon25@gmail.com");
+        EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
+
+        entityManager.persist(person);
+
+        Person findPerson = entityManager.find(Person.class, 1L);
+        assertThat(person.getName()).isEqualTo(findPerson.getName());
+    }
 }
