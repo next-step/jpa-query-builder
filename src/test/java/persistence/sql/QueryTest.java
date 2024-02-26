@@ -22,26 +22,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class QueryTest {
 
     private static DatabaseServer server;
-
-    private JdbcTemplate jdbcTemplate;
-
-    private DDLQueryBuilder ddlQueryBuilder;
-
-    private DMLQueryBuilder dmlQueryBuilder;
+    private static JdbcTemplate jdbcTemplate;
+    private static DDLQueryBuilder ddlQueryBuilder;
+    private static DMLQueryBuilder dmlQueryBuilder;
 
     @BeforeAll
-    static void databaseStart() throws SQLException {
+    static void initialize() throws SQLException {
         server = new H2();
         server.start();
-    }
 
-    @AfterAll
-    static void databaseStop() {
-        server.stop();
-    }
-
-    @BeforeEach
-    void setUp() throws SQLException {
         Connection connection = server.getConnection();
         jdbcTemplate = new JdbcTemplate(connection);
 
@@ -50,6 +39,17 @@ public class QueryTest {
 
         ddlQueryBuilder = new DDLQueryBuilder(table, dialect);
         dmlQueryBuilder = new DMLQueryBuilder(table);
+    }
+
+    @AfterAll
+    static void close() {
+        server.stop();
+    }
+
+    @BeforeEach
+    void setUp() throws SQLException {
+
+
 
         String createTableQuery = ddlQueryBuilder.buildCreateQuery();
         jdbcTemplate.execute(createTableQuery);
