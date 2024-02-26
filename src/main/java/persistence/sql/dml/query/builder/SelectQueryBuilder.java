@@ -4,10 +4,6 @@ import persistence.sql.dml.query.clause.ColumnClause;
 import persistence.sql.dml.query.clause.WhereClause;
 import persistence.sql.entity.EntityMappingTable;
 import persistence.sql.entity.model.Criterias;
-import persistence.sql.entity.model.DomainType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SelectQueryBuilder {
     private static final String FORMAT = "SELECT %s FROM %s %s";
@@ -24,7 +20,8 @@ public class SelectQueryBuilder {
         this.whereClause = whereClause;
     }
 
-    public static SelectQueryBuilder of(EntityMappingTable entityMappingTable, Criterias criterias) {
+    public static SelectQueryBuilder of(final EntityMappingTable entityMappingTable,
+                                        final Criterias criterias) {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
@@ -32,7 +29,7 @@ public class SelectQueryBuilder {
         );
     }
 
-    public static SelectQueryBuilder from(EntityMappingTable entityMappingTable) {
+    public static SelectQueryBuilder from(final EntityMappingTable entityMappingTable) {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
@@ -43,8 +40,6 @@ public class SelectQueryBuilder {
     public String toSql() {
         return String.format(FORMAT, columnClause.toSql(), tableName, whereClause.toSql());
     }
-
-
 
 
 }
