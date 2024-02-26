@@ -1,10 +1,6 @@
 package persistence.sql.dml;
 
-import persistence.sql.dialect.Dialect;
-import persistence.sql.extractor.ColumnData;
-import persistence.sql.extractor.ColumnExtractor;
-import persistence.sql.extractor.TableData;
-import persistence.sql.extractor.TableExtractor;
+import persistence.sql.mapping.*;
 
 import java.util.List;
 import java.util.stream.Collectors;

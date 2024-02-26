@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.mapping.TableExtractor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

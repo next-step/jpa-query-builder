@@ -1,12 +1,12 @@
 package persistence.sql.ddl;
 
 import persistence.sql.dialect.Dialect;
-import persistence.sql.extractor.ColumnData;
-import persistence.sql.extractor.ColumnExtractor;
-import persistence.sql.extractor.TableData;
-import persistence.sql.extractor.TableExtractor;
+import persistence.sql.mapping.ColumnData;
+import persistence.sql.mapping.Columns;
+import persistence.sql.mapping.TableData;
+import persistence.sql.mapping.TableExtractor;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class DDLQueryGenerator {

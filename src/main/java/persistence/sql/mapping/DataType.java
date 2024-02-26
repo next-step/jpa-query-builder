@@ -1,4 +1,4 @@
-package persistence.sql.extractor;
+package persistence.sql.mapping;
 
 public enum DataType {
     LONG,

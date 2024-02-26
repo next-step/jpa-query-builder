@@ -1,4 +1,4 @@
-package persistence.sql.extractor.exception;
+package persistence.sql.mapping.exception;
 
 public class GenerationTypeMissingException extends RuntimeException {
     public GenerationTypeMissingException() {
