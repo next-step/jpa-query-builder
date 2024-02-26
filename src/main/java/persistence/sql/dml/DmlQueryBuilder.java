@@ -29,7 +29,7 @@ public class DmlQueryBuilder implements InsertQueryBuild, SelectQueryBuild, Dele
 
     @Override
     public Query findById(Class<?> entity, Object id) {
-        return selectQueryBuilder.findById(entity,id);
+        return selectQueryBuilder.findById(entity, id);
 
     }
 

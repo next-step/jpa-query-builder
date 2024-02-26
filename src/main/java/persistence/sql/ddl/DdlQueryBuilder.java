@@ -2,12 +2,9 @@ package persistence.sql.ddl;
 
 import persistence.sql.ddl.view.QueryResolver;
 import persistence.sql.domain.ColumnOperation;
-import persistence.sql.domain.DatabaseColumn;
-import persistence.sql.domain.DatabasePrimaryColumn;
 import persistence.sql.domain.DatabaseTable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class DdlQueryBuilder implements DdlQueryBuild {
 

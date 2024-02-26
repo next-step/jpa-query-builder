@@ -1,6 +1,9 @@
 package persistence.sql.dml;
 
-import persistence.sql.domain.*;
+import persistence.sql.domain.Condition;
+import persistence.sql.domain.DatabaseTable;
+import persistence.sql.domain.Query;
+import persistence.sql.domain.Where;
 
 public class SelectQueryBuilder implements SelectQueryBuild {
 

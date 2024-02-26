@@ -1,7 +1,6 @@
 package persistence.sql;
 
 import persistence.sql.domain.ColumnOperation;
-import persistence.sql.domain.DatabaseColumn;
 
 import java.sql.Types;
 import java.util.HashMap;

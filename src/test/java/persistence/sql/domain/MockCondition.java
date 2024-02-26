@@ -1,6 +1,6 @@
 package persistence.sql.domain;
 
-public class MockCondition implements ColumnOperation{
+public class MockCondition implements ColumnOperation {
 
     private final String columnName;
     private final String columnValue;

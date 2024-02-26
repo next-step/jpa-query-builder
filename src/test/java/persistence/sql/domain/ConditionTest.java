@@ -12,7 +12,7 @@ class ConditionTest {
         String columnValue = "testValue";
         Condition condition = Condition.equal(new MockCondition(columnName, columnValue));
 
-        assertThat(condition.getCondition()).isEqualTo(columnName+"="+columnValue);
+        assertThat(condition.getCondition()).isEqualTo(columnName + "=" + columnValue);
     }
 
 }

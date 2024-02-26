@@ -22,19 +22,19 @@ class QueryResultTest {
     @Test
     void should_return_single_entity() throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         DatabaseTable table = new DatabaseTable(Person.class);
-        QueryResult queryResult = new QueryResult(new MockResultSet(),table);
+        QueryResult queryResult = new QueryResult(new MockResultSet(), table);
         Person person = queryResult.getSingleEntity(Person.class);
 
 
         assertAll(
-                ()-> validateFieldValue("id",1l,person),
-                ()-> validateFieldValue("name","cs",person),
-                ()-> validateFieldValue("age",29,person),
-                ()-> validateFieldValue("email","katd216@gmail.com",person)
+                () -> validateFieldValue("id", 1l, person),
+                () -> validateFieldValue("name", "cs", person),
+                () -> validateFieldValue("age", 29, person),
+                () -> validateFieldValue("email", "katd216@gmail.com", person)
         );
     }
 
-    private void validateFieldValue(String fieldName,Object fieldValue,Object instance) throws NoSuchFieldException, IllegalAccessException {
+    private void validateFieldValue(String fieldName, Object fieldValue, Object instance) throws NoSuchFieldException, IllegalAccessException {
         Field field = clazz.getDeclaredField(fieldName);
         field.setAccessible(true);
         assertThat(field.get(instance)).isEqualTo(fieldValue);
@@ -42,14 +42,13 @@ class QueryResultTest {
 
     private static class MockResultSet extends SimpleResultSet implements ResultSet {
 
-        private int pointer = -1;
-
-        private final List<Map<String,Object>> rows = Collections.singletonList(Map.of(
-                "id",1l,
-                "nick_name","cs",
-                "old",29,
-                "email","katd216@gmail.com"
+        private final List<Map<String, Object>> rows = Collections.singletonList(Map.of(
+                "id", 1l,
+                "nick_name", "cs",
+                "old", 29,
+                "email", "katd216@gmail.com"
         ));
+        private int pointer = -1;
 
         @Override
         public Object getObject(String columnLabel) {
@@ -58,9 +57,9 @@ class QueryResultTest {
 
         @Override
         public boolean next() {
-             boolean hasNext = pointer < rows.size() - 1;
-             pointer++;
-             return hasNext;
+            boolean hasNext = pointer < rows.size() - 1;
+            pointer++;
+            return hasNext;
         }
     }
 }

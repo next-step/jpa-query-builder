@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class EntityManagerImpl implements EntityManager{
+public class EntityManagerImpl implements EntityManager {
 
     private final Connection connection;
 
