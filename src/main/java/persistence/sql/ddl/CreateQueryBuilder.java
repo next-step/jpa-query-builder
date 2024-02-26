@@ -5,10 +5,10 @@ import persistence.sql.exception.InvalidEntityException;
 
 import static persistence.sql.common.SqlConstant.*;
 
-public class QueryBuilder {
+public class CreateQueryBuilder {
     private final Table table;
 
-    public QueryBuilder(Class<?> entity) {
+    public CreateQueryBuilder(Class<?> entity) {
         if (!entity.isAnnotationPresent(Entity.class)) {
             throw new InvalidEntityException();
         }
