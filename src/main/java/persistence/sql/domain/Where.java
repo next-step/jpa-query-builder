@@ -19,7 +19,7 @@ public class Where {
 
     public String getWhereClause() {
         if (query.length() == 0) {
-            throw new IllegalStateException("sql is empty");
+            throw new IllegalStateException("where clause is empty");
         }
         return query.toString();
     }
