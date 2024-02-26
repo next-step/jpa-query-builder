@@ -31,6 +31,6 @@ src>test>java>persistence>study 하위에 StringTest 클래스를 하나 생성�
   - [x] dml의 clause 객체 재사용 하도록 구현
   - [x] ddl에서 Column 종속성 제거 후 삭제
   - [x] RowMapper 함수 분리
-- [ ] find 구현
-- [ ] persist(insert) 구현
-- [ ] remove(delete) 구현
+- [x] find 구현
+- [x] persist(insert) 구현
+- [x] remove(delete) 구현

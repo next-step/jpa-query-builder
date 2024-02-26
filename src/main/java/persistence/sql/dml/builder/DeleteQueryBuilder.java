@@ -5,7 +5,7 @@ import persistence.sql.dml.clause.ValuesClause;
 import persistence.sql.dml.factory.DeleteFactory;
 
 public class DeleteQueryBuilder {
-    public String generateSQL(Object object) throws IllegalAccessException {
+    public String generateSQL(Object object) {
         Delete delete = DeleteFactory.getDelete(object.getClass());
         return String.format("delete %s where %s = %s",
                 delete.getTableName(),

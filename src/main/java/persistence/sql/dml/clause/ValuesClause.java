@@ -39,7 +39,7 @@ public class ValuesClause {
         return sb.toString();
     }
 
-    public String getPkValue() throws IllegalAccessException {
+    public String getPkValue() {
         Field[] fields = object.getClass().getDeclaredFields();
         Field pkField = Arrays.stream(fields)
                 .filter(field -> field.isAnnotationPresent(Id.class))
@@ -47,6 +47,10 @@ public class ValuesClause {
                 .orElseThrow(() -> new RuntimeException("Id 어노테이션은 반드시 존재해야합니다."));
 
         pkField.setAccessible(true);
-        return pkField.get(object).toString();
+        try {
+            return pkField.get(object).toString();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
