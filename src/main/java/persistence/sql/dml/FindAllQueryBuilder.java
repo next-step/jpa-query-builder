@@ -9,7 +9,6 @@ import java.util.List;
 public class FindAllQueryBuilder {
 
     private final static String FIND_ALL_QUERY_FORMAT = "SELECT %s FROM %s;";
-    ;
 
     private final Table table;
 

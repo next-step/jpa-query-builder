@@ -24,4 +24,9 @@ public class DMLQueryBuilder {
         FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(table, instance);
         return findByIdQueryBuilder.build();
     }
+
+    public String buildDeleteQuery() {
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(table);
+        return deleteQueryBuilder.build();
+    }
 }

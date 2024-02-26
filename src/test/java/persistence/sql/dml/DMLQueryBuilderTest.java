@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -69,6 +70,25 @@ public class DMLQueryBuilderTest {
                 Arguments.arguments(new Table(Person1.class), new Person1(1L, "qwer", 1), "SELECT id,name,age FROM person1 WHERE id=1;"),
                 Arguments.arguments(new Table(Person2.class), new Person2(2L, "qwert", 2, "email@email.com"), "SELECT id,nick_name,old,email FROM person2 WHERE id=2;"),
                 Arguments.arguments(new Table(Person3.class), new Person3(3L, "qwerty", 3, "email2@email.com"), "SELECT id,nick_name,old,email FROM users WHERE id=3;")
+        );
+    }
+
+    @DisplayName("Person을 이용하여 delete 쿼리 생성하기")
+    @ParameterizedTest
+    @MethodSource
+    void buildDeleteQuery(Table table, String deleteQuery) {
+        DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder(table);
+
+        String result = dmlQueryBuilder.buildDeleteQuery();
+
+        assertThat(result).isEqualTo(deleteQuery);
+    }
+
+    private static Stream<Arguments> buildDeleteQuery() {
+        return Stream.of(
+                Arguments.arguments(new Table(Person1.class), "DELETE FROM person1;"),
+                Arguments.arguments(new Table(Person2.class), "DELETE FROM person2;"),
+                Arguments.arguments(new Table(Person3.class), "DELETE FROM users;")
         );
     }
 }

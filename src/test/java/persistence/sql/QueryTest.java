@@ -3,10 +3,7 @@ package persistence.sql;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import persistence.sql.ddl.DDLQueryBuilder;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
@@ -24,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class QueryTest {
 
-    private DatabaseServer server;
+    private static DatabaseServer server;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -32,11 +29,19 @@ public class QueryTest {
 
     private DMLQueryBuilder dmlQueryBuilder;
 
-    @BeforeEach
-    void setUp() throws SQLException {
+    @BeforeAll
+    static void databaseStart() throws SQLException {
         server = new H2();
         server.start();
+    }
 
+    @AfterAll
+    static void databaseStop() {
+        server.stop();
+    }
+
+    @BeforeEach
+    void setUp() throws SQLException {
         Connection connection = server.getConnection();
         jdbcTemplate = new JdbcTemplate(connection);
 
@@ -61,8 +66,6 @@ public class QueryTest {
     void setDown() {
         String dropQuery = ddlQueryBuilder.buildDropQuery();
         jdbcTemplate.execute(dropQuery);
-
-        server.stop();
     }
 
     private Stream<Person3> createPersons() {
@@ -95,5 +98,17 @@ public class QueryTest {
         Person3 result = jdbcTemplate.queryForObject(findByIdQuery, new Person3RowMapper());
 
         assertThat(result).isEqualTo(person);
+    }
+
+    @Test
+    @DisplayName("delete 쿼리 통합 테스트")
+    void deleteQuery() {
+        String deleteQuery = dmlQueryBuilder.buildDeleteQuery();
+        jdbcTemplate.execute(deleteQuery);
+
+        String findAllQuery = dmlQueryBuilder.buildFindAllQuery();
+        List<Person3> persons = jdbcTemplate.query(findAllQuery, new Person3RowMapper());
+
+        assertThat(persons).isEmpty();
     }
 }
