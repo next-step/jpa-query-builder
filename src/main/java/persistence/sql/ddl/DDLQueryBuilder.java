@@ -1,42 +1,26 @@
 package persistence.sql.ddl;
 
 import persistence.sql.dialect.Dialect;
-import persistence.sql.model.Column;
-import persistence.sql.model.Sql;
 import persistence.sql.model.Table;
-
-import java.util.List;
 
 public class DDLQueryBuilder {
 
     private final Dialect dialect;
+    private final Table table;
 
-    public DDLQueryBuilder(Dialect dialect) {
+    public DDLQueryBuilder(Table table, Dialect dialect) {
+        this.table = table;
         this.dialect = dialect;
     }
 
-    public String buildCreateQuery(Table table) {
-        String tableName = table.getName();
-        List<Column> tableColumns = table.getColumns();
-
-        return new Sql.Builder(dialect)
-                .create()
-                .and()
-                .table(tableName)
-                .and()
-                .leftParenthesis()
-                .columns(tableColumns)
-                .rightParenthesis()
-                .build();
+    public String buildCreateQuery() {
+        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(table, dialect);
+        return createQueryBuilder.build();
     }
 
-    public String buildDropQuery(Table table) {
-        String tableName = table.getName();
 
-        return new Sql.Builder(dialect)
-                .drop()
-                .and()
-                .table(tableName)
-                .build();
+    public String buildDropQuery() {
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(table);
+        return dropQueryBuilder.build();
     }
 }

@@ -1,42 +1,33 @@
 package persistence.sql.model;
 
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum SqlConstraint {
     NOT_NULL,
     UNIQUE,
     PRIMARY_KEY,
     FOREIGN_KEY,
-    CHECK,
-    IDENTITY;
+    CHECK;
 
-    private static final HashMap<Class<?>, SqlConstraint> javaClassToJdbcConstraintCodeMap = buildJavaClassToJdbcConstraintCodeMappings();
+    public static List<SqlConstraint> of(Column column) {
+        List<SqlConstraint> constraints = new ArrayList<>();
 
-    private static HashMap<Class<?>, SqlConstraint> buildJavaClassToJdbcConstraintCodeMappings() {
-        final HashMap<Class<?>, SqlConstraint> workMap = new HashMap<>();
-
-        workMap.put(Id.class, SqlConstraint.PRIMARY_KEY);
-
-        return workMap;
-    }
-
-    public static SqlConstraint of(Class<?> clazz) {
-        SqlConstraint constraint = javaClassToJdbcConstraintCodeMap.get(clazz);
-
-        if (constraint == null) {
-            throw new IllegalArgumentException("No mapping for jdbc constraint: " + clazz.getSimpleName());
+        if (!column.nullable()) {
+            constraints.add(NOT_NULL);
         }
 
-        return constraint;
+        return constraints;
     }
 
-    public static SqlConstraint of(GenerationType type) {
-        if (type == GenerationType.IDENTITY) {
-            return SqlConstraint.IDENTITY;
-        }
-        throw new IllegalArgumentException("No mapping for jdbc constraint: " + type.name());
+    public static List<SqlConstraint> of(Id id) {
+        List<SqlConstraint> constraints = new ArrayList<>();
+
+        constraints.add(PRIMARY_KEY);
+
+        return constraints;
     }
 }
