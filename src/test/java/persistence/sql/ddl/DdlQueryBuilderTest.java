@@ -3,10 +3,10 @@ package persistence.sql.ddl;
 import domain.Person1;
 import domain.Person2;
 import domain.Person3;
+import domain.step2.dialect.H2Dialect;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
-import domain.step2.dialect.H2Dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -40,9 +40,9 @@ class DdlQueryBuilderTest {
     @Test
     void 요구사항_4_Drop_테스트() {
         assertAll(
-                () -> assertThat(DDL_QUERY_BUILDER.dropTable(person1)).contains("DROP TABLE person1;"),
-                () -> assertThat(DDL_QUERY_BUILDER.dropTable(person2)).contains("DROP TABLE person2;"),
-                () -> assertThat(DDL_QUERY_BUILDER.dropTable(person3)).contains("DROP TABLE users;")
+                () -> assertThat(DDL_QUERY_BUILDER.dropTable(person1)).contains("DROP TABLE person1 IF EXISTS;"),
+                () -> assertThat(DDL_QUERY_BUILDER.dropTable(person2)).contains("DROP TABLE person2 IF EXISTS;"),
+                () -> assertThat(DDL_QUERY_BUILDER.dropTable(person3)).contains("DROP TABLE users IF EXISTS;")
         );
     }
 
