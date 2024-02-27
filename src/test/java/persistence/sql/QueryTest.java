@@ -90,8 +90,9 @@ public class QueryTest {
     @DisplayName("findById 쿼리 통합 테스트")
     void findByIdQuery() {
         Person3 person = new Person3(3L, "qwer3", 3, "email3@email.com");
+        Long id = person.getId();
 
-        String findByIdQuery = dmlQueryBuilder.buildFindByIdQuery(person);
+        String findByIdQuery = dmlQueryBuilder.buildFindByIdQuery(id);
         Person3 result = jdbcTemplate.queryForObject(findByIdQuery, new Person3RowMapper());
 
         assertThat(result).isEqualTo(person);
@@ -113,8 +114,9 @@ public class QueryTest {
     @DisplayName("deleteById 쿼리 통합 테스트")
     void deleteByIdQuery() {
         Person3 person = new Person3(3L, "qwer3", 3, "email3@email.com");
+        Long id = person.getId();
 
-        String deleteByIdQuery = dmlQueryBuilder.buildDeleteByIdQuery(person);
+        String deleteByIdQuery = dmlQueryBuilder.buildDeleteByIdQuery(id);
         jdbcTemplate.execute(deleteByIdQuery);
 
         String findAllQuery = dmlQueryBuilder.buildFindAllQuery();

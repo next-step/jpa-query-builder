@@ -15,12 +15,15 @@ import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.DMLQueryBuilder;
 import persistence.sql.model.Table;
 import persistence.study.sql.ddl.Person3;
+import persistence.study.sql.ddl.Person3RowMapper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class SimpleEntityMangerTest {
 
@@ -110,7 +113,33 @@ class SimpleEntityMangerTest {
 
         Person3 result = entityManager.persist(person);
 
-        Person3 expect = new Person3(4L, "qwer", 1, "email@email.com");
-        assertThat(result).isEqualTo(expect);
+        Person3 findPerson = findByIdPerson();
+        assertThat(result).isEqualTo(findPerson);
+    }
+
+    private Person3 findByIdPerson() {
+        String findByIdQuery = dmlQueryBuilder.buildFindByIdQuery(4L);
+        return jdbcTemplate.queryForObject(findByIdQuery, new Person3RowMapper());
+    }
+
+    @DisplayName("person을 이용하여 remove 메서드 테스트")
+    @Test
+    void remove() {
+        Person3 person = new Person3(3L, "qwer", 1, "email@email.com");
+
+        entityManager.remove(person);
+
+        List<Person3> findPersons = findAllPerson();
+        Person3 expect1 = new Person3(1L, "qwer1", 1, "email1@email.com");
+        Person3 expect2 = new Person3(2L, "qwer2", 2, "email2@email.com");
+        assertSoftly(softly -> {
+            softly.assertThat(findPersons).containsExactlyInAnyOrder(expect1, expect2);
+            softly.assertThat(findPersons).doesNotContain(person);
+        });
+    }
+
+    private List<Person3> findAllPerson() {
+        String findAllQuery = dmlQueryBuilder.buildFindAllQuery();
+        return jdbcTemplate.query(findAllQuery, new Person3RowMapper());
     }
 }

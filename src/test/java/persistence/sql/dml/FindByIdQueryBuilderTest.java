@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import persistence.sql.model.PKColumn;
 import persistence.sql.model.Table;
 import persistence.study.sql.ddl.Person1;
 import persistence.study.sql.ddl.Person2;
@@ -19,7 +20,9 @@ class FindByIdQueryBuilderTest {
     @ParameterizedTest
     @MethodSource
     void build(Table table, Object person, String findByIdQuery) {
-        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(table, person);
+        PKColumn pkColumn = table.getPKColumn();
+        Object id = pkColumn.getValue(person);
+        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(table, id);
 
         String result = findByIdQueryBuilder.build();
 

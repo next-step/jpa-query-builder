@@ -96,6 +96,14 @@ public class SimpleEntityManger implements EntityManager {
 
     @Override
     public void remove(Object entity) {
+        Class<?> clazz = entity.getClass();
+        Table table = new Table(clazz);
+        DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder(table);
 
+        PKColumn pkColumn = table.getPKColumn();
+        Object pkColumnValue = pkColumn.getValue(entity);
+
+        String deleteByIdQuery = dmlQueryBuilder.buildDeleteByIdQuery(pkColumnValue);
+        database.executeUpdate(deleteByIdQuery);
     }
 }
