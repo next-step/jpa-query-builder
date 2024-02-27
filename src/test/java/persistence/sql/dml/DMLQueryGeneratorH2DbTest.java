@@ -5,7 +5,8 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
 import persistence.Person;
-import persistence.sql.ddl.DDLQueryGenerator;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dialect.H2Dialect;
 
 import java.util.List;
@@ -15,7 +16,8 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 class DMLQueryGeneratorH2DbTest {
     private static JdbcTemplate jdbcTemplate;
     private static DatabaseServer server;
-    private DDLQueryGenerator ddlQueryGenerator;
+    private final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
+    private final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect(), Person.class);;
     private final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
     private final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);
 
@@ -33,14 +35,13 @@ class DMLQueryGeneratorH2DbTest {
 
     @BeforeEach
     public void setUp() {
-        ddlQueryGenerator = new DDLQueryGenerator(new H2Dialect(), Person.class);
-        String sql = ddlQueryGenerator.generateCreateQuery();
+        String sql = createQueryBuilder.toQuery();
         jdbcTemplate.execute(sql);
     }
 
     @AfterEach
     public void cleanUp() {
-        jdbcTemplate.execute(ddlQueryGenerator.generateDropTableQuery());
+        jdbcTemplate.execute(dropQueryBuilder.toQuery());
     }
 
     @Test

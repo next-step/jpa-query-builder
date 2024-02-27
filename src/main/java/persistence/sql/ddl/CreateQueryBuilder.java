@@ -9,23 +9,19 @@ import persistence.sql.mapping.TableExtractor;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class DDLQueryGenerator {
+public class CreateQueryBuilder {
     private final Dialect dialect;
     private final TableData tableData;
     private final Columns columns;
 
 
-    public DDLQueryGenerator(Dialect dialect, Class<?> clazz) {
+    public CreateQueryBuilder(Dialect dialect, Class<?> clazz) {
         this.dialect = dialect;
         this.tableData = new TableExtractor(clazz).createTable();
         this.columns = Columns.createColumns(clazz);
     }
 
-    public String generateDropTableQuery() {
-        return String.format("DROP TABLE %s", tableData.getName());
-    }
-
-    public String generateCreateQuery() {
+    public String toQuery() {
         final String tableNameClause = tableData.getName();
         final String columnClause = getColumnClause();
         final String keyClause = getKeyClause();
