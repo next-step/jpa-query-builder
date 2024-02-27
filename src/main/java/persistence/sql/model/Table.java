@@ -63,7 +63,10 @@ public class Table {
 
     private Columns buildColumns(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
-        return new Columns(fields);
+        List<Field> columnFields = Arrays.stream(fields)
+                .filter(field -> !hasIdAnnotation(field))
+                .collect(Collectors.toList());
+        return new Columns(columnFields);
     }
 
     public String getName() {

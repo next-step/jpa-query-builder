@@ -1,11 +1,9 @@
 package persistence.sql.model;
 
-import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,20 +13,15 @@ public class Columns {
 
     private final List<Column> columns;
 
-    public Columns(Field[] fields) {
+    public Columns(List<Field> fields) {
         this.columns = buildColumns(fields);
     }
 
-    private List<Column> buildColumns(Field[] fields) {
-        return Arrays.stream(fields)
-                .filter(field -> !hasIdAnnotation(field))
+    private List<Column> buildColumns(List<Field> fields) {
+        return fields.stream()
                 .filter(field -> !hasTransientAnnotation(field))
                 .map(Column::new)
                 .collect(Collectors.toList());
-    }
-
-    private boolean hasIdAnnotation(Field field) {
-        return field.isAnnotationPresent(Id.class);
     }
 
     private boolean hasTransientAnnotation(Field field) {

@@ -1,5 +1,6 @@
 package persistence.sql.model;
 
+import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +12,9 @@ import persistence.study.sql.ddl.Person3;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,9 +40,19 @@ class ColumnsTest {
         Field[] person2Fields = person2Class.getDeclaredFields();
         Field[] person3Fields = person3Class.getDeclaredFields();
 
-        Columns person1Columns = new Columns(person1Fields);
-        Columns person2Columns = new Columns(person2Fields);
-        Columns person3Columns = new Columns(person3Fields);
+        List<Field> person1ColumnFields = Arrays.stream(person1Fields)
+                .filter(field -> !field.isAnnotationPresent(Id.class))
+                .collect(Collectors.toList());
+        List<Field> person2ColumnFields = Arrays.stream(person2Fields)
+                .filter(field -> !field.isAnnotationPresent(Id.class))
+                .collect(Collectors.toList());
+        List<Field> person3ColumnFields = Arrays.stream(person3Fields)
+                .filter(field -> !field.isAnnotationPresent(Id.class))
+                .collect(Collectors.toList());
+
+        Columns person1Columns = new Columns(person1ColumnFields);
+        Columns person2Columns = new Columns(person2ColumnFields);
+        Columns person3Columns = new Columns(person3ColumnFields);
 
         return Stream.of(
                 Arguments.arguments(person1Columns, new String[]{"age", "name"}),
