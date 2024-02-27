@@ -37,7 +37,7 @@ class RepositoryImplTest extends H2Database {
     void findAllTest() {
         List<Person> result = personRepository.findAll();
 
-        assertThat(result).isEqualTo(List.of(person1, person2));
+        assertThat(result).containsExactly(person1, person2);
     }
 
     @DisplayName("아이디값에 해당하는 값을 반환한다.")
