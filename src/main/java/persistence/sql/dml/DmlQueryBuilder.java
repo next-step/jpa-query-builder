@@ -64,6 +64,24 @@ public class DmlQueryBuilder {
         return String.format(DELETE_QUERY, getTableName(clazz), columnName.getName(), columnValue.getValue());
     }
 
+    public String deleteByIdQuery(Object entity) {
+        Field idField = Arrays.stream(entity.getClass().getDeclaredFields())
+                .collect(Collectors.toCollection(LinkedList::new)).stream()
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("primary key 값이 없습니다."));
+
+        Object idFieldValue;
+        try {
+            idField.setAccessible(true);
+            idFieldValue = idField.get(entity);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("Field 정보가 존재하지 않습니다.");
+        }
+
+        return deleteQuery(entity.getClass(), idField, idFieldValue);
+    }
+
     private void checkEntityClass(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalStateException("Entity 클래스가 아닙니다.");
