@@ -1,6 +1,7 @@
 package persistence.sql.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -8,22 +9,27 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DatabaseTable {
 
     private final String name;
 
-    private final DatabaseColumns columns;
+    private final List<DatabaseColumn> columns;
+
+    private final DatabasePrimaryColumn primaryColumn;
 
     public DatabaseTable(Class<?> clazz) {
         this.name = getTableName(clazz);
         this.columns = buildColumns(clazz, null);
+        this.primaryColumn = buildPrimaryColumn(clazz, null);
     }
 
     public <T> DatabaseTable(T entity) {
         Class<?> clazz = entity.getClass();
         this.name = getTableName(clazz);
         this.columns = buildColumns(clazz, entity);
+        this.primaryColumn = buildPrimaryColumn(clazz, entity);
     }
 
     private String getTableName(Class<?> clazz) {
@@ -37,43 +43,41 @@ public class DatabaseTable {
         return clazz.getSimpleName();
     }
 
-    private DatabaseColumns buildColumns(Class<?> clazz, Object object) {
-        List<DatabaseColumn> columns = Arrays.stream(clazz.getDeclaredFields())
+    private List<DatabaseColumn> buildColumns(Class<?> clazz, Object object) {
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(this::isMappingColumn)
-                .map(column -> buildColumn(column, object))
+                .filter(column -> !isPrimaryColumn(column))
+                .map(column -> DatabaseColumn.fromField(column, object))
                 .collect(Collectors.toList());
-        return new DatabaseColumns(columns);
+    }
+
+    private DatabasePrimaryColumn buildPrimaryColumn(Class<?> clazz, Object object) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(this::isMappingColumn)
+                .filter(this::isPrimaryColumn)
+                .findFirst()
+                .map(column -> DatabasePrimaryColumn.fromField(column, object))
+                .orElseThrow(() -> new IllegalStateException("entity primary key not exist"));
+    }
+
+    private boolean isPrimaryColumn(Field field) {
+        return field.isAnnotationPresent(Id.class);
     }
 
     private boolean isMappingColumn(Field field) {
         return !field.isAnnotationPresent(Transient.class);
     }
 
-    private DatabaseColumn buildColumn(Field field, Object object) {
-        return DatabaseColumn.fromField(field, object);
-    }
-
     public String getName() {
         return name;
     }
 
-    public List<DatabaseColumn> getColumns() {
-        return columns.getColumns();
+    public DatabasePrimaryColumn getPrimaryColumn() {
+        return DatabasePrimaryColumn.copy(primaryColumn);
     }
 
-    public String columnClause() {
-        return columns.columnClause();
-    }
-
-    public String valueClause() {
-        return columns.valueClause();
-    }
-
-    public String whereClause() {
-        return columns.whereClause();
-    }
-
-    public String getIdColumnName() {
-        return columns.getIdColumnName();
+    public List<ColumnOperation> getAllColumns() {
+        return Stream.concat(Stream.of(getPrimaryColumn()), columns.stream().map(DatabaseColumn::copy))
+                .collect(Collectors.toList());
     }
 }

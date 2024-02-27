@@ -1,6 +1,6 @@
 package persistence.sql;
 
-import persistence.sql.domain.DatabaseColumn;
+import persistence.sql.domain.ColumnOperation;
 
 import java.sql.Types;
 import java.util.HashMap;
@@ -34,9 +34,9 @@ public class MySqlDialect extends Dialect {
     }
 
     @Override
-    public String getJdbcTypeFromJavaClass(DatabaseColumn column) {
+    public String getJdbcTypeFromJavaClass(ColumnOperation column) {
         Class<?> clazz = column.getColumnObjectType();
-        Integer size = column.getSize();
+        Integer size = column.getColumnSize();
 
         return Optional.ofNullable(javaClassToJdbcType.get(clazz))
                 .map(jdbcType -> {
@@ -44,7 +44,7 @@ public class MySqlDialect extends Dialect {
                     Integer typeSize = getSize(jdbcType, size);
                     return String.format(typeValue, typeSize);
                 })
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("jdbc type of " + clazz + " does not defined in Dialect"));
     }
 
     private Integer getSize(Integer jdbcType, Integer size) {

@@ -5,7 +5,6 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.DdlQueryBuild;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.view.mysql.MySQLPrimaryKeyResolver;
 import persistence.sql.entity.Person;

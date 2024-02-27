@@ -24,7 +24,7 @@ class MySQLPrimaryKeyResolverTest {
                 DatabaseColumn.fromField(clazz.getDeclaredField("test"), null)
         ));
 
-        assertThat(query).isEqualTo("id BIGINT PRIMARY KEY AUTO_INCREMENT,test VARCHAR(300)");
+        assertThat(query).isEqualTo("id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,test VARCHAR(300)");
     }
 
     private class TestClass {

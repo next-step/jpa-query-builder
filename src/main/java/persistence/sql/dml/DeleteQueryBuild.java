@@ -1,5 +1,7 @@
 package persistence.sql.dml;
 
+import persistence.sql.domain.Query;
+
 public interface DeleteQueryBuild {
-    <T> String delete(T entity);
+    <T> Query delete(T entity);
 }

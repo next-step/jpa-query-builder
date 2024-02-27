@@ -1,8 +1,10 @@
 package persistence.sql.dml;
 
+import persistence.sql.domain.Query;
+
 public interface SelectQueryBuild {
 
-    String findAll(Class<?> entity);
+    Query findAll(Class<?> entity);
 
-    String findById(Class<?> entity, Object id);
+    Query findById(Class<?> entity, Object id);
 }

@@ -1,6 +1,8 @@
 package persistence.sql.dml;
 
+import persistence.sql.domain.Query;
+
 public interface InsertQueryBuild {
 
-    <T> String insert(T entity);
+    <T> Query insert(T entity);
 }

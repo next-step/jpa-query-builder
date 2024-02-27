@@ -14,7 +14,7 @@ class DdlQueryBuilderTest {
     @Test
     void should_create_create_query() {
         assertThat(ddlQueryBuilder.createQuery(Person.class)).isEqualTo("CREATE TABLE users(" +
-                "id BIGINT PRIMARY KEY AUTO_INCREMENT," +
+                "id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
                 "nick_name VARCHAR(255)," +
                 "old INT," +
                 "email VARCHAR(255) NOT NULL" +

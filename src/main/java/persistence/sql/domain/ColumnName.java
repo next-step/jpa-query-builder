@@ -6,18 +6,28 @@ import java.lang.reflect.Field;
 
 public class ColumnName {
 
-    private final String name;
+    private final String javaFieldName;
+
+    private final String jdbcColumnName;
 
     public ColumnName(Field field) {
-        Column annotation = field.getAnnotation(Column.class);
-        if (annotation != null && annotation.name().length() > 0) {
-            this.name = annotation.name();
-            return;
-        }
-        this.name = field.getName();
+        this.javaFieldName = field.getName();
+        this.jdbcColumnName = getJdbcColumnName(field);
     }
 
-    public String getName() {
-        return name;
+    private String getJdbcColumnName(Field field) {
+        Column annotation = field.getAnnotation(Column.class);
+        if (annotation != null && annotation.name().length() > 0) {
+            return annotation.name();
+        }
+        return field.getName();
+    }
+
+    public String getJavaFieldName() {
+        return javaFieldName;
+    }
+
+    public String getJdbcColumnName() {
+        return jdbcColumnName;
     }
 }
