@@ -5,6 +5,9 @@ import persistence.sql.Table;
 
 public class DDLQueryBuilder implements QueryBuilder {
 
+    private static final String CREATE_QUERY_FORMAT = "CREATE TABLE %s (%s);";
+    private static final String DROP_QUERY_FORMAT = "DROP TABLE %s;";
+
     private final Table table;
     private final Column column;
 
@@ -16,7 +19,7 @@ public class DDLQueryBuilder implements QueryBuilder {
     @Override
     public String create(Class<?> clz) {
         return String.format(
-                "CREATE TABLE %s (%s);",
+                CREATE_QUERY_FORMAT,
                 table.name(clz),
                 column.create(clz)
         );
@@ -25,7 +28,7 @@ public class DDLQueryBuilder implements QueryBuilder {
     @Override
     public String drop(Class<?> clz) {
         return String.format(
-                "DROP TABLE %s;",
+                DROP_QUERY_FORMAT,
                 table.name(clz)
         );
     }

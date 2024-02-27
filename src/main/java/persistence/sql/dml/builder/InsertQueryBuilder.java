@@ -5,6 +5,8 @@ import persistence.sql.dml.model.DMLColumn;
 
 public class InsertQueryBuilder {
 
+    private static final String INSERT_QUERY_FORMAT = "INSERT INTO %s (%s) VALUES (%s);";
+
     private final Table table;
     private final DMLColumn column;
 
@@ -15,9 +17,10 @@ public class InsertQueryBuilder {
 
     public String query(Class<?> clz, Object entity) {
         return String.format(
-                "INSERT INTO %s (%s) VALUES (%s);",
+                INSERT_QUERY_FORMAT,
                 table.name(clz),
                 column.fields(clz),
-                column.values(clz, entity));
+                column.values(clz, entity)
+        );
     }
 }

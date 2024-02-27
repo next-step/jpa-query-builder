@@ -5,6 +5,8 @@ import persistence.sql.dml.model.DMLColumn;
 
 public class DeleteQueryBuilder {
 
+    private static final String DELETE_QUERY_FORMAT = "DELETE FROM %s WHERE %s = %s;";
+
     private final Table table;
     private final DMLColumn column;
 
@@ -15,7 +17,7 @@ public class DeleteQueryBuilder {
 
     public String query(Class<?> clz, Object id) {
         return String.format(
-                "DELETE FROM %s WHERE %s = %s;",
+                DELETE_QUERY_FORMAT,
                 table.name(clz),
                 column.where(clz, id),
                 id
