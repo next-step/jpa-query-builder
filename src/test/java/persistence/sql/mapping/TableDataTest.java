@@ -1,11 +1,10 @@
-package persistence.sql.extractor;
+package persistence.sql.mapping;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.mapping.TableExtractor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,7 +23,7 @@ class WithoutTableName {
     private int id;
 }
 
-class TableExtractorTest {
+class TableDataTest {
 
     @Test
     @DisplayName("getName: @Table(name)이 있다면 name을 반환한다")

@@ -1,4 +1,4 @@
-package persistence.sql.extractor;
+package persistence.sql.mapping;
 
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
-import persistence.sql.mapping.ColumnData;
 import persistence.sql.mapping.exception.GenerationTypeMissingException;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -42,7 +41,7 @@ class TestClass {
     }
 }
 
-class ColumnExtractorTest {
+class ColumnDataTest {
     Dialect dialect = new H2Dialect();
 
     private static final String GENERATED_VALUE_FIELD_NAME = "generated";
