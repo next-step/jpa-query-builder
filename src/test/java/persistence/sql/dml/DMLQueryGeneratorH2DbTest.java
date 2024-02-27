@@ -16,7 +16,8 @@ class DMLQueryGeneratorH2DbTest {
     private static JdbcTemplate jdbcTemplate;
     private static DatabaseServer server;
     private DDLQueryGenerator ddlQueryGenerator;
-    private final DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(Person.class);
+    private final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
+    private final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);
 
     @BeforeAll
     public static void tearUp() throws Exception {
@@ -52,11 +53,11 @@ class DMLQueryGeneratorH2DbTest {
         Person person1 = new Person(null, nickName1, age, email, null);
         Person person2 = new Person(null, nickName2, age, email, null);
 
-        jdbcTemplate.execute(dmlQueryGenerator.generateInsertQuery(person1));
-        jdbcTemplate.execute(dmlQueryGenerator.generateInsertQuery(person2));
+        jdbcTemplate.execute(insertQueryBuilder.toQuery(person1));
+        jdbcTemplate.execute(insertQueryBuilder.toQuery(person2));
 
         List<Person> persons = jdbcTemplate.query(
-                dmlQueryGenerator.generateSelectQuery(new WhereBuilder()),
+                selectQueryBuilder.toQuery(new WhereBuilder()),
                 rs -> new Person(
                         rs.getLong("id"),
                         rs.getString("nick_name"),
