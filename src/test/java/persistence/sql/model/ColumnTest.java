@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import persistence.study.sql.ddl.Person2;
 import persistence.study.sql.ddl.Person3;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class ColumnTest {
@@ -38,5 +41,33 @@ class ColumnTest {
                 Arguments.arguments(new Column(ageField), "old", SqlType.INTEGER, List.of()),
                 Arguments.arguments(new Column(emailField), "email", SqlType.VARCHAR, List.of(SqlConstraint.NOT_NULL))
         );
+    }
+
+    @DisplayName("올바르게 인스턴스의 값을 반환하는지 확인")
+    @Test
+    void getValue() throws NoSuchFieldException {
+        Column column = createPerson3NameColumn();
+        Person3 person = new Person3("a", 1, "email@email.com");
+
+        Object result = column.getValue(person);
+
+        assertThat(result).isEqualTo("a");
+    }
+
+    @DisplayName("해당 필드가 없는 instance를 넣었을 경우 IllegalArgumentException을 던진다.")
+    @Test
+    void getValueWithException() throws NoSuchFieldException {
+        Column column = createPerson3NameColumn();
+        Person2 person = new Person2("a", 1, "email@email.com");
+
+        assertThatThrownBy(() -> column.getValue(person))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("This instance does not have any of the fields in that column.");
+    }
+
+    private Column createPerson3NameColumn() throws NoSuchFieldException {
+        Class<Person3> clazz = Person3.class;
+        Field field = clazz.getDeclaredField("name");
+        return new Column(field);
     }
 }
