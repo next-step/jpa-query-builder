@@ -47,10 +47,7 @@ public class QueryTest {
     }
 
     @BeforeEach
-    void setUp() throws SQLException {
-
-
-
+    void setUp() {
         String createTableQuery = ddlQueryBuilder.buildCreateQuery();
         jdbcTemplate.execute(createTableQuery);
 
