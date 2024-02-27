@@ -22,7 +22,7 @@ public class Person {
     @Transient
     private Integer index;
 
-    private Person() {
+    protected Person() {
 
     }
 

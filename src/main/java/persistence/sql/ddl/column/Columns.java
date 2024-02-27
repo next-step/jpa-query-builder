@@ -42,7 +42,8 @@ public class Columns {
 
     public String getColumnsClause() {
         return columns.stream()
+                .filter(column -> !column.hasId())
                 .map(EntityColumn::getName)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
     }
 }
