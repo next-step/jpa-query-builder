@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.mapping;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

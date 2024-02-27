@@ -42,20 +42,4 @@ class CreateQueryBuilderTest {
 
         assertThat(query.toLowerCase()).isEqualTo(expect.toLowerCase());
     }
-
-    @Test
-    @DisplayName("기본키 없으면 에러")
-    void throwErrorWhenPrimaryKeyIsNotDefined() {
-        assertThrows(IdAnnotationMissingException.class, () -> {
-            CreateQueryBuilder sut = new CreateQueryBuilder(new H2Dialect(), NoPrimaryKeyTest.class);
-        });
-    }
-
-    @Test
-    @DisplayName("Entity 클래스가 아니면 에러")
-    void throwErrorWhenClassIsNotForEntity() {
-        assertThrows(AnnotationMissingException.class, () -> {
-            new CreateQueryBuilder(new H2Dialect(), NoEntityAnnotationTest.class);
-        });
-    }
 }
