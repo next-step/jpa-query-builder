@@ -100,6 +100,31 @@
 
 ### 요구사항
 
+```java
+
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+```
+
 * [ ] 요구사항 1 - 위의 정보를 바탕으로 insert 구현해보기
     * 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
     * 위의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
@@ -130,7 +155,6 @@
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(selectQuery);
           stringBuilder.append(" where ");
-          ...
       }
       ```
 
