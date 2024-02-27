@@ -8,7 +8,7 @@ import persistence.sql.ddl.mapping.DDLQueryBuilder;
 import persistence.sql.ddl.mapping.H2PrimaryKeyGenerationType;
 import persistence.sql.ddl.mapping.QueryBuilder;
 import persistence.sql.ddl.model.Column;
-import persistence.sql.ddl.model.Table;
+import persistence.sql.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +27,7 @@ class DDLQueryBuilderTest {
 
     @Test
     void createQueryTest() {
-        final var expected = "CREATE TABLE users ( id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL );";
+        final var expected = "CREATE TABLE users (id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);";
 
         final var actual = queryBuilder.create(Person.class);
 

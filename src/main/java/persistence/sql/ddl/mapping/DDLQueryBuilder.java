@@ -1,9 +1,12 @@
 package persistence.sql.ddl.mapping;
 
 import persistence.sql.ddl.model.Column;
-import persistence.sql.ddl.model.Table;
+import persistence.sql.Table;
 
 public class DDLQueryBuilder implements QueryBuilder {
+
+    private static final String CREATE_QUERY_FORMAT = "CREATE TABLE %s (%s);";
+    private static final String DROP_QUERY_FORMAT = "DROP TABLE %s;";
 
     private final Table table;
     private final Column column;
@@ -15,15 +18,19 @@ public class DDLQueryBuilder implements QueryBuilder {
 
     @Override
     public String create(Class<?> clz) {
-        return new StringBuilder()
-                .append(table.create(clz))
-                .append(column.create(clz))
-                .toString();
+        return String.format(
+                CREATE_QUERY_FORMAT,
+                table.name(clz),
+                column.create(clz)
+        );
     }
 
     @Override
     public String drop(Class<?> clz) {
-        return table.drop(clz);
+        return String.format(
+                DROP_QUERY_FORMAT,
+                table.name(clz)
+        );
     }
 
 }
