@@ -35,4 +35,12 @@ public class Person {
     public String getName() {
         return name;
     }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
