@@ -25,8 +25,13 @@ public class DMLQueryBuilder {
         return findByIdQueryBuilder.build();
     }
 
-    public String buildDeleteQuery() {
-        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(table);
-        return deleteQueryBuilder.build();
+    public String buildDeleteAllQuery() {
+        DeleteAllQueryBuilder deleteAllQueryBuilder = new DeleteAllQueryBuilder(table);
+        return deleteAllQueryBuilder.build();
+    }
+
+    public String buildDeleteByIdQuery(Object instance) {
+        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder(table, instance);
+        return deleteByIdQueryBuilder.build();
     }
 }
