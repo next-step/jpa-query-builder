@@ -7,11 +7,13 @@ import persistence.entity.Person;
 import persistence.repository.Repository;
 import persistence.repository.RepositoryImpl;
 import persistence.sql.db.H2Database;
+import persistence.sql.dml.exception.InvalidDeleteNullPointException;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class RepositoryImplTest extends H2Database {
 
@@ -56,5 +58,13 @@ class RepositoryImplTest extends H2Database {
         Optional<Person> person = personRepository.findById(1L);
 
         assertThat(person.isPresent()).isFalse();
+    }
+
+    @DisplayName("디비에 없는값을 제거시 에러를 반환한다.")
+    @Test
+    void isNotExistsDeleteTest() {
+        assertThatThrownBy(() -> personRepository.deleteById(3L))
+                .isInstanceOf(InvalidDeleteNullPointException.class)
+                .hasMessage("값이 존재하지 않아 삭제가 불가능합니다.");
     }
 }
