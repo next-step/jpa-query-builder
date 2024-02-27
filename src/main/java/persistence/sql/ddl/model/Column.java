@@ -40,7 +40,7 @@ public class Column {
                 .append(name(field))
                 .append(type(field))
                 .append(properties(field))
-                .append(generation(field))
+                .append(primaryKeyGenerationTypeValue(field))
                 .append(primaryKey(field))
                 .toString();
     }
@@ -58,7 +58,7 @@ public class Column {
         return EMPTY;
     }
 
-    private String generation(Field field) {
+    private String primaryKeyGenerationTypeValue(Field field) {
         return generationType.value(field);
     }
 
