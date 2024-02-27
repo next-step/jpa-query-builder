@@ -23,4 +23,14 @@ src>test>java>persistence>study 하위에 StringTest 클래스를 하나 생성�
 - [x] insert 구현해보기
 - [x] findAll 기능 구현해보기
 - [x] 단건 조회(findBy Id) 기능 구현해보기
-- [ ] delete 쿼리 만들어보기
+- [x] delete 쿼리 만들어보기
+
+## Step4 요구사항
+- [x] Step3리뷰반영
+  - [x] dml의 clause 객체 묶기
+  - [x] dml의 clause 객체 재사용 하도록 구현
+  - [x] ddl에서 Column 종속성 제거 후 삭제
+  - [x] RowMapper 함수 분리
+- [x] find 구현
+- [x] persist(insert) 구현
+- [x] remove(delete) 구현

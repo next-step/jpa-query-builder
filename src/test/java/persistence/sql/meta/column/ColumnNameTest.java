@@ -21,7 +21,7 @@ public class ColumnNameTest {
     void columName(String fieldName, String columnName) throws NoSuchFieldException {
         Field field = Person.class.getDeclaredField(fieldName);
 
-        Assertions.assertThat(new Column(field).getColumnName()).isEqualTo(columnName);
+        Assertions.assertThat(new ColumnName(field).getName()).isEqualTo(columnName);
     }
 
     @Entity

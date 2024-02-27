@@ -1,4 +1,4 @@
-package persistence.sql.dml.caluse;
+package persistence.sql.dml.clause;
 
 import jakarta.persistence.Transient;
 import persistence.sql.meta.column.ColumnName;

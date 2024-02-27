@@ -1,10 +1,8 @@
-package persistence.sql.dml.builder;
+package persistence.entity;
 
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import jdbc.RowMapper;
-import jdbc.RowMapperImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,65 +14,66 @@ import persistence.sql.ddl.builder.QueryBuilder;
 import persistence.sql.ddl.dialect.H2Dialect;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class SelectQueryBuilderTest {
-    private JdbcTemplate jdbcTemplate;
-    private DatabaseServer server;
-    private final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
-    private final RowMapper<Person> rowMapper = new RowMapperImpl<>(Person.class);
+class EntityManagerImplTest {
 
+    private DatabaseServer server;
+    private JdbcTemplate jdbcTemplate;
+    private EntityManager<Person> entityManager;
 
     @BeforeEach
     void setup() throws SQLException {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
+        entityManager = new EntityManagerImpl<>(jdbcTemplate);
 
         QueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect());
         jdbcTemplate.execute(createQueryBuilder.generateSQL(Person.class));
     }
 
     @AfterEach
-    void clean() throws SQLException {
+    void clean() {
         String sql = new DropQueryBuilder(new H2Dialect()).generateSQL(Person.class);
         jdbcTemplate.execute(sql);
         server.stop();
     }
 
+    @DisplayName("find/id로 조회/성공")
     @Test
-    @DisplayName("findAll/데이터 insert 2회/2개 조회 성공")
-    void findAll() {
+    void find() {
         Person person = new Person("hoon25", 20, "hoon25@gmail.com");
-        jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
-        jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
+        entityManager.persist(person);
 
-        List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(Person.class), rowMapper);
-
-        assertThat(persons).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("findById/데이터 insert 1회/1L로 조회 성공")
-    void findById() {
-        Person person = new Person("hoon25", 20, "hoon25@gmail.com");
-        jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
-
-        Person findPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(Person.class, 1L), rowMapper);
+        Person findPerson = entityManager.find(Person.class, 1L);
 
         assertThat(person.getName()).isEqualTo(findPerson.getName());
     }
 
+    @DisplayName("persist/entity 저장/저장 성공")
     @Test
-    @DisplayName("findById/데이터 insert 1회/2L로 조회 RunTimeException")
-    void findByIdFail() {
+    void persist() {
         Person person = new Person("hoon25", 20, "hoon25@gmail.com");
-        jdbcTemplate.execute(new InsertQueryBuilder().generateSQL(person));
 
-        assertThatThrownBy(() -> jdbcTemplate.queryForObject(selectQueryBuilder.findById(Person.class, 2L), rowMapper))
+        entityManager.persist(person);
+
+        Person findPerson = entityManager.find(Person.class, 1L);
+        assertThat(person.getName()).isEqualTo(findPerson.getName());
+    }
+
+    @DisplayName("remove/entity 삭제/삭제 성공")
+    @Test
+    void remove() {
+        Person person = new Person("hoon25", 20, "hoon25@gmail.com");
+        entityManager.persist(person);
+
+        Person findPerson = entityManager.find(Person.class, 1L);
+        entityManager.remove(findPerson);
+
+        assertThatThrownBy(() -> entityManager.find(Person.class, 1L))
                 .isInstanceOf(RuntimeException.class);
     }
 }

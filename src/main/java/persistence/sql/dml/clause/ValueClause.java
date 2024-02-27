@@ -1,42 +1,41 @@
-package persistence.sql.dml.caluse;
+package persistence.sql.dml.clause;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import persistence.sql.meta.pk.GenerationType;
 
 import java.lang.reflect.Field;
 
 public class ValueClause {
-    public static final String DEFAULT_VALUE = "DEFAULT";
-    public static final String STRING_QUOTE = "'";
-    private final Object object;
-    private final Field field;
+    private static final String DEFAULT_VALUE = "DEFAULT";
+    private static final String SINGLE_QUOTE = "'";
+    private final String value;
 
     public ValueClause(Object object, Field field) {
         this.validateColumn(field);
-        this.object = object;
-        this.field = field;
+        this.value = extractValue(object, field);
     }
 
     public String getValue() {
-        if (field.isAnnotationPresent(Id.class)) {
-            return getPKValue();
-        }
-        return getValueByField();
+        return this.value;
     }
 
-    private String getPKValue() {
-        GenerationType generationType = field.isAnnotationPresent(GeneratedValue.class)
-                ? field.getAnnotation(GeneratedValue.class).strategy()
-                : GenerationType.AUTO;
+    private String extractValue(Object object, Field field) {
+        if (field.isAnnotationPresent(Id.class)) {
+            return extractValueByPK(object, field);
+        }
+        return extractValueByField(object, field);
+    }
+
+    private String extractValueByPK(Object object, Field field) {
+        GenerationType generationType = GenerationType.of(object.getClass());
         if (generationType.equals(GenerationType.AUTO)) {
-            return getValueByField();
+            return extractValueByField(object, field);
         }
         return DEFAULT_VALUE;
     }
 
-    private String getValueByField() {
+    private String extractValueByField(Object object, Field field) {
         try {
             field.setAccessible(true);
             Class<?> type = field.getType();
@@ -44,7 +43,7 @@ public class ValueClause {
             if (type.equals(Integer.class) || type.equals(Long.class)) {
                 return value.toString();
             }
-            return STRING_QUOTE + value.toString() + STRING_QUOTE;
+            return SINGLE_QUOTE + value.toString() + SINGLE_QUOTE;
         } catch (IllegalAccessException e) {
             throw new RuntimeException("필드의 값에 접근할 수 없습니다.", e);
         }

@@ -21,6 +21,16 @@ public enum GenerationType {
         return mappingJPAtoJPAImpl(pkField.getAnnotation(GeneratedValue.class).strategy());
     }
 
+    public static GenerationType of(Field pkField) {
+        if (!pkField.isAnnotationPresent(Id.class)) {
+            throw new IllegalStateException("Id 어노테이션은 반드시 존재해야합니다.");
+        }
+        if (!pkField.isAnnotationPresent(jakarta.persistence.GeneratedValue.class)) {
+            return AUTO;
+        }
+        return mappingJPAtoJPAImpl(pkField.getAnnotation(GeneratedValue.class).strategy());
+    }
+
     private static GenerationType mappingJPAtoJPAImpl(jakarta.persistence.GenerationType before) {
         return Arrays.stream(GenerationType.values())
                 .filter(generationType -> before.name().equals(generationType.name()))
