@@ -19,14 +19,14 @@ public class Table {
 
     private String generateTableName(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(jakarta.persistence.Table.class)) {
-            return clazz.getSimpleName().toUpperCase();
+            return clazz.getSimpleName();
         }
 
         jakarta.persistence.Table table = clazz.getAnnotation(jakarta.persistence.Table.class);
         if (table.name().isEmpty()) {
-            return clazz.getSimpleName().toUpperCase();
+            return clazz.getSimpleName();
         }
-        return table.name().toUpperCase();
+        return table.name();
     }
 
     public String getName() {

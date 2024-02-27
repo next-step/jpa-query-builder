@@ -14,7 +14,7 @@ class DropQueryBuilderTest {
     void DDLDropTest() {
         // given
         DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
-        String expectedQuery = "DROP TABLE PERSON;";
+        String expectedQuery = "DROP TABLE Person;";
 
         // when
         String actualQuery = dropQueryBuilder.build();
@@ -28,7 +28,7 @@ class DropQueryBuilderTest {
     void DDLDropTest2() {
         // given
         DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person3.class);
-        String expectedQuery = "DROP TABLE USERS;";
+        String expectedQuery = "DROP TABLE users;";
 
         // when
         String actualQuery = dropQueryBuilder.build();

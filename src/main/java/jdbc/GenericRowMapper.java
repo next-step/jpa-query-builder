@@ -20,7 +20,7 @@ public class GenericRowMapper<T> implements RowMapper<T> {
     public T mapRow(final ResultSet resultSet) {
         try {
             final List<Field> fields = getFields();
-            return getInstance(resultSet, fields);
+            return toInstance(resultSet, fields);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -40,7 +40,7 @@ public class GenericRowMapper<T> implements RowMapper<T> {
         return field.getName();
     }
 
-    private T getInstance(ResultSet resultSet, List<Field> fields) throws Exception {
+    private T toInstance(ResultSet resultSet, List<Field> fields) throws Exception {
         T instance = clazz.getDeclaredConstructor().newInstance();
         for (Field field : fields) {
             field.setAccessible(true);

@@ -14,7 +14,7 @@ class DeleteQueryBuilderTest {
     @DisplayName("Person 객체를 이용한 DML DELETE 생성 테스트")
     void DMLDeleteTest() {
         // given
-        String expectedQuery = "DELETE FROM USERS WHERE ID = 1;";
+        String expectedQuery = "DELETE FROM users WHERE id = 1;";
 
         // when
         String actualQuery = new DeleteQueryBuilder(Person.class, List.of("id"), List.of(1L)).build();

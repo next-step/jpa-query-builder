@@ -33,10 +33,10 @@ public class Column {
 
     public String createColumnName(Field field) {
         if (field.isAnnotationPresent(jakarta.persistence.Column.class) && !field.getAnnotation(jakarta.persistence.Column.class).name().isBlank()) {
-            return field.getAnnotation(jakarta.persistence.Column.class).name().toUpperCase();
+            return field.getAnnotation(jakarta.persistence.Column.class).name();
         }
 
-        return field.getName().toUpperCase();
+        return field.getName();
     }
 
     public Class<?> createColumnType(Field field) {

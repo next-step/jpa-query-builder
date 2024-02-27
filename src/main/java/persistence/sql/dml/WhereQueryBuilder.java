@@ -35,15 +35,11 @@ public class WhereQueryBuilder implements QueryBuilder {
 
     private List<Value> createValues(Class<?> clazz, List<String> whereColumns, List<Object> whereValues) {
         return IntStream.range(0, whereColumns.size())
-                .mapToObj(index -> createValue(clazz, whereColumns, whereValues, index))
+                .mapToObj(index -> createValue(clazz, whereColumns.get(index), whereValues.get(index)))
                 .collect(Collectors.toList());
     }
 
-    private Value createValue(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, int index) {
-        return getValue(clazz, whereColumns.get(index), whereValues.get(index));
-    }
-
-    private Value getValue(Class<?> clazz, String column, Object value) {
+    private Value createValue(Class<?> clazz, String column, Object value) {
         try {
             Field field = clazz.getDeclaredField(column);
             return new Value(new Column(field), field.getType(), value);
