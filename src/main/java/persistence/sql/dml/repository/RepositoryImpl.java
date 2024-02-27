@@ -1,6 +1,7 @@
 package persistence.sql.dml.repository;
 
 import jdbc.JdbcTemplate;
+import persistence.sql.dml.exception.InvalidDeleteNullPointException;
 import persistence.sql.entity.manager.EntityManagerImpl;
 import persistence.sql.entity.manager.EntityManger;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class RepositoryImpl<T, K> implements Repository<T, K> {
+    private static final String MESSAGE = "값이 존재 하지 않습니다.";
 
     private final EntityManger<T, K> entityManger;
     private final Class<T> clazz;
@@ -42,6 +44,10 @@ public class RepositoryImpl<T, K> implements Repository<T, K> {
     @Override
     public void deleteById(K id) {
         T t = entityManger.find(clazz, id);
+        if(t == null) {
+            throw new InvalidDeleteNullPointException();
+        }
+
         entityManger.remove(t);
     }
 }
