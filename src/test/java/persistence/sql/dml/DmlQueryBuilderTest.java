@@ -4,9 +4,10 @@ import database.DatabaseServer;
 import database.H2;
 import domain.Person1;
 import domain.Person3;
-import domain.step3.mapper.PersonMapper;
+import domain.step3.mapper.RowMapperImpl;
 import jakarta.persistence.Column;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +32,7 @@ class DmlQueryBuilderTest {
 
     Person3 person = new Person3();
     Person3 personWithIdNull = new Person3();
-    PersonMapper personMapper = new PersonMapper();
+    RowMapper<Person3> rowMapper = new RowMapperImpl<>(Person3.class);
 
     @BeforeAll
     static void setUp() throws SQLException {
@@ -45,6 +46,7 @@ class DmlQueryBuilderTest {
         server.stop();
     }
 
+    @DisplayName("모든 데이터가 주어질 때 데이터 insert test")
     @Test
     void insertDataWithAllValuesTest() {
         person = new Person3(1L, "test", 20, "test@test.com");
@@ -52,6 +54,7 @@ class DmlQueryBuilderTest {
         assertThat(dmlQueryBuilder.insertQuery(person)).isEqualTo(insertQuery);
     }
 
+    @DisplayName("nullable = false 인 경우를 제외하고 다른 데이터는 null 일 경우 insert test")
     @Test
     void insertDataWithNullValuesTest() {
         person = new Person3(null, null, "test@test.com");
@@ -88,7 +91,7 @@ class DmlQueryBuilderTest {
     void executeFindAllQuery() {
         createTable();
         insertData();
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), personMapper)).hasSize(2);
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), rowMapper)).hasSize(2);
         dropTable();
     }
 
@@ -97,7 +100,7 @@ class DmlQueryBuilderTest {
     void executeFindByIdQuery() {
         createTable();
         insertData();
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findByIdQuery(Person3.class, personWithIdNull.getId()), personMapper))
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findByIdQuery(Person3.class, personWithIdNull.getId()), rowMapper))
                 .hasSize(1);
         dropTable();
     }
@@ -108,15 +111,14 @@ class DmlQueryBuilderTest {
         createTable();
         insertData();
 
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), personMapper)).hasSize(2);
-
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), rowMapper)).hasSize(2);
 
         Field idField = Arrays.stream(person.getClass().getDeclaredFields())
                 .filter(field1 -> getFieldName(field1).equals("id"))
                 .findAny().get();
 
         jdbcTemplate.execute(dmlQueryBuilder.deleteQuery(Person3.class, idField, person.getId()));
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), personMapper)).hasSize(1);
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), rowMapper)).hasSize(1);
         dropTable();
     }
 
