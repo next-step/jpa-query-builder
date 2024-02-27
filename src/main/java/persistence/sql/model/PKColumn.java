@@ -6,13 +6,14 @@ import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class PKColumn {
 
     private final Column column;
 
-    private final Optional<GenerationType> generationType;
+    private final GenerationType generationType;
 
     public PKColumn(Field pkField) {
         validatePKField(pkField);
@@ -31,15 +32,14 @@ public class PKColumn {
         return new Column(field);
     }
 
-    private Optional<GenerationType> buildGenerationType(Field field) {
+    private GenerationType buildGenerationType(Field field) {
         GeneratedValue generatedValue = field.getDeclaredAnnotation(GeneratedValue.class);
 
-        if (generatedValue != null) {
-            GenerationType strategy = generatedValue.strategy();
-            return Optional.of(strategy);
+        if (generatedValue == null) {
+            return null;
         }
 
-        return Optional.empty();
+        return generatedValue.strategy();
     }
 
     public String getName() {
@@ -55,7 +55,7 @@ public class PKColumn {
     }
 
     public Optional<GenerationType> getGenerationType() {
-        return generationType;
+        return Optional.ofNullable(generationType);
     }
 
     public Object getValue(Object instance) {
@@ -69,14 +69,14 @@ public class PKColumn {
 
         PKColumn pkColumn = (PKColumn) object;
 
-        if (!column.equals(pkColumn.column)) return false;
-        return generationType.equals(pkColumn.generationType);
+        if (!Objects.equals(column, pkColumn.column)) return false;
+        return generationType == pkColumn.generationType;
     }
 
     @Override
     public int hashCode() {
-        int result = column.hashCode();
-        result = 31 * result + generationType.hashCode();
+        int result = column != null ? column.hashCode() : 0;
+        result = 31 * result + (generationType != null ? generationType.hashCode() : 0);
         return result;
     }
 }
