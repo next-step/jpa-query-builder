@@ -49,8 +49,7 @@ public class InsertQueryBuilder {
 
         List<Column> columns = table.getColumns();
         columns.forEach(column -> {
-            Object value = column.getValue(instance);
-            String columnValueClause = buildColumnValueClause(value);
+            String columnValueClause = buildColumnValueClause(column, instance);
             valueClauseBuilder
                     .append(',')
                     .append(columnValueClause);
@@ -59,10 +58,11 @@ public class InsertQueryBuilder {
         return valueClauseBuilder.toString();
     }
 
-    private String buildColumnValueClause(Object value) {
+    private String buildColumnValueClause(Column column, Object instance) {
         StringBuilder valueClauseBuilder = new StringBuilder();
 
-        if (value instanceof String) {
+        Object value = column.getValue(instance);
+        if (column.isType(String.class)) {
             return valueClauseBuilder.append('\'')
                     .append(value)
                     .append('\'')

@@ -63,6 +63,11 @@ public class Column {
         return constraints;
     }
 
+    public <T> boolean isType(Class<T> type) {
+        Class<?> clazz = this.type.toJavaClass();
+        return clazz.isAssignableFrom(type);
+    }
+
     public String getName() {
         return name;
     }
