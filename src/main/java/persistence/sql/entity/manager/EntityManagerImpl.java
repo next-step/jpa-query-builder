@@ -54,7 +54,7 @@ public class EntityManagerImpl<T, K> implements EntityManger<T, K> {
     public void remove(final T entity) {
         final EntityMappingTable entityMappingTable = EntityMappingTable.from(entity.getClass());
         final DomainType pkDomainType = entityMappingTable.getPkDomainTypes();
-        final EntityManagerMapper<T> entityManagerMapper = new EntityManagerMapper<T>(entity, entity.getClass(), pkDomainType.getName());
+        final EntityManagerMapper<T> entityManagerMapper = new EntityManagerMapper(entity, entity.getClass(), pkDomainType.getName());
 
         Criteria criteria = new Criteria(pkDomainType.getColumnName(), entityManagerMapper.getFieldValue(), Operators.EQUALS);
         Criterias criterias = new Criterias(Collections.singletonList(criteria));
