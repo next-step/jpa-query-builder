@@ -1,13 +1,13 @@
-package persistence.sql.dml.repository;
+package persistence.sql.entity.manager;
 
-import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
+import persistence.repository.Repository;
+import persistence.repository.RepositoryImpl;
 import persistence.sql.db.H2Database;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
-import persistence.sql.entity.EntityMappingTable;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,20 +15,19 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RepositoryMapperTest extends H2Database {
-    private RepositoryMapper<Person> repositoryMapper;
+class EntityManagerMapperTest extends H2Database {
+    private EntityManagerMapper<Person> entityManagerMapper;
     private Connection connection;
     private SelectQueryBuilder selectQueryBuilder;
-    private Repository<Person> personRepository;
+    private Repository<Person, Long> personRepository;
 
     private Person person1;
-    private Person person2;
 
 
     @BeforeEach
     void setUp() throws SQLException {
         this.personRepository = new RepositoryImpl<>(jdbcTemplate, Person.class);
-        this.repositoryMapper = new RepositoryMapper(Person.class);
+        this.entityManagerMapper = new EntityManagerMapper<>(Person.class);
         this.connection = server.getConnection();
         this.selectQueryBuilder = SelectQueryBuilder.from(entityMappingTable);
 
@@ -53,7 +52,7 @@ class RepositoryMapperTest extends H2Database {
     private Person executeQuery(final String sql) {
         try (final ResultSet resultSet = connection.prepareStatement(sql).executeQuery()) {
             resultSet.next();
-            return repositoryMapper.mapper(resultSet);
+            return entityManagerMapper.mapper(resultSet);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("SQL 에러가 발생하였습니다.");

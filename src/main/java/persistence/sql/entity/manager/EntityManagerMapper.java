@@ -1,9 +1,6 @@
-package persistence.sql.dml.repository;
+package persistence.sql.entity.manager;
 
-import persistence.sql.dml.exception.FieldSetValueException;
-import persistence.sql.dml.exception.InstanceException;
-import persistence.sql.dml.exception.InvalidFieldValueException;
-import persistence.sql.dml.exception.NotFoundFieldException;
+import persistence.sql.dml.exception.*;
 import persistence.sql.entity.EntityMappingTable;
 import persistence.sql.entity.model.DomainType;
 
@@ -12,11 +9,11 @@ import java.sql.ResultSet;
 import java.util.Spliterator;
 import java.util.stream.StreamSupport;
 
-public class RepositoryMapper<T> {
+public class EntityManagerMapper<T> {
 
     private final Class<T> clazz;
 
-    public RepositoryMapper(final Class<T> clazz) {
+    public EntityManagerMapper(Class<T> clazz) {
         this.clazz = clazz;
     }
 
@@ -67,4 +64,13 @@ public class RepositoryMapper<T> {
         }
     }
 
+    public String getFieldValue(final T entity, final String columnName) {
+        try {
+            Field field = clazz.getDeclaredField(columnName);
+            field.setAccessible(true);
+            return field.get(entity).toString();
+        } catch (Exception e) {
+            throw new NotFoundIdException();
+        }
+    }
 }

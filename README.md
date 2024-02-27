@@ -38,3 +38,10 @@
 - [x] 모두 조회(findAll) 기능 구현해보기
 - [x] 단건 조회(findById) 기능 구현해보기
 - [x] delete 쿼리 만들어보기
+
+## 4단계 요구사항
+
+- [x] EntityManager find 구현
+- [x] EntityManager persist (insert) 구현
+- [x] EntityMaanger remove (delete) 구현
+

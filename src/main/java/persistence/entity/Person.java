@@ -30,6 +30,10 @@ public class Person {
         this.email = email;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

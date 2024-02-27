@@ -3,10 +3,7 @@ package persistence.sql.dml.query.builder;
 import persistence.sql.dml.query.clause.ColumnClause;
 import persistence.sql.dml.query.clause.WhereClause;
 import persistence.sql.entity.EntityMappingTable;
-import persistence.sql.entity.model.DomainType;
-
-import java.util.HashMap;
-import java.util.Map;
+import persistence.sql.entity.conditional.Criteria;
 
 public class SelectQueryBuilder {
     private static final String FORMAT = "SELECT %s FROM %s %s";
@@ -23,27 +20,26 @@ public class SelectQueryBuilder {
         this.whereClause = whereClause;
     }
 
-    public static SelectQueryBuilder of(EntityMappingTable entityMappingTable, Map<DomainType, String> whereClause) {
+    public static SelectQueryBuilder of(final EntityMappingTable entityMappingTable,
+                                        final Criteria criterias) {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
-                new WhereClause(whereClause)
+                new WhereClause(criterias)
         );
     }
 
-    public static SelectQueryBuilder from(EntityMappingTable entityMappingTable) {
+    public static SelectQueryBuilder from(final EntityMappingTable entityMappingTable) {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
-                new WhereClause(new HashMap())
+                new WhereClause(Criteria.emptyInstance())
         );
     }
 
     public String toSql() {
         return String.format(FORMAT, columnClause.toSql(), tableName, whereClause.toSql());
     }
-
-
 
 
 }

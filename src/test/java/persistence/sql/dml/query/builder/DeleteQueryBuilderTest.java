@@ -5,9 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.conditional.Criterion;
+import persistence.sql.entity.conditional.Criteria;
 import persistence.sql.entity.model.DomainType;
+import persistence.sql.entity.model.Operators;
 
-import java.util.Map;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,8 +27,10 @@ class DeleteQueryBuilderTest {
     @Test
     void deleteById() {
         DomainType pkDomainTypes = entityMappingTable.getPkDomainTypes();
-        Map<DomainType, String> where = Map.of(pkDomainTypes, "1");
-        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of("person", where);
+        Criterion criterion = new Criterion(pkDomainTypes.getColumnName(), "1", Operators.EQUALS);
+        Criteria criteria = new Criteria(Collections.singletonList(criterion));
+
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of("person", criteria);
 
         assertThat(deleteQueryBuilder.toSql()).isEqualTo("DELETE FROM person where id='1'");
     }
