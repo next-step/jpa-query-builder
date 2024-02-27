@@ -1,14 +1,23 @@
 # jpa-query-builder
 
-### DDLQueryGenerator
-- 문자열 조합하여 DDL Query를 생성
+### CreateQueryBuilder
+- create 쿼리 생성
 
-### Extractor
-- ColumnExtractor
+### DropQueryBuilder
+- drop 쿼리 생성
+
+### MappingData
+- ColumnData
   - Entity 클래스의 필드에서 컬럼 정보를 추출
+  - 추출한 정보 저장
 
-- TableExtractor 
+- Columns
+  - ColumnData 한번에 여러개 생성
+  - 생성시 조건 검증
+
+- TableData
   - Entity 클래스의 테이블 정보를 추출
+  - 추출한 정보저장
 
 ### Dialect
 - 여러 DB 확장을 위해 추출정보를 각 DB에 맞는 용어로 변환하는 인터페이스
