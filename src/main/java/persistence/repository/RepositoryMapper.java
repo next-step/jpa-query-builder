@@ -1,4 +1,4 @@
-package persistence.sql.dml.repository;
+package persistence.repository;
 
 import persistence.sql.dml.exception.FieldSetValueException;
 import persistence.sql.dml.exception.InstanceException;

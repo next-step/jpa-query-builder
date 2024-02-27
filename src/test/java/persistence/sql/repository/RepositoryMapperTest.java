@@ -1,13 +1,14 @@
-package persistence.sql.dml.repository;
+package persistence.sql.repository;
 
-import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
+import persistence.repository.Repository;
+import persistence.repository.RepositoryImpl;
+import persistence.repository.RepositoryMapper;
 import persistence.sql.db.H2Database;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
-import persistence.sql.entity.EntityMappingTable;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

@@ -1,13 +1,10 @@
 package persistence.sql.entity.manager;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.db.H2Database;
-import persistence.sql.dml.repository.Repository;
-import persistence.sql.dml.repository.RepositoryImpl;
 
 import java.util.Optional;
 

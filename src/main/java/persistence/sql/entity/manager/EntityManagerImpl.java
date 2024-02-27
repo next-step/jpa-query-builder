@@ -4,7 +4,7 @@ import jdbc.JdbcTemplate;
 import persistence.sql.dml.query.builder.DeleteQueryBuilder;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
-import persistence.sql.dml.repository.RepositoryMapper;
+import persistence.repository.RepositoryMapper;
 import persistence.sql.entity.EntityMappingTable;
 import persistence.sql.entity.conditional.Criteria;
 import persistence.sql.entity.conditional.Criterias;

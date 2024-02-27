@@ -1,4 +1,4 @@
-package persistence.sql.dml.repository;
+package persistence.repository;
 
 import jdbc.JdbcTemplate;
 import persistence.sql.dml.exception.InvalidDeleteNullPointException;
