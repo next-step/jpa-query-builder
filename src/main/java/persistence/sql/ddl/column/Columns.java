@@ -1,32 +1,33 @@
 package persistence.sql.ddl.column;
 
+import jakarta.persistence.Transient;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Columns {
 
-    private final List<Column> columns;
+    private final List<EntityColumn> columns;
 
-    private Columns(List<Column> columns) {
+    private Columns(List<EntityColumn> columns) {
         this.columns = columns;
 
         checkHasIdAnnotation(columns);
     }
 
     public static Columns from(Class<?> entity) {
-        List<Column> columns = Arrays.stream(entity.getDeclaredFields())
-                .map(Column::from)
-                .filter(Objects::nonNull)
+        List<EntityColumn> columns = Arrays.stream(entity.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(ColumnConvertor::convert)
                 .collect(Collectors.toList());
 
         return new Columns(columns);
     }
 
-    private void checkHasIdAnnotation(List<Column> columns) {
+    private void checkHasIdAnnotation(List<EntityColumn> columns) {
         boolean hasId = columns.stream()
-                .anyMatch(Column::hasId);
+                .anyMatch(EntityColumn::hasId);
 
         if (!hasId) {
             throw new IllegalArgumentException("table should have primary key");
@@ -35,7 +36,13 @@ public class Columns {
 
     public String getColumnsDefinition() {
         return columns.stream()
-                .map(Column::defineColumn)
+                .map(EntityColumn::defineColumn)
                 .collect(Collectors.joining(", "));
+    }
+
+    public String getColumnsClause() {
+        return columns.stream()
+                .map(EntityColumn::getName)
+                .collect(Collectors.joining(","));
     }
 }

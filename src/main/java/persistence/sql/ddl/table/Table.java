@@ -26,4 +26,8 @@ public class Table {
     public String getColumnsDefinition() {
         return columns.getColumnsDefinition();
     }
+
+    public String getColumnsClause() {
+        return columns.getColumnsClause();
+    }
 }
