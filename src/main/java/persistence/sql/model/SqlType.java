@@ -114,8 +114,4 @@ public enum SqlType {
         return type;
     }
 
-    public String query() {
-        return this.name()
-                .toLowerCase();
-    }
 }
