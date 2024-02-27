@@ -1,6 +1,5 @@
 package persistence.sql.dml;
 
-import persistence.sql.model.Column;
 import persistence.sql.model.PKColumn;
 import persistence.sql.model.Table;
 
@@ -27,14 +26,12 @@ public class FindAllQueryBuilder {
 
         PKColumn pkColumn = table.getPKColumn();
         String pkColumnName = pkColumn.getName();
-        columnsClauseBuilder.append(pkColumnName);
+        columnsClauseBuilder.append(pkColumnName)
+                .append(',');
 
-        List<Column> columns = table.getColumns();
-        columns.forEach(column -> {
-            String name = column.getName();
-            columnsClauseBuilder.append(',')
-                    .append(name);
-        });
+        List<String> columnNames = table.getColumnNames();
+        String joinedColumnNames = String.join(",", columnNames);
+        columnsClauseBuilder.append(joinedColumnNames);
 
         return columnsClauseBuilder.toString();
     }

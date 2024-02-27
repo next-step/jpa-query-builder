@@ -6,7 +6,6 @@ import util.CaseConverter;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,7 @@ public class Table {
 
     private final PKColumn pkColumn;
 
-    private final List<Column> columns;
+    private final Columns columns;
 
     public Table(Class<?> entity) {
         validateEntity(entity);
@@ -43,6 +42,11 @@ public class Table {
         return CaseConverter.pascalToSnake(className);
     }
 
+    private boolean hasName(jakarta.persistence.Table table) {
+        String name = table.name();
+        return !name.isEmpty();
+    }
+
     private PKColumn buildPKColumn(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
         Field pkField = Arrays.stream(fields)
@@ -53,26 +57,13 @@ public class Table {
         return new PKColumn(pkField);
     }
 
-    private List<Column> buildColumns(Class<?> entity) {
-        Field[] fields = entity.getDeclaredFields();
-        return Arrays.stream(fields)
-                .filter(field -> !hasIdAnnotation(field))
-                .filter(field -> !hasTransientAnnotation(field))
-                .map(Column::new)
-                .collect(Collectors.toList());
-    }
-
-    private boolean hasName(jakarta.persistence.Table table) {
-        String name = table.name();
-        return !name.isEmpty();
-    }
-
-    private boolean hasTransientAnnotation(Field field) {
-        return field.isAnnotationPresent(Transient.class);
-    }
-
     private boolean hasIdAnnotation(Field field) {
         return field.isAnnotationPresent(Id.class);
+    }
+
+    private Columns buildColumns(Class<?> entity) {
+        Field[] fields = entity.getDeclaredFields();
+        return new Columns(fields);
     }
 
     public String getName() {
@@ -83,7 +74,11 @@ public class Table {
         return pkColumn;
     }
 
-    public List<Column> getColumns() {
-        return Collections.unmodifiableList(columns);
+    public Columns getColumns() {
+        return columns;
+    }
+
+    public List<String> getColumnNames() {
+        return columns.getColumnNames();
     }
 }

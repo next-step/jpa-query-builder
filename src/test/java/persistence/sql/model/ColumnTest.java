@@ -43,6 +43,17 @@ class ColumnTest {
         );
     }
 
+    @DisplayName("@Transient 어노테이션이 달린 필드를 넣었을 경우 IllegarArgumentException을 던진다.")
+    @Test
+    void newColumnWithException() throws NoSuchFieldException {
+        Class<Person3> clazz = Person3.class;
+        Field field = clazz.getDeclaredField("index");
+
+        assertThatThrownBy(() -> new Column(field))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("This field is not a column: index");
+    }
+
     @DisplayName("올바르게 인스턴스의 값을 반환하는지 확인")
     @Test
     void getValue() throws NoSuchFieldException {

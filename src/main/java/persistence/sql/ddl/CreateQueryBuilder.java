@@ -29,12 +29,13 @@ public class CreateQueryBuilder {
         String pkColumn = buildPKColumnQuery();
         columnsBuilder.append(pkColumn);
 
-        List<Column> columns = table.getColumns();
-        columns.forEach(column -> {
-            String columnQuery = buildColumnQuery(column);
-            columnsBuilder.append(',');
-            columnsBuilder.append(columnQuery);
-        });
+        Columns columns = table.getColumns();
+        columns.stream()
+                .forEach(column -> {
+                    String columnQuery = buildColumnQuery(column);
+                    columnsBuilder.append(',');
+                    columnsBuilder.append(columnQuery);
+                });
 
         return columnsBuilder.toString();
     }

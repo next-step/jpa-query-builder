@@ -1,6 +1,7 @@
 package persistence.sql.model;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import util.CaseConverter;
 
 import java.lang.reflect.Field;
@@ -19,10 +20,18 @@ public class Column {
     private final List<SqlConstraint> constraints;
 
     public Column(Field field) {
+        validateField(field);
+        
         this.field = field;
         this.name = buildName();
         this.type = buildType();
         this.constraints = buildConstraints();
+    }
+
+    private void validateField(Field field) {
+        if (field.isAnnotationPresent(Transient.class)) {
+            throw new IllegalArgumentException("This field is not a column: " + field.getName());
+        }
     }
 
     private String buildName() {
