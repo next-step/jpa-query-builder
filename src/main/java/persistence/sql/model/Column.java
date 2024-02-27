@@ -84,7 +84,7 @@ public class Column {
         try {
             field.setAccessible(true);
             return field.get(instance);
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException | IllegalArgumentException e) {
             throw new IllegalArgumentException("This instance does not have any of the fields in that column.");
         }
     }
