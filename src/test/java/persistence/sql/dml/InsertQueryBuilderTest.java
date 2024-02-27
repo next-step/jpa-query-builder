@@ -14,7 +14,7 @@ class InsertQueryBuilderTest {
     @DisplayName("Person 객체를 이용한 DML INSERT 생성 테스트")
     void DMLInsertTest() {
         // given
-        String expectedQuery = "INSERT INTO USERS (NICK_NAME, OLD, EMAIL) VALUES ('Jamie', 34, 'jaesungahn91@gmail.com');";
+        String expectedQuery = "INSERT INTO users (nick_name, old, email) VALUES ('Jamie', 34, 'jaesungahn91@gmail.com');";
         Person person = new Person("Jamie", 34, "jaesungahn91@gmail.com");
         InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(person);
 

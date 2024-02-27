@@ -15,7 +15,7 @@ class CreateQueryBuilderTest {
     void DDLCreateTest() {
         // given
         CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
-        String expectedQuery = "CREATE TABLE PERSON (ID BIGINT PRIMARY KEY, NAME VARCHAR(255), AGE INTEGER);";
+        String expectedQuery = "CREATE TABLE Person (id BIGINT PRIMARY KEY, name VARCHAR(255), age INTEGER);";
 
         // when
         String actualQuery = createQueryBuilder.build();
@@ -29,7 +29,7 @@ class CreateQueryBuilderTest {
     void DDLCreateTest2() {
         // given
         CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person2.class);
-        String expectedQuery = "CREATE TABLE PERSON2 (ID BIGINT PRIMARY KEY AUTO_INCREMENT, NICK_NAME VARCHAR(255), OLD INTEGER, EMAIL VARCHAR(255) NOT NULL);";
+        String expectedQuery = "CREATE TABLE Person2 (id BIGINT PRIMARY KEY AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);";
 
         // when
         String actualQuery = createQueryBuilder.build();
@@ -43,7 +43,7 @@ class CreateQueryBuilderTest {
     void DDLCreateTest3() {
         // given
         CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person3.class);
-        String expectedQuery = "CREATE TABLE USERS (ID BIGINT PRIMARY KEY AUTO_INCREMENT, NICK_NAME VARCHAR(255), OLD INTEGER, EMAIL VARCHAR(255) NOT NULL);";
+        String expectedQuery = "CREATE TABLE users (id BIGINT PRIMARY KEY AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);";
 
         // when
         String actualQuery = createQueryBuilder.build();

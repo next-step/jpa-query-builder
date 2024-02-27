@@ -17,4 +17,5 @@ public class DropQueryBuilder implements QueryBuilder {
     public String build() {
         return String.format(DROP_TABLE_QUERY, table.getName());
     }
+
 }
