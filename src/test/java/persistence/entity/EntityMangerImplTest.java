@@ -5,19 +5,22 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
 import persistence.Person;
-import persistence.sql.ddl.DDLQueryGenerator;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dialect.H2Dialect;
-import persistence.sql.dml.DMLQueryGenerator;
+import persistence.sql.dml.InsertQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EntityMangerImplTest {
     private static JdbcTemplate jdbcTemplate;
-    EntityManger entityManger = new EntityMangerImpl(new H2Dialect(), jdbcTemplate);
+    EntityManger entityManger = new EntityMangerImpl(jdbcTemplate);
     private static DatabaseServer server;
-    private DDLQueryGenerator ddlQueryGenerator;
-    private DMLQueryGenerator dmlQueryGenerator;
+    private CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect(), Person.class);;
+    private DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);;
+    private InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);;
+
     @BeforeAll
     public static void tearUp() throws Exception {
         server = new H2();
@@ -32,18 +35,16 @@ class EntityMangerImplTest {
 
     @BeforeEach
     public void setUp() {
-        dmlQueryGenerator = new DMLQueryGenerator(Person.class, new H2Dialect());
-        ddlQueryGenerator = new DDLQueryGenerator(new H2Dialect(), Person.class);
-        String sql = ddlQueryGenerator.generateCreateQuery();
+        String sql = createQueryBuilder.toQuery();
         jdbcTemplate.execute(sql);
 
         Person person1 = new Person(null, "nick_name", 10, "test@test.com", null);
-        jdbcTemplate.execute(dmlQueryGenerator.generateInsertQuery(person1));
+        jdbcTemplate.execute(insertQueryBuilder.toQuery(person1));
     }
 
     @AfterEach
     public void cleanUp() {
-        jdbcTemplate.execute(ddlQueryGenerator.generateDropTableQuery());
+        jdbcTemplate.execute(dropQueryBuilder.toQuery());
     }
 
     @Test

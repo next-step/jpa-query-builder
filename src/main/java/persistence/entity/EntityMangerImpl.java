@@ -3,25 +3,21 @@ package persistence.entity;
 import jdbc.JdbcTemplate;
 import persistence.Person;
 import persistence.sql.dialect.Dialect;
-import persistence.sql.dml.BooleanBuilder;
-import persistence.sql.dml.BooleanExpression;
-import persistence.sql.dml.DMLQueryGenerator;
+import persistence.sql.dml.*;
 
 public class EntityMangerImpl implements EntityManger {
     private JdbcTemplate jdbcTemplate;
-    private Dialect dialect;
 
-    public EntityMangerImpl(Dialect dialect, JdbcTemplate jdbcTemplate) {
-        this.dialect = dialect;
+    public EntityMangerImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Person find(Class<Person> clazz, Long id) {
-        DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(clazz, dialect);
-        BooleanBuilder builder = new BooleanBuilder();
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(clazz);
+        WhereBuilder builder = new WhereBuilder();
         builder.and(BooleanExpression.eq("id", id));
-        String query = dmlQueryGenerator.generateSelectQuery(builder);
+        String query = selectQueryBuilder.toQuery(builder);
 
         return jdbcTemplate.queryForObject(query, rs ->
                 new Person(
@@ -36,8 +32,8 @@ public class EntityMangerImpl implements EntityManger {
 
     @Override
     public Object persist(Object entity) {
-        DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(entity.getClass(), dialect);
-        jdbcTemplate.execute(dmlQueryGenerator.generateInsertQuery(entity));
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entity.getClass());
+        jdbcTemplate.execute(insertQueryBuilder.toQuery(entity));
         Person person = (Person) entity;
         person.setId(1L);
         return entity;
@@ -46,9 +42,9 @@ public class EntityMangerImpl implements EntityManger {
     @Override
     public void remove(Object entity) {
         Person person = (Person) entity;
-        DMLQueryGenerator dmlQueryGenerator = new DMLQueryGenerator(entity.getClass(), dialect);
-        BooleanBuilder builder = new BooleanBuilder();
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entity.getClass());
+        WhereBuilder builder = new WhereBuilder();
         builder.and(BooleanExpression.eq("id", person.getId()));
-        jdbcTemplate.execute(dmlQueryGenerator.generateDeleteQuery(builder));
+        jdbcTemplate.execute(deleteQueryBuilder.toQuery(builder));
     }
 }
