@@ -62,6 +62,10 @@ public class PKColumn {
         return column.getValue(instance);
     }
 
+    public void setValue(Object instance, Object value) {
+        column.setValue(instance, value);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

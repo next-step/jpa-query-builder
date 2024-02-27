@@ -21,7 +21,7 @@ public class Column {
 
     public Column(Field field) {
         validateField(field);
-        
+
         this.field = field;
         this.name = buildName();
         this.type = buildType();
@@ -95,6 +95,16 @@ public class Column {
             return field.get(instance);
         } catch (IllegalAccessException | IllegalArgumentException e) {
             throw new IllegalArgumentException("This instance does not have any of the fields in that column.");
+        }
+    }
+
+    public void setValue(Object instance, Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(instance, value);
+        } catch (IllegalAccessException ignored) {
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid instance or value: " + instance + ' ' + value);
         }
     }
 

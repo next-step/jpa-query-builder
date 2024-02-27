@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import persistence.study.sql.ddl.Person2;
 import persistence.study.sql.ddl.Person3;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Stream;
@@ -74,6 +75,40 @@ class ColumnTest {
         assertThatThrownBy(() -> column.getValue(person))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("This instance does not have any of the fields in that column.");
+    }
+
+    @DisplayName("인스턴스의 필드에 값을 정상적으로 할당하는지 확인")
+    @Test
+    void setValue() throws Exception {
+        Person3 person = new Person3("qweqwe", 123, "e");
+        Column column = createPerson3NameColumn();
+
+        column.setValue(person, "aaa");
+
+        String result = person.getName();
+        assertThat(result).isEqualTo("aaa");
+    }
+
+    @DisplayName("필드가 없는 instance에 값을 넣으려는 경우 IllegalArgumentException을 던진다.")
+    @Test
+    void setValueWithWrongInstance() throws Exception {
+        Person2 person = new Person2("a", 1, "email@email.com");
+        Column column = createPerson3NameColumn();
+
+        assertThatThrownBy(() -> column.setValue(person, "some name"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid instance or value: ");
+    }
+
+    @DisplayName("필드에 잘못된 값을 넣으려는 경우 IllegalArgumentException을 던진다.")
+    @Test
+    void setValueWithWrongType() throws Exception {
+        Person3 person = new Person3("aa", 2, "email@email.com");
+        Column column = createPerson3NameColumn();
+
+        assertThatThrownBy(() -> column.setValue(person, 112323))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid instance or value: ");
     }
 
     private Column createPerson3NameColumn() throws NoSuchFieldException {
