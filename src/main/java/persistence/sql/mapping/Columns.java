@@ -58,10 +58,11 @@ public class Columns implements Iterable<ColumnData> {
                 .collect(Collectors.toList());
     }
 
-    public List<ColumnData> getKeyColumns() {
+    public ColumnData getKeyColumn() {
         return columns.stream()
                 .filter(ColumnData::hasKeyType)
-                .collect(Collectors.toList());
+                .findFirst()
+                .orElseThrow(IdAnnotationMissingException::new);
     }
 
     private static void checkIsEntity(Class<?> entityClazz) {

@@ -56,9 +56,7 @@ public class CreateQueryBuilder {
     }
 
     private String getKeyClause() {
-        return columns.getKeyColumns().stream()
-                .map(this::getKeyString)
-                .collect(Collectors.joining(" ,"));
+        return getKeyString(columns.getKeyColumn());
     }
 
     private String getKeyString(ColumnData columnData) {

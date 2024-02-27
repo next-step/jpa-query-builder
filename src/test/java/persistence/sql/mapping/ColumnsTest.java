@@ -72,4 +72,12 @@ class ColumnsTest {
             softly.assertThat(names.get(2)).isEqualTo(person.getEmail());
         });
     }
+
+    @Test
+    public void testGetKeyColumns() {
+        Columns columns = Columns.createColumns(Person.class);
+        ColumnData foundColumn = columns.getKeyColumn();
+
+        assertThat(foundColumn.isPrimaryKey()).isTrue();
+    }
 }
