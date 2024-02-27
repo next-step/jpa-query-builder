@@ -18,9 +18,9 @@ public class WhereBuilder {
 
         for (BooleanExpressionLine line : expressionLines) {
             if (!firstLine) {
+                stringBuilder.append(" ");
                 stringBuilder.append(line.getLogicalOperator().name());
                 stringBuilder.append(" ");
-                firstLine = false;
             }
             BooleanExpression expression = line.getExpression();
             stringBuilder.append(expression.getColumn());
@@ -28,6 +28,7 @@ public class WhereBuilder {
             stringBuilder.append(expression.getOperator().getSymbol());
             stringBuilder.append(" ");
             stringBuilder.append(ValueUtil.getValueString(expression.getValue()));
+            firstLine = false;
         }
 
         return stringBuilder.toString();
