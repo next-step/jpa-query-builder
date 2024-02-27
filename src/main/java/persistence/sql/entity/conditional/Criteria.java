@@ -1,4 +1,6 @@
-package persistence.sql.entity.model;
+package persistence.sql.entity.conditional;
+
+import persistence.sql.entity.model.Operators;
 
 public class Criteria {
     private static final String FORMAT = "'%s'";

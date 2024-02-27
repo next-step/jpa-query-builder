@@ -5,13 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.entity.EntityMappingTable;
-import persistence.sql.entity.model.Criteria;
-import persistence.sql.entity.model.Criterias;
+import persistence.sql.entity.conditional.Criteria;
+import persistence.sql.entity.conditional.Criterias;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.Operators;
 
 import java.util.Collections;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

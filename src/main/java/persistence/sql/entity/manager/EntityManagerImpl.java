@@ -6,8 +6,8 @@ import persistence.sql.dml.query.builder.InsertQueryBuilder;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 import persistence.sql.dml.repository.RepositoryMapper;
 import persistence.sql.entity.EntityMappingTable;
-import persistence.sql.entity.model.Criteria;
-import persistence.sql.entity.model.Criterias;
+import persistence.sql.entity.conditional.Criteria;
+import persistence.sql.entity.conditional.Criterias;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.Operators;
 

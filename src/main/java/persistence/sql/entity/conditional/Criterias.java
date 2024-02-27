@@ -1,4 +1,4 @@
-package persistence.sql.entity.model;
+package persistence.sql.entity.conditional;
 
 import java.util.Collections;
 import java.util.List;

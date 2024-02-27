@@ -1,6 +1,6 @@
 package persistence.sql.dml.query.clause;
 
-import persistence.sql.entity.model.Criterias;
+import persistence.sql.entity.conditional.Criterias;
 
 public class WhereClause {
 
