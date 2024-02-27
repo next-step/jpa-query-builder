@@ -1,26 +1,30 @@
 package persistence.sql.entity.conditional;
 
-import persistence.sql.entity.model.Operators;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Criteria {
-    private static final String FORMAT = "'%s'";
+    private static final String EMPTY = "";
+    private static final String DELIMITER = "AND";
 
-    private final String key;
-    private final String value;
-    private final Operators operators;
+    private final List<Criterion> criterion;
 
-    public Criteria(String key,
-                    String value,
-                    Operators operators) {
-        this.key = key;
-        this.value = value;
-        this.operators = operators;
+    public Criteria(List<Criterion> criterion) {
+        this.criterion = criterion;
+    }
+
+    public static Criteria emptyInstance() {
+        return new Criteria(Collections.emptyList());
     }
 
     public String toSql() {
-        return new StringBuilder(key)
-                .append(operators.getValue())
-                .append(String.format(FORMAT, value))
-                .toString();
+        if(criterion.isEmpty()) {
+            return EMPTY;
+        }
+
+        return criterion.stream()
+                .map(Criterion::toSql)
+                .collect(Collectors.joining(DELIMITER));
     }
 }

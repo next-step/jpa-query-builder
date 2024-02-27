@@ -3,7 +3,7 @@ package persistence.sql.dml.query.builder;
 import persistence.sql.dml.query.clause.ColumnClause;
 import persistence.sql.dml.query.clause.WhereClause;
 import persistence.sql.entity.EntityMappingTable;
-import persistence.sql.entity.conditional.Criterias;
+import persistence.sql.entity.conditional.Criteria;
 
 public class SelectQueryBuilder {
     private static final String FORMAT = "SELECT %s FROM %s %s";
@@ -21,7 +21,7 @@ public class SelectQueryBuilder {
     }
 
     public static SelectQueryBuilder of(final EntityMappingTable entityMappingTable,
-                                        final Criterias criterias) {
+                                        final Criteria criterias) {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
@@ -33,7 +33,7 @@ public class SelectQueryBuilder {
         return new SelectQueryBuilder(
                 entityMappingTable.getTableName(),
                 ColumnClause.from(entityMappingTable.getDomainTypes()),
-                new WhereClause(Criterias.emptyInstance())
+                new WhereClause(Criteria.emptyInstance())
         );
     }
 

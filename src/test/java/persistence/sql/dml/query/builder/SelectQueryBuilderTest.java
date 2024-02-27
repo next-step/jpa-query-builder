@@ -5,8 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.conditional.Criterion;
 import persistence.sql.entity.conditional.Criteria;
-import persistence.sql.entity.conditional.Criterias;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.Operators;
 
@@ -38,10 +38,10 @@ class SelectQueryBuilderTest {
         DomainType domainType = entityMappingTable.getPkDomainTypes();
         Map<DomainType, String> where = Map.of(domainType, "1");
 
-        Criteria criteria = new Criteria(domainType.getColumnName(), "1", Operators.EQUALS);
-        Criterias criterias = new Criterias(Collections.singletonList(criteria));
+        Criterion criterion = new Criterion(domainType.getColumnName(), "1", Operators.EQUALS);
+        Criteria criteria = new Criteria(Collections.singletonList(criterion));
 
-        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, criterias);
+        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, criteria);
 
         assertThat(selectQueryBuilder.toSql()).isEqualTo("SELECT id,nick_name,old,email FROM Person where id='1'");
     }

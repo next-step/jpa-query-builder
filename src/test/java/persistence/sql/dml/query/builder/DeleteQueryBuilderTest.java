@@ -5,8 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.conditional.Criterion;
 import persistence.sql.entity.conditional.Criteria;
-import persistence.sql.entity.conditional.Criterias;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.Operators;
 
@@ -27,10 +27,10 @@ class DeleteQueryBuilderTest {
     @Test
     void deleteById() {
         DomainType pkDomainTypes = entityMappingTable.getPkDomainTypes();
-        Criteria criteria = new Criteria(pkDomainTypes.getColumnName(), "1", Operators.EQUALS);
-        Criterias criterias = new Criterias(Collections.singletonList(criteria));
+        Criterion criterion = new Criterion(pkDomainTypes.getColumnName(), "1", Operators.EQUALS);
+        Criteria criteria = new Criteria(Collections.singletonList(criterion));
 
-        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of("person", criterias);
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of("person", criteria);
 
         assertThat(deleteQueryBuilder.toSql()).isEqualTo("DELETE FROM person where id='1'");
     }

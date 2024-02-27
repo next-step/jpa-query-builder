@@ -1,24 +1,24 @@
 package persistence.sql.dml.query.clause;
 
-import persistence.sql.entity.conditional.Criterias;
+import persistence.sql.entity.conditional.Criteria;
 
 public class WhereClause {
 
     private static final String FORMAT = "where %s";
     private static final String EMPTY = "";
 
-    private Criterias criterias;
+    private Criteria criteria;
 
-    public WhereClause(final Criterias criterias) {
-        this.criterias = criterias;
+    public WhereClause(final Criteria criteria) {
+        this.criteria = criteria;
     }
 
     public String toSql() {
-        String sql = criterias.toSql();
+        String sql = criteria.toSql();
 
         return EMPTY.equals(sql) ?
                 EMPTY :
-                String.format(FORMAT, criterias.toSql());
+                String.format(FORMAT, criteria.toSql());
 
     }
 

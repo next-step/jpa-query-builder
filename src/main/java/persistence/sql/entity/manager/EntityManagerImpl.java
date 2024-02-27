@@ -6,8 +6,8 @@ import persistence.sql.dml.query.builder.InsertQueryBuilder;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 import persistence.repository.RepositoryMapper;
 import persistence.sql.entity.EntityMappingTable;
+import persistence.sql.entity.conditional.Criterion;
 import persistence.sql.entity.conditional.Criteria;
-import persistence.sql.entity.conditional.Criterias;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.Operators;
 
@@ -37,10 +37,10 @@ public class EntityManagerImpl<T, K> implements EntityManger<T, K> {
         final RepositoryMapper<T> repositoryMapper = new RepositoryMapper<>(clazz);
         final DomainType pkDomainType = entityMappingTable.getPkDomainTypes();
 
-        Criteria criteria = new Criteria(pkDomainType.getColumnName(), id.toString(), Operators.EQUALS);
-        Criterias criterias = new Criterias(Collections.singletonList(criteria));
+        Criterion criterion = new Criterion(pkDomainType.getColumnName(), id.toString(), Operators.EQUALS);
+        Criteria criteria = new Criteria(Collections.singletonList(criterion));
 
-        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, criterias);
+        SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.of(entityMappingTable, criteria);
         return jdbcTemplate.queryForObject(selectQueryBuilder.toSql(), repositoryMapper::mapper);
     }
 
@@ -56,10 +56,10 @@ public class EntityManagerImpl<T, K> implements EntityManger<T, K> {
         final DomainType pkDomainType = entityMappingTable.getPkDomainTypes();
         final EntityManagerMapper<T> entityManagerMapper = new EntityManagerMapper(entity, entity.getClass(), pkDomainType.getName());
 
-        Criteria criteria = new Criteria(pkDomainType.getColumnName(), entityManagerMapper.getFieldValue(), Operators.EQUALS);
-        Criterias criterias = new Criterias(Collections.singletonList(criteria));
+        Criterion criterion = new Criterion(pkDomainType.getColumnName(), entityManagerMapper.getFieldValue(), Operators.EQUALS);
+        Criteria criteria = new Criteria(Collections.singletonList(criterion));
 
-        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(entityMappingTable.getTableName(), criterias);
+        DeleteQueryBuilder deleteQueryBuilder = DeleteQueryBuilder.of(entityMappingTable.getTableName(), criteria);
         jdbcTemplate.execute(deleteQueryBuilder.toSql());
     }
 

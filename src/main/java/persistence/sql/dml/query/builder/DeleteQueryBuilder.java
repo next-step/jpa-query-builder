@@ -1,7 +1,7 @@
 package persistence.sql.dml.query.builder;
 
 import persistence.sql.dml.query.clause.WhereClause;
-import persistence.sql.entity.conditional.Criterias;
+import persistence.sql.entity.conditional.Criteria;
 
 public class DeleteQueryBuilder {
 
@@ -19,11 +19,11 @@ public class DeleteQueryBuilder {
     public static DeleteQueryBuilder from(String tableName) {
         return new DeleteQueryBuilder(
                 tableName,
-                new WhereClause(Criterias.emptyInstance())
+                new WhereClause(Criteria.emptyInstance())
         );
     }
 
-    public static DeleteQueryBuilder of(String tableName, Criterias criterias) {
+    public static DeleteQueryBuilder of(String tableName, Criteria criterias) {
         return new DeleteQueryBuilder(
                 tableName,
                 new WhereClause(criterias)
