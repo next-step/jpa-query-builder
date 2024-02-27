@@ -46,7 +46,7 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     private String generateColumn(Column column) {
         return Stream.of(column.getName(),
-                        column.getType(),
+                        TYPE_MAPPER.getTypeString(column.getType(), column.getLength()),
                         column.getConstraintString())
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.joining(SPACE));

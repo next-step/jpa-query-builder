@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 
 public interface QueryBuilder {
 
-    String EMPTY_STRING = "";
     String COMMA = ", ";
     String SPACE = " ";
 

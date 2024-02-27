@@ -1,30 +1,25 @@
 package persistence.sql.ddl.mapper;
 
-import jakarta.persistence.Column;
-
-import java.lang.reflect.Field;
-
 public class H2TypeMapper implements TypeMapper {
 
     private static final String EMPTY_STRING = "";
 
     @Override
-    public String getTypeString(Field field) {
+    public String getTypeString(Class<?> type, int length) {
+        H2DataType dataType = H2DataType.of(type);
         return String.join(EMPTY_STRING,
-                H2DataType.of(field.getType()).name(),
-                getTypeLength(field)
+                dataType.name(),
+                getTypeLength(dataType, length)
         );
     }
 
-    private String getTypeLength(Field field) {
-        if (H2DataType.of(field.getType()).getDefaultLength() == null) {
+    private String getTypeLength(H2DataType dataType, int length) {
+        if (dataType.getDefaultLength() == null) {
             return EMPTY_STRING;
         }
-
-        if (!field.isAnnotationPresent(Column.class)) {
-            return "(" + H2DataType.of(field.getType()).getDefaultLength() + ")";
+        if (length == 0) {
+            return "(" + dataType.getDefaultLength() + ")";
         }
-
-        return "(" + field.getAnnotation(Column.class).length() + ")";
+        return "(" + length + ")";
     }
 }

@@ -34,7 +34,7 @@ public class DeleteQueryBuilder implements QueryBuilder {
     private List<Value> createValues(Object object, Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(this::isNotTransientAnnotationPresent)
-                .map(field -> new Value(new Column(field), field, object))
+                .map(field -> new Value(new Column(field), object))
                 .collect(Collectors.toList());
     }
 

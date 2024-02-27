@@ -12,17 +12,17 @@ public enum H2DataType {
     VARCHAR(List.of(String.class), 255),
     BIGINT(List.of(BigInteger.class, Long.class, long.class), null);
 
-    private final List<Class<?>> classes;
+    private final List<Class<?>> supportedClasses;
     private final Integer defaultLength;
 
     H2DataType(List<Class<?>> classes, Integer defaultLength) {
-        this.classes = classes;
+        this.supportedClasses = classes;
         this.defaultLength = defaultLength;
     }
 
     public static H2DataType of(Class<?> type) {
         return Arrays.stream(values())
-                .filter(h2DataType -> h2DataType.classes.contains(type))
+                .filter(h2DataType -> h2DataType.supportedClasses.contains(type))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported type: " + type));
     }

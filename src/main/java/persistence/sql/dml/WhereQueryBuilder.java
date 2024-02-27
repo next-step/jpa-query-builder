@@ -40,16 +40,16 @@ public class WhereQueryBuilder implements QueryBuilder {
     }
 
     private Value createValue(Class<?> clazz, List<String> whereColumns, List<Object> whereValues, int index) {
-        try {
-            return getValue(clazz, whereColumns.get(index), whereValues.get(index));
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+        return getValue(clazz, whereColumns.get(index), whereValues.get(index));
     }
 
-    private Value getValue(Class<?> clazz, String column, Object value) throws NoSuchFieldException {
-        Field field = clazz.getDeclaredField(column);
-        return new Value(new Column(field), field.getType(), value);
+    private Value getValue(Class<?> clazz, String column, Object value) {
+        try {
+            Field field = clazz.getDeclaredField(column);
+            return new Value(new Column(field), field.getType(), value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

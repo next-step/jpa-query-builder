@@ -9,9 +9,10 @@ public class Value {
     private final Column column;
     private final String value;
 
-    public Value(Column column, Field field, Object object) {
+    public Value(Column column, Object object) {
         this.column = column;
         try {
+            Field field = column.getField();
             field.setAccessible(true);
             this.value = convertValue(field.getType(), String.valueOf(field.get(object)));
         } catch (IllegalAccessException e) {
