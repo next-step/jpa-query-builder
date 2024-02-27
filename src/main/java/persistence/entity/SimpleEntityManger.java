@@ -77,8 +77,21 @@ public class SimpleEntityManger implements EntityManager {
     }
 
     @Override
-    public Object persist(Object entity) {
-        return null;
+    public <T> T persist(T entity) {
+        Class<?> clazz = entity.getClass();
+        Table table = new Table(clazz);
+        DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder(table);
+
+        PKColumn pkColumn = table.getPKColumn();
+
+        String insertQuery = dmlQueryBuilder.buildInsertQuery(entity);
+        String pkColumnName = pkColumn.getName();
+
+        Object id = database.executeUpdate(insertQuery, pkColumnName);
+
+        pkColumn.setValue(entity, id);
+
+        return entity;
     }
 
     @Override

@@ -102,4 +102,15 @@ class SimpleEntityMangerTest {
                 Arguments.arguments(3L, person3)
         );
     }
+
+    @DisplayName("person을 이용하여 persist 메서드 테스트")
+    @Test
+    void persist() {
+        Person3 person = new Person3(null, "qwer", 1, "email@email.com");
+
+        Person3 result = entityManager.persist(person);
+
+        Person3 expect = new Person3(4L, "qwer", 1, "email@email.com");
+        assertThat(result).isEqualTo(expect);
+    }
 }
