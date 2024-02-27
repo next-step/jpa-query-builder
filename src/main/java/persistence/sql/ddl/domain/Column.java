@@ -1,8 +1,13 @@
 package persistence.sql.ddl.domain;
 
-import java.lang.reflect.Field;
+import jakarta.persistence.Id;
+import persistence.sql.ddl.constraint.Constraint;
+import persistence.sql.ddl.constraint.NotNull;
+import persistence.sql.ddl.constraint.PrimaryKey;
 
-import static persistence.sql.QueryBuilder.CONSTRAINT_MAPPER;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Column {
 
@@ -10,18 +15,31 @@ public class Column {
 
     private final String name;
 
-    private final Class<?> type;
+    private final Type type;
 
     private final int length;
 
-    private final Constraint constraint;
+    private final Constraints constraints;
 
     public Column(Field field) {
         this.field = field;
         this.name = createColumnName(field);
         this.type = createColumnType(field);
         this.length = createColumnLength(field);
-        this.constraint = new Constraint(field);
+        this.constraints = createColumnConstraints(field);
+    }
+
+    private Constraints createColumnConstraints(Field field) {
+        final List<Constraint> newConstraints = new ArrayList<>();
+        if (field.isAnnotationPresent(jakarta.persistence.Column.class) && !field.getAnnotation(jakarta.persistence.Column.class).nullable()) {
+            newConstraints.add(new NotNull());
+        }
+
+        if (field.isAnnotationPresent(Id.class)) {
+            newConstraints.add(new PrimaryKey(field));
+        }
+
+        return new Constraints(newConstraints);
     }
 
     private int createColumnLength(Field field) {
@@ -39,11 +57,11 @@ public class Column {
         return field.getName();
     }
 
-    public Class<?> createColumnType(Field field) {
-        return field.getType();
+    public Type createColumnType(Field field) {
+        return Type.of(field.getType());
     }
 
-    public Class<?> getType() {
+    public Type getType() {
         return type;
     }
 
@@ -59,11 +77,11 @@ public class Column {
         return field;
     }
 
-    public String getConstraintString() {
-        return CONSTRAINT_MAPPER.getConstraintString(constraint);
+    public List<Constraint> getConstraints() {
+        return constraints.getConstraints();
     }
 
     public boolean isPrimaryKey() {
-        return constraint.isPrimaryKey();
+        return constraints.hasPrimaryKeyConstraint();
     }
 }

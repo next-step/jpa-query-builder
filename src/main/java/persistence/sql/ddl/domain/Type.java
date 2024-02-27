@@ -1,10 +1,10 @@
-package persistence.sql.ddl.mapper;
+package persistence.sql.ddl.domain;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-public enum H2DataType {
+public enum Type {
 
     TINYINT(List.of(Byte.class, byte.class), null),
     SMALLINT(List.of(Short.class, short.class), null),
@@ -15,12 +15,12 @@ public enum H2DataType {
     private final List<Class<?>> supportedClasses;
     private final Integer defaultLength;
 
-    H2DataType(List<Class<?>> classes, Integer defaultLength) {
+    Type(List<Class<?>> classes, Integer defaultLength) {
         this.supportedClasses = classes;
         this.defaultLength = defaultLength;
     }
 
-    public static H2DataType of(Class<?> type) {
+    public static Type of(Class<?> type) {
         return Arrays.stream(values())
                 .filter(h2DataType -> h2DataType.supportedClasses.contains(type))
                 .findFirst()
@@ -30,4 +30,5 @@ public enum H2DataType {
     public Integer getDefaultLength() {
         return defaultLength;
     }
+
 }

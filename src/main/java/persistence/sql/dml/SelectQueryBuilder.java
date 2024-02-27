@@ -41,9 +41,16 @@ public class SelectQueryBuilder implements QueryBuilder {
     public String build() {
         return String.format(
                 SELECT_QUERY,
-                columns.getSelectColumns(),
+                generateColumns(),
                 table.getName(),
                 whereQueryBuilder.build()
         );
+    }
+
+    private String generateColumns() {
+        return columns.getColumns().stream()
+                .map(Column::getName)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(COMMA));
     }
 }
