@@ -20,8 +20,8 @@ public class DMLQueryBuilder {
         return findAllQueryBuilder.build();
     }
 
-    public String buildFindByIdQuery(Object instance) {
-        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(table, instance);
+    public String buildFindByIdQuery(Object id) {
+        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(table, id);
         return findByIdQueryBuilder.build();
     }
 
@@ -30,8 +30,8 @@ public class DMLQueryBuilder {
         return deleteAllQueryBuilder.build();
     }
 
-    public String buildDeleteByIdQuery(Object instance) {
-        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder(table, instance);
+    public String buildDeleteByIdQuery(Object id) {
+        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder(table, id);
         return deleteByIdQueryBuilder.build();
     }
 }

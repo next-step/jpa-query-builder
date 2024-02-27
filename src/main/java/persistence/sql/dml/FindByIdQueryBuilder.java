@@ -11,11 +11,11 @@ public class FindByIdQueryBuilder {
     private final static String FIND_BY_ID_QUERY_FORMAT = "SELECT %s FROM %s WHERE %s;";
 
     private final Table table;
-    private final Object instance;
+    private final Object id;
 
-    public FindByIdQueryBuilder(Table table, Object instance) {
+    public FindByIdQueryBuilder(Table table, Object id) {
         this.table = table;
-        this.instance = instance;
+        this.id = id;
     }
 
     public String build() {
@@ -47,10 +47,8 @@ public class FindByIdQueryBuilder {
 
         String pkColumnName = pkColumn.getName();
         whereClauseBuilder.append(pkColumnName)
-                .append('=');
-
-        Object value = pkColumn.getValue(instance);
-        whereClauseBuilder.append(value);
+                .append('=')
+                .append(id);
 
         return whereClauseBuilder.toString();
     }
