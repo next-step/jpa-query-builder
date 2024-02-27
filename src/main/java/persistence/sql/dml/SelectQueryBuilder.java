@@ -1,13 +1,12 @@
 package persistence.sql.dml;
 
 import persistence.sql.mapping.TableData;
-import persistence.sql.mapping.TableExtractor;
 
 public class SelectQueryBuilder {
     private final TableData table;
 
     public SelectQueryBuilder(Class<?> clazz) {
-        this.table = new TableExtractor(clazz).createTable();
+        this.table = TableData.from(clazz);
     }
 
     public String toQuery(WhereBuilder whereBuilder) {

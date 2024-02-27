@@ -28,15 +28,15 @@ class TableDataTest {
     @Test
     @DisplayName("getName: @Table(name)이 있다면 name을 반환한다")
     void testGetNameWithAnnotation() {
-        TableExtractor tableExtractor = new TableExtractor(WithTableName.class);
-        assertThat(tableExtractor.getName()).isEqualTo("with_table_name");
+        TableData tableData = TableData.from(WithTableName.class);
+        assertThat(tableData.getName()).isEqualTo("with_table_name");
     }
 
     @Test
     @DisplayName("getName: @Table(name)이 없다면 소문자 클래스 이름 반환한다")
     void testGetName() {
-        TableExtractor tableExtractor = new TableExtractor(WithoutTableName.class);
-        assertThat(tableExtractor.getName()).isEqualTo("withouttablename");
+        TableData tableData = TableData.from(WithoutTableName.class);
+        assertThat(tableData.getName()).isEqualTo("withouttablename");
     }
 
 }

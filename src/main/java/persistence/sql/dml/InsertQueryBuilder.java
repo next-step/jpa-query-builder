@@ -2,7 +2,6 @@ package persistence.sql.dml;
 
 import persistence.sql.mapping.Columns;
 import persistence.sql.mapping.TableData;
-import persistence.sql.mapping.TableExtractor;
 
 import java.util.stream.Collectors;
 
@@ -10,7 +9,7 @@ public class InsertQueryBuilder {
     private final TableData table;
 
     public InsertQueryBuilder(Class<?> clazz) {
-        this.table = new TableExtractor(clazz).createTable();
+        this.table = TableData.from(clazz);
     }
 
     public String toQuery(Object entity) {

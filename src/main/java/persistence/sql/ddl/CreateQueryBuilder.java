@@ -4,10 +4,8 @@ import persistence.sql.dialect.Dialect;
 import persistence.sql.mapping.ColumnData;
 import persistence.sql.mapping.Columns;
 import persistence.sql.mapping.TableData;
-import persistence.sql.mapping.TableExtractor;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
     private final Dialect dialect;
@@ -17,7 +15,7 @@ public class CreateQueryBuilder {
 
     public CreateQueryBuilder(Dialect dialect, Class<?> clazz) {
         this.dialect = dialect;
-        this.tableData = new TableExtractor(clazz).createTable();
+        this.tableData = TableData.from(clazz);
         this.columns = Columns.createColumns(clazz);
     }
 
