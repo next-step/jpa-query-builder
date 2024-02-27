@@ -31,6 +31,6 @@
 
 #### step4 목표: 간이 EntityManager 구현체 작성하기
 
-- [ ] 요구사항 1 - 구현체에 find 기능 구현하기
-- [ ] 요구사항 2 - 구현체에 persist (insert) 기능 구현하기
+- [x] 요구사항 1 - 구현체에 find 기능 구현하기
+- [x] 요구사항 2 - 구현체에 persist (insert) 기능 구현하기
 - [ ] 요구사항 3 - 구현체에 remove (delete) 기능 구현하기
