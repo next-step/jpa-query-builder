@@ -5,13 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.entity.EntityMappingTable;
-import persistence.sql.entity.conditional.Criterion;
 import persistence.sql.entity.conditional.Criteria;
+import persistence.sql.entity.conditional.Criterion;
 import persistence.sql.entity.model.DomainType;
 import persistence.sql.entity.model.Operators;
 
 import java.util.Collections;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +35,6 @@ class SelectQueryBuilderTest {
     @Test
     void whereSqlTest() {
         DomainType domainType = entityMappingTable.getPkDomainTypes();
-        Map<DomainType, String> where = Map.of(domainType, "1");
 
         Criterion criterion = new Criterion(domainType.getColumnName(), "1", Operators.EQUALS);
         Criteria criteria = new Criteria(Collections.singletonList(criterion));

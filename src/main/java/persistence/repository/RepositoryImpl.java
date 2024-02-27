@@ -16,7 +16,7 @@ public class RepositoryImpl<T, K> implements Repository<T, K> {
 
     public RepositoryImpl(final JdbcTemplate jdbcTemplate,
                           final Class<T> clazz) {
-        this.entityManger = new EntityManagerImpl<>(jdbcTemplate);
+        this.entityManger = new EntityManagerImpl<>(jdbcTemplate, clazz);
         this.clazz = clazz;
     }
 

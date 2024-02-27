@@ -18,7 +18,7 @@ class EntityMangerTest extends H2Database {
 
     @BeforeEach
     void setUp() {
-        this.entityManger = new EntityManagerImpl<Person, Long>(jdbcTemplate);
+        this.entityManger = new EntityManagerImpl<>(jdbcTemplate, Person.class);
 
         this.person = new Person(1L, "박재성", 10, "jason");
 
