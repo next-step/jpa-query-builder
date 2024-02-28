@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Column {
+public class Column implements BaseColumn {
 
     private final Field field;
 
@@ -77,14 +77,22 @@ public class Column {
         return clazz.isAssignableFrom(type);
     }
 
+    @Override
+    public Field getField() {
+        return field;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public SqlType getType() {
         return type;
     }
 
+    @Override
     public List<SqlConstraint> getConstraints() {
         return Collections.unmodifiableList(constraints);
     }

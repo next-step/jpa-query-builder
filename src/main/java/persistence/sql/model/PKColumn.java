@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class PKColumn {
+public class PKColumn implements BaseColumn {
 
     private final Column column;
 
@@ -42,28 +42,28 @@ public class PKColumn {
         return generatedValue.strategy();
     }
 
+    @Override
+    public Field getField() {
+        return column.getField();
+    }
+
+    @Override
     public String getName() {
         return column.getName();
     }
 
+    @Override
     public SqlType getType() {
         return column.getType();
     }
 
+    @Override
     public List<SqlConstraint> getConstraints() {
         return column.getConstraints();
     }
 
     public Optional<GenerationType> getGenerationType() {
         return Optional.ofNullable(generationType);
-    }
-
-    public Object getValue(Object instance) {
-        return column.getValue(instance);
-    }
-
-    public void setValue(Object instance, Object value) {
-        column.setValue(instance, value);
     }
 
     @Override

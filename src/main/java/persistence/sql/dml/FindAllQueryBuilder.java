@@ -24,8 +24,7 @@ public class FindAllQueryBuilder {
     private String buildColumnsClause() {
         StringBuilder columnsClauseBuilder = new StringBuilder();
 
-        PKColumn pkColumn = table.getPKColumn();
-        String pkColumnName = pkColumn.getName();
+        String pkColumnName = table.getPKColumnName();
         columnsClauseBuilder.append(pkColumnName)
                 .append(',');
 

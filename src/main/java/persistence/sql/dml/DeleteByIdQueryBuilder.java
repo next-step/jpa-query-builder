@@ -24,10 +24,7 @@ public class DeleteByIdQueryBuilder {
     private String buildWhereClause() {
         StringBuilder whereClauseBuilder = new StringBuilder();
 
-        PKColumn pkColumn = table.getPKColumn();
-
-        String pkColumnName = pkColumn.getName();
-
+        String pkColumnName = table.getPKColumnName();
         whereClauseBuilder.append(pkColumnName)
                 .append('=')
                 .append(id);

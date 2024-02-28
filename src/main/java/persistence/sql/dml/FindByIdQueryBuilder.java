@@ -28,8 +28,7 @@ public class FindByIdQueryBuilder {
     private String buildColumnsClause() {
         StringBuilder columnsClauseBuilder = new StringBuilder();
 
-        PKColumn pkColumn = table.getPKColumn();
-        String pkColumnName = pkColumn.getName();
+        String pkColumnName = table.getPKColumnName();
         columnsClauseBuilder.append(pkColumnName)
                 .append(',');
 
@@ -43,9 +42,7 @@ public class FindByIdQueryBuilder {
     private String buildWhereClause() {
         StringBuilder whereClauseBuilder = new StringBuilder();
 
-        PKColumn pkColumn = table.getPKColumn();
-
-        String pkColumnName = pkColumn.getName();
+        String pkColumnName = table.getPKColumnName();
         whereClauseBuilder.append(pkColumnName)
                 .append('=')
                 .append(id);

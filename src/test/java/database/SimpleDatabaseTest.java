@@ -7,7 +7,6 @@ import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.DMLQueryBuilder;
 import persistence.sql.model.Table;
-import persistence.study.sql.ddl.Person2;
 import persistence.study.sql.ddl.Person3;
 
 import java.sql.Connection;

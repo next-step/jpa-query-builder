@@ -81,7 +81,13 @@ public class Table {
         return columns;
     }
 
+    public String getPKColumnName() {
+        return pkColumn.getName();
+    }
+
     public List<String> getColumnNames() {
-        return columns.getColumnNames();
+        String pkColumnName = pkColumn.getName();
+        List<String> columnNames = columns.getColumnNames();
+        return columnNames;
     }
 }

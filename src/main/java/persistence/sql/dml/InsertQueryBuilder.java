@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
+import persistence.entity.EntityBinder;
 import persistence.sql.model.Column;
 import persistence.sql.model.Columns;
-import persistence.sql.model.PKColumn;
 import persistence.sql.model.Table;
 
 import java.util.List;
@@ -29,8 +29,7 @@ public class InsertQueryBuilder {
     private String buildColumnsClause() {
         StringBuilder columnsClauseBuilder = new StringBuilder();
 
-        PKColumn pkColumn = table.getPKColumn();
-        String pkColumnName = pkColumn.getName();
+        String pkColumnName = table.getPKColumnName();
         columnsClauseBuilder.append(pkColumnName)
                 .append(',');
 
@@ -60,8 +59,9 @@ public class InsertQueryBuilder {
 
     private String buildColumnValueClause(Column column, Object instance) {
         StringBuilder valueClauseBuilder = new StringBuilder();
+        EntityBinder entityBinder = new EntityBinder(instance);
 
-        Object value = column.getValue(instance);
+        Object value = entityBinder.getValue(column);
         if (column.isType(String.class)) {
             return valueClauseBuilder.append('\'')
                     .append(value)
