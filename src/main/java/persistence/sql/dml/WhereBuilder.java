@@ -14,25 +14,16 @@ public class WhereBuilder {
 
     public String toClause() {
         StringBuilder stringBuilder = new StringBuilder();
-        boolean firstLine = true;
+        boolean isFirstLine = true;
 
         for (BooleanExpressionLine line : expressionLines) {
-            if (!firstLine) {
-                stringBuilder.append(" ");
-                stringBuilder.append(line.getLogicalOperator().name());
-                stringBuilder.append(" ");
-            }
-            BooleanExpression expression = line.getExpression();
-            stringBuilder.append(expression.getColumn());
-            stringBuilder.append(" ");
-            stringBuilder.append(expression.getOperator().getSymbol());
-            stringBuilder.append(" ");
-            stringBuilder.append(ValueUtil.getValueString(expression.getValue()));
-            firstLine = false;
+            stringBuilder.append(line.toQuery(isFirstLine));
+            isFirstLine = false;
         }
 
         return stringBuilder.toString();
     }
+
     public boolean isEmpty(){
         return expressionLines.isEmpty();
     }
