@@ -22,7 +22,7 @@ public class QueryBuilder {
         this.dialect = dialect;
     }
 
-    public String createTableSql(Class<?> clazz) {
+    public String generateCreateTableQuery(Class<?> clazz) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("CREATE TABLE ")
@@ -44,25 +44,16 @@ public class QueryBuilder {
         return sb.toString();
     }
 
-    public String dropTableSql(Class<?> clazz) {
+    public String generateDropTableQuery(Class<?> clazz) {
         return "DROP TABLE " + generateTableName(clazz);
     }
 
-    // insert into users (id, nick_name, old, email) values (?, ?, ?, ?)
-    public String generateInsertSql(Object entity) {
-        StringBuilder sb = new StringBuilder();
+    public String generateInsertQuery(Object entity) {
+        return String.format("INSERT INTO %s (%s) VALUES (%s)", generateTableName(entity.getClass()), columnsClause(entity.getClass()), valueClause(entity));
+    }
 
-        sb.append("INSERT INTO ")
-                .append(generateTableName(entity.getClass()))
-                .append(" (");
-
-        sb.append(columnsClause(entity.getClass()))
-                .append(") VALUES (");
-
-        sb.append(valueClause(entity))
-                .append(")");
-
-        return sb.toString();
+    public String generateSelectQuery(Object entity) {
+        return String.format("SELECT * FROM %s", generateTableName(entity.getClass()));
     }
 
     private String valueClause(Object object) {

@@ -139,7 +139,7 @@ public class Person {
       }
       ```
 
-* [ ] 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
+* [x] 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
     * 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
     * 쿼리 실행을 통해 데이터를 여러 row 를 넣어 정상적으로 나오는지 확인해보자
     * ```java
