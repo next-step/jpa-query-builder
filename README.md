@@ -7,7 +7,11 @@
 - [x] 요구사항 4 - delete 쿼리 구현히라
   - [x] 4.1 deleteAll 구현하라
   - [x] 4.2 deleteById 구현하라
-- [ ] 2단계 피드백 반영
+- [x] 2단계 피드백 반영
+  - [x] 단순히 값을 리턴할 때는 get을 붙이지 말아라
+  - [x] 객체 생성시 유효한 값을 상태값으로 가지도록 하여, 싱태에 대해 null check를 따로 하지 않도록 바꾼다
+  - [x] 변수명 변경 : Map -> Converter
+  - [x] 클래스명 변경: Id -> PrimaryKey
 
 
 ## Step2
