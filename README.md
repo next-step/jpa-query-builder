@@ -52,3 +52,13 @@
 4. delete 구현해보기
     - `delete from 테이블명 where id = ?` 쿼리 생성
     - BooleanBuilder로 동적으로 만들기
+
+### step4
+1. find
+   - id로 entity 찾기
+   - TODO: generic으로 변경하기
+2. persist
+   - entity 저장하기
+   - 반환값에 id 채워주기
+3. remove
+   - entity 삭제하기
