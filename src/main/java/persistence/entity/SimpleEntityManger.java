@@ -2,14 +2,12 @@ package persistence.entity;
 
 import database.Database;
 import persistence.sql.dml.DMLQueryBuilder;
-import persistence.sql.model.Columns;
 import persistence.sql.model.PKColumn;
 import persistence.sql.model.Table;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.HashMap;
 
 public class SimpleEntityManger implements EntityManager {
 
@@ -25,36 +23,24 @@ public class SimpleEntityManger implements EntityManager {
         DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder(table);
 
         String findByIdQuery = dmlQueryBuilder.buildFindByIdQuery(id);
-        ResultSet resultSet = database.executeQuery(findByIdQuery);
-
-        if (!hasNext(resultSet)) {
-            return null;
-        }
+        HashMap<String, Object> queryResult = database.executeQueryForObject(findByIdQuery);
 
         T instance = createInstance(clazz);
 
         PKColumn pkColumn = table.getPKColumn();
         String pkColumnName = pkColumn.getName();
-        Object pkColumnValue = getValue(resultSet, pkColumnName);
+        Object pkColumnValue = queryResult.get(pkColumnName);
         pkColumn.setValue(instance, pkColumnValue);
 
-        Columns columns = table.getColumns();
-        columns.stream()
+        table.getColumns()
+                .stream()
                 .forEach(column -> {
                     String columnName = column.getName();
-                    Object columnValue = getValue(resultSet, columnName);
+                    Object columnValue = queryResult.get(columnName);
                     column.setValue(instance, columnValue);
                 });
 
         return instance;
-    }
-
-    private boolean hasNext(ResultSet resultSet) {
-        try {
-            return resultSet.next();
-        } catch (SQLException ignored) {
-            return false;
-        }
     }
 
     private <T> T createInstance(Class<T> clazz) {
@@ -68,30 +54,14 @@ public class SimpleEntityManger implements EntityManager {
         }
     }
 
-    private Object getValue(ResultSet resultSet, String columnName) {
-        try {
-            return resultSet.getObject(columnName);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
-    public <T> T persist(T entity) {
+    public void persist(Object entity) {
         Class<?> clazz = entity.getClass();
         Table table = new Table(clazz);
         DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder(table);
 
-        PKColumn pkColumn = table.getPKColumn();
-
         String insertQuery = dmlQueryBuilder.buildInsertQuery(entity);
-        String pkColumnName = pkColumn.getName();
-
-        Object id = database.executeUpdate(insertQuery, pkColumnName);
-
-        pkColumn.setValue(entity, id);
-
-        return entity;
+        database.execute(insertQuery);
     }
 
     @Override
@@ -104,6 +74,6 @@ public class SimpleEntityManger implements EntityManager {
         Object pkColumnValue = pkColumn.getValue(entity);
 
         String deleteByIdQuery = dmlQueryBuilder.buildDeleteByIdQuery(pkColumnValue);
-        database.executeUpdate(deleteByIdQuery);
+        database.execute(deleteByIdQuery);
     }
 }

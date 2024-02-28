@@ -4,7 +4,7 @@ public interface EntityManager {
 
     <T> T find(Class<T> clazz, Object id);
 
-    <T> T persist(T entity);
+    void persist(Object entity);
 
     void remove(Object entity);
 }

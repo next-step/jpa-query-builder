@@ -1,14 +1,11 @@
 package database;
 
-import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.List;
 
 public interface Database {
 
     void execute(String sql);
 
-    ResultSet executeQuery(String sql);
-
-    void executeUpdate(String sql);
-
-    Object executeUpdate(String sql, String pkColumnName);
+    HashMap<String, Object> executeQueryForObject(String sql);
 }

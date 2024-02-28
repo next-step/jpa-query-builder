@@ -42,9 +42,7 @@ class SimpleEntityMangerTest {
 
         Connection jdbcConnection = server.getConnection();
         jdbcTemplate = new JdbcTemplate(jdbcConnection);
-
-        Connection databaseConnection = server.getConnection();
-        Database database = new SimpleDatabase(databaseConnection);
+        Database database = new SimpleDatabase(jdbcTemplate);
         entityManager = new SimpleEntityManger(database);
 
         Dialect dialect = new H2Dialect();
@@ -111,10 +109,11 @@ class SimpleEntityMangerTest {
     void persist() {
         Person3 person = new Person3(null, "qwer", 1, "email@email.com");
 
-        Person3 result = entityManager.persist(person);
+        entityManager.persist(person);
 
         Person3 findPerson = findByIdPerson();
-        assertThat(result).isEqualTo(findPerson);
+        Person3 expectPerson = new Person3(4L, "qwer", 1, "email@email.com");
+        assertThat(findPerson).isEqualTo(expectPerson);
     }
 
     private Person3 findByIdPerson() {
