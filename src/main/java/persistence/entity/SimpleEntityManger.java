@@ -35,13 +35,13 @@ public class SimpleEntityManger implements EntityManager {
     @Override
     public void remove(Object entity) {
         Class<?> clazz = entity.getClass();
-
         Table table = new Table(clazz);
-        PKColumn pkColumn = table.getPKColumn();
 
         DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder(table);
 
+        PKColumn pkColumn = table.getPKColumn();
         Object id = getEntityId(entity, pkColumn);
+
         String deleteByIdQuery = dmlQueryBuilder.buildDeleteByIdQuery(id);
 
         database.execute(deleteByIdQuery);
