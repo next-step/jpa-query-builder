@@ -5,8 +5,6 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import static persistence.sql.common.SqlConstant.COMMA;
-
 public class Columns {
     private final List<Column> columns;
     public Columns(List<Field> fields) {
@@ -20,12 +18,6 @@ public class Columns {
     }
 
     public List<String> getNames() {
-        return this.columns.stream().map(Column::getName).toList();
-    }
-
-    public static String getConcatedQueries(List<String> queries) {
-        return queries.stream()
-                .reduce((s1, s2) -> s1 + COMMA + s2)
-                .orElse("");
+        return this.columns.stream().map(Column::name).toList();
     }
 }

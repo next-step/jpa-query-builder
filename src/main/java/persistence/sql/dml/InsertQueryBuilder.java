@@ -2,13 +2,10 @@ package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
 import persistence.sql.ddl.Table;
-import persistence.sql.ddl.column.Column;
-import persistence.sql.ddl.column.Columns;
 import persistence.sql.ddl.column.Values;
 import persistence.sql.exception.InvalidEntityException;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class InsertQueryBuilder {
 
         List<Field> fields = Arrays.stream(value.getClass().getDeclaredFields()).toList();
 
-        return String.format(INSERT_QUERY_START, table.getName()) +
+        return String.format(INSERT_QUERY_START, table.name()) +
                 String.join(COMMA, table.columnNames()) +
                 CLOSING_PARENTHESIS +
                 VALUES +

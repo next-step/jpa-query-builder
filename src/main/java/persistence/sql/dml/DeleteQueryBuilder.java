@@ -17,9 +17,9 @@ public class DeleteQueryBuilder {
     }
 
     public String deleteAll() {
-        return String.format(DELETE_ALL_QUERY, table.getName());
+        return String.format(DELETE_ALL_QUERY, table.name());
     }
     public String deleteById(Long id) {
-        return String.format(DELETE_BY_ID_QUERY, table.getName(), table.getIdName(), id);
+        return String.format(DELETE_BY_ID_QUERY, table.name(), table.primaryKeyName(), id);
     }
 }

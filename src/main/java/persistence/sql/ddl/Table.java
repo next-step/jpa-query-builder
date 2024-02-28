@@ -38,7 +38,7 @@ public class Table {
                 .orElseThrow(NotIdException::new);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -52,15 +52,15 @@ public class Table {
         return entity.getAnnotation(jakarta.persistence.Table.class).name();
     }
 
-    public String getIdCreateQuery() {
+    public String createQuery() {
         return primaryKey.getQuery();
     }
 
-    public String getIdName() {
-        return primaryKey.getName();
+    public String primaryKeyName() {
+        return primaryKey.name();
     }
 
-    public List<String> getColumnQueries() {
+    public List<String> columnQueries() {
         return columns.getQueries();
     }
 

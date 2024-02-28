@@ -36,7 +36,7 @@ public class Column {
         return column.name();
     }
 
-    public String getName() {
+    public String name() {
         return this.name;
     }
 }

@@ -17,7 +17,7 @@ public class CreateQueryBuilder {
     }
 
     public String getQuery() {
-        return String.format(CREATE_TABLE_START, table.getName()) +
+        return String.format(CREATE_TABLE_START, table.name()) +
                 OPENING_PARENTHESIS +
                 getIdQuery() +
                 getColumnQuery() +
@@ -25,10 +25,10 @@ public class CreateQueryBuilder {
     }
 
     private String getIdQuery() {
-        return table.getIdCreateQuery() + COMMA;
+        return table.createQuery() + COMMA;
     }
 
     private String getColumnQuery() {
-        return String.join(COMMA, table.getColumnQueries());
+        return String.join(COMMA, table.columnQueries());
     }
 }

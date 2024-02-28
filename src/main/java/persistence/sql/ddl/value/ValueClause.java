@@ -21,7 +21,7 @@ public class ValueClause {
         return String.valueOf(field.get(object));
     }
 
-    public String getQuery() {
+    public String value() {
         return this.value;
     }
 }

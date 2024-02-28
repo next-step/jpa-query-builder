@@ -14,6 +14,6 @@ public class DropQueryBuilder {
         this.table = new Table(entity);
     }
     public String getQuery() {
-        return String.format(DROP_TABLE, table.getName());
+        return String.format(DROP_TABLE, table.name());
     }
 }

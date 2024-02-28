@@ -59,7 +59,7 @@ class TableTest {
         String expectedName = "users";
 
         // when
-        String actualName = new Table(persistence.entity.notcolumn.Person.class).getName();
+        String actualName = new Table(persistence.entity.notcolumn.Person.class).name();
 
         // then
         Assertions.assertThat(actualName).isEqualTo(expectedName);

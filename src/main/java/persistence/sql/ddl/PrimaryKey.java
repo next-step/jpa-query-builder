@@ -3,7 +3,6 @@ package persistence.sql.ddl;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import persistence.sql.exception.NotIdException;
-import persistence.sql.exception.NotSupportedIdException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -43,7 +42,7 @@ public class PrimaryKey {
         this.generationType = getType(field);
     }
 
-    public String getName() {
+    public String name() {
         return this.name;
     }
 
