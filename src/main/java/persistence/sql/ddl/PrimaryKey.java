@@ -55,9 +55,6 @@ public class PrimaryKey {
     }
 
     public String getQuery() {
-        if (sqlMap.get(generationType) == null) {
-            throw new NotSupportedIdException();
-        }
         if (generationType == GenerationType.UUID) {
             return String.format(sqlMap.get(generationType), name);
         }
