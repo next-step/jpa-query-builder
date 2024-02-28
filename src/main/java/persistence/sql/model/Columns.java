@@ -3,7 +3,6 @@ package persistence.sql.model;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,12 +28,9 @@ public class Columns {
     }
 
     public List<String> getColumnNames() {
-        List<String> columnNames = new ArrayList<>();
-        columns.forEach(column -> {
-            String columnName = column.getName();
-            columnNames.add(columnName);
-        });
-        return Collections.unmodifiableList(columnNames);
+        return columns.stream()
+                .map(Column::getName)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Stream<Column> stream() {
