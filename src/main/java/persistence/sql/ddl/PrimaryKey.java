@@ -8,9 +8,8 @@ import persistence.sql.exception.NotSupportedIdException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.function.Function;
 
-public class Id {
+public class PrimaryKey {
     public static final String ID_AUTO_INCREMENT = "%s %s AUTO_INCREMENT PRIMARY KEY";
     public static Map<GenerationType, String> sqlMap = Map.of(
             GenerationType.AUTO, ID_AUTO_INCREMENT,
@@ -35,7 +34,7 @@ public class Id {
     private final String dataType;
     private final GenerationType generationType;
 
-    public Id(Field field) {
+    public PrimaryKey(Field field) {
         if (!field.isAnnotationPresent(jakarta.persistence.Id.class)) {
             throw new NotIdException();
         }

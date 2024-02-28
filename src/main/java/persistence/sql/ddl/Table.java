@@ -13,12 +13,12 @@ import persistence.sql.exception.NotIdException;
 
 public class Table {
     private final String name;
-    private final persistence.sql.ddl.Id id; // TODO: (질문) 매번 패키명을 적어야하는데 네이밍을 바꾸는게 나을까요?
+    private final PrimaryKey primaryKey;
     private final Columns columns;
 
     public Table(Class<?> entity) {
         this.name = getTableName(entity);
-        this.id = extractIdFrom(entity);
+        this.primaryKey = extractIdFrom(entity);
         this.columns = extractColumnsFrom(entity);
     }
 
@@ -30,11 +30,11 @@ public class Table {
         return new Columns(fields);
     }
 
-    private static persistence.sql.ddl.Id extractIdFrom(Class<?> entity) {
+    private static PrimaryKey extractIdFrom(Class<?> entity) {
         return Stream.of(entity.getDeclaredFields())
                 .filter(x -> x.isAnnotationPresent(Id.class))
                 .findFirst()
-                .map(persistence.sql.ddl.Id::new)
+                .map(PrimaryKey::new)
                 .orElseThrow(NotIdException::new);
     }
 
@@ -53,11 +53,11 @@ public class Table {
     }
 
     public String getIdCreateQuery() {
-        return id.getQuery();
+        return primaryKey.getQuery();
     }
 
     public String getIdName() {
-        return id.getName();
+        return primaryKey.getName();
     }
 
     public List<String> getColumnQueries() {

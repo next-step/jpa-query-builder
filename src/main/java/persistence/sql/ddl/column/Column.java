@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Column {
-    private static final Map<Type, Function<String, String>> typeToSqlMap = Map.of(
+    private static final Map<Type, Function<String, String>> typeToSqlConverter = Map.of(
             String.class, fieldName -> String.format("%s VARCHAR(30)", fieldName),
             Integer.class, fieldName -> String.format("%s INT", fieldName),
             int.class, fieldName -> String.format("%s INT", fieldName)
@@ -22,7 +22,7 @@ public class Column {
     }
 
     public String getQuery() {
-        return typeToSqlMap.get(type).apply(name) + " " + nullClause.getQuery();
+        return typeToSqlConverter.get(type).apply(name) + " " + nullClause.getQuery();
     }
 
     public String getNameFrom(Field field) {

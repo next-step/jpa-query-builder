@@ -7,6 +7,7 @@
 - [x] 요구사항 4 - delete 쿼리 구현히라
   - [x] 4.1 deleteAll 구현하라
   - [x] 4.2 deleteById 구현하라
+- [ ] 2단계 피드백 반영
 
 
 ## Step2
