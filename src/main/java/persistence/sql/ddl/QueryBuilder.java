@@ -59,6 +59,13 @@ public class QueryBuilder {
         return sb.toString();
     }
 
+    public String generateDeleteQuery(Object entity, Object id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("DELETE FROM %s", generateTableName(entity.getClass())));
+        sb.append(whereClause(entity.getClass(), id));
+        return sb.toString();
+    }
+
     private String whereClause(Class<?> clazz, Object id) {
         if (Objects.isNull(id)) {
             return "";
