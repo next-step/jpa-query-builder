@@ -18,7 +18,7 @@ public class EntityBinder {
             field.setAccessible(true);
             field.set(entity, value);
         } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("Invalid instance or value: " + entity + ' ' + value);
+            throw new RuntimeException(e);
         }
     }
 
@@ -28,7 +28,7 @@ public class EntityBinder {
             field.setAccessible(true);
             return field.get(entity);
         } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("This instance does not have any of the fields in that column.");
+            throw new RuntimeException(e);
         }
     }
 }

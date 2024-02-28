@@ -97,25 +97,6 @@ public class Column implements BaseColumn {
         return Collections.unmodifiableList(constraints);
     }
 
-    public Object getValue(Object instance) {
-        try {
-            field.setAccessible(true);
-            return field.get(instance);
-        } catch (IllegalAccessException | IllegalArgumentException e) {
-            throw new IllegalArgumentException("This instance does not have any of the fields in that column.");
-        }
-    }
-
-    public void setValue(Object instance, Object value) {
-        try {
-            field.setAccessible(true);
-            field.set(instance, value);
-        } catch (IllegalAccessException ignored) {
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid instance or value: " + instance + ' ' + value);
-        }
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
