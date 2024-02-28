@@ -68,10 +68,13 @@ public class EntityMangerImpl implements EntityManger {
 
     @Override
     public void remove(Object entity) {
-        Person person = (Person) entity;
-        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entity.getClass());
+        Class<?> clazz = entity.getClass();
+        ColumnData idColumn = Columns.createColumnsWithValue(clazz, entity).getKeyColumn();
+
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(clazz);
         WhereBuilder builder = new WhereBuilder();
-        builder.and(BooleanExpression.eq("id", person.getId()));
+        builder.and(BooleanExpression.eq(idColumn.getName(), idColumn.getValue()));
+
         jdbcTemplate.execute(deleteQueryBuilder.toQuery(builder));
     }
 }

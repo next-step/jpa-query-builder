@@ -74,12 +74,8 @@ class EntityMangerImplTest {
 
         entityManger.remove(person);
 
-        Exception exception = assertThrows(Exception.class, () -> {
-            jdbcTemplate.queryForObject("select * from users where id = 1", rs ->
-                    new Person()
-            );
+        assertThrows(Exception.class, () -> {
+            jdbcTemplate.queryForObject("select * from users where id = 1", rs -> new Person());
         });
-
-        exception.printStackTrace();
     }
 }
