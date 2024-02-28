@@ -148,7 +148,7 @@ public class Person {
       }
       ```
 
-* [ ] 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
+* [x] 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
     * 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
     * ```java
       private String whereClause(String selectQuery, Class<?> clazz) {

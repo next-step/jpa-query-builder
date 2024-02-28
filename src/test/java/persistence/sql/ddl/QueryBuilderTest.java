@@ -52,8 +52,16 @@ class QueryBuilderTest {
     @Test
     @DisplayName("요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기")
     void generateSelectAllQuery() {
-        String insertQuery = queryBuilder.generateSelectQuery(new Person());
+        String insertQuery = queryBuilder.generateSelectQuery(new Person(), null);
 
-        assertThat(insertQuery).isEqualTo("SELECT * FROM users");
+        assertThat(insertQuery).isEqualTo("SELECT id, nick_name, old, email FROM users");
+    }
+
+    @Test
+    @DisplayName("요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기")
+    void generateSelectOneQuery() {
+        String insertQuery = queryBuilder.generateSelectQuery(new Person(), 1L);
+
+        assertThat(insertQuery).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
     }
 }

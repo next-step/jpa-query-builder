@@ -52,8 +52,35 @@ public class QueryBuilder {
         return String.format("INSERT INTO %s (%s) VALUES (%s)", generateTableName(entity.getClass()), columnsClause(entity.getClass()), valueClause(entity));
     }
 
-    public String generateSelectQuery(Object entity) {
-        return String.format("SELECT * FROM %s", generateTableName(entity.getClass()));
+    public String generateSelectQuery(Object entity, Object id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("SELECT %s FROM %s", generateColumnNames(entity.getClass().getDeclaredFields()), generateTableName(entity.getClass())));
+        sb.append(whereClause(entity.getClass(), id));
+        return sb.toString();
+    }
+
+    private String whereClause(Class<?> clazz, Object id) {
+        if (Objects.isNull(id)) {
+            return "";
+        }
+
+        Field primaryKey = getPrimaryField(clazz);
+
+        return String.format(" WHERE %s = %d", generateColumnName(primaryKey), id);
+    }
+
+    private static Field getPrimaryField(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Id field not found"));
+    }
+
+    private String generateColumnNames(Field[] fields) {
+        return Arrays.stream(fields)
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(this::generateColumnName)
+                .collect(Collectors.joining(DELIMITER_COMMA));
     }
 
     private String valueClause(Object object) {
