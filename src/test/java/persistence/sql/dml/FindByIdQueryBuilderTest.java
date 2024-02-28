@@ -25,9 +25,9 @@ class FindByIdQueryBuilderTest {
         EntityBinder entityBinder = new EntityBinder(person);
 
         Object id = entityBinder.getValue(pkColumn);
-        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(table, id);
+        FindQueryBuilder findQueryBuilder = new FindQueryBuilder(table);
 
-        String result = findByIdQueryBuilder.build();
+        String result = findQueryBuilder.buildById(id);
 
         assertThat(result).isEqualTo(findByIdQuery);
     }

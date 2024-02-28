@@ -24,9 +24,9 @@ class DeleteByIdQueryBuilderTest {
         PKColumn pkColumn = table.getPKColumn();
         EntityBinder entityBinder = new EntityBinder(instance);
         Object id = entityBinder.getValue(pkColumn);
-        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder(table, id);
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(table);
 
-        String result = deleteByIdQueryBuilder.build();
+        String result = deleteQueryBuilder.buildById(id);
 
         assertThat(result).isEqualTo(deleteByIdQuery);
     }

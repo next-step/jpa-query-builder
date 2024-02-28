@@ -29,11 +29,7 @@ public class InsertQueryBuilder {
     private String buildColumnsClause() {
         StringBuilder columnsClauseBuilder = new StringBuilder();
 
-        String pkColumnName = table.getPKColumnName();
-        columnsClauseBuilder.append(pkColumnName)
-                .append(',');
-
-        List<String> columnNames = table.getColumnNames();
+        List<String> columnNames = table.getAllColumnNames();
         String joinedColumnNames = String.join(",", columnNames);
         columnsClauseBuilder.append(joinedColumnNames);
 

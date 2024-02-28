@@ -13,15 +13,15 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FindAllQueryBuilderTest {
+class FindQueryBuilderTest {
 
     @DisplayName("Person을 이용하여 findAll 쿼리 생성하기")
     @ParameterizedTest
     @MethodSource
     void build(Table table, String findAllQuery) {
-        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(table);
+        FindQueryBuilder findQueryBuilder = new FindQueryBuilder(table);
 
-        String result = findAllQueryBuilder.build();
+        String result = findQueryBuilder.build();
 
         assertThat(result).isEqualTo(findAllQuery);
     }

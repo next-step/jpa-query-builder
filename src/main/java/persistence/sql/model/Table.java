@@ -1,13 +1,15 @@
 package persistence.sql.model;
 
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import util.CaseConverter;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Table {
 
@@ -85,9 +87,15 @@ public class Table {
         return pkColumn.getName();
     }
 
-    public List<String> getColumnNames() {
+    public List<String> getAllColumnNames() {
+        List<String> allColumnNames = new ArrayList<>();
+
         String pkColumnName = pkColumn.getName();
+        allColumnNames.add(pkColumnName);
+
         List<String> columnNames = columns.getColumnNames();
-        return columnNames;
+        allColumnNames.addAll(columnNames);
+
+        return Collections.unmodifiableList(allColumnNames);
     }
 }
