@@ -48,4 +48,9 @@ public class H2Dialect implements Dialect {
         }
         return str;
     }
+
+    @Override
+    public String getGeneratedIdQuery() {
+        return "CALL IDENTITY()";
+    }
 }

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EntityMangerImplTest {
     private static JdbcTemplate jdbcTemplate;
-    EntityManger entityManger = new EntityMangerImpl(jdbcTemplate);
+    EntityManger entityManger = new EntityMangerImpl(jdbcTemplate, new H2Dialect());
     private static DatabaseServer server;
     private CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect(), Person.class);;
     private DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);;
@@ -59,7 +59,6 @@ class EntityMangerImplTest {
     @Test
     @DisplayName("요구사항2: persist")
     void testPersist() {
-        Long id = 1L;
         Person person = new Person(null, "nick_name", 10, "df", null);
 
         Object saved = entityManger.persist(person);
