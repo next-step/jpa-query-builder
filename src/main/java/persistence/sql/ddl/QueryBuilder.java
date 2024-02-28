@@ -48,6 +48,48 @@ public class QueryBuilder {
         return "DROP TABLE " + generateTableName(clazz);
     }
 
+    // insert into users (id, nick_name, old, email) values (?, ?, ?, ?)
+    public String generateInsertSql(Object entity) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("INSERT INTO ")
+                .append(generateTableName(entity.getClass()))
+                .append(" (");
+
+        sb.append(columnsClause(entity.getClass()))
+                .append(") VALUES (");
+
+        sb.append(valueClause(entity))
+                .append(")");
+
+        return sb.toString();
+    }
+
+    private String valueClause(Object object) {
+        return Arrays.stream(object.getClass().getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(field -> generateColumnValue(field, object))
+                .collect(Collectors.joining(", "));
+    }
+
+    private String columnsClause(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .filter(field -> !field.isAnnotationPresent(Id.class))
+                .map(this::generateColumnName)
+                .collect(Collectors.joining(", "));
+    }
+
+    private String generateColumnValue(Field field, Object entity) {
+        field.setAccessible(true);
+
+        try {
+            return field.getType().equals(String.class) ? String.format("'%s'", field.get(entity)) : String.valueOf(field.get(entity));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private String generateColumnsQuery(Field[] fields) {
         return Arrays.stream(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
