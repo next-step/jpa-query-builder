@@ -47,10 +47,7 @@ public class QueryTest {
     }
 
     @BeforeEach
-    void setUp() throws SQLException {
-
-
-
+    void setUp() {
         String createTableQuery = ddlQueryBuilder.buildCreateQuery();
         jdbcTemplate.execute(createTableQuery);
 
@@ -93,8 +90,9 @@ public class QueryTest {
     @DisplayName("findById 쿼리 통합 테스트")
     void findByIdQuery() {
         Person3 person = new Person3(3L, "qwer3", 3, "email3@email.com");
+        Long id = person.getId();
 
-        String findByIdQuery = dmlQueryBuilder.buildFindByIdQuery(person);
+        String findByIdQuery = dmlQueryBuilder.buildFindByIdQuery(id);
         Person3 result = jdbcTemplate.queryForObject(findByIdQuery, new Person3RowMapper());
 
         assertThat(result).isEqualTo(person);
@@ -103,12 +101,29 @@ public class QueryTest {
     @Test
     @DisplayName("delete 쿼리 통합 테스트")
     void deleteQuery() {
-        String deleteQuery = dmlQueryBuilder.buildDeleteQuery();
+        String deleteQuery = dmlQueryBuilder.buildDeleteAllQuery();
         jdbcTemplate.execute(deleteQuery);
 
         String findAllQuery = dmlQueryBuilder.buildFindAllQuery();
         List<Person3> persons = jdbcTemplate.query(findAllQuery, new Person3RowMapper());
 
         assertThat(persons).isEmpty();
+    }
+
+    @Test
+    @DisplayName("deleteById 쿼리 통합 테스트")
+    void deleteByIdQuery() {
+        Person3 person = new Person3(3L, "qwer3", 3, "email3@email.com");
+        Long id = person.getId();
+
+        String deleteByIdQuery = dmlQueryBuilder.buildDeleteByIdQuery(id);
+        jdbcTemplate.execute(deleteByIdQuery);
+
+        String findAllQuery = dmlQueryBuilder.buildFindAllQuery();
+        List<Person3> persons = jdbcTemplate.query(findAllQuery, new Person3RowMapper());
+
+        Person3 expectPerson1 = new Person3(1L, "qwer1", 1, "email1@email.com");
+        Person3 expectPerson2 = new Person3(2L, "qwer2", 2, "email2@email.com");
+        assertThat(persons).containsExactlyInAnyOrder(expectPerson1, expectPerson2);
     }
 }

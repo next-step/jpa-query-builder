@@ -4,6 +4,7 @@ import persistence.sql.dialect.Dialect;
 import persistence.sql.model.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
 
@@ -29,13 +30,12 @@ public class CreateQueryBuilder {
         String pkColumn = buildPKColumnQuery();
         columnsBuilder.append(pkColumn);
 
-        List<Column> columns = table.getColumns();
-        columns.forEach(column -> {
-            String columnQuery = buildColumnQuery(column);
-            columnsBuilder.append(',');
-            columnsBuilder.append(columnQuery);
-        });
+        Columns columns = table.getColumns();
+        String columnsClause = columns.stream()
+                .map(this::buildColumnQuery)
+                .collect(Collectors.joining(",", ",", ""));
 
+        columnsBuilder.append(columnsClause);
         return columnsBuilder.toString();
     }
 

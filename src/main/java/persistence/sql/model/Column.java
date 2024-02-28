@@ -1,6 +1,7 @@
 package persistence.sql.model;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import util.CaseConverter;
 
 import java.lang.reflect.Field;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Column {
+public class Column implements BaseColumn {
 
     private final Field field;
 
@@ -19,10 +20,18 @@ public class Column {
     private final List<SqlConstraint> constraints;
 
     public Column(Field field) {
+        validateField(field);
+
         this.field = field;
         this.name = buildName();
         this.type = buildType();
         this.constraints = buildConstraints();
+    }
+
+    private void validateField(Field field) {
+        if (field.isAnnotationPresent(Transient.class)) {
+            throw new IllegalArgumentException("This field is not a column: " + field.getName());
+        }
     }
 
     private String buildName() {
@@ -63,25 +72,29 @@ public class Column {
         return constraints;
     }
 
+    public <T> boolean isType(Class<T> type) {
+        Class<?> clazz = this.type.toJavaClass();
+        return clazz.isAssignableFrom(type);
+    }
+
+    @Override
+    public Field getField() {
+        return field;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public SqlType getType() {
         return type;
     }
 
+    @Override
     public List<SqlConstraint> getConstraints() {
         return Collections.unmodifiableList(constraints);
-    }
-
-    public Object getValue(Object instance) {
-        try {
-            field.setAccessible(true);
-            return field.get(instance);
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("This instance does not have any of the fields in that column.");
-        }
     }
 
     @Override

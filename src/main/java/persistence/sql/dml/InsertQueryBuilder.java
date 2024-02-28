@@ -1,7 +1,8 @@
 package persistence.sql.dml;
 
+import persistence.entity.EntityBinder;
 import persistence.sql.model.Column;
-import persistence.sql.model.PKColumn;
+import persistence.sql.model.Columns;
 import persistence.sql.model.Table;
 
 import java.util.List;
@@ -28,16 +29,9 @@ public class InsertQueryBuilder {
     private String buildColumnsClause() {
         StringBuilder columnsClauseBuilder = new StringBuilder();
 
-        PKColumn pkColumn = table.getPKColumn();
-        String pkColumnName = pkColumn.getName();
-        columnsClauseBuilder.append(pkColumnName);
-
-        List<Column> columns = table.getColumns();
-        columns.forEach(column -> {
-            String name = column.getName();
-            columnsClauseBuilder.append(',')
-                    .append(name);
-        });
+        List<String> columnNames = table.getAllColumnNames();
+        String joinedColumnNames = String.join(",", columnNames);
+        columnsClauseBuilder.append(joinedColumnNames);
 
         return columnsClauseBuilder.toString();
     }
@@ -47,22 +41,24 @@ public class InsertQueryBuilder {
 
         valueClauseBuilder.append("null");
 
-        List<Column> columns = table.getColumns();
-        columns.forEach(column -> {
-            Object value = column.getValue(instance);
-            String columnValueClause = buildColumnValueClause(value);
-            valueClauseBuilder
-                    .append(',')
-                    .append(columnValueClause);
-        });
+        Columns columns = table.getColumns();
+        columns.stream()
+                .forEach(column -> {
+                    String columnValueClause = buildColumnValueClause(column, instance);
+                    valueClauseBuilder
+                            .append(',')
+                            .append(columnValueClause);
+                });
 
         return valueClauseBuilder.toString();
     }
 
-    private String buildColumnValueClause(Object value) {
+    private String buildColumnValueClause(Column column, Object instance) {
         StringBuilder valueClauseBuilder = new StringBuilder();
+        EntityBinder entityBinder = new EntityBinder(instance);
 
-        if (value instanceof String) {
+        Object value = entityBinder.getValue(column);
+        if (column.isType(String.class)) {
             return valueClauseBuilder.append('\'')
                     .append(value)
                     .append('\'')

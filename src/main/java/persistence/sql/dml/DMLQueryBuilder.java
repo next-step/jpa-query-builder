@@ -16,17 +16,22 @@ public class DMLQueryBuilder {
     }
 
     public String buildFindAllQuery() {
-        FindAllQueryBuilder findAllQueryBuilder = new FindAllQueryBuilder(table);
-        return findAllQueryBuilder.build();
+        FindQueryBuilder findQueryBuilder = new FindQueryBuilder(table);
+        return findQueryBuilder.build();
     }
 
-    public String buildFindByIdQuery(Object instance) {
-        FindByIdQueryBuilder findByIdQueryBuilder = new FindByIdQueryBuilder(table, instance);
-        return findByIdQueryBuilder.build();
+    public String buildFindByIdQuery(Object id) {
+        FindQueryBuilder findQueryBuilder = new FindQueryBuilder(table);
+        return findQueryBuilder.buildById(id);
     }
 
-    public String buildDeleteQuery() {
+    public String buildDeleteAllQuery() {
         DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(table);
         return deleteQueryBuilder.build();
+    }
+
+    public String buildDeleteByIdQuery(Object id) {
+        DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(table);
+        return deleteQueryBuilder.buildById(id);
     }
 }
