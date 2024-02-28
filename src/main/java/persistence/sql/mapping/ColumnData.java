@@ -13,9 +13,9 @@ public class ColumnData {
     private final String name;
     private final DataType type;
     private Object value;
-    private KeyType keyType;
-    private GenerationType generationType;
-    private boolean isNullable;
+    private final KeyType keyType;
+    private final GenerationType generationType;
+    private final boolean isNullable;
 
     private ColumnData(String name, DataType type, KeyType keyType, GenerationType generationType, boolean isNullable) {
         this.name = name;
