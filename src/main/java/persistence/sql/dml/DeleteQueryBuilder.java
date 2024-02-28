@@ -7,7 +7,7 @@ import persistence.sql.exception.InvalidEntityException;
 public class DeleteQueryBuilder {
     public static final String DELETE_ALL_QUERY = "DELETE FROM %s";
     public static final String DELETE_BY_ID_QUERY = "DELETE FROM %s where %s = %d";
-    private final Table table; // TODO: (질문) table을 다 가지고 있는게 나을까? 아니면 필요한 정보만?
+    private final Table table;
 
     public DeleteQueryBuilder(Class<?> entity) {
         if (!entity.isAnnotationPresent(Entity.class)) {
