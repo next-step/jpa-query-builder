@@ -125,7 +125,7 @@ public class Person {
 }
 ```
 
-* [ ] 요구사항 1 - 위의 정보를 바탕으로 insert 구현해보기
+* [x] 요구사항 1 - 위의 정보를 바탕으로 insert 구현해보기
     * 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
     * 위의 정보를 통해 Person 클래스의 정보를 업데이트 해준다
     * @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자
