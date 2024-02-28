@@ -2,9 +2,8 @@ package persistence.sql.dml;
 
 import database.DatabaseServer;
 import database.H2;
-import jdbc.DtoMapper;
+import persistence.sql.common.DtoMapper;
 import jdbc.JdbcTemplate;
-import jdbc.RowMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +14,10 @@ import org.slf4j.LoggerFactory;
 import persistence.entity.notcolumn.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
 import static persistence.sql.dml.TestFixture.*;
 

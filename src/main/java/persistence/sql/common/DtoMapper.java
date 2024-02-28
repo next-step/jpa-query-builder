@@ -1,7 +1,8 @@
-package jdbc;
+package persistence.sql.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
+import jdbc.RowMapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -10,8 +11,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-// TODO: (질문) 패키지 위치를 jdbc 하위로 잡아도 되나요? JdbcTemplate과 인접하게 있어야할지, 아니면 제가 직접 구현한 기능이니 persistence 하위에 있어야할지 질문드립니다.
-public class DtoMapper<T> implements RowMapper<T>{
+public class DtoMapper<T> implements RowMapper<T> {
 
     private final Class<T> clazz;
 

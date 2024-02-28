@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import database.DatabaseServer;
 import database.H2;
-import jdbc.DtoMapper;
+import persistence.sql.common.DtoMapper;
 import jdbc.JdbcTemplate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
