@@ -2,6 +2,7 @@ package persistence.entity;
 
 import jakarta.persistence.Id;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
 import persistence.Person;
 import persistence.sql.ddl.exception.IdAnnotationMissingException;
 import persistence.sql.dialect.H2Dialect;
@@ -29,15 +30,18 @@ public class EntityMangerImpl implements EntityManger {
         builder.and(BooleanExpression.eq("id", id));
         String query = selectQueryBuilder.toQuery(builder);
 
-        return jdbcTemplate.queryForObject(query, rs ->
+        return jdbcTemplate.queryForObject(query, getRowMapper());
+    }
+
+    private static RowMapper<Person> getRowMapper() {
+        return rs ->
                 new Person(
                         rs.getLong("id"),
                         rs.getString("nick_name"),
                         rs.getInt("old"),
                         rs.getString("email"),
                         null
-                )
-        );
+                );
     }
 
     @Override
