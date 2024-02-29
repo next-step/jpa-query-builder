@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EntityMangerImplTest {
     private static JdbcTemplate jdbcTemplate;
-    EntityManger entityManger = new EntityMangerImpl(jdbcTemplate, new H2Dialect());
     private static DatabaseServer server;
+    EntityManger entityManger = new EntityMangerImpl(jdbcTemplate, new H2Dialect());
     private CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(new H2Dialect(), Person.class);;
     private DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);;
     private InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);;
