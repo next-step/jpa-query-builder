@@ -22,7 +22,7 @@ public class WhereClause {
                     return Optional.ofNullable(getFieldValue(field, entity)).isPresent();
                 })
                 .map(field -> toWhereClause(entity, field))
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(" AND "));
     }
 
     private static String toWhereClause(Object entity, Field field) {

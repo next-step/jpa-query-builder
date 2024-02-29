@@ -48,6 +48,6 @@ class DMLGeneratorTest {
         String result = dmlGenerator.generateDelete(person);
 
         // then
-        assertThat(result).isEqualTo("DELETE FROM users where nick_name = 'name', old = 26, email = 'email';");
+        assertThat(result).isEqualTo("DELETE FROM users where nick_name = 'name' AND old = 26 AND email = 'email';");
     }
 }

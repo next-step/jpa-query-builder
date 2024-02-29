@@ -29,7 +29,8 @@ public class Application {
 
             PersonRowMapper rowMapper = new PersonRowMapper();
             jdbcTemplate.query(dmlGenerator.generateFindAll(), rowMapper);
-            jdbcTemplate.queryForObject(dmlGenerator.generateFindById(1L), rowMapper);
+            Person person = jdbcTemplate.queryForObject(dmlGenerator.generateFindById(1L), rowMapper);
+            jdbcTemplate.execute(dmlGenerator.generateDelete(person));
 
             jdbcTemplate.execute(ddlGenerator.generateDrop());
 
