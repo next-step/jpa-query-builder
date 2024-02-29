@@ -2,7 +2,10 @@ package persistence;
 
 import database.DatabaseServer;
 import database.H2;
+import domain.Person;
 import jdbc.JdbcTemplate;
+import persistence.sql.ddl.CreateQueryBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,10 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+
+            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
+
+            jdbcTemplate.execute(createQueryBuilder.getCreateTableSql(Person.class));
 
             server.stop();
         } catch (Exception e) {
