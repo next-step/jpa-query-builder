@@ -1,7 +1,6 @@
 package persistence.entity;
 
-import domain.Person3;
-import domain.step3.mapper.RowMapperImpl;
+import domain.mapper.RowMapperImpl;
 import jdbc.JdbcTemplate;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.dml.DmlQueryBuilder;
@@ -21,7 +20,7 @@ public class SimpleEntityManager implements EntityManager {
 
     @Override
     public <T> T find(Class<T> clazz, Long id) {
-        return jdbcTemplate.query(dmlQueryBuilder.findByIdQuery(clazz, id), new RowMapperImpl<>(clazz)).get(0);
+        return jdbcTemplate.queryForObject(dmlQueryBuilder.findByIdQuery(clazz, id), new RowMapperImpl<>(clazz));
     }
 
     @Override
