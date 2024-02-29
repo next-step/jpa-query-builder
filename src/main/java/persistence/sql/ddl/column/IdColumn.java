@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 
 public class IdColumn implements EntityColumn {
 
-    private static final String ID_DEFENITION = "PRIMARY KEY";
+    private static final String ID_DEFINITION = "PRIMARY KEY";
 
     private final Column column;
     private final GenerationTypeStrategy generatedValueStrategy;
@@ -38,7 +38,7 @@ public class IdColumn implements EntityColumn {
                 column.getLengthDefinition() +
                 BLANK +
                 generatedValueStrategy.getMySqlStrategyDDL() +
-                ID_DEFENITION +
+                ID_DEFINITION +
                 BLANK +
                 column.getNullableDefinition();
     }
