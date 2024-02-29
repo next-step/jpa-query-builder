@@ -5,7 +5,7 @@ import persistence.sql.dml.clause.ValueClause;
 
 public class DMLGenerator {
 
-    private static final String INSERT_QUERY = "INSERT INTO %s (%s) VALUE (%s);";
+    private static final String INSERT_QUERY = "INSERT INTO %s (%s) VALUES (%s);";
 
     public String generateInsert(Object entity) {
         Table table = Table.from(entity.getClass());

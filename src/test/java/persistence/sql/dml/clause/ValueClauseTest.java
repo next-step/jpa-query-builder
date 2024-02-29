@@ -10,13 +10,13 @@ class ValueClauseTest {
     @Test
     void getValueClause() {
         // given
-        PersonForValueClauseTest person = new PersonForValueClauseTest("name", "email", 1);
+        PersonForValueClauseTest person = new PersonForValueClauseTest("name", 26, "email", 1);
 
         // when
         String result = ValueClause.getValueClause(person);
 
         // then
-        assertThat(result).contains("name, email");
+        assertThat(result).contains("'name', 26, 'email'");
     }
 
     static class PersonForValueClauseTest {
@@ -26,16 +26,19 @@ class ValueClauseTest {
         private Long id;
 
         @Column(name = "nick_name")
-        private String name;
+        private final String name;
+
+        private final int age;
 
         @Column(nullable = false)
-        private String email;
+        private final String email;
 
         @Transient
-        private Integer index;
+        private final Integer index;
 
-        public PersonForValueClauseTest(String name, String email, Integer index) {
+        public PersonForValueClauseTest(String name, int age, String email, Integer index) {
             this.name = name;
+            this.age = age;
             this.email = email;
             this.index = index;
         }

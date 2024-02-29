@@ -10,15 +10,15 @@ class DMLGeneratorTest {
     DMLGenerator dmlGenerator = new DMLGenerator();
 
     @Test
-    void generateInsert() {
+    void insert() {
         // given
         Person person = new Person("name", 26, "email", 1);
 
         // when
-        String result = dmlGenerator.generateInsert(person);
+        String insert = dmlGenerator.generateInsert(person);
 
         // then
-        assertThat(result).isEqualTo("INSERT INTO users (nick_name, old, email) VALUE (name, 26, email);");
+        assertThat(insert).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('name', 26, 'email');");
     }
 
 }
