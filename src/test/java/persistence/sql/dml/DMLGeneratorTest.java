@@ -21,4 +21,12 @@ class DMLGeneratorTest {
         assertThat(insert).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('name', 26, 'email');");
     }
 
+    @Test
+    void findAll() {
+        // given & when
+        String result = dmlGenerator.generateFindAll(Person.class);
+
+        // then
+        assertThat(result).isEqualTo("SELECT * FROM users;");
+    }
 }

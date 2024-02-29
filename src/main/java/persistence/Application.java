@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
+import jdbc.PersonRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DDLGenerator;
@@ -25,6 +26,7 @@ public class Application {
 
             jdbcTemplate.execute(ddlGenerator.generateCreate(Person.class));
             jdbcTemplate.execute(dmlGenerator.generateInsert(new Person("name", 26, "email", 1)));
+            jdbcTemplate.query(dmlGenerator.generateFindAll(Person.class), new PersonRowMapper());
 
             jdbcTemplate.execute(ddlGenerator.generateDrop(Person.class));
 
