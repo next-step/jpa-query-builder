@@ -66,6 +66,10 @@ public class Columns implements Iterable<ColumnData> {
                 .orElseThrow(IdAnnotationMissingException::new);
     }
 
+    public String getKeyColumnName() {
+        return getKeyColumn().getName();
+    }
+
     private static void checkIsEntity(Class<?> entityClazz) {
         if (!entityClazz.isAnnotationPresent(Entity.class)) {
             throw new AnnotationMissingException("Entity 어노테이션이 없습니다.");

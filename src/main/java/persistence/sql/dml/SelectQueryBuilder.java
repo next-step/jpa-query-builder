@@ -36,7 +36,7 @@ public class SelectQueryBuilder {
 
     private String selectClause() {
         ArrayList<String> names = new ArrayList<String>();
-        names.add(columns.getKeyColumn().getName());
+        names.add(columns.getKeyColumnName());
         names.addAll(columns.getNames());
         return String.join(", ", names);
     }
