@@ -20,5 +20,4 @@ class WhereClauseTest {
         // then
         assertThat(result).isEqualTo("nick_name = 'name' AND old = 26");
     }
-
 }
