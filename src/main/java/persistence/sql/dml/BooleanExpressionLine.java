@@ -16,4 +16,22 @@ public class BooleanExpressionLine {
     public LogicalOperator getLogicalOperator() {
         return logicalOperator;
     }
+
+    public String toQuery(boolean firstLine) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (!firstLine) {
+            stringBuilder.append(" ");
+            stringBuilder.append(logicalOperator.name());
+            stringBuilder.append(" ");
+        }
+
+        stringBuilder.append(expression.getColumn());
+        stringBuilder.append(" ");
+        stringBuilder.append(expression.getOperator().getSymbol());
+        stringBuilder.append(" ");
+        stringBuilder.append(ValueUtil.getValueString(expression.getValue()));
+
+        return stringBuilder.toString();
+    }
 }

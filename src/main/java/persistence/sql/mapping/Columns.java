@@ -35,6 +35,7 @@ public class Columns implements Iterable<ColumnData> {
     }
 
     public static Columns createColumnsWithValue(Class<?> clazz, Object entity) {
+        checkIsEntity(clazz);
         List<ColumnData> columns = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(field -> ColumnData.createColumnWithValue(field, entity))
@@ -63,6 +64,10 @@ public class Columns implements Iterable<ColumnData> {
                 .filter(ColumnData::hasKeyType)
                 .findFirst()
                 .orElseThrow(IdAnnotationMissingException::new);
+    }
+
+    public String getKeyColumnName() {
+        return getKeyColumn().getName();
     }
 
     private static void checkIsEntity(Class<?> entityClazz) {

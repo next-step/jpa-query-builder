@@ -80,4 +80,11 @@ class ColumnsTest {
 
         assertThat(foundColumn.isPrimaryKey()).isTrue();
     }
+
+    @Test
+    public void testGetKeyColumnName() {
+        Columns columns = Columns.createColumns(Person.class);
+
+        assertThat(columns.getKeyColumnName()).isEqualTo("id");
+    }
 }
