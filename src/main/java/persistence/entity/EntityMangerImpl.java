@@ -5,7 +5,6 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import persistence.Person;
 import persistence.sql.ddl.exception.IdAnnotationMissingException;
-import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.*;
 import persistence.sql.mapping.ColumnData;
 import persistence.sql.mapping.Columns;
@@ -14,13 +13,12 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class EntityMangerImpl implements EntityManger {
-    private JdbcTemplate jdbcTemplate;
-    private H2Dialect dialect;
+    private final JdbcTemplate jdbcTemplate;
+    private final GetGeneratedIdStrategy idSetStrategy;
 
-
-    public EntityMangerImpl(JdbcTemplate jdbcTemplate, H2Dialect dialect) {
+    public EntityMangerImpl(JdbcTemplate jdbcTemplate, GetGeneratedIdStrategy idSetStrategy) {
         this.jdbcTemplate = jdbcTemplate;
-        this.dialect = dialect;
+        this.idSetStrategy = idSetStrategy;
     }
 
     @Override
@@ -56,7 +54,8 @@ public class EntityMangerImpl implements EntityManger {
     }
 
     private void setIdToEntity(Object entity, Class<?> clazz) {
-        Long id = jdbcTemplate.queryForObject(dialect.getGeneratedIdQuery(), rs -> rs.getLong(1));
+        Long id = idSetStrategy.getGeneratedId(jdbcTemplate);
+
         Field idField = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
@@ -64,7 +63,7 @@ public class EntityMangerImpl implements EntityManger {
         idField.setAccessible(true);
 
         try {
-            idField.set(entity, id - 1);
+            idField.set(entity, id);
         } catch (IllegalAccessException e) {
             throw new IdAnnotationMissingException();
         }
