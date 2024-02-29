@@ -1,4 +1,4 @@
-package persistence.sql.ddl.column;
+package persistence.sql.ddl.value;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;

@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.Function;
 
-public class Column {
+public class ColumnClause {
     private static final Map<Type, Function<String, String>> typeToSqlConverter = Map.of(
             String.class, fieldName -> String.format("%s VARCHAR(30)", fieldName),
             Integer.class, fieldName -> String.format("%s INT", fieldName),
@@ -15,7 +15,7 @@ public class Column {
     private final Class<?> type;
     private final NullClause nullClause;
 
-    public Column(Field field) {
+    public ColumnClause(Field field) {
         this.name = getNameFrom(field);
         this.type = field.getType();
         this.nullClause = new NullClause(field);

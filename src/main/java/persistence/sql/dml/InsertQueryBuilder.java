@@ -2,7 +2,10 @@ package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
 import persistence.sql.ddl.Table;
-import persistence.sql.ddl.column.Values;
+import persistence.sql.ddl.column.ColumnClause;
+import persistence.sql.ddl.column.Columns;
+import persistence.sql.ddl.value.ValueClause;
+import persistence.sql.ddl.value.Values;
 import persistence.sql.exception.InvalidEntityException;
 
 import java.lang.reflect.Field;
@@ -24,15 +27,27 @@ public class InsertQueryBuilder<T> {
         this.table = new Table(entity);
     }
 
-    public String getInsertQuery(T value) {
+    public String getInsertQuery(T target) {
 
-        List<Field> fields = Arrays.stream(value.getClass().getDeclaredFields()).toList();
+        List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
 
         return String.format(INSERT_QUERY_START, table.name()) +
                 String.join(COMMA, table.columnNames()) +
                 CLOSING_PARENTHESIS +
                 VALUES +
-                String.join(COMMA, new Values(fields, value).getQueries()) +
+                String.join(COMMA, new Values(fields, target).getQueries()) +
+                CLOSING_PARENTHESIS;
+    }
+
+    public String getInsertQuery(T target, Columns colums, Values values) {
+
+        List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
+
+        return String.format(INSERT_QUERY_START, table.name()) +
+                String.join(COMMA, colums.getQueries()) +
+                CLOSING_PARENTHESIS +
+                VALUES +
+                String.join(COMMA, values.getQueries()) +
                 CLOSING_PARENTHESIS;
     }
 }
