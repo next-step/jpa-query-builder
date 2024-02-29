@@ -2,10 +2,11 @@ package persistence.sql.dml;
 
 import database.DatabaseServer;
 import database.H2;
+import domain.EntityMetaData;
 import domain.Person1;
 import domain.Person3;
-import domain.step3.mapper.RowMapperImpl;
-import jakarta.persistence.Column;
+import domain.dialect.H2Dialect;
+import domain.mapper.RowMapperImpl;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.junit.jupiter.api.AfterAll;
@@ -18,7 +19,6 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import static domain.step3.utils.StringUtils.isBlankOrEmpty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -27,8 +27,9 @@ class DmlQueryBuilderTest {
 
     static DatabaseServer server;
     static JdbcTemplate jdbcTemplate;
-    DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new domain.step2.dialect.H2Dialect());
-    DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new domain.step3.dialect.H2Dialect());
+    static EntityMetaData entityMetaData = new EntityMetaData(Person3.class);
+    DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect(), entityMetaData);
+    DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect(), entityMetaData);
 
     Person3 person = new Person3();
     Person3 personWithIdNull = new Person3();
@@ -114,7 +115,7 @@ class DmlQueryBuilderTest {
         assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), rowMapper)).hasSize(2);
 
         Field idField = Arrays.stream(person.getClass().getDeclaredFields())
-                .filter(field1 -> getFieldName(field1).equals("id"))
+                .filter(field1 -> entityMetaData.getFieldName(field1).equals("id"))
                 .findAny().get();
 
         jdbcTemplate.execute(dmlQueryBuilder.deleteQuery(Person3.class, idField, person.getId()));
@@ -138,14 +139,6 @@ class DmlQueryBuilderTest {
     }
 
     private void dropTable() {
-        jdbcTemplate.execute(ddlQueryBuilder.dropTable(Person3.class));
-    }
-
-    private String getFieldName(Field field) {
-        if (field.isAnnotationPresent(Column.class)) {
-            return isBlankOrEmpty(field.getAnnotation(Column.class).name()) ? field.getName()
-                    : field.getAnnotation(Column.class).name();
-        }
-        return field.getName();
+        jdbcTemplate.execute(ddlQueryBuilder.dropTable());
     }
 }

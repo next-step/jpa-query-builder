@@ -2,7 +2,9 @@ package persistence.entity;
 
 import database.DatabaseServer;
 import database.H2;
+import domain.EntityMetaData;
 import domain.Person3;
+import domain.dialect.H2Dialect;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -24,10 +26,12 @@ class SimpleEntityManagerTest {
     static DatabaseServer server;
     static JdbcTemplate jdbcTemplate;
     static SimpleEntityManager simpleEntityManager;
-    static DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new domain.step2.dialect.H2Dialect());
-    static DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new domain.step3.dialect.H2Dialect());
 
     Person3 person;
+    static EntityMetaData entityMetaData = new EntityMetaData(Person3.class);
+
+    static DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect(), entityMetaData);
+    static DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect(), entityMetaData);
 
     @BeforeAll
     static void init() throws SQLException {
@@ -118,6 +122,6 @@ class SimpleEntityManagerTest {
     }
 
     private void dropTable() {
-        jdbcTemplate.execute(ddlQueryBuilder.dropTable(Person3.class));
+        jdbcTemplate.execute(ddlQueryBuilder.dropTable());
     }
 }
