@@ -22,79 +22,30 @@ import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
 import static persistence.sql.dml.TestFixture.*;
 
 class DeleteQueryBuilderTest {
-    private static final Logger logger = LoggerFactory.getLogger(DeleteQueryBuilderTest.class);
-    DatabaseServer server;
-    private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void setUp() {
-        try {
-            server = new H2();
-            server.start();
-            jdbcTemplate = new JdbcTemplate(server.getConnection());
-        } catch (Exception e) {
-            logger.error("Error occurred", e);
-        } finally {
-            logger.info("Application finished");
-        }
-    }
-
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute(DROP_TABLE);
-        server.stop();
-    }
-
-    @DisplayName("[요구사항4.1] 3건의 person insert 후, delteAll을 실행시, 0건이 조회된다.")
+    @DisplayName("[요구사항4.1] Delete All 쿼리를 반환한다.")
     @Test
-    void 요구사항2_test() throws SQLException {
+    void 요구사항2_test() {
         // given
-        insertTestFixtures();
-        Long randomPersonId = getRandomPersonId();
+        String expected = "DELETE FROM users";
 
         // when
-        String query = new DeleteQueryBuilder(Person.class).deleteAll();
-        jdbcTemplate.execute(query);
+        String actual = new DeleteQueryBuilder(Person.class).deleteAll();
 
         // then
-        String findAllQuery = new SelectQueryBuilder(Person.class).getFindAllQuery();
-        List<Person> persons = jdbcTemplate.query(findAllQuery, new DtoMapper<Person>(Person.class));
-
-        Assertions.assertThat(persons).isEmpty();
+        Assertions.assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("[요구사항4.2] 3건의 person insert 후, deleteById 실행시, 2건이 조회된다.")
+    @DisplayName("[요구사항4.2] Delete by Id 쿼리를 반환한다.")
     @Test
     void 요구사항3_test() {
         // given
-        insertTestFixtures();
-        Long randomPersonId = getRandomPersonId();
+        Long id = 1L;
 
         // when
-        String query = new DeleteQueryBuilder(Person.class).deleteById(randomPersonId);
-        jdbcTemplate.execute(query);
-
-        String selectQuery = new SelectQueryBuilder(Person.class).getFindAllQuery();
-        List<Person> persons = jdbcTemplate.query(selectQuery, new DtoMapper<Person>(Person.class));
+        String query = new DeleteQueryBuilder(Person.class).deleteById(id);
 
         // then
-        Assertions.assertThat(persons).hasSize(2);
-    }
-
-    private Long getRandomPersonId() {
-        String selectAllQuery = new SelectQueryBuilder(Person.class).getFindAllQuery();
-        List<Person> persons = jdbcTemplate.query(selectAllQuery, new DtoMapper<Person>(Person.class));
-        return persons.get(0).getId();
-    }
-
-    private void insertTestFixtures() {
-        jdbcTemplate.execute(new CreateQueryBuilder(Person.class).getQuery());
-
-        List<String> insertQueries = Stream.of(person_철수, person_영희, person_짱구)
-                .map(person -> new InsertQueryBuilder(Person.class).getInsertQuery(person)).toList();
-
-        for (String query : insertQueries) {
-            jdbcTemplate.execute(query);
-        }
+        Assertions.assertThat(query).isEqualTo(String.format("DELETE FROM users where id = %d", id));
     }
 }

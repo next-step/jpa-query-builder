@@ -47,7 +47,7 @@ class SelectQueryBuilderTest {
 
     @DisplayName("[요구사항2] 3건의 person insert 후, findAll을 실행시, 3건이 조회된다.")
     @Test
-    void 요구사항2_test() throws SQLException {
+    void 요구사항2_test() {
         // given
         jdbcTemplate.execute(new CreateQueryBuilder(Person.class).getQuery());
 
