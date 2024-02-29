@@ -7,7 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class DMLGeneratorTest {
 
-    DMLGenerator dmlGenerator = new DMLGenerator();
+    DMLGenerator dmlGenerator = new DMLGenerator(Person.class);
 
     @Test
     void insert() {
@@ -24,9 +24,18 @@ class DMLGeneratorTest {
     @Test
     void findAll() {
         // given & when
-        String result = dmlGenerator.generateFindAll(Person.class);
+        String result = dmlGenerator.generateFindAll();
 
         // then
         assertThat(result).isEqualTo("SELECT * FROM users;");
+    }
+
+    @Test
+    void findById() {
+        // given & when
+        String result = dmlGenerator.generateFindById(1L);
+
+        // then
+        assertThat(result).isEqualTo("SELECT * FROM users where id = 1;");
     }
 }

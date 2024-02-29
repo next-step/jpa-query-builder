@@ -10,10 +10,10 @@ class DDLGeneratorTest {
     @Test
     void createPersonCreateQuery() {
         // given
-        DDLGenerator ddlGenerator = new DDLGenerator();
+        DDLGenerator ddlGenerator = new DDLGenerator(Person.class);
 
         // when
-        String createSql = ddlGenerator.generateCreate(Person.class);
+        String createSql = ddlGenerator.generateCreate();
 
         // then
         assertThat(createSql).isEqualTo("CREATE TABLE users (" +
@@ -26,10 +26,10 @@ class DDLGeneratorTest {
     @Test
     void createPersonDropQuery() {
         // given
-        DDLGenerator ddlGenerator = new DDLGenerator();
+        DDLGenerator ddlGenerator = new DDLGenerator(Person.class);
 
         // when
-        String dropSql = ddlGenerator.generateDrop(Person.class);
+        String dropSql = ddlGenerator.generateDrop();
 
         // then
         assertThat(dropSql).isEqualTo("DROP TABLE users;");

@@ -21,14 +21,17 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            DDLGenerator ddlGenerator = new DDLGenerator();
-            DMLGenerator dmlGenerator = new DMLGenerator();
+            DDLGenerator ddlGenerator = new DDLGenerator(Person.class);
+            DMLGenerator dmlGenerator = new DMLGenerator(Person.class);
 
-            jdbcTemplate.execute(ddlGenerator.generateCreate(Person.class));
+            jdbcTemplate.execute(ddlGenerator.generateCreate());
             jdbcTemplate.execute(dmlGenerator.generateInsert(new Person("name", 26, "email", 1)));
-            jdbcTemplate.query(dmlGenerator.generateFindAll(Person.class), new PersonRowMapper());
 
-            jdbcTemplate.execute(ddlGenerator.generateDrop(Person.class));
+            PersonRowMapper rowMapper = new PersonRowMapper();
+            jdbcTemplate.query(dmlGenerator.generateFindAll(), rowMapper);
+            jdbcTemplate.queryForObject(dmlGenerator.generateFindById(1L), rowMapper);
+
+            jdbcTemplate.execute(ddlGenerator.generateDrop());
 
             server.stop();
         } catch (Exception e) {

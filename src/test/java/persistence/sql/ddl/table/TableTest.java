@@ -13,10 +13,10 @@ class TableTest {
     @DisplayName("테이블에 @Id 가 없을 경우 예외가 발생한다")
     void failByNotFoundIdAnnotation() {
         // given
-        DDLGenerator DDLGenerator = new DDLGenerator();
+        DDLGenerator DDLGenerator = new DDLGenerator(PersonNotHaveIdAnnotation.class);
 
         // when
-        Throwable throwable = catchThrowable(() -> DDLGenerator.generateCreate(PersonNotHaveIdAnnotation.class));
+        Throwable throwable = catchThrowable(DDLGenerator::generateCreate);
 
         // then
         assertThat(throwable)
