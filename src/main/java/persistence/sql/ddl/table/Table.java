@@ -30,4 +30,8 @@ public class Table {
     public String getColumnsClause() {
         return columns.getColumnsClause();
     }
+
+    public Columns getColumns() {
+        return columns;
+    }
 }

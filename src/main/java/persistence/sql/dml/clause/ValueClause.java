@@ -2,10 +2,9 @@ package persistence.sql.dml.clause;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import util.StringUtil;
+import util.ClauseUtil;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -27,17 +26,9 @@ public class ValueClause {
 
         try {
             String value = field.get(entity).toString();
-            return addQuotesWhenString(field.getType(), value);
+            return ClauseUtil.addQuotesWhenRequire(field.getType(), value);
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException("not access " + field.getName());
         }
-    }
-
-    private static String addQuotesWhenString(Class<?> type, String value) {
-        if (type == String.class || type == LocalDate.class) {
-            return StringUtil.addStringOnBothSides(value, "'");
-        }
-
-        return value;
     }
 }

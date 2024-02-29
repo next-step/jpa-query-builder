@@ -38,4 +38,16 @@ class DMLGeneratorTest {
         // then
         assertThat(result).isEqualTo("SELECT * FROM users where id = 1;");
     }
+
+    @Test
+    void generateDelete() {
+        // given
+        Person person = new Person("name", 26, "email", 1);
+
+        // when
+        String result = dmlGenerator.generateDelete(person);
+
+        // then
+        assertThat(result).isEqualTo("DELETE FROM users where nick_name = 'name', old = 26, email = 'email';");
+    }
 }
