@@ -12,7 +12,7 @@ import java.util.List;
 import static persistence.sql.common.SqlConstant.CLOSING_PARENTHESIS;
 import static persistence.sql.common.SqlConstant.COMMA;
 
-public class InsertQueryBuilder {
+public class InsertQueryBuilder<T> {
     public static final String INSERT_QUERY_START = "INSERT INTO %s (";
     public static final String VALUES = " VALUES (";
     private final Table table;
@@ -24,7 +24,7 @@ public class InsertQueryBuilder {
         this.table = new Table(entity);
     }
 
-    public String getInsertQuery(Object value) {
+    public String getInsertQuery(T value) {
 
         List<Field> fields = Arrays.stream(value.getClass().getDeclaredFields()).toList();
 

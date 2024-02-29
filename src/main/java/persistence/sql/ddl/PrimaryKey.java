@@ -57,6 +57,10 @@ public class PrimaryKey {
         if (generationType == GenerationType.UUID) {
             return String.format(sqlMap.get(generationType), name);
         }
-        return String.format(sqlMap.get(generationType), name, dataType);
+        String query = String.format(sqlMap.get(generationType), name, dataType);
+        if (query == null) {
+            return ID_AUTO_INCREMENT;
+        }
+        return query;
     }
 }

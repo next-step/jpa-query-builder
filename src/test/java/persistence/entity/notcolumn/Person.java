@@ -21,7 +21,7 @@ public class Person {
     @Transient
     private Integer index;
 
-    protected Person() {
+    public Person() {
     }
 
     public Person(String name, int age, String email, int index) {
