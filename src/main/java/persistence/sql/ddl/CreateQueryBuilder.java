@@ -1,13 +1,16 @@
 package persistence.sql.ddl;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.lang.reflect.Field;
 
 import domain.Person;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 public class CreateQueryBuilder {
 	Map<? extends Class<? extends Serializable>, String> javaClassTypeToDbTypes = Map.of(
@@ -16,13 +19,62 @@ public class CreateQueryBuilder {
 		Integer.class, "BIGINT"
 	);
 
-	public String getCreateTableSql(Class<?> clazz) {
-		Class<?> person = clazz;
-		String tableName = person.getSimpleName();
+	public String getCreateTableSql() throws
+		NoSuchMethodException,
+		InvocationTargetException,
+		InstantiationException,
+		IllegalAccessException {
 
-		List<? extends Class<?>> fieldTypes = Arrays.stream(person.getDeclaredFields()).map(Field::getType).toList();
+		Class<Person> personClass = Person.class;
 
-		List<String> fieldNames = Arrays.stream(person.getDeclaredFields()).map(Field::getName).toList();
+		Person person = personClass.getConstructor().newInstance();
+
+		Arrays.stream(personClass.getDeclaredFields())
+			.filter(x -> x.isAnnotationPresent(GeneratedValue.class))
+			.forEach(x -> {
+				x.setAccessible(true);
+				try {
+					Long value = 0L;
+					if (x.getAnnotation(GeneratedValue.class).strategy().equals(GenerationType.AUTO)) {
+						value = (Long)x.get(person);
+						x.set(person, value + 1L);
+					}
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			});
+
+		Arrays.stream(personClass.getDeclaredFields())
+			.filter(x -> x.isAnnotationPresent(Column.class))
+			.forEach(x -> {
+				x.setAccessible(true);
+				try {
+					x.set(person, x.getAnnotation(Column.class).name());
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			});
+
+		Arrays.stream(personClass.getDeclaredFields())
+			.filter(x -> x.isAnnotationPresent(Column.class))
+			.forEach(x -> {
+				x.setAccessible(true);
+				try {
+					if (!x.getAnnotation(Column.class).nullable()) {
+						if (x.get(person) == null) {
+							throw new RuntimeException();
+						}
+					}
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			});
+
+		String tableName = personClass.getSimpleName();
+
+		List<? extends Class<?>> fieldTypes = Arrays.stream(personClass.getDeclaredFields()).map(Field::getType).toList();
+
+		List<String> fieldNames = Arrays.stream(personClass.getDeclaredFields()).map(Field::getName).toList();
 
 		String createTableSql = String.format("create table %s(%s %s, %s %s, %s %s)",
 			tableName, fieldNames.get(0), javaClassTypeToDbTypes.get(fieldTypes.get(0)),

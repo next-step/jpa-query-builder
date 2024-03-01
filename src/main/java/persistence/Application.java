@@ -1,5 +1,11 @@
 package persistence;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import database.DatabaseServer;
 import database.H2;
 import domain.Person;
@@ -20,9 +26,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
-
-            jdbcTemplate.execute(createQueryBuilder.getCreateTableSql(Person.class));
+            jdbcTemplate.execute(new CreateQueryBuilder().getCreateTableSql());
 
             server.stop();
         } catch (Exception e) {
