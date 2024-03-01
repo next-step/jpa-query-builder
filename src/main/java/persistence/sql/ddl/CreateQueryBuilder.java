@@ -6,6 +6,7 @@ import persistence.sql.exception.InvalidEntityException;
 import static persistence.sql.common.SqlConstant.*;
 
 public class CreateQueryBuilder {
+    public static final String CREATE_TABLE_START = "CREATE TABLE IF NOT EXISTS %s ";
     private final Table table;
 
     public CreateQueryBuilder(Class<?> entity) {
@@ -15,24 +16,19 @@ public class CreateQueryBuilder {
         this.table = new Table(entity);
     }
 
-    public String getCreateQuery() {
-        return String.format(CREATE_TABLE_START, table.getName()) +
+    public String getQuery() {
+        return String.format(CREATE_TABLE_START, table.name()) +
+                OPENING_PARENTHESIS +
                 getIdQuery() +
                 getColumnQuery() +
-                CREATE_TABLE_END;
+                CLOSING_PARENTHESIS;
     }
 
     private String getIdQuery() {
-        return table.getIdQuery() + CRETE_TABLE_COMMA;
+        return table.createQuery() + COMMA;
     }
 
     private String getColumnQuery() {
-        return table.getColumnQueries().stream()
-                .reduce((s1, s2) -> s1 + CRETE_TABLE_COMMA + s2)
-                .orElse("");
-    }
-
-    public String getDropTableQuery() {
-        return String.format(DROP_TABLE, table.getName());
+        return String.join(COMMA, table.columnQueries());
     }
 }

@@ -6,14 +6,18 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class Columns {
-    private final List<Column> columns;
+    private final List<ColumnClause> columnClauses;
     public Columns(List<Field> fields) {
-        this.columns = fields.stream()
+        this.columnClauses = fields.stream()
                 .filter(filter -> !filter.isAnnotationPresent(Transient.class))
-                .map(Column::new).toList();
+                .map(ColumnClause::new).toList();
     }
 
     public List<String> getQueries() {
-        return this.columns.stream().map(Column::getQuery).toList();
+        return this.columnClauses.stream().map(ColumnClause::getQuery).toList();
+    }
+
+    public List<String> getNames() {
+        return this.columnClauses.stream().map(ColumnClause::name).toList();
     }
 }

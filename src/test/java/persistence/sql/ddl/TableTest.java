@@ -39,14 +39,14 @@ class TableTest {
     }
 
     @Test
-    @DisplayName("[요구사항 2] @Column 애노테이션이 있는 Person 엔티티를 이용하여 create 쿼리 만든다.")
+    @DisplayName("[요구사항 2] @ColumnClause 애노테이션이 있는 Person 엔티티를 이용하여 create 쿼리 만든다.")
     void 요구사항2_test() {
         //given
         String expectedQuery = "CREATE TABLE IF NOT EXISTS Person " +
                 "(id Long AUTO_INCREMENT PRIMARY KEY,nick_name VARCHAR(30) NULL,old INT NULL,email VARCHAR(30) NOT NULL)";
 
         // when
-        String actualQuery = new CreateQueryBuilder(Person.class).getCreateQuery();
+        String actualQuery = new CreateQueryBuilder(Person.class).getQuery();
 
         // then
         Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
@@ -59,7 +59,7 @@ class TableTest {
         String expectedName = "users";
 
         // when
-        String actualName = new Table(persistence.entity.notcolumn.Person.class).getName();
+        String actualName = new Table(persistence.entity.notcolumn.Person.class).name();
 
         // then
         Assertions.assertThat(actualName).isEqualTo(expectedName);
