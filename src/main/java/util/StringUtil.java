@@ -1,4 +1,4 @@
-package persistence.sql.ddl.util;
+package util;
 
 public class StringUtil {
 
@@ -18,5 +18,9 @@ public class StringUtil {
             }
         }
         return result.toString();
+    }
+
+    public static String addStringOnBothSides(String origin, String toAdd) {
+        return toAdd + origin + toAdd;
     }
 }

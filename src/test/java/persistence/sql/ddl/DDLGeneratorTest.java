@@ -5,15 +5,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class MySqlDDLGeneratorTest {
+class DDLGeneratorTest {
 
     @Test
     void createPersonCreateQuery() {
         // given
-        MySqlDDLGenerator mySqlDdlGenerator = new MySqlDDLGenerator();
+        DDLGenerator ddlGenerator = new DDLGenerator(Person.class);
 
         // when
-        String createSql = mySqlDdlGenerator.generateCreate(Person.class);
+        String createSql = ddlGenerator.generateCreate();
 
         // then
         assertThat(createSql).isEqualTo("CREATE TABLE users (" +
@@ -26,10 +26,10 @@ class MySqlDDLGeneratorTest {
     @Test
     void createPersonDropQuery() {
         // given
-        MySqlDDLGenerator mySqlDdlGenerator = new MySqlDDLGenerator();
+        DDLGenerator ddlGenerator = new DDLGenerator(Person.class);
 
         // when
-        String dropSql = mySqlDdlGenerator.generateDrop(Person.class);
+        String dropSql = ddlGenerator.generateDrop();
 
         // then
         assertThat(dropSql).isEqualTo("DROP TABLE users;");

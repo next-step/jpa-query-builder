@@ -1,8 +1,24 @@
 package persistence.sql.ddl;
 
-public interface DDLGenerator {
+import persistence.sql.ddl.table.Table;
 
-    String generateCreate(Class<?> entity);
+public class DDLGenerator {
 
-    String generateDrop(Class<?> entity);
+    private final Class<?> entity;
+
+    public DDLGenerator(Class<?> entity) {
+        this.entity = entity;
+    }
+
+    public String generateCreate() {
+        Table table = Table.from(entity);
+
+        return String.format("CREATE TABLE %s (%s);", table.getName(), table.getColumnsDefinition());
+    }
+
+    public String generateDrop() {
+        Table table = Table.from(entity);
+
+        return String.format("DROP TABLE %s;", table.getName());
+    }
 }

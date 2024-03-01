@@ -29,3 +29,10 @@
 4. @Entity, @Table 을 고려하여 drop 쿼리 만들기
    - @Table 에 name 속성이 있을 경우, name 속성 값으로 삭제한다.
    - @Table 에 name 속성이 없을 경우 클래스 명에 스네이크케이스를 테이블 명으로 한다.
+
+## 🚀 3단계 - QueryBuilder DML
+
+1. insert 구현
+2. 모두 조회(findAll) 기능 구현
+3. 단건 조회(findById) 기능 구현
+4. delete 구현
