@@ -35,7 +35,7 @@ public class CreateQueryBuilder {
 				x.setAccessible(true);
 				try {
 					Long value = 0L;
-					if (x.getAnnotation(GeneratedValue.class).strategy().equals(GenerationType.AUTO)) {
+					if (x.getAnnotation(GeneratedValue.class).strategy().equals(GenerationType.IDENTITY)) {
 						value = (Long)x.get(person);
 						x.set(person, value + 1L);
 					}
