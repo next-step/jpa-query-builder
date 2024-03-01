@@ -1,4 +1,4 @@
-package domain.step3.constants;
+package domain.constants;
 
 public class CommonConstants {
 

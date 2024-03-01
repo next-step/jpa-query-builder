@@ -2,11 +2,13 @@ package persistence.sql.dml;
 
 import database.DatabaseServer;
 import database.H2;
+import domain.EntityMetaData;
 import domain.Person1;
 import domain.Person3;
-import domain.step3.mapper.PersonMapper;
-import jakarta.persistence.Column;
+import domain.dialect.H2Dialect;
+import domain.mapper.RowMapperImpl;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +19,6 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import static domain.step3.utils.StringUtils.isBlankOrEmpty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,12 +27,13 @@ class DmlQueryBuilderTest {
 
     static DatabaseServer server;
     static JdbcTemplate jdbcTemplate;
-    DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new domain.step2.dialect.H2Dialect());
-    DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new domain.step3.dialect.H2Dialect());
+    static EntityMetaData entityMetaData = new EntityMetaData(Person3.class);
+    DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect(), entityMetaData);
+    DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect(), entityMetaData);
 
     Person3 person = new Person3();
     Person3 personWithIdNull = new Person3();
-    PersonMapper personMapper = new PersonMapper();
+    RowMapper<Person3> rowMapper = new RowMapperImpl<>(Person3.class);
 
     @BeforeAll
     static void setUp() throws SQLException {
@@ -45,6 +47,7 @@ class DmlQueryBuilderTest {
         server.stop();
     }
 
+    @DisplayName("모든 데이터가 주어질 때 데이터 insert test")
     @Test
     void insertDataWithAllValuesTest() {
         person = new Person3(1L, "test", 20, "test@test.com");
@@ -52,6 +55,7 @@ class DmlQueryBuilderTest {
         assertThat(dmlQueryBuilder.insertQuery(person)).isEqualTo(insertQuery);
     }
 
+    @DisplayName("nullable = false 인 경우를 제외하고 다른 데이터는 null 일 경우 insert test")
     @Test
     void insertDataWithNullValuesTest() {
         person = new Person3(null, null, "test@test.com");
@@ -88,7 +92,7 @@ class DmlQueryBuilderTest {
     void executeFindAllQuery() {
         createTable();
         insertData();
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), personMapper)).hasSize(2);
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), rowMapper)).hasSize(2);
         dropTable();
     }
 
@@ -97,7 +101,7 @@ class DmlQueryBuilderTest {
     void executeFindByIdQuery() {
         createTable();
         insertData();
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findByIdQuery(Person3.class, personWithIdNull.getId()), personMapper))
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findByIdQuery(Person3.class, personWithIdNull.getId()), rowMapper))
                 .hasSize(1);
         dropTable();
     }
@@ -108,15 +112,14 @@ class DmlQueryBuilderTest {
         createTable();
         insertData();
 
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), personMapper)).hasSize(2);
-
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), rowMapper)).hasSize(2);
 
         Field idField = Arrays.stream(person.getClass().getDeclaredFields())
-                .filter(field1 -> getFieldName(field1).equals("id"))
+                .filter(field1 -> entityMetaData.getFieldName(field1).equals("id"))
                 .findAny().get();
 
         jdbcTemplate.execute(dmlQueryBuilder.deleteQuery(Person3.class, idField, person.getId()));
-        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), personMapper)).hasSize(1);
+        assertThat(jdbcTemplate.query(dmlQueryBuilder.findAllQuery(Person3.class), rowMapper)).hasSize(1);
         dropTable();
     }
 
@@ -136,14 +139,6 @@ class DmlQueryBuilderTest {
     }
 
     private void dropTable() {
-        jdbcTemplate.execute(ddlQueryBuilder.dropTable(Person3.class));
-    }
-
-    private String getFieldName(Field field) {
-        if (field.isAnnotationPresent(Column.class)) {
-            return isBlankOrEmpty(field.getAnnotation(Column.class).name()) ? field.getName()
-                    : field.getAnnotation(Column.class).name();
-        }
-        return field.getName();
+        jdbcTemplate.execute(ddlQueryBuilder.dropTable());
     }
 }

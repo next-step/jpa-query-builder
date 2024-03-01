@@ -1,4 +1,4 @@
-package domain.step3.utils;
+package domain.utils;
 
 public class StringUtils {
 

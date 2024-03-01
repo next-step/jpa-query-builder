@@ -1,4 +1,4 @@
-package domain.step3.dialect;
+package domain.dialect;
 
 import java.sql.Types;
 

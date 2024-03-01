@@ -1,4 +1,4 @@
-package domain.step3.vo;
+package domain.vo;
 
 import java.util.Objects;
 

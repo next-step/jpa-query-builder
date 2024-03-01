@@ -1,11 +1,11 @@
-package domain.step3.vo;
+package domain.vo;
 
 import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
-import static domain.step3.utils.StringUtils.isBlankOrEmpty;
+import static domain.utils.StringUtils.isBlankOrEmpty;
 
 public class ColumnName {
 

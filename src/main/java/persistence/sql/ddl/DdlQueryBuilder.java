@@ -1,34 +1,41 @@
 package persistence.sql.ddl;
 
-import domain.step2.dialect.Dialect;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import domain.EntityMetaData;
+import domain.H2GenerationType;
+import domain.dialect.Dialect;
+import domain.vo.JavaMappingType;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
+import java.sql.Types;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static domain.step2.Constraints.NOT_NULL;
-import static domain.step2.Constraints.PRIMARY_KEY;
+import static domain.Constraints.NOT_NULL;
+import static domain.Constraints.NULL;
+import static domain.Constraints.PRIMARY_KEY;
 
 public class DdlQueryBuilder {
 
+    private final JavaMappingType javaMappingType;
     private final Dialect dialect;
+    private final EntityMetaData entityMetaData;
 
     private static final String CREATE_TABLE_QUERY = "CREATE TABLE %s ( %s );";
     private static final String DROP_TABLE_QUERY = "DROP TABLE %s IF EXISTS;";
     private static final String COMMA = ", ";
 
-    public DdlQueryBuilder(Dialect dialect) {
+    public DdlQueryBuilder(Dialect dialect, EntityMetaData entityMetaData) {
+        this.javaMappingType = new JavaMappingType();
         this.dialect = dialect;
+        this.entityMetaData = entityMetaData;
     }
 
     public String createTable(Class<?> clazz) {
-        checkEntityClass(clazz);
-
         StringBuilder sb = new StringBuilder();
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !isTransientField(field))
@@ -38,22 +45,11 @@ public class DdlQueryBuilder {
                 });
 
         String result = sb.toString().replaceAll(",[\\s,]*$", "");
-        return String.format(CREATE_TABLE_QUERY, dialect.getTableName(clazz), result);
+        return String.format(CREATE_TABLE_QUERY, entityMetaData.getTableName(), result);
     }
 
-    public String dropTable(Class<?> clazz) {
-        checkEntityClass(clazz);
-        return String.format(DROP_TABLE_QUERY, dialect.getTableName(clazz));
-    }
-
-    private void checkEntityClass(Class<?> clazz) {
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalStateException("Entity 클래스가 아닙니다.");
-        }
-    }
-
-    private boolean isIdField(Field field) {
-        return field.isAnnotationPresent(Id.class);
+    public String dropTable() {
+        return String.format(DROP_TABLE_QUERY, entityMetaData.getTableName());
     }
 
     private boolean isTransientField(Field field) {
@@ -61,18 +57,67 @@ public class DdlQueryBuilder {
     }
 
     private String getFieldInfo(Field field) {
-        if (isIdField(field)) {
+        if (entityMetaData.isIdField(field)) {
             return Stream.of(
-                            dialect.getFieldName(field), dialect.getFieldType(field),
-                            NOT_NULL.getName(), PRIMARY_KEY.getName(), dialect.getGenerationType(field))
+                            entityMetaData.getFieldName(field), getFieldType(field),
+                            NOT_NULL.getName(), PRIMARY_KEY.getName(), getGenerationType(field))
                     .filter(Objects::nonNull)
                     .collect(Collectors.joining(" "));
         }
 
         return Stream.of(
-                        dialect.getFieldName(field), dialect.getFieldType(field),
-                        dialect.getFieldLength(field), dialect.getColumnNullConstraint(field))
+                        entityMetaData.getFieldName(field), getFieldType(field),
+                        getFieldLength(field), getColumnNullConstraint(field))
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
+    }
+
+    public String getFieldType(Field field) {
+        Integer javaTypeByClass = javaMappingType.getJavaTypeByClass(field.getType());
+        return dialect.getColumnDefine(javaTypeByClass);
+    }
+
+    public String getFieldLength(Field field) {
+        return Objects.nonNull(getColumnLength(field)) ? "(" + getColumnLength(field) + ")" : null;
+    }
+
+    public String getGenerationType(Field field) {
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
+            return H2GenerationType.from(field.getAnnotation(GeneratedValue.class).strategy()).getStrategy();
+        }
+        return null;
+    }
+
+    public String getColumnNullConstraint(Field field) {
+        if (!isColumnField(field) || field.getAnnotation(Column.class).nullable()) {
+            return NULL.getName();
+        }
+        return NOT_NULL.getName();
+    }
+
+    private boolean isColumnField(Field field) {
+        return field.isAnnotationPresent(Column.class);
+    }
+
+    private String getColumnLength(Field field) {
+        if (isColumnField(field) && isVarcharType(field)) {
+            return String.valueOf(field.getAnnotation(Column.class).length());
+        }
+
+        if (isColumnField(field) && !isVarcharType(field)) {
+            return getLengthOrDefaultValue(field, 255);
+        }
+
+        return null;
+    }
+
+    private boolean isVarcharType(Field field) {
+        Integer javaTypeByClass = javaMappingType.getJavaTypeByClass(field.getType());
+        return javaTypeByClass.equals(Types.VARCHAR);
+    }
+
+    private String getLengthOrDefaultValue(Field field, int defaultLengthValue) {
+        return field.getAnnotation(Column.class).length() == defaultLengthValue ? null
+                : String.valueOf(field.getAnnotation(Column.class).length());
     }
 }

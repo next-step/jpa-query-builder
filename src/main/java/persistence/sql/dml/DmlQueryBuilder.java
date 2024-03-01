@@ -1,15 +1,14 @@
 package persistence.sql.dml;
 
-import domain.step2.H2GenerationType;
-import domain.step3.dialect.Dialect;
-import domain.step3.vo.ColumnName;
-import domain.step3.vo.ColumnValue;
-import domain.step3.vo.JavaMappingType;
+import domain.EntityMetaData;
+import domain.H2GenerationType;
+import domain.dialect.Dialect;
+import domain.vo.ColumnName;
+import domain.vo.ColumnValue;
+import domain.vo.JavaMappingType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
@@ -18,61 +17,64 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static domain.step3.constants.CommonConstants.COMMA;
-import static domain.step3.utils.StringUtils.isBlankOrEmpty;
+import static domain.constants.CommonConstants.COMMA;
 
 public class DmlQueryBuilder {
 
     private final JavaMappingType javaMappingType;
     private final Dialect dialect;
+    private final EntityMetaData entityMetaData;
 
     private static final String INSERT_DATA_QUERY = "INSERT INTO %s (%s) VALUES (%s);";
     private static final String FIND_ALL_QUERY = "SELECT * FROM %s;";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM %s WHERE %s = %s;";
     private static final String DELETE_QUERY = "DELETE %s WHERE %s = %s;";
 
-    public DmlQueryBuilder(Dialect dialect) {
+    public DmlQueryBuilder(Dialect dialect, EntityMetaData entityMetaData) {
         this.javaMappingType = new JavaMappingType();
         this.dialect = dialect;
+        this.entityMetaData = entityMetaData;
     }
 
     public String insertQuery(Object object) {
-        checkEntityClass(object.getClass());
-        return String.format(INSERT_DATA_QUERY, getTableName(object.getClass()), columnsClause(object.getClass()),
+        return String.format(INSERT_DATA_QUERY, entityMetaData.getTableName(), columnsClause(object.getClass()),
                 valueClause(object));
     }
 
     public String findAllQuery(Class<?> clazz) {
-        checkEntityClass(clazz);
-        return String.format(FIND_ALL_QUERY, getTableName(clazz));
+        return String.format(FIND_ALL_QUERY, entityMetaData.getTableName());
     }
 
     public String findByIdQuery(Class<?> clazz, Object condition) {
-        checkEntityClass(clazz);
-        return String.format(FIND_BY_ID_QUERY, getTableName(clazz), getIdField(clazz), condition);
+        return String.format(FIND_BY_ID_QUERY, entityMetaData.getTableName(), entityMetaData.getIdField(), condition);
     }
 
     public String deleteQuery(Class<?> clazz, Field field, Object value) {
-        checkEntityClass(clazz);
-
         LinkedList<Field> fields = Arrays.stream(clazz.getDeclaredFields())
                 .collect(Collectors.toCollection(LinkedList::new));
 
         ColumnName columnName = new ColumnName(fields, field);
         ColumnValue columnValue = new ColumnValue(javaMappingType, javaMappingType.getJavaTypeByClass(clazz), value);
 
-        return String.format(DELETE_QUERY, getTableName(clazz), columnName.getName(), columnValue.getValue());
+        return String.format(DELETE_QUERY, entityMetaData.getTableName(), columnName.getName(), columnValue.getValue());
     }
 
-    private void checkEntityClass(Class<?> clazz) {
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalStateException("Entity 클래스가 아닙니다.");
+    public String deleteByIdQuery(Object entity) {
+        Field idField = Arrays.stream(entity.getClass().getDeclaredFields())
+                .collect(Collectors.toCollection(LinkedList::new)).stream()
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("primary key 값이 없습니다."));
+
+        Object idFieldValue;
+        try {
+            idField.setAccessible(true);
+            idFieldValue = idField.get(entity);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("Field 정보가 존재하지 않습니다.");
         }
-    }
 
-    private String getTableName(Class<?> clazz) {
-        return clazz.isAnnotationPresent(Table.class) ? clazz.getAnnotation(Table.class).name()
-                : clazz.getSimpleName().toLowerCase();
+        return deleteQuery(entity.getClass(), idField, idFieldValue);
     }
 
     private String columnsClause(Class<?> clazz) {
@@ -99,7 +101,7 @@ public class DmlQueryBuilder {
                         Object fieldValue = field.get(object);
 
                         //Id 필드 check
-                        if (isIdField(field)) {
+                        if (entityMetaData.isIdField(field)) {
                             isValidIdFieldValue(field, fieldValue);
                         }
 
@@ -127,24 +129,12 @@ public class DmlQueryBuilder {
                 .toString();
     }
 
-    private boolean isIdField(Field field) {
-        return field.isAnnotationPresent(Id.class);
-    }
-
     private boolean isColumnField(Field field) {
         return field.isAnnotationPresent(Column.class);
     }
 
     private boolean isTransientField(Field field) {
         return field.isAnnotationPresent(Transient.class);
-    }
-
-    private String getFieldName(Field field) {
-        if (isColumnField(field)) {
-            return isBlankOrEmpty(field.getAnnotation(Column.class).name()) ? field.getName()
-                    : field.getAnnotation(Column.class).name();
-        }
-        return field.getName();
     }
 
     private void isValidIdFieldValue(Field field, Object fieldValue) {
@@ -172,13 +162,5 @@ public class DmlQueryBuilder {
         if (Objects.isNull(fieldValue) && !field.getAnnotation(Column.class).nullable()) {
             throw new IllegalArgumentException("fieldValue 가 null 이어서는 안됩니다.");
         }
-    }
-
-    private Object getIdField(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(this::isIdField)
-                .map(this::getFieldName)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Id 필드가 존재하지 않습니다."));
     }
 }
