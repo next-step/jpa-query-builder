@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TableTest {
 
-    private final persistence.sql.Table table = new persistence.sql.Table();
+    private final persistence.sql.model.Table table = new persistence.sql.model.Table();
 
     @Test
     @DisplayName("@Table 어노테이션이 존재하지 않으면 소문자의 클래스명을 생성한다.")

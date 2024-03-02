@@ -1,4 +1,4 @@
-package persistence.sql;
+package persistence.sql.model;
 
 public class Table {
 
