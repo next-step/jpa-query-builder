@@ -1,17 +1,17 @@
 package persistence.sql.ddl.query.generator;
 
-import persistence.sql.ddl.dto.db.CreateTableComponent;
 import persistence.sql.ddl.dto.db.DBColumn;
-import persistence.sql.ddl.dto.db.DropTableComponent;
+import persistence.sql.ddl.dto.db.TableName;
+
+import java.util.List;
 
 public class QueryGenerator {
 
-    public static String generateCreateTableSql(CreateTableComponent component) {
+    public static String generateCreateTableSql(TableName tableName, List<DBColumn> dbColumns) {
         StringBuilder sql = new StringBuilder();
-        sql.append(String.format("create table %s (\n", component.getTableName()));
+        sql.append(String.format("create table %s (\n", tableName.getName()));
 
-        component.getDBColumns()
-                .forEach(dbColumn -> sql.append(generateColumnSql(dbColumn)));
+        dbColumns.forEach(dbColumn -> sql.append(generateColumnSql(dbColumn)));
 
         int lastChar = sql.length() - 2;
         if (sql.charAt(lastChar) == ',') {
@@ -22,8 +22,8 @@ public class QueryGenerator {
         return sql.toString();
     }
 
-    public static String generateDropTableSql(DropTableComponent component) {
-        return String.format("drop table %s", component.getTableName());
+    public static String generateDropTableSql(TableName tableName) {
+        return String.format("drop table %s", tableName.getName());
     }
 
     private static String generateColumnSql(DBColumn dbColumn) {

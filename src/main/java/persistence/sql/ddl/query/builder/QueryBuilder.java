@@ -31,14 +31,12 @@ public class QueryBuilder {
     public static String generateCreateTableQuery(Class<?> clazz) {
         TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz).get(0);
         List<DBColumn> dbColumns = (List<DBColumn>) invoke(ClassComponentType.CLASS_FIELD, clazz);
-        CreateTableComponent createTableComponent = new CreateTableComponent(tableName, dbColumns);
-        return QueryGenerator.generateCreateTableSql(createTableComponent);
+        return QueryGenerator.generateCreateTableSql(tableName, dbColumns);
     }
 
     public static String generateDropTableQuery(Class<?> clazz) {
         TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz).get(0);
-        DropTableComponent dropTableComponent = new DropTableComponent(tableName);
-        return QueryGenerator.generateDropTableSql(dropTableComponent);
+        return QueryGenerator.generateDropTableSql(tableName);
     }
 
     private static List<?> invoke(ClassComponentType type, Class<?> clazz) {
