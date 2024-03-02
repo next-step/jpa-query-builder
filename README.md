@@ -18,4 +18,4 @@
     - [x] @Transient 가 붙은 클래스 필드는 테이블 컬럼으로 반영하지 않음
 
 ## 요구사항 4
-- [ ] person 클래스의 drop 쿼리 생성
+- [x] person 클래스의 drop 쿼리 생성
