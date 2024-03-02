@@ -116,4 +116,21 @@ class DefaultEntityManagerTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[EntityManager] persist: the instance is not an entity");
     }
+
+    @Test
+    @DisplayName("Person 을 삭제한다.")
+    void remove_1() {
+        // given
+        long id = 1L;
+        entityManager.persist(new Person(id, "name", 26, "email"));
+
+        Person person = entityManager.find(Person.class, id);
+
+        // when
+        entityManager.remove(person);
+
+        // then
+        Person result = entityManager.find(Person.class, id);
+        assertThat(result).isNull();
+    }
 }
