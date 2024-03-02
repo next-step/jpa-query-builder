@@ -36,3 +36,9 @@
 2. 모두 조회(findAll) 기능 구현
 3. 단건 조회(findById) 기능 구현
 4. delete 구현
+
+## 🚀 4단계 - Simple Entity Object
+
+1. find 구현
+2. persist (insert) 구현
+3. remove (delete) 구현
