@@ -39,4 +39,8 @@ public class Person {
         this.age = age;
         this.email = email;
     }
+
+    public Long getId() {
+        return id;
+    }
 }
