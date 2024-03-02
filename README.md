@@ -45,3 +45,4 @@
 2. persist (insert) 구현
    - Entity 가 아닐 경우, Exception 이 발생한다.
 3. remove (delete) 구현
+   - Entity 가 아닐 경우, Exception 이 발생한다.
