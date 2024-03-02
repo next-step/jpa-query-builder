@@ -1,7 +1,6 @@
-package persistence.sql.ddl.targetentity;
+package persistence.sql.ddl.targetentity.requirement1;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Person {
