@@ -1,12 +1,12 @@
 package persistence.sql.dml.builder;
 
-import persistence.sql.Table;
+import persistence.sql.model.Table;
 import persistence.sql.dml.model.DMLColumn;
 
 public class SelectQueryBuilder {
 
-    private static final String FIND_ALL_QUERY_FORMAT = "SELECT (%s) FROM %s;";
-    private static final String FIND_BY_ID_QUERY_FORMAT = "SELECT (%s) FROM %s WHERE %s = %s;";
+    private static final String FIND_ALL_QUERY_FORMAT = "SELECT %s FROM %s;";
+    private static final String FIND_BY_ID_QUERY_FORMAT = "SELECT %s FROM %s WHERE %s = %s;";
 
     private final Table table;
     private final DMLColumn column;
@@ -19,7 +19,7 @@ public class SelectQueryBuilder {
     public String findAll(Class<?> clz) {
         return String.format(
                 FIND_ALL_QUERY_FORMAT,
-                column.fields(clz),
+                column.fields(),
                 table.name(clz)
         );
     }
@@ -27,9 +27,9 @@ public class SelectQueryBuilder {
     public String findById(Class<?> clz, Object id) {
         return String.format(
                 FIND_BY_ID_QUERY_FORMAT,
-                column.fields(clz),
+                column.fields(),
                 table.name(clz),
-                column.where(clz, id),
+                column.whereById(id),
                 id
         );
     }
