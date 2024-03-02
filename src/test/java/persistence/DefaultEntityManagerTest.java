@@ -82,4 +82,18 @@ class DefaultEntityManagerTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[EntityManager] find: id is null");
     }
+
+    @Test
+    @DisplayName("Person 을 저장한다.")
+    void persist_1() {
+        // given
+        String name = "name";
+        Person person = new Person(name, 26, "email", 1);
+
+        // when
+        Person result = (Person) entityManager.persist(person);
+
+        // then
+        assertThat(result.getName()).isEqualTo(name);
+    }
 }
