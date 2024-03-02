@@ -1,9 +1,7 @@
 package persistence.sql.ddl.query.builder;
 
 import persistence.sql.ddl.ClassComponentType;
-import persistence.sql.ddl.dto.db.CreateTableComponent;
 import persistence.sql.ddl.dto.db.DBColumn;
-import persistence.sql.ddl.dto.db.DropTableComponent;
 import persistence.sql.ddl.dto.db.TableName;
 import persistence.sql.ddl.loader.ClassComponentLoader;
 import persistence.sql.ddl.loader.ClassFieldLoader;
