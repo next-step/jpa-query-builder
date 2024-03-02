@@ -1,6 +1,7 @@
 package persistence;
 
 import domain.Person;
+import jakarta.persistence.Entity;
 import jdbc.JdbcTemplate;
 import jdbc.PersonRowMapper;
 import persistence.sql.dml.DMLGenerator;
@@ -35,6 +36,11 @@ public class DefaultEntityManager implements EntityManager {
 
     @Override
     public void persist(Object entity) {
+        Class<?> clazz = entity.getClass();
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("[EntityManager] persist: the instance is not an entity");
+        }
+
         String sql = dmlGenerator.generateInsert(entity);
         jdbcTemplate.execute(sql);
     }

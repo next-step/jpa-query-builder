@@ -101,4 +101,19 @@ class DefaultEntityManagerTest {
         assertThat(people).hasSize(1);
         assertThat(people.get(0).getName()).isEqualTo(name);
     }
+
+    @Test
+    @DisplayName("persist 할 Object 가 Entity 가 아닐 경우, 예외가 발생한다.")
+    void persist_2() {
+        // given
+        entityManager = new DefaultEntityManager(jdbcTemplate, new DMLGenerator(NotEntity.class));
+
+        // when
+        Throwable throwable = catchThrowable(() -> entityManager.persist(new NotEntity(1L)));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[EntityManager] persist: the instance is not an entity");
+    }
 }
