@@ -6,14 +6,14 @@ import domain.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.Table;
+import persistence.sql.model.Table;
 import persistence.sql.ddl.converter.H2TypeConverter;
 import persistence.sql.ddl.converter.TypeConverter;
 import persistence.sql.ddl.mapping.DDLQueryBuilder;
 import persistence.sql.ddl.mapping.H2PrimaryKeyGenerationType;
 import persistence.sql.ddl.mapping.PrimaryKeyGenerationType;
 import persistence.sql.ddl.mapping.QueryBuilder;
-import persistence.sql.ddl.model.Column;
+import persistence.sql.ddl.model.DDLColumn;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -28,7 +28,7 @@ public class Application {
             final PrimaryKeyGenerationType generationType = new H2PrimaryKeyGenerationType();
             final QueryBuilder queryBuilder = new DDLQueryBuilder(
                     new Table(),
-                    new Column(typeConverter, generationType)
+                    new DDLColumn(typeConverter, generationType)
             );
             final String createQuery = queryBuilder.create(Person.class);
             final String dropQuery = queryBuilder.drop(Person.class);

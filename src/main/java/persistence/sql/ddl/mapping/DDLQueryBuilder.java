@@ -1,7 +1,7 @@
 package persistence.sql.ddl.mapping;
 
-import persistence.sql.ddl.model.Column;
-import persistence.sql.Table;
+import persistence.sql.ddl.model.DDLColumn;
+import persistence.sql.model.Table;
 
 public class DDLQueryBuilder implements QueryBuilder {
 
@@ -9,9 +9,9 @@ public class DDLQueryBuilder implements QueryBuilder {
     private static final String DROP_QUERY_FORMAT = "DROP TABLE %s;";
 
     private final Table table;
-    private final Column column;
+    private final DDLColumn column;
 
-    public DDLQueryBuilder(Table table, Column column) {
+    public DDLQueryBuilder(Table table, DDLColumn column) {
         this.table = table;
         this.column = column;
     }

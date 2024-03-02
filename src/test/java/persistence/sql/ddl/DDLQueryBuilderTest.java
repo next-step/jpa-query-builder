@@ -7,8 +7,8 @@ import persistence.sql.ddl.converter.H2TypeConverter;
 import persistence.sql.ddl.mapping.DDLQueryBuilder;
 import persistence.sql.ddl.mapping.H2PrimaryKeyGenerationType;
 import persistence.sql.ddl.mapping.QueryBuilder;
-import persistence.sql.ddl.model.Column;
-import persistence.sql.Table;
+import persistence.sql.ddl.model.DDLColumn;
+import persistence.sql.model.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,12 +16,12 @@ class DDLQueryBuilderTest {
 
     private QueryBuilder queryBuilder;
     private Table table;
-    private Column column;
+    private DDLColumn column;
 
     @BeforeEach
     void setUp() {
         table = new Table();
-        column = new Column(new H2TypeConverter(), new H2PrimaryKeyGenerationType());
+        column = new DDLColumn(new H2TypeConverter(), new H2PrimaryKeyGenerationType());
         queryBuilder = new DDLQueryBuilder(table, column);
     }
 

@@ -1,5 +1,6 @@
 package persistence.sql;
 
+import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
@@ -22,8 +23,12 @@ public class ColumnUtils {
         return columnAnnotation != null && !columnAnnotation.name().isEmpty();
     }
 
-    public static boolean excludeColumn(Field field) {
+    public static boolean includeColumn(Field field) {
         return !field.isAnnotationPresent(Transient.class);
+    }
+
+    public static boolean isId(Field field) {
+        return field.isAnnotationPresent(Id.class);
     }
 
 }

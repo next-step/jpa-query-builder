@@ -1,6 +1,5 @@
 package persistence.sql.ddl.model;
 
-import jakarta.persistence.Id;
 import persistence.sql.ColumnUtils;
 import persistence.sql.ddl.converter.TypeConverter;
 import persistence.sql.ddl.mapping.PrimaryKeyGenerationType;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static persistence.sql.ColumnUtils.name;
 
-public class Column {
+public class DDLColumn {
 
     private static final String PK_QUERY = " NOT NULL PRIMARY KEY";
     private static final String NOT_NULL = " NOT NULL";
@@ -21,7 +20,7 @@ public class Column {
     private final TypeConverter converter;
     private final PrimaryKeyGenerationType generationType;
 
-    public Column(TypeConverter converter, PrimaryKeyGenerationType generationType) {
+    public DDLColumn(TypeConverter converter, PrimaryKeyGenerationType generationType) {
         this.converter = converter;
         this.generationType = generationType;
     }
@@ -30,7 +29,7 @@ public class Column {
         final Field[] fields = clz.getDeclaredFields();
 
         return Arrays.stream(fields)
-                .filter(ColumnUtils::excludeColumn)
+                .filter(ColumnUtils::includeColumn)
                 .map(this::createQuery)
                 .collect(Collectors.joining(SEPARATOR));
     }
@@ -63,7 +62,7 @@ public class Column {
     }
 
     private String primaryKey(Field field) {
-        if (hasPrimaryKeyAnnotation(field)) {
+        if (ColumnUtils.isId(field)) {
             return PK_QUERY;
         }
         return EMPTY;
@@ -71,9 +70,5 @@ public class Column {
 
     private static boolean isTrueColumnNullableProperty(jakarta.persistence.Column columnAnnotation) {
         return columnAnnotation != null && !columnAnnotation.nullable();
-    }
-
-    private static boolean hasPrimaryKeyAnnotation(Field field) {
-        return field.isAnnotationPresent(Id.class);
     }
 }
