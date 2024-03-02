@@ -40,5 +40,7 @@
 ## 🚀 4단계 - Simple Entity Object
 
 1. find 구현
+   - id 가 null 일 경우 예외가 발생한다.
+   - id 로 조회되지 않는 경우 null 을 반환한다.
 2. persist (insert) 구현
 3. remove (delete) 구현
