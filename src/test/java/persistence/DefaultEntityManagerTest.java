@@ -14,6 +14,7 @@ import persistence.sql.dml.DMLGenerator;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
 class DefaultEntityManagerTest {
 
@@ -42,7 +43,7 @@ class DefaultEntityManagerTest {
 
     @Test
     @DisplayName("Person 을 조회한다.")
-    void find() {
+    void find_1() {
         // given
         long id = 1L;
         jdbcTemplate.execute(dmlGenerator.generateInsert(new Person(id, "name", 26, "email")));
@@ -54,4 +55,31 @@ class DefaultEntityManagerTest {
         assertThat(person.getId()).isEqualTo(id);
     }
 
+    @Test
+    @DisplayName("존재하지 않는 id로 조회할 경우 null을 반환한다.")
+    void find_2() {
+        // given
+        long id = 1L;
+
+        // when
+        Person person = entityManager.find(Person.class, id);
+
+        // then
+        assertThat(person).isNull();
+    }
+
+    @Test
+    @DisplayName("id가 null 일 경우 예외가 발생한다.")
+    void find_3() {
+        // given
+        Long id = null;
+
+        // when
+        Throwable throwable = catchThrowable(() -> entityManager.find(Person.class, id));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[EntityManager] find: id is null");
+    }
 }

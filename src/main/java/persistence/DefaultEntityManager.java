@@ -5,6 +5,8 @@ import jdbc.JdbcTemplate;
 import jdbc.PersonRowMapper;
 import persistence.sql.dml.DMLGenerator;
 
+import java.util.List;
+
 public class DefaultEntityManager implements EntityManager {
 
     private final JdbcTemplate jdbcTemplate;
@@ -17,8 +19,18 @@ public class DefaultEntityManager implements EntityManager {
 
     @Override
     public Person find(Class<Person> clazz, Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("[EntityManager] find: id is null");
+        }
+
         String sql = dmlGenerator.generateFindById(id);
-        return jdbcTemplate.queryForObject(sql, new PersonRowMapper());
+        List<Person> people = jdbcTemplate.query(sql, new PersonRowMapper());
+
+        if (people.isEmpty()) {
+            return null;
+        }
+
+        return people.get(0);
     }
 
     @Override
