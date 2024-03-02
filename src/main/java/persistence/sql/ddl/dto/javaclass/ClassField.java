@@ -3,6 +3,7 @@ package persistence.sql.ddl.dto.javaclass;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -13,8 +14,9 @@ public class ClassField {
     private final Id idAnnotation;
     private final GeneratedValue generatedValueAnnotation;
     private final Column columnAnnotation;
+    private final Transient transientAnnotation;
 
-    public ClassField(String name, Class<?> type, Id idAnnotation, GeneratedValue generatedValueAnnotation, Column columnAnnotation) {
+    public ClassField(String name, Class<?> type, Id idAnnotation, GeneratedValue generatedValueAnnotation, Column columnAnnotation, Transient transientAnnotation) {
         validate(name, type);
 
         this.name = name;
@@ -22,6 +24,7 @@ public class ClassField {
         this.idAnnotation = idAnnotation;
         this.generatedValueAnnotation = generatedValueAnnotation;
         this.columnAnnotation = columnAnnotation;
+        this.transientAnnotation = transientAnnotation;
     }
 
     public String getColumnName() {
@@ -51,6 +54,10 @@ public class ClassField {
             return false;
         }
         return !columnAnnotation.nullable();
+    }
+
+    public boolean hasTransientAnnotation() {
+        return transientAnnotation != null;
     }
 
     private void validate(String name, Class<?> type) {

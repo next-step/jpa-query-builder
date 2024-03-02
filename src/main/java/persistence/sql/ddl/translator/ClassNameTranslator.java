@@ -12,7 +12,7 @@ public class ClassNameTranslator implements ClassComponentTranslator<ClassName, 
     @Override
     public List<TableName> invoke(List<ClassName> classNames) {
         return classNames.stream()
-                .map(name -> new TableName(name.nameToLowerCase()))
+                .map(name -> new TableName(name.getTableName()))
                 .collect(Collectors.toList());
     }
 

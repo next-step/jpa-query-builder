@@ -13,9 +13,9 @@
   - [x] @Column 에 nullable 여부가 지정된 클래스 필드는 테이블 컬럼의 nullable 생성
 
 ## 요구사항 3
-- [ ] person 클래스 정보에 맞는 create table 쿼리 생성
-    - [ ] @Table 에 name 값이 지정된 클래스는 테이블명을 name 값으로 생성 
-    - [ ] @Transient 가 붙은 클래스 필드는 테이블 컬럼으로 반영하지 않음
+- [x] person 클래스 정보에 맞는 create table 쿼리 생성
+    - [x] @Table 에 name 값이 지정된 클래스는 테이블명을 name 값으로 생성 
+    - [x] @Transient 가 붙은 클래스 필드는 테이블 컬럼으로 반영하지 않음
 
 ## 요구사항 4
 - [ ] person 클래스의 drop 쿼리 생성
