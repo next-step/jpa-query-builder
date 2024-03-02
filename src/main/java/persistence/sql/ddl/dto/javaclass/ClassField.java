@@ -1,20 +1,33 @@
 package persistence.sql.ddl.dto.javaclass;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 public class ClassField {
 
     private final String name;
     private final Class<?> type;
-    private final boolean idAnnotationPresent;
+    private final Id idAnnotation;
+    private final GeneratedValue generatedValueAnnotation;
+    private final Column columnAnnotation;
 
-    public ClassField(String name, Class<?> type, boolean idAnnotationPresent) {
+    public ClassField(String name, Class<?> type, Id idAnnotation, GeneratedValue generatedValueAnnotation, Column columnAnnotation) {
         validate(name, type);
 
         this.name = name;
         this.type = type;
-        this.idAnnotationPresent = idAnnotationPresent;
+        this.idAnnotation = idAnnotation;
+        this.generatedValueAnnotation = generatedValueAnnotation;
+        this.columnAnnotation = columnAnnotation;
     }
 
-    public String getName() {
+    public String getColumnName() {
+        if (columnAnnotation != null && !columnAnnotation.name().isEmpty()) {
+            return columnAnnotation.name();
+        }
         return name;
     }
 
@@ -22,8 +35,22 @@ public class ClassField {
         return type;
     }
 
-    public boolean isIdAnnotationPresent() {
-        return idAnnotationPresent;
+    public boolean hasIdAnnotation() {
+        return idAnnotation != null;
+    }
+
+    public boolean hasIdentityTypeGeneratedValueAnnotation() {
+        if (generatedValueAnnotation != null && generatedValueAnnotation.strategy() == IDENTITY) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasNotNullColumnAnnotation() {
+        if (columnAnnotation == null) {
+            return false;
+        }
+        return !columnAnnotation.nullable();
     }
 
     private void validate(String name, Class<?> type) {

@@ -5,13 +5,17 @@ public class DBColumn {
     private final String name;
     private final String type;
     private final boolean primaryKey;
+    private final boolean autoIncrement;
+    private final boolean nullable;
 
-    public DBColumn(String name, String type, boolean primaryKey) {
+    public DBColumn(String name, String type, boolean primaryKey, boolean autoIncrement, boolean nullable) {
         validate(name, type);
 
         this.name = name;
         this.type = type;
         this.primaryKey = primaryKey;
+        this.autoIncrement = autoIncrement;
+        this.nullable = nullable;
     }
 
     public String getName() {
@@ -24,6 +28,14 @@ public class DBColumn {
 
     public boolean isPrimaryKey() {
         return primaryKey;
+    }
+
+    public boolean isAutoIncrement() {
+        return autoIncrement;
+    }
+
+    public boolean isNullable() {
+        return nullable;
     }
 
     private void validate(String name, String type) {

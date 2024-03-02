@@ -22,9 +22,22 @@ public class QueryGenerator {
     }
 
     private static String generateColumnSql(DBColumn dbColumn) {
+        StringBuilder columnSql = new StringBuilder();
+        columnSql.append(String.format("    %s %s", dbColumn.getName(), dbColumn.getType()));
+
         if (dbColumn.isPrimaryKey()) {
-            return String.format("    %s %s PRIMARY KEY,\n", dbColumn.getName(), dbColumn.getType());
+            columnSql.append(" PRIMARY KEY");
         }
-        return String.format("    %s %s,\n", dbColumn.getName(), dbColumn.getType());
+
+        if (dbColumn.isAutoIncrement()) {
+            columnSql.append(" AUTO_INCREMENT");
+        }
+
+        if (!dbColumn.isNullable()) {
+            columnSql.append(" NOT NULL");
+        }
+
+        columnSql.append(",\n");
+        return columnSql.toString();
     }
 }
