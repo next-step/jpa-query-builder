@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
+import jdbc.PersonRowMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +13,9 @@ import persistence.sql.ddl.DDLGenerator;
 import persistence.sql.dml.DMLGenerator;
 
 import java.sql.SQLException;
+import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
 class DefaultEntityManagerTest {
@@ -91,9 +93,12 @@ class DefaultEntityManagerTest {
         Person person = new Person(name, 26, "email", 1);
 
         // when
-        Person result = (Person) entityManager.persist(person);
+        entityManager.persist(person);
 
         // then
-        assertThat(result.getName()).isEqualTo(name);
+        List<Person> people = jdbcTemplate.query(dmlGenerator.generateFindAll(), new PersonRowMapper());
+
+        assertThat(people).hasSize(1);
+        assertThat(people.get(0).getName()).isEqualTo(name);
     }
 }

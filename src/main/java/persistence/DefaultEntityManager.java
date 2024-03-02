@@ -34,8 +34,9 @@ public class DefaultEntityManager implements EntityManager {
     }
 
     @Override
-    public Object persist(Object entity) {
-        return null;
+    public void persist(Object entity) {
+        String sql = dmlGenerator.generateInsert(entity);
+        jdbcTemplate.execute(sql);
     }
 
     @Override
