@@ -36,10 +36,7 @@ public class DefaultEntityManager implements EntityManager {
 
     @Override
     public void persist(Object entity) {
-        Class<?> clazz = entity.getClass();
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("[EntityManager] persist: the instance is not an entity");
-        }
+        validEntity(entity);
 
         String sql = dmlGenerator.generateInsert(entity);
         jdbcTemplate.execute(sql);
@@ -47,6 +44,15 @@ public class DefaultEntityManager implements EntityManager {
 
     @Override
     public void remove(Object entity) {
+        validEntity(entity);
+
         jdbcTemplate.execute(dmlGenerator.generateDelete(entity));
+    }
+
+    private static void validEntity(Object entity) {
+        Class<?> clazz = entity.getClass();
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("[EntityManager] persist: the instance is not an entity");
+        }
     }
 }

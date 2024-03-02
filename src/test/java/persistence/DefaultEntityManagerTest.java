@@ -40,6 +40,7 @@ class DefaultEntityManagerTest {
 
     @AfterEach
     void tearDown() {
+        jdbcTemplate.execute(ddlGenerator.generateDrop());
         server.stop();
     }
 
@@ -132,5 +133,20 @@ class DefaultEntityManagerTest {
         // then
         Person result = entityManager.find(Person.class, id);
         assertThat(result).isNull();
+    }
+
+    @Test
+    @DisplayName("remove 할 Object 가 Entity 가 아닐 경우, 예외가 발생한다.")
+    void remove_2() {
+        // given
+        entityManager = new DefaultEntityManager(jdbcTemplate, new DMLGenerator(NotEntity.class));
+
+        // when
+        Throwable throwable = catchThrowable(() -> entityManager.remove(new NotEntity(1L)));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[EntityManager] persist: the instance is not an entity");
     }
 }
