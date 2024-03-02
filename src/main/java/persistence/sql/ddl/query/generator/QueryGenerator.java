@@ -3,10 +3,9 @@ package persistence.sql.ddl.query.generator;
 import persistence.sql.ddl.dto.db.CreateTableComponent;
 import persistence.sql.ddl.dto.db.DBColumn;
 
-// TODO: 추상화
-public class CreateTableQueryGenerator {
+public class QueryGenerator {
 
-    public static String generateSql(CreateTableComponent component) {
+    public static String generateCreateTableSql(CreateTableComponent component) {
         StringBuilder sql = new StringBuilder();
         sql.append(String.format("create table %s (\n", component.getTableName()));
 
