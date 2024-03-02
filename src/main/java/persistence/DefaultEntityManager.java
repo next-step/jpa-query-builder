@@ -47,6 +47,6 @@ public class DefaultEntityManager implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-
+        jdbcTemplate.execute(dmlGenerator.generateDelete(entity));
     }
 }
