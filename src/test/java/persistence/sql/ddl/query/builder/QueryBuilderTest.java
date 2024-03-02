@@ -47,4 +47,13 @@ public class QueryBuilderTest {
                 "    email VARCHAR NOT NULL\n" +
                 ")");
     }
+
+    @Test
+    void 요구사항_4_Person_클래스_정보를_통해_drop_쿼리_생성() {
+        // when
+        String result = QueryBuilder.generateDropTableQuery(persistence.sql.ddl.targetentity.requirement3.Person.class);
+
+        // then
+        assertThat(result).isEqualTo("drop table users");
+    }
 }

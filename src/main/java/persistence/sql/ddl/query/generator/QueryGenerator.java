@@ -2,6 +2,7 @@ package persistence.sql.ddl.query.generator;
 
 import persistence.sql.ddl.dto.db.CreateTableComponent;
 import persistence.sql.ddl.dto.db.DBColumn;
+import persistence.sql.ddl.dto.db.DropTableComponent;
 
 public class QueryGenerator {
 
@@ -19,6 +20,10 @@ public class QueryGenerator {
 
         sql.append(")");
         return sql.toString();
+    }
+
+    public static String generateDropTableSql(DropTableComponent component) {
+        return String.format("drop table %s", component.getTableName());
     }
 
     private static String generateColumnSql(DBColumn dbColumn) {

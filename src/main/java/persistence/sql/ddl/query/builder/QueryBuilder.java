@@ -3,6 +3,7 @@ package persistence.sql.ddl.query.builder;
 import persistence.sql.ddl.ClassComponentType;
 import persistence.sql.ddl.dto.db.CreateTableComponent;
 import persistence.sql.ddl.dto.db.DBColumn;
+import persistence.sql.ddl.dto.db.DropTableComponent;
 import persistence.sql.ddl.dto.db.TableName;
 import persistence.sql.ddl.loader.ClassComponentLoader;
 import persistence.sql.ddl.loader.ClassFieldLoader;
@@ -32,6 +33,12 @@ public class QueryBuilder {
         List<DBColumn> dbColumns = (List<DBColumn>) invoke(ClassComponentType.CLASS_FIELD, clazz);
         CreateTableComponent createTableComponent = new CreateTableComponent(tableName, dbColumns);
         return QueryGenerator.generateCreateTableSql(createTableComponent);
+    }
+
+    public static String generateDropTableQuery(Class<?> clazz) {
+        TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz).get(0);
+        DropTableComponent dropTableComponent = new DropTableComponent(tableName);
+        return QueryGenerator.generateDropTableSql(dropTableComponent);
     }
 
     private static List<?> invoke(ClassComponentType type, Class<?> clazz) {
