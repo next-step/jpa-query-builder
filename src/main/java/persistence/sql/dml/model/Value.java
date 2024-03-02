@@ -21,12 +21,12 @@ public class Value {
 
         return Arrays.stream(clz.getDeclaredFields())
                 .filter(ColumnUtils::includeColumn)
-                .map(field -> value(field, entity))
+                .map(this::value)
                 .collect(Collectors.joining(SEPARATOR));
     }
 
-    public String clause(Field field, Object entity) {
-        final String value = value(field, entity);
+    public String clause(Field field) {
+        final String value = value(field);
 
         if (value.equals("null")) {
             return null;
@@ -35,7 +35,7 @@ public class Value {
         return ColumnUtils.name(field) + " = " + value;
     }
 
-    private String value(Field field, Object entity) {
+    private String value(Field field) {
         Object value;
 
         field.setAccessible(true);

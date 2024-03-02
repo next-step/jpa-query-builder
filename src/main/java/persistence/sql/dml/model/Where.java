@@ -39,7 +39,7 @@ public class Where {
     public String entity(Value value) {
         return Arrays.stream(clz.getDeclaredFields())
                 .filter(ColumnUtils::includeColumn)
-                .map(field -> value.clause(field, entity))
+                .map(value::clause)
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(AND_OPERATOR));
     }
