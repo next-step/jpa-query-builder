@@ -1,10 +1,8 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
-import persistence.sql.ddl.Table;
-import persistence.sql.ddl.column.ColumnClause;
-import persistence.sql.ddl.column.Columns;
-import persistence.sql.ddl.value.ValueClause;
+import persistence.sql.ddl.TableClause;
+import persistence.sql.ddl.column.ColumnClauses;
 import persistence.sql.ddl.value.Values;
 import persistence.sql.exception.InvalidEntityException;
 
@@ -18,32 +16,32 @@ import static persistence.sql.common.SqlConstant.COMMA;
 public class InsertQueryBuilder<T> {
     public static final String INSERT_QUERY_START = "INSERT INTO %s (";
     public static final String VALUES = " VALUES (";
-    private final Table table;
+    private final TableClause tableClause;
 
     public InsertQueryBuilder(Class<?> entity) {
         if (!entity.isAnnotationPresent(Entity.class)) {
             throw new InvalidEntityException();
         }
-        this.table = new Table(entity);
+        this.tableClause = new TableClause(entity);
     }
 
     public String getInsertQuery(T target) {
 
         List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
 
-        return String.format(INSERT_QUERY_START, table.name()) +
-                String.join(COMMA, table.columnNames()) +
+        return String.format(INSERT_QUERY_START, tableClause.name()) +
+                String.join(COMMA, tableClause.columnNames()) +
                 CLOSING_PARENTHESIS +
                 VALUES +
                 String.join(COMMA, new Values(fields, target).getQueries()) +
                 CLOSING_PARENTHESIS;
     }
 
-    public String getInsertQuery(T target, Columns colums, Values values) {
+    public String getInsertQuery(T target, ColumnClauses colums, Values values) {
 
         List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
 
-        return String.format(INSERT_QUERY_START, table.name()) +
+        return String.format(INSERT_QUERY_START, tableClause.name()) +
                 String.join(COMMA, colums.getQueries()) +
                 CLOSING_PARENTHESIS +
                 VALUES +

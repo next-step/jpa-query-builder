@@ -1,5 +1,8 @@
 # jpa-query-builder
 
+## Step4 
+- [ ] 3단계 피드백 반영
+  - [x] Clause 절 반영 
 ## Step3
 - [x] 요구사항 1 - insert 쿼리 구현하기
 - [x] 요구사항 2 - findAll 기능 구현하기

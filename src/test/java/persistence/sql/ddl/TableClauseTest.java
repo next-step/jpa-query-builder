@@ -14,8 +14,8 @@ import persistence.entity.annotated.Person;
 
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
 
-class TableTest {
-    private static final Logger logger = LoggerFactory.getLogger(TableTest.class);
+class TableClauseTest {
+    private static final Logger logger = LoggerFactory.getLogger(TableClauseTest.class);
     DatabaseServer server;
     private JdbcTemplate jdbcTemplate;
 
@@ -59,7 +59,7 @@ class TableTest {
         String expectedName = "users";
 
         // when
-        String actualName = new Table(persistence.entity.notcolumn.Person.class).name();
+        String actualName = new TableClause(persistence.entity.notcolumn.Person.class).name();
 
         // then
         Assertions.assertThat(actualName).isEqualTo(expectedName);

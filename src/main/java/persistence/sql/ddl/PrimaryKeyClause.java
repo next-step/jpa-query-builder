@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public class PrimaryKey {
+public class PrimaryKeyClause {
     public static final String ID_AUTO_INCREMENT = "%s %s AUTO_INCREMENT PRIMARY KEY";
     public static Map<GenerationType, String> sqlMap = Map.of(
             GenerationType.AUTO, ID_AUTO_INCREMENT,
@@ -33,7 +33,7 @@ public class PrimaryKey {
     private final String dataType;
     private final GenerationType generationType;
 
-    public PrimaryKey(Field field) {
+    public PrimaryKeyClause(Field field) {
         if (!field.isAnnotationPresent(jakarta.persistence.Id.class)) {
             throw new NotIdException();
         }

@@ -5,9 +5,9 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class Columns {
+public class ColumnClauses {
     private final List<ColumnClause> columnClauses;
-    public Columns(List<Field> fields) {
+    public ColumnClauses(List<Field> fields) {
         this.columnClauses = fields.stream()
                 .filter(filter -> !filter.isAnnotationPresent(Transient.class))
                 .map(ColumnClause::new).toList();

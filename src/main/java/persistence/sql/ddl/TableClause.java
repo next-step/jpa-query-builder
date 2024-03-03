@@ -8,33 +8,33 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import persistence.sql.ddl.column.Columns;
+import persistence.sql.ddl.column.ColumnClauses;
 import persistence.sql.exception.NotIdException;
 
-public class Table {
+public class TableClause {
     private final String name;
-    private final PrimaryKey primaryKey;
-    private final Columns columns;
+    private final PrimaryKeyClause primaryKeyClause;
+    private final ColumnClauses columnClauses;
 
-    public Table(Class<?> entity) {
+    public TableClause(Class<?> entity) {
         this.name = getTableName(entity);
-        this.primaryKey = extractIdFrom(entity);
-        this.columns = extractColumnsFrom(entity);
+        this.primaryKeyClause = extractIdFrom(entity);
+        this.columnClauses = extractColumnsFrom(entity);
     }
 
-    private static Columns extractColumnsFrom(Class<?> entity) {
+    private static ColumnClauses extractColumnsFrom(Class<?> entity) {
         List<Field> fields = Arrays.stream(entity.getDeclaredFields())
                 .filter(x -> !x.isAnnotationPresent(jakarta.persistence.Id.class))
                 .toList();
 
-        return new Columns(fields);
+        return new ColumnClauses(fields);
     }
 
-    private static PrimaryKey extractIdFrom(Class<?> entity) {
+    private static PrimaryKeyClause extractIdFrom(Class<?> entity) {
         return Stream.of(entity.getDeclaredFields())
                 .filter(x -> x.isAnnotationPresent(Id.class))
                 .findFirst()
-                .map(PrimaryKey::new)
+                .map(PrimaryKeyClause::new)
                 .orElseThrow(NotIdException::new);
     }
 
@@ -53,18 +53,18 @@ public class Table {
     }
 
     public String createQuery() {
-        return primaryKey.getQuery();
+        return primaryKeyClause.getQuery();
     }
 
     public String primaryKeyName() {
-        return primaryKey.name();
+        return primaryKeyClause.name();
     }
 
     public List<String> columnQueries() {
-        return columns.getQueries();
+        return columnClauses.getQueries();
     }
 
     public List<String> columnNames() {
-        return columns.getNames();
+        return columnClauses.getNames();
     }
 }
