@@ -19,21 +19,27 @@ public class SelectQueryBuilder {
         this.where = where;
     }
 
-    public String findAllBuild() {
-        return String.format(
-                FIND_ALL_QUERY_FORMAT,
-                column.fields(),
-                table.name()
+    public Builder findAll() {
+        return new Builder(
+                String.format(FIND_ALL_QUERY_FORMAT, column.fields(), table.name())
         );
     }
 
-    public String findByIdBuild(Object id) {
-        return String.format(
-                FIND_BY_ID_QUERY_FORMAT,
-                column.fields(),
-                table.name(),
-                where.findById(),
-                id
+    public Builder findById(Object id) {
+        return new Builder(
+                String.format(FIND_BY_ID_QUERY_FORMAT, column.fields(), table.name(), where.findById(), id)
         );
+    }
+
+    public static class Builder {
+        private final String query;
+
+        public Builder(String query) {
+            this.query = query;
+        }
+
+        public String build() {
+            return query;
+        }
     }
 }

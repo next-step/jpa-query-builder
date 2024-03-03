@@ -90,7 +90,7 @@ class EntityManagerImplTest {
                 new Table(expected.getClass()),
                 new DMLColumn(expected)
         );
-        final String insertQuery = queryBuilder.build(expected);
+        final String insertQuery = queryBuilder.build();
 
         jdbcTemplate.execute(insertQuery);
     }

@@ -25,7 +25,7 @@ class SelectQueryBuilderTest {
     void findAllQueryTest() {
         final var expected = "SELECT id, nick_name, old, email FROM users;";
 
-        final var actual = queryBuilder.findAllBuild();
+        final var actual = queryBuilder.findAll().build();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -34,7 +34,7 @@ class SelectQueryBuilderTest {
     void findByIdQueryTest() {
         final var expected = "SELECT id, nick_name, old, email FROM users WHERE id = 1;";
 
-        final var actual = queryBuilder.findByIdBuild(1L);
+        final var actual = queryBuilder.findById(1L).build();
 
         assertThat(actual).isEqualTo(expected);
     }
