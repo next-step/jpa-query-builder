@@ -1,15 +1,19 @@
 package persistence.meta.vo;
 
+import jakarta.persistence.GeneratedValue;
+
 public class EntityId {
     private final String originalFieldName;
     private final Class<?> fieldType;
     private final EntityField entityField;
-    private final boolean isPrimary = true;
+    private final GeneratedValue generatedValue;
 
-    public EntityId(String originalFieldName, Class<?> fieldType, EntityField entityField) {
+    public EntityId(String originalFieldName, Class<?> fieldType, EntityField entityField,
+                    GeneratedValue generatedValue) {
         this.originalFieldName = originalFieldName;
         this.fieldType = fieldType;
         this.entityField = entityField;
+        this.generatedValue = generatedValue;
     }
 
     public String getOriginalFieldName() {
@@ -24,7 +28,7 @@ public class EntityId {
         return entityField;
     }
 
-    public boolean isPrimary() {
-        return isPrimary;
+    public GeneratedValue getGeneratedValue() {
+        return generatedValue;
     }
 }

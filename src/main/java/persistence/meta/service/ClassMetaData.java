@@ -2,6 +2,7 @@ package persistence.meta.service;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -62,7 +63,8 @@ public class ClassMetaData {
             throw new IllegalArgumentException("Multiple @Id in Entity Class");
         }
         Field idField = idAnnotatedFields.get(0);
-        return new EntityId(idField.getName(), idField.getType(), convert(idField));
+        GeneratedValue generatedValue = idField.isAnnotationPresent(GeneratedValue.class) ? idField.getAnnotation(GeneratedValue.class) : null;
+        return new EntityId(idField.getName(), idField.getType(), convert(idField), generatedValue);
     }
 
     public EntityMetaData getEntityMetaData(Class<?> cls) {

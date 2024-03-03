@@ -26,13 +26,11 @@ public class DDLQueryGenerator {
         sb.append("create table ");
         sb.append(tableName.getTableName());
         sb.append("(");
-        String idClause = entityId.getEntityField().getTableFieldName() + " " + dialect.getFieldType(entityId.getEntityField());
-        sb.append(idClause);
+        sb.append(getIdClause(entityId));
         sb.append(",");
         for (EntityField entityField : entityFields) {
             sb.append(" ");
-            String fieldClause = entityField.getTableFieldName() + " " + dialect.getFieldType(entityField);
-            sb.append(fieldClause);
+            sb.append(getFieldClause(entityField));
             sb.append(",");
         }
         sb.deleteCharAt(sb.length() - 1);
@@ -45,5 +43,16 @@ public class DDLQueryGenerator {
         StringBuilder sb = new StringBuilder();
         sb.append("drop table ").append(tableName.getTableName()).append(" if exists;");
         return sb.toString();
+    }
+
+    private String getFieldClause(EntityField entityField) {
+        return entityField.getTableFieldName() + " " + dialect.getFieldType(entityField) + (entityField.isNullable()
+            ? "" : " not null");
+    }
+
+    private String getIdClause(EntityId entityId) {
+        return
+            entityId.getEntityField().getTableFieldName() + " " + dialect.getFieldType(entityId.getEntityField())
+                + dialect.getGenerationTypeSql(entityId.getGeneratedValue());
     }
 }
