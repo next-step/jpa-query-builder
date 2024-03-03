@@ -3,6 +3,7 @@ package jdbc;
 import persistence.sql.ColumnUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -30,8 +31,8 @@ public class RowMapperImpl<T> implements RowMapper<T> {
             }
 
             return instance;
-        } catch (Exception e) {
-            throw new SQLException("Error mapping row", e);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
     }
 }
