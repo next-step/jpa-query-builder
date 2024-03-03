@@ -8,12 +8,12 @@ import persistence.sql.ddl.mapping.H2PrimaryKeyGenerationType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ColumnTest {
-    private Column column;
+class DDLDMLColumnTest {
+    private DDLColumn column;
 
     @BeforeEach
     void setUp() {
-        column = new Column(
+        column = new DDLColumn(
                 new H2TypeConverter(),
                 new H2PrimaryKeyGenerationType()
         );

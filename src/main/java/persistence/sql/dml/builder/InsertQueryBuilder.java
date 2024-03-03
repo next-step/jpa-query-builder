@@ -1,6 +1,6 @@
 package persistence.sql.dml.builder;
 
-import persistence.sql.Table;
+import persistence.sql.model.Table;
 import persistence.sql.dml.model.DMLColumn;
 
 public class InsertQueryBuilder {
@@ -15,12 +15,12 @@ public class InsertQueryBuilder {
         this.column = column;
     }
 
-    public String query(Class<?> clz, Object entity) {
+    public String build() {
         return String.format(
                 INSERT_QUERY_FORMAT,
-                table.name(clz),
-                column.fields(clz),
-                column.values(clz, entity)
+                table.name(),
+                column.fields(),
+                column.values()
         );
     }
 }

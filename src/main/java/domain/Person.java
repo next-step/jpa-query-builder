@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+import java.util.Objects;
+
 @Table(name = "users")
 @Entity
 public class Person {
@@ -28,7 +30,7 @@ public class Person {
     @Transient
     private Integer index;
 
-    protected Person() {
+    public Person() {
     }
 
     public Person(String name, Integer age, String email) {
@@ -41,5 +43,21 @@ public class Person {
         this.age = age;
         this.email = email;
         this.index = index;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id)
+                && Objects.equals(name, person.name)
+                && Objects.equals(age, person.age)
+                && Objects.equals(email, person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, age, email);
     }
 }

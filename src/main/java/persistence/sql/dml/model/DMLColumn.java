@@ -1,24 +1,32 @@
 package persistence.sql.dml.model;
 
-import persistence.sql.dml.converter.ColumnConverter;
-
 public class DMLColumn {
 
-    private final ColumnConverter converter;
+    private final Field field;
+    private final Value value;
 
-    public DMLColumn(ColumnConverter converter) {
-        this.converter = converter;
+    public DMLColumn(Class<?> clz) {
+        this(new Field(clz), null);
     }
 
-    public String fields(Class<?> clz) {
-        return converter.fields(clz);
+    public DMLColumn(Object entity) {
+        this(new Field(entity.getClass()), new Value(entity));
     }
 
-    public String values(Class<?> clz, Object entity) {
-        return converter.values(clz, entity);
+    public DMLColumn(Field field, Value value) {
+        this.field = field;
+        this.value = value;
     }
 
-    public String where(Class<?> clz, Object id) {
-        return converter.where(clz, id);
+    public Value getValue() {
+        return value;
+    }
+
+    public String fields() {
+        return field.getEntityFieldClause();
+    }
+
+    public String values() {
+        return value.getEntityValueClause();
     }
 }
