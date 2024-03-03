@@ -16,7 +16,7 @@ class DeleteQueryBuilderTest {
     @BeforeEach
     void setUp() {
         person = new Person("name", 10, "a@a.com");
-        final Table table = new Table();
+        final Table table = new Table(person.getClass());
         final DMLColumn column = new DMLColumn(person);
         queryBuilder = new DeleteQueryBuilder(table, column);
     }
@@ -25,7 +25,7 @@ class DeleteQueryBuilderTest {
     void deleteQueryByObjectTest() {
         final var expected = "DELETE FROM users WHERE nick_name = 'name' AND old = 10 AND email = 'a@a.com';";
 
-        final var actual = queryBuilder.query(person);
+        final var actual = queryBuilder.build();
 
         assertThat(actual).isEqualTo(expected);
     }

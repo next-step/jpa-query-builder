@@ -25,10 +25,10 @@ public class EntityManagerImpl implements EntityManager {
 
     private <T> String findQuery(Class<T> clazz, Long id) {
         final SelectQueryBuilder queryBuilder = new SelectQueryBuilder(
-                new Table(), new DMLColumn(clazz)
+                new Table(clazz), new DMLColumn(clazz)
         );
 
-        return queryBuilder.findById(clazz, id);
+        return queryBuilder.build(clazz, id);
     }
 
     @Override
@@ -40,10 +40,10 @@ public class EntityManagerImpl implements EntityManager {
 
     private String persistQuery(Object entity) {
         final InsertQueryBuilder queryBuilder = new InsertQueryBuilder(
-                new Table(), new DMLColumn(entity)
+                new Table(entity.getClass()), new DMLColumn(entity)
         );
 
-        return queryBuilder.query(entity);
+        return queryBuilder.build(entity);
     }
 
     @Override
@@ -55,10 +55,10 @@ public class EntityManagerImpl implements EntityManager {
 
     private String removeQuery(Object entity) {
         final DeleteQueryBuilder queryBuilder = new DeleteQueryBuilder(
-                new Table(), new DMLColumn(entity)
+                new Table(entity.getClass()), new DMLColumn(entity)
         );
 
-        return queryBuilder.query(entity);
+        return queryBuilder.build();
     }
 
 }

@@ -27,7 +27,7 @@ public class Application {
             final TypeConverter typeConverter = new H2TypeConverter();
             final PrimaryKeyGenerationType generationType = new H2PrimaryKeyGenerationType();
             final QueryBuilder queryBuilder = new DDLQueryBuilder(
-                    new Table(),
+                    new Table(Person.class),
                     new DDLColumn(typeConverter, generationType)
             );
             final String createQuery = queryBuilder.create(Person.class);

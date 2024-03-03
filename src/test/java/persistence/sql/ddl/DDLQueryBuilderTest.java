@@ -20,7 +20,7 @@ class DDLQueryBuilderTest {
 
     @BeforeEach
     void setUp() {
-        table = new Table();
+        table = new Table(Person.class);
         column = new DDLColumn(new H2TypeConverter(), new H2PrimaryKeyGenerationType());
         queryBuilder = new DDLQueryBuilder(table, column);
     }

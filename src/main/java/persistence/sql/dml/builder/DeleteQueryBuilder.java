@@ -15,10 +15,10 @@ public class DeleteQueryBuilder {
         this.column = column;
     }
 
-    public String query(Object entity) {
+    public String build() {
         return String.format(
                 DELETE_QUERY_FORMAT,
-                table.name(entity.getClass()),
+                table.name(),
                 column.whereByEntity()
         );
     }

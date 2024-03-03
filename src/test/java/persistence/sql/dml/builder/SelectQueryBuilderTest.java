@@ -14,7 +14,7 @@ class SelectQueryBuilderTest {
 
     @BeforeEach
     void setUp() {
-        final Table table = new Table();
+        final Table table = new Table(Person.class);
         final DMLColumn column = new DMLColumn(Person.class);
         queryBuilder = new SelectQueryBuilder(table, column);
     }
@@ -32,7 +32,7 @@ class SelectQueryBuilderTest {
     void findByIdQueryTest() {
         final var expected = "SELECT id, nick_name, old, email FROM users WHERE id = 1;";
 
-        final var actual = queryBuilder.findById(Person.class, 1L);
+        final var actual = queryBuilder.build(Person.class, 1L);
 
         assertThat(actual).isEqualTo(expected);
     }

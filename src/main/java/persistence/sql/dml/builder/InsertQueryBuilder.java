@@ -15,10 +15,10 @@ public class InsertQueryBuilder {
         this.column = column;
     }
 
-    public String query(Object entity) {
+    public String build(Object entity) {
         return String.format(
                 INSERT_QUERY_FORMAT,
-                table.name(entity.getClass()),
+                table.name(),
                 column.fields(),
                 column.values()
         );

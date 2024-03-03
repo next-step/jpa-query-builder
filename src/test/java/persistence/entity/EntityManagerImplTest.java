@@ -39,7 +39,7 @@ class EntityManagerImplTest {
         jdbcTemplate = new JdbcTemplate(server.getConnection());
         entityManager = new EntityManagerImpl(jdbcTemplate);
         queryBuilder = new DDLQueryBuilder(
-                new Table(),
+                new Table(expected.getClass()),
                 new DDLColumn(new H2TypeConverter(), new H2PrimaryKeyGenerationType())
         );
 
@@ -87,10 +87,10 @@ class EntityManagerImplTest {
 
     private void insertDummyPerson() {
         final InsertQueryBuilder queryBuilder = new InsertQueryBuilder(
-                new Table(),
+                new Table(expected.getClass()),
                 new DMLColumn(expected)
         );
-        final String insertQuery = queryBuilder.query(expected);
+        final String insertQuery = queryBuilder.build(expected);
 
         jdbcTemplate.execute(insertQuery);
     }

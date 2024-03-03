@@ -20,15 +20,15 @@ public class SelectQueryBuilder {
         return String.format(
                 FIND_ALL_QUERY_FORMAT,
                 column.fields(),
-                table.name(clz)
+                table.name()
         );
     }
 
-    public String findById(Class<?> clz, Object id) {
+    public String build(Class<?> clz, Object id) {
         return String.format(
                 FIND_BY_ID_QUERY_FORMAT,
                 column.fields(),
-                table.name(clz),
+                table.name(),
                 column.whereById(id),
                 id
         );

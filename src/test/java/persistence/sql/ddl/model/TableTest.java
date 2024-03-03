@@ -10,14 +10,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TableTest {
 
-    private final persistence.sql.model.Table table = new persistence.sql.model.Table();
-
     @Test
     @DisplayName("@Table 어노테이션이 존재하지 않으면 소문자의 클래스명을 생성한다.")
     void tableCreateTest_withoutTable() {
+        final var table = new persistence.sql.model.Table(Fixture.class);
         final var expected = "fixture";
 
-        final var actual = table.name(Fixture.class);
+        final var actual = table.name();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -25,9 +24,10 @@ class TableTest {
     @Test
     @DisplayName("@Table 어노테이션이 존재하지만, name property 가 존재하지 않으면 소문자의 클래스명을 생성한다.")
     void tableCreateTest_withoutName() {
+        final var table = new persistence.sql.model.Table(FixtureWithoutName.class);
         final var expected = "fixturewithoutname";
 
-        final var actual = table.name(FixtureWithoutName.class);
+        final var actual = table.name();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -35,9 +35,10 @@ class TableTest {
     @Test
     @DisplayName("@Table 어노테이션과 name property 가 존재하면, name 값으로 생성한다.")
     void tableCreateTest_withName() {
+        final var table = new persistence.sql.model.Table(FixtureWithName.class);
         final var expected = "fixtures";
 
-        final var actual = table.name(FixtureWithName.class);
+        final var actual = table.name();
 
         assertThat(actual).isEqualTo(expected);
     }

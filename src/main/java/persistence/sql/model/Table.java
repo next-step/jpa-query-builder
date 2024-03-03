@@ -2,7 +2,13 @@ package persistence.sql.model;
 
 public class Table {
 
-    public String name(Class<?> clz) {
+    private final Class<?> clz;
+
+    public Table(Class<?> clz) {
+        this.clz = clz;
+    }
+
+    public String name() {
         final jakarta.persistence.Table tableAnnotation = clz.getAnnotation(jakarta.persistence.Table.class);
 
         if (existTableNameProperty(tableAnnotation)) {
@@ -12,7 +18,7 @@ public class Table {
         return clz.getSimpleName().toLowerCase();
     }
 
-    private static boolean existTableNameProperty(jakarta.persistence.Table tableAnnotation) {
+    private boolean existTableNameProperty(jakarta.persistence.Table tableAnnotation) {
         return tableAnnotation != null && !tableAnnotation.name().isEmpty();
     }
 

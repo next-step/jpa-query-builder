@@ -20,7 +20,7 @@ public class DDLQueryBuilder implements QueryBuilder {
     public String create(Class<?> clz) {
         return String.format(
                 CREATE_QUERY_FORMAT,
-                table.name(clz),
+                table.name(),
                 column.create(clz)
         );
     }
@@ -29,7 +29,7 @@ public class DDLQueryBuilder implements QueryBuilder {
     public String drop(Class<?> clz) {
         return String.format(
                 DROP_QUERY_FORMAT,
-                table.name(clz)
+                table.name()
         );
     }
 

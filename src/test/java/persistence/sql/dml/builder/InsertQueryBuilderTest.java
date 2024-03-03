@@ -16,7 +16,7 @@ class InsertQueryBuilderTest {
     @BeforeEach
     void setUp() {
         person = new Person("name", 10, "a@a.com");
-        final Table table = new Table();
+        final Table table = new Table(person.getClass());
         final DMLColumn column = new DMLColumn(person);
         queryBuilder = new InsertQueryBuilder(table, column);
     }
@@ -25,16 +25,7 @@ class InsertQueryBuilderTest {
     void insertQueryTest() {
         final var expected = "INSERT INTO users (id, nick_name, old, email) VALUES (null, 'name', 10, 'a@a.com');";
 
-        final var actual = queryBuilder.query(person);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void insertQueryTest2() {
-        final var expected = "INSERT INTO users (id, nick_name, old, email) VALUES (null, 'name', 10, 'a@a.com');";
-
-        final var actual = queryBuilder.query(person);
+        final var actual = queryBuilder.build(person);
 
         assertThat(actual).isEqualTo(expected);
     }
