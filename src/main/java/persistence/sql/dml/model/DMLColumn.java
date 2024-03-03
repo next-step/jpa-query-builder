@@ -23,11 +23,10 @@ public class DMLColumn {
     }
 
     public String fields() {
-        return field.get();
+        return field.getEntityFieldClause();
     }
 
     public String values() {
-        return value.get();
+        return value.getEntityValueClause();
     }
-
 }

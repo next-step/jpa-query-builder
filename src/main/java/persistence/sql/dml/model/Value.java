@@ -16,7 +16,7 @@ public class Value {
         this.entity = entity;
     }
 
-    public String get() {
+    public String getEntityValueClause() {
         final Class<?> clz = entity.getClass();
 
         return Arrays.stream(clz.getDeclaredFields())

@@ -15,7 +15,7 @@ public class Field {
 
     private static final String SEPARATOR = ", ";
 
-    public String get() {
+    public String getEntityFieldClause() {
         final java.lang.reflect.Field[] fields = clz.getDeclaredFields();
 
         return Arrays.stream(fields)
