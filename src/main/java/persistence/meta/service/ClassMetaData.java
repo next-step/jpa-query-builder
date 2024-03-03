@@ -63,8 +63,9 @@ public class ClassMetaData {
             throw new IllegalArgumentException("Multiple @Id in Entity Class");
         }
         Field idField = idAnnotatedFields.get(0);
-        GeneratedValue generatedValue = idField.isAnnotationPresent(GeneratedValue.class) ? idField.getAnnotation(GeneratedValue.class) : null;
-        return new EntityId(idField.getName(), idField.getType(), convert(idField), generatedValue);
+        GeneratedValue generatedValue =
+            idField.isAnnotationPresent(GeneratedValue.class) ? idField.getAnnotation(GeneratedValue.class) : null;
+        return new EntityId(idField.getName(), convert(idField), generatedValue);
     }
 
     public EntityMetaData getEntityMetaData(Class<?> cls) {
