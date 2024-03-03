@@ -3,6 +3,7 @@ package persistence.sql.dml.builder;
 import domain.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import persistence.DummyPerson;
 import persistence.sql.dml.model.Where;
 import persistence.sql.model.Table;
 import persistence.sql.dml.model.DMLColumn;
@@ -16,7 +17,7 @@ class DeleteQueryBuilderTest {
 
     @BeforeEach
     void setUp() {
-        person = new Person("name", 10, "a@a.com");
+        person = DummyPerson.ofNullId();
         final Table table = new Table(person.getClass());
         final DMLColumn column = new DMLColumn(person);
         final Where where = new Where(person);

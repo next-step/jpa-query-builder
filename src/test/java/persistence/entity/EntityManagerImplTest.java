@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.DummyPerson;
 import persistence.sql.model.Table;
 import persistence.sql.ddl.converter.H2TypeConverter;
 import persistence.sql.ddl.mapping.DDLQueryBuilder;
@@ -34,7 +35,7 @@ class EntityManagerImplTest {
     void setUp() throws SQLException {
         server = new H2();
         server.start();
-        expected = new Person(1L, "name", 10, "a@a.com", 1);
+        expected = DummyPerson.of();
 
         jdbcTemplate = new JdbcTemplate(server.getConnection());
         entityManager = new EntityManagerImpl(jdbcTemplate);
