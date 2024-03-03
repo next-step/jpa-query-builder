@@ -22,7 +22,7 @@ public class DeleteQueryBuilder {
         return String.format(
                 DELETE_QUERY_FORMAT,
                 table.name(),
-                where.findByEntity(column.getValue())
+                where.getEntityClause(column.getValue())
         );
     }
 }
