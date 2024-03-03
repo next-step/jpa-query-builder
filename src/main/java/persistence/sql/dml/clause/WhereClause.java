@@ -11,28 +11,31 @@ import java.util.stream.Collectors;
 
 public class WhereClause {
 
-    private WhereClause() {
+    private final Object entity;
+
+    public WhereClause(Object entity) {
+        this.entity = entity;
     }
 
-    public static String getWhereClause(Object entity) {
+    public String getWhereClause() {
         return Arrays.stream(entity.getClass().getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .filter(field -> {
                     field.setAccessible(true);
-                    return Optional.ofNullable(getFieldValue(field, entity)).isPresent();
+                    return Optional.ofNullable(getFieldValue(field)).isPresent();
                 })
-                .map(field -> toWhereClause(entity, field))
+                .map(this::toWhereClause)
                 .collect(Collectors.joining(" AND "));
     }
 
-    private static String toWhereClause(Object entity, Field field) {
+    private String toWhereClause(Field field) {
         ColumnName columnName = ColumnName.from(field);
-        String fieldValue = getFieldValue(field, entity).toString();
+        String fieldValue = getFieldValue(field).toString();
 
         return String.format("%s = %s", columnName.getName(), ClauseUtil.addQuotesWhenRequire(field.getType(), fieldValue));
     }
 
-    public static Object getFieldValue(Field field, Object entity) {
+    private Object getFieldValue(Field field) {
         try {
             return field.get(entity);
         } catch (IllegalAccessException e) {

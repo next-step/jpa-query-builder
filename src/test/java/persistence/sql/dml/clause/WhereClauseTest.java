@@ -13,9 +13,10 @@ class WhereClauseTest {
     void getWhereClause_1() {
         // given
         Person person = new Person("name", 26, null, 1);
+        WhereClause whereClause = new WhereClause(person);
 
         // when
-        String result = WhereClause.getWhereClause(person);
+        String result = whereClause.getWhereClause();
 
         // then
         assertThat(result).isEqualTo("nick_name = 'name' AND old = 26");
