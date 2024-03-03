@@ -21,7 +21,7 @@ public class Where {
         this.clz = clz;
     }
 
-    public String findById() {
+    public String getIdClause() {
         return Arrays.stream(clz.getDeclaredFields())
                 .filter(ColumnUtils::isId)
                 .findAny()
@@ -29,7 +29,7 @@ public class Where {
                 .orElseThrow(() -> new IllegalArgumentException("field not exist!"));
     }
 
-    public String findByEntity(Value value) {
+    public String getEntityClause(Value value) {
         return Arrays.stream(clz.getDeclaredFields())
                 .filter(ColumnUtils::includeColumn)
                 .map(value::clause)
