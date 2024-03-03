@@ -21,13 +21,23 @@ public class SelectQueryBuilder {
 
     public Builder findAll() {
         return new Builder(
-                String.format(FIND_ALL_QUERY_FORMAT, column.fields(), table.name())
+                String.format(
+                        FIND_ALL_QUERY_FORMAT,
+                        column.fields(),
+                        table.name()
+                )
         );
     }
 
     public Builder findById(Object id) {
         return new Builder(
-                String.format(FIND_BY_ID_QUERY_FORMAT, column.fields(), table.name(), where.findById(), id)
+                String.format(
+                        FIND_BY_ID_QUERY_FORMAT,
+                        column.fields(),
+                        table.name(),
+                        where.getIdClause(),
+                        id
+                )
         );
     }
 
