@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.QueryBuilder;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
 
@@ -22,13 +23,13 @@ class QueryBuilderTest {
     @BeforeEach
     void setUp() {
         dialect = H2Dialect.getInstance();
-        queryBuilder = new QueryBuilder(dialect);
+        queryBuilder = new CreateQueryBuilder(dialect);
     }
 
     @Test
     @DisplayName("요구사항 3 - 추가된 정보를 통해 create 쿼리 만들어보기2")
     void generateCreateTableQuery_WithTableAndTransientAnnotation() {
-        String createTableQuery = queryBuilder.generateCreateTableQuery(Person.class);
+        String createTableQuery = queryBuilder.generateQuery(Person.class);
 
         assertThat(createTableQuery).isEqualTo("CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT, nick_name VARCHAR, old INTEGER, email VARCHAR NOT NULL, PRIMARY KEY (id))");
     }
@@ -36,7 +37,7 @@ class QueryBuilderTest {
     @Test
     @DisplayName("요구사항 4 - 정보를 바탕으로 drop 쿼리 만들어보기")
     void generateDropTableQuery() {
-        String dropTableQuery = queryBuilder.generateDropTableQuery(Person.class);
+        String dropTableQuery = queryBuilder.generateQuery(Person.class);
 
         assertThat(dropTableQuery).isEqualTo("DROP TABLE users");
     }

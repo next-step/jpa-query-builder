@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -13,60 +13,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class QueryBuilder {
+public abstract class QueryBuilder {
 
     private static final String DELIMITER_COMMA = ", ";
     private final Dialect dialect;
+
+    public abstract String generateQuery(Class<?> clazz);
 
     public QueryBuilder(Dialect dialect) {
         this.dialect = dialect;
     }
 
-    public String generateCreateTableQuery(Class<?> clazz) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("CREATE TABLE ")
-                .append(generateTableName(clazz))
-                .append(" (");
-
-        sb.append(generateColumnsQuery(clazz.getDeclaredFields()));
-
-        Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .forEach(field ->
-                        sb.append(", PRIMARY KEY (")
-                                .append(convertCamelCaseToSnakeCase(field.getName()))
-                                .append(")")
-                );
-
-        sb.append(")");
-
-        return sb.toString();
-    }
-
-    public String generateDropTableQuery(Class<?> clazz) {
-        return "DROP TABLE " + generateTableName(clazz);
-    }
-
-    public String generateInsertQuery(Object entity) {
-        return String.format("INSERT INTO %s (%s) VALUES (%s)", generateTableName(entity.getClass()), columnsClause(entity.getClass()), valueClause(entity));
-    }
-
-    public String generateSelectQuery(Object entity, Object id) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("SELECT %s FROM %s", generateColumnNames(entity.getClass().getDeclaredFields()), generateTableName(entity.getClass())));
-        sb.append(whereClause(entity.getClass(), id));
-        return sb.toString();
-    }
-
-    public String generateDeleteQuery(Object entity, Object id) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("DELETE FROM %s", generateTableName(entity.getClass())));
-        sb.append(whereClause(entity.getClass(), id));
-        return sb.toString();
-    }
-
-    private String whereClause(Class<?> clazz, Object id) {
+    protected String whereClause(Class<?> clazz, Object id) {
         if (Objects.isNull(id)) {
             return "";
         }
@@ -83,29 +41,14 @@ public class QueryBuilder {
                 .orElseThrow(() -> new IllegalArgumentException("Id field not found"));
     }
 
-    private String generateColumnNames(Field[] fields) {
+    protected String generateColumnNames(Field[] fields) {
         return Arrays.stream(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::generateColumnName)
                 .collect(Collectors.joining(DELIMITER_COMMA));
     }
 
-    private String valueClause(Object object) {
-        return Arrays.stream(object.getClass().getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> generateColumnValue(field, object))
-                .collect(Collectors.joining(", "));
-    }
-
-    private String columnsClause(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .filter(field -> !field.isAnnotationPresent(Id.class))
-                .map(this::generateColumnName)
-                .collect(Collectors.joining(", "));
-    }
-
-    private String generateColumnValue(Field field, Object entity) {
+    protected String generateColumnValue(Field field, Object entity) {
         field.setAccessible(true);
 
         try {
@@ -115,7 +58,7 @@ public class QueryBuilder {
         }
     }
 
-    private String generateColumnsQuery(Field[] fields) {
+    protected String generateColumnsQuery(Field[] fields) {
         return Arrays.stream(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::generateColumnQuery)
@@ -130,7 +73,7 @@ public class QueryBuilder {
                 dialect.generateColumnSql(field));
     }
 
-    private String generateTableName(Class<?> clazz) {
+    protected String generateTableName(Class<?> clazz) {
         Table annotation = clazz.getDeclaredAnnotation(Table.class);
 
         if (Objects.nonNull(annotation) && !annotation.name().isEmpty()) {
@@ -141,7 +84,7 @@ public class QueryBuilder {
     }
 
 
-    private String generateColumnName(Field field) {
+    protected String generateColumnName(Field field) {
         Column annotation = field.getDeclaredAnnotation(Column.class);
 
         if (Objects.nonNull(annotation) && !annotation.name().isEmpty()) {
