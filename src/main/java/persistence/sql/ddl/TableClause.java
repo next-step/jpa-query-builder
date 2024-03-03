@@ -4,6 +4,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,12 +16,25 @@ public class TableClause {
     private final String name;
     private final PrimaryKeyClause primaryKeyClause;
     private final ColumnClauses columnClauses;
+    private final Object instanceOfTable;
 
     public TableClause(Class<?> entity) {
         this.name = getTableName(entity);
         this.primaryKeyClause = extractIdFrom(entity);
         this.columnClauses = extractColumnsFrom(entity);
+        this.instanceOfTable = getInstanceOfTable(entity);
     }
+
+    private Object getInstanceOfTable(Class<?> entity) {
+        try {
+            return Arrays.stream(entity.getDeclaredConstructors())
+                    .filter(x -> x.getParameterCount() == 0)
+                    .findFirst().get().newInstance();
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e){
+            throw new RuntimeException("새로운 인스턴스 생성에 실패하였습니다.");
+        }
+    }
+
 
     private static ColumnClauses extractColumnsFrom(Class<?> entity) {
         List<Field> fields = Arrays.stream(entity.getDeclaredFields())
@@ -66,5 +80,9 @@ public class TableClause {
 
     public List<String> columnNames() {
         return columnClauses.getNames();
+    }
+
+    public Object newInstance() {
+        return this.instanceOfTable;
     }
 }

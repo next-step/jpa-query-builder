@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import persistence.sql.ddl.TableClause;
 import persistence.sql.exception.InvalidEntityException;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class DeleteQueryBuilder {
     public static final String DELETE_ALL_QUERY = "DELETE FROM %s";
     public static final String DELETE_BY_ID_QUERY = "DELETE FROM %s where %s = %d";

@@ -3,10 +3,12 @@ package persistence.sql.dml;
 import jakarta.persistence.Entity;
 import persistence.sql.ddl.TableClause;
 import persistence.sql.ddl.column.ColumnClauses;
-import persistence.sql.ddl.value.Values;
+import persistence.sql.ddl.value.ValueClauses;
 import persistence.sql.exception.InvalidEntityException;
+import persistence.sql.exception.InvalidValueClausesException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,27 +27,46 @@ public class InsertQueryBuilder {
         this.tableClause = new TableClause(entity);
     }
 
-    public String getInsertQuery(Object target) {
+    public String getInsertQuery(Object instance) {
 
-        List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
+        List<Field> fields = Arrays.stream(instance.getClass().getDeclaredFields()).toList();
 
         return String.format(INSERT_QUERY_START, tableClause.name()) +
                 String.join(COMMA, tableClause.columnNames()) +
                 CLOSING_PARENTHESIS +
                 VALUES +
-                String.join(COMMA, new Values(fields, target).getQueries()) +
+                String.join(COMMA, new ValueClauses(fields, instance).getQueries()) +
                 CLOSING_PARENTHESIS;
     }
 
-    public String getInsertQuery(Object target, ColumnClauses colums, Values values) {
+    public String getInsertQuery(List<String> columnNames, List<Object> columValues) {
 
-        List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
+        if (columnNames.size() != columValues.size()) {
+            throw new InvalidValueClausesException();
+        }
 
-        return String.format(INSERT_QUERY_START, tableClause.name()) +
-                String.join(COMMA, colums.getQueries()) +
-                CLOSING_PARENTHESIS +
-                VALUES +
-                String.join(COMMA, values.getQueries()) +
-                CLOSING_PARENTHESIS;
+        Object instance;
+        try {
+            instance = initInstance(columnNames, columValues);
+        } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+                 InstantiationException e) {
+            throw new IllegalArgumentException("잚못된 요청입니다.");
+
+        }
+        return this.getInsertQuery(instance);
+    }
+
+    private Object initInstance(List<String> columnNames, List<Object> columValues)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+            NoSuchFieldException {
+        Object instance;
+        instance = tableClause.newInstance();
+
+        for (int i = 0; i < columnNames.size(); i++) {
+            Field field = instance.getClass().getDeclaredField(columnNames.get(i));
+            field.setAccessible(true);
+            field.set(instance, columValues.get(i));
+        }
+        return instance;
     }
 }

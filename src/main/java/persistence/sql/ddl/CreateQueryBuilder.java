@@ -3,6 +3,8 @@ package persistence.sql.ddl;
 import jakarta.persistence.Entity;
 import persistence.sql.exception.InvalidEntityException;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static persistence.sql.common.SqlConstant.*;
 
 public class CreateQueryBuilder {
