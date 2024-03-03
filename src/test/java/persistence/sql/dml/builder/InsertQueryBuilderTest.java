@@ -25,7 +25,7 @@ class InsertQueryBuilderTest {
     void insertQueryTest() {
         final var expected = "INSERT INTO users (id, nick_name, old, email) VALUES (null, 'name', 10, 'a@a.com');";
 
-        final var actual = queryBuilder.build(person);
+        final var actual = queryBuilder.build();
 
         assertThat(actual).isEqualTo(expected);
     }

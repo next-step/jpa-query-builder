@@ -1,5 +1,6 @@
 package persistence.sql.dml.builder;
 
+import persistence.sql.dml.model.Where;
 import persistence.sql.model.Table;
 import persistence.sql.dml.model.DMLColumn;
 
@@ -10,13 +11,15 @@ public class SelectQueryBuilder {
 
     private final Table table;
     private final DMLColumn column;
+    private final Where where;
 
-    public SelectQueryBuilder(Table table, DMLColumn column) {
+    public SelectQueryBuilder(Table table, DMLColumn column, Where where) {
         this.table = table;
         this.column = column;
+        this.where = where;
     }
 
-    public String findAll(Class<?> clz) {
+    public String findAllBuild() {
         return String.format(
                 FIND_ALL_QUERY_FORMAT,
                 column.fields(),
@@ -24,12 +27,12 @@ public class SelectQueryBuilder {
         );
     }
 
-    public String build(Class<?> clz, Object id) {
+    public String findByIdBuild(Object id) {
         return String.format(
                 FIND_BY_ID_QUERY_FORMAT,
                 column.fields(),
                 table.name(),
-                column.whereById(id),
+                where.findById(),
                 id
         );
     }

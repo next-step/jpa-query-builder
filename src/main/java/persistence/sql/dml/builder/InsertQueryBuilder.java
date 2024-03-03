@@ -15,7 +15,7 @@ public class InsertQueryBuilder {
         this.column = column;
     }
 
-    public String build(Object entity) {
+    public String build() {
         return String.format(
                 INSERT_QUERY_FORMAT,
                 table.name(),

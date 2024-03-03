@@ -13,30 +13,23 @@ public class Where {
 
     private final Class<?> clz;
 
-    private final Object entity;
+    public Where(Object entity) {
+        this(entity.getClass());
+    }
 
     public Where(Class<?> clz) {
-        this(clz, null);
-    }
-
-    public Where(Object entity) {
-        this(entity.getClass(), entity);
-    }
-
-    public Where(Class<?> clz, Object entity) {
         this.clz = clz;
-        this.entity = entity;
     }
 
-    public String id(Object id) {
+    public String findById() {
         return Arrays.stream(clz.getDeclaredFields())
                 .filter(ColumnUtils::isId)
                 .findAny()
                 .map(Field::getName)
-                .orElseThrow(() -> new IllegalArgumentException(id + " field not exist!"));
+                .orElseThrow(() -> new IllegalArgumentException("field not exist!"));
     }
 
-    public String entity(Value value) {
+    public String findByEntity(Value value) {
         return Arrays.stream(clz.getDeclaredFields())
                 .filter(ColumnUtils::includeColumn)
                 .map(value::clause)
