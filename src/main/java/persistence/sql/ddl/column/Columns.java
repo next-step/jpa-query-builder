@@ -45,8 +45,4 @@ public class Columns {
                 .map(EntityColumn::getName)
                 .collect(Collectors.joining(", "));
     }
-
-    public List<EntityColumn> getColumns() {
-        return columns;
-    }
 }
