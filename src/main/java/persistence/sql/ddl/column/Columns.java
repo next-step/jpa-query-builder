@@ -11,9 +11,8 @@ public class Columns {
     private final List<EntityColumn> columns;
 
     private Columns(List<EntityColumn> columns) {
-        this.columns = columns;
-
         checkHasIdAnnotation(columns);
+        this.columns = columns;
     }
 
     public static Columns from(Class<?> entity) {
