@@ -1,6 +1,6 @@
 package persistence.sql.dialect;
 
-import persistence.sql.core.Column;
+import persistence.sql.metadata.Column;
 
 public interface Dialect {
 

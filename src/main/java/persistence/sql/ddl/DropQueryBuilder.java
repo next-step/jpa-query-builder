@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import persistence.sql.QueryBuilder;
-import persistence.sql.core.Entity;
+import persistence.sql.metadata.Entity;
 
 public class DropQueryBuilder extends QueryBuilder {
 

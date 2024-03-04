@@ -1,4 +1,4 @@
-package persistence.sql.core;
+package persistence.sql.metadata;
 
 import java.beans.Transient;
 import java.lang.annotation.Annotation;

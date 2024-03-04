@@ -1,10 +1,10 @@
 package persistence.sql.ddl;
 
 import persistence.sql.QueryBuilder;
-import persistence.sql.core.Column;
-import persistence.sql.core.Columns;
-import persistence.sql.core.Entity;
-import persistence.sql.core.PrimaryKey;
+import persistence.sql.metadata.Column;
+import persistence.sql.metadata.Columns;
+import persistence.sql.metadata.Entity;
+import persistence.sql.metadata.PrimaryKey;
 
 import java.util.stream.Collectors;
 

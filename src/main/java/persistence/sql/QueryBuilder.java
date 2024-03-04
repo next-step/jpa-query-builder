@@ -2,11 +2,11 @@ package persistence.sql;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.core.Column;
-import persistence.sql.core.Columns;
-import persistence.sql.core.PrimaryKey;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
+import persistence.sql.metadata.Column;
+import persistence.sql.metadata.Columns;
+import persistence.sql.metadata.PrimaryKey;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,13 +23,13 @@ public abstract class QueryBuilder {
 
     public abstract String build();
 
-    protected static List<persistence.sql.core.Column> createColumns(Class<?> clazz, Object entity) {
+    protected static List<persistence.sql.metadata.Column> createColumns(Class<?> clazz, Object entity) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> Objects.nonNull(entity) ? persistence.sql.core.Column.of(field, entity) : persistence.sql.core.Column.of(field)).toList();
+                .map(field -> Objects.nonNull(entity) ? persistence.sql.metadata.Column.of(field, entity) : persistence.sql.metadata.Column.of(field)).toList();
     }
 
-    protected static persistence.sql.core.Column generatePrimaryKey(Class<?> clazz) {
+    protected static persistence.sql.metadata.Column generatePrimaryKey(Class<?> clazz) {
         return createColumns(clazz, null).stream()
                 .filter(column -> column.getAnnotations().stream()
                         .anyMatch(annotation -> annotation.annotationType().equals(Id.class)))

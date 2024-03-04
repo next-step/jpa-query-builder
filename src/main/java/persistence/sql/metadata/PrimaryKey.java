@@ -1,4 +1,4 @@
-package persistence.sql.core;
+package persistence.sql.metadata;
 
 public class PrimaryKey {
 

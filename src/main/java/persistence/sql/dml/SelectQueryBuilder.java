@@ -1,9 +1,9 @@
 package persistence.sql.dml;
 
 import persistence.sql.QueryBuilder;
-import persistence.sql.core.Columns;
-import persistence.sql.core.Entity;
-import persistence.sql.core.PrimaryKey;
+import persistence.sql.metadata.Columns;
+import persistence.sql.metadata.Entity;
+import persistence.sql.metadata.PrimaryKey;
 
 public class SelectQueryBuilder extends QueryBuilder {
 

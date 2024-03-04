@@ -1,9 +1,9 @@
 package persistence.sql.dialect;
 
-import persistence.sql.core.Column;
 import persistence.sql.dialect.constraint.strategy.ColumnConstraintStrategy;
 import persistence.sql.dialect.constraint.strategy.constraint.GeneratedValueConstraint;
 import persistence.sql.dialect.constraint.strategy.constraint.NotNullConstraint;
+import persistence.sql.metadata.Column;
 
 import java.util.HashMap;
 import java.util.List;

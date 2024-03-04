@@ -1,4 +1,4 @@
-package persistence.sql.core;
+package persistence.sql.metadata;
 
 import jakarta.persistence.Table;
 
@@ -36,7 +36,7 @@ public class Entity {
         return name;
     }
 
-    public static String convertCamelCaseToSnakeCase(String input) {
+    private static String convertCamelCaseToSnakeCase(String input) {
         String regex = "([a-z])([A-Z]+)";
         String replacement = "$1_$2";
 
