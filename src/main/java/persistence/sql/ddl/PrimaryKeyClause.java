@@ -2,10 +2,13 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import persistence.entity.exception.InvalidPrimaryKeyException;
 import persistence.sql.exception.NotIdException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Map;
 
 public class PrimaryKeyClause {
@@ -40,6 +43,24 @@ public class PrimaryKeyClause {
         this.name = field.getName();
         this.dataType = field.getType().getSimpleName();
         this.generationType = getType(field);
+    }
+
+    public static Long primaryKeyValue(Object entity ) {
+        Field idField = Arrays.stream(entity.getClass().getDeclaredFields())
+                .filter(x -> x.isAnnotationPresent(Id.class))
+                .findAny()
+                .orElseThrow(InvalidPrimaryKeyException::new);
+
+
+        idField.setAccessible(true);
+        Long id;
+        try {
+            id = (Long) idField.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new InvalidPrimaryKeyException();
+        }
+
+        return id;
     }
 
     public String name() {

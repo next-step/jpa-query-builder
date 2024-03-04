@@ -1,6 +1,9 @@
 # jpa-query-builder
 
 ## Step4 
+- [x] 요구사항 1 -  find
+- [x] 요구사항 2 -  persist (insert)
+- [x] 요구사항 3 -  remove (delete)
 - [x] 3단계 피드백 반영
   - [x] clause를 접미사로 갖도록 클래스명 변경
   - [x] Generic 제거

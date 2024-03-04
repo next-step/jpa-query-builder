@@ -82,7 +82,6 @@ class SelectQueryBuilderTest {
 
         // when
         String query = new SelectQueryBuilder(Person.class).getFindById(1L);
-        jdbcTemplate.query(query, new DtoMapper<Person>(Person.class));
         Person selectedPerson = (Person) jdbcTemplate.queryForObject(query, new DtoMapper<Person>(Person.class));
 
         // then

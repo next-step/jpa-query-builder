@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import persistence.entity.exception.InvalidPrimaryKeyException;
 import persistence.sql.ddl.column.ColumnClauses;
 import persistence.sql.exception.NotIdException;
 
