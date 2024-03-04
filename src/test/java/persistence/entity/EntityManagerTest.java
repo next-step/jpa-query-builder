@@ -15,16 +15,13 @@ import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static persistence.entity.TestFixture.person_철수_id있음;
-import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
+import static persistence.entity.TestFixture.*;
 import static persistence.entity.TestFixture.person_철수;
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE_USERS;
-import static persistence.sql.dml.TestFixture.person_영희;
-import static persistence.sql.dml.TestFixture.person_짱구;
+import static persistence.sql.dml.TestFixture.*;
 
 class EntityManagerTest {
     private static final Logger logger = LoggerFactory.getLogger(EntityManagerTest.class);
@@ -64,9 +61,7 @@ class EntityManagerTest {
         Person actual = entityManager.find(Person.class, 1L);
 
         // then
-        Assertions.assertThat(actual.getName()).isEqualTo(person_철수.getName());
-        Assertions.assertThat(actual.getAge()).isEqualTo(person_철수.getAge());
-        Assertions.assertThat(actual.getEmail()).isEqualTo(person_철수.getEmail());
+        Assertions.assertThat(actual).isEqualTo(person_철수_저장결과);
     }
 
     @Test
@@ -75,9 +70,7 @@ class EntityManagerTest {
         Person actual = (Person) entityManager.persist(person_철수);
 
         // then
-        Assertions.assertThat(actual.getName()).isEqualTo(person_철수.getName());
-        Assertions.assertThat(actual.getAge()).isEqualTo(person_철수.getAge());
-        Assertions.assertThat(actual.getEmail()).isEqualTo(person_철수.getEmail());
+        Assertions.assertThat(actual).isEqualTo(person_철수_저장결과);
     }
 
     @Test
@@ -91,17 +84,11 @@ class EntityManagerTest {
         }
 
         // when
-        entityManager.remove(person_철수_id있음);
+        entityManager.remove(person_철수_저장결과);
 
         // then
         String query = new SelectQueryBuilder(Person.class).getFindAllQuery();
         List<Person> actual = jdbcTemplate.query(query, new DtoMapper<>(Person.class));
-        Assertions.assertThat(actual.get(0).getName()).isEqualTo(person_영희.getName());
-        Assertions.assertThat(actual.get(0).getAge()).isEqualTo(person_영희.getAge());
-        Assertions.assertThat(actual.get(0).getEmail()).isEqualTo(person_영희.getEmail());
-        Assertions.assertThat(actual.get(1).getName()).isEqualTo(person_짱구.getName());
-        Assertions.assertThat(actual.get(1).getAge()).isEqualTo(person_짱구.getAge());
-        Assertions.assertThat(actual.get(1).getEmail()).isEqualTo(person_짱구.getEmail());
-
+        Assertions.assertThat(actual).containsAll(List.of(person_영희_저장결과,person_짱구_저장결과));
     }
 }
