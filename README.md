@@ -161,3 +161,27 @@ public class Person {
 * [x] 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
     * 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
     * @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자
+
+## 🚀 4단계 - Simple Entity Object
+
+### 요구사항
+
+* [ ] 요구사항1 - find
+    * src/main/java > persistence/entity 하위의 EntityManager 인터페이스를 생성 후 구현
+    * ```java
+      // <T> T find(Class<T> clazz, Long Id); 제네릭을 사용해보셔도 됩니다.
+      Person find(Class<Person> clazz, Long id);
+      ```
+* [ ] 요구사항2 - persist (insert)
+    * src/main/java > persistence/entity 하위의 EntityManager 인터페이스를 생성 후 구현
+    * ```java
+        void persist(Object entity);
+        
+        Object persist(Object entity);
+        ```
+
+* [ ] 요구사항3 - remove (delete)
+    * src/main/java > persistence/entity 하위의 EntityManager 인터페이스를 생성 후 구현
+    * ```java
+      void remove(Object entity);
+      ```
