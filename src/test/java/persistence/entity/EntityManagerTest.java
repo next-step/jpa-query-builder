@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 import static persistence.entity.TestFixture.*;
 import static persistence.entity.TestFixture.person_철수;
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE_USERS;
-import static persistence.sql.dml.TestFixture.*;
 
 class EntityManagerTest {
     private static final Logger logger = LoggerFactory.getLogger(EntityManagerTest.class);
@@ -89,6 +88,6 @@ class EntityManagerTest {
         // then
         String query = new SelectQueryBuilder(Person.class).getFindAllQuery();
         List<Person> actual = jdbcTemplate.query(query, new DtoMapper<>(Person.class));
-        Assertions.assertThat(actual).containsAll(List.of(person_영희_저장결과,person_짱구_저장결과));
+        Assertions.assertThat(actual).containsExactlyInAnyOrder(TestFixture.person_영희_저장결과, TestFixture.person_짱구_저장결과);
     }
 }
