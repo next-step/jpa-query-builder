@@ -1,10 +1,10 @@
 package persistence.sql.dialect;
 
+import persistence.sql.core.Column;
 import persistence.sql.dialect.constraint.strategy.ColumnConstraintStrategy;
-import persistence.sql.dialect.constraint.strategy.h2db.H2GeneratedValueConstraintStrategy;
-import persistence.sql.dialect.constraint.strategy.h2db.H2NotNullConstraintStrategy;
+import persistence.sql.dialect.constraint.strategy.constraint.GeneratedValueConstraint;
+import persistence.sql.dialect.constraint.strategy.constraint.NotNullConstraint;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +14,12 @@ import static java.util.Optional.ofNullable;
 
 public class H2Dialect implements Dialect {
 
-    private static final H2Dialect INSTANCE = new H2Dialect();
+    public static final String TYPE_AND_CONSTRAINTS_DELIMITER = " ";
+    public static final String COLUMN_DELIMITER = " ";
 
     private final List<ColumnConstraintStrategy> strategies = List.of(
-            new H2NotNullConstraintStrategy(),
-            new H2GeneratedValueConstraintStrategy()
+            new NotNullConstraint(),
+            new GeneratedValueConstraint()
     );
 
     private static final Map<Class<?>, String> COLUMN_TYPES = new HashMap<>();
@@ -29,26 +30,19 @@ public class H2Dialect implements Dialect {
         COLUMN_TYPES.put(Integer.class, "INTEGER");
     }
 
-    public static H2Dialect getInstance() {
-        return INSTANCE;
-    }
-
     @Override
-    public String generateColumnSql(Field field) {
+    public String build(Column column) {
         String constraints = strategies.stream()
-                .map(strategy -> strategy.generateConstraints(field))
+                .map(strategy -> strategy.generateConstraints(column.getAnnotations()))
                 .filter(constraint -> !constraint.trim().isEmpty())
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.joining(COLUMN_DELIMITER));
 
-        if (!constraints.isEmpty()) {
-            return String.join(" ", generateColumnType(field.getType()), constraints);
-        }
-
-        return generateColumnType(field.getType());
+        return constraints.isBlank() ?
+                generateColumnType(column.getType()) : String.join(TYPE_AND_CONSTRAINTS_DELIMITER, generateColumnType(column.getType()), constraints);
     }
 
-    private String generateColumnType(Class<?> type) {
-        return ofNullable(COLUMN_TYPES.get(type))
+    private String generateColumnType(Class<?> clazz) {
+        return ofNullable(COLUMN_TYPES.get(clazz))
                 .orElseThrow(() -> new IllegalArgumentException("This type is not supported."));
     }
 }

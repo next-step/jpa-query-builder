@@ -1,107 +1,53 @@
 package persistence.sql;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import persistence.sql.core.Column;
+import persistence.sql.core.Columns;
+import persistence.sql.core.PrimaryKey;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dialect.H2Dialect;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public abstract class QueryBuilder {
 
-    private static final String DELIMITER_COMMA = ", ";
-    private final Dialect dialect;
+    public static final String DELIMITER = ", ";
+    public static final String WHERE_CLAUSE_BLANK = "";
+    public static final String WHERE_CLAUSE_TEMPLATE = "WHERE %s = %s";
 
-    public abstract String generateQuery(Class<?> clazz);
+    protected final Dialect DIALECT = new H2Dialect();
 
-    public QueryBuilder(Dialect dialect) {
-        this.dialect = dialect;
-    }
+    public abstract String build();
 
-    protected String whereClause(Class<?> clazz, Object id) {
-        if (Objects.isNull(id)) {
-            return "";
-        }
-
-        Field primaryKey = getPrimaryField(clazz);
-
-        return String.format(" WHERE %s = %d", generateColumnName(primaryKey), id);
-    }
-
-    private static Field getPrimaryField(Class<?> clazz) {
+    protected static List<persistence.sql.core.Column> createColumns(Class<?> clazz, Object entity) {
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(field -> Objects.nonNull(entity) ? persistence.sql.core.Column.of(field, entity) : persistence.sql.core.Column.of(field)).toList();
+    }
+
+    protected static persistence.sql.core.Column generatePrimaryKey(Class<?> clazz) {
+        return createColumns(clazz, null).stream()
+                .filter(column -> column.getAnnotations().stream()
+                        .anyMatch(annotation -> annotation.annotationType().equals(Id.class)))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Id field not found"));
+                .orElse(null);
     }
 
-    protected String generateColumnNames(Field[] fields) {
-        return Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(this::generateColumnName)
-                .collect(Collectors.joining(DELIMITER_COMMA));
-    }
-
-    protected String generateColumnValue(Field field, Object entity) {
-        field.setAccessible(true);
-
-        try {
-            return field.getType().equals(String.class) ? String.format("'%s'", field.get(entity)) : String.valueOf(field.get(entity));
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected String generateColumnsQuery(Field[] fields) {
-        return Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(this::generateColumnQuery)
-                .collect(Collectors.joining(DELIMITER_COMMA));
-    }
-
-    private String generateColumnQuery(Field field) {
-        field.setAccessible(true);
-
-        return String.format("%s %s",
-                generateColumnName(field),
-                dialect.generateColumnSql(field));
-    }
-
-    protected String generateTableName(Class<?> clazz) {
-        Table annotation = clazz.getDeclaredAnnotation(Table.class);
-
-        if (Objects.nonNull(annotation) && !annotation.name().isEmpty()) {
-            return annotation.name();
+    protected String whereClause(PrimaryKey primaryKey, Object id) {
+        if (Objects.isNull(id)) {
+            return WHERE_CLAUSE_BLANK;
         }
 
-        return convertCamelCaseToSnakeCase(clazz.getSimpleName());
+        return String.format(WHERE_CLAUSE_TEMPLATE, primaryKey.getName(), id);
     }
 
-
-    protected String generateColumnName(Field field) {
-        Column annotation = field.getDeclaredAnnotation(Column.class);
-
-        if (Objects.nonNull(annotation) && !annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return convertCamelCaseToSnakeCase(field.getName());
-    }
-
-    public static String convertCamelCaseToSnakeCase(String input) {
-        String regex = "([a-z])([A-Z]+)";
-        String replacement = "$1_$2";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        String result = matcher.replaceAll(replacement);
-
-        return result.toLowerCase();
+    protected String columnsClause(Columns columns) {
+        return columns.getColumns().stream()
+                .map(Column::getName)
+                .collect(Collectors.joining(DELIMITER));
     }
 }

@@ -1,8 +1,9 @@
 package persistence.sql.dialect.constraint.strategy;
 
-import java.lang.reflect.Field;
+import java.lang.annotation.Annotation;
+import java.util.List;
 
 public interface ColumnConstraintStrategy {
 
-    String generateConstraints(Field field);
+    String generateConstraints(List<Annotation> annotations);
 }

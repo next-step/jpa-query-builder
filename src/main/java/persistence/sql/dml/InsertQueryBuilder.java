@@ -1,36 +1,47 @@
 package persistence.sql.dml;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import persistence.sql.QueryBuilder;
-import persistence.sql.dialect.Dialect;
+import persistence.sql.core.Columns;
+import persistence.sql.core.Entity;
+import persistence.sql.core.PrimaryKey;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder extends QueryBuilder {
 
-    public InsertQueryBuilder(Dialect dialect) {
-        super(dialect);
+    public static final String INSERT_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
+    public static final String DELIMITER = ", ";
+    private final Entity entity;
+    private final Columns columns;
+    private final PrimaryKey primaryKey;
+
+    private InsertQueryBuilder(Entity entity, Columns columns, PrimaryKey primaryKey) {
+        this.entity = entity;
+        this.columns = columns;
+        this.primaryKey = primaryKey;
+    }
+
+    public static InsertQueryBuilder of(Object entity) {
+        Class<?> clazz = entity.getClass();
+        return new InsertQueryBuilder(Entity.of(clazz), Columns.of(createColumns(clazz, entity)), PrimaryKey.of(generatePrimaryKey(clazz)));
+    }
+
+    private String valueClause() {
+        return columns.getColumns().stream()
+                .map(column -> this.primaryKey.getName().equals(column.getName()) ? "default" : generateColumnValue(column.getValue()))
+                .collect(Collectors.joining(DELIMITER));
+    }
+
+    private String generateColumnValue(Object object) {
+        if (object instanceof String) {
+            return String.format("'%s'", object);
+        } else {
+            return String.valueOf(object);
+        }
     }
 
     @Override
-    public String generateQuery(Class<?> clazz) {
-        return String.format("INSERT INTO %s (%s) VALUES (%s)", generateTableName(clazz), columnsClause(clazz), valueClause(clazz));
-    }
-
-    private String columnsClause(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .filter(field -> !field.isAnnotationPresent(Id.class))
-                .map(this::generateColumnName)
-                .collect(Collectors.joining(", "));
-    }
-
-    private String valueClause(Object object) {
-        return Arrays.stream(object.getClass().getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> generateColumnValue(field, object))
-                .collect(Collectors.joining(", "));
+    public String build() {
+        return String.format(INSERT_TEMPLATE, entity.getName(), columnsClause(columns), valueClause());
     }
 }
