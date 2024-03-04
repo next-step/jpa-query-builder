@@ -10,15 +10,15 @@ public class Entity {
 
     private final String name;
 
-    private Entity(Class<?> clazz) {
-        this.name = generateTableName(clazz);
+    private Entity(String name) {
+        this.name = name;
     }
 
     public static Entity of(Class<?> clazz) {
-        return new Entity(clazz);
+        return new Entity(generateTableName(clazz));
     }
 
-    private String generateTableName(Class<?> clazz) {
+    private static String generateTableName(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(jakarta.persistence.Entity.class)) {
             throw new IllegalArgumentException("This is not an entity annotation.");
         }
