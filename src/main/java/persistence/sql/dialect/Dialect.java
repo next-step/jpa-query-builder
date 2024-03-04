@@ -1,8 +1,8 @@
 package persistence.sql.dialect;
 
-import java.lang.reflect.Field;
+import persistence.sql.core.Column;
 
 public interface Dialect {
 
-    String generateColumnSql(Field field);
+    String build(Column column);
 }
