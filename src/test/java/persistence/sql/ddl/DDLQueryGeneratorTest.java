@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
-import persistence.meta.service.ClassMetaData;
 import persistence.sql.dialect.H2Dialect;
 
 class DDLQueryGeneratorTest {
@@ -14,7 +13,7 @@ class DDLQueryGeneratorTest {
 
     @BeforeEach
     void setup() {
-        ddlQueryGenerator = new DDLQueryGenerator(new H2Dialect(), ClassMetaData.getInstance());
+        ddlQueryGenerator = new DDLQueryGenerator(new H2Dialect());
     }
 
     @Test

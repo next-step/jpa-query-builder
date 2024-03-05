@@ -5,7 +5,6 @@ import static persistence.sql.Constant.NOT_NULL;
 import static persistence.sql.Constant.WHITE_SPACE;
 
 import java.util.List;
-import persistence.meta.service.ClassMetaData;
 import persistence.meta.vo.EntityField;
 import persistence.meta.vo.EntityId;
 import persistence.meta.vo.EntityMetaData;
@@ -14,15 +13,13 @@ import persistence.sql.dialect.Dialect;
 
 public class DDLQueryGenerator {
     private final Dialect dialect;
-    private final ClassMetaData classMetaData;
 
-    public DDLQueryGenerator(Dialect dialect, ClassMetaData classMetaData) {
+    public DDLQueryGenerator(Dialect dialect) {
         this.dialect = dialect;
-        this.classMetaData = classMetaData;
     }
 
     public String generateCreateTableQuery(Class<?> cls) {
-        EntityMetaData entityMetaData = classMetaData.getEntityMetaData(cls);
+        EntityMetaData entityMetaData = EntityMetaData.createFromClass(cls);
         TableName tableName = entityMetaData.getTableName();
         List<EntityField> entityFields = entityMetaData.getEntityFields();
         EntityId entityId = entityMetaData.getEntityId();
@@ -41,7 +38,7 @@ public class DDLQueryGenerator {
     }
 
     public String generateDropTableQuery(Class<?> cls) {
-        TableName tableName = classMetaData.getEntityMetaData(cls).getTableName();
+        TableName tableName = EntityMetaData.createFromClass(cls).getTableName();
         StringBuilder sb = new StringBuilder();
         sb.append("drop table ").append(tableName.getTableName()).append(" if exists;");
         return sb.toString();
