@@ -26,15 +26,15 @@ public class InsertQueryBuilder {
         this.tableClause = new TableClause(entity);
     }
 
-    public String getInsertQuery(Object instance) {
+    public String getInsertQuery(Object entity) {
 
-        List<Field> fields = Arrays.stream(instance.getClass().getDeclaredFields()).toList();
+        List<Field> fields = Arrays.stream(entity.getClass().getDeclaredFields()).toList();
 
         return String.format(INSERT_QUERY_START, tableClause.name()) +
                 String.join(COMMA, tableClause.columnNames()) +
                 CLOSING_PARENTHESIS +
                 VALUES +
-                String.join(COMMA, new ValueClauses(fields, instance).getQueries()) +
+                String.join(COMMA, new ValueClauses(fields, entity).getQueries()) +
                 CLOSING_PARENTHESIS;
     }
 
@@ -44,15 +44,15 @@ public class InsertQueryBuilder {
             throw new InvalidValueClausesException();
         }
 
-        Object instance;
+        Object entity;
         try {
-            instance = initInstance(columnNames, columValues);
+            entity = initInstance(columnNames, columValues);
         } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | InvocationTargetException |
                  InstantiationException e) {
             throw new IllegalArgumentException("잚못된 요청입니다.");
 
         }
-        return this.getInsertQuery(instance);
+        return this.getInsertQuery(entity);
     }
 
     private Object initInstance(List<String> columnNames, List<Object> columValues)
