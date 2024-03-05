@@ -1,14 +1,13 @@
 package persistence.meta.service;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import persistence.meta.vo.ColumnAnnotationData;
 import persistence.meta.vo.EntityField;
@@ -26,21 +25,15 @@ public class ClassMetaData {
     private ClassMetaData() {
     }
 
-    public TableName getTableName(Class<?> cls) {
-        if (!cls.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Class is not annotated with @Entity");
-        }
-        String tableName = cls.getSimpleName();
-        if (cls.isAnnotationPresent(Table.class)) {
-            Table annotation = cls.getAnnotation(Table.class);
-            if (annotation.name() != null && !annotation.name().isBlank()) {
-                tableName = annotation.name();
-            }
-        }
-        return new TableName(cls.getSimpleName(), tableName);
+    public EntityMetaData getEntityMetaData(Class<?> cls) {
+        return new EntityMetaData(cls, getEntityId(cls), getTableName(cls), getEntityFields(cls));
     }
 
-    public List<EntityField> getEntityFields(Class<?> cls) {
+    private TableName getTableName(Class<?> cls) {
+        return TableName.createFromClass(cls);
+    }
+
+    private List<EntityField> getEntityFields(Class<?> cls) {
         return Arrays.stream(cls.getDeclaredFields())
                      .filter(field -> !field.isAnnotationPresent(Id.class))
                      .filter(field -> !field.isAnnotationPresent(Transient.class))
@@ -48,10 +41,7 @@ public class ClassMetaData {
                      .collect(Collectors.toList());
     }
 
-    public EntityId getEntityId(Class<?> cls) {
-        if (!cls.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Class is not annotated with @Entity");
-        }
+    private EntityId getEntityId(Class<?> cls) {
         List<Field> idAnnotatedFields = Arrays.stream(cls.getDeclaredFields())
                                               .filter(field -> field.isAnnotationPresent(Id.class))
                                               .filter(field -> !field.isAnnotationPresent(Transient.class))
@@ -65,24 +55,27 @@ public class ClassMetaData {
         Field idField = idAnnotatedFields.get(0);
         GeneratedValue generatedValue =
             idField.isAnnotationPresent(GeneratedValue.class) ? idField.getAnnotation(GeneratedValue.class) : null;
-        return new EntityId(idField.getName(), convert(idField), generatedValue);
+        return new EntityId(convert(idField), generatedValue);
     }
 
-    public EntityMetaData getEntityMetaData(Class<?> cls) {
-        return new EntityMetaData(cls, getEntityId(cls), getTableName(cls), getEntityFields(cls));
-    }
 
     private EntityField convert(Field field) {
         return new EntityField(field.getName(), getColumAnnotationData(field), field.getType());
     }
 
-    private ColumnAnnotationData getColumAnnotationData(Field field) {
+    private Optional<ColumnAnnotationData> getColumAnnotationData(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {
-            return null;
+            return Optional.empty();
         }
         Column columnAnnotation = field.getAnnotation(Column.class);
-        String tableFieldName = (columnAnnotation.name() == null || columnAnnotation.name().isBlank())
-            ? field.getName() : columnAnnotation.name();
-        return new ColumnAnnotationData(tableFieldName, columnAnnotation.nullable());
+        return Optional.of(new ColumnAnnotationData(getTableFieldName(field), columnAnnotation.nullable()));
+    }
+
+    private String getTableFieldName(Field field) {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if(columnAnnotation.name() == null || columnAnnotation.name().isBlank()) {
+            return field.getName();
+        }
+        return columnAnnotation.name();
     }
 }

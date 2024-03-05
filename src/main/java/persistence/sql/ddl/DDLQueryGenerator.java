@@ -1,5 +1,9 @@
 package persistence.sql.ddl;
 
+import static persistence.sql.Constant.EMPTY;
+import static persistence.sql.Constant.NOT_NULL;
+import static persistence.sql.Constant.WHITE_SPACE;
+
 import java.util.List;
 import persistence.meta.service.ClassMetaData;
 import persistence.meta.vo.EntityField;
@@ -29,9 +33,7 @@ public class DDLQueryGenerator {
         sb.append(getIdClause(entityId));
         sb.append(",");
         for (EntityField entityField : entityFields) {
-            sb.append(" ");
-            sb.append(getFieldClause(entityField));
-            sb.append(",");
+            fillEntityFieldInCreateTableSQL(entityField, sb);
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append(");");
@@ -39,20 +41,26 @@ public class DDLQueryGenerator {
     }
 
     public String generateDropTableQuery(Class<?> cls) {
-        TableName tableName = classMetaData.getTableName(cls);
+        TableName tableName = classMetaData.getEntityMetaData(cls).getTableName();
         StringBuilder sb = new StringBuilder();
         sb.append("drop table ").append(tableName.getTableName()).append(" if exists;");
         return sb.toString();
     }
 
+    private void fillEntityFieldInCreateTableSQL(EntityField entityField, StringBuilder sb) {
+        sb.append(" ");
+        sb.append(getFieldClause(entityField));
+        sb.append(",");
+    }
+
     private String getFieldClause(EntityField entityField) {
         return entityField.getTableFieldName() + " " + dialect.getFieldType(entityField) + (entityField.isNullable()
-            ? "" : " not null");
+            ? EMPTY : WHITE_SPACE + NOT_NULL);
     }
 
     private String getIdClause(EntityId entityId) {
         return
-            entityId.getEntityField().getTableFieldName() + " " + dialect.getFieldType(entityId.getEntityField())
+            entityId.getTableFieldName() + " " + dialect.getFieldType(entityId.getEntityField())
                 + dialect.getGenerationTypeSql(entityId.getGeneratedValue());
     }
 }
