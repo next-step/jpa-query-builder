@@ -13,11 +13,6 @@ public class H2Dialect implements Dialect {
     );
 
     @Override
-    public void getDialectType() {
-        return;
-    }
-
-    @Override
     public String getFieldType(EntityField entityField) {
         String result = fieldTypeMap.get(entityField.getFieldType());
         if (result == null) {
