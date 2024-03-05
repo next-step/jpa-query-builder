@@ -15,10 +15,14 @@ public class ValueClause {
     }
 
     private static String getValueFromInstance(Field field, Object instance) throws IllegalAccessException {
-        if (String.class.isAssignableFrom(field.getType()) && field.get(instance) != null) {
+        if (isStringField(field, instance)) {
             return APOSTROPHE + field.get(instance) + APOSTROPHE;
         }
         return String.valueOf(field.get(instance));
+    }
+
+    private static boolean isStringField(Field field, Object instance) throws IllegalAccessException {
+        return String.class.isAssignableFrom(field.getType()) && field.get(instance) != null;
     }
 
     private static String getValueFromColumnValue(Field field, Object instance) throws IllegalAccessException {
