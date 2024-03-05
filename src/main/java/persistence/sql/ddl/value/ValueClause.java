@@ -25,13 +25,6 @@ public class ValueClause {
         return String.class.isAssignableFrom(field.getType()) && field.get(instance) != null;
     }
 
-    private static String getValueFromColumnValue(Field field, Object instance) throws IllegalAccessException {
-        if (String.class.isAssignableFrom(field.getType())) {
-            return APOSTROPHE + instance + APOSTROPHE;
-        }
-        return String.valueOf(field.get(instance));
-    }
-
     public String value() {
         return this.value;
     }
