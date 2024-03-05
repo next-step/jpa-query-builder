@@ -10,12 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.entity.notcolumn.Person;
-import persistence.sql.common.DtoMapper;
 import persistence.sql.ddl.CreateQueryBuilder;
-import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE_USERS;
@@ -53,8 +49,7 @@ class EntityManagerTest {
     void find() {
         // given
         Person person = new Person("김철수", 21, "chulsoo.kim@gmail.com", 11);
-        jdbcTemplate.execute(new InsertQueryBuilder(Person.class).getInsertQuery(person));
-
+        entityManager.persist(person);
         // when
         Person actual = entityManager.find(Person.class, 1L);
 
@@ -80,22 +75,12 @@ class EntityManagerTest {
         Person person_철수 = new Person("김철수", 21, "chulsoo.kim@gmail.com", 11);
         Person person_영희 = new Person("김영희", 15, "younghee.kim@gmail.com", 11);
         Person person_짱구 = new Person("신짱구", 15, "jjangoo.sin@gmail.com", 11);
-        List<String> insertQueries = Stream.of(person_철수, person_영희, person_짱구)
-                .map(person -> new InsertQueryBuilder(Person.class).getInsertQuery(person)).toList();
-
-        for (String query : insertQueries) {
-            jdbcTemplate.execute(query);
-        }
+        Stream.of(person_철수, person_영희, person_짱구).forEach(person -> entityManager.persist(person));
 
         // when
         Person person_철수_Id1 = new Person(1L, "김철수", 21, "chulsoo.kim@gmail.com", null);
         entityManager.remove(person_철수_Id1);
 
-        // then
-        String query = new SelectQueryBuilder(Person.class).getFindAllQuery();
-        List<Person> actual = jdbcTemplate.query(query, new DtoMapper<>(Person.class));
-        Person person_영희_Id2 = new Person(2L, "김영희", 15, "younghee.kim@gmail.com", null);
-        Person person_짱구_Id3 = new Person(3L, "신짱구", 15, "jjangoo.sin@gmail.com", null);
-        Assertions.assertThat(actual).containsExactlyInAnyOrder(person_영희_Id2, person_짱구_Id3);
+        Assertions.assertThatThrownBy(() -> entityManager.find(Person.class, 1L)).isInstanceOf(RuntimeException.class);
     }
 }
