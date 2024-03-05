@@ -1,22 +1,11 @@
 package persistence.entity;
 
-import database.DatabaseServer;
-import database.H2;
-import jakarta.persistence.Id;
 import jdbc.JdbcTemplate;
-import persistence.entity.exception.InvalidPrimaryKeyException;
 import persistence.sql.common.DtoMapper;
-import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.PrimaryKeyClause;
-import persistence.sql.ddl.TableClause;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
-
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Arrays;
 
 public class EntityManagerImpl<T> implements EntityManager<T>{
 
