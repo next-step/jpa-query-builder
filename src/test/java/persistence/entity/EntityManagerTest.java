@@ -25,7 +25,7 @@ class EntityManagerTest {
     DatabaseServer server;
     private JdbcTemplate jdbcTemplate;
 
-    EntityManager<Person> entityManager;
+    EntityManager entityManager;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +33,7 @@ class EntityManagerTest {
             server = new H2();
             server.start();
             jdbcTemplate = new JdbcTemplate(server.getConnection());
-            entityManager = new EntityManagerImpl<>(jdbcTemplate);
+            entityManager = new EntityManagerImpl(jdbcTemplate);
 
             jdbcTemplate.execute(new CreateQueryBuilder(Person.class).getQuery());
         } catch (Exception e) {
