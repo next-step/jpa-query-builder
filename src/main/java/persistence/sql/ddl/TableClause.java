@@ -39,11 +39,13 @@ public class TableClause {
 
 
     private static ColumnClauses extractColumnsFrom(Class<?> entity) {
-        List<Field> fields = Arrays.stream(entity.getDeclaredFields())
-                .filter(x -> !x.isAnnotationPresent(jakarta.persistence.Id.class))
-                .toList();
+        return new ColumnClauses(getColumnsFrom(entity));
+    }
 
-        return new ColumnClauses(fields);
+    private static List<Field> getColumnsFrom(Class<?> entity) {
+        return Arrays.stream(entity.getDeclaredFields())
+                .filter(x -> !x.isAnnotationPresent(Id.class))
+                .toList();
     }
 
     private static PrimaryKeyClause extractIdFrom(Class<?> entity) {
