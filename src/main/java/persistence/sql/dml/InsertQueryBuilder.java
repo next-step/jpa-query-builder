@@ -2,7 +2,6 @@ package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
 import persistence.sql.ddl.TableClause;
-import persistence.sql.ddl.column.ColumnClauses;
 import persistence.sql.ddl.value.ValueClauses;
 import persistence.sql.exception.InvalidEntityException;
 import persistence.sql.exception.InvalidValueClausesException;

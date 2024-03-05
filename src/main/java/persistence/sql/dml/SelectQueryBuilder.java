@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import persistence.sql.ddl.TableClause;
 import persistence.sql.exception.InvalidEntityException;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class SelectQueryBuilder {
     public static final String SELECT_ALL_QUERY = "SELECT * FROM %s";
     public static final String SELECT_BY_ID_QUERY = "SELECT * FROM %s WHERE %s = %d";

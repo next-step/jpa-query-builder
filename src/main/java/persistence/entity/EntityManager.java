@@ -1,7 +1,5 @@
 package persistence.entity;
 
-import org.h2.mvstore.type.ObjectDataType;
-
 public interface EntityManager<T> {
     /**
      * 조회
