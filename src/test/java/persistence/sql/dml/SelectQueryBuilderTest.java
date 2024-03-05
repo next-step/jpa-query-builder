@@ -14,12 +14,10 @@ import org.slf4j.LoggerFactory;
 import persistence.entity.notcolumn.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static persistence.sql.ddl.common.TestSqlConstant.DROP_TABLE;
-import static persistence.sql.dml.TestFixture.*;
 
 class SelectQueryBuilderTest {
     private static final Logger logger = LoggerFactory.getLogger(SelectQueryBuilderTest.class);
@@ -51,7 +49,10 @@ class SelectQueryBuilderTest {
         // given
         jdbcTemplate.execute(new CreateQueryBuilder(Person.class).getQuery());
 
-        List<String> insertQueries = Stream.of(person_철수, person_영희, person_짱구)
+        List<String> insertQueries = Stream.of(
+                new Person("김철수", 21, "chulsoo.kim@gmail.com", 11),
+                        new Person("김영희", 15, "younghee.kim@gmail.com", 11),
+                        new Person("신짱구", 15, "jjangoo.sin@gmail.com", 11))
                 .map(person -> new InsertQueryBuilder(Person.class).getInsertQuery(person)).toList();
 
         for (String query : insertQueries) {
@@ -73,7 +74,10 @@ class SelectQueryBuilderTest {
         // given
         jdbcTemplate.execute(new CreateQueryBuilder(Person.class).getQuery());
 
-        List<String> insertQueries = Stream.of(person_철수, person_영희, person_짱구)
+        List<String> insertQueries = Stream.of(
+                new Person("김철수", 21, "chulsoo.kim@gmail.com", 11),
+                        new Person("김영희", 15, "younghee.kim@gmail.com", 11),
+                        new Person("신짱구", 15, "jjangoo.sin@gmail.com", 11))
                 .map(person -> new InsertQueryBuilder(Person.class).getInsertQuery(person)).toList();
 
         for (String query : insertQueries) {
@@ -82,7 +86,7 @@ class SelectQueryBuilderTest {
 
         // when
         String query = new SelectQueryBuilder(Person.class).getFindById(1L);
-        Person selectedPerson = (Person) jdbcTemplate.queryForObject(query, new DtoMapper<Person>(Person.class));
+        Person selectedPerson = jdbcTemplate.queryForObject(query, new DtoMapper<>(Person.class));
 
         // then
         Assertions.assertThat(selectedPerson.getId()).isEqualTo(1L);

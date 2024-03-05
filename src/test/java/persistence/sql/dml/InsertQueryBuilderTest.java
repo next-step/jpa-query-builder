@@ -4,13 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.notcolumn.Person;
-import persistence.sql.ddl.column.ColumnClauses;
-import persistence.sql.dml.InsertQueryBuilder;
-
-import java.lang.reflect.Field;
 import java.util.List;
-
-import static persistence.sql.dml.TestFixture.person_철수;
 
 class InsertQueryBuilderTest {
     @Test
@@ -19,7 +13,7 @@ class InsertQueryBuilderTest {
         //given
         String expectedQuery = "INSERT INTO users (nick_name,old,email) VALUES ('김철수',21,'chulsoo.kim@gmail.com')";
         // when
-        String actualQuery = new InsertQueryBuilder(Person.class).getInsertQuery(person_철수);
+        String actualQuery = new InsertQueryBuilder(Person.class).getInsertQuery(new Person("김철수", 21, "chulsoo.kim@gmail.com", 11));
 
         // then
         Assertions.assertThat(actualQuery).isEqualTo(expectedQuery);
