@@ -20,7 +20,6 @@ public class ClassFieldTranslator implements ClassComponentTranslator<ClassField
     @Override
     public List<DBColumn> invoke(List<ClassField> classFields) {
         return classFields.stream()
-                .filter(field -> !field.hasTransientAnnotation())
                 .map(field -> new DBColumn(field.getColumnName(), JAVA_CLASS_FIELD_TYPE_TO_DB_TYPE.get(field.getType()), field.hasIdAnnotation(), field.hasIdentityTypeGeneratedValueAnnotation(), !field.hasNotNullColumnAnnotation()))
                 .collect(Collectors.toList());
     }
