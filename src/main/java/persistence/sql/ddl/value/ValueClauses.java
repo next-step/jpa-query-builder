@@ -2,18 +2,20 @@ package persistence.sql.ddl.value;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.value.ValueClause;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class Values {
+public class ValueClauses {
     private final List<ValueClause> values;
-    public Values(List<Field> fields, Object value) {
+    public ValueClauses(List<Field> fields, Object entity) {
         this.values = fields.stream()
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .filter(field -> !field.isAnnotationPresent(Id.class))
-                .map(field -> new ValueClause(field, value)).toList();
+                .filter(ValueClauses::isColumn)
+                .map(field -> new ValueClause(field, entity)).toList();
+    }
+
+    private static boolean isColumn(Field field) {
+        return !field.isAnnotationPresent(Transient.class) && !field.isAnnotationPresent(Id.class);
     }
 
     public List<String> getQueries() {

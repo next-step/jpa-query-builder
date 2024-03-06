@@ -29,7 +29,7 @@ class CreateQueryBuilderTest {
                 "email VARCHAR(30) NOT NULL");
 
         // when
-        List<String> actualColumnQueries = new Table(persistence.entity.notcolumn.Person.class).columnQueries();
+        List<String> actualColumnQueries = new TableClause(persistence.entity.notcolumn.Person.class).columnQueries();
 
         // then
         Assertions.assertThat(expectedColumnQueries.containsAll(actualColumnQueries)).isTrue();

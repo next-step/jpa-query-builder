@@ -7,17 +7,17 @@ import static persistence.sql.common.SqlConstant.*;
 
 public class CreateQueryBuilder {
     public static final String CREATE_TABLE_START = "CREATE TABLE IF NOT EXISTS %s ";
-    private final Table table;
+    private final TableClause tableClause;
 
     public CreateQueryBuilder(Class<?> entity) {
         if (!entity.isAnnotationPresent(Entity.class)) {
             throw new InvalidEntityException();
         }
-        this.table = new Table(entity);
+        this.tableClause = new TableClause(entity);
     }
 
     public String getQuery() {
-        return String.format(CREATE_TABLE_START, table.name()) +
+        return String.format(CREATE_TABLE_START, tableClause.name()) +
                 OPENING_PARENTHESIS +
                 getIdQuery() +
                 getColumnQuery() +
@@ -25,10 +25,10 @@ public class CreateQueryBuilder {
     }
 
     private String getIdQuery() {
-        return table.createQuery() + COMMA;
+        return tableClause.createQuery() + COMMA;
     }
 
     private String getColumnQuery() {
-        return String.join(COMMA, table.columnQueries());
+        return String.join(COMMA, tableClause.columnQueries());
     }
 }

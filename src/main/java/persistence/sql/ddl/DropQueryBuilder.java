@@ -5,15 +5,15 @@ import persistence.sql.exception.InvalidEntityException;
 
 public class DropQueryBuilder {
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS %s";
-    private final Table table;
+    private final TableClause tableClause;
 
     public DropQueryBuilder(Class<?> entity) {
         if (!entity.isAnnotationPresent(Entity.class)) {
             throw new InvalidEntityException();
         }
-        this.table = new Table(entity);
+        this.tableClause = new TableClause(entity);
     }
     public String getQuery() {
-        return String.format(DROP_TABLE, table.name());
+        return String.format(DROP_TABLE, tableClause.name());
     }
 }

@@ -1,53 +1,71 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
-import persistence.sql.ddl.Table;
-import persistence.sql.ddl.column.ColumnClause;
-import persistence.sql.ddl.column.Columns;
-import persistence.sql.ddl.value.ValueClause;
-import persistence.sql.ddl.value.Values;
+import persistence.sql.ddl.TableClause;
+import persistence.sql.ddl.value.ValueClauses;
 import persistence.sql.exception.InvalidEntityException;
+import persistence.sql.exception.InvalidValueClausesException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
 import static persistence.sql.common.SqlConstant.CLOSING_PARENTHESIS;
 import static persistence.sql.common.SqlConstant.COMMA;
 
-public class InsertQueryBuilder<T> {
+public class InsertQueryBuilder {
     public static final String INSERT_QUERY_START = "INSERT INTO %s (";
     public static final String VALUES = " VALUES (";
-    private final Table table;
+    private final TableClause tableClause;
 
     public InsertQueryBuilder(Class<?> entity) {
         if (!entity.isAnnotationPresent(Entity.class)) {
             throw new InvalidEntityException();
         }
-        this.table = new Table(entity);
+        this.tableClause = new TableClause(entity);
     }
 
-    public String getInsertQuery(T target) {
+    public String getInsertQuery(Object entity) {
 
-        List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
+        List<Field> fields = Arrays.stream(entity.getClass().getDeclaredFields()).toList();
 
-        return String.format(INSERT_QUERY_START, table.name()) +
-                String.join(COMMA, table.columnNames()) +
+        return String.format(INSERT_QUERY_START, tableClause.name()) +
+                String.join(COMMA, tableClause.columnNames()) +
                 CLOSING_PARENTHESIS +
                 VALUES +
-                String.join(COMMA, new Values(fields, target).getQueries()) +
+                String.join(COMMA, new ValueClauses(fields, entity).getQueries()) +
                 CLOSING_PARENTHESIS;
     }
 
-    public String getInsertQuery(T target, Columns colums, Values values) {
+    public String getInsertQuery(List<String> columnNames, List<Object> columValues) {
 
-        List<Field> fields = Arrays.stream(target.getClass().getDeclaredFields()).toList();
+        if (columnNames.size() != columValues.size()) {
+            throw new InvalidValueClausesException();
+        }
 
-        return String.format(INSERT_QUERY_START, table.name()) +
-                String.join(COMMA, colums.getQueries()) +
-                CLOSING_PARENTHESIS +
-                VALUES +
-                String.join(COMMA, values.getQueries()) +
-                CLOSING_PARENTHESIS;
+        Object entity;
+        try {
+            entity = initInstance(columnNames, columValues);
+        } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+                 InstantiationException e) {
+            throw new IllegalArgumentException("잚못된 요청입니다.");
+
+        }
+        return this.getInsertQuery(entity);
+    }
+
+    private Object initInstance(List<String> columnNames, List<Object> columValues)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+            NoSuchFieldException {
+        Object instance;
+        instance = tableClause.newInstance();
+
+        for (int i = 0; i < columnNames.size(); i++) {
+            Field field = instance.getClass().getDeclaredField(columnNames.get(i));
+            field.setAccessible(true);
+            field.set(instance, columValues.get(i));
+        }
+        return instance;
     }
 }

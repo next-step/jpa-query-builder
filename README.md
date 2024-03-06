@@ -1,5 +1,13 @@
 # jpa-query-builder
 
+## Step4 
+- [x] 요구사항 1 -  find
+- [x] 요구사항 2 -  persist (insert)
+- [x] 요구사항 3 -  remove (delete)
+- [x] 3단계 피드백 반영
+  - [x] clause를 접미사로 갖도록 클래스명 변경
+  - [x] Generic 제거
+  - [x] 테스트 코드 추가, 테스트가 용이하도록 코드 변경
 ## Step3
 - [x] 요구사항 1 - insert 쿼리 구현하기
 - [x] 요구사항 2 - findAll 기능 구현하기

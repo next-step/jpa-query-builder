@@ -2,13 +2,16 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import persistence.entity.exception.InvalidPrimaryKeyException;
 import persistence.sql.exception.NotIdException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Map;
 
-public class PrimaryKey {
+public class PrimaryKeyClause {
     public static final String ID_AUTO_INCREMENT = "%s %s AUTO_INCREMENT PRIMARY KEY";
     public static Map<GenerationType, String> sqlMap = Map.of(
             GenerationType.AUTO, ID_AUTO_INCREMENT,
@@ -33,13 +36,29 @@ public class PrimaryKey {
     private final String dataType;
     private final GenerationType generationType;
 
-    public PrimaryKey(Field field) {
+    public PrimaryKeyClause(Field field) {
         if (!field.isAnnotationPresent(jakarta.persistence.Id.class)) {
             throw new NotIdException();
         }
         this.name = field.getName();
         this.dataType = field.getType().getSimpleName();
         this.generationType = getType(field);
+    }
+
+    public static Long primaryKeyValue(Object entity ) {
+        Field idField = Arrays.stream(entity.getClass().getDeclaredFields())
+                .filter(x -> x.isAnnotationPresent(Id.class))
+                .findAny()
+                .orElseThrow(InvalidPrimaryKeyException::new);
+
+
+        idField.setAccessible(true);
+
+        try {
+            return (Long) idField.get(entity);
+        } catch (IllegalAccessException e) {
+            throw new InvalidPrimaryKeyException();
+        }
     }
 
     public String name() {
