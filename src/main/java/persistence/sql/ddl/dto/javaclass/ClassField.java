@@ -43,10 +43,7 @@ public class ClassField {
     }
 
     public boolean hasIdentityTypeGeneratedValueAnnotation() {
-        if (generatedValueAnnotation != null && generatedValueAnnotation.strategy() == IDENTITY) {
-            return true;
-        }
-        return false;
+        return generatedValueAnnotation != null && generatedValueAnnotation.strategy() == IDENTITY;
     }
 
     public boolean hasNotNullColumnAnnotation() {
