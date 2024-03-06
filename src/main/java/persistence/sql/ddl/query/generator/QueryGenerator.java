@@ -7,7 +7,7 @@ import java.util.List;
 
 public class QueryGenerator {
 
-    public static String generateCreateTableSql(TableName tableName, List<DBColumn> dbColumns) {
+    public String generateCreateTableSql(TableName tableName, List<DBColumn> dbColumns) {
         StringBuilder sql = new StringBuilder();
         sql.append(String.format("create table %s (\n", tableName.getName()));
 
@@ -22,11 +22,11 @@ public class QueryGenerator {
         return sql.toString();
     }
 
-    public static String generateDropTableSql(TableName tableName) {
+    public String generateDropTableSql(TableName tableName) {
         return String.format("drop table %s", tableName.getName());
     }
 
-    private static String generateColumnSql(DBColumn dbColumn) {
+    private String generateColumnSql(DBColumn dbColumn) {
         StringBuilder columnSql = new StringBuilder();
         columnSql.append(String.format("    %s %s", dbColumn.getName(), dbColumn.getType()));
 
