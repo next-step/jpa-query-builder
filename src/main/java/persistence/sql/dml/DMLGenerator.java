@@ -19,8 +19,9 @@ public class DMLGenerator {
 
     public String generateInsert(Object entity) {
         Table table = Table.from(entity.getClass());
+        ValueClause valueClause = new ValueClause(entity);
 
-        return String.format(INSERT_QUERY, table.getName(), table.getColumnsClause(), ValueClause.getValueClause(entity));
+        return String.format(INSERT_QUERY, table.getName(), table.getColumnsClause(), valueClause.getValueClause());
     }
 
     public String generateFindAll() {
@@ -39,9 +40,8 @@ public class DMLGenerator {
 
     public String generateDelete(Object entity) {
         TableName tableName = TableName.from(this.entity);
+        WhereClause whereClause = new WhereClause(entity);
 
-        String whereClause = WhereClause.getWhereClause(entity);
-
-        return String.format(DELETE_QUERY, tableName.getName(), " where " + whereClause);
+        return String.format(DELETE_QUERY, tableName.getName(), " where " + whereClause.getWhereClause());
     }
 }

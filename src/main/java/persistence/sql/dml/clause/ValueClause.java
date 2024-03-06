@@ -10,18 +10,21 @@ import java.util.stream.Collectors;
 
 public class ValueClause {
 
-    private ValueClause() {
+    private final Object entity;
+
+    public ValueClause(Object entity) {
+        this.entity = entity;
     }
 
-    public static String getValueClause(Object entity) {
+    public String getValueClause() {
         return Arrays.stream(entity.getClass().getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Id.class))
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> getValueClause(field, entity))
+                .map(this::getFieldValue)
                 .collect(Collectors.joining(", "));
     }
 
-    private static String getValueClause(Field field, Object entity) {
+    private String getFieldValue(Field field) {
         field.setAccessible(true);
 
         try {

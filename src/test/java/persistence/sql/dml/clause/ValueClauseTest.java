@@ -11,9 +11,10 @@ class ValueClauseTest {
     void getValueClause() {
         // given
         PersonForValueClauseTest person = new PersonForValueClauseTest("name", 26, "email", 1);
+        ValueClause valueClause = new ValueClause(person);
 
         // when
-        String result = ValueClause.getValueClause(person);
+        String result = valueClause.getValueClause();
 
         // then
         assertThat(result).contains("'name', 26, 'email'");

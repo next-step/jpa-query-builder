@@ -11,9 +11,8 @@ public class Columns {
     private final List<EntityColumn> columns;
 
     private Columns(List<EntityColumn> columns) {
-        this.columns = columns;
-
         checkHasIdAnnotation(columns);
+        this.columns = columns;
     }
 
     public static Columns from(Class<?> entity) {
@@ -45,9 +44,5 @@ public class Columns {
                 .filter(column -> !column.hasId())
                 .map(EntityColumn::getName)
                 .collect(Collectors.joining(", "));
-    }
-
-    public List<EntityColumn> getColumns() {
-        return columns;
     }
 }
