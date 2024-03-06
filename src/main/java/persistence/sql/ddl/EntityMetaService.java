@@ -1,12 +1,11 @@
-package persistence.sql.ddl.query.builder;
+package persistence.sql.ddl;
 
-import persistence.sql.ddl.ClassComponentType;
-import persistence.sql.ddl.dto.db.DBColumn;
-import persistence.sql.ddl.dto.db.TableName;
+import persistence.sql.ddl.dto.db.Column;
+import persistence.sql.ddl.dto.db.Table;
 import persistence.sql.ddl.loader.ClassComponentLoader;
 import persistence.sql.ddl.loader.ClassFieldLoader;
 import persistence.sql.ddl.loader.ClassNameLoader;
-import persistence.sql.ddl.query.generator.QueryGenerator;
+import persistence.sql.ddl.query.QueryBuilder;
 import persistence.sql.ddl.translator.ClassComponentTranslator;
 import persistence.sql.ddl.translator.ClassFieldTranslator;
 import persistence.sql.ddl.translator.ClassNameTranslator;
@@ -14,7 +13,7 @@ import persistence.sql.ddl.translator.ClassNameTranslator;
 import java.util.List;
 import java.util.Map;
 
-public class QueryBuilder {
+public class EntityMetaService {
 
     private static final Map<ClassComponentType, ClassComponentLoader> CLASS_COMPONENT_LOADERS = Map.of(
             ClassComponentType.CLASS_NAME, new ClassNameLoader(),
@@ -26,21 +25,21 @@ public class QueryBuilder {
             ClassComponentType.CLASS_FIELD, new ClassFieldTranslator()
     );
 
-    private final QueryGenerator queryGenerator;
+    private final QueryBuilder queryBuilder;
 
-    public QueryBuilder(QueryGenerator queryGenerator) {
-        this.queryGenerator = queryGenerator;
+    public EntityMetaService(QueryBuilder queryBuilder) {
+        this.queryBuilder = queryBuilder;
     }
 
     public String generateCreateTableQuery(Class<?> clazz) {
-        TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz);
-        List<DBColumn> dbColumns = (List<DBColumn>) invoke(ClassComponentType.CLASS_FIELD, clazz);
-        return queryGenerator.generateCreateTableSql(tableName, dbColumns);
+        Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
+        List<Column> columns = (List<Column>) invoke(ClassComponentType.CLASS_FIELD, clazz);
+        return queryBuilder.generateCreateTableSql(table, columns);
     }
 
     public String generateDropTableQuery(Class<?> clazz) {
-        TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz);
-        return queryGenerator.generateDropTableSql(tableName);
+        Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
+        return queryBuilder.generateDropTableSql(table);
     }
 
     private Object invoke(ClassComponentType type, Class<?> clazz) {

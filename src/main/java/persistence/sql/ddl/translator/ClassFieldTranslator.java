@@ -2,14 +2,14 @@ package persistence.sql.ddl.translator;
 
 import persistence.sql.ddl.ClassComponentType;
 import persistence.sql.ddl.dto.javaclass.ClassField;
-import persistence.sql.ddl.dto.db.DBColumn;
+import persistence.sql.ddl.dto.db.Column;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ClassFieldTranslator implements ClassComponentTranslator<List<ClassField>, List<DBColumn>> {
+public class ClassFieldTranslator implements ClassComponentTranslator<List<ClassField>, List<Column>> {
 
     private static final Map<? extends Class<? extends Serializable>, String> JAVA_CLASS_FIELD_TYPE_TO_DB_TYPE = Map.of(
             Long.class, "BIGINT",
@@ -18,9 +18,9 @@ public class ClassFieldTranslator implements ClassComponentTranslator<List<Class
     );
 
     @Override
-    public List<DBColumn> invoke(List<ClassField> classFields) {
+    public List<Column> invoke(List<ClassField> classFields) {
         return classFields.stream()
-                .map(field -> new DBColumn(field.getColumnName(), JAVA_CLASS_FIELD_TYPE_TO_DB_TYPE.get(field.getType()), field.hasIdAnnotation(), field.hasIdentityTypeGeneratedValueAnnotation(), !field.hasNotNullColumnAnnotation()))
+                .map(field -> new Column(field.getColumnName(), JAVA_CLASS_FIELD_TYPE_TO_DB_TYPE.get(field.getType()), field.hasIdAnnotation(), field.hasIdentityTypeGeneratedValueAnnotation(), !field.hasNotNullColumnAnnotation()))
                 .collect(Collectors.toList());
     }
 
