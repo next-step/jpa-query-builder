@@ -26,25 +26,25 @@ public class QueryBuilder {
             ClassComponentType.CLASS_FIELD, new ClassFieldTranslator()
     );
 
-    private QueryGenerator queryGenerator;
+    private final QueryGenerator queryGenerator;
 
     public QueryBuilder(QueryGenerator queryGenerator) {
         this.queryGenerator = queryGenerator;
     }
 
     public String generateCreateTableQuery(Class<?> clazz) {
-        TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz).get(0);
+        TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz);
         List<DBColumn> dbColumns = (List<DBColumn>) invoke(ClassComponentType.CLASS_FIELD, clazz);
         return queryGenerator.generateCreateTableSql(tableName, dbColumns);
     }
 
     public String generateDropTableQuery(Class<?> clazz) {
-        TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz).get(0);
+        TableName tableName = (TableName) invoke(ClassComponentType.CLASS_NAME, clazz);
         return queryGenerator.generateDropTableSql(tableName);
     }
 
-    private List<?> invoke(ClassComponentType type, Class<?> clazz) {
-        List loaded = CLASS_COMPONENT_LOADERS.get(type).invoke(clazz);
+    private Object invoke(ClassComponentType type, Class<?> clazz) {
+        Object loaded = CLASS_COMPONENT_LOADERS.get(type).invoke(clazz);
         return CLASS_COMPONENT_TRANSLATORS.get(type).invoke(loaded);
     }
 }

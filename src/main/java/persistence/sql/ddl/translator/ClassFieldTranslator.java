@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ClassFieldTranslator implements ClassComponentTranslator<ClassField, DBColumn> {
+public class ClassFieldTranslator implements ClassComponentTranslator<List<ClassField>, List<DBColumn>> {
 
     private static final Map<? extends Class<? extends Serializable>, String> JAVA_CLASS_FIELD_TYPE_TO_DB_TYPE = Map.of(
             Long.class, "BIGINT",

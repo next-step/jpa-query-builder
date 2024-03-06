@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ClassFieldLoader implements ClassComponentLoader<ClassField> {
+public class ClassFieldLoader implements ClassComponentLoader<List<ClassField>> {
 
     @Override
     public List<ClassField> invoke(Class<?> clazz) {
