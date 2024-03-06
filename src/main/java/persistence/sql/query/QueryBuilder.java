@@ -1,7 +1,7 @@
-package persistence.sql.ddl.query;
+package persistence.sql.query;
 
-import persistence.sql.ddl.dto.db.Column;
-import persistence.sql.ddl.dto.db.Table;
+import persistence.sql.dto.db.Column;
+import persistence.sql.dto.db.Table;
 
 import java.util.List;
 

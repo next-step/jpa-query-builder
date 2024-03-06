@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dto.db;
+package persistence.sql.dto.db;
 
 public class Column {
 

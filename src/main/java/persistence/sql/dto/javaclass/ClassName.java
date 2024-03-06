@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dto.javaclass;
+package persistence.sql.dto.javaclass;
 
 import jakarta.persistence.Table;
 

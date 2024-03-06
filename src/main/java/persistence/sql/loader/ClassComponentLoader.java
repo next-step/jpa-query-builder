@@ -1,6 +1,6 @@
-package persistence.sql.ddl.loader;
+package persistence.sql.loader;
 
-import persistence.sql.ddl.ClassComponentType;
+import persistence.sql.ClassComponentType;
 
 public interface ClassComponentLoader<R> {
 

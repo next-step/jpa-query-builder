@@ -1,12 +1,13 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.query.QueryBuilder;
+import persistence.sql.query.QueryBuilder;
 import persistence.sql.ddl.targetentity.requirement1.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// TODO: TC 보충
 public class EntityMetaServiceTest {
 
     private EntityMetaService entityMetaService;

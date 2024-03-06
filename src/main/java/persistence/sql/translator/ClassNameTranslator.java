@@ -1,8 +1,8 @@
-package persistence.sql.ddl.translator;
+package persistence.sql.translator;
 
-import persistence.sql.ddl.ClassComponentType;
-import persistence.sql.ddl.dto.javaclass.ClassName;
-import persistence.sql.ddl.dto.db.Table;
+import persistence.sql.ClassComponentType;
+import persistence.sql.dto.javaclass.ClassName;
+import persistence.sql.dto.db.Table;
 
 public class ClassNameTranslator implements ClassComponentTranslator<ClassName, Table> {
 

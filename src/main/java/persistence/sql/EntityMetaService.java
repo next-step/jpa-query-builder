@@ -1,14 +1,14 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
-import persistence.sql.ddl.dto.db.Column;
-import persistence.sql.ddl.dto.db.Table;
-import persistence.sql.ddl.loader.ClassComponentLoader;
-import persistence.sql.ddl.loader.ClassFieldLoader;
-import persistence.sql.ddl.loader.ClassNameLoader;
-import persistence.sql.ddl.query.QueryBuilder;
-import persistence.sql.ddl.translator.ClassComponentTranslator;
-import persistence.sql.ddl.translator.ClassFieldTranslator;
-import persistence.sql.ddl.translator.ClassNameTranslator;
+import persistence.sql.dto.db.Column;
+import persistence.sql.dto.db.Table;
+import persistence.sql.loader.ClassComponentLoader;
+import persistence.sql.loader.ClassFieldLoader;
+import persistence.sql.loader.ClassNameLoader;
+import persistence.sql.query.QueryBuilder;
+import persistence.sql.translator.ClassComponentTranslator;
+import persistence.sql.translator.ClassFieldTranslator;
+import persistence.sql.translator.ClassNameTranslator;
 
 import java.util.List;
 import java.util.Map;

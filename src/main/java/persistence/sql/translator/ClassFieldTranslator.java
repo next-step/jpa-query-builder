@@ -1,8 +1,8 @@
-package persistence.sql.ddl.translator;
+package persistence.sql.translator;
 
-import persistence.sql.ddl.ClassComponentType;
-import persistence.sql.ddl.dto.javaclass.ClassField;
-import persistence.sql.ddl.dto.db.Column;
+import persistence.sql.ClassComponentType;
+import persistence.sql.dto.javaclass.ClassField;
+import persistence.sql.dto.db.Column;
 
 import java.io.Serializable;
 import java.util.List;

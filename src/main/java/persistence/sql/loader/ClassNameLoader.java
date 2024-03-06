@@ -1,9 +1,9 @@
-package persistence.sql.ddl.loader;
+package persistence.sql.loader;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import persistence.sql.ddl.ClassComponentType;
-import persistence.sql.ddl.dto.javaclass.ClassName;
+import persistence.sql.ClassComponentType;
+import persistence.sql.dto.javaclass.ClassName;
 
 public class ClassNameLoader implements ClassComponentLoader<ClassName> {
 

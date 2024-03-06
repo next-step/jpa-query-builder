@@ -1,11 +1,11 @@
-package persistence.sql.ddl.loader;
+package persistence.sql.loader;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.ClassComponentType;
-import persistence.sql.ddl.dto.javaclass.ClassField;
+import persistence.sql.ClassComponentType;
+import persistence.sql.dto.javaclass.ClassField;
 
 import java.util.Arrays;
 import java.util.List;
