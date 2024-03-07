@@ -80,4 +80,13 @@ public class EntityMetaServiceTest {
         // then
         assertThat(result).isEqualTo("insert into users (id, nick_name, old, email) values (1, '유인근', 29, 'keun0390@naver.com')");
     }
+
+    @Test
+    void Person_클래스_정보를_통해_select_all_쿼리_생성() {
+        // when
+        String result = entityMetaService.generateSelectAllQuery(persistence.sql.dml.targetentity.Person.class);
+
+        // then
+        assertThat(result).isEqualTo("select * from users");
+    }
 }
