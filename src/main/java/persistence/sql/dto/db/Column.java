@@ -38,6 +38,10 @@ public class Column {
         return nullable;
     }
 
+    public boolean isVarcharType() {
+        return "VARCHAR".equals(type);
+    }
+
     private void validate(String name, String type) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("DB 컬럼 이름은 비어있을 수 없습니다.");

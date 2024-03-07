@@ -13,6 +13,7 @@ import persistence.sql.translator.ClassNameTranslator;
 import java.util.List;
 import java.util.Map;
 
+// TODO: table, column 정보 캐싱
 public class EntityMetaService {
 
     private static final Map<ClassComponentType, ClassComponentLoader> CLASS_COMPONENT_LOADERS = Map.of(
@@ -34,12 +35,18 @@ public class EntityMetaService {
     public String generateCreateTableQuery(Class<?> clazz) {
         Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
         List<Column> columns = (List<Column>) invoke(ClassComponentType.CLASS_FIELD, clazz);
-        return queryBuilder.generateCreateTableSql(table, columns);
+        return queryBuilder.createTableQuery(table, columns);
     }
 
     public String generateDropTableQuery(Class<?> clazz) {
         Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
-        return queryBuilder.generateDropTableSql(table);
+        return queryBuilder.dropTableQuery(table);
+    }
+
+    public String generateInsertQuery(Class<?> clazz, List<Object> values) {
+        Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
+        List<Column> columns = (List<Column>) invoke(ClassComponentType.CLASS_FIELD, clazz);
+        return queryBuilder.insertQuery(table, columns, values);
     }
 
     private Object invoke(ClassComponentType type, Class<?> clazz) {
