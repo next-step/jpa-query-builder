@@ -1,7 +1,7 @@
 package persistence.sql.query;
 
-import persistence.sql.dto.db.Column;
-import persistence.sql.dto.db.Table;
+import persistence.sql.dto.database.Column;
+import persistence.sql.dto.database.Table;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +30,10 @@ public class QueryBuilder {
 
     public String insertQuery(Table table, List<Column> columns, List<Object> values) {
         return String.format("insert into %s %s values %s", table.getName(), columnsClause(columns), valueClause(columns, values));
+    }
+
+    public String selectAllQuery(Table table) {
+        return String.format("select * from %s", table.getName());
     }
 
     private String columnConstraints(Column column) {

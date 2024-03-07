@@ -2,7 +2,7 @@ package persistence.sql.translator;
 
 import persistence.sql.ClassComponentType;
 import persistence.sql.dto.javaclass.ClassName;
-import persistence.sql.dto.db.Table;
+import persistence.sql.dto.database.Table;
 
 public class ClassNameTranslator implements ClassComponentTranslator<ClassName, Table> {
 

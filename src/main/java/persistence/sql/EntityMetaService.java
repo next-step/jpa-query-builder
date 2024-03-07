@@ -1,7 +1,7 @@
 package persistence.sql;
 
-import persistence.sql.dto.db.Column;
-import persistence.sql.dto.db.Table;
+import persistence.sql.dto.database.Column;
+import persistence.sql.dto.database.Table;
 import persistence.sql.loader.ClassComponentLoader;
 import persistence.sql.loader.ClassFieldLoader;
 import persistence.sql.loader.ClassNameLoader;
@@ -47,6 +47,11 @@ public class EntityMetaService {
         Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
         List<Column> columns = (List<Column>) invoke(ClassComponentType.CLASS_FIELD, clazz);
         return queryBuilder.insertQuery(table, columns, values);
+    }
+
+    public String generateSelectAllQuery(Class<?> clazz) {
+        Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
+        return queryBuilder.selectAllQuery(table);
     }
 
     private Object invoke(ClassComponentType type, Class<?> clazz) {

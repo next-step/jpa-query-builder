@@ -2,7 +2,7 @@ package persistence.sql.translator;
 
 import persistence.sql.ClassComponentType;
 import persistence.sql.dto.javaclass.ClassField;
-import persistence.sql.dto.db.Column;
+import persistence.sql.dto.database.Column;
 
 import java.io.Serializable;
 import java.util.List;
