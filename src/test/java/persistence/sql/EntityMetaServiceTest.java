@@ -1,6 +1,5 @@
 package persistence.sql;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistence.sql.query.QueryBuilder;
 import persistence.sql.ddl.targetentity.requirement1.Person;
@@ -12,12 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // TODO: TC 보충
 public class EntityMetaServiceTest {
 
-    private EntityMetaService entityMetaService;
-
-    @BeforeEach
-    void setUp() {
-        entityMetaService = new EntityMetaService(new QueryBuilder());
-    }
+    private final EntityMetaService entityMetaService = new EntityMetaService(new QueryBuilder());
 
     @Test
     void Person_클래스_정보를_통해_create_쿼리_생성_1() {
