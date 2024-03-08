@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// TODO: table, column 정보 캐싱
+// TODO: clazz 에 해당하는 table, column 정보는 최초 1번만 invoke 후에 캐싱
 public class EntityMetaService {
 
     private static final Map<ClassComponentType, ClassComponentLoader> CLASS_COMPONENT_LOADERS = Map.of(

@@ -8,7 +8,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// TODO: TC 보충
 public class EntityMetaServiceTest {
 
     private final EntityMetaService entityMetaService = new EntityMetaService(new QueryBuilder());
