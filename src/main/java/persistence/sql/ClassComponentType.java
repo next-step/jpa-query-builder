@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 public enum ClassComponentType {
     CLASS_NAME,

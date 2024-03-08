@@ -1,10 +1,10 @@
-package persistence.sql.ddl.dto.db;
+package persistence.sql.dto.database;
 
-public class TableName {
+public class Table {
 
     private final String name;
 
-    public TableName(String name) {
+    public Table(String name) {
         validateName(name);
 
         this.name = name;

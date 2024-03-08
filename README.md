@@ -1,21 +1,16 @@
 # 기능 요구사항
 
 ## 요구사항 1
-- [x] person 클래스 정보에 맞는 create table 쿼리 생성
-  - [x] @Entity 가 붙은 클래스명을 테이블명으로 생성
-  - [x] 클래스 필드를 테이블 컬럼으로 생성
-  - [x] @Id 가 붙은 클래스 필드는 기본키를 가진 테이블 컬럼으로 생성
+- [x] person 클래스 정보에 맞는 insert 구현
+  - [x] columns 과 values 를 나누어서 구현
 
 ## 요구사항 2
-- [x] person 클래스 정보에 맞는 create table 쿼리 생성
-  - [x] @GeneratedValue 가 붙은 클래스 필드는 auto increment 가 설정된 테이블 컬럼으로 생성
-  - [x] @Column 에 name 값이 지정된 클래스 필드는 테이블 컬럼명을 name 값으로 생성
-  - [x] @Column 에 nullable 여부가 지정된 클래스 필드는 테이블 컬럼의 nullable 생성
+- [x] findAll 기능 구현
+  - [x] 쿼리 실행을 통해 데이터가 정상적으로 나오는지 확인
 
 ## 요구사항 3
-- [x] person 클래스 정보에 맞는 create table 쿼리 생성
-    - [x] @Table 에 name 값이 지정된 클래스는 테이블명을 name 값으로 생성 
-    - [x] @Transient 가 붙은 클래스 필드는 테이블 컬럼으로 반영하지 않음
+- [x] findById 기능 구현
+    - [x] where 를 나누어서 구현
 
 ## 요구사항 4
-- [x] person 클래스의 drop 쿼리 생성
+- [x] deleteAll 쿼리 생성

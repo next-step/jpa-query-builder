@@ -1,4 +1,4 @@
-package persistence.sql.ddl.dto.javaclass;
+package persistence.sql.dto.javaclass;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -43,10 +43,7 @@ public class ClassField {
     }
 
     public boolean hasIdentityTypeGeneratedValueAnnotation() {
-        if (generatedValueAnnotation != null && generatedValueAnnotation.strategy() == IDENTITY) {
-            return true;
-        }
-        return false;
+        return generatedValueAnnotation != null && generatedValueAnnotation.strategy() == IDENTITY;
     }
 
     public boolean hasNotNullColumnAnnotation() {

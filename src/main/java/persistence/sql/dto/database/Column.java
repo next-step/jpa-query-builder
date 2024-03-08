@@ -1,6 +1,6 @@
-package persistence.sql.ddl.dto.db;
+package persistence.sql.dto.database;
 
-public class DBColumn {
+public class Column {
 
     private final String name;
     private final String type;
@@ -8,7 +8,7 @@ public class DBColumn {
     private final boolean autoIncrement;
     private final boolean nullable;
 
-    public DBColumn(String name, String type, boolean primaryKey, boolean autoIncrement, boolean nullable) {
+    public Column(String name, String type, boolean primaryKey, boolean autoIncrement, boolean nullable) {
         validate(name, type);
 
         this.name = name;
@@ -36,6 +36,10 @@ public class DBColumn {
 
     public boolean isNullable() {
         return nullable;
+    }
+
+    public boolean isVarcharType() {
+        return "VARCHAR".equals(type);
     }
 
     private void validate(String name, String type) {
