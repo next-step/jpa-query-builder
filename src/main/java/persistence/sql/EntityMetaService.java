@@ -64,6 +64,11 @@ public class EntityMetaService {
         return queryBuilder.selectOneById(table, idColumns, idValues);
     }
 
+    public String generateDeleteAllQuery(Class<?> clazz) {
+        Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
+        return queryBuilder.deleteAllQuery(table);
+    }
+
     private Object invoke(ClassComponentType type, Class<?> clazz) {
         Object loaded = CLASS_COMPONENT_LOADERS.get(type).invoke(clazz);
         return CLASS_COMPONENT_TRANSLATORS.get(type).invoke(loaded);

@@ -51,19 +51,12 @@ public class QueryExecutionTest {
         jdbcTemplate.execute(insertQuery2);
 
         // when
-        String selectAllQuery = entityMetaService.generateSelectAllQuery(Person.class);
-        List<Person> persons = jdbcTemplate.query(selectAllQuery, resultSet -> {
-            String id = resultSet.getString("id");
-            String nickName = resultSet.getString("nick_name");
-            String old = resultSet.getString("old");
-            String email = resultSet.getString("email");
-            return new Person(Long.valueOf(id), nickName, Integer.valueOf(old), email);
-        });
+        List<Person> people = executeSelectAllQuery();
 
         // then
         assertAll(
-                () -> assertThat(persons.get(0)).isEqualTo(new Person(1L, "유인근", 29, "keun0390@naver.com")),
-                () -> assertThat(persons.get(1)).isEqualTo(new Person(2L, "유인근123", 123, "keun123@naver.com"))
+                () -> assertThat(people.get(0)).isEqualTo(new Person(1L, "유인근", 29, "keun0390@naver.com")),
+                () -> assertThat(people.get(1)).isEqualTo(new Person(2L, "유인근123", 123, "keun123@naver.com"))
         );
     }
 
@@ -86,5 +79,32 @@ public class QueryExecutionTest {
 
         // then
         assertThat(person).isEqualTo(new Person(1L, "유인근", 29, "keun0390@naver.com"));
+    }
+
+    @Test
+    void delete_쿼리_실행_테스트() {
+        // given
+        List<Object> values = List.of(1, "유인근", 29, "keun0390@naver.com");
+        String insertQuery = entityMetaService.generateInsertQuery(Person.class, values);
+        jdbcTemplate.execute(insertQuery);
+
+        // when
+        String deleteQuery = entityMetaService.generateDeleteAllQuery(Person.class);
+        jdbcTemplate.execute(deleteQuery);
+        List<Person> people = executeSelectAllQuery();
+
+        // then
+        assertThat(people).isEmpty();
+    }
+
+    private List<Person> executeSelectAllQuery() {
+        String selectAllQuery = entityMetaService.generateSelectAllQuery(Person.class);
+        return jdbcTemplate.query(selectAllQuery, resultSet -> {
+            String id = resultSet.getString("id");
+            String nickName = resultSet.getString("nick_name");
+            String old = resultSet.getString("old");
+            String email = resultSet.getString("email");
+            return new Person(Long.valueOf(id), nickName, Integer.valueOf(old), email);
+        });
     }
 }

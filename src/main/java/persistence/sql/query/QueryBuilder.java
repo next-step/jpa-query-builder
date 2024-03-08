@@ -40,6 +40,10 @@ public class QueryBuilder {
         return String.format("select * from %s %s", table.getName(), whereClause(idColumns, idValues));
     }
 
+    public String deleteAllQuery(Table table) {
+        return String.format("delete from %s", table.getName());
+    }
+
     private String columnConstraints(Column column) {
         StringBuilder columnSql = new StringBuilder();
         columnSql.append(String.format("    %s %s", column.getName(), column.getType()));

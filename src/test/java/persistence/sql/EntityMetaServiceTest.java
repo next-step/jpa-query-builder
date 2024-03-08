@@ -92,4 +92,13 @@ public class EntityMetaServiceTest {
         // then
         assertThat(result).isEqualTo("select * from users where id = 1");
     }
+
+    @Test
+    void Person_클래스_정보를_통해_delete_all_쿼리_생성() {
+        // when
+        String result = entityMetaService.generateDeleteAllQuery(persistence.sql.dml.targetentity.Person.class);
+
+        // then
+        assertThat(result).isEqualTo("delete from users");
+    }
 }
