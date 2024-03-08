@@ -12,6 +12,7 @@ import persistence.sql.translator.ClassNameTranslator;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // TODO: table, column 정보 캐싱
 public class EntityMetaService {
@@ -52,6 +53,15 @@ public class EntityMetaService {
     public String generateSelectAllQuery(Class<?> clazz) {
         Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
         return queryBuilder.selectAllQuery(table);
+    }
+
+    public String generateSelectOneByIdQuery(Class<?> clazz, List<Object> idValues) {
+        Table table = (Table) invoke(ClassComponentType.CLASS_NAME, clazz);
+        List<Column> idColumns = ((List<Column>) invoke(ClassComponentType.CLASS_FIELD, clazz)).stream()
+                .filter(Column::isPrimaryKey)
+                .collect(Collectors.toList());
+
+        return queryBuilder.selectOneById(table, idColumns, idValues);
     }
 
     private Object invoke(ClassComponentType type, Class<?> clazz) {

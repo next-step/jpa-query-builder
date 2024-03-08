@@ -83,4 +83,13 @@ public class EntityMetaServiceTest {
         // then
         assertThat(result).isEqualTo("select * from users");
     }
+
+    @Test
+    void Person_클래스_정보를_통해_select_one_by_id_쿼리_생성() {
+        // when
+        String result = entityMetaService.generateSelectOneByIdQuery(persistence.sql.dml.targetentity.Person.class, List.of(1L));
+
+        // then
+        assertThat(result).isEqualTo("select * from users where id = 1");
+    }
 }

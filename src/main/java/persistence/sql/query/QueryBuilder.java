@@ -36,6 +36,10 @@ public class QueryBuilder {
         return String.format("select * from %s", table.getName());
     }
 
+    public String selectOneById(Table table, List<Column> idColumns, List<Object> idValues) {
+        return String.format("select * from %s %s", table.getName(), whereClause(idColumns, idValues));
+    }
+
     private String columnConstraints(Column column) {
         StringBuilder columnSql = new StringBuilder();
         columnSql.append(String.format("    %s %s", column.getName(), column.getType()));
@@ -70,5 +74,15 @@ public class QueryBuilder {
                     Object value = values.get(index);
                     return column.isVarcharType() ? String.format("'%s'", value) : value.toString();
                 }).collect(Collectors.joining(", ", "(", ")"));
+    }
+
+    private String whereClause(List<Column> columns, List<Object> values) {
+        return IntStream
+                .range(0, columns.size())
+                .mapToObj(index -> {
+                    Column column = columns.get(index);
+                    String value = column.isVarcharType() ? String.format("'%s'", values.get(index)) : values.get(index).toString();
+                    return String.format("%s = %s", column.getName(), value);
+                }).collect(Collectors.joining(", ", "where ", ""));
     }
 }
