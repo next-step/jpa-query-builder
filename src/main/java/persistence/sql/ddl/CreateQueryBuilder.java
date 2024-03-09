@@ -10,7 +10,8 @@ import java.lang.reflect.Field;
 import domain.Person;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 public class CreateQueryBuilder {
 	Map<? extends Class<? extends Serializable>, String> javaClassTypeToDbTypes = Map.of(
@@ -29,59 +30,106 @@ public class CreateQueryBuilder {
 
 		Person person = personClass.getConstructor().newInstance();
 
-		Arrays.stream(personClass.getDeclaredFields())
+		// 목표 출력의 목표를 스트링으로 적는다
+		/*
+			CREATE TABLE person (
+    			id INT AUTO_INCREMENT PRIMARY KEY,
+    			name VARCHAR(50),
+    			age INT,
+    			email VARCHAR(50) NOT NULL,
+    			index INT
+			);
+		 */
+		// 메서드 분리 (3)
+		Field idField = Arrays.stream(getDeclaredFields(personClass))
 			.filter(x -> x.isAnnotationPresent(GeneratedValue.class))
-			.forEach(x -> {
-				x.setAccessible(true);
-				try {
-					Long value = 0L;
-					if (x.getAnnotation(GeneratedValue.class).strategy().equals(GenerationType.IDENTITY)) {
-						value = (Long)x.get(person);
-						x.set(person, value + 1L);
-					}
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
-			});
+			.findFirst().get();
 
-		Arrays.stream(personClass.getDeclaredFields())
-			.filter(x -> x.isAnnotationPresent(Column.class))
-			.forEach(x -> {
-				x.setAccessible(true);
-				try {
-					x.set(person, x.getAnnotation(Column.class).name());
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
-			});
+		String idFieldName = idField.getName();
 
-		Arrays.stream(personClass.getDeclaredFields())
+		String idType = javaClassTypeToDbTypes.get(idField.getType());
+
+		String generatedValue = generateValue();
+
+		String primaryKey = getPrimaryKey();
+
+		String idCombi = String.format("%s %s %s %s,", idFieldName, idType, generatedValue, primaryKey);
+
+		// name VARCHAR(50),
+		Field nameField = Arrays.stream(getDeclaredFields(personClass))
+			.filter(x -> x.isAnnotationPresent(Column.class)).findFirst().get();
+
+		String name = nameField.getName();
+
+		String nameType = javaClassTypeToDbTypes.get(nameField.getType());
+
+		String nameCombi = String.format("%s %s,", name, nameType);
+
+		// age INT,
+		Field ageField = Arrays.stream(getDeclaredFields(personClass))
 			.filter(x -> x.isAnnotationPresent(Column.class))
-			.forEach(x -> {
-				x.setAccessible(true);
-				try {
-					if (!x.getAnnotation(Column.class).nullable()) {
-						if (x.get(person) == null) {
-							throw new RuntimeException();
-						}
-					}
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
-			});
+			.filter(x -> x.getAnnotation(Column.class).name().equals("old"))
+			.findFirst().get();
+		String age = ageField.getName();
+		String ageType = javaClassTypeToDbTypes.get(ageField.getType());
+
+		String ageCombi = String.format("%s %s,", age, ageType);
+
+		// email VARCHAR(50) NOT NULL,
+		Field emailField = Arrays.stream(getDeclaredFields(personClass))
+			.filter(x -> x.isAnnotationPresent(Column.class))
+			.filter(x -> !x.getAnnotation(Column.class).nullable())
+			.findFirst().get();
+		String email = emailField.getName();
+		String emailType = javaClassTypeToDbTypes.get(emailField.getType());
+		boolean isNullable = emailField.getAnnotation(Column.class).nullable();
+
+		String emialNullable = isNull(isNullable);
+
+		String emailCombi = String.format("%s %s %s", email, emailType, emialNullable);
+
+		// index INT
+		Field indexField = Arrays.stream(getDeclaredFields(personClass))
+			.filter(x -> x.isAnnotationPresent(Transient.class))
+			.findFirst().get();
+		String indexCombi = "";
 
 		String tableName = personClass.getSimpleName();
 
-		List<? extends Class<?>> fieldTypes = Arrays.stream(personClass.getDeclaredFields()).map(Field::getType).toList();
+		// List<? extends Class<?>> fieldTypes = Arrays.stream(getDeclaredFields(personClass)).map(Field::getType).toList();
+		//
+		// List<String> fieldNames = Arrays.stream(getDeclaredFields(personClass)).map(Field::getName).toList();
 
-		List<String> fieldNames = Arrays.stream(personClass.getDeclaredFields()).map(Field::getName).toList();
-
-		String createTableSql = String.format("create table %s(%s %s, %s %s, %s %s)",
-			tableName, fieldNames.get(0), javaClassTypeToDbTypes.get(fieldTypes.get(0)),
-			fieldNames.get(1), javaClassTypeToDbTypes.get(fieldTypes.get(1)),
-			fieldNames.get(2), javaClassTypeToDbTypes.get(fieldTypes.get(2))
+		String createTableSql = String.format("create table %s(%s %s %s %s %s)",
+			tableName,
+			idCombi,
+			nameCombi,
+			ageCombi,
+			emailCombi,
+			indexCombi
 		);
 
 		return createTableSql;
+	}
+
+	private String getPrimaryKey() {
+
+		return "PRIMARY KEY";
+	}
+
+	private static Field[] getDeclaredFields(Class<Person> personClass) {
+		return personClass.getDeclaredFields();
+	}
+
+	//  DB에서 가져와야겠다 ai를 //
+	private static String generateValue() {
+		return "AUTO_INCREMENT";
+	}
+
+	private  static String isNull(boolean isNullable) {
+		if (!isNullable) {
+			return "NOT NULL";
+		}
+		return "";
 	}
 }
