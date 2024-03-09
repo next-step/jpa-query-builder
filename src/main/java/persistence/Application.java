@@ -2,10 +2,11 @@ package persistence;
 
 import database.DatabaseServer;
 import database.H2;
+import java.util.List;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.query.QueryTranslator;
+import persistence.sql.QueryTranslator;
 import persistence.sql.ddl.entity.Person;
 
 public class Application {
@@ -23,11 +24,32 @@ public class Application {
 
             jdbcTemplate.execute(queryTranslator.getCreateTableQuery(Person.class));
 
+            executeInitializedQuery(jdbcTemplate, queryTranslator);
+
+            List<Person> persons = jdbcTemplate.query(queryTranslator.getSelectAllQuery(Person.class),
+                resultSet -> new Person(
+                    resultSet.getLong(1),
+                    resultSet.getString(2),
+                    resultSet.getInt(3),
+                    resultSet.getString(4)
+                ));
+
+            persons.forEach(person -> logger.info("Person: {}", person));
+
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
         } finally {
             logger.info("Application finished");
         }
+    }
+
+    private static void executeInitializedQuery(JdbcTemplate jdbcTemplate, QueryTranslator queryTranslator) {
+        jdbcTemplate.execute(queryTranslator.getInsertQuery(new Person("John", 23, "john@gmail.com")));
+        jdbcTemplate.execute(
+            queryTranslator.getInsertQuery(new Person("Smith", 33, "smith@gmail.com")));
+        jdbcTemplate.execute(queryTranslator.getInsertQuery(new Person("Tom", 45, "tom@gmail.com")));
+        jdbcTemplate.execute(
+            queryTranslator.getInsertQuery(new Person("rolroralra", 37, "rolroralra@gmail.com")));
     }
 }

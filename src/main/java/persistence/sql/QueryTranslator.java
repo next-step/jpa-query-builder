@@ -45,18 +45,18 @@ public class QueryTranslator {
         this.columnValueTranslator = columnValueTranslator;
     }
 
-    public String getCreateTableQuery(final Class<?> clazz) {
+    public String getCreateTableQuery(final Class<?> entityClass) {
         return String.format(
             "CREATE TABLE %s (%s)",
-            getTableNameFrom(clazz),
-            getTableColumnDefinitionFrom(clazz)
+            getTableNameFrom(entityClass),
+            getTableColumnDefinitionFrom(entityClass)
         );
     }
 
-    public String getDropTableQuery(Class<?> clazz) {
+    public String getDropTableQuery(Class<?> entityClass) {
         return String.format(
             "DROP TABLE %s",
-            getTableNameFrom(clazz)
+            getTableNameFrom(entityClass)
         );
     }
 
@@ -66,27 +66,35 @@ public class QueryTranslator {
         return String.format(
             "INSERT INTO %s (%s) VALUES (%s)",
             getTableNameFrom(entityClass),
-            getColumnNamesClause(entityClass),
+            getColumnNamesClauseWithoutPrimaryKey(entityClass),
             getColumnValueClause(entity)
         );
     }
 
-    public String getTableNameFrom(Class<?> clazz) {
+    public String getSelectAllQuery(Class<?> entityClass) {
+        return String.format(
+            "SELECT %s FROM %s",
+            getColumnNamesClause(entityClass),
+            getTableNameFrom(entityClass)
+        );
+    }
+
+    public String getTableNameFrom(Class<?> entityClass) {
         return Stream.of(
-                getSchemaNameFrom(clazz),
-                getOnlyTableNameFrom(clazz)
+                getSchemaNameFrom(entityClass),
+                getOnlyTableNameFrom(entityClass)
             )
             .filter(s -> !s.isBlank())
             .collect(Collectors.joining(SCHEMA_TABLE_DELIMITER));
     }
 
-    public String getTableColumnDefinitionFrom(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-            .filter(field -> !field.isAnnotationPresent(Transient.class))
-            .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1))
+    public String getTableColumnDefinitionFrom(Class<?> entityClass) {
+        return getColumnFieldStream(entityClass)
             .map(this::getColumnDefinitionFrom)
             .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
     }
+
+
 
     public String getColumnDefinitionFrom(Field field) {
         return Stream.of(
@@ -98,14 +106,7 @@ public class QueryTranslator {
             .collect(Collectors.joining(" "));
     }
 
-    public String getColumnNamesClause(Class<?> entityClass) {
-        return Arrays.stream(entityClass.getDeclaredFields())
-            .filter(field -> !field.isAnnotationPresent(Transient.class))
-            .filter(field -> !field.isAnnotationPresent(Id.class))
-            .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1))
-            .map(this::getColumnNameFrom)
-            .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
-    }
+
 
     public String getColumnNameFrom(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {
@@ -133,13 +134,32 @@ public class QueryTranslator {
         return columnValueTranslator.getColumnValueClause(entity);
     }
 
-    protected String getOnlyTableNameFrom(final Class<?> clazz) {
-        if (clazz.isAnnotationPresent(Table.class)) {
-            Table table = clazz.getAnnotation(Table.class);
+    protected String getColumnNamesClause(Class<?> entityClass) {
+        return getColumnFieldStream(entityClass)
+            .map(this::getColumnNameFrom)
+            .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
+    }
+
+    protected String getColumnNamesClauseWithoutPrimaryKey(Class<?> entityClass) {
+        return getColumnFieldStream(entityClass)
+            .filter(field -> !field.isAnnotationPresent(Id.class))
+            .map(this::getColumnNameFrom)
+            .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
+    }
+
+    protected static Stream<Field> getColumnFieldStream(Class<?> entityClass) {
+        return Arrays.stream(entityClass.getDeclaredFields())
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1));
+    }
+
+    protected String getOnlyTableNameFrom(final Class<?> entityClass) {
+        if (entityClass.isAnnotationPresent(Table.class)) {
+            Table table = entityClass.getAnnotation(Table.class);
             return getOnlyTableNameFrom(table);
         }
 
-        return clazz.getSimpleName();
+        return entityClass.getSimpleName();
     }
 
     protected String getOnlyTableNameFrom(Table table) {
@@ -150,9 +170,9 @@ public class QueryTranslator {
         return StringConstants.EMPTY_STRING;
     }
 
-    protected String getSchemaNameFrom(Class<?> clazz) {
-        if (clazz.isAnnotationPresent(Table.class)) {
-            Table table = clazz.getAnnotation(Table.class);
+    protected String getSchemaNameFrom(Class<?> entityClass) {
+        if (entityClass.isAnnotationPresent(Table.class)) {
+            Table table = entityClass.getAnnotation(Table.class);
             return  getSchemaNameFrom(table);
         }
 

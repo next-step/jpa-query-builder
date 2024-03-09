@@ -118,4 +118,15 @@ class QueryTranslatorTest {
 
         assertThat(insertQuery).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('홍길동', 20, 'test@gamil.com')");
     }
+
+    @Test
+    @DisplayName("요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기")
+    void getSelectAllQuery() {
+        // when
+        String selectAllQuery = queryTranslator.getSelectAllQuery(Person.class);
+
+        // then
+        assertThat(selectAllQuery).isEqualTo("SELECT id, nick_name, old, email FROM users");
+
+    }
 }
