@@ -138,4 +138,26 @@ class QueryTranslatorTest {
         // then
         assertThat(selectByIdQuery).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
     }
+
+    @Test
+    @DisplayName("요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기")
+    void getDeleteAllQuery() {
+        // given
+        Long givenId = 1L;
+        Person givenEntity = new Person(givenId, "홍길동", 20, "test@gmail.com");
+
+        // when
+        String deleteAllQuery = queryTranslator.getDeleteAllQuery(Person.class);
+        String deleteByIdQuery = queryTranslator.getDeleteByIdQuery(Person.class, givenId);
+        String deleteQueryFromEntity = queryTranslator.getDeleteQueryFromEntity(
+            Person.class,
+            givenEntity
+        );
+
+        // then
+        assertThat(deleteAllQuery).isEqualTo("DELETE FROM users");
+        assertThat(deleteByIdQuery).isEqualTo("DELETE FROM users WHERE id = 1");
+        assertThat(deleteQueryFromEntity).isEqualTo("DELETE FROM users WHERE id = 1");
+
+    }
 }

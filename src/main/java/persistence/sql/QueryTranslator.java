@@ -85,9 +85,35 @@ public class QueryTranslator {
             getColumnNamesClause(entityClass),
             getTableNameFrom(entityClass),
             getPrimaryKeyColumnName(entityClass),
-            columnValueTranslator.getPrimaryKeyValueClause(entityClass, id)
+            columnValueTranslator.getPrimaryKeyValueClauseFromEntityClassAndId(entityClass, id)
         );
     }
+
+    public String getDeleteAllQuery(Class<?> entityClass) {
+        return String.format(
+            "DELETE FROM %s",
+            getTableNameFrom(entityClass)
+        );
+    }
+
+    public String getDeleteByIdQuery(Class<?> entityClass, Object id) {
+        return String.format(
+            "DELETE FROM %s WHERE %s = %s",
+            getTableNameFrom(entityClass),
+            getPrimaryKeyColumnName(entityClass),
+            columnValueTranslator.getPrimaryKeyValueClauseFromEntityClassAndId(entityClass, id)
+        );
+    }
+
+    public String getDeleteQueryFromEntity(Class<?> entityClass, Object entity) {
+        return String.format(
+            "DELETE FROM %s WHERE %s = %s",
+            getTableNameFrom(entityClass),
+            getPrimaryKeyColumnName(entityClass),
+            columnValueTranslator.getPrimaryKeyValueClauseFromEntityClassAndEntityObject(entityClass, entity)
+        );
+    }
+
 
     private String getPrimaryKeyColumnName(Class<?> entityClass) {
         return Arrays.stream(entityClass.getDeclaredFields())

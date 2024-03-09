@@ -22,7 +22,7 @@ public class ColumnValueTranslator {
             .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
     }
 
-    public String getPrimaryKeyValueClause(Class<?> entityClass, Object id) {
+    public String getPrimaryKeyValueClauseFromEntityClassAndId(Class<?> entityClass, Object id) {
         Field primaryKeyField = Arrays.stream(entityClass.getDeclaredFields())
             .filter(field -> field.isAnnotationPresent(Id.class))
             .findFirst()
@@ -33,6 +33,23 @@ public class ColumnValueTranslator {
         }
 
         return getNativeColumnValueString(id);
+    }
+
+    public String getPrimaryKeyValueClauseFromEntityClassAndEntityObject(Class<?> entityClass, Object entity) {
+        try {
+            Field primaryKeyField = Arrays.stream(entityClass.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Primary key not found"));
+
+            primaryKeyField.setAccessible(true);
+
+            Object id = primaryKeyField.get(entity);
+
+            return getNativeColumnValueString(id);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private String getNativeColumnValueStringFromEntity(Object entity, Field field) {
