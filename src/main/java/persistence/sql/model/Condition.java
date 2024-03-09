@@ -1,4 +1,4 @@
-package persistence.sql.ddl.model;
+package persistence.sql.model;
 
 public class Condition {
     public static final Condition DEFAULT_CONDITION = new Condition(false, true);

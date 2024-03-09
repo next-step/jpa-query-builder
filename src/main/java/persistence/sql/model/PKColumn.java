@@ -1,11 +1,10 @@
-package persistence.sql.ddl.model;
+package persistence.sql.model;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class PKColumn extends Column {
     private String strategy;
@@ -16,10 +15,7 @@ public class PKColumn extends Column {
     }
 
     public static PKColumn from(Field field) {
-        var column = Arrays.stream(field.getAnnotations())
-                .filter(annotation -> annotation.annotationType().equals(jakarta.persistence.Column.class))
-                .map(annotation -> (jakarta.persistence.Column) annotation)
-                .findFirst();
+        var column = getColumnAnnotation(field);
 
         var name = column.filter(value -> !value.name().isBlank())
                 .map(jakarta.persistence.Column::name)
@@ -55,5 +51,10 @@ public class PKColumn extends Column {
         if (!strategy.isBlank()) sb.append(" ").append(strategy);
         sb.append(" PRIMARY KEY");
         return sb.toString();
+    }
+
+    @Override
+    public boolean isPK() {
+        return true;
     }
 }
