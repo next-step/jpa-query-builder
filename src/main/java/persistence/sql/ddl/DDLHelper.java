@@ -2,9 +2,10 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import persistence.sql.ddl.model.Column;
+import persistence.sql.model.ColumnFactory;
+
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -14,9 +15,9 @@ public class DDLHelper {
         var tableName = getTableName(clazz);
 
         String columnInfo = Arrays.stream(clazz.getDeclaredFields())
-                .map(Column::from)
-                .filter(Objects::nonNull)
-                .map(Column::getDDLColumnQuery)
+                .map(ColumnFactory::createColumn)
+                .filter(Optional::isPresent)
+                .map(column -> column.get().getDDLColumnQuery())
                 .collect(Collectors.joining(", "));
 
         return "create table " + tableName + "(" + columnInfo + ");";

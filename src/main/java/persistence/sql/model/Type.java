@@ -1,4 +1,4 @@
-package persistence.sql.ddl.model;
+package persistence.sql.model;
 
 import java.sql.Types;
 import java.util.Arrays;
