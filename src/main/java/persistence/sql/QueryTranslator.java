@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query;
+package persistence.sql;
 
 import static persistence.sql.ddl.common.StringConstants.COLUMN_DEFINITION_DELIMITER;
 import static persistence.sql.ddl.common.StringConstants.SCHEMA_TABLE_DELIMITER;
@@ -17,6 +17,7 @@ import persistence.sql.ddl.constraints.strategy.ConstraintsStrategy;
 import persistence.sql.ddl.constraints.strategy.DefaultConstraintsStrategy;
 import persistence.sql.ddl.type.DataTypeMapping;
 import persistence.sql.ddl.type.impl.DefaultDataTypeMapping;
+import persistence.sql.dml.ColumnValueTranslator;
 
 public class QueryTranslator {
 
@@ -24,13 +25,24 @@ public class QueryTranslator {
 
     protected final DataTypeMapping dataTypeMapping;
 
+    protected final ColumnValueTranslator columnValueTranslator;
+
     public QueryTranslator() {
-        this(new DefaultConstraintsStrategy(), new DefaultDataTypeMapping());
+        this(
+            new DefaultConstraintsStrategy(),
+            new DefaultDataTypeMapping(),
+            new ColumnValueTranslator()
+        );
     }
 
-    protected QueryTranslator(ConstraintsStrategy constraintsStrategy, DataTypeMapping dataTypeMapping) {
+    protected QueryTranslator(
+        ConstraintsStrategy constraintsStrategy,
+        DataTypeMapping dataTypeMapping,
+        ColumnValueTranslator columnValueTranslator
+    ) {
         this.constraintsStrategy = constraintsStrategy;
         this.dataTypeMapping = dataTypeMapping;
+        this.columnValueTranslator = columnValueTranslator;
     }
 
     public String getCreateTableQuery(final Class<?> clazz) {
@@ -48,6 +60,17 @@ public class QueryTranslator {
         );
     }
 
+    public String getInsertQuery(Object entity) {
+        Class<?> entityClass = entity.getClass();
+
+        return String.format(
+            "INSERT INTO %s (%s) VALUES (%s)",
+            getTableNameFrom(entityClass),
+            getColumnNamesClause(entityClass),
+            getColumnValueClause(entity)
+        );
+    }
+
     public String getTableNameFrom(Class<?> clazz) {
         return Stream.of(
                 getSchemaNameFrom(clazz),
@@ -57,7 +80,7 @@ public class QueryTranslator {
             .collect(Collectors.joining(SCHEMA_TABLE_DELIMITER));
     }
 
-    public String getTableColumnDefinitionFrom(final Class<?> clazz) {
+    public String getTableColumnDefinitionFrom(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
             .filter(field -> !field.isAnnotationPresent(Transient.class))
             .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1))
@@ -73,6 +96,15 @@ public class QueryTranslator {
             )
             .filter(s -> !s.isBlank())
             .collect(Collectors.joining(" "));
+    }
+
+    public String getColumnNamesClause(Class<?> entityClass) {
+        return Arrays.stream(entityClass.getDeclaredFields())
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .filter(field -> !field.isAnnotationPresent(Id.class))
+            .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1))
+            .map(this::getColumnNameFrom)
+            .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
     }
 
     public String getColumnNameFrom(Field field) {
@@ -95,6 +127,10 @@ public class QueryTranslator {
 
     public String getColumnConstraintsFrom(Field field) {
         return constraintsStrategy.getConstraintsFrom(field);
+    }
+
+    public String getColumnValueClause(Object entity) {
+        return columnValueTranslator.getColumnValueClause(entity);
     }
 
     protected String getOnlyTableNameFrom(final Class<?> clazz) {

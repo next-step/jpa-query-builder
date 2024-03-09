@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
+import persistence.sql.QueryTranslator;
 import persistence.sql.ddl.entity.Person;
 import persistence.sql.ddl.entity.Person4;
 
@@ -106,5 +107,15 @@ class QueryTranslatorTest {
         String actualColumnDefinitionStatement = queryTranslator.getColumnDefinitionFrom(field);
 
         assertThat(actualColumnDefinitionStatement).isEqualTo(expectedColumnDefinitionStatement);
+    }
+
+    @Test
+    @DisplayName("요구사항 1 - 위의 정보를 바탕으로 insert 구현해보기")
+    void getInsertQuery() {
+        Person person = new Person("홍길동", 20, "test@gamil.com");
+
+        String insertQuery = queryTranslator.getInsertQuery(person);
+
+        assertThat(insertQuery).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('홍길동', 20, 'test@gamil.com')");
     }
 }

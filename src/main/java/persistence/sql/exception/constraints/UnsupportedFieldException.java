@@ -1,4 +1,4 @@
-package persistence.sql.ddl.exception.constraints;
+package persistence.sql.exception.constraints;
 
 import java.lang.reflect.Field;
 

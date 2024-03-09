@@ -26,4 +26,16 @@ public class Person {
 
     @Transient
     private Integer index;
+
+    protected Person() {
+
+    }
+
+    public Person(String name, Integer age, String email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
+
 }
