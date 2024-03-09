@@ -1,8 +1,18 @@
 package persistence;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import database.DatabaseServer;
 import database.H2;
+import domain.Person;
 import jdbc.JdbcTemplate;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +26,9 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+
+            jdbcTemplate.execute(new CreateQueryBuilder().getCreateTableSql());
+            jdbcTemplate.execute(new DropQueryBuilder().getDropTableSql());
 
             server.stop();
         } catch (Exception e) {
