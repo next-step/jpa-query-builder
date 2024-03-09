@@ -11,6 +11,7 @@ import database.H2;
 import domain.Person;
 import jdbc.JdbcTemplate;
 import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             jdbcTemplate.execute(new CreateQueryBuilder().getCreateTableSql());
+            jdbcTemplate.execute(new DropQueryBuilder().getDropTableSql());
 
             server.stop();
         } catch (Exception e) {
