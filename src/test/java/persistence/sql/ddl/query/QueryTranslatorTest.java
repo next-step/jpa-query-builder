@@ -127,6 +127,15 @@ class QueryTranslatorTest {
 
         // then
         assertThat(selectAllQuery).isEqualTo("SELECT id, nick_name, old, email FROM users");
+    }
 
+    @Test
+    @DisplayName("요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기")
+    void getSelectByIdQuery() {
+        // when
+        String selectByIdQuery = queryTranslator.getSelectByIdQuery(Person.class, 1L);
+
+        // then
+        assertThat(selectByIdQuery).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
     }
 }

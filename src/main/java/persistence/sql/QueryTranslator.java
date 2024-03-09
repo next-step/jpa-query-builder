@@ -79,6 +79,24 @@ public class QueryTranslator {
         );
     }
 
+    public String getSelectByIdQuery(Class<?> entityClass, Object id) {
+        return String.format(
+            "SELECT %s FROM %s WHERE %s = %s",
+            getColumnNamesClause(entityClass),
+            getTableNameFrom(entityClass),
+            getPrimaryKeyColumnName(entityClass),
+            columnValueTranslator.getPrimaryKeyValueClause(entityClass, id)
+        );
+    }
+
+    private String getPrimaryKeyColumnName(Class<?> entityClass) {
+        return Arrays.stream(entityClass.getDeclaredFields())
+            .filter(field -> field.isAnnotationPresent(Id.class))
+            .findFirst()
+            .map(this::getColumnNameFrom)
+            .orElseThrow(() -> new IllegalStateException("Primary key not found"));
+    }
+
     public String getTableNameFrom(Class<?> entityClass) {
         return Stream.of(
                 getSchemaNameFrom(entityClass),
@@ -94,8 +112,6 @@ public class QueryTranslator {
             .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
     }
 
-
-
     public String getColumnDefinitionFrom(Field field) {
         return Stream.of(
                 getColumnNameFrom(field),
@@ -105,8 +121,6 @@ public class QueryTranslator {
             .filter(s -> !s.isBlank())
             .collect(Collectors.joining(" "));
     }
-
-
 
     public String getColumnNameFrom(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {
