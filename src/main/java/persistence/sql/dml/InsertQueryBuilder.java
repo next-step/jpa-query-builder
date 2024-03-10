@@ -1,34 +1,59 @@
 package persistence.sql.dml;
 
-import persistence.sql.QueryBuilder;
-import persistence.sql.metadata.Columns;
-import persistence.sql.metadata.Entity;
-import persistence.sql.metadata.PrimaryKey;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.metadata.ColumnMetadata;
+import persistence.sql.metadata.ColumnsMetadata;
+import persistence.sql.metadata.EntityMetadata;
 
 import java.util.stream.Collectors;
 
-public class InsertQueryBuilder extends QueryBuilder {
+public class InsertQueryBuilder {
 
     public static final String INSERT_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
     public static final String DELIMITER = ", ";
-    private final Entity entity;
-    private final Columns columns;
-    private final PrimaryKey primaryKey;
+    private final Dialect dialect;
+    private final EntityMetadata entity;
 
-    private InsertQueryBuilder(Entity entity, Columns columns, PrimaryKey primaryKey) {
+    private InsertQueryBuilder(Dialect dialect, EntityMetadata entity) {
+        this.dialect = dialect;
         this.entity = entity;
-        this.columns = columns;
-        this.primaryKey = primaryKey;
     }
 
-    public static InsertQueryBuilder of(Object entity) {
-        Class<?> clazz = entity.getClass();
-        return new InsertQueryBuilder(Entity.of(clazz), Columns.of(createColumns(clazz, entity)), PrimaryKey.of(generatePrimaryKey(clazz)));
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Dialect dialect;
+        private EntityMetadata entity;
+
+        private Builder() {
+        }
+
+        public Builder dialect(Dialect dialect) {
+            this.dialect = dialect;
+            return this;
+        }
+
+        public Builder entity(Object object) {
+            this.entity = EntityMetadata.of(object.getClass(), object);
+            return this;
+        }
+
+        public InsertQueryBuilder build() {
+            return new InsertQueryBuilder(dialect, entity);
+        }
+    }
+
+    private String columnsClause(ColumnsMetadata columns) {
+        return columns.getColumns().stream()
+                .map(ColumnMetadata::getName)
+                .collect(Collectors.joining(DELIMITER));
     }
 
     private String valueClause() {
-        return columns.getColumns().stream()
-                .map(column -> this.primaryKey.getName().equals(column.getName()) ? "default" : generateColumnValue(column.getValue()))
+        return entity.getColumns().getColumns().stream()
+                .map(column -> entity.getPrimaryKey().getName().equals(column.getName()) ? "default" : generateColumnValue(column.getValue()))
                 .collect(Collectors.joining(DELIMITER));
     }
 
@@ -40,8 +65,7 @@ public class InsertQueryBuilder extends QueryBuilder {
         }
     }
 
-    @Override
-    public String build() {
-        return String.format(INSERT_TEMPLATE, entity.getName(), columnsClause(columns), valueClause());
+    public String generateQuery() {
+        return String.format(INSERT_TEMPLATE, entity.getName(), columnsClause(entity.getColumns()), valueClause());
     }
 }

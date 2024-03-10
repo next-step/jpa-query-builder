@@ -1,23 +1,46 @@
 package persistence.sql.ddl;
 
-import persistence.sql.QueryBuilder;
-import persistence.sql.metadata.Entity;
+import persistence.sql.dialect.Dialect;
+import persistence.sql.metadata.EntityMetadata;
 
-public class DropQueryBuilder extends QueryBuilder {
+public class DropQueryBuilder {
 
     public static final String DROP_TABLE_TEMPLATE = "DROP TABLE %s";
-    private final Entity entity;
+    private final Dialect dialect;
+    private final EntityMetadata entity;
 
-    private DropQueryBuilder(Entity entity) {
+    private DropQueryBuilder(Dialect dialect, EntityMetadata entity) {
+        this.dialect = dialect;
         this.entity = entity;
     }
 
-    public static DropQueryBuilder of(Class<?> clazz) {
-        return new DropQueryBuilder(Entity.of(clazz));
+    public static Builder builder() {
+        return new Builder();
     }
 
-    @Override
-    public String build() {
+    public static class Builder {
+        private Dialect dialect;
+        private EntityMetadata entity;
+
+        private Builder() {
+        }
+
+        public Builder dialect(Dialect dialect) {
+            this.dialect = dialect;
+            return this;
+        }
+
+        public Builder entity(Class<?> clazz) {
+            this.entity = EntityMetadata.of(clazz);
+            return this;
+        }
+
+        public DropQueryBuilder build() {
+            return new DropQueryBuilder(dialect, entity);
+        }
+    }
+
+    public String generateQuery() {
         return String.format(DROP_TABLE_TEMPLATE, entity.getName());
     }
 }

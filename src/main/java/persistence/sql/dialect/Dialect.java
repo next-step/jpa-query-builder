@@ -1,8 +1,8 @@
 package persistence.sql.dialect;
 
-import persistence.sql.metadata.Column;
+import persistence.sql.metadata.ColumnMetadata;
 
 public interface Dialect {
 
-    String build(Column column);
+    String build(ColumnMetadata column);
 }

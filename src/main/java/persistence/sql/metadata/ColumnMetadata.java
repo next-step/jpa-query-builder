@@ -9,26 +9,26 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Column {
+public class ColumnMetadata {
 
     private final List<Annotation> annotations;
     private final Class<?> type;
     private final String name;
     private final Object value;
 
-    private Column(String name, Object value, Class<?> type, List<Annotation> annotations) {
+    private ColumnMetadata(String name, Object value, Class<?> type, List<Annotation> annotations) {
         this.name = name;
         this.value = value;
         this.type = type;
         this.annotations = annotations;
     }
 
-    public static Column of(Field field, Object entity) {
-        return new Column(generateColumnName(field), generateColumnValue(field, entity), field.getType(), generateColumnAnnotations(field.getDeclaredAnnotations()));
+    public static ColumnMetadata of(Field field, Object entity) {
+        return new ColumnMetadata(generateColumnName(field), generateColumnValue(field, entity), field.getType(), generateColumnAnnotations(field.getDeclaredAnnotations()));
     }
 
-    public static Column of(Field field) {
-        return new Column(generateColumnName(field), null, field.getType(), generateColumnAnnotations(field.getDeclaredAnnotations()));
+    public static ColumnMetadata of(Field field) {
+        return new ColumnMetadata(generateColumnName(field), null, field.getType(), generateColumnAnnotations(field.getDeclaredAnnotations()));
     }
 
     private static Object generateColumnValue(Field field, Object entity) {
