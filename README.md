@@ -182,7 +182,7 @@ public class Person {
         Object persist(Object entity);
         ```
 
-* [ ] 요구사항3 - remove (delete)
+* [x] 요구사항3 - remove (delete)
     * src/main/java > persistence/entity 하위의 EntityManager 인터페이스를 생성 후 구현
     * ```java
       void remove(Object entity);
