@@ -8,10 +8,14 @@ public class WhereCondition {
     private final String operator;
     private final Object value;
 
-    public WhereCondition(ColumnMetadata columnMetadata, String operator, Object value) {
+    private WhereCondition(ColumnMetadata columnMetadata, String operator, Object value) {
         this.columnMetadata = columnMetadata;
         this.operator = operator;
         this.value = value;
+    }
+
+    public static WhereCondition of(ColumnMetadata columnMetadata, String operator, Object value) {
+        return new WhereCondition(columnMetadata, operator, value);
     }
 
     public String toSqlCondition() {

@@ -7,8 +7,12 @@ public class WhereConditions {
     public static final String AND = " AND ";
     private final List<WhereCondition> whereConditions;
 
-    public WhereConditions(List<WhereCondition> whereConditions) {
+    private WhereConditions(List<WhereCondition> whereConditions) {
         this.whereConditions = whereConditions;
+    }
+
+    public static WhereConditions of(List<WhereCondition> whereConditions) {
+        return new WhereConditions(whereConditions);
     }
 
     public String generateWhereClausesQuery() {

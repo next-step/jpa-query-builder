@@ -10,8 +10,8 @@ public class WhereQueryBuilder {
     private final WhereConditions whereConditions;
 
     public WhereQueryBuilder(ColumnsMetadata columns, List<WhereRecord> whereRecords) {
-        this.whereConditions = new WhereConditions(whereRecords.stream()
-                .map(whereRecord -> new WhereCondition(columns.getColumn(whereRecord.name()), whereRecord.operator(), whereRecord.value()))
+        this.whereConditions = WhereConditions.of(whereRecords.stream()
+                .map(whereRecord -> WhereCondition.of(columns.getColumn(whereRecord.name()), whereRecord.operator(), whereRecord.value()))
                 .toList());
     }
 
