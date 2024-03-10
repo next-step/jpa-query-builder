@@ -87,7 +87,7 @@ public class ColumnTranslator {
             .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
     }
 
-    protected static Stream<Field> getColumnFieldStream(Class<?> entityClass) {
+    public Stream<Field> getColumnFieldStream(Class<?> entityClass) {
         return Arrays.stream(entityClass.getDeclaredFields())
             .filter(field -> !field.isAnnotationPresent(Transient.class))
             .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1));

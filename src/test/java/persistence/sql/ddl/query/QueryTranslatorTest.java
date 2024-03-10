@@ -140,6 +140,16 @@ class QueryTranslatorTest {
     }
 
     @Test
+    @DisplayName("요구사항 3 - 위의 정보를 바탕으로 count 쿼리 만들어보기")
+    void getSelectCountQuery() {
+        // when
+        String selectCountQuery = queryTranslator.getSelectCountQuery(Person.class);
+
+        // then
+        assertThat(selectCountQuery).isEqualTo("SELECT COUNT(id) FROM users");
+    }
+
+    @Test
     @DisplayName("요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기")
     void getDeleteAllQuery() {
         // given
@@ -149,15 +159,11 @@ class QueryTranslatorTest {
         // when
         String deleteAllQuery = queryTranslator.getDeleteAllQuery(Person.class);
         String deleteByIdQuery = queryTranslator.getDeleteByIdQuery(Person.class, givenId);
-        String deleteQueryFromEntity = queryTranslator.getDeleteQueryFromEntity(
-            Person.class,
-            givenEntity
-        );
+        String deleteQueryFromEntity = queryTranslator.getDeleteQueryFromEntity(givenEntity);
 
         // then
         assertThat(deleteAllQuery).isEqualTo("DELETE FROM users");
         assertThat(deleteByIdQuery).isEqualTo("DELETE FROM users WHERE id = 1");
         assertThat(deleteQueryFromEntity).isEqualTo("DELETE FROM users WHERE id = 1");
-
     }
 }

@@ -60,6 +60,10 @@ public class QueryTranslator {
         return selectQueryTranslator.getSelectByIdQuery(entityClass, id);
     }
 
+    public String getSelectCountQuery(Class<?> entityClass) {
+        return selectQueryTranslator.getSelectCountQuery(entityClass);
+    }
+
     public String getDeleteAllQuery(Class<?> entityClass) {
         return deleteQueryTranslator.getDeleteAllQuery(entityClass);
     }
@@ -68,8 +72,8 @@ public class QueryTranslator {
         return deleteQueryTranslator.getDeleteByIdQuery(entityClass, id);
     }
 
-    public String getDeleteQueryFromEntity(Class<?> entityClass, Object entity) {
-        return deleteQueryTranslator.getDeleteQueryFromEntity(entityClass, entity);
+    public String getDeleteQueryFromEntity(Object entity) {
+        return deleteQueryTranslator.getDeleteQueryFromEntity(entity);
     }
 
     public String getTableNameFrom(Class<?> entityClass) {

@@ -36,7 +36,11 @@ public class DeleteQueryTranslator {
         );
     }
 
-    public String getDeleteQueryFromEntity(Class<?> entityClass, Object entity) {
+    public String getDeleteQueryFromEntity(Object entity) {
+        return getDeleteQueryFromEntity(entity.getClass(), entity);
+    }
+
+    private String getDeleteQueryFromEntity(Class<?> entityClass, Object entity) {
         return String.format(
             "DELETE FROM %s WHERE %s = %s",
             tableTranslator.getTableNameFrom(entityClass),

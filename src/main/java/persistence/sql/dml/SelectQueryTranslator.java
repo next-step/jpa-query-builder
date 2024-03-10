@@ -37,4 +37,12 @@ public class SelectQueryTranslator {
             columnValueTranslator.getPrimaryKeyValueClauseFromEntityClassAndId(entityClass, id)
         );
     }
+
+    public String getSelectCountQuery(Class<?> entityClass) {
+        return String.format(
+            "SELECT COUNT(%s) FROM %s",
+            columnTranslator.getPrimaryKeyColumnName(entityClass),
+            tableTranslator.getTableNameFrom(entityClass)
+        );
+    }
 }

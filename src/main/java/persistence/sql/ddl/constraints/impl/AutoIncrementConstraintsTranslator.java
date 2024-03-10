@@ -3,7 +3,7 @@ package persistence.sql.ddl.constraints.impl;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import persistence.sql.ddl.constraints.ConstraintsTranslator;
-import persistence.sql.exception.constraints.UnsupportedFieldException;
+import persistence.exception.UnsupportedFieldException;
 
 public class AutoIncrementConstraintsTranslator implements ConstraintsTranslator {
     private static final String AUTO_INCREMENT = "AUTO_INCREMENT";

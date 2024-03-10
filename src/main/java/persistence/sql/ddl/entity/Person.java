@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.util.Objects;
 
 @Table(name = "users")
 @Entity
@@ -27,7 +28,7 @@ public class Person {
     @Transient
     private Integer index;
 
-    protected Person() {
+    public Person() {
 
     }
 
@@ -44,6 +45,26 @@ public class Person {
         this.email = email;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -52,5 +73,24 @@ public class Person {
             ", age=" + age +
             ", email='" + email + '\'' +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Person person = (Person) o;
+        return Objects.equals(id, person.id) && Objects.equals(name, person.name)
+            && Objects.equals(age, person.age) && Objects.equals(email,
+            person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, age, email);
     }
 }

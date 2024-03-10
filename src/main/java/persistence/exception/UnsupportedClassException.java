@@ -1,4 +1,4 @@
-package persistence.sql.exception;
+package persistence.exception;
 
 public class UnsupportedClassException extends RuntimeException {
 
