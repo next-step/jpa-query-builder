@@ -23,12 +23,12 @@ public class GeneratedValueConstraint implements ColumnConstraintStrategy {
 
     @Override
     public String generateConstraints(List<Annotation> annotations) {
-        GeneratedValue annotation = (GeneratedValue) annotations.stream()
-                .filter(_annotation -> _annotation.annotationType().equals(GeneratedValue.class))
+        GeneratedValue generatedValue = (GeneratedValue) annotations.stream()
+                .filter(annotation -> annotation.annotationType().equals(GeneratedValue.class))
                 .findFirst().orElse(null);
 
-        if (Objects.nonNull(annotation)) {
-            return ofNullable(GENERATION_TYPE_QUERY_MAP.get(annotation.strategy()))
+        if (Objects.nonNull(generatedValue)) {
+            return ofNullable(GENERATION_TYPE_QUERY_MAP.get(generatedValue.strategy()))
                     .orElseThrow(() -> new IllegalArgumentException("GenerationType is not supported."));
         }
 

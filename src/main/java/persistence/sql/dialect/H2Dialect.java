@@ -1,9 +1,9 @@
 package persistence.sql.dialect;
 
-import persistence.sql.core.Column;
 import persistence.sql.dialect.constraint.strategy.ColumnConstraintStrategy;
 import persistence.sql.dialect.constraint.strategy.constraint.GeneratedValueConstraint;
 import persistence.sql.dialect.constraint.strategy.constraint.NotNullConstraint;
+import persistence.sql.metadata.ColumnMetadata;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +31,7 @@ public class H2Dialect implements Dialect {
     }
 
     @Override
-    public String build(Column column) {
+    public String build(ColumnMetadata column) {
         String constraints = strategies.stream()
                 .map(strategy -> strategy.generateConstraints(column.getAnnotations()))
                 .filter(constraint -> !constraint.trim().isEmpty())
