@@ -3,6 +3,7 @@ package persistence.entity;
 import jdbc.EntityRowMapper;
 import jdbc.JdbcTemplate;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 import persistence.sql.dml.WhereRecord;
@@ -27,7 +28,7 @@ public class SimpleEntityManager implements EntityManager {
                 .where(List.of(new WhereRecord("id", "=", Id)))
                 .build();
 
-        return jdbcTemplate.queryForObject(selectQueryBuilder.generateQuery(), resultSet -> new EntityRowMapper<T>(clazz).mapRow(resultSet));
+        return jdbcTemplate.queryForObject(selectQueryBuilder.generateQuery(), resultSet -> new EntityRowMapper<>(clazz).mapRow(resultSet));
     }
 
     @Override
@@ -44,6 +45,10 @@ public class SimpleEntityManager implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-
+        jdbcTemplate.execute(DeleteQueryBuilder.builder()
+                .dialect(dialect)
+                .entity(entity.getClass())
+                .build()
+                .generateQuery());
     }
 }

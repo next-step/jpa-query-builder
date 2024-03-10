@@ -15,6 +15,7 @@ import persistence.sql.dialect.H2Dialect;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SimpleEntityManagerTest {
 
@@ -22,12 +23,15 @@ class SimpleEntityManagerTest {
     private EntityManager entityManager;
     private Dialect DIALECT = new H2Dialect();
     private DatabaseServer server;
+    private Person person;
 
     @BeforeEach
     void setUp() throws SQLException {
         server = new H2();
         server.start();
         jdbcTemplate = new JdbcTemplate(server.getConnection());
+
+        person = Person.of(1L, "test", 11, "test!@gmail.com");
 
         jdbcTemplate.execute(CreateQueryBuilder.builder()
                 .dialect(DIALECT)
@@ -47,7 +51,6 @@ class SimpleEntityManagerTest {
     @DisplayName("요구사항1 - find")
     void find() {
         // given
-        Person person = Person.of(1L, "joel", 37, "test!@gmail.com");
         entityManager.persist(person);
 
         // when
@@ -57,4 +60,25 @@ class SimpleEntityManagerTest {
         assertThat(findPerson).isEqualTo(person);
     }
 
+    @Test
+    @DisplayName("요구사항2 - persist (insert)")
+    void insert() {
+        // when
+        // then
+        assertThat(entityManager.persist(person)).isEqualTo(person);
+    }
+
+    @Test
+    @DisplayName("요구사항3 - remove (delete)")
+    void remove() {
+        // given
+        entityManager.persist(person);
+
+        // when
+        entityManager.remove(new Person());
+
+        // then
+        assertThatThrownBy(() -> entityManager.find(Person.class, 1L))
+                .isExactlyInstanceOf(RuntimeException.class);
+    }
 }
