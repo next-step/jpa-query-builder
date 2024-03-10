@@ -54,7 +54,7 @@ class QueryTranslator1Test {
     @Test
     @DisplayName("클래스 정보를 바탕으로 컬럼 선언문 가져오기")
     void getColumnDefinitionStatement() {
-        String columnDefinitionStatement = queryTranslator.getTableColumnDefinitionFrom(entityClass);
+        String columnDefinitionStatement = queryTranslator.getColumnDefinitionsFrom(entityClass);
 
         log.debug("Column definition statement: {}", columnDefinitionStatement);
 
