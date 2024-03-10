@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dml.conditions.WhereRecord;
 import persistence.sql.metadata.EntityMetadata;
 
 import java.util.List;

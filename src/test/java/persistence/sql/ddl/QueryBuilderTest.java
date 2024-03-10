@@ -9,7 +9,7 @@ import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
-import persistence.sql.dml.WhereRecord;
+import persistence.sql.dml.conditions.WhereRecord;
 
 import java.util.List;
 

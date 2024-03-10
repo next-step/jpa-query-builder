@@ -1,5 +1,8 @@
 package persistence.sql.dml;
 
+import persistence.sql.dml.conditions.WhereCondition;
+import persistence.sql.dml.conditions.WhereConditions;
+import persistence.sql.dml.conditions.WhereRecord;
 import persistence.sql.metadata.ColumnsMetadata;
 
 import java.util.List;
