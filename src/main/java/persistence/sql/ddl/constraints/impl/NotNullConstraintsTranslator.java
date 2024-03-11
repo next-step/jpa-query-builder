@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import persistence.sql.ddl.common.StringConstants;
 import persistence.sql.ddl.constraints.ConstraintsTranslator;
-import persistence.sql.exception.constraints.UnsupportedFieldException;
+import persistence.exception.UnsupportedFieldException;
 
 public class NotNullConstraintsTranslator implements ConstraintsTranslator {
 

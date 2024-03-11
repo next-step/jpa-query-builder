@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 import persistence.sql.ddl.common.StringConstants;
-import persistence.sql.ddl.constraints.impl.AutoIncrementConstraintsTranslator;
 import persistence.sql.ddl.constraints.ConstraintsTranslator;
+import persistence.sql.ddl.constraints.impl.AutoIncrementConstraintsTranslator;
 import persistence.sql.ddl.constraints.impl.NotNullConstraintsTranslator;
 import persistence.sql.ddl.constraints.impl.UniqueConstraintsTranslator;
 

@@ -8,21 +8,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
-import persistence.sql.QueryTranslator;
+import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.entity.Person;
 import persistence.sql.ddl.entity.Person4;
 
-class QueryTranslatorTest {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryTranslatorTest.class);
+class QueryBuilderTest {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilderTest.class);
 
     private final Class<?> entityClass = Person.class;
 
-    private final QueryTranslator queryTranslator = new QueryTranslator();
+    private final QueryBuilder queryBuilder = new QueryBuilder();
 
     @Test
     @DisplayName("@Entity, @Table, @Id, @Column, @Transient 어노테이션을 바탕으로 create 쿼리 만들어보기")
     void createDDL() {
-        String ddl = queryTranslator.getCreateTableQuery(entityClass);
+        String ddl = queryBuilder.getCreateTableQuery(entityClass);
 
         log.debug("DDL: {}", ddl);
 
@@ -33,7 +33,7 @@ class QueryTranslatorTest {
     @Test
     @DisplayName("@Entity, @Table(schema), @Id, @Column, @Transient 어노테이션을 바탕으로 create 쿼리 만들어보기")
     void createDDLWithSchema() {
-        String ddl = queryTranslator.getCreateTableQuery(Person4.class);
+        String ddl = queryBuilder.getCreateTableQuery(Person4.class);
 
         log.debug("DDL: {}", ddl);
 
@@ -44,7 +44,7 @@ class QueryTranslatorTest {
     @Test
     @DisplayName("@Entity, @Table, @Id, @Column, @Transient 어노테이션을 바탕으로 drop 쿼리 만들어보기")
     void buildDropQuery() {
-        String dropQuery = queryTranslator.getDropTableQuery(entityClass);
+        String dropQuery = queryBuilder.getDropTableQuery(entityClass);
 
         log.debug("Drop query: {}", dropQuery);
 
@@ -54,7 +54,7 @@ class QueryTranslatorTest {
     @Test
     @DisplayName("@Entity, @Table(schema), @Id, @Column, @Transient 어노테이션을 바탕으로 drop 쿼리 만들어보기")
     void buildDropQueryWithSchema() {
-        String dropQuery = queryTranslator.getDropTableQuery(Person4.class);
+        String dropQuery = queryBuilder.getDropTableQuery(Person4.class);
 
         log.debug("Drop query: {}", dropQuery);
 
@@ -64,7 +64,7 @@ class QueryTranslatorTest {
     @Test
     @DisplayName("클래스 정보와 @Table 어노테이션을 바탕으로 테이블명 가져오기")
     void getTableName() {
-        String tableName = queryTranslator.getTableNameFrom(entityClass);
+        String tableName = queryBuilder.getTableNameFrom(entityClass);
 
         log.debug("Table name: {}", tableName);
 
@@ -74,7 +74,7 @@ class QueryTranslatorTest {
     @Test
     @DisplayName("클래스 정보와 @Table(schema) 어노테이션을 바탕으로 테이블명 가져오기")
     void getTableNameWithSchema() {
-        String tableName = queryTranslator.getTableNameFrom(Person4.class);
+        String tableName = queryBuilder.getTableNameFrom(Person4.class);
 
         log.debug("Table name: {}", tableName);
 
@@ -84,7 +84,7 @@ class QueryTranslatorTest {
     @Test
     @DisplayName("클래스 정보와 @Id, @Column, @Transient 어노테이션을 바탕으로 컬럼 선언문 가져오기")
     void getColumnDefinitionStatement() {
-        String columnDefinitionStatement = queryTranslator.getTableColumnDefinitionFrom(entityClass);
+        String columnDefinitionStatement = queryBuilder.getColumnDefinitionsFrom(entityClass);
 
         log.debug("Column definition statement: {}", columnDefinitionStatement);
 
@@ -104,7 +104,7 @@ class QueryTranslatorTest {
     ) throws NoSuchFieldException {
         Field field = entityClass.getDeclaredField(fieldName);
 
-        String actualColumnDefinitionStatement = queryTranslator.getColumnDefinitionFrom(field);
+        String actualColumnDefinitionStatement = queryBuilder.getColumnDefinitionFrom(field);
 
         assertThat(actualColumnDefinitionStatement).isEqualTo(expectedColumnDefinitionStatement);
     }
@@ -114,7 +114,7 @@ class QueryTranslatorTest {
     void getInsertQuery() {
         Person person = new Person("홍길동", 20, "test@gamil.com");
 
-        String insertQuery = queryTranslator.getInsertQuery(person);
+        String insertQuery = queryBuilder.getInsertQuery(person);
 
         assertThat(insertQuery).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('홍길동', 20, 'test@gamil.com')");
     }
@@ -123,7 +123,7 @@ class QueryTranslatorTest {
     @DisplayName("요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기")
     void getSelectAllQuery() {
         // when
-        String selectAllQuery = queryTranslator.getSelectAllQuery(Person.class);
+        String selectAllQuery = queryBuilder.getSelectAllQuery(Person.class);
 
         // then
         assertThat(selectAllQuery).isEqualTo("SELECT id, nick_name, old, email FROM users");
@@ -133,10 +133,20 @@ class QueryTranslatorTest {
     @DisplayName("요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기")
     void getSelectByIdQuery() {
         // when
-        String selectByIdQuery = queryTranslator.getSelectByIdQuery(Person.class, 1L);
+        String selectByIdQuery = queryBuilder.getSelectByIdQuery(Person.class, 1L);
 
         // then
         assertThat(selectByIdQuery).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
+    }
+
+    @Test
+    @DisplayName("요구사항 3 - 위의 정보를 바탕으로 count 쿼리 만들어보기")
+    void getSelectCountQuery() {
+        // when
+        String selectCountQuery = queryBuilder.getSelectCountQuery(Person.class);
+
+        // then
+        assertThat(selectCountQuery).isEqualTo("SELECT COUNT(id) FROM users");
     }
 
     @Test
@@ -147,17 +157,13 @@ class QueryTranslatorTest {
         Person givenEntity = new Person(givenId, "홍길동", 20, "test@gmail.com");
 
         // when
-        String deleteAllQuery = queryTranslator.getDeleteAllQuery(Person.class);
-        String deleteByIdQuery = queryTranslator.getDeleteByIdQuery(Person.class, givenId);
-        String deleteQueryFromEntity = queryTranslator.getDeleteQueryFromEntity(
-            Person.class,
-            givenEntity
-        );
+        String deleteAllQuery = queryBuilder.getDeleteAllQuery(Person.class);
+        String deleteByIdQuery = queryBuilder.getDeleteByIdQuery(Person.class, givenId);
+        String deleteQueryFromEntity = queryBuilder.getDeleteQueryFromEntity(givenEntity);
 
         // then
         assertThat(deleteAllQuery).isEqualTo("DELETE FROM users");
         assertThat(deleteByIdQuery).isEqualTo("DELETE FROM users WHERE id = 1");
         assertThat(deleteQueryFromEntity).isEqualTo("DELETE FROM users WHERE id = 1");
-
     }
 }

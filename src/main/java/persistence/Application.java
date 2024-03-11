@@ -7,7 +7,7 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.QueryTranslator;
+import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.entity.Person;
 
 public class Application {
@@ -28,19 +28,19 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            QueryTranslator queryTranslator = new QueryTranslator();
+            QueryBuilder queryBuilder = new QueryBuilder();
 
-            jdbcTemplate.execute(queryTranslator.getCreateTableQuery(Person.class));
+            jdbcTemplate.execute(queryBuilder.getCreateTableQuery(Person.class));
 
-            executeInitializedQuery(jdbcTemplate, queryTranslator);
+            executeInitializedQuery(jdbcTemplate, queryBuilder);
 
-            querySelectAll(jdbcTemplate, queryTranslator);
+            querySelectAll(jdbcTemplate, queryBuilder);
 
-            querySelectById(jdbcTemplate, queryTranslator);
+            querySelectById(jdbcTemplate, queryBuilder);
 
-            jdbcTemplate.execute(queryTranslator.getDeleteByIdQuery(Person.class, 2L));
+            jdbcTemplate.execute(queryBuilder.getDeleteByIdQuery(Person.class, 2L));
 
-            querySelectAll(jdbcTemplate, queryTranslator);
+            querySelectAll(jdbcTemplate, queryBuilder);
 
             server.stop();
         } catch (Exception e) {
@@ -50,25 +50,25 @@ public class Application {
         }
     }
 
-    private static void querySelectById(JdbcTemplate jdbcTemplate, QueryTranslator queryTranslator) {
+    private static void querySelectById(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         Person person = jdbcTemplate.queryForObject(
-            queryTranslator.getSelectByIdQuery(Person.class, 2L),
+            queryBuilder.getSelectByIdQuery(Person.class, 2L),
             rowMapper
         );
 
         logger.info("Person: {}", person);
     }
 
-    private static void querySelectAll(JdbcTemplate jdbcTemplate, QueryTranslator queryTranslator) {
+    private static void querySelectAll(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         List<Person> persons = jdbcTemplate.query(
-            queryTranslator.getSelectAllQuery(Person.class),
+            queryBuilder.getSelectAllQuery(Person.class),
             rowMapper
         );
 
         persons.forEach(person -> logger.info("Person: {}", person));
     }
 
-    private static void executeInitializedQuery(JdbcTemplate jdbcTemplate, QueryTranslator queryTranslator) {
+    private static void executeInitializedQuery(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         List<Person> persons = List.of(
             new Person("John", 23, "john@gmail.com"),
             new Person("Smith", 33, "smith@gmail.com"),
@@ -76,7 +76,7 @@ public class Application {
         );
 
         persons.stream()
-            .map(queryTranslator::getInsertQuery)
+            .map(queryBuilder::getInsertQuery)
             .forEach(jdbcTemplate::execute);
     }
 

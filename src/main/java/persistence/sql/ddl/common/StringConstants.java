@@ -14,4 +14,6 @@ public class StringConstants {
 
     public static final String COLUMN_DEFINITION_DELIMITER = ", ";
 
+    public static final String PRIMARY_KEY_NOT_FOUND = "Primary key not found";
+
 }
