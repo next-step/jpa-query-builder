@@ -3,18 +3,18 @@ package persistence.entity.impl;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityManager;
 import persistence.entity.EntityRowMapperFactory;
-import persistence.sql.QueryTranslator;
+import persistence.sql.QueryBuilder;
 
 public class EntityManagerImpl implements EntityManager {
     private final JdbcTemplate jdbcTemplate;
 
-    private final QueryTranslator queryBuilder;
+    private final QueryBuilder queryBuilder;
 
     public EntityManagerImpl(JdbcTemplate jdbcTemplate) {
-        this(jdbcTemplate, new QueryTranslator());
+        this(jdbcTemplate, new QueryBuilder());
     }
 
-    public EntityManagerImpl(JdbcTemplate jdbcTemplate, QueryTranslator queryBuilder) {
+    public EntityManagerImpl(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryBuilder = queryBuilder;
     }

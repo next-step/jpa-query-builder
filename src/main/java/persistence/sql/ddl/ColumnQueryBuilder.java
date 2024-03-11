@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
-public class ColumnQueryTranslator {
+public class ColumnQueryBuilder {
 
     public String getColumnNameFrom(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {

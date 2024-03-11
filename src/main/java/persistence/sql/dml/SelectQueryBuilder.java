@@ -1,49 +1,54 @@
 package persistence.sql.dml;
 
-import static persistence.sql.ddl.common.StringConstants.*;
+import static persistence.sql.ddl.common.StringConstants.COLUMN_DEFINITION_DELIMITER;
+import static persistence.sql.ddl.common.StringConstants.PRIMARY_KEY_NOT_FOUND;
 
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import persistence.sql.AbstractQueryTranslator;
+import java.util.stream.Collectors;
+import persistence.sql.AbstractQueryBuilder;
 import persistence.sql.ddl.TableQueryBuilder;
 
-public class DeleteQueryTranslator extends AbstractQueryTranslator {
+public class SelectQueryBuilder extends AbstractQueryBuilder {
     private final TableQueryBuilder tableQueryBuilder;
 
-    public DeleteQueryTranslator(
+    public SelectQueryBuilder(
         TableQueryBuilder tableQueryBuilder
     ) {
         this.tableQueryBuilder = tableQueryBuilder;
     }
 
-    public String getDeleteAllQuery(Class<?> entityClass) {
+    public String getSelectAllQuery(Class<?> entityClass) {
         return String.format(
-            "DELETE FROM %s",
+            "SELECT %s FROM %s",
+            getColumnNamesClause(entityClass),
             tableQueryBuilder.getTableNameFrom(entityClass)
         );
     }
 
-    public String getDeleteByIdQuery(Class<?> entityClass, Object id) {
+    public String getSelectByIdQuery(Class<?> entityClass, Object id) {
         return String.format(
-            "DELETE FROM %s WHERE %s = %s",
+            "SELECT %s FROM %s WHERE %s = %s",
+            getColumnNamesClause(entityClass),
             tableQueryBuilder.getTableNameFrom(entityClass),
             getPrimaryKeyColumnName(entityClass),
             getPrimaryKeyValueQueryFromEntityClassAndId(entityClass, id)
         );
     }
 
-    public String getDeleteQueryFromEntity(Object entity) {
-        return getDeleteQueryFromEntity(entity.getClass(), entity);
+    public String getSelectCountQuery(Class<?> entityClass) {
+        return String.format(
+            "SELECT COUNT(%s) FROM %s",
+            getPrimaryKeyColumnName(entityClass),
+            tableQueryBuilder.getTableNameFrom(entityClass)
+        );
     }
 
-    private String getDeleteQueryFromEntity(Class<?> entityClass, Object entity) {
-        return String.format(
-            "DELETE FROM %s WHERE %s = %s",
-            tableQueryBuilder.getTableNameFrom(entityClass),
-            getPrimaryKeyColumnName(entityClass),
-            getPrimaryKeyValueQueryFromEntityClassAndEntityObject(entityClass, entity)
-        );
+    private String getColumnNamesClause(Class<?> entityClass) {
+        return getColumnFieldStream(entityClass)
+            .map(this::getColumnNameFrom)
+            .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
     }
 
     private String getPrimaryKeyColumnName(Class<?> entityClass) {
@@ -65,22 +70,5 @@ public class DeleteQueryTranslator extends AbstractQueryTranslator {
         }
 
         return getColumnValueFromObject(id);
-    }
-
-    private String getPrimaryKeyValueQueryFromEntityClassAndEntityObject(Class<?> entityClass, Object entity) {
-        try {
-            Field primaryKeyField = Arrays.stream(entityClass.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(PRIMARY_KEY_NOT_FOUND));
-
-            primaryKeyField.setAccessible(true);
-
-            Object id = primaryKeyField.get(entity);
-
-            return getColumnValueFromObject(id);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
     }
 }

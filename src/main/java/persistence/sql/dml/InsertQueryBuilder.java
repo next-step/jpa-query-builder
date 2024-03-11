@@ -8,13 +8,13 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
-import persistence.sql.AbstractQueryTranslator;
+import persistence.sql.AbstractQueryBuilder;
 import persistence.sql.ddl.TableQueryBuilder;
 
-public class InsertQueryTranslator extends AbstractQueryTranslator {
+public class InsertQueryBuilder extends AbstractQueryBuilder {
     private final TableQueryBuilder tableQueryBuilder;
 
-    public InsertQueryTranslator(TableQueryBuilder tableQueryBuilder) {
+    public InsertQueryBuilder(TableQueryBuilder tableQueryBuilder) {
         this.tableQueryBuilder = tableQueryBuilder;
     }
 

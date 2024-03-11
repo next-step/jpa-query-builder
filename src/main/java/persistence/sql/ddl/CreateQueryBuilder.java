@@ -5,21 +5,21 @@ import static persistence.sql.ddl.common.StringConstants.COLUMN_DEFINITION_DELIM
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import persistence.sql.AbstractQueryTranslator;
+import persistence.sql.AbstractQueryBuilder;
 import persistence.sql.ddl.common.StringConstants;
 import persistence.sql.ddl.constraints.strategy.ConstraintsStrategy;
 import persistence.sql.ddl.constraints.strategy.DefaultConstraintsStrategy;
 import persistence.sql.ddl.type.DataTypeMapping;
 import persistence.sql.ddl.type.impl.DefaultDataTypeMapping;
 
-public class CreateQueryTranslator extends AbstractQueryTranslator {
+public class CreateQueryBuilder extends AbstractQueryBuilder {
     private final TableQueryBuilder tableQueryBuilder;
 
     private final DataTypeMapping dataTypeMapping;
 
     private final ConstraintsStrategy constraintsStrategy;
 
-    public CreateQueryTranslator(TableQueryBuilder tableQueryBuilder) {
+    public CreateQueryBuilder(TableQueryBuilder tableQueryBuilder) {
         this(
             tableQueryBuilder,
             new DefaultDataTypeMapping(),
@@ -27,7 +27,7 @@ public class CreateQueryTranslator extends AbstractQueryTranslator {
         );
     }
 
-    public CreateQueryTranslator(
+    public CreateQueryBuilder(
         TableQueryBuilder tableQueryBuilder,
         DataTypeMapping dataTypeMapping,
         ConstraintsStrategy constraintsStrategy

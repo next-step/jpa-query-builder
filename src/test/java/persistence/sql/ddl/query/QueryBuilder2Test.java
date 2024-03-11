@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
-import persistence.sql.QueryTranslator;
+import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.entity.Person2;
 
 @DisplayName("2단계 요구사항 - @Entity, @Id, @Column 어노테이션을 바탕으로 create 쿼리 만들어보기")
@@ -18,7 +18,7 @@ class QueryBuilder2Test {
 
     private final Class<?> entityClass = Person2.class;
 
-    private final QueryTranslator queryBuilder = new QueryTranslator();
+    private final QueryBuilder queryBuilder = new QueryBuilder();
 
     @Test
     @DisplayName("@Entity, @Id, @Column 어노테이션을 바탕으로 create 쿼리 만들어보기")

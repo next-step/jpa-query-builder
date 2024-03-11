@@ -2,38 +2,38 @@ package persistence.sql;
 
 
 import java.lang.reflect.Field;
-import persistence.sql.ddl.CreateQueryTranslator;
-import persistence.sql.ddl.DropQueryTranslator;
+import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.ddl.TableQueryBuilder;
-import persistence.sql.dml.DeleteQueryTranslator;
-import persistence.sql.dml.InsertQueryTranslator;
-import persistence.sql.dml.SelectQueryTranslator;
+import persistence.sql.dml.DeleteQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
+import persistence.sql.dml.SelectQueryBuilder;
 
-public class QueryTranslator extends AbstractQueryTranslator {
+public class QueryBuilder extends AbstractQueryBuilder {
 
     private final TableQueryBuilder tableQueryBuilder;
 
-    private final SelectQueryTranslator selectQueryBuilder;
+    private final SelectQueryBuilder selectQueryBuilder;
 
-    private final DeleteQueryTranslator deleteQueryBuilder;
+    private final DeleteQueryBuilder deleteQueryBuilder;
 
-    private final InsertQueryTranslator insertQueryTranslator;
+    private final InsertQueryBuilder insertQueryTranslator;
 
-    private final DropQueryTranslator dropQueryTranslator;
+    private final DropQueryBuilder dropQueryBuilder;
 
-    private final CreateQueryTranslator createQueryBuilder;
+    private final CreateQueryBuilder createQueryBuilder;
 
-    public QueryTranslator() {
+    public QueryBuilder() {
         this(new TableQueryBuilder());
     }
 
-    public QueryTranslator(TableQueryBuilder tableQueryBuilder) {
+    public QueryBuilder(TableQueryBuilder tableQueryBuilder) {
         this.tableQueryBuilder = tableQueryBuilder;
-        this.selectQueryBuilder = new SelectQueryTranslator(tableQueryBuilder);
-        this.deleteQueryBuilder = new DeleteQueryTranslator(tableQueryBuilder);
-        this.insertQueryTranslator = new InsertQueryTranslator(tableQueryBuilder);
-        this.dropQueryTranslator = new DropQueryTranslator(tableQueryBuilder);
-        this.createQueryBuilder = new CreateQueryTranslator(tableQueryBuilder);
+        this.selectQueryBuilder = new SelectQueryBuilder(tableQueryBuilder);
+        this.deleteQueryBuilder = new DeleteQueryBuilder(tableQueryBuilder);
+        this.insertQueryTranslator = new InsertQueryBuilder(tableQueryBuilder);
+        this.dropQueryBuilder = new DropQueryBuilder(tableQueryBuilder);
+        this.createQueryBuilder = new CreateQueryBuilder(tableQueryBuilder);
     }
 
     public String getCreateTableQuery(final Class<?> entityClass) {
@@ -41,7 +41,7 @@ public class QueryTranslator extends AbstractQueryTranslator {
     }
 
     public String getDropTableQuery(Class<?> entityClass) {
-        return dropQueryTranslator.getDropTableQuery(entityClass);
+        return dropQueryBuilder.getDropTableQuery(entityClass);
     }
 
     public String getInsertQuery(Object entity) {

@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import persistence.entity.EntityManager;
-import persistence.sql.QueryTranslator;
+import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.entity.Person;
 
 class EntityManagerImplTest {
@@ -55,7 +55,7 @@ class EntityManagerImplTest {
 
         entityManager = new EntityManagerImpl(jdbcTemplate);
 
-        QueryTranslator queryBuilder = new QueryTranslator();
+        QueryBuilder queryBuilder = new QueryBuilder();
 
         jdbcTemplate.execute(queryBuilder.getCreateTableQuery(Person.class));
     }
@@ -129,7 +129,7 @@ class EntityManagerImplTest {
     private void initializeTable() throws SQLException {
         JdbcTemplate jdbcTemplate = getJdbcTemplate();
 
-        QueryTranslator queryBuilder = new QueryTranslator();
+        QueryBuilder queryBuilder = new QueryBuilder();
 
         for (Person person : idToPersonMap.values()) {
             jdbcTemplate.execute(queryBuilder.getInsertQuery(person));
@@ -139,7 +139,7 @@ class EntityManagerImplTest {
     private void dropTable() throws SQLException {
         JdbcTemplate jdbcTemplate = getJdbcTemplate();
 
-        QueryTranslator queryBuilder = new QueryTranslator();
+        QueryBuilder queryBuilder = new QueryBuilder();
 
         jdbcTemplate.execute(queryBuilder.getDropTableQuery(Person.class));
     }
@@ -147,7 +147,7 @@ class EntityManagerImplTest {
     private Integer selectCountOfTable() throws SQLException {
         JdbcTemplate jdbcTemplate = getJdbcTemplate();
 
-        QueryTranslator queryBuilder = new QueryTranslator();
+        QueryBuilder queryBuilder = new QueryBuilder();
 
         return jdbcTemplate.queryForObject(queryBuilder.getSelectCountQuery(Person.class),
             resultSet -> resultSet.getInt(1));

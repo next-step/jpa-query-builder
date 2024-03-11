@@ -9,9 +9,9 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 import persistence.exception.UnsupportedClassException;
 
-public abstract class AbstractQueryTranslator {
+public abstract class AbstractQueryBuilder {
 
-    protected AbstractQueryTranslator() {
+    protected AbstractQueryBuilder() {
 
     }
 

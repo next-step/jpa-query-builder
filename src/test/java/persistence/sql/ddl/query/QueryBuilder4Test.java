@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import persistence.sql.QueryTranslator;
+import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.entity.Person4;
 
 @DisplayName("4단계 요구사항 - @Entity, @Table(schema), @Id, @Column, @Transient 어노테이션을 바탕으로 drop 쿼리 만들어보기")
@@ -14,7 +14,7 @@ class QueryBuilder4Test {
 
     private final Class<?> entityClass = Person4.class;
 
-    private final QueryTranslator queryBuilder = new QueryTranslator();
+    private final QueryBuilder queryBuilder = new QueryBuilder();
 
     @Test
     @DisplayName("@Entity, @Table(schema), @Id, @Column, @Transient 어노테이션을 바탕으로 drop 쿼리 만들어보기")

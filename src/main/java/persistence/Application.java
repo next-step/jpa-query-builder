@@ -7,7 +7,7 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.QueryTranslator;
+import persistence.sql.QueryBuilder;
 import persistence.sql.ddl.entity.Person;
 
 public class Application {
@@ -28,7 +28,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            QueryTranslator queryBuilder = new QueryTranslator();
+            QueryBuilder queryBuilder = new QueryBuilder();
 
             jdbcTemplate.execute(queryBuilder.getCreateTableQuery(Person.class));
 
@@ -50,7 +50,7 @@ public class Application {
         }
     }
 
-    private static void querySelectById(JdbcTemplate jdbcTemplate, QueryTranslator queryBuilder) {
+    private static void querySelectById(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         Person person = jdbcTemplate.queryForObject(
             queryBuilder.getSelectByIdQuery(Person.class, 2L),
             rowMapper
@@ -59,7 +59,7 @@ public class Application {
         logger.info("Person: {}", person);
     }
 
-    private static void querySelectAll(JdbcTemplate jdbcTemplate, QueryTranslator queryBuilder) {
+    private static void querySelectAll(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         List<Person> persons = jdbcTemplate.query(
             queryBuilder.getSelectAllQuery(Person.class),
             rowMapper
@@ -68,7 +68,7 @@ public class Application {
         persons.forEach(person -> logger.info("Person: {}", person));
     }
 
-    private static void executeInitializedQuery(JdbcTemplate jdbcTemplate, QueryTranslator queryBuilder) {
+    private static void executeInitializedQuery(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         List<Person> persons = List.of(
             new Person("John", 23, "john@gmail.com"),
             new Person("Smith", 33, "smith@gmail.com"),

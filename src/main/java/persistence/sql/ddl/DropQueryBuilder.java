@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
-public class DropQueryTranslator {
+public class DropQueryBuilder {
     private final TableQueryBuilder tableQueryBuilder;
 
-    public DropQueryTranslator(TableQueryBuilder tableQueryBuilder) {
+    public DropQueryBuilder(TableQueryBuilder tableQueryBuilder) {
         this.tableQueryBuilder = tableQueryBuilder;
     }
 
