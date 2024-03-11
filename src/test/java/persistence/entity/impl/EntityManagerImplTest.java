@@ -55,9 +55,9 @@ class EntityManagerImplTest {
 
         entityManager = new EntityManagerImpl(jdbcTemplate);
 
-        QueryTranslator queryTranslator = new QueryTranslator();
+        QueryTranslator queryBuilder = new QueryTranslator();
 
-        jdbcTemplate.execute(queryTranslator.getCreateTableQuery(Person.class));
+        jdbcTemplate.execute(queryBuilder.getCreateTableQuery(Person.class));
     }
 
     @AfterEach
@@ -129,27 +129,27 @@ class EntityManagerImplTest {
     private void initializeTable() throws SQLException {
         JdbcTemplate jdbcTemplate = getJdbcTemplate();
 
-        QueryTranslator queryTranslator = new QueryTranslator();
+        QueryTranslator queryBuilder = new QueryTranslator();
 
         for (Person person : idToPersonMap.values()) {
-            jdbcTemplate.execute(queryTranslator.getInsertQuery(person));
+            jdbcTemplate.execute(queryBuilder.getInsertQuery(person));
         }
     }
 
     private void dropTable() throws SQLException {
         JdbcTemplate jdbcTemplate = getJdbcTemplate();
 
-        QueryTranslator queryTranslator = new QueryTranslator();
+        QueryTranslator queryBuilder = new QueryTranslator();
 
-        jdbcTemplate.execute(queryTranslator.getDropTableQuery(Person.class));
+        jdbcTemplate.execute(queryBuilder.getDropTableQuery(Person.class));
     }
 
     private Integer selectCountOfTable() throws SQLException {
         JdbcTemplate jdbcTemplate = getJdbcTemplate();
 
-        QueryTranslator queryTranslator = new QueryTranslator();
+        QueryTranslator queryBuilder = new QueryTranslator();
 
-        return jdbcTemplate.queryForObject(queryTranslator.getSelectCountQuery(Person.class),
+        return jdbcTemplate.queryForObject(queryBuilder.getSelectCountQuery(Person.class),
             resultSet -> resultSet.getInt(1));
     }
 }

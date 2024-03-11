@@ -1,16 +1,16 @@
 package persistence.sql.ddl;
 
 public class DropQueryTranslator {
-    private final TableTranslator tableTranslator;
+    private final TableQueryBuilder tableQueryBuilder;
 
-    public DropQueryTranslator(TableTranslator tableTranslator) {
-        this.tableTranslator = tableTranslator;
+    public DropQueryTranslator(TableQueryBuilder tableQueryBuilder) {
+        this.tableQueryBuilder = tableQueryBuilder;
     }
 
     public String getDropTableQuery(Class<?> entityClass) {
         return String.format(
             "DROP TABLE %s",
-            tableTranslator.getTableNameFrom(entityClass)
+            tableQueryBuilder.getTableNameFrom(entityClass)
         );
     }
 }

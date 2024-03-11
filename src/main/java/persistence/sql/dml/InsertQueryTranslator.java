@@ -1,20 +1,21 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.ColumnTranslator;
-import persistence.sql.ddl.TableTranslator;
+import static persistence.sql.ddl.common.StringConstants.COLUMN_DEFINITION_DELIMITER;
 
-public class InsertQueryTranslator {
-    private final ColumnTranslator columnTranslator;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import persistence.sql.AbstractQueryTranslator;
+import persistence.sql.ddl.TableQueryBuilder;
 
-    private final ColumnValueTranslator columnValueTranslator;
+public class InsertQueryTranslator extends AbstractQueryTranslator {
+    private final TableQueryBuilder tableQueryBuilder;
 
-    private final TableTranslator tableTranslator;
-
-    public InsertQueryTranslator(ColumnTranslator columnTranslator,
-        ColumnValueTranslator columnValueTranslator, TableTranslator tableTranslator) {
-        this.columnTranslator = columnTranslator;
-        this.columnValueTranslator = columnValueTranslator;
-        this.tableTranslator = tableTranslator;
+    public InsertQueryTranslator(TableQueryBuilder tableQueryBuilder) {
+        this.tableQueryBuilder = tableQueryBuilder;
     }
 
     public String getInsertQuery(Object entity) {
@@ -22,9 +23,37 @@ public class InsertQueryTranslator {
 
         return String.format(
             "INSERT INTO %s (%s) VALUES (%s)",
-            tableTranslator.getTableNameFrom(entityClass),
-            columnTranslator.getColumnNamesClauseWithoutPrimaryKey(entityClass),
-            columnValueTranslator.getColumnValueClause(entity)
+            tableQueryBuilder.getTableNameFrom(entityClass),
+            getColumnNamesWithoutPrimaryKey(entityClass),
+            getColumnValuesQuery(entity)
         );
+    }
+
+    private String getColumnValuesQuery(Object entity) {
+        Class<?> clazz = entity.getClass();
+        return Arrays.stream(clazz.getDeclaredFields())
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .filter(field -> !field.isAnnotationPresent(Id.class))
+            .sorted(Comparator.comparing(field -> field.isAnnotationPresent(Id.class) ? 0 : 1))
+            .map(field -> getColumnValueFromEntity(entity, field))
+            .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
+    }
+
+    private String getColumnNamesWithoutPrimaryKey(Class<?> entityClass) {
+        return getColumnFieldStream(entityClass)
+            .filter(field -> !field.isAnnotationPresent(Id.class))
+            .map(this::getColumnNameFrom)
+            .collect(Collectors.joining(COLUMN_DEFINITION_DELIMITER));
+    }
+
+    private String getColumnValueFromEntity(Object entity, Field field) {
+        try {
+            field.setAccessible(true);
+            Object columnValue = field.get(entity);
+
+            return getColumnValueFromObject(columnValue);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

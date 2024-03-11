@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import persistence.sql.ddl.common.StringConstants;
 
-public class TableTranslator {
+public class TableQueryBuilder {
     public String getTableNameFrom(Class<?> entityClass) {
         return Stream.of(
                 getSchemaNameFrom(entityClass),

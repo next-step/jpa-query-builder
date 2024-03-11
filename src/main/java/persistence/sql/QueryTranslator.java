@@ -2,46 +2,42 @@ package persistence.sql;
 
 
 import java.lang.reflect.Field;
-import persistence.sql.ddl.ColumnTranslator;
 import persistence.sql.ddl.CreateQueryTranslator;
 import persistence.sql.ddl.DropQueryTranslator;
-import persistence.sql.ddl.TableTranslator;
-import persistence.sql.dml.ColumnValueTranslator;
+import persistence.sql.ddl.TableQueryBuilder;
 import persistence.sql.dml.DeleteQueryTranslator;
 import persistence.sql.dml.InsertQueryTranslator;
 import persistence.sql.dml.SelectQueryTranslator;
 
-public class QueryTranslator {
+public class QueryTranslator extends AbstractQueryTranslator {
 
-    private final TableTranslator tableTranslator = new TableTranslator();
+    private final TableQueryBuilder tableQueryBuilder;
 
-    private final ColumnTranslator columnTranslator = new ColumnTranslator();
+    private final SelectQueryTranslator selectQueryBuilder;
 
-    private final ColumnValueTranslator columnValueTranslator = new ColumnValueTranslator();
-
-    private final SelectQueryTranslator selectQueryTranslator;
-
-    private final DeleteQueryTranslator deleteQueryTranslator;
+    private final DeleteQueryTranslator deleteQueryBuilder;
 
     private final InsertQueryTranslator insertQueryTranslator;
 
     private final DropQueryTranslator dropQueryTranslator;
 
-    private final CreateQueryTranslator createQueryTranslator;
+    private final CreateQueryTranslator createQueryBuilder;
 
     public QueryTranslator() {
-        this.selectQueryTranslator = new SelectQueryTranslator(columnTranslator,
-            columnValueTranslator, tableTranslator);
-        this.deleteQueryTranslator = new DeleteQueryTranslator(columnTranslator,
-            columnValueTranslator, tableTranslator);
-        this.insertQueryTranslator = new InsertQueryTranslator(columnTranslator,
-            columnValueTranslator, tableTranslator);
-        this.dropQueryTranslator = new DropQueryTranslator(tableTranslator);
-        this.createQueryTranslator = new CreateQueryTranslator(columnTranslator, tableTranslator);
+        this(new TableQueryBuilder());
+    }
+
+    public QueryTranslator(TableQueryBuilder tableQueryBuilder) {
+        this.tableQueryBuilder = tableQueryBuilder;
+        this.selectQueryBuilder = new SelectQueryTranslator(tableQueryBuilder);
+        this.deleteQueryBuilder = new DeleteQueryTranslator(tableQueryBuilder);
+        this.insertQueryTranslator = new InsertQueryTranslator(tableQueryBuilder);
+        this.dropQueryTranslator = new DropQueryTranslator(tableQueryBuilder);
+        this.createQueryBuilder = new CreateQueryTranslator(tableQueryBuilder);
     }
 
     public String getCreateTableQuery(final Class<?> entityClass) {
-        return createQueryTranslator.getCreateTableQuery(entityClass);
+        return createQueryBuilder.getCreateTableQuery(entityClass);
     }
 
     public String getDropTableQuery(Class<?> entityClass) {
@@ -53,38 +49,38 @@ public class QueryTranslator {
     }
 
     public String getSelectAllQuery(Class<?> entityClass) {
-        return selectQueryTranslator.getSelectAllQuery(entityClass);
+        return selectQueryBuilder.getSelectAllQuery(entityClass);
     }
 
     public String getSelectByIdQuery(Class<?> entityClass, Object id) {
-        return selectQueryTranslator.getSelectByIdQuery(entityClass, id);
+        return selectQueryBuilder.getSelectByIdQuery(entityClass, id);
     }
 
     public String getSelectCountQuery(Class<?> entityClass) {
-        return selectQueryTranslator.getSelectCountQuery(entityClass);
+        return selectQueryBuilder.getSelectCountQuery(entityClass);
     }
 
     public String getDeleteAllQuery(Class<?> entityClass) {
-        return deleteQueryTranslator.getDeleteAllQuery(entityClass);
+        return deleteQueryBuilder.getDeleteAllQuery(entityClass);
     }
 
     public String getDeleteByIdQuery(Class<?> entityClass, Object id) {
-        return deleteQueryTranslator.getDeleteByIdQuery(entityClass, id);
+        return deleteQueryBuilder.getDeleteByIdQuery(entityClass, id);
     }
 
     public String getDeleteQueryFromEntity(Object entity) {
-        return deleteQueryTranslator.getDeleteQueryFromEntity(entity);
+        return deleteQueryBuilder.getDeleteQueryFromEntity(entity);
     }
 
     public String getTableNameFrom(Class<?> entityClass) {
-        return tableTranslator.getTableNameFrom(entityClass);
+        return tableQueryBuilder.getTableNameFrom(entityClass);
     }
 
     public String getColumnDefinitionFrom(Field field) {
-        return columnTranslator.getColumnDefinitionFrom(field);
+        return createQueryBuilder.getColumnDefinitionFrom(field);
     }
 
     public String getColumnDefinitionsFrom(Class<?> entityClass) {
-        return columnTranslator.getColumnDefinitionsFrom(entityClass);
+        return createQueryBuilder.getColumnDefinitionsFrom(entityClass);
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import jdbc.RowMapper;
 import persistence.exception.ReflectionRuntimeException;
-import persistence.sql.ddl.ColumnTranslator;
+import persistence.sql.ddl.ColumnQueryTranslator;
 
 public class EntityRowMapperFactory {
 
@@ -15,28 +15,32 @@ public class EntityRowMapperFactory {
         // Do nothing
     }
 
-    public static class LazyLoadEntityRowMapperFactory {
+    public static class CacheEntityRowMapperFactory {
+        private CacheEntityRowMapperFactory() {
+            // Do nothing
+        }
+
         private static final EntityRowMapperFactory INSTANCE = new EntityRowMapperFactory();
     }
 
     public static EntityRowMapperFactory getInstance() {
-        return LazyLoadEntityRowMapperFactory.INSTANCE;
+        return CacheEntityRowMapperFactory.INSTANCE;
     }
 
     public <T> RowMapper<T> getRowMapper(Class<T> entityClass) {
         return resultSet -> {
             try {
-                ColumnTranslator columnTranslator = new ColumnTranslator();
+                ColumnQueryTranslator columnQueryTranslator = new ColumnQueryTranslator();
                 Constructor<T> declaredConstructor = entityClass.getDeclaredConstructor();
                 declaredConstructor.setAccessible(true);
                 T entity = entityClass.getDeclaredConstructor().newInstance();
 
-                List<Field> columnFieldList = columnTranslator.getColumnFieldStream(entityClass)
+                List<Field> columnFieldList = columnQueryTranslator.getColumnFieldStream(entityClass)
                     .collect(Collectors.toList());
 
                 for (Field field : columnFieldList) {
                     field.setAccessible(true);
-                    String columnName = columnTranslator.getColumnNameFrom(field);
+                    String columnName = columnQueryTranslator.getColumnNameFrom(field);
                     field.set(entity, resultSet.getObject(columnName));
                 }
 

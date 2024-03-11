@@ -12,17 +12,17 @@ import persistence.sql.QueryTranslator;
 import persistence.sql.ddl.entity.Person1;
 
 @DisplayName("1단계 요구사항 - @Entity, @Id 어노테이션을 바탕으로 create 쿼리 만들어보기")
-class QueryTranslator1Test {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryTranslator2Test.class);
+class QueryBuilder1Test {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(QueryBuilder2Test.class);
 
     private final Class<?> entityClass = Person1.class;
 
-    private final QueryTranslator queryTranslator = new QueryTranslator();
+    private final QueryTranslator queryBuilder = new QueryTranslator();
 
     @Test
     @DisplayName("@Entity, @Id 어노테이션을 바탕으로 create 쿼리 만들어보기")
     void createDDL() {
-        String ddl = queryTranslator.getCreateTableQuery(entityClass);
+        String ddl = queryBuilder.getCreateTableQuery(entityClass);
 
         log.debug("DDL: {}", ddl);
 
@@ -33,7 +33,7 @@ class QueryTranslator1Test {
     @Test
     @DisplayName("@Entity, @Id 어노테이션을 바탕으로 drop 쿼리 만들어보기")
     void buildDropQuery() {
-        String dropQuery = queryTranslator.getDropTableQuery(entityClass);
+        String dropQuery = queryBuilder.getDropTableQuery(entityClass);
 
         log.debug("Drop query: {}", dropQuery);
 
@@ -43,7 +43,7 @@ class QueryTranslator1Test {
     @Test
     @DisplayName("클래스 정보를 바탕으로 테이블명 가져오기")
     void getTableNameByClassName() {
-        String tableName = queryTranslator.getTableNameFrom(entityClass);
+        String tableName = queryBuilder.getTableNameFrom(entityClass);
 
         log.debug("Table name: {}", tableName);
 
@@ -54,7 +54,7 @@ class QueryTranslator1Test {
     @Test
     @DisplayName("클래스 정보를 바탕으로 컬럼 선언문 가져오기")
     void getColumnDefinitionStatement() {
-        String columnDefinitionStatement = queryTranslator.getColumnDefinitionsFrom(entityClass);
+        String columnDefinitionStatement = queryBuilder.getColumnDefinitionsFrom(entityClass);
 
         log.debug("Column definition statement: {}", columnDefinitionStatement);
 
@@ -73,7 +73,7 @@ class QueryTranslator1Test {
     ) throws NoSuchFieldException {
         Field field = entityClass.getDeclaredField(fieldName);
 
-        String actualColumnDefinitionStatement = queryTranslator.getColumnDefinitionFrom(field);
+        String actualColumnDefinitionStatement = queryBuilder.getColumnDefinitionFrom(field);
 
         assertThat(actualColumnDefinitionStatement).isEqualTo(expectedColumnDefinitionStatement);
     }

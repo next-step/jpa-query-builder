@@ -8,21 +8,21 @@ import persistence.sql.QueryTranslator;
 public class EntityManagerImpl implements EntityManager {
     private final JdbcTemplate jdbcTemplate;
 
-    private final QueryTranslator queryTranslator;
+    private final QueryTranslator queryBuilder;
 
     public EntityManagerImpl(JdbcTemplate jdbcTemplate) {
         this(jdbcTemplate, new QueryTranslator());
     }
 
-    public EntityManagerImpl(JdbcTemplate jdbcTemplate, QueryTranslator queryTranslator) {
+    public EntityManagerImpl(JdbcTemplate jdbcTemplate, QueryTranslator queryBuilder) {
         this.jdbcTemplate = jdbcTemplate;
-        this.queryTranslator = queryTranslator;
+        this.queryBuilder = queryBuilder;
     }
 
 
     @Override
     public <T> T find(Class<T> entityClass, Long id) {
-        String selectByIdQuery = queryTranslator.getSelectByIdQuery(entityClass, id);
+        String selectByIdQuery = queryBuilder.getSelectByIdQuery(entityClass, id);
 
         return jdbcTemplate.queryForObject(
             selectByIdQuery,
@@ -32,7 +32,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public Object persist(Object entity) {
-        String insertQuery = queryTranslator.getInsertQuery(entity);
+        String insertQuery = queryBuilder.getInsertQuery(entity);
 
         jdbcTemplate.execute(insertQuery);
 
@@ -41,7 +41,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-        String deleteQueryFromEntity = queryTranslator.getDeleteQueryFromEntity(entity);
+        String deleteQueryFromEntity = queryBuilder.getDeleteQueryFromEntity(entity);
 
         jdbcTemplate.execute(deleteQueryFromEntity);
     }
