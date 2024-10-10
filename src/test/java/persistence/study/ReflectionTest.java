@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -54,14 +55,7 @@ public class ReflectionTest {
         Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.getName().startsWith("test"))
                 .forEach(method -> {
-                    try {
-                        Object result = method.invoke(car);
-                        if (Objects.nonNull(result)) {
-                            logger.debug((String) result);
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    invokeMethod(car, method);
                 });
     }
 
@@ -75,15 +69,19 @@ public class ReflectionTest {
         Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                 .forEach(method -> {
-                    try {
-                        Object result = method.invoke(car);
-                        if (Objects.nonNull(result)) {
-                            logger.debug((String) result);
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    invokeMethod(car, method);
                 });
+    }
+
+    private void invokeMethod(Car car, Method method) {
+        try {
+            Object result = method.invoke(car);
+            if (Objects.nonNull(result)) {
+                logger.debug((String) result);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
