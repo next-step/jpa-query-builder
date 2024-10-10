@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -71,4 +72,32 @@ public class ReflectionTest {
                     }
                 });
     }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        final String carNameFieldName = "name";
+        final String priceFieldName = "price";
+        final String carName = "변경차";
+        final int price = 1000;
+
+        Class<Car> carClass = Car.class;
+
+        Constructor<Car> constructor = carClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Car car = constructor.newInstance();
+
+        Field carNameField = car.getClass().getDeclaredField(carNameFieldName);
+        carNameField.setAccessible(true);
+        carNameField.set(car, carName);
+
+        Field carPriceField = car.getClass().getDeclaredField(priceFieldName);
+        carPriceField.setAccessible(true);
+        carPriceField.set(car,price);
+
+
+        assertThat(car.getClass().getMethod("getName").invoke(car)).isEqualTo(carName);
+        assertThat(car.getClass().getMethod("getPrice").invoke(car)).isEqualTo(price);
+    }
+
 }
