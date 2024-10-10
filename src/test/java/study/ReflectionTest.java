@@ -97,8 +97,6 @@ public class ReflectionTest {
         assertThat(outputStream.toString()).isEqualTo("자동차 정보를 출력 합니다.\n");
 
     }
-
-
     @Test
     @DisplayName("private field에 값 할당한다.")
     void privateFieldAccess() throws Exception {
@@ -120,4 +118,18 @@ public class ReflectionTest {
         assertThat(tesla.testGetPrice()).endsWith(String.valueOf(price));
     }
 
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성한다.")
+    void constructorWithArgs() throws Exception {
+        String name = "테슬라";
+        int price = 10000;
+
+        Class<Car> carClass = Car.class;
+        Car tesla = carClass.getDeclaredConstructor(String.class, int.class)
+                .newInstance(name, price);
+
+        assertThat(tesla.testGetName()).endsWith(name);
+        assertThat(tesla.testGetPrice()).endsWith(String.valueOf(price));
+    }
 }
