@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -163,6 +164,28 @@ public class ReflectionTest {
             priceField.set(car, 100_000_000);
 
             Assertions.assertAll("Car 객체 필드값 설정 검증",
+                    () -> assertEquals(nameField.get(car), "드림카"),
+                    () -> assertEquals(priceField.get(car), 100_000_000));
+        }
+    }
+
+    @Nested
+    class 요구사항5 {
+
+        @Test
+        @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+        void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+            Class<Car> carClass = Car.class;
+            Constructor<Car> constructor = carClass.getDeclaredConstructor(String.class, int.class);
+            Car car = constructor.newInstance("드림카", 100_000_000);
+
+            Field nameField = carClass.getDeclaredField("name");
+            nameField.setAccessible(true);
+
+            Field priceField = carClass.getDeclaredField("price");
+            priceField.setAccessible(true);
+
+            Assertions.assertAll("Car 객체 필드값 초기화 검증",
                     () -> assertEquals(nameField.get(car), "드림카"),
                     () -> assertEquals(priceField.get(car), 100_000_000));
         }
