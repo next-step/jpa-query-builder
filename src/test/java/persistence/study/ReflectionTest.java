@@ -3,6 +3,7 @@ package persistence.study;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -28,5 +29,19 @@ class ReflectionTest {
                 .toList();
 
         assertThat(fieldNames).containsExactly("name", "price");
+    }
+
+    @DisplayName("getDeclaredConstructor() 메서드는 클래스에 선언된 생성자를 반환한다")
+    @Test
+    void getDeclaredConstructor() {
+        Class<Car> carClass = Car.class;
+        List<String> constructorNames = Arrays.stream(carClass.getDeclaredConstructors())
+                .map(Constructor::toString)
+                .toList();
+
+        assertThat(constructorNames).containsExactly(
+                "public persistence.study.Car()",
+                "public persistence.study.Car(java.lang.String,int)"
+        );
     }
 }
