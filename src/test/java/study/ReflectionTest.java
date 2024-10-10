@@ -2,9 +2,8 @@ package study;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -12,17 +11,27 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReflectionTest {
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
     @Test
     @DisplayName("Car 객체의 모든 필드 정보 출력하기")
-    void showDeclaredFields() {
+    void getDeclaredFields() {
         Class<Car> carClass = Car.class;
-        Field[] declaredFields = carClass.getDeclaredFields();
-        List<String> fieldNames = Arrays.stream(declaredFields)
+        List<String> fieldNames = Arrays.stream(carClass.getDeclaredFields())
                 .map(Field::getName)
                 .toList();
         assertThat(fieldNames).contains("name", "price");
+    }
+
+    @Test
+    @DisplayName("Car 객체의 모든 생성자 정보 출력하기")
+    void getDeclaredConstructors() {
+        Class<Car> carClass = Car.class;
+        Constructor<?>[] declaredConstructors = carClass.getDeclaredConstructors();
+        List<String> constructorNames = Arrays.stream(declaredConstructors)
+                .map(Constructor::toString)
+                .toList();
+
+        assertThat(constructorNames).contains("public study.Car()", "public study.Car(java.lang.String,int)");
     }
 
 }
