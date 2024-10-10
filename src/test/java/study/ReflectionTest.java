@@ -93,11 +93,23 @@ public class ReflectionTest {
 
         Field carPriceField = car.getClass().getDeclaredField(priceFieldName);
         carPriceField.setAccessible(true);
-        carPriceField.set(car,price);
+        carPriceField.set(car, price);
 
 
         assertThat(car.getClass().getMethod("getName").invoke(car)).isEqualTo(carName);
         assertThat(car.getClass().getMethod("getPrice").invoke(car)).isEqualTo(price);
     }
 
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        final String carName = "차이름";
+        final Integer price = 10000;
+
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor(String.class, int.class).newInstance(carName, price);
+
+        assertThat(car.getName()).isEqualTo(carName);
+        assertThat(car.getPrice()).isEqualTo(price);
+    }
 }
