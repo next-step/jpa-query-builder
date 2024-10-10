@@ -96,8 +96,8 @@ public class ReflectionTest {
         carPriceField.set(car, price);
 
 
-        assertThat(car.getClass().getMethod("getName").invoke(car)).isEqualTo(carName);
-        assertThat(car.getClass().getMethod("getPrice").invoke(car)).isEqualTo(price);
+        assertThat(car.getName()).isEqualTo(carName);
+        assertThat(car.getPrice()).isEqualTo(price);
     }
 
     @Test
