@@ -1,5 +1,6 @@
 package persistence.study;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReflectionTest {
 
@@ -138,6 +141,30 @@ public class ReflectionTest {
             } catch (Exception exception) {
                 logger.error("Method.invoke() 예외 발생", exception);
             }
+        }
+    }
+
+    @Nested
+    class 요구사항4 {
+
+        @Test
+        @DisplayName("private field 에 값 할당")
+        void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException {
+            Class<Car> carClass = Car.class;
+
+            Field nameField = carClass.getDeclaredField("name");
+            nameField.setAccessible(true);
+
+            Field priceField = carClass.getDeclaredField("price");
+            priceField.setAccessible(true);
+
+            Car car = new Car();
+            nameField.set(car, "드림카");
+            priceField.set(car, 100_000_000);
+
+            Assertions.assertAll("Car 객체 필드값 설정 검증",
+                    () -> assertEquals(nameField.get(car), "드림카"),
+                    () -> assertEquals(priceField.get(car), 100_000_000));
         }
     }
 
