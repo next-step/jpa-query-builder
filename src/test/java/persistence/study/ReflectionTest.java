@@ -114,5 +114,32 @@ public class ReflectionTest {
         }
     }
 
+    @Nested
+    class 요구사항3 {
+
+        @Test
+        @DisplayName("@PrintView 애노테이션 메소드 실행")
+        void testAnnotationMethodRun() {
+            Class<Car> carClass = Car.class;
+            for (Method method : carClass.getMethods()) {
+                invokeMethod(carClass, method);
+            }
+        }
+
+        private void invokeMethod(Class<Car> car, Method method) {
+            if (method.isAnnotationPresent(PrintView.class)) {
+                invoke(car, method);
+            }
+        }
+
+        private void invoke(Class<Car> car, Method method) {
+            try {
+                method.invoke(car.getDeclaredConstructor().newInstance());
+            } catch (Exception exception) {
+                logger.error("Method.invoke() 예외 발생", exception);
+            }
+        }
+    }
+
 }
 
