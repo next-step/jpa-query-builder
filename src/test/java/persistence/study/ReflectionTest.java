@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,6 +43,21 @@ class ReflectionTest {
         assertThat(constructorNames).containsExactly(
                 "public persistence.study.Car()",
                 "public persistence.study.Car(java.lang.String,int)"
+        );
+    }
+
+    @DisplayName("getDeclaredMethods() 메서드는 클래스에 선언된 메서드를 반환한다")
+    @Test
+    void getDeclaredMethods() {
+        Class<Car> carClass = Car.class;
+        List<String> methodNames = Arrays.stream(carClass.getDeclaredMethods())
+                .map(Method::toString)
+                .toList();
+
+        assertThat(methodNames).containsExactly(
+                "public void persistence.study.Car.printView()",
+                "public java.lang.String persistence.study.Car.testGetName()",
+                "public java.lang.String persistence.study.Car.testGetPrice()"
         );
     }
 }
