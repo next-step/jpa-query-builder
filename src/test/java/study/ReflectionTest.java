@@ -56,7 +56,7 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
-    void testAnnotationMethodRun() throws InvocationTargetException, IllegalAccessException {
+    void testAnnotationMethodRun() {
         Car testCar = new Car("테스트카", 10000);
         Class<? extends Car> testCarClass = testCar.getClass();
         Arrays.stream(testCarClass.getDeclaredMethods())
@@ -65,9 +65,9 @@ public class ReflectionTest {
                     try {
                         method.invoke(testCar);
                     } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("접근할 수 없는 필드");
                     } catch (InvocationTargetException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("메소드 응답 예외 발생");
                     }
                 });
     }
