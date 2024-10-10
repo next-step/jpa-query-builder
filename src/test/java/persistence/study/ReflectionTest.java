@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -50,8 +49,7 @@ public class ReflectionTest {
     @DisplayName("test로 시작하는 메소드 실행")
     void testMethodRun() throws Exception {
         Class<Car> carClass = Car.class;
-        Constructor<Car> constructor = carClass.getConstructor();
-        Car car = constructor.newInstance();
+        Car car = carClass.getDeclaredConstructor().newInstance();
 
         Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.getName().startsWith("test"))
@@ -64,8 +62,7 @@ public class ReflectionTest {
     @DisplayName("@PrintView 애노테이션 메소드 실행")
     void testAnnotationMethodRun() throws Exception {
         Class<Car> carClass = Car.class;
-        Constructor<Car> constructor = carClass.getConstructor();
-        Car car = constructor.newInstance();
+        Car car = carClass.getDeclaredConstructor().newInstance();
 
         Arrays.stream(carClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
@@ -78,8 +75,7 @@ public class ReflectionTest {
     @DisplayName("private field에 값 할당")
     void privateFieldAccess() throws Exception {
         Class<Car> carClass = Car.class;
-        Constructor<Car> constructor = carClass.getConstructor();
-        Car car = constructor.newInstance();
+        Car car = carClass.getDeclaredConstructor().newInstance();
 
         Field name = carClass.getDeclaredField("name");
         name.setAccessible(true);
