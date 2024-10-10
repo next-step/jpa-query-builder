@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Objects;
+
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
@@ -38,5 +42,26 @@ public class ReflectionTest {
             logger.debug("method[{}] annotations: {}", i, carClass.getDeclaredMethods()[i].getAnnotations());
             logger.debug("==================================================");
         }
+    }
+
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    void testMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getConstructor();
+        Car car = constructor.newInstance();
+
+        Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.getName().startsWith("test"))
+                .forEach(method -> {
+                    try {
+                        Object result = method.invoke(car);
+                        if (Objects.nonNull(result)) {
+                            logger.debug((String) result);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }
