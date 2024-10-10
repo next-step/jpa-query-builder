@@ -64,4 +64,27 @@ public class ReflectionTest {
                     }
                 });
     }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getConstructor();
+        Car car = constructor.newInstance();
+
+        Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .forEach(method -> {
+                    try {
+                        Object result = method.invoke(car);
+                        if (Objects.nonNull(result)) {
+                            logger.debug((String) result);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
 }
+
