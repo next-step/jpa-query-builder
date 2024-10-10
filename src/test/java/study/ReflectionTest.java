@@ -99,4 +99,25 @@ public class ReflectionTest {
     }
 
 
+    @Test
+    @DisplayName("private field에 값 할당한다.")
+    void privateFieldAccess() throws Exception {
+        String name = "테슬라";
+        int price = 10000;
+
+        Class<Car> carClass = Car.class;
+        Car tesla = carClass.getDeclaredConstructor().newInstance();
+
+        Field nameField = tesla.getClass().getDeclaredField("name");
+        nameField.setAccessible(true);
+        nameField.set(tesla, name);
+
+        Field priceField = tesla.getClass().getDeclaredField("price");
+        priceField.setAccessible(true);
+        priceField.set(tesla, price);
+
+        assertThat(tesla.testGetName()).endsWith(name);
+        assertThat(tesla.testGetPrice()).endsWith(String.valueOf(price));
+    }
+
 }
