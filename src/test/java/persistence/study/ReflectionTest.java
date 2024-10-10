@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
@@ -73,11 +74,33 @@ public class ReflectionTest {
                 });
     }
 
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getConstructor();
+        Car car = constructor.newInstance();
+
+        Field name = carClass.getDeclaredField("name");
+        name.setAccessible(true);
+        name.set(car, "Porsche");
+
+        Field price = carClass.getDeclaredField("price");
+        price.setAccessible(true);
+        price.set(car, 10000);
+
+        Method getName = carClass.getDeclaredMethod("getName");
+        invokeMethod(car,getName);
+
+        Method getPrice = carClass.getDeclaredMethod("getPrice");
+        invokeMethod(car,getPrice);
+    }
+
     private void invokeMethod(Car car, Method method) {
         try {
             Object result = method.invoke(car);
             if (Objects.nonNull(result)) {
-                logger.debug((String) result);
+                logger.debug(String.valueOf(result));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
