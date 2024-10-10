@@ -3,6 +3,8 @@ package study;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -71,6 +73,28 @@ public class ReflectionTest {
 
         assertThat(invokes).hasSize(2);
         assertThat(invokes).allMatch(o -> o.startsWith("test : "));
+
+    }
+
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행한다")
+    void testAnnotationMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        Method annotationMethod = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .findFirst()
+                .orElseThrow();
+
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        annotationMethod.invoke(car);
+        assertThat(outputStream.toString()).isEqualTo("자동차 정보를 출력 합니다.\n");
 
     }
 
