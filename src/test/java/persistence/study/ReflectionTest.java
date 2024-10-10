@@ -83,7 +83,9 @@ public class ReflectionTest {
 
     @Nested
     class 요구사항2 {
+
         @Test
+        @DisplayName("test 로 시작하는 메소드 실행")
         void testMethodRun() {
             Car car = new Car("Dream Car", 100_000_000);
             StringBuilder builder = new StringBuilder();
