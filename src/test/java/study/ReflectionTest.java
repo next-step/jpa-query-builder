@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -48,5 +49,30 @@ public class ReflectionTest {
                 "public java.lang.String study.Car.testGetPrice()"
         );
     }
+
+    @Test
+    @DisplayName("test로 시작하는 메서드를 실행한다")
+    void invokeTest() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        List<String> invokes = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.getName().startsWith("test"))
+                .map(method -> {
+                    try {
+                        return (String) method.invoke(car);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+
+        assertThat(invokes).hasSize(2);
+        assertThat(invokes).allMatch(o -> o.startsWith("test : "));
+
+    }
+
 
 }
