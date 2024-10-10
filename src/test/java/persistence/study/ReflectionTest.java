@@ -109,8 +109,7 @@ class ReflectionTest {
         String expectedName = "테슬라";
         int expectedPrice = 100_000_000;
 
-        Class<Car> carClass = Car.class;
-        Car car = carClass.getDeclaredConstructor().newInstance();
+        Car car = Car.class.getDeclaredConstructor().newInstance();
         setFieldValue(car, "name", expectedName);
         setFieldValue(car, "price", expectedPrice);
 
@@ -122,5 +121,18 @@ class ReflectionTest {
         Field field = car.getClass().getDeclaredField(targetField);
         field.setAccessible(true);
         field.set(car, value);
+    }
+
+    @DisplayName("인자를 가진 생성자를 사용하여 인스턴스를 생성한다")
+    @Test
+    void createInstanceWithConstructor() throws Exception {
+        String expectedName = "테슬라";
+        int expectedPrice = 100_000_000;
+
+        Car car = Car.class.getDeclaredConstructor(String.class, int.class)
+                .newInstance(expectedName, expectedPrice);
+
+        assertThat(car.testGetName()).endsWith(expectedName);
+        assertThat(car.testGetPrice()).endsWith(String.valueOf(expectedPrice));
     }
 }
