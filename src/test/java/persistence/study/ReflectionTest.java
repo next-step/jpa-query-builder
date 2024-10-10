@@ -31,7 +31,7 @@ class ReflectionTest {
                 .map(Field::getName)
                 .toList();
 
-        assertThat(fieldNames).containsExactly("name", "price");
+        assertThat(fieldNames).containsExactlyInAnyOrder("name", "price");
     }
 
     @DisplayName("getDeclaredConstructor() 메서드는 클래스에 선언된 생성자를 반환한다")
@@ -42,7 +42,7 @@ class ReflectionTest {
                 .map(Constructor::toString)
                 .toList();
 
-        assertThat(constructorNames).containsExactly(
+        assertThat(constructorNames).containsExactlyInAnyOrder(
                 "public persistence.study.Car()",
                 "public persistence.study.Car(java.lang.String,int)"
         );
@@ -56,7 +56,7 @@ class ReflectionTest {
                 .map(Method::toString)
                 .toList();
 
-        assertThat(methodNames).containsExactly(
+        assertThat(methodNames).containsExactlyInAnyOrder(
                 "public void persistence.study.Car.printView()",
                 "public java.lang.String persistence.study.Car.testGetName()",
                 "public java.lang.String persistence.study.Car.testGetPrice()"
@@ -100,7 +100,7 @@ class ReflectionTest {
                 .orElseThrow();
         annotatedMethod.invoke(car);
 
-        assertThat(outContent.toString()).hasToString("자동차 정보를 출력 합니다.\n");
+        assertThat(outContent).hasToString("자동차 정보를 출력 합니다.\n");
     }
 
     @DisplayName("private field에 값을 할당한다")
