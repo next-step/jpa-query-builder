@@ -5,7 +5,7 @@ public class Car {
     private String name;
     private int price;
 
-    private Car() {
+    public Car() {
     }
 
     public Car(String name, int price) {
