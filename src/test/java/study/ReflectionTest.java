@@ -1,5 +1,6 @@
 package study;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -85,6 +86,23 @@ public class ReflectionTest {
                 method.invoke(carClass.newInstance());
             }
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        // given
+        String carName = "소나타";
+        Car car = new Car();
+        Class<? extends Car> carClass = car.getClass();
+        Field field = carClass.getDeclaredField("name");
+
+        // when
+        field.setAccessible(true);
+        field.set(car, carName);
+
+        // then
+        Assertions.assertThat(car.getName()).isEqualTo(carName);
     }
 
 }
