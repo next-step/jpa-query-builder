@@ -3,6 +3,8 @@ package persistence.study;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -82,5 +84,22 @@ class ReflectionTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @DisplayName("@PrintView 애노테이션 메서드를 실행한다")
+    @Test
+    void invokePrintViewAnnotatedMethod() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        Method annotatedMethod = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .findAny()
+                .orElseThrow();
+        annotatedMethod.invoke(car);
+
+        assertThat(outContent.toString()).hasToString("자동차 정보를 출력 합니다.\n");
     }
 }
