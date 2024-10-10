@@ -39,12 +39,9 @@ public class ReflectionTest {
     @DisplayName("Car 객체의 모든 메서드 정보 출력하기")
     void getDeclaredMethods() {
         Class<Car> carClass = Car.class;
-        Method[] declaredMethods = carClass.getDeclaredMethods();
-
-        List<String> methodNames = Arrays.stream(declaredMethods)
+        List<String> methodNames = Arrays.stream(carClass.getDeclaredMethods())
                 .map(Method::toString)
                 .toList();
-        System.out.println(methodNames);
         assertThat(methodNames).contains(
                 "public void study.Car.printView()",
                 "public java.lang.String study.Car.testGetName()",
