@@ -96,8 +96,10 @@ public class ReflectionTest {
         carPriceField.set(car, price);
 
 
-        assertThat(car.getName()).isEqualTo(carName);
-        assertThat(car.getPrice()).isEqualTo(price);
+        assertAll(() -> {
+            assertThat(car.getName()).isEqualTo(carName);
+            assertThat(car.getPrice()).isEqualTo(price);
+        });
     }
 
     @Test
@@ -109,7 +111,9 @@ public class ReflectionTest {
         Class<Car> carClass = Car.class;
         Car car = carClass.getDeclaredConstructor(String.class, int.class).newInstance(carName, price);
 
-        assertThat(car.getName()).isEqualTo(carName);
-        assertThat(car.getPrice()).isEqualTo(price);
+        assertAll(() -> {
+            assertThat(car.getName()).isEqualTo(carName);
+            assertThat(car.getPrice()).isEqualTo(price);
+        });
     }
 }
