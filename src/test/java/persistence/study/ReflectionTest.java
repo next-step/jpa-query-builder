@@ -1,14 +1,15 @@
 package persistence.study;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 public class ReflectionTest {
 
@@ -74,6 +75,34 @@ public class ReflectionTest {
                     .append(System.lineSeparator());
         }
         return builder.toString();
+    }
+
+    @Test
+    void testMethodRun() {
+        Car car = new Car("Dream Car", 100_000_000);
+        StringBuilder builder = new StringBuilder();
+        for (Method method : car.getClass().getMethods()) {
+            invokeMethod(car, method)
+                    .ifPresent((obj) -> builder.append(obj).append(System.lineSeparator()));
+        }
+        logger.debug(builder.toString());
+    }
+
+    private Optional<Object> invokeMethod(Car car, Method method) {
+        if (method.getName().contains("test")) {
+            return invoke(car, method);
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Object> invoke(Car car, Method method) {
+        try {
+            Object returnObject = method.invoke(car);
+            return Optional.of(returnObject);
+        } catch (Exception exception) {
+            logger.error("Method.invoke() 예외 발생", exception);
+        }
+        return Optional.empty();
     }
 }
 
