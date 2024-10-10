@@ -102,4 +102,25 @@ class ReflectionTest {
 
         assertThat(outContent.toString()).hasToString("자동차 정보를 출력 합니다.\n");
     }
+
+    @DisplayName("private field에 값을 할당한다")
+    @Test
+    void setPrivateField() throws Exception {
+        String expectedName = "테슬라";
+        int expectedPrice = 100_000_000;
+
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+        setFieldValue(car, "name", expectedName);
+        setFieldValue(car, "price", expectedPrice);
+
+        assertThat(car.testGetName()).endsWith(expectedName);
+        assertThat(car.testGetPrice()).endsWith(String.valueOf(expectedPrice));
+    }
+
+    private void setFieldValue(Car car, String targetField, Object value) throws NoSuchFieldException, IllegalAccessException {
+        Field field = car.getClass().getDeclaredField(targetField);
+        field.setAccessible(true);
+        field.set(car, value);
+    }
 }
