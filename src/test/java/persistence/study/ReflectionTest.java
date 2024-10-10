@@ -60,4 +60,27 @@ class ReflectionTest {
                 "public java.lang.String persistence.study.Car.testGetPrice()"
         );
     }
+
+    @DisplayName("test로 시작하는 메서드를 실행한다")
+    @Test
+    void invokeTestPrefixMethods() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor().newInstance();
+
+        List<String> invokeResults = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.getName().startsWith("test"))
+                .map(method -> invokeMethod(method, car))
+                .toList();
+
+        assertThat(invokeResults).hasSize(2)
+                .allMatch(result -> result.startsWith("test :"));
+    }
+
+    private String invokeMethod(Method method, Car car) {
+        try {
+            return (String) method.invoke(car);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
