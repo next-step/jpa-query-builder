@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -103,6 +104,21 @@ public class ReflectionTest {
 
         // then
         Assertions.assertThat(car.getName()).isEqualTo(carName);
+    }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws Exception {
+        Class<Car> carClass = Car.class;
+        logger.debug(carClass.getName());
+
+        for (Constructor<?> constructor : carClass.getDeclaredConstructors()) {
+            if (constructor.getParameterCount() == 2) {
+                Car car = (Car) constructor.newInstance("name", 100000);
+                logger.debug("name=" + car.getName());
+                logger.debug("price=" + car.getPrice());
+            }
+        }
     }
 
 }
