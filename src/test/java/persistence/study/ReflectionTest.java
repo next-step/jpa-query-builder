@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class ReflectionTest {
 
@@ -113,8 +114,10 @@ class ReflectionTest {
         setFieldValue(car, "name", expectedName);
         setFieldValue(car, "price", expectedPrice);
 
-        assertThat(car.testGetName()).endsWith(expectedName);
-        assertThat(car.testGetPrice()).endsWith(String.valueOf(expectedPrice));
+        assertSoftly(softly -> {
+            softly.assertThat(car.testGetName()).endsWith(expectedName);
+            softly.assertThat(car.testGetPrice()).endsWith(String.valueOf(expectedPrice));
+        });
     }
 
     private void setFieldValue(Car car, String targetField, Object value) throws Exception {
