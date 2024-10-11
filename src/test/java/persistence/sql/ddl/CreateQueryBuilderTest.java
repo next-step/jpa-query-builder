@@ -38,7 +38,7 @@ class CreateQueryBuilderTest {
 
         // then
         assertThat(query).isEqualTo(
-                "CREATE TABLE person ( id BIGINT NOT NULL PRIMARY KEY, name VARCHAR(255), age INTEGER )");
+                "CREATE TABLE person ( id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL )");
     }
 
     static public class NotEntity {
