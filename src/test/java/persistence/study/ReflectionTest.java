@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class ReflectionTest {
@@ -37,7 +40,7 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("Car 객체의 메서드 중 PrintView 어노테이션이 있는 메소드 실행한다.")
-    public void printAnnotatedMethod() throws Exception{
+    public void printAnnotatedMethod() throws Exception {
 
         // given
         Class<Car> carClass = Car.class;
@@ -45,10 +48,29 @@ public class ReflectionTest {
         var car = carClass.getDeclaredConstructors()[0].newInstance();
 
         // when
-        for (Method declaredMethod: carClass.getDeclaredMethods()) {
+        for (Method declaredMethod : carClass.getDeclaredMethods()) {
             if (declaredMethod.isAnnotationPresent(PrintView.class)) {
                 declaredMethod.invoke(car);
             }
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    public void privateFieldAccess() throws Exception {
+
+        // given
+        Class<Car> carClass = Car.class;
+        var car = carClass.getDeclaredConstructors()[0].newInstance();
+
+        // when
+        Field field = carClass.getDeclaredField("name");
+        field.setAccessible(true);
+        field.set(car, "소나타");
+
+        // then
+        logger.debug(carClass.getName());
+        assertThat(car)
+                .extracting("name").asString().isEqualTo("소나타");
     }
 }
