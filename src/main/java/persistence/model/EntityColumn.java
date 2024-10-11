@@ -8,6 +8,7 @@ import persistence.model.meta.DataType;
 import persistence.model.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 public class EntityColumn {
     private final String name;
@@ -16,16 +17,20 @@ public class EntityColumn {
 
     private final DataType dataType;
 
-    public EntityColumn(String name, Field field, DataType dataType) {
+    private final int length;
+
+    public EntityColumn(String name, Field field, DataType dataType, int length) {
         this.name = name;
         this.field = field;
         this.dataType = dataType;
+        this.length = length;
     }
 
     public static EntityColumn build(Field field) {
         String name = getName(field);
+        int length = getLength(field);
         DataType dataType = DataType.getByJavaType(field.getType());
-        return new EntityColumn(name, field, dataType);
+        return new EntityColumn(name, field, dataType, length);
     }
 
     private static String getName(Field field) {
@@ -35,16 +40,26 @@ public class EntityColumn {
                 .orElse(field.getName());
     }
 
+    private static int getLength(Field field) {
+        Optional<Column> annotation = ReflectionUtil.getAnnotationIfPresent(field, Column.class);
+
+        if (annotation.isPresent() && annotation.get().length() != 255) {
+            return annotation.get().length();
+        }
+        DataType dataType = DataType.getByJavaType(field.getType());
+        return dataType.getDefaultLength();
+    }
+
     public String getName() {
         return name;
     }
 
-    public Field getField() {
-        return field;
-    }
-
     public DataType getDataType() {
         return dataType;
+    }
+
+    public int getLength() {
+        return length;
     }
 
     public Boolean isNullable() {

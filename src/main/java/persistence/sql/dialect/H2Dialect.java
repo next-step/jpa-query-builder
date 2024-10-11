@@ -1,7 +1,5 @@
 package persistence.sql.dialect;
 
-import persistence.model.EntityColumn;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

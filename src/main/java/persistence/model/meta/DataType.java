@@ -3,7 +3,7 @@ package persistence.model.meta;
 import java.util.Arrays;
 
 public enum DataType {
-    VARCHAR(String.class, "varchar(255)"),
+    VARCHAR(String.class, "varchar(%d)", 255),
 
     BIGINT(Long.class, "bigint"),
 
@@ -11,19 +11,19 @@ public enum DataType {
 
     private final Class<?> javaType;
 
-    private final String defaultName;
+    private final String namePattern;
 
-    DataType(Class<?> javaType, String defaultName) {
+    private int defaultLength = -1;
+
+    DataType(Class<?> javaType, String namePattern, int defaultLength) {
         this.javaType = javaType;
-        this.defaultName = defaultName;
+        this.namePattern = namePattern;
+        this.defaultLength = defaultLength;
     }
 
-    public Class<?> getJavaType() {
-        return javaType;
-    }
-
-    public String getDefaultName() {
-        return defaultName;
+    DataType(Class<?> javaType, String namePattern) {
+        this.javaType = javaType;
+        this.namePattern = namePattern;
     }
 
     public static DataType getByJavaType(Class<?> javaType) {
@@ -31,5 +31,24 @@ public enum DataType {
                 .filter(dataType -> dataType.getJavaType().equals(javaType))
                 .findFirst()
                 .orElseThrow();
+    }
+
+    public Class<?> getJavaType() {
+        return javaType;
+    }
+
+    public String getDefaultName() {
+        return namePattern;
+    }
+
+    public int getDefaultLength() {
+        return defaultLength;
+    }
+
+    public String getFullName(int length) {
+        if (namePattern.contains("%d")) {
+            return String.format(namePattern, length);
+        }
+        return namePattern;
     }
 }

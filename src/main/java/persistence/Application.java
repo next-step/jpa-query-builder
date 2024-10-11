@@ -22,7 +22,8 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            jdbcTemplate.execute(queryBuilder.getCreateTableQuery(Person.class));
+            jdbcTemplate.execute(queryBuilder.getCreateTableQuery(ExampleEntity.class));
+            jdbcTemplate.execute(queryBuilder.getDropTableQuery(ExampleEntity.class));
 
 //            server.stop();
         } catch (Exception e) {

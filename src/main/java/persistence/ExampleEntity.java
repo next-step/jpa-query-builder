@@ -1,10 +1,10 @@
-package persistence.sql.fixture;
+package persistence;
 
 import jakarta.persistence.*;
 
 @Table(name = "users")
 @Entity
-public class PersonWithTransientAnnotation {
+public class ExampleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

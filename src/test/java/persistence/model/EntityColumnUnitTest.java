@@ -21,7 +21,7 @@ public class EntityColumnUnitTest {
         @Column(name = "nick_name", nullable = false)
         private String name;
 
-        @Column(name = "login_id")
+        @Column(name = "login_id", length = 100)
         private String email;
 
         private Integer age;
