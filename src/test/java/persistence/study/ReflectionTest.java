@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -76,6 +77,23 @@ public class ReflectionTest {
         assertAll(
                 () -> assertThat(tesla.testGetName()).isEqualTo("test : Volvo"),
                 () -> assertThat(tesla.testGetPrice()).isEqualTo("test : 20000")
+        );
+    }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성하기")
+    void createInstanceWithConstructor() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<?> argsConstructor = Arrays.stream(carClass.getDeclaredConstructors())
+                .filter(constructor -> constructor.getParameterCount() > 0)
+                .findFirst()
+                .orElseThrow();
+
+        Car volvoCar = (Car) argsConstructor.newInstance("Volvo", 20_000);
+
+        assertAll(
+                () -> assertThat(volvoCar.testGetName()).isEqualTo("test : Volvo"),
+                () -> assertThat(volvoCar.testGetPrice()).isEqualTo("test : 20000")
         );
     }
 }
