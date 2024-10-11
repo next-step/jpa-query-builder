@@ -24,3 +24,9 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.register<JavaExec>("run") {
+    group = "application"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("persistence.Application")
+}
