@@ -63,4 +63,20 @@ public class ReflectionTest {
             assertThat(method.invoke(car)).isEqualTo(expectedResult);
         }
     }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void invokePrintViewMethod() throws Exception {
+        Car car = testClass.getDeclaredConstructor().newInstance();
+
+        Arrays.stream(testClass.getMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .forEach(method -> {
+                    try {
+                        assertThat(method.invoke(car)).isNull();
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
 }
