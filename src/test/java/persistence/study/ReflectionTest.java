@@ -27,7 +27,7 @@ public class ReflectionTest {
         // Car 클래스의 생성자 정보 출력
         logger.debug("Car 클래스의 생성자 정보 출력");
         Constructor<?>[] constructors = carClass.getDeclaredConstructors();
-        for (Constructor<?> constructor: constructors) {
+        for (Constructor<?> constructor : constructors) {
             logger.debug("constructor : {}", constructor.getName());
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             for (Class<?> parameterType : parameterTypes) {
@@ -42,6 +42,21 @@ public class ReflectionTest {
             Class<?>[] parameterTypes = method.getParameterTypes();
             for (Class<?> parameterType : parameterTypes) {
                 logger.debug("parameter type : {}", parameterType.getName());
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    void testMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getConstructor();
+        Car carInstance = constructor.newInstance();
+
+        Method[] declaredMethods = carClass.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            if (method.getName().startsWith("test")) {
+                logger.debug("method name={}, invoked result => {}", method.getName(), method.invoke(carInstance));
             }
         }
     }
