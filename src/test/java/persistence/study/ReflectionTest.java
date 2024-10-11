@@ -30,7 +30,6 @@ public class ReflectionTest {
             logger.debug("field type : {}, field name : {}", field.getType(), field.getName());
         }
 
-        // Car 클래스의 생성자 정보 출력
         logger.debug("Car 클래스의 생성자 정보 출력");
         Constructor<?>[] constructors = carClass.getDeclaredConstructors();
         for (Constructor<?> constructor : constructors) {
