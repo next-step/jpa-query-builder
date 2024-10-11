@@ -6,7 +6,6 @@ public class Car {
     private int price;
 
     public Car() {
-
     }
 
     public Car(String name, int price) {
@@ -25,5 +24,13 @@ public class Car {
 
     public String testGetPrice() {
         return "test : " + price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
     }
 }

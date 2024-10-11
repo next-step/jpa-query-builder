@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class ReflectionTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -56,8 +58,8 @@ public class ReflectionTest {
         Constructor<Car> constructor = carClass.getConstructor();
         Car carInstance = constructor.newInstance();
 
-        List<Method> method = extractMethod(carClass, m -> m.getName().startsWith("test"));
-        for (Method m : method) {
+        List<Method> methods = extractMethod(carClass, m -> m.getName().startsWith("test"));
+        for (Method m : methods) {
             logger.debug("method name={}, invoked result => {}", m.getName(), m.invoke(carInstance));
         }
     }
@@ -73,6 +75,29 @@ public class ReflectionTest {
         for (Method m : method) {
             m.invoke(carInstance);
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getConstructor();
+        Car carInstance = constructor.newInstance();
+
+        for (Field field : carClass.getDeclaredFields()) {
+            if (!field.canAccess(carInstance)) {
+                field.setAccessible(true);
+
+                if (field.getName().equals("name")) {
+                    field.set(carInstance, "BMW");
+                } else if (field.getName().equals("price")) {
+                    field.set(carInstance, 1000);
+                }
+            }
+        }
+
+        assertThat(carInstance.getName()).isEqualTo("BMW");
+        assertThat(carInstance.getPrice()).isEqualTo(1000);
     }
 
     private List<Method> extractMethod(Class<Car> carClass, Predicate<Method> predicate) {
