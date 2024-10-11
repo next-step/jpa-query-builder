@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class DdlQueryBuilder {
     public static final String CREATE_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
     private static final String CREATE_QUERY_TEMPLATE = "CREATE TABLE %s ( %s )";
+    private static final String DROP_QUERY_TEMPLATE = "DROP TABLE IF EXISTS %s";
 
     private static final String NOT_NULL_COLUMN_DEFINITION = "NOT NULL";
     private static final String GENERATION_COLUMN_DEFINITION = "AUTO_INCREMENT";
@@ -45,6 +46,10 @@ public class DdlQueryBuilder {
 
     public String getCreateQuery() {
         return String.format(CREATE_QUERY_TEMPLATE, getTableName(), getColumns());
+    }
+
+    public String getDropQuery() {
+        return String.format(DROP_QUERY_TEMPLATE, getTableName());
     }
 
     private String getTableName() {

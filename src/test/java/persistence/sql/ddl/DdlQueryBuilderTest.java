@@ -41,6 +41,20 @@ class DdlQueryBuilderTest {
                 "CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL )");
     }
 
+    @Test
+    @DisplayName("DROP 쿼리를 생성한다.")
+    void getDropQuery() {
+        // given
+        final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(Person.class);
+
+        // when
+        final String query = ddlQueryBuilder.getDropQuery();
+
+        // then
+        assertThat(query).isEqualTo(
+                "DROP TABLE IF EXISTS users");
+    }
+
     static public class NotEntity {
         @Id
         private Long id;
