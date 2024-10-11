@@ -78,6 +78,19 @@ class ReflectionTest {
         assertThat(results).containsExactly("test : null", "test : 0");
     }
 
+    @Test
+    @DisplayName("Car 클래스의 @PrintView 어노테이션이 붙은 메서드를 실행한다")
+    void testAnnotationMethodRun() throws Exception {
+        final Class<Car> carClass = Car.class;
+        final Car car = carClass.getDeclaredConstructor().newInstance();
+        final Method[] methods = carClass.getDeclaredMethods();
+        for (final Method method : methods) {
+            if (method.isAnnotationPresent(PrintView.class)) {
+                method.invoke(car);
+            }
+        }
+    }
+
     private String getParameters(final Parameter[] parameters) {
         return Arrays.stream(parameters)
                 .map(param -> param.getType().getSimpleName())
