@@ -15,7 +15,7 @@ class CreateQueryBuilderTest {
         CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
         String createTableQuery = createQueryBuilder.createTableQuery(Person.class);
 
-        assertEquals(createTableQuery, "create table person (id BIGINT PRIMARY KEY, name VARCHAR, age INT)");
+        assertEquals(createTableQuery, "create table Person (id BIGINT PRIMARY KEY, name VARCHAR, age INT)");
     }
 
 }
