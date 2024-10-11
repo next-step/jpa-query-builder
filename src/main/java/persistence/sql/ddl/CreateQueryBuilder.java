@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -46,12 +48,17 @@ public class CreateQueryBuilder {
     }
 
     private String getTableName() {
+        final Table table = entityClass.getAnnotation(Table.class);
+        if (Objects.nonNull(table) && Objects.nonNull(table.name()) && !table.name().isBlank()) {
+            return table.name();
+        }
         return entityClass.getSimpleName()
                 .toLowerCase();
     }
 
     private String getColumns() {
         final List<String> columnDefinitions = Arrays.stream(entityClass.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
