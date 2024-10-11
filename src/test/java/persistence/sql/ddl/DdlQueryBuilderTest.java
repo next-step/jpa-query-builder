@@ -7,34 +7,34 @@ import persistence.sql.Person;
 
 import static org.assertj.core.api.Assertions.*;
 
-class CreateQueryBuilderTest {
+class DdlQueryBuilderTest {
     @Test
     @DisplayName("@Entity 애노테이션이 존재하는 클래스로 인스턴스를 생성한다.")
     void create() {
         // when
-        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
+        final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(Person.class);
 
         // then
-        assertThat(createQueryBuilder).isNotNull();
+        assertThat(ddlQueryBuilder).isNotNull();
     }
 
     @Test
     @DisplayName("@Entity 애노테이션이 존재하지 않는 클래스로 인스턴스를 생성하면 예외가 발생한다.")
     void create_exception() {
         // when & then
-        assertThatThrownBy(() -> new CreateQueryBuilder(NotEntity.class))
+        assertThatThrownBy(() -> new DdlQueryBuilder(NotEntity.class))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(CreateQueryBuilder.CREATE_FAILED_MESSAGE);
+                .hasMessage(DdlQueryBuilder.CREATE_FAILED_MESSAGE);
     }
 
     @Test
     @DisplayName("CREATE 쿼리를 생성한다.")
     void build() {
         // given
-        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
+        final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(Person.class);
 
         // when
-        final String query = createQueryBuilder.build();
+        final String query = ddlQueryBuilder.build();
 
         // then
         assertThat(query).isEqualTo(

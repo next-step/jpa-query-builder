@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class CreateQueryBuilder {
+public class DdlQueryBuilder {
     public static final String CREATE_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
     private static final String CREATE_QUERY_TEMPLATE = "CREATE TABLE %s ( %s )";
 
@@ -35,7 +35,7 @@ public class CreateQueryBuilder {
         );
     }
 
-    public CreateQueryBuilder(Class<?> entityClass) {
+    public DdlQueryBuilder(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(CREATE_FAILED_MESSAGE);
         }
