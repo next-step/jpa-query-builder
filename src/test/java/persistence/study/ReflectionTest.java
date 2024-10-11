@@ -1,8 +1,9 @@
 package persistence.study;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,24 @@ public class ReflectionTest {
                 method.invoke(carClass.newInstance());
             }
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        Car car = new Car();
+        Class<Car> carClass = Car.class;
+
+        Field nameField = carClass.getDeclaredField("name");
+        nameField.setAccessible(true);
+        nameField.set(car, "소나타");
+
+        Field priceField = carClass.getDeclaredField("price");
+        priceField.setAccessible(true);
+        priceField.set(car, 3000);
+
+        assertThat(car.testGetName()).isEqualTo("test : 소나타");
+        assertThat(car.testGetPrice()).isEqualTo("test : " + 3000);
     }
 
 }
