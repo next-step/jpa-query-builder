@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
     @Test
@@ -27,8 +28,9 @@ public class ReflectionTest {
     void testMethodRun() {
         Car car = new Car("자동차", 10000);
         Class<Car> carClass = Car.class;
-        List<Method> testMethods = Arrays.stream(carClass.getDeclaredMethods()).filter(it -> it.getName().startsWith("test"))
-                .toList();
+        List<Method> testMethods = Arrays.stream(carClass.getDeclaredMethods())
+            .filter(it -> it.getName().startsWith("test"))
+            .toList();
 
         List<Object> results = testMethods.stream().map(it -> invoke(it, car)).toList();
 
@@ -40,8 +42,9 @@ public class ReflectionTest {
     void testAnnotationMethodRun() {
         Class<Car> carClass = Car.class;
         Car car = new Car("자동차", 10000);
-        List<Method> printViewMethods = Arrays.stream(carClass.getDeclaredMethods()).filter(it -> hasAnnotation(it, PrintView.class))
-                .toList();
+        List<Method> printViewMethods = Arrays.stream(carClass.getDeclaredMethods())
+            .filter(it -> hasAnnotation(it, PrintView.class))
+            .toList();
 
         printViewMethods.forEach(it -> invoke(it, car));
     }
@@ -68,13 +71,16 @@ public class ReflectionTest {
     @DisplayName("인자를 가진 생성자의 인스턴스 생성")
     void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<Car> carClass = Car.class;
-        Constructor<?> constructor = Arrays.stream(carClass.getDeclaredConstructors()).filter(it -> it.getParameterCount() > 0)
-                .findFirst().get();
+        Constructor<?> constructor = Arrays.stream(carClass.getDeclaredConstructors())
+            .filter(it -> it.getParameterCount() > 0)
+            .findFirst().get();
 
         Car car = (Car) constructor.newInstance("자동차", 10000);
 
-        assertThat(car.getName()).isEqualTo("자동차");
-        assertThat(car.getPrice()).isEqualTo(10000);
+        assertAll(
+            () -> assertThat(car.getName()).isEqualTo("자동차"),
+            () -> assertThat(car.getPrice()).isEqualTo(10000)
+        );
     }
 
     private boolean hasAnnotation(Method method, Class<? extends Annotation> annotation) {
