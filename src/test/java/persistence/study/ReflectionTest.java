@@ -49,4 +49,18 @@ public class ReflectionTest {
         }
     }
 
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    void testMethodRun() throws Exception {
+        Car tesla = new Car("Tesla", 10000);
+        Class<? extends Car> carClass = tesla.getClass();
+
+        for (Method declaredMethod : carClass.getDeclaredMethods()) {
+            if (declaredMethod.getName().startsWith("test")) {
+                Object invoke = declaredMethod.invoke(tesla);
+                System.out.println(invoke);
+            }
+        }
+    }
+
 }
