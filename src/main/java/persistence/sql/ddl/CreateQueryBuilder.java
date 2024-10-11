@@ -3,6 +3,8 @@ package persistence.sql.ddl;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -19,9 +21,10 @@ public class CreateQueryBuilder {
     public String createTableQuery(Class<?> clazz) {
         StringBuilder sb = new StringBuilder();
 
-        String tableName = clazz.getSimpleName().toLowerCase();
+        String tableName = getTableName(clazz);
         sb.append(String.format("create table %s (", tableName));
         List<String> fieldNames = Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(field -> {
                     String fieldName = getFieldName(field);
                     String fieldType = getFieldType(field);
@@ -45,6 +48,11 @@ public class CreateQueryBuilder {
                 .append(")");
 
         return sb.toString();
+    }
+
+    private static String getTableName(Class<?> clazz) {
+        Table annotation = clazz.getAnnotation(Table.class);
+        return annotation != null && !annotation.name().isEmpty() ? annotation.name() : clazz.getSimpleName().toLowerCase();
     }
 
     private static String getFieldName(Field field) {
