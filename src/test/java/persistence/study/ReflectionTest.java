@@ -10,9 +10,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ReflectionTest {
@@ -65,9 +68,30 @@ class ReflectionTest {
         }
     }
 
+    @Test
+    @DisplayName("Car 클래스의 test로 시작하는 메서드를 실행한다")
+    void testMethodRun() throws Exception {
+        final Class<Car> carClass = Car.class;
+        final Car car = carClass.getDeclaredConstructor().newInstance();
+        final Method[] methods = carClass.getDeclaredMethods();
+        final List<String> results = getResults(methods, car);
+        assertThat(results).containsExactly("test : null", "test : 0");
+    }
+
     private String getParameters(final Parameter[] parameters) {
         return Arrays.stream(parameters)
                 .map(param -> param.getType().getSimpleName())
                 .collect(Collectors.joining(", "));
+    }
+
+    private List<String> getResults(final Method[] methods, final Car car) throws Exception {
+        final List<String> results = new ArrayList<>();
+        for (final Method method : methods) {
+            if (method.getName().startsWith("test")) {
+                final Object invoke = method.invoke(car);
+                results.add(invoke.toString());
+            }
+        }
+        return results;
     }
 }
