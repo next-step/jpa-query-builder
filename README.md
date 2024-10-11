@@ -48,7 +48,7 @@
     private String email;
     }
   ```
-- [ ] 추가된 정보를 통해 create 쿼리 만들어보기 2
+- [x] 추가된 정보를 통해 create 쿼리 만들어보기 2
   ```java
     @Table(name = "users")
     @Entity

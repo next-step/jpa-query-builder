@@ -1,7 +1,9 @@
 package persistence.model;
 
+import jakarta.persistence.Table;
 import persistence.model.meta.Constraint;
 import persistence.model.meta.PrimaryConstraint;
+import persistence.model.util.ReflectionUtil;
 
 import java.util.List;
 
@@ -19,11 +21,17 @@ public class EntityTable {
     }
 
     public static EntityTable build(Class<?> entityClass) {
-        String name = entityClass.getSimpleName();
+        String name = getName(entityClass);
         EntityTableColumns entityColumns = EntityTableColumns.build(entityClass);
         Constraint primaryConstraint = PrimaryConstraint.build(entityColumns);
 
         return new EntityTable(name, entityColumns, primaryConstraint);
+    }
+
+    private static String getName(Class<?> entityClass) {
+        return ReflectionUtil.getAnnotationIfPresent(entityClass, Table.class)
+                .map(Table::name)
+                .orElse(entityClass.getSimpleName());
     }
 
     public String getName() {

@@ -1,5 +1,7 @@
 package persistence.model;
 
+import jakarta.persistence.Transient;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ public class EntityTableColumns {
 
     public static EntityTableColumns build(Class<?> entityClass) {
         List<EntityColumn> columns =  Arrays.stream(entityClass.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(EntityColumn::build)
                 .toList();
 
