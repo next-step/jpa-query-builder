@@ -91,6 +91,22 @@ class ReflectionTest {
         }
     }
 
+    @Test
+    @DisplayName("Car 클래스의 필드에 값을 설정하고, getter를 호출한다")
+    void privateFieldAccess() throws Exception {
+        final Class<Car> carClass = Car.class;
+        final Car car = carClass.getDeclaredConstructor().newInstance();
+        final Field nameField = carClass.getDeclaredField("name");
+        final Field priceField = carClass.getDeclaredField("price");
+        nameField.setAccessible(true);
+        priceField.setAccessible(true);
+        nameField.set(car, "벤츠 G클래스");
+        priceField.set(car, 1000);
+
+        assertThat(car.getName()).isEqualTo("벤츠 G클래스");
+        assertThat(car.getPrice()).isEqualTo(1000);
+    }
+
     private String getParameters(final Parameter[] parameters) {
         return Arrays.stream(parameters)
                 .map(param -> param.getType().getSimpleName())
