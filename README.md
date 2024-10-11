@@ -30,7 +30,7 @@
     private Integer age;
     }
   ```
-- [ ] 추가된 정보를 통해 create 쿼리 만들어보기
+- [x] 추가된 정보를 통해 create 쿼리 만들어보기
   ```java
     @Entity
     public class Person {
