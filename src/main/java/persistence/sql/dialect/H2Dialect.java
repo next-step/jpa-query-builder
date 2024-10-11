@@ -36,6 +36,11 @@ public class H2Dialect implements Dialect {
     }
 
     @Override
+    public String getDropTablePhrase() {
+        return "DROP TABLE IF EXISTS";
+    }
+
+    @Override
     public String buildPrimaryKeyPhrase(List<String> columnNames) {
         String quotedColumnNames = columnNames.stream()
                 .map(this::getIdentifierQuoted)

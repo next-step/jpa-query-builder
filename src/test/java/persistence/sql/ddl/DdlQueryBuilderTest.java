@@ -59,4 +59,13 @@ public class DdlQueryBuilderTest {
 
         assertEquals(expectedQuery, resultQuery);
     }
+
+    @Test()
+    @DisplayName("DROP TABLE 쿼리를 생성한다.")
+    void dropDdlTest() {
+        String expectedQuery = "DROP TABLE IF EXISTS \"users\"";
+        String resultQuery = queryBuilder.getDropTableQuery(PersonWithTransientAnnotation.class);
+
+        assertEquals(expectedQuery, resultQuery);
+    }
 }

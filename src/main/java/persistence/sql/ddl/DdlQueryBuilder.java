@@ -15,6 +15,12 @@ public class DdlQueryBuilder {
         this.dialect = dialect;
     }
 
+    public String getDropTableQuery(Class<?> entityClass) {
+        EntityTable table = EntityTable.build(entityClass);
+
+        return dialect.getDropTablePhrase() + " " + dialect.getIdentifierQuoted(table.getName());
+    }
+
     public String getCreateTableQuery(Class<?> entityClass) {
         EntityTable table = EntityTable.build(entityClass);
 

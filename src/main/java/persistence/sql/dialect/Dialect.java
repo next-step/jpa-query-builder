@@ -11,6 +11,8 @@ public interface Dialect {
 
     String getCreateTablePhrase();
 
+    String getDropTablePhrase();
+
     String buildPrimaryKeyPhrase(List<String> columnNames);
 
     Boolean shouldSpecifyNotNullOnIdentity();
