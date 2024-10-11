@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -56,5 +57,25 @@ public class ReflectionTest {
         for (Method printViewMethod : printViewMethods) {
             printViewMethod.invoke(tesla);
         }
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당하기")
+    void assignValueToPrivateField() throws Exception {
+        Car tesla = new Car("Tesla", 10_000);
+        Class<? extends Car> carClass = tesla.getClass();
+
+        Field nameField = carClass.getDeclaredField("name");
+        nameField.setAccessible(true);
+        nameField.set(tesla, "Volvo");
+
+        Field priceField = carClass.getDeclaredField("price");
+        priceField.setAccessible(true);
+        priceField.set(tesla, 20_000);
+
+        assertAll(
+                () -> assertThat(tesla.testGetName()).isEqualTo("test : Volvo"),
+                () -> assertThat(tesla.testGetPrice()).isEqualTo("test : 20000")
+        );
     }
 }
