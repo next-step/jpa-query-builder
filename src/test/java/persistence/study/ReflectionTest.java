@@ -10,12 +10,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReflectionTest {
     private Class<Car> testClass;
+    private static final String CAR_NAME = "K9";
+    private static final int CAR_PRICE = 10000000;
 
     @BeforeEach
     void setUp() {
@@ -39,16 +42,16 @@ public class ReflectionTest {
 
         assertAll(
                 () -> assertThat(fieldNames).containsExactlyInAnyOrderElementsOf(List.of("name", "price")),
-                () -> assertThat(methodNames)
-                        .containsExactlyInAnyOrderElementsOf(List.of("testGetName", "testGetPrice", "printView")),
+                () -> assertThat(methodNames).containsExactlyInAnyOrderElementsOf(
+                        List.of("testGetName", "testGetPrice", "printView", "getName", "getPrice")),
                 () -> assertThat(constructorsArgsCount).containsExactlyInAnyOrderElementsOf(List.of(0, 2))
         );
     }
 
     @Test
     @DisplayName("\"test\"로 시작하는 메소드 실행")
-    void invokeClassMethod() throws Exception {
-        Car car = testClass.getDeclaredConstructor(String.class, int.class).newInstance("그랜져", 1000000);
+    void testMethodRun() throws Exception {
+        Car car = testClass.getDeclaredConstructor(String.class, int.class).newInstance(CAR_NAME, CAR_PRICE);
 
         List<Method> testMethods = Arrays.stream(testClass.getMethods())
                 .filter(method -> method.getName().startsWith("test"))
@@ -56,27 +59,49 @@ public class ReflectionTest {
 
         for (Method method : testMethods) {
             String expectedResult = switch (method.getName()) {
-                case "testGetName" -> "test : 그랜져";
-                case "testGetPrice" -> "test : 1000000";
+                case "testGetName" -> "test : " + CAR_NAME;
+                case "testGetPrice" -> "test : " + CAR_PRICE;
                 default -> throw new NoSuchMethodException();
             };
-            assertThat(method.invoke(car)).isEqualTo(expectedResult);
+            assertEquals(method.invoke(car), expectedResult);
         }
     }
 
     @Test
     @DisplayName("@PrintView 애노테이션 메소드 실행")
-    void invokePrintViewMethod() throws Exception {
+    void testAnnotationMethodRun() throws Exception {
         Car car = testClass.getDeclaredConstructor().newInstance();
 
         Arrays.stream(testClass.getMethods())
                 .filter(method -> method.isAnnotationPresent(PrintView.class))
                 .forEach(method -> {
                     try {
-                        assertThat(method.invoke(car)).isNull();
+                        assertNull(method.invoke(car));
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }
                 });
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    void privateFieldAccess() throws Exception {
+        Car car = testClass.getDeclaredConstructor().newInstance();
+
+        Map<String, Object> propertyMap = Map.of("name", CAR_NAME, "price", CAR_PRICE);
+        propertyMap.forEach((key, value) -> {
+            try {
+                Field field = testClass.getDeclaredField(key);
+                field.setAccessible(true);
+                field.set(car, value);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        assertAll(
+                () -> assertEquals(car.getName(), CAR_NAME),
+                () -> assertEquals(car.getPrice(), CAR_PRICE)
+        );
     }
 }
