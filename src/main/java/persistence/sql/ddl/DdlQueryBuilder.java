@@ -43,7 +43,7 @@ public class DdlQueryBuilder {
         this.entityClass = entityClass;
     }
 
-    public String build() {
+    public String getCreateQuery() {
         return String.format(CREATE_QUERY_TEMPLATE, getTableName(), getColumns());
     }
 

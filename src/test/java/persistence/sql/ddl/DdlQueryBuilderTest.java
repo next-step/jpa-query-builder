@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.*;
 class DdlQueryBuilderTest {
     @Test
     @DisplayName("@Entity 애노테이션이 존재하는 클래스로 인스턴스를 생성한다.")
-    void create() {
+    void constructor() {
         // when
         final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(Person.class);
 
@@ -20,7 +20,7 @@ class DdlQueryBuilderTest {
 
     @Test
     @DisplayName("@Entity 애노테이션이 존재하지 않는 클래스로 인스턴스를 생성하면 예외가 발생한다.")
-    void create_exception() {
+    void constructor_exception() {
         // when & then
         assertThatThrownBy(() -> new DdlQueryBuilder(NotEntity.class))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -29,12 +29,12 @@ class DdlQueryBuilderTest {
 
     @Test
     @DisplayName("CREATE 쿼리를 생성한다.")
-    void build() {
+    void getCreateQuery() {
         // given
         final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(Person.class);
 
         // when
-        final String query = ddlQueryBuilder.build();
+        final String query = ddlQueryBuilder.getCreateQuery();
 
         // then
         assertThat(query).isEqualTo(
