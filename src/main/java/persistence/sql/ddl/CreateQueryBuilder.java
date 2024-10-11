@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -21,20 +23,38 @@ public class CreateQueryBuilder {
         sb.append(String.format("create table %s (", tableName));
         List<String> fieldNames = Arrays.stream(clazz.getDeclaredFields())
                 .map(field -> {
-                    String fieldName = field.getName();
+                    String fieldName = getFieldName(field);
                     String fieldType = getFieldType(field);
 
+                    String result = String.format("%s %s", fieldName, fieldType);
                     if (isIdField(field)) {
-                        return String.format("%s %s PRIMARY KEY", fieldName, fieldType);
+                        result += " PRIMARY KEY";
                     }
-                    return String.format("%s %s", fieldName, fieldType);
+                    if (isGeneratedValueField(field)) {
+                        result += " AUTO_INCREMENT";
+                    }
+                    if (isNotNullConstraint(field)) {
+                        result += " NOT NULL";
+                    }
+                    return result;
                 })
                 .toList();
+        System.out.println(fieldNames);
 
         sb.append(String.join(", ", fieldNames))
                 .append(")");
 
         return sb.toString();
+    }
+
+    private static String getFieldName(Field field) {
+        Column annotation = field.getAnnotation(Column.class);
+        return (annotation != null && !annotation.name().isEmpty()) ? annotation.name() : field.getName();
+    }
+
+    private boolean isNotNullConstraint(Field field) {
+        Column annotation = field.getAnnotation(Column.class);
+        return annotation != null && !annotation.nullable();
     }
 
     private String getFieldType(Field field) {
@@ -44,5 +64,10 @@ public class CreateQueryBuilder {
     private boolean isIdField(Field field) {
         return Arrays.stream(field.getAnnotations())
                 .anyMatch(annotation -> annotation.annotationType().equals(Id.class));
+    }
+
+    private boolean isGeneratedValueField(Field field) {
+        return Arrays.stream(field.getAnnotations())
+                .anyMatch(annotation -> annotation.annotationType().equals(GeneratedValue.class));
     }
 }
