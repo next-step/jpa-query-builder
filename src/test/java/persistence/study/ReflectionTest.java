@@ -2,6 +2,7 @@ package persistence.study;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,6 +60,19 @@ public class ReflectionTest {
             if (declaredMethod.getName().startsWith("test")) {
                 Object invoke = declaredMethod.invoke(tesla);
                 System.out.println(invoke);
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Method[] methods = carClass.getDeclaredMethods();
+
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(PrintView.class)) {
+                method.invoke(carClass.newInstance());
             }
         }
     }
