@@ -1,4 +1,4 @@
-package study;
+package persistence.study;
 
 public class Car {
 

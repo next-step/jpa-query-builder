@@ -1,4 +1,4 @@
-package study;
+package persistence.study;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
