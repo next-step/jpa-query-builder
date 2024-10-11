@@ -9,7 +9,7 @@
 
 
 ## 2단계 요구사항
-- [ ] 주어진 정보(@Entity, @Id)를 바탕으로 create 쿼리 만들어보기
+- [x] 주어진 정보(@Entity, @Id)를 바탕으로 create 쿼리 만들어보기
 - [ ] 추가된 정보(@GeneratedValue, @Column)를 통해 create 쿼리 만들어보기
 - [ ] 추가된 정보(@Table, @Transient)를 통해 create 쿼리 만들어보기2
 - [ ] 정보를 바탕으로 drop 쿼리 만들어보기
