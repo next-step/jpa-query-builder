@@ -117,7 +117,7 @@ class ReflectionTest {
         assertThat(car.testGetPrice()).endsWith(String.valueOf(expectedPrice));
     }
 
-    private void setFieldValue(Car car, String targetField, Object value) throws NoSuchFieldException, IllegalAccessException {
+    private void setFieldValue(Car car, String targetField, Object value) throws Exception {
         Field field = car.getClass().getDeclaredField(targetField);
         field.setAccessible(true);
         field.set(car, value);
