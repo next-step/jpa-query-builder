@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class ReflectionTest {
 
@@ -53,11 +56,34 @@ public class ReflectionTest {
         Constructor<Car> constructor = carClass.getConstructor();
         Car carInstance = constructor.newInstance();
 
+        List<Method> method = extractMethod(carClass, m -> m.getName().startsWith("test"));
+        for (Method m : method) {
+            logger.debug("method name={}, invoked result => {}", m.getName(), m.invoke(carInstance));
+        }
+    }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getConstructor();
+        Car carInstance = constructor.newInstance();
+
+        List<Method> method = extractMethod(carClass, m -> m.isAnnotationPresent(PrintView.class));
+        for (Method m : method) {
+            m.invoke(carInstance);
+        }
+    }
+
+    private List<Method> extractMethod(Class<Car> carClass, Predicate<Method> predicate) {
         Method[] declaredMethods = carClass.getDeclaredMethods();
+        List<Method> result = new ArrayList<>(declaredMethods.length);
+
         for (Method method : declaredMethods) {
-            if (method.getName().startsWith("test")) {
-                logger.debug("method name={}, invoked result => {}", method.getName(), method.invoke(carInstance));
+            if (predicate.test(method)) {
+                result.add(method);
             }
         }
+        return result;
     }
 }
