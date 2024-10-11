@@ -13,3 +13,61 @@
     - Car 클래스의 name과 price 필드에 값을 할당한 후 getter 메소드를 통해 값을 확인한다.
 - [x] 인자를 가진 생성자의 인스턴스 생성
     - Car 클래스의 인스턴스를 자바 Reflection API를 활용해 Car 인스턴스를 생성한다.
+
+---
+
+## step2
+요구사항
+- [ ] 아래 정보를 바탕으로 create 쿼리 만들어보기
+  ```java
+    @Entity
+    public class Person {
+    @Id
+    private Long id;
+    
+    private String name;
+    
+    private Integer age;
+    }
+  ```
+- [ ] 추가된 정보를 통해 create 쿼리 만들어보기
+  ```java
+    @Entity
+    public class Person {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+    
+    @Column(nullable = false)
+    private String email;
+    }
+  ```
+- [ ] 추가된 정보를 통해 create 쿼리 만들어보기 2
+  ```java
+    @Table(name = "users")
+    @Entity
+    public class Person {
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
+      private Long id;
+
+      @Column(name = "nick_name")
+      private String name;
+
+      @Column(name = "old")
+      private Integer age;
+
+      @Column(nullable = false)
+      private String email;
+
+      @Transient
+      private Integer index;
+      }
+  ```
+- [ ] 정보를 바탕으로 drop 쿼리 만들어보기
