@@ -1,4 +1,4 @@
-package persistence.sql;
+package persistence.sql.fixture;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
