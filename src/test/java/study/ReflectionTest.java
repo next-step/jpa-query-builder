@@ -68,6 +68,18 @@ public class ReflectionTest {
     }
 
     @Test
+    @DisplayName("인자가 없는 생성자의 인스턴스 생성")
+    void constructor() throws InstantiationException, IllegalAccessException {
+        Class<Car> carClass = Car.class;
+        Car car = carClass.newInstance();
+
+        assertAll(
+            () -> assertThat(car.getName()).isNull(),
+            () -> assertThat(car.getPrice()).isZero()
+        );
+    }
+
+    @Test
     @DisplayName("인자를 가진 생성자의 인스턴스 생성")
     void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<Car> carClass = Car.class;
