@@ -42,4 +42,19 @@ public class ReflectionTest {
             System.out.println(invoke);
         }
     }
+
+    @Test
+    @DisplayName("PrintView 어노테이션 메소드 실행")
+    void printViewAnnotationMethodsExecute() throws Exception {
+        Car tesla = new Car("Tesla", 10_000);
+        Class<? extends Car> carClass = tesla.getClass();
+
+        List<Method> printViewMethods = Arrays.stream(carClass.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .toList();
+
+        for (Method printViewMethod : printViewMethods) {
+            printViewMethod.invoke(tesla);
+        }
+    }
 }
