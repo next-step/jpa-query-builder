@@ -107,6 +107,17 @@ class ReflectionTest {
         assertThat(car.getPrice()).isEqualTo(1000);
     }
 
+    @Test
+    @DisplayName("Car 클래스의 인자가 있는 생성자를 이용하여 인스턴스를 생성한다")
+    void constructorWithArgs() throws Exception {
+        final Class<Car> carClass = Car.class;
+        final Constructor<Car> constructor = getCarConstructor(carClass);
+        final Car car = constructor.newInstance("벤츠 G클래스", 1000);
+
+        assertThat(car.getName()).isEqualTo("벤츠 G클래스");
+        assertThat(car.getPrice()).isEqualTo(1000);
+    }
+
     private String getParameters(final Parameter[] parameters) {
         return Arrays.stream(parameters)
                 .map(param -> param.getType().getSimpleName())
@@ -122,5 +133,12 @@ class ReflectionTest {
             }
         }
         return results;
+    }
+
+    private Constructor<Car> getCarConstructor(final Class<Car> carClass) {
+        return (Constructor<Car>) Arrays.stream(carClass.getDeclaredConstructors())
+                .filter(c -> c.getParameterCount() == 2)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Constructor not found"));
     }
 }
