@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -47,6 +48,20 @@ class ReflectionTest {
             final String name = carClass.getSimpleName();
             final String parameters = getParameters(constructor.getParameters());
             logger.info("Constructor: {} {} ({})", modifiers, name, parameters);
+        }
+    }
+
+    @Test
+    @DisplayName("Car 클래스의 모든 메서드 정보를 출력한다")
+    void printAllMethods() {
+        final Class<Car> carClass = Car.class;
+        final Method[] declaredMethods = carClass.getDeclaredMethods();
+        for (final Method method : declaredMethods) {
+            final String modifiers = Modifier.toString(method.getModifiers());
+            final String returnType = method.getReturnType().getSimpleName();
+            final String name = method.getName();
+            final String parameters = getParameters(method.getParameters());
+            logger.info("Method: {} {} {} ({})", modifiers, returnType, name, parameters);
         }
     }
 
