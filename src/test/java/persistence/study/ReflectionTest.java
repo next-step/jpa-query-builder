@@ -104,4 +104,15 @@ public class ReflectionTest {
                 () -> assertEquals(car.getPrice(), CAR_PRICE)
         );
     }
+
+    @Test()
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void getDeclaredConstructors() throws Exception {
+        Car car = testClass.getDeclaredConstructor(String.class, int.class).newInstance(CAR_NAME, CAR_PRICE);
+
+        assertAll(
+                () -> assertEquals(car.getName(), CAR_NAME),
+                () -> assertEquals(car.getPrice(), CAR_PRICE)
+        );
+    }
 }
