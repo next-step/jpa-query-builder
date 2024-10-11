@@ -1,13 +1,16 @@
 package persistence.study;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -72,5 +75,26 @@ public class ReflectionTest {
         logger.debug(carClass.getName());
         assertThat(car)
                 .extracting("name").asString().isEqualTo("소나타");
+    }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws Exception {
+
+        // given
+        Class<Car> clazz = Car.class;
+        Car car = null;
+
+        // when
+        for (Constructor<?> declaredConstructor : clazz.getDeclaredConstructors()) {
+            int parameterCount = declaredConstructor.getParameterCount();
+            if (parameterCount == 2) {
+                car = (Car) declaredConstructor.newInstance("BMW", 100_000);
+                logger.debug("car : {}", car);
+            }
+        }
+
+        // then
+        assertThat(car).isNotNull();
     }
 }
