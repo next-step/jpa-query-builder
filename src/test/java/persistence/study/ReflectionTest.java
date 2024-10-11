@@ -34,4 +34,21 @@ public class ReflectionTest {
             }
         }
     }
+
+    @Test
+    @DisplayName("Car 객체의 메서드 중 PrintView 어노테이션이 있는 메소드 실행한다.")
+    public void printAnnotatedMethod() throws Exception{
+
+        // given
+        Class<Car> carClass = Car.class;
+        logger.debug(carClass.getName());
+        var car = carClass.getDeclaredConstructors()[0].newInstance();
+
+        // when
+        for (Method declaredMethod: carClass.getDeclaredMethods()) {
+            if (declaredMethod.isAnnotationPresent(PrintView.class)) {
+                declaredMethod.invoke(car);
+            }
+        }
+    }
 }
