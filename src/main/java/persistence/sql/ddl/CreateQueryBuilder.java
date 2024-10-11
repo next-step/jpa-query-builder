@@ -42,7 +42,6 @@ public class CreateQueryBuilder {
                     return result;
                 })
                 .toList();
-        System.out.println(fieldNames);
 
         sb.append(String.join(", ", fieldNames))
                 .append(")");
