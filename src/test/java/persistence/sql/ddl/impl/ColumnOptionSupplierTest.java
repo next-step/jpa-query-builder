@@ -56,7 +56,7 @@ class ColumnOptionSupplierTest {
 
         String actual = supplier.supply(fieldNode);
 
-        assertThat(actual).isEqualTo(" UNIQUE");
+        assertThat(actual).isEqualTo("UNIQUE");
     }
 
     @Test

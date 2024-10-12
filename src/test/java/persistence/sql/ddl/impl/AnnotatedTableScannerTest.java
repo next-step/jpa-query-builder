@@ -17,7 +17,7 @@ class AnnotatedTableScannerTest {
     @DisplayName("scan 함수는 Entity 어노테이션이 붙은 클래스를 찾아 EntityNode로 변환한다.")
     void scanTes() {
         // given
-        String basePackage = "sample.domain";
+        String basePackage = "persistence.sql.ddl.impl.fixture";
 
         // when
         Set<EntityNode<?>> actualSet = annotatedTableScanner.scan(basePackage);
@@ -26,8 +26,8 @@ class AnnotatedTableScannerTest {
         // then
         assertThat(actualSet).hasSize(1);
 
-        Class<?> entityClass = actualList.get(0).entityClass();
-        assertThat(entityClass.getSimpleName()).isEqualTo("Person");
+        Class<?> entityClass = actualList.getFirst().entityClass();
+        assertThat(entityClass.getSimpleName()).isEqualTo("ExampleClassOne");
     }
 
     @Test
