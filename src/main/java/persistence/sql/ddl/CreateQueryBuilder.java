@@ -8,7 +8,6 @@ import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -20,34 +19,9 @@ public class CreateQueryBuilder {
     );
 
     public String createTableQuery(Class<?> clazz) {
-        StringBuilder sb = new StringBuilder();
-
         String tableName = getTableName(clazz);
-        sb.append(String.format("create table %s (", tableName));
-        List<String> fieldNames = Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> {
-                    String fieldName = getFieldName(field);
-                    String fieldType = getFieldType(field);
-
-                    String result = String.format("%s %s", fieldName, fieldType);
-                    if (isIdField(field)) {
-                        result += " PRIMARY KEY";
-                    }
-                    if (isGeneratedValueField(field)) {
-                        result += " AUTO_INCREMENT";
-                    }
-                    if (isNotNullConstraint(field)) {
-                        result += " NOT NULL";
-                    }
-                    return result;
-                })
-                .toList();
-
-        sb.append(String.join(", ", fieldNames))
-                .append(")");
-
-        return sb.toString();
+        String fieldDefinitions = getFieldDefinitions(clazz);
+        return String.format("create table %s (%s)", tableName, fieldDefinitions);
     }
 
     private static String getTableName(Class<?> clazz) {
@@ -61,6 +35,29 @@ public class CreateQueryBuilder {
         }
 
         return clazz.getSimpleName().toLowerCase();
+    }
+
+    private String getFieldDefinitions(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(this::getFieldDefinition)
+                .collect(Collectors.joining(", "));
+    }
+
+    private String getFieldDefinition(Field field) {
+        String fieldName = getFieldName(field);
+        String fieldType = getFieldType(field);
+        StringBuilder result = new StringBuilder(String.format("%s %s", fieldName, fieldType));
+        if (isIdField(field)) {
+            result.append(" PRIMARY KEY");
+        }
+        if (isGeneratedValueField(field)) {
+            result.append(" AUTO_INCREMENT");
+        }
+        if (isNotNullConstraint(field)) {
+            result.append(" NOT NULL");
+        }
+        return result.toString();
     }
 
     private static String getFieldName(Field field) {
