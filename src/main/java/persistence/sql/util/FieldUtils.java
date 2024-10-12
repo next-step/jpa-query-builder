@@ -49,7 +49,7 @@ public class FieldUtils {
         return !column.nullable();
     }
 
-    public static boolean isPrimaryKey(Field field) {
+    public static boolean isId(Field field) {
         return field.isAnnotationPresent(Id.class);
     }
 

@@ -26,7 +26,7 @@ public class InsertQueryBuilder extends QueryBuilder {
     }
 
     private String getColumnClause() {
-        final List<String> columnDefinitions = getColumns().stream()
+        final List<String> columnDefinitions = getFields().stream()
                 .filter(this::isNotNeeded)
                 .map(FieldUtils::getColumnName)
                 .collect(Collectors.toList());
@@ -49,7 +49,7 @@ public class InsertQueryBuilder extends QueryBuilder {
     }
 
     private String getValueClause() {
-        final List<String> columnDefinitions = getColumns().stream()
+        final List<String> columnDefinitions = getFields().stream()
                 .filter(this::isNotNeeded)
                 .map(this::getColumnValue)
                 .collect(Collectors.toList());

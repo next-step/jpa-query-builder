@@ -22,7 +22,7 @@ public class CreateQueryBuilder extends QueryBuilder {
     }
 
     private String getColumnClause() {
-        final List<String> columnDefinitions = getColumns().stream()
+        final List<String> columnDefinitions = getFields().stream()
                 .filter(field -> !FieldUtils.isTransient(field))
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
@@ -41,7 +41,7 @@ public class CreateQueryBuilder extends QueryBuilder {
             columDefinition += " " + GENERATION_COLUMN_DEFINITION;
         }
 
-        if (FieldUtils.isPrimaryKey(field)) {
+        if (FieldUtils.isId(field)) {
             columDefinition += " " + PRIMARY_KEY_COLUMN_DEFINITION;
         }
 

@@ -89,12 +89,12 @@ class FieldUtilsTest {
 
     @Test
     @DisplayName("primary key 필드인 경우 true를 반환한다.")
-    void isPrimaryKey_true() {
+    void isId_true() {
         // given
         final Field field = getField("id");
 
         // when
-        final boolean result = FieldUtils.isPrimaryKey(field);
+        final boolean result = FieldUtils.isId(field);
 
         // then
         assertThat(result).isTrue();
@@ -102,12 +102,12 @@ class FieldUtilsTest {
 
     @Test
     @DisplayName("primary key 필드가 아닌 경우 false를 반환한다.")
-    void isPrimaryKey_false() {
+    void isId_false() {
         // given
         final Field field = getField("age");
 
         // when
-        final boolean result = FieldUtils.isPrimaryKey(field);
+        final boolean result = FieldUtils.isId(field);
 
         // then
         assertThat(result).isFalse();

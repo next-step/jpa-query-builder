@@ -37,14 +37,14 @@ public abstract class QueryBuilder {
                 .toLowerCase();
     }
 
-    protected List<Field> getColumns() {
+    protected List<Field> getFields() {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .collect(Collectors.toList());
     }
 
     protected Field getIdField() {
         return Arrays.stream(entityClass.getDeclaredFields())
-                .filter(FieldUtils::isPrimaryKey)
+                .filter(FieldUtils::isId)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(NOT_ID_FAILED_MESSAGE));
     }

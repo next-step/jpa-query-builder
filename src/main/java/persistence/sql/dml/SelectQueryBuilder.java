@@ -24,7 +24,7 @@ public class SelectQueryBuilder extends QueryBuilder {
     }
 
     private String getColumnClause() {
-        final List<String> columnDefinitions = getColumns().stream()
+        final List<String> columnDefinitions = getFields().stream()
                 .filter(this::isNotNeeded)
                 .map(FieldUtils::getColumnName)
                 .collect(Collectors.toList());
