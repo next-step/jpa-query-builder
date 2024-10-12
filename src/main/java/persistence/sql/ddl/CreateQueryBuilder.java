@@ -54,7 +54,7 @@ public class CreateQueryBuilder {
         if (annotation == null) {
             return clazz.getSimpleName().toLowerCase();
         }
-        
+
         if (!annotation.name().isEmpty()) {
             return annotation.name();
         }
@@ -77,12 +77,10 @@ public class CreateQueryBuilder {
     }
 
     private boolean isIdField(Field field) {
-        return Arrays.stream(field.getAnnotations())
-                .anyMatch(annotation -> annotation.annotationType().equals(Id.class));
+        return field.isAnnotationPresent(Id.class);
     }
 
     private boolean isGeneratedValueField(Field field) {
-        return Arrays.stream(field.getAnnotations())
-                .anyMatch(annotation -> annotation.annotationType().equals(GeneratedValue.class));
+        return field.isAnnotationPresent(GeneratedValue.class);
     }
 }
