@@ -116,4 +116,15 @@ public class ReflectionTest {
             assertThat(car.testGetName()).isEqualTo("test : Benz");
             assertThat(car.testGetPrice()).isEqualTo("test : 1000");
         }
+
+        @Test
+        @DisplayName("자바 Reflection API를 활용해 Car 인스턴스를 생성한다.")
+        void createInstance() throws Exception {
+            Class<Car> carClass = Car.class;
+            Constructor<Car> constructor = carClass.getDeclaredConstructor(String.class, int.class);
+            Car car = constructor.newInstance("Benz", 1000);
+
+            assertThat(car.testGetName()).endsWith("Benz");
+            assertThat(car.testGetPrice()).endsWith("1000");
+        }
 }
