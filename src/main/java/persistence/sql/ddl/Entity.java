@@ -3,6 +3,8 @@ package persistence.sql.ddl;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import persistence.sql.ddl.exception.IncorrectIdFieldException;
+import persistence.sql.ddl.exception.NotEntityException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
