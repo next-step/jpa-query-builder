@@ -99,4 +99,21 @@ public class ReflectionTest {
         // assertThat으로 출력된 내용을 검증
         assertThat(output).isEqualTo("자동차 정보를 출력 합니다.");
         }
+
+        @Test
+        @DisplayName("private field 값 할당")
+        void privateFieldAccess() throws Exception {
+            Class<Car> carClass = Car.class;
+            Car car = carClass.getDeclaredConstructor().newInstance();
+
+            Field nameField = carClass.getDeclaredField("name");
+            Field priceField = carClass.getDeclaredField("price");
+            nameField.setAccessible(true);
+            priceField.setAccessible(true);
+            nameField.set(car, "Benz");
+            priceField.set(car, 1000);
+
+            assertThat(car.testGetName()).isEqualTo("test : Benz");
+            assertThat(car.testGetPrice()).isEqualTo("test : 1000");
+        }
 }
