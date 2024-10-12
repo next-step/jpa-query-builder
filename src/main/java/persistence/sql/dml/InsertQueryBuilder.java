@@ -21,9 +21,8 @@ public class InsertQueryBuilder extends QueryBuilder {
         this.entity = entity;
     }
 
-    @Override
-    public String build() {
-        return super.build(QUERY_TEMPLATE, getColumnClause(), getValueClause());
+    public String insert() {
+        return super.build(QUERY_TEMPLATE, getTableName(), getColumnClause(), getValueClause());
     }
 
     private String getColumnClause() {

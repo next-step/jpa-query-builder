@@ -9,8 +9,7 @@ public class DropQueryBuilder extends QueryBuilder {
         super(entityClass);
     }
 
-    @Override
-    public String build() {
-        return super.build(QUERY_TEMPLATE);
+    public String drop() {
+        return super.build(QUERY_TEMPLATE, getTableName());
     }
 }

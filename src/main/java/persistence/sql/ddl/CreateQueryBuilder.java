@@ -17,9 +17,8 @@ public class CreateQueryBuilder extends QueryBuilder {
         super(entityClass);
     }
 
-    @Override
-    public String build() {
-        return super.build(QUERY_TEMPLATE, getColumnClause());
+    public String create() {
+        return super.build(QUERY_TEMPLATE, getTableName(), getColumnClause());
     }
 
     private String getColumnClause() {

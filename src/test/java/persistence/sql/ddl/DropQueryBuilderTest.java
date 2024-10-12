@@ -30,12 +30,12 @@ class DropQueryBuilderTest {
 
     @Test
     @DisplayName("DROP 쿼리를 생성한다.")
-    void build() {
+    void drop() {
         // given
         final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
 
         // when
-        final String query = dropQueryBuilder.build();
+        final String query = dropQueryBuilder.drop();
 
         // then
         assertThat(query).isEqualTo("DROP TABLE IF EXISTS users");

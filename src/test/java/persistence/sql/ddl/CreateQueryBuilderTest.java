@@ -30,12 +30,12 @@ class CreateQueryBuilderTest {
 
     @Test
     @DisplayName("CREATE 쿼리를 생성한다.")
-    void build() {
+    void create() {
         // given
         final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
 
         // when
-        final String query = createQueryBuilder.build();
+        final String query = createQueryBuilder.create();
 
         // then
         assertThat(query).isEqualTo(

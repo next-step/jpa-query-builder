@@ -22,30 +22,21 @@ public abstract class QueryBuilder {
         this.entityClass = entityClass;
     }
 
-    public abstract String build();
-
     protected String build(String queryTemplate, String... templateArgs) {
-        return String.format(queryTemplate, getArgs(templateArgs));
+        return String.format(queryTemplate, (Object[]) templateArgs);
     }
 
-    protected List<Field> getColumns() {
-        return Arrays.stream(entityClass.getDeclaredFields())
-                .collect(Collectors.toList());
-    }
-
-    private Object[] getArgs(String[] templateArgs) {
-        Object[] args = new Object[templateArgs.length + 1];
-        args[0] = getTableName();
-        System.arraycopy(templateArgs, 0, args, 1, templateArgs.length);
-        return args;
-    }
-
-    private String getTableName() {
+    protected String getTableName() {
         final Table table = entityClass.getAnnotation(Table.class);
         if (Objects.nonNull(table) && Objects.nonNull(table.name()) && !table.name().isBlank()) {
             return table.name();
         }
         return entityClass.getSimpleName()
                 .toLowerCase();
+    }
+
+    protected List<Field> getColumns() {
+        return Arrays.stream(entityClass.getDeclaredFields())
+                .collect(Collectors.toList());
     }
 }

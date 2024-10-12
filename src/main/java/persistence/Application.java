@@ -24,13 +24,13 @@ public class Application {
             final Person person = new Person("Jaden", 30, "test@email.com", 1);
 
             final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
-            jdbcTemplate.execute(createQueryBuilder.build());
+            jdbcTemplate.execute(createQueryBuilder.create());
 
             final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(person);
-            jdbcTemplate.execute(insertQueryBuilder.build());
+            jdbcTemplate.execute(insertQueryBuilder.insert());
 
             final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
-            jdbcTemplate.execute(dropQueryBuilder.build());
+            jdbcTemplate.execute(dropQueryBuilder.drop());
 
             server.stop();
         } catch (Exception e) {
