@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.entity.TestEntity;
 
 import java.lang.reflect.Field;
 

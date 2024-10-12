@@ -1,8 +1,13 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.entity;
 
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Field;
+import persistence.sql.ddl.Entity;
+import persistence.sql.ddl.EntityField;
+import persistence.sql.ddl.IncorrectIdFieldException;
+import persistence.sql.ddl.entity.EmptyIdEntity;
+import persistence.sql.ddl.entity.ManyIdsEntity;
+import persistence.sql.ddl.entity.NormalEntity;
+import persistence.sql.ddl.entity.TableEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
