@@ -64,12 +64,22 @@ public class CreateQueryBuilder {
 
     private static String getFieldName(Field field) {
         Column annotation = field.getAnnotation(Column.class);
-        return (annotation != null && !annotation.name().isEmpty()) ? annotation.name() : field.getName();
+        if (annotation == null) {
+            return field.getName();
+        }
+        if (!annotation.name().isEmpty()) {
+            return annotation.name();
+        }
+
+        return field.getName();
     }
 
     private boolean isNotNullConstraint(Field field) {
+        if (field.isAnnotationPresent(Column.class)) {
+            return false;
+        }
         Column annotation = field.getAnnotation(Column.class);
-        return annotation != null && !annotation.nullable();
+        return !annotation.nullable();
     }
 
     private String getFieldType(Field field) {
