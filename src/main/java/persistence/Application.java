@@ -7,8 +7,6 @@ import persistence.sql.ddl.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.QueryBuilderDDL;
-import persistence.sql.ddl.QueryBuilderDDL3;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
