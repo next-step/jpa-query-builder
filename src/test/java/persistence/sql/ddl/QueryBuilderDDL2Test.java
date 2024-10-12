@@ -1,6 +1,5 @@
 package persistence.sql.ddl;
 
-import entity.Person;
 import org.junit.jupiter.api.Test;
 
 class QueryBuilderDDL2Test {

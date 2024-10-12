@@ -1,4 +1,4 @@
-package entity;
+package persistence.sql.ddl;
 
 import jakarta.persistence.*;
 

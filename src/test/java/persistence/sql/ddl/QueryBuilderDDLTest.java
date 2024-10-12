@@ -1,6 +1,5 @@
 package persistence.sql.ddl;
 
-import entity.Person;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.Test;
 
