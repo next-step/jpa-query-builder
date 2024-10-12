@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
 
@@ -97,6 +98,7 @@ public class ReflectionTest {
         assertThat(outputStream.toString()).isEqualTo("자동차 정보를 출력 합니다.\n");
 
     }
+
     @Test
     @DisplayName("private field에 값 할당한다.")
     void privateFieldAccess() throws Exception {
@@ -114,8 +116,10 @@ public class ReflectionTest {
         priceField.setAccessible(true);
         priceField.set(tesla, price);
 
-        assertThat(tesla.testGetName()).endsWith(name);
-        assertThat(tesla.testGetPrice()).endsWith(String.valueOf(price));
+        assertAll(
+                () -> assertThat(tesla.testGetName()).endsWith(name),
+                () -> assertThat(tesla.testGetPrice()).endsWith(String.valueOf(price))
+        );
     }
 
 
