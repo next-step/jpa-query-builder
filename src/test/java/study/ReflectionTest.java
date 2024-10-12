@@ -20,7 +20,7 @@ public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
     @Test
-    @DisplayName("Car 객체 정보 가져오기")
+    @DisplayName("요구 사항 1 - 클래스 정보 출력")
     void getDeclaredInfoInCarClass() {
         Class<Car> carClass = Car.class;
         String carClassName = carClass.getSimpleName();
@@ -54,7 +54,7 @@ public class ReflectionTest {
    }
 
    @Test
-   @DisplayName("test로 시작하는 메소드 실행")
+   @DisplayName("요구 사항 2 - test로 시작하는 메소드 실행")
    void testMethodRun() throws Exception {
         // Car Class에 정의된 메소드 중 'test'로 시작하는 메소드 가져오기
        Class<Car> carClass = Car.class;
@@ -74,5 +74,11 @@ public class ReflectionTest {
            String returnValue = (String)method.invoke(testCar);
            logger.info("{} 실행 결과 = {}", method.getName(), returnValue);
        }
+   }
+
+   @Test
+   @DisplayName("요구 사항 3 - @PrintView 애노테이션 메소드 실행")
+   void testAnnotationMethodRun() {
+
    }
 }
