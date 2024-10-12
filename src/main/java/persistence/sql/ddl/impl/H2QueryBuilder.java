@@ -73,13 +73,25 @@ public class H2QueryBuilder implements QueryBuilder {
     }
 
     private <T> String buildTableQuery(EntityNode<T> entityNode) {
+        String tableName = getTableName(entityNode);
+
+        return "CREATE TABLE " + nameConverter.convert(tableName);
+    }
+
+    @Override
+    public String buildDropTableQuery(EntityNode<?> entityNode) {
+        String tableName = getTableName(entityNode);
+
+        return "DROP TABLE " + nameConverter.convert(tableName);
+    }
+
+    private static <T> String getTableName(EntityNode<T> entityNode) {
         Class<T> entityClass = entityNode.getEntityClass();
         String tableName = entityClass.getSimpleName();
 
         if (entityClass.isAnnotationPresent(Table.class)) {
             tableName = entityClass.getAnnotation(Table.class).name();
         }
-
-        return "CREATE TABLE " + nameConverter.convert(tableName);
+        return tableName;
     }
 }

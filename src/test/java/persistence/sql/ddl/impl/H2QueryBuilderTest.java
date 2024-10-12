@@ -61,6 +61,19 @@ class H2QueryBuilderTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("buildDropTableQuery 는 매개변수 클래스를 스네이크 케이스 기반으로 삭제 쿼리를 반환한다.")
+    void buildDropTableQuery() {
+        EntityNode<?> entityNode = EntityNode.from(CamelCaseTable.class);
+
+        // given
+        String expected = "DROP TABLE camel_case_table";
+        // when
+        String actual = queryBuilder.buildDropTableQuery(entityNode);
+        // then
+        assertThat(actual).isEqualTo(expected);
+    }
+
 
     @Entity
     private static class CamelCaseTable {

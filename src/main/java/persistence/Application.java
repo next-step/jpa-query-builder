@@ -35,6 +35,13 @@ public class Application {
                 jdbcTemplate.execute(createTableQuery);
             }
 
+            for (EntityNode<?> node : nodes) {
+                String dropTableQuery = queryBuilder.buildDropTableQuery(node);
+                logger.info("Create table query: {}", dropTableQuery);
+                jdbcTemplate.execute(dropTableQuery);
+            }
+
+
             //server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
