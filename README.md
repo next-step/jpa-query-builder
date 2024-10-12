@@ -11,6 +11,6 @@
   - Step2
     - 요구 사항
       - [x] 1 : Entity 클래스에 @Entity, @Id 가 있는 클래스 Create 쿼리 만들기
-      - [] 2 : Entity 클래스에 @Enttiy, @Id, @GeneratedValue, @Column이 있는 클래스 Create 쿼리 만들기
+      - [x] 2 : Entity 클래스에 @Enttiy, @Id, @GeneratedValue, @Column이 있는 클래스 Create 쿼리 만들기 (Column DDL은 따로 클래스를 만들어서 처리)
       - [] 3 : Entity 클래스에 @Enttiy, @Id, @GeneratedValue, @Column, @Transient이 있는 클래스 Create 쿼리 만들기
       - [] 4 : Entity를 가지고 Drop Table 쿼리 만들기
