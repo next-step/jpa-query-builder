@@ -8,8 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 
 public class ReflectionTest {
@@ -41,5 +44,26 @@ public class ReflectionTest {
         Arrays.stream(methods).forEach(method -> {
             logger.info("Method: " + method.getName() + ", Return Type: " + method.getReturnType());
         });
+    }
+
+    @Test
+    @DisplayName("test로 시작하는 메서드 실행하기")
+    void testMethodRun()  throws Exception {
+
+        Class<?> carClass = Car.class;
+        Object carInstance = carClass.getDeclaredConstructor().newInstance(); // Car 인스턴스 생성
+
+        Method[] methods = carClass.getDeclaredMethods(); // Car 클래스의 메서드들 가져오기
+
+        Arrays.stream(methods)
+                .filter(method -> method.getName().startsWith("test"))
+                .forEach(method -> {
+                    try {
+                        logger.info("invoke: " + method.invoke(carInstance));
+                        method.invoke(carInstance);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+            });
     }
 }
