@@ -1,33 +1,52 @@
 package study
 
 import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.SoftAssertions
+import org.assertj.core.api.SoftAssertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class ReflectionTest {
 
     @Test
-    @DisplayName("클래스의 모든 필드, 생성자, 메서드 정보를 조회한다")
-    fun showClass() {
+    @DisplayName("클래스의 필드 정보를 확인한다")
+    fun fields() {
+        val clazz = Car::class.java
+        assertSoftly {
+            it.assertThat(clazz.name).isEqualTo("study.Car")
+
+            it.assertThat(clazz.fields).isEmpty()
+            it.assertThat(clazz.getDeclaredField("name").type).isEqualTo(String::class.java)
+            it.assertThat(clazz.getDeclaredField("price").type).isEqualTo(Integer.TYPE)
+        }
+    }
+
+    @Test
+    @DisplayName("클래스의 생성자를 확인한다")
+    fun constructors() {
         val clazz = Car::class.java
 
-        assertThat(clazz.name).isEqualTo("study.Car")
-
-        assertThat(clazz.fields).isEmpty()
-        assertThat(clazz.declaredFields[0].name).isEqualTo("name")
-        assertThat(clazz.declaredFields[1].name).isEqualTo("price")
-
-        assertThat(clazz.constructors.size).isEqualTo(clazz.declaredConstructors.size)
-        assertThat(clazz.getDeclaredConstructor().parameterCount).isEqualTo(0)
-        assertThat(clazz.constructors[0].parameterCount).isEqualTo(0)
-        assertThat(clazz.constructors[2].parameterCount).isEqualTo(2)
-
-        assertThat(clazz.methods.size).isEqualTo(12)
-        assertThat(clazz.declaredMethods.size).isEqualTo(3)
-        assertThat(clazz.declaredMethods[0].name).isEqualTo("printView")
-        assertThat(clazz.declaredMethods[1].name).isEqualTo("testGetName")
-        assertThat(clazz.declaredMethods[2].name).isEqualTo("testGetPrice")
+        assertSoftly {
+            it.assertThat(clazz.constructors.size).isEqualTo(clazz.declaredConstructors.size)
+            it.assertThat(clazz.getDeclaredConstructor().parameterCount).isEqualTo(0)
+            it.assertThat(clazz.getDeclaredConstructor(String::class.java, Integer.TYPE).parameterCount).isEqualTo(2)
+        }
     }
+
+    @Test
+    @DisplayName("클래스의 메서드를 확인한다")
+    fun methods() {
+        val clazz = Car::class.java
+
+        assertSoftly {
+            it.assertThat(clazz.methods.size).isEqualTo(12)
+            it.assertThat(clazz.declaredMethods.size).isEqualTo(3)
+            it.assertThat(clazz.getDeclaredMethod("printView").isAnnotationPresent(PrintView::class.java)).isTrue
+            it.assertThat(clazz.getDeclaredMethod("testGetName").returnType).isEqualTo(String::class.java)
+            it.assertThat(clazz.getDeclaredMethod("testGetPrice").returnType).isEqualTo(String::class.java)
+        }
+    }
+
 
     @Test
     @DisplayName("test로 시작하는 메소드를 실행한다")
@@ -64,11 +83,13 @@ class ReflectionTest {
         val clazz = Car::class.java
         val car = clazz.getDeclaredConstructor().newInstance()
 
-        assertThat(car.testGetName()).isEqualTo("test : ")
-        assertThat(car.testGetPrice()).isEqualTo("test : 0")
+        assertSoftly {
+            it.assertThat(car.testGetName()).isEqualTo("test : ")
+            it.assertThat(car.testGetPrice()).isEqualTo("test : 0")
 
-        assertThatThrownBy { clazz.getDeclaredField("name").set(car, "업데이트") }
-            .isInstanceOf(IllegalAccessException::class.java)
+            assertThatThrownBy { clazz.getDeclaredField("name").set(car, "업데이트") }
+                .isInstanceOf(IllegalAccessException::class.java)
+        }
 
         clazz.getDeclaredField("name").also {
             it.trySetAccessible()
@@ -78,8 +99,11 @@ class ReflectionTest {
             it.trySetAccessible()
             it.set(car, 10000)
         }
-        assertThat(car.testGetName()).isEqualTo("test : 업데이트")
-        assertThat(car.testGetPrice()).isEqualTo("test : 10000")
+
+        assertSoftly {
+            it.assertThat(car.testGetName()).isEqualTo("test : 업데이트")
+            it.assertThat(car.testGetPrice()).isEqualTo("test : 10000")
+        }
     }
 
     @Test
@@ -87,8 +111,9 @@ class ReflectionTest {
     fun constructorWithArgs() {
         val clazz = Car::class.java
         val car = clazz.getConstructor(String::class.java, Integer.TYPE).newInstance("테스트", 10000)
-
-        assertThat(car.testGetName()).isEqualTo("test : 테스트")
-        assertThat(car.testGetPrice()).isEqualTo("test : 10000")
+        assertSoftly {
+            it.assertThat(car.testGetName()).isEqualTo("test : 테스트")
+            it.assertThat(car.testGetPrice()).isEqualTo("test : 10000")
+        }
     }
 }
