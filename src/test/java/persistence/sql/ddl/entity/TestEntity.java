@@ -14,4 +14,7 @@ public class TestEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer identityId;
+
+    @Column(nullable = false)
+    private Integer home;
 }
