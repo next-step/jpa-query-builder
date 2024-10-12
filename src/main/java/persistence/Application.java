@@ -26,33 +26,14 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             // create table
-            CreateQueryBuilder createQuery = new CreateQueryBuilder();
-            jdbcTemplate.execute(createQuery.build(Person.class));
+            testCreate(jdbcTemplate);
 
             // test insert and select
-            String insertSQL = "INSERT INTO users (nick_name, old, email) VALUES ('John Doe', 30, 'chanho0912@gmail.com')";
-            jdbcTemplate.execute(insertSQL);
-            logger.info("Data inserted successfully!");
-
-            String selectSQL = "SELECT * FROM users where id = 1";
-            Map<String, Object> result = jdbcTemplate.queryForObject(selectSQL, new RowMapper<Map<String, Object>>() {
-                @Override
-                public Map<String, Object> mapRow(ResultSet resultSet) throws SQLException {
-                    return Map.of("nick_name", resultSet.getString("nick_name"), "old", resultSet.getInt("old"));
-                }
-            });
-
-            for (Map.Entry<String, Object> row : result.entrySet()) {
-                logger.info("Row: column={}, value={}", row.getKey(), row.getValue());
-            }
+            testInsert(jdbcTemplate);
+            testSelect(jdbcTemplate);
 
             // drop table
-            DropQueryBuilder dropQuery = new DropQueryBuilder();
-            String build = dropQuery.build(Person.class);
-            logger.info("Drop query: {}", build);
-            jdbcTemplate.execute(build);
-
-//            jdbcTemplate.execute("select * from users");
+            testDrop(jdbcTemplate);
 
             server.stop();
         } catch (Exception e) {
@@ -60,5 +41,39 @@ public class Application {
         } finally {
             logger.info("Application finished");
         }
+    }
+
+    private static void testCreate(JdbcTemplate jdbcTemplate) {
+        CreateQueryBuilder createQuery = new CreateQueryBuilder();
+        jdbcTemplate.execute(createQuery.build(Person.class));
+    }
+
+    private static void testDrop(JdbcTemplate jdbcTemplate) {
+        DropQueryBuilder dropQuery = new DropQueryBuilder();
+        String build = dropQuery.build(Person.class);
+        logger.info("Drop query: {}", build);
+        jdbcTemplate.execute(build);
+
+//            jdbcTemplate.execute("select * from users");
+    }
+
+    private static void testSelect(JdbcTemplate jdbcTemplate) {
+        String selectSQL = "SELECT * FROM users where id = 1";
+        Map<String, Object> result = jdbcTemplate.queryForObject(selectSQL, new RowMapper<Map<String, Object>>() {
+            @Override
+            public Map<String, Object> mapRow(ResultSet resultSet) throws SQLException {
+                return Map.of("nick_name", resultSet.getString("nick_name"), "old", resultSet.getInt("old"));
+            }
+        });
+
+        for (Map.Entry<String, Object> row : result.entrySet()) {
+            logger.info("Row: column={}, value={}", row.getKey(), row.getValue());
+        }
+    }
+
+    private static void testInsert(JdbcTemplate jdbcTemplate) {
+        String insertSQL = "INSERT INTO users (nick_name, old, email) VALUES ('John Doe', 30, 'chanho0912@gmail.com')";
+        jdbcTemplate.execute(insertSQL);
+        logger.info("Data inserted successfully!");
     }
 }
