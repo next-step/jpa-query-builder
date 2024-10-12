@@ -21,7 +21,9 @@ class ColumnMetadataTest {
     @Test
     void getIdField() throws Exception {
         ColumnMetadata columnMetadata = ColumnMetadata.from(IncludeId.class);
+
         Column expected = Column.from(IncludeId.class.getDeclaredField("id"));
+        
         assertThat(columnMetadata.getPrimaryKeys()).containsExactly(expected);
     }
 }

@@ -16,7 +16,7 @@
 - [X] `@Table`과 `@Transient` 정보를 추가로 읽어 create query를 만든다.
     - [X] `@Table`이 있으면 name을 사용한다.
     - [X] `@Transient`가 있으면 컬럼에서 제외한다.
-- [ ] drop query를 만든다.
+- [X] drop query를 만든다.
 
 ## 1단계 - Reflection
 

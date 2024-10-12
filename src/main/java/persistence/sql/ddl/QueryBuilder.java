@@ -20,6 +20,11 @@ public class QueryBuilder {
                 ");";
     }
 
+    public String buildDropDdl(Class<?> clazz) {
+        EntityMetadata entityMetadata = EntityMetadata.from(clazz);
+        return "drop table " + entityMetadata.getTableName() + ";";
+    }
+
     private String getDefinitions(EntityMetadata entityMetadata) {
         return generateColumnDefinitions(entityMetadata.getColumnMetadata()) + ", primary key (" + getPrimaryKeyNames(entityMetadata) + ")";
     }

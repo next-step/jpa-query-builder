@@ -15,4 +15,13 @@ class QueryBuilderTest {
 
         assertThat(createDdl).isEqualTo(expectedQuery);
     }
+
+    @Test
+    void dropDdl() {
+        String expectedQuery = "drop table users;";
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String dropDdl = queryBuilder.buildDropDdl(Person.class);
+
+        assertThat(dropDdl).isEqualTo(expectedQuery);
+    }
 }
