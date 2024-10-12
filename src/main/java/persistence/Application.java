@@ -21,6 +21,7 @@ public class Application {
             final TableManager tableManager = new TableManager(Person.class);
 
             tableManager.createQuery().forEach(jdbcTemplate::execute);
+            tableManager.dropQuery().forEach(jdbcTemplate::execute);
 
             server.stop();
         } catch (Exception e) {
