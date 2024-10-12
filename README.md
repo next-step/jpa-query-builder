@@ -1,5 +1,17 @@
 # jpa-query-builder
 
+## 2단계 - QueryBuilder DDL
+
+### 요구 사항
+
+- [ ] `@Entity`, `@Id`가 사용된 클래스를 받아 create query를 만든다.
+  - [ ] Long은 bigint로 해석한다.
+  - [ ] String은 varchar(255)로 해석한다.
+  - [ ] Integer는 integer로 해석한다.
+- [ ] `@GeneratedValue`와 `@Column` 정보를 추가로 읽어 create query를 만든다.
+- [ ] `@Table`과 `@Transient` 정보를 추가로 읽어 create query를 만든다.
+- [ ] drop query를 만든다.
+
 ## 1단계 - Reflection
 
 ### 요구 사항
