@@ -49,10 +49,8 @@ public class ReflectionTest {
     @Test
     @DisplayName("test로 시작하는 메서드 실행하기")
     void testMethodRun()  throws Exception {
-
         Class<?> carClass = Car.class;
         Object carInstance = carClass.getDeclaredConstructor().newInstance(); // Car 인스턴스 생성
-
         Method[] methods = carClass.getDeclaredMethods(); // Car 클래스의 메서드들 가져오기
 
         Arrays.stream(methods)
