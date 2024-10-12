@@ -130,8 +130,15 @@ public class ReflectionTest {
    void constructorWithArgs() throws Exception {
         Class<Car> carClass = Car.class;
 
+        List<Constructor> declaredConstructorWithParameter = Arrays.stream(carClass.getDeclaredConstructors()).filter(constructor-> constructor.getParameters().length > 0).collect(Collectors.toList());
         logger.info("선언된 생성자 개수: {}", carClass.getDeclaredConstructors().length);
-        logger.info("선언된 생성자 : {}", carClass.getDeclaredConstructors().length);
+        assertThat(declaredConstructorWithParameter.size()).isEqualTo(1);
 
+        if(declaredConstructorWithParameter.size()>0) {
+            Constructor constructorWithNameAndPrice = declaredConstructorWithParameter.get(0);
+            Car newCar = (Car) constructorWithNameAndPrice.newInstance("teslar", 4000);
+            assertThat(newCar.getName()).isEqualTo("teslar");
+            assertThat(newCar.getPrice()).isEqualTo(4000);
+        }
    }
 }
