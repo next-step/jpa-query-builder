@@ -100,6 +100,25 @@ public class ReflectionTest {
        for (Method method : declaredMethodAnnotatedWithPrintView) {
            method.invoke(testCar);
        }
+   }
 
+   @Test
+   @DisplayName("요구 사항 4 - private field에 값 할당")
+   void privateFieldAccess() throws Exception {
+       Class<Car> carClass = Car.class;
+       Car testCar = getTestCar();
+
+       Field priceField = carClass.getDeclaredField("price");
+       Field nameField = carClass.getDeclaredField("name");
+
+       priceField.setAccessible(true);
+       nameField.setAccessible(true);
+
+       priceField.set(testCar, 4200);
+       nameField.set(testCar, "소나타");
+
+       logger.info("정의한 Car 정보 : name = {}, price = {}", testCar.getName(), testCar.getPrice());
+       assertThat(testCar.getPrice()).isEqualTo(4200);
+       assertThat(testCar.getName()).isEqualTo("소나타");
    }
 }
