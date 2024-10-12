@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 
 class ColumnTest: DescribeSpec({
 
-    describe("toQuery 메소드는") {
+    describe("createQuery 메소드는") {
         val person = Person::class.java
 
         context("지원하는 Field 타입은") {
@@ -17,9 +17,9 @@ class ColumnTest: DescribeSpec({
             val stringColumn = Column(person.getDeclaredField("name"))
             val intColumn = Column(person.getDeclaredField("age"))
             it("DDL 컬럼 문자열을 반환한다.") {
-                stringColumn.toQuery() shouldBe "nick_name VARCHAR(255) DEFAULT NULL"
-                intColumn.toQuery() shouldBe "old int DEFAULT NULL"
-                idColumn.toQuery() shouldBe "id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id)"
+                stringColumn.createQuery() shouldBe "nick_name VARCHAR(255) DEFAULT NULL"
+                intColumn.createQuery() shouldBe "old int DEFAULT NULL"
+                idColumn.createQuery() shouldBe "id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id)"
             }
         }
 
@@ -28,7 +28,7 @@ class ColumnTest: DescribeSpec({
             val unavailableColumn = Column(table.getDeclaredField("columns"))
 
             it("지원하지 않는 타입이라는 의미의 예외를 던진다.") {
-                shouldThrow<ColumnTypeUnavailableException> { unavailableColumn.toQuery() }
+                shouldThrow<ColumnTypeUnavailableException> { unavailableColumn.createQuery() }
             }
         }
 
@@ -36,7 +36,7 @@ class ColumnTest: DescribeSpec({
             val transientColumn = Column(person.getDeclaredField("index"))
 
             it("공백을 반환한다") {
-                transientColumn.toQuery() shouldBe ""
+                transientColumn.createQuery() shouldBe ""
             }
         }
     }

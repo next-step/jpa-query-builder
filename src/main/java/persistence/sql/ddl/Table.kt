@@ -5,15 +5,18 @@ class Table (
 ) {
     private val columns: List<Column> = extractColumn(clazz)
 
-    fun toQuery(): String {
+    fun createQuery(): String {
         val tableName = this.clazz.simpleName.lowercase()
         return "CREATE TABLE $tableName (${columnsToQuery()})"
     }
 
-    private fun columnsToQuery(): String = columns.map { it.toQuery() }
+    fun dropQuery() = "DROP TABLE ${this.clazz.simpleName.lowercase()}"
+
+    private fun columnsToQuery(): String = columns.map { it.createQuery() }
         .filter { it.isNotEmpty() }
         .joinToString(",")
 
     private fun extractColumn(clazz: Class<*>): List<Column> =
         clazz.declaredFields.map { Column(it) }
+
 }

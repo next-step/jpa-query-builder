@@ -12,7 +12,7 @@ data class Column (
 ) {
     private val isIdColumn: Boolean = field.isAnnotationPresent(Id::class.java)
 
-    fun toQuery(): String {
+    fun createQuery(): String {
         if (isTransientField()) return ""
 
         return StringJoiner(" ").apply {
