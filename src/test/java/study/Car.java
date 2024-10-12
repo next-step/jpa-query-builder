@@ -19,7 +19,7 @@ public class Car {
         System.out.println("자동차 정보를 출력 합니다.");
     }
 
-    public String testGetName() {
+    public String testname() {
         return "test : " + name;
     }
 
@@ -27,7 +27,7 @@ public class Car {
         return "test : " + price;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
