@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.*;
 
+@Table(name = "users")
 @Entity
 public class Person {
 
@@ -17,5 +18,8 @@ public class Person {
 
     @Column(nullable = false)
     private String email;
+
+    @Transient
+    private Integer index;
 
 }

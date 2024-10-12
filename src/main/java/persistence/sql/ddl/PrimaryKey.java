@@ -5,23 +5,16 @@ import jakarta.persistence.GenerationType;
 
 public class PrimaryKey {
 
-    private final FieldInfo fieldInfo;
-    private GenerationType generationType;
+    private final TableColumn tableColumn;
+    private final GenerationType generationType;
 
-    public PrimaryKey(FieldInfo fieldInfo, GeneratedValue generatedValue) {
-        this.fieldInfo = fieldInfo;
-        this.generationType = GenerationType.AUTO;
-        if (generatedValue != null) {
-            this.generationType = generatedValue.strategy();
-        }
+    public PrimaryKey(TableColumn tableColumn, GeneratedValue generatedValue) {
+        this.tableColumn = tableColumn;
+        this.generationType = generatedValue == null ? GenerationType.AUTO : generatedValue.strategy();
     }
 
     public String name() {
-        return fieldInfo.name();
-    }
-
-    public String type() {
-        return fieldInfo.type();
+        return tableColumn.name();
     }
 
     public GenerationType generationType() {

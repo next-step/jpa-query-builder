@@ -1,9 +1,8 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.jetbrains.annotations.NotNull;
+import jakarta.persistence.Table;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -11,8 +10,8 @@ import java.util.List;
 
 public class SchemaExtractor {
 
-    static class EntityValidator {
-        static void validateEntity(Class<?> clazz) {
+    static class EntityClassValidator {
+        static void validate(Class<?> clazz) {
             if (!clazz.isAnnotationPresent(Entity.class)) {
                 throw new IllegalArgumentException("Entity must be annotated with @Entity");
             }
@@ -32,15 +31,36 @@ public class SchemaExtractor {
         }
     }
 
-    public EntityInfo extract(Class<?> clazz) {
-        EntityValidator.validateEntity(clazz);
+    static class TableNameExtractor {
+        static String extract(Class<?> clazz) {
+            String tableName = clazz.getSimpleName();
+            if (clazz.isAnnotationPresent(Entity.class)) {
+                Entity entityAnnotation = clazz.getAnnotation(Entity.class);
+                if (!entityAnnotation.name().isEmpty()) {
+                    tableName = entityAnnotation.name();
+                }
+            }
 
-        String tableName = clazz.getSimpleName().toLowerCase();
-        FieldInfo[] fields =
+            if (clazz.isAnnotationPresent(Table.class)) {
+                Table tableAnnotation = clazz.getAnnotation(Table.class);
+                if (!tableAnnotation.name().isEmpty()) {
+                    tableName = tableAnnotation.name();
+                }
+            }
+
+            return tableName;
+        }
+    }
+
+    public TableInfo extract(Class<?> clazz) {
+        EntityClassValidator.validate(clazz);
+
+        String tableName = TableNameExtractor.extract(clazz);
+        List<TableColumn> columns =
                 Arrays.stream(clazz.getDeclaredFields())
-                        .map(FieldInfo::new)
-                        .toArray(FieldInfo[]::new);
+                        .map(TableColumn::new)
+                        .toList();
 
-        return new EntityInfo(tableName, fields);
+        return new TableInfo(tableName, columns);
     }
 }

@@ -29,11 +29,11 @@ public class Application {
             jdbcTemplate.execute(createQuery.build(Person.class));
 
             // test insert and select
-            String insertSQL = "INSERT INTO Person (nick_name, old, email) VALUES ('John Doe', 30, 'chanho0912@gmail.com')";
+            String insertSQL = "INSERT INTO users (nick_name, old, email) VALUES ('John Doe', 30, 'chanho0912@gmail.com')";
             jdbcTemplate.execute(insertSQL);
             logger.info("Data inserted successfully!");
 
-            String selectSQL = "SELECT * FROM Person where id = 1";
+            String selectSQL = "SELECT * FROM users where id = 1";
             Map<String, Object> result = jdbcTemplate.queryForObject(selectSQL, new RowMapper<Map<String, Object>>() {
                 @Override
                 public Map<String, Object> mapRow(ResultSet resultSet) throws SQLException {

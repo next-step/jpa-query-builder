@@ -1,12 +1,11 @@
 package persistence.sql.ddl.query;
 
-import persistence.sql.ddl.EntityInfo;
-import persistence.sql.ddl.FieldInfo;
 import persistence.sql.ddl.PrimaryKey;
 import persistence.sql.ddl.SchemaExtractor;
+import persistence.sql.ddl.TableColumn;
+import persistence.sql.ddl.TableInfo;
 
 import java.util.List;
-import java.util.Optional;
 
 public class CreateQueryBuilder implements QueryBuilder {
 
@@ -24,7 +23,7 @@ public class CreateQueryBuilder implements QueryBuilder {
         this.schemaExtractor = schemaExtractor;
     }
 
-    static class SQLTypeTranslator {
+    public static class SQLTypeTranslator {
         public static String translate(String type) {
             return switch (type) {
                 case "Long" -> "BIGINT";
@@ -37,44 +36,28 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     @Override
     public String build(Class<?> entityClazz) {
-        EntityInfo entityInfo = schemaExtractor.extract(entityClazz);
+        TableInfo tableInfo = schemaExtractor.extract(entityClazz);
+        PrimaryKeyGenerationStrategy pkGenerationStrategy = pkGenerationStrategies.stream()
+                .filter(strategy -> strategy.supports(tableInfo.primaryKey()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Primary key generation strategy not found"));
+
         StringBuilder query = new StringBuilder();
 
-        query.append("CREATE TABLE ").append(entityInfo.tableName());
+        query.append("CREATE TABLE ").append(tableInfo.tableName());
         query.append(" (");
 
-        for (FieldInfo field : entityInfo.fields()) {
-            addColumn(field, query);
-            query.append(", ");
+        for (TableColumn column : tableInfo.columns()) {
+            column.applyToQuery(query, pkGenerationStrategy);
         }
 
-        addPrimaryKey(entityInfo, query);
+        definePrimaryKey(tableInfo.primaryKey(), query);
 
         query.append(");");
         return query.toString();
     }
 
-    private void addColumn(FieldInfo field, StringBuilder query) {
-        String sqlType = SQLTypeTranslator.translate(field.type());
-        query.append(field.name()).append(" ").append(sqlType);
-        if (field.notNullable()) {
-            query.append(" NOT NULL");
-        }
-        if (field.isPrimaryKey()) {
-            PrimaryKey pk = field.primaryKey();
-            Optional<PrimaryKeyGenerationStrategy> strategy = pkGenerationStrategies
-                    .stream()
-                    .filter(s -> s.supports(pk))
-                    .findFirst();
-
-            strategy.ifPresent(primaryKeyGenerationStrategy ->
-                    query.append(" ").append(primaryKeyGenerationStrategy.generatePrimaryKeySQL(pk))
-            );
-        }
-    }
-
-    private void addPrimaryKey(EntityInfo entityInfo, StringBuilder query) {
-        PrimaryKey pk = entityInfo.primaryKey();
+    private void definePrimaryKey(PrimaryKey pk, StringBuilder query) {
         query.append("PRIMARY KEY (").append(pk.name()).append(")");
     }
 }
