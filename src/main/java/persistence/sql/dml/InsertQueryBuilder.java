@@ -1,5 +1,7 @@
 package persistence.sql.dml;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import persistence.sql.QueryBuilder;
 import persistence.sql.util.FieldUtils;
 
@@ -8,10 +10,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder extends QueryBuilder {
+    private static final Logger logger = LoggerFactory.getLogger(QueryBuilder.class);
+
     private static final String QUERY_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
 
+    private final Object entity;
+
     public InsertQueryBuilder(Object entity) {
-        super(entity);
+        super(entity.getClass());
+        this.entity = entity;
     }
 
     @Override
@@ -49,5 +56,14 @@ public class InsertQueryBuilder extends QueryBuilder {
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
+    }
+
+    protected Object getValue(Field field) {
+        try {
+            return field.get(entity);
+        } catch (IllegalAccessException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
     }
 }

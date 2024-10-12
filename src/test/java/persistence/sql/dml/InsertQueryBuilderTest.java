@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.NotEntity;
 import persistence.sql.Person;
 import persistence.sql.QueryBuilder;
-import persistence.sql.ddl.CreateQueryBuilder;
-import persistence.sql.ddl.DropQueryBuilder;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -18,10 +16,10 @@ class InsertQueryBuilderTest {
         final Person person = new Person("Jaden", 30, "test@email.com", 1);
 
         // when
-        final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(person);
+        final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(person);
 
         // then
-        assertThat(dropQueryBuilder).isNotNull();
+        assertThat(insertQueryBuilder).isNotNull();
     }
 
     @Test
@@ -31,7 +29,7 @@ class InsertQueryBuilderTest {
         final NotEntity notEntity = new NotEntity("Jaden", 30, "test@email.com", 1);
 
         // when & then
-        assertThatThrownBy(() -> new CreateQueryBuilder(notEntity))
+        assertThatThrownBy(() -> new InsertQueryBuilder(notEntity))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(QueryBuilder.NOT_ENTITY_FAILED_MESSAGE);
     }

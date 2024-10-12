@@ -23,13 +23,13 @@ public class Application {
 
             final Person person = new Person("Jaden", 30, "test@email.com", 1);
 
-            final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(person);
+            final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
             jdbcTemplate.execute(createQueryBuilder.build());
 
             final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(person);
             jdbcTemplate.execute(insertQueryBuilder.build());
 
-            final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(person);
+            final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
             jdbcTemplate.execute(dropQueryBuilder.build());
 
             server.stop();
