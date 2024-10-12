@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SchemaExtractor {
 
-    static class EntityClassValidator {
+    private static class EntityClassValidator {
         static void validate(Class<?> clazz) {
             if (!clazz.isAnnotationPresent(Entity.class)) {
                 throw new IllegalArgumentException("Entity must be annotated with @Entity");
@@ -31,7 +31,7 @@ public class SchemaExtractor {
         }
     }
 
-    static class TableNameExtractor {
+    private static class TableNameExtractor {
         static String extract(Class<?> clazz) {
             String tableName = clazz.getSimpleName();
             if (clazz.isAnnotationPresent(Entity.class)) {

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.ddl.Person;
+import persistence.sql.ddl.query.DropQueryBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,6 +45,14 @@ public class Application {
             for (Map.Entry<String, Object> row : result.entrySet()) {
                 logger.info("Row: column={}, value={}", row.getKey(), row.getValue());
             }
+
+            // drop table
+            DropQueryBuilder dropQuery = new DropQueryBuilder();
+            String build = dropQuery.build(Person.class);
+            logger.info("Drop query: {}", build);
+            jdbcTemplate.execute(build);
+
+//            jdbcTemplate.execute("select * from users");
 
             server.stop();
         } catch (Exception e) {
