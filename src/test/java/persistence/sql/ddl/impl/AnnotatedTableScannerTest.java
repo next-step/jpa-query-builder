@@ -31,4 +31,17 @@ class AnnotatedTableScannerTest {
         assertThat(entityClass.getSimpleName()).isEqualTo("Person");
     }
 
+    @Test
+    @DisplayName("scan 함수는 Entity 애노테이션이 붙은 클래스가 없을 경우 빈 Set을 반환한다.")
+    void scanTestWhenNoEntity() {
+        // given
+        String basePackage = "jdbc";
+
+        // when
+        Set<EntityNode<?>> actualSet = annotatedTableScanner.scan(basePackage);
+
+        // then
+        assertThat(actualSet).isEmpty();
+    }
+
 }
