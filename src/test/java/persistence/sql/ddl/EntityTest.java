@@ -14,8 +14,18 @@ public class EntityTest {
 
         Entity entity = Entity.of(clazz);
 
+        assertThat(entity.getName()).isEqualTo("NormalEntity");
         assertThat(entity.getIdField().getField().getName()).isEqualTo("id");
         assertThat(entity.getFields()).map(EntityField::getName).containsExactlyInAnyOrder("name", "address");
+    }
+
+    @Test
+    public void Table이_있으면_이름을_Table의_이름을_사용한다() {
+        Class<TableEntity> clazz = TableEntity.class;
+
+        Entity entity = Entity.of(clazz);
+
+        assertThat(entity.getName()).isEqualTo("table");
     }
 
     @Test
