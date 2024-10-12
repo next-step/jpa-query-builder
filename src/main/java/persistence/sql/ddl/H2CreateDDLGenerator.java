@@ -12,22 +12,22 @@ public class H2CreateDDLGenerator implements CreateDDLGenerator {
     );
 
     @Override
-    public String generate(Entity entity) {
-        String command = createCommand(entity);
-        String definition = getDefinition(entity);
+    public String generate(EntityFields entityFields) {
+        String command = createCommand(entityFields);
+        String definition = getDefinition(entityFields);
 
         return "%s (%s);".formatted(command, definition);
     }
 
-    private String createCommand(Entity entity) {
-        String name = entity.getName();
+    private String createCommand(EntityFields entityFields) {
+        String name = entityFields.getName();
 
         return "CREATE TABLE %s".formatted(name);
     }
 
-    private String getDefinition(Entity entity) {
-        String idDefinition = getIdDefinition(entity.getIdField());
-        Stream<String> fieldDefinitions = entity.getFields().stream().map(this::getFieldDefinition);
+    private String getDefinition(EntityFields entityFields) {
+        String idDefinition = getIdDefinition(entityFields.getIdField());
+        Stream<String> fieldDefinitions = entityFields.getFields().stream().map(this::getFieldDefinition);
 
         return Stream.concat(Stream.of(idDefinition), fieldDefinitions).collect(Collectors.joining(", "));
     }

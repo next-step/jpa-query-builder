@@ -9,9 +9,9 @@ import java.lang.reflect.Field;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class EntityIdFieldTest {
+class EntityIdFieldTest {
     @Test
-    public void GeneratedValue가_없으면_generationType은_Auto이다() throws NoSuchFieldException {
+    void GeneratedValue가_없으면_generationType은_Auto이다() throws NoSuchFieldException {
         Field field = TestEntity.class.getDeclaredField("defaultId");
 
         EntityIdField entityIdField = EntityIdField.of(field);
@@ -24,7 +24,7 @@ public class EntityIdFieldTest {
     }
 
     @Test
-    public void GeneratedValue가_있으면_generationType은_GeneratedValue의_stratgy를_사용한다() throws NoSuchFieldException {
+    void GeneratedValue가_있으면_generationType은_GeneratedValue의_stratgy를_사용한다() throws NoSuchFieldException {
         Field field = TestEntity.class.getDeclaredField("identityId");
 
         EntityIdField entityIdField = EntityIdField.of(field);

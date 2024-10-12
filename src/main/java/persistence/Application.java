@@ -14,7 +14,7 @@ public class Application {
         CreateDDLGenerator createDDLGenerator = new H2CreateDDLGenerator();
         DropDDLGenerator dropDDLGenerator = new H2DropDDLGenerator();
 
-        Entity entity = Entity.of(Person.class);
+        EntityFields entityFields = EntityFields.of(Person.class);
 
         logger.info("Starting application...");
         try {
@@ -23,8 +23,8 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            String createDDL = createDDLGenerator.generate(entity);
-            String dropDDL = dropDDLGenerator.generate(entity);
+            String createDDL = createDDLGenerator.generate(entityFields);
+            String dropDDL = dropDDLGenerator.generate(entityFields);
 
             jdbcTemplate.execute(createDDL);
             jdbcTemplate.execute(dropDDL);

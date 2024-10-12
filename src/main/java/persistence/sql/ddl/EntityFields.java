@@ -10,27 +10,27 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public class Entity {
+public class EntityFields {
     private String name;
 
     private EntityIdField idField;
 
     private List<EntityField> fields;
 
-    private Entity(String name, EntityIdField idField, List<EntityField> fields) {
+    private EntityFields(String name, EntityIdField idField, List<EntityField> fields) {
         this.name = name;
         this.idField = idField;
         this.fields = fields;
     }
 
-    public static <T> Entity of(Class<T> clazz) {
+    public static <T> EntityFields of(Class<T> clazz) {
         if (clazz.getAnnotation(jakarta.persistence.Entity.class) == null) {
             throw new NotEntityException();
         }
 
         Field[] declaredFields = clazz.getDeclaredFields();
 
-        return new Entity(
+        return new EntityFields(
                 getName(clazz),
                 getIdField(declaredFields),
                 getFields(declaredFields)

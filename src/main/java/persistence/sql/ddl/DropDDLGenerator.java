@@ -1,5 +1,5 @@
 package persistence.sql.ddl;
 
 public interface DropDDLGenerator {
-    String generate(Entity entity);
+    String generate(EntityFields entityFields);
 }
