@@ -1,0 +1,39 @@
+@startuml
+interface QueryBuilder {
+    + String getQuery()
+}
+
+class DDLQueryBuilder {
+    + Object<<Entity>> entity
+    + DropTableStep dropTable(String tableName)
+    + CreateTableStep createTable(String tableName)
+}
+
+
+class DMLQueryBuilder {
+
+}
+
+interface CreateTableStep {
+
+}
+
+interface DropTableStep {
+
+}
+
+interface DropTableConditionStep {
+
+}
+
+
+QueryBuilder <|-- DDLQueryBuilder : extends
+DDLQueryBuilder <|-- DropTableStep : extends
+DDLQueryBuilder <|-- CreateTableStep : extends
+
+DropTableStep <|-- DropTableConditionStep
+
+
+QueryBuilder <|-- DMLQueryBuilder
+
+@enduml
