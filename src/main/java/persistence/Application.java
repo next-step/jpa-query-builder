@@ -6,7 +6,7 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.ddl.Person;
 
 import java.sql.ResultSet;
@@ -25,11 +25,11 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             // create table
-            Person person = new Person();
             CreateQueryBuilder createQuery = new CreateQueryBuilder();
-            jdbcTemplate.execute(createQuery.build(person));
+            jdbcTemplate.execute(createQuery.build(Person.class));
 
-            String insertSQL = "INSERT INTO Person (id, name, age) VALUES (1, 'John Doe', 30)";
+            // test insert and select
+            String insertSQL = "INSERT INTO Person (nick_name, old, email) VALUES ('John Doe', 30, 'chanho0912@gmail.com')";
             jdbcTemplate.execute(insertSQL);
             logger.info("Data inserted successfully!");
 
@@ -37,7 +37,7 @@ public class Application {
             Map<String, Object> result = jdbcTemplate.queryForObject(selectSQL, new RowMapper<Map<String, Object>>() {
                 @Override
                 public Map<String, Object> mapRow(ResultSet resultSet) throws SQLException {
-                    return Map.of("name", resultSet.getString("name"), "age", resultSet.getInt("age"));
+                    return Map.of("nick_name", resultSet.getString("nick_name"), "old", resultSet.getInt("old"));
                 }
             });
 

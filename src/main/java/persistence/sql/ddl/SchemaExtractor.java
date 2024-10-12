@@ -1,7 +1,9 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -10,19 +12,15 @@ import java.util.List;
 public class SchemaExtractor {
 
     static class EntityValidator {
-        static void validateEntity(Object entity) {
-            if (entity == null) {
-                throw new IllegalArgumentException("Entity cannot be null");
-            }
-
-            if (!entity.getClass().isAnnotationPresent(Entity.class)) {
+        static void validateEntity(Class<?> clazz) {
+            if (!clazz.isAnnotationPresent(Entity.class)) {
                 throw new IllegalArgumentException("Entity must be annotated with @Entity");
             }
 
-            validateHasIdField(entity.getClass().getDeclaredFields());
+            validateHasId(clazz.getDeclaredFields());
         }
 
-        static void validateHasIdField(Field[] fields) {
+        static void validateHasId(Field[] fields) {
             List<Field> idFields = Arrays.stream(fields)
                     .filter(field ->
                             field.isAnnotationPresent(Id.class)
@@ -34,19 +32,13 @@ public class SchemaExtractor {
         }
     }
 
-    public EntityInfo extract(Object entity) {
-        EntityValidator.validateEntity(entity);
+    public EntityInfo extract(Class<?> clazz) {
+        EntityValidator.validateEntity(clazz);
 
-        String tableName = entity.getClass().getSimpleName().toLowerCase();
+        String tableName = clazz.getSimpleName().toLowerCase();
         FieldInfo[] fields =
-                Arrays.stream(entity.getClass().getDeclaredFields())
-                        .map(field ->
-                                new FieldInfo(
-                                        field.getName(),
-                                        field.getType().getSimpleName(),
-                                        field.isAnnotationPresent(Id.class)
-                                )
-                        )
+                Arrays.stream(clazz.getDeclaredFields())
+                        .map(FieldInfo::new)
                         .toArray(FieldInfo[]::new);
 
         return new EntityInfo(tableName, fields);

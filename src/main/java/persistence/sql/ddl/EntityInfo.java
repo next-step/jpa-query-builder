@@ -2,10 +2,10 @@ package persistence.sql.ddl;
 
 public record EntityInfo(String tableName, FieldInfo[] fields) {
 
-    public FieldInfo primaryKey() {
+    public PrimaryKey primaryKey() {
         for (FieldInfo field : fields) {
             if (field.isPrimaryKey()) {
-                return field;
+                return field.primaryKey();
             }
         }
 
