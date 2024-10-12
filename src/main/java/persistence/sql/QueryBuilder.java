@@ -2,6 +2,7 @@ package persistence.sql;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import persistence.sql.util.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -10,7 +11,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class QueryBuilder {
-    public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
+    public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 없습니다.";
+    public static final String NOT_ID_FAILED_MESSAGE = "필드에 @Id 애노테이션이 없습니다.";
 
     private final Class<?> entityClass;
 
@@ -38,5 +40,12 @@ public abstract class QueryBuilder {
     protected List<Field> getColumns() {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .collect(Collectors.toList());
+    }
+
+    protected Field getIdField() {
+        return Arrays.stream(entityClass.getDeclaredFields())
+                .filter(FieldUtils::isPrimaryKey)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(NOT_ID_FAILED_MESSAGE));
     }
 }

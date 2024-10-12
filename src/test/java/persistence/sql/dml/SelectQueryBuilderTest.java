@@ -1,5 +1,11 @@
 package persistence.sql.dml;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.NotEntity;
@@ -39,5 +45,49 @@ class SelectQueryBuilderTest {
 
         // then
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users");
+    }
+
+    @Test
+    @DisplayName("findById 쿼리를 생성한다.")
+    void findById() {
+        // given
+        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
+
+        // when
+        final String query = selectQueryBuilder.findById(1);
+
+        // then
+        assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
+    }
+
+    @Test
+    @DisplayName("findById 쿼리를 생성한다.")
+    void findById_exception() {
+        // given
+        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(NotId.class);
+
+        // when & then
+        assertThatThrownBy(() -> selectQueryBuilder.findById(1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(QueryBuilder.NOT_ID_FAILED_MESSAGE);
+    }
+
+    @Table(name = "users")
+    @Entity
+    static class NotId {
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        @Column(name = "nick_name")
+        private String name;
+
+        @Column(name = "old")
+        private Integer age;
+
+        @Column(nullable = false)
+        private String email;
+
+        @Transient
+        private Integer index;
     }
 }
