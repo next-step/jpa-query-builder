@@ -1,11 +1,9 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
@@ -15,8 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class CreateQueryBuilder {
-    public static final String CREATE_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
+public class CreateQueryBuilder extends QueryBuilder {
     private static final String CREATE_QUERY_TEMPLATE = "CREATE TABLE %s ( %s )";
 
     private static final String NOT_NULL_COLUMN_DEFINITION = "NOT NULL";
@@ -24,8 +21,6 @@ public class CreateQueryBuilder {
     private static final String PRIMARY_KEY_COLUMN_DEFINITION = "PRIMARY KEY";
 
     private static final Map<Class<?>, String> FIELD_TYPE_TO_DB_TYPE_MAPPING;
-
-    private final Class<?> entityClass;
 
     static {
         FIELD_TYPE_TO_DB_TYPE_MAPPING = Map.of(
@@ -36,24 +31,12 @@ public class CreateQueryBuilder {
     }
 
     public CreateQueryBuilder(Class<?> entityClass) {
-        if (!entityClass.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException(CREATE_FAILED_MESSAGE);
-        }
-
-        this.entityClass = entityClass;
+        super(entityClass);
     }
 
-    public String getCreateQuery() {
-        return String.format(CREATE_QUERY_TEMPLATE, getTableName(), getColumns());
-    }
-
-    private String getTableName() {
-        final Table table = entityClass.getAnnotation(Table.class);
-        if (Objects.nonNull(table) && Objects.nonNull(table.name()) && !table.name().isBlank()) {
-            return table.name();
-        }
-        return entityClass.getSimpleName()
-                .toLowerCase();
+    @Override
+    public String build() {
+        return super.build(CREATE_QUERY_TEMPLATE, getColumns());
     }
 
     private String getColumns() {

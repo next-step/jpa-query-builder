@@ -24,17 +24,17 @@ class CreateQueryBuilderTest {
         // when & then
         assertThatThrownBy(() -> new CreateQueryBuilder(NotEntity.class))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(CreateQueryBuilder.CREATE_FAILED_MESSAGE);
+                .hasMessage(QueryBuilder.NOT_ENTITY_FAILED_MESSAGE);
     }
 
     @Test
     @DisplayName("CREATE 쿼리를 생성한다.")
-    void getCreateQuery() {
+    void build() {
         // given
         final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
 
         // when
-        final String query = createQueryBuilder.getCreateQuery();
+        final String query = createQueryBuilder.build();
 
         // then
         assertThat(query).isEqualTo(

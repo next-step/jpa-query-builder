@@ -24,17 +24,17 @@ class DropQueryBuilderTest {
         // when & then
         assertThatThrownBy(() -> new CreateQueryBuilder(NotEntity.class))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(DropQueryBuilder.CREATE_FAILED_MESSAGE);
+                .hasMessage(QueryBuilder.NOT_ENTITY_FAILED_MESSAGE);
     }
 
     @Test
     @DisplayName("DROP 쿼리를 생성한다.")
-    void getDropQuery() {
+    void build() {
         // given
         final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
 
         // when
-        final String query = dropQueryBuilder.getDropQuery();
+        final String query = dropQueryBuilder.build();
 
         // then
         assertThat(query).isEqualTo(
