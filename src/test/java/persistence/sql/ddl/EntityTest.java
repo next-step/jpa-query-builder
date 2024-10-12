@@ -1,13 +1,10 @@
-package persistence.sql.ddl.entity;
+package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Entity;
 import persistence.sql.ddl.EntityField;
 import persistence.sql.ddl.IncorrectIdFieldException;
-import persistence.sql.ddl.entity.EmptyIdEntity;
-import persistence.sql.ddl.entity.ManyIdsEntity;
-import persistence.sql.ddl.entity.NormalEntity;
-import persistence.sql.ddl.entity.TableEntity;
+import persistence.sql.ddl.entity.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -31,6 +28,14 @@ public class EntityTest {
         Entity entity = Entity.of(clazz);
 
         assertThat(entity.getName()).isEqualTo("table");
+    }
+
+    @Test
+    public void Entity_애노테이션이_없으면_실패한다() {
+        Class<NotEntityAnnotationEntity> clazz = NotEntityAnnotationEntity.class;
+
+        assertThatExceptionOfType(NotEntityException.class)
+                .isThrownBy(() -> Entity.of(clazz));
     }
 
     @Test

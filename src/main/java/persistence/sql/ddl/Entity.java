@@ -34,6 +34,10 @@ public class Entity {
     }
 
     public static <T> Entity of(Class<T> clazz) {
+        if (clazz.getAnnotation(jakarta.persistence.Entity.class) == null) {
+            throw new NotEntityException();
+        }
+
         Field[] declaredFields = clazz.getDeclaredFields();
 
         return new Entity(
