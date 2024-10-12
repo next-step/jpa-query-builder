@@ -1,8 +1,10 @@
 package persistence.sql.ddl.entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
+@Entity
 public class NormalEntity {
     @Id
     private Long id;
