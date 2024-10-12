@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public final class H2CreateDDLGenerator implements CreateDDLGenerator {
     private static final Map<Class, String> typeToTypeDefinition = Map.of(
-            String.class, "VARCHAR(255)",
+            String.class, "VARCHAR(%s)",
             Long.class, "BIGINT",
             Integer.class, "INTEGER"
     );
@@ -50,6 +50,10 @@ public final class H2CreateDDLGenerator implements CreateDDLGenerator {
         String name = field.name();
         String typeDefinition = typeToTypeDefinition.get(field.type());
         String nullable = field.nullable() ? "" : "not null";
+
+        if (field.type() == String.class) {
+            typeDefinition = typeDefinition.formatted(field.length());
+        }
 
         return "%s %s %s".formatted(name, typeDefinition, nullable);
     }
