@@ -1,4 +1,4 @@
-package model;
+package persistence.sql.ddl.model;
 
 import jakarta.persistence.Table;
 
@@ -7,7 +7,7 @@ public class TableName {
 
     public TableName(Class<?> clazz) {
         if (clazz == null) {
-            throw new NullPointerException("클래스가 존재하지 않습니다.");
+            throw new IllegalArgumentException("class가 존재하지 않습니다.");
         }
 
         this.value = getTableName(clazz);
@@ -26,6 +26,7 @@ public class TableName {
         if (name.isEmpty()) {
             return clazz.getSimpleName().toLowerCase();
         }
+
         return name;
     }
 

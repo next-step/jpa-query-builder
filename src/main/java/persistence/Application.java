@@ -22,6 +22,7 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             jdbcTemplate.execute(createQueryBuilder.makeQuery());
             jdbcTemplate.execute(dropQueryBuilder.makeQuery());
+            
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

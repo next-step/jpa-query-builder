@@ -1,4 +1,4 @@
-package model;
+package persistence.sql.ddl.model;
 
 import jakarta.persistence.*;
 
@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DDLColumns {
+public class DDLColumn {
 
     private static final String SPACE = " ";
 
@@ -29,9 +29,9 @@ public class DDLColumns {
     private final List<Field> fields;
 
 
-    public DDLColumns(Field[] fields) {
+    public DDLColumn(Field[] fields) {
         if (fields == null || fields.length <= 0) {
-            throw new NullPointerException("필드가 존재하지 않습니다.");
+            throw new IllegalArgumentException("필드가 존재하지 않습니다.");
         }
 
         this.fields = new ArrayList<>(Arrays.asList(fields))

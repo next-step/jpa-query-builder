@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import model.TableName;
+import persistence.sql.ddl.model.TableName;
 
 public class H2DropQueryBuilder implements DropQueryBuilder {
 
@@ -12,6 +12,9 @@ public class H2DropQueryBuilder implements DropQueryBuilder {
     private final Class<?> clazz;
 
     public H2DropQueryBuilder(Class<?> clazz) {
+        if (clazz == null) {
+            throw new IllegalArgumentException("class가 존재하지 않습니다.");
+        }
         this.clazz = clazz;
     }
 

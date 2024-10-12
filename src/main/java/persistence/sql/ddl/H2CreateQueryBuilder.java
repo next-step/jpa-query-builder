@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
-import model.DDLColumns;
-import model.TableName;
+import persistence.sql.ddl.model.DDLColumn;
+import persistence.sql.ddl.model.TableName;
 
 public class H2CreateQueryBuilder implements CreateQueryBuilder{
 
@@ -13,7 +13,7 @@ public class H2CreateQueryBuilder implements CreateQueryBuilder{
 
     public H2CreateQueryBuilder(Class<?> clazz) {
         if (clazz == null) {
-            throw new NullPointerException("class가 존재하지 않습니다.");
+            throw new IllegalArgumentException("class가 존재하지 않습니다.");
         }
         this.clazz = clazz;
     }
@@ -21,7 +21,7 @@ public class H2CreateQueryBuilder implements CreateQueryBuilder{
     public String makeQuery() {
         TableName tableName = new TableName(clazz);
 
-        DDLColumns ddlColumns = new DDLColumns(clazz.getDeclaredFields());
+        DDLColumn ddlColumns = new DDLColumn(clazz.getDeclaredFields());
         StringBuilder sqlStringBuilder = new StringBuilder();
         sqlStringBuilder.append("CREATE TABLE");
         sqlStringBuilder.append(SPACE);
