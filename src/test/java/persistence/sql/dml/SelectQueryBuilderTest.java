@@ -74,7 +74,7 @@ class SelectQueryBuilderTest {
 
     @Table(name = "users")
     @Entity
-    static class NotId {
+    private static class NotId {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 

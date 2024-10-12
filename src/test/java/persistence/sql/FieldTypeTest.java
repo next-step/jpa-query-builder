@@ -34,11 +34,11 @@ class FieldTypeTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    static class ExistingField {
+    private static class ExistingField {
         private String field;
     }
 
-    static class NonExistingField {
+    private static class NonExistingField {
         private Object field;
     }
 }
