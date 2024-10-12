@@ -1,7 +1,10 @@
 package study
 
+import entity.Person
+import jakarta.persistence.Column
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import org.assertj.core.api.Assertions.*
-import org.assertj.core.api.SoftAssertions
 import org.assertj.core.api.SoftAssertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -114,6 +117,22 @@ class ReflectionTest {
         assertSoftly {
             it.assertThat(car.testGetName()).isEqualTo("test : 테스트")
             it.assertThat(car.testGetPrice()).isEqualTo("test : 10000")
+        }
+    }
+
+    @Test
+    @DisplayName("필드에 선언된 어노테이션의 값을 조회한다")
+    fun annotationValue() {
+        val clazz = Person::class.java
+
+        val idField = clazz.getDeclaredField("id")
+        val nameField = clazz.getDeclaredField("name")
+        val emailField = clazz.getDeclaredField("email")
+
+        assertSoftly {
+            it.assertThat(idField.getAnnotation(GeneratedValue::class.java).strategy).isEqualTo(GenerationType.IDENTITY)
+            it.assertThat(nameField.getAnnotation(Column::class.java).name).isEqualTo("nick_name")
+            it.assertThat(emailField.getAnnotation(Column::class.java).nullable).isFalse
         }
     }
 }
