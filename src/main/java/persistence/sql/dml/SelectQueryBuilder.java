@@ -35,9 +35,4 @@ public class SelectQueryBuilder extends QueryBuilder {
     private boolean isNotNeeded(Field field) {
         return !FieldUtils.isTransient(field);
     }
-
-    private String getWhereClause(Object id) {
-        final Field field = getIdField();
-        return FieldUtils.getColumnName(field) + " = " + id;
-    }
 }

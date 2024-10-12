@@ -48,4 +48,9 @@ public abstract class QueryBuilder {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(NOT_ID_FAILED_MESSAGE));
     }
+
+    protected String getWhereClause(Object id) {
+        final Field field = getIdField();
+        return FieldUtils.getColumnName(field) + " = " + id;
+    }
 }
