@@ -3,11 +3,12 @@ package persistence.sql.ddl.node;
 import jakarta.persistence.Entity;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EntityNode<T> implements SQLNode {
-    private Class<T> entityClass;
-    private List<FieldNode> fields;
+    private final Class<T> entityClass;
+    private final List<FieldNode> fields;
 
     public Class<T> getEntityClass() {
         return entityClass;
@@ -26,5 +27,14 @@ public class EntityNode<T> implements SQLNode {
         List<FieldNode> fields = Arrays.stream(entityClass.getDeclaredFields()).map(FieldNode::from).toList();
 
         return new EntityNode<>(entityClass, fields);
+    }
+
+    public List<FieldNode> getFields() {
+        return Collections.unmodifiableList(fields);
+    }
+
+    public boolean existsConstraint() {
+        // TODO: Implement this method
+        return false;
     }
 }
