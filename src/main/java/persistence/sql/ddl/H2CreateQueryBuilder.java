@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Entity;
 import persistence.sql.ddl.model.DDLColumn;
 import persistence.sql.ddl.model.TableName;
 
@@ -15,6 +16,11 @@ public class H2CreateQueryBuilder implements CreateQueryBuilder{
         if (clazz == null) {
             throw new IllegalArgumentException("class가 존재하지 않습니다.");
         }
+
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("Entity 클래스가 아닙니다.");
+        }
+
         this.clazz = clazz;
     }
 
