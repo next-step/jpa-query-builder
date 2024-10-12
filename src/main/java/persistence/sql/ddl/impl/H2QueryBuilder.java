@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
+/**
+ * H2 데이터베이스용 쿼리 빌더
+ */
 public class H2QueryBuilder implements QueryBuilder {
 
     private final NameConverter nameConverter;
@@ -86,7 +89,7 @@ public class H2QueryBuilder implements QueryBuilder {
     }
 
     private static <T> String getTableName(EntityNode<T> entityNode) {
-        Class<T> entityClass = entityNode.getEntityClass();
+        Class<T> entityClass = entityNode.entityClass();
         String tableName = entityClass.getSimpleName();
 
         if (entityClass.isAnnotationPresent(Table.class)) {

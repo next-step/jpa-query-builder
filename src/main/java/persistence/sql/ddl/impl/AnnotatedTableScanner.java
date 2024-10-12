@@ -10,6 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * 애노테이션 기반 테이블 스캐너
+ */
 public class AnnotatedTableScanner implements TableScanner {
     private Reflections reflections;
 

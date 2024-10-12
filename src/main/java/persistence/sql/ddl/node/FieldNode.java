@@ -6,8 +6,10 @@ import jakarta.persistence.Id;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.List;
 
+/**
+ * 필드 노드 정보
+ */
 public class FieldNode implements SQLNode{
     private final Field field;
 

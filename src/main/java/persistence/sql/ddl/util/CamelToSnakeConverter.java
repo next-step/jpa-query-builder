@@ -1,5 +1,8 @@
 package persistence.sql.ddl.util;
 
+/**
+ * 카멜 케이스 to 스네이크 케이스 변환기
+ */
 public class CamelToSnakeConverter implements NameConverter {
     private static final CamelToSnakeConverter INSTANCE = new CamelToSnakeConverter();
 

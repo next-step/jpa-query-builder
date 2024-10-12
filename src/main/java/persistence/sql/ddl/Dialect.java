@@ -3,6 +3,9 @@ package persistence.sql.ddl;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 데이터베이스 방언 정보
+ */
 public abstract class Dialect {
     private final Map<Integer, String> defaults = new HashMap<>();
 

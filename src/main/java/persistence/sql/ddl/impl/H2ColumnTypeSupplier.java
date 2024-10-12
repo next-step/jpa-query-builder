@@ -7,6 +7,9 @@ import persistence.sql.ddl.node.FieldNode;
 import java.sql.Types;
 import java.util.Map;
 
+/**
+ * H2 데이터베이스 컬럼 타입 제공자
+ */
 public class H2ColumnTypeSupplier implements QueryColumnSupplier {
     private static final Map<Class<?>, Integer> columnTypeMap = Map.of(
             Integer.class, Types.INTEGER,

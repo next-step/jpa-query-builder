@@ -4,11 +4,14 @@ import persistence.sql.ddl.QueryConstraintSupplier;
 import persistence.sql.ddl.node.FieldNode;
 import persistence.sql.ddl.util.NameConverter;
 
-public class ColumnPrimaryKeySupplier implements QueryConstraintSupplier {
+/**
+ * 컬럼 기본키 제약 조건 쿼리 제공자
+ */
+public class ConstraintPrimaryKeySupplier implements QueryConstraintSupplier {
     private final short priority;
     private final NameConverter nameConverter;
 
-    public ColumnPrimaryKeySupplier(short priority, NameConverter nameconverter) {
+    public ConstraintPrimaryKeySupplier(short priority, NameConverter nameconverter) {
         this.priority = priority;
         this.nameConverter = nameconverter;
     }

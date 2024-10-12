@@ -5,6 +5,9 @@ import persistence.sql.ddl.QueryColumnSupplier;
 import persistence.sql.ddl.node.FieldNode;
 import persistence.sql.ddl.util.NameConverter;
 
+/**
+ * 컬럼명을 처리하는 컬럼 쿼리 제공자
+ */
 public class ColumnNameSupplier implements QueryColumnSupplier {
     private final short priority;
     private final NameConverter nameConverter;

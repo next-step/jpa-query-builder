@@ -46,7 +46,7 @@ public class PersistenceConfig {
     private SortedSet<QueryConstraintSupplier> constraintQuerySuppliers() {
         SortedSet<QueryConstraintSupplier> suppliers = new TreeSet<>();
 
-        suppliers.add(new ColumnPrimaryKeySupplier((short) 1, nameConverter()));
+        suppliers.add(new ConstraintPrimaryKeySupplier((short) 1, nameConverter()));
 
         return suppliers;
     }

@@ -4,17 +4,10 @@ import jakarta.persistence.Column;
 import persistence.sql.ddl.QueryColumnSupplier;
 import persistence.sql.ddl.node.FieldNode;
 
-public class ColumnOptionSupplier implements QueryColumnSupplier {
-    private final short priority;
-
-    public ColumnOptionSupplier(short priority) {
-        this.priority = priority;
-    }
-
-    @Override
-    public short priority() {
-        return priority;
-    }
+/**
+ * 컬럼 옵션을 처리하는 컬럼 쿼리 제공자
+ */
+public record ColumnOptionSupplier(short priority) implements QueryColumnSupplier {
 
     @Override
     public boolean supported(FieldNode fieldNode) {

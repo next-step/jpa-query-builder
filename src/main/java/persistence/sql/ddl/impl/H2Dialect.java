@@ -4,6 +4,9 @@ import persistence.sql.ddl.Dialect;
 
 import java.sql.Types;
 
+/**
+ * H2 데이터베이스 방언 정보
+ */
 public class H2Dialect extends Dialect {
 
     public static H2Dialect create() {

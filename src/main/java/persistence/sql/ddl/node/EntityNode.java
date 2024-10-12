@@ -7,18 +7,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class EntityNode<T> implements SQLNode {
-    private final Class<T> entityClass;
-    private final List<FieldNode> fields;
-
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
-
-    public EntityNode(Class<T> entityClass, List<FieldNode> fields) {
-        this.entityClass = entityClass;
-        this.fields = fields;
-    }
+/**
+ * 엔티티 노드 정보
+ *
+ * @param entityClass 엔티티 클래스
+ * @param fields 엔티티 필드 노드 목록
+ * @param <T> 엔티티 클래스 타입
+ */
+public record EntityNode<T>(Class<T> entityClass, List<FieldNode> fields) implements SQLNode {
 
     public static EntityNode<?> from(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
@@ -30,7 +26,8 @@ public class EntityNode<T> implements SQLNode {
         return new EntityNode<>(entityClass, fields);
     }
 
-    public List<FieldNode> getFields() {
+    @Override
+    public List<FieldNode> fields() {
         return Collections.unmodifiableList(fields);
     }
 
@@ -38,10 +35,5 @@ public class EntityNode<T> implements SQLNode {
     public final List<FieldNode> getFields(Class<? extends Annotation>... excludeAnnotations) {
         return fields.stream()
                 .filter(fieldNode -> !fieldNode.containsAnnotations(excludeAnnotations)).toList();
-    }
-
-    public boolean existsConstraint() {
-        // TODO: Implement this method
-        return false;
     }
 }

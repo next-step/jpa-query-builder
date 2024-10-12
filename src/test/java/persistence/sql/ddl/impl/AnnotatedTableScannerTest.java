@@ -26,7 +26,7 @@ class AnnotatedTableScannerTest {
         // then
         assertThat(actualSet).hasSize(1);
 
-        Class<?> entityClass = actualList.get(0).getEntityClass();
+        Class<?> entityClass = actualList.get(0).entityClass();
         assertThat(entityClass.getSimpleName()).isEqualTo("Person");
     }
 
