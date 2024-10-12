@@ -14,8 +14,8 @@ public class CreateQueryBuilder extends QueryBuilder {
     private static final String GENERATION_COLUMN_DEFINITION = "AUTO_INCREMENT";
     private static final String PRIMARY_KEY_COLUMN_DEFINITION = "PRIMARY KEY";
 
-    public CreateQueryBuilder(Class<?> entityClass) {
-        super(entityClass);
+    public CreateQueryBuilder(Object entity) {
+        super(entity);
     }
 
     @Override

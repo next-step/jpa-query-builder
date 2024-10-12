@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 public abstract class QueryBuilder {
     public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
 
-    protected final Class<?> entityClass;
+    private final Object entity;
 
-    protected QueryBuilder(Class<?> entityClass) {
-        if (!entityClass.isAnnotationPresent(Entity.class)) {
+    protected QueryBuilder(Object entity) {
+        if (!entity.getClass().isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(NOT_ENTITY_FAILED_MESSAGE);
         }
 
-        this.entityClass = entityClass;
+        this.entity = entity;
     }
 
     protected abstract String build();
@@ -29,7 +29,7 @@ public abstract class QueryBuilder {
     }
 
     protected List<Field> getColumns() {
-        return Arrays.stream(entityClass.getDeclaredFields())
+        return Arrays.stream(entity.getClass().getDeclaredFields())
                 .collect(Collectors.toList());
     }
 
@@ -41,11 +41,12 @@ public abstract class QueryBuilder {
     }
 
     private String getTableName() {
-        final Table table = entityClass.getAnnotation(Table.class);
+        final Table table = entity.getClass().getAnnotation(Table.class);
         if (Objects.nonNull(table) && Objects.nonNull(table.name()) && !table.name().isBlank()) {
             return table.name();
         }
-        return entityClass.getSimpleName()
+        return entity.getClass()
+                .getSimpleName()
                 .toLowerCase();
     }
 }

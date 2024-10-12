@@ -5,8 +5,8 @@ import persistence.sql.QueryBuilder;
 public class DropQueryBuilder extends QueryBuilder {
     private static final String DROP_QUERY_TEMPLATE = "DROP TABLE IF EXISTS %s";
 
-    public DropQueryBuilder(Class<?> entityClass) {
-        super(entityClass);
+    public DropQueryBuilder(Object entity) {
+        super(entity);
     }
 
     @Override
