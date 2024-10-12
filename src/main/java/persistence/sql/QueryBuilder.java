@@ -1,12 +1,12 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import java.util.Objects;
 
-abstract class QueryBuilder {
-    protected static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
+public abstract class QueryBuilder {
+    public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
 
     protected final Class<?> entityClass;
 

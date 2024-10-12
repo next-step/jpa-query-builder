@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.NotEntity;
 import persistence.sql.Person;
+import persistence.sql.QueryBuilder;
 
 import static org.assertj.core.api.Assertions.*;
 
