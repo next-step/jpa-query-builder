@@ -1,12 +1,10 @@
 package model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DDLColumns {
 
@@ -36,7 +34,10 @@ public class DDLColumns {
             throw new NullPointerException("필드가 존재하지 않습니다.");
         }
 
-        this.fields = new ArrayList<>(Arrays.asList(fields));
+        this.fields = new ArrayList<>(Arrays.asList(fields))
+                .stream()
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .collect(Collectors.toList());
     }
 
     public String makeColumnsDDL() {

@@ -19,7 +19,6 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             String tableSQL = new QueryBuilderDDL().createTableSQL(Person.class);
-            System.out.println("tableSQL = " + tableSQL);
             jdbcTemplate.execute(new QueryBuilderDDL().createTableSQL(Person.class));
             server.stop();
         } catch (Exception e) {
