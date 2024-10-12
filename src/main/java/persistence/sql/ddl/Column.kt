@@ -16,7 +16,7 @@ data class Column (
             this.add(columnType())
             this.add(nullable())
             if (isIdColumn) {
-                this.add("AUTO INCREMENT")
+                this.add("AUTO_INCREMENT")
                 this.add(", PRIMARY KEY (${field.name})")
             }
         }.toString()
