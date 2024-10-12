@@ -42,15 +42,15 @@ public abstract class QueryBuilder {
                 .collect(Collectors.toList());
     }
 
+    protected String getWhereClause(Object id) {
+        final Field field = getIdField();
+        return FieldUtils.getColumnName(field) + " = " + id;
+    }
+
     protected Field getIdField() {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .filter(FieldUtils::isId)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(NOT_ID_FAILED_MESSAGE));
-    }
-
-    protected String getWhereClause(Object id) {
-        final Field field = getIdField();
-        return FieldUtils.getColumnName(field) + " = " + id;
     }
 }
