@@ -1,16 +1,10 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import persistence.sql.QueryBuilder;
+import persistence.sql.util.FieldUtils;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CreateQueryBuilder extends QueryBuilder {
@@ -26,12 +20,12 @@ public class CreateQueryBuilder extends QueryBuilder {
 
     @Override
     public String build() {
-        return super.build(CREATE_QUERY_TEMPLATE, getColumns());
+        return super.build(CREATE_QUERY_TEMPLATE, getColumnDefinition());
     }
 
-    private String getColumns() {
-        final List<String> columnDefinitions = Arrays.stream(entityClass.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
+    private String getColumnDefinition() {
+        final List<String> columnDefinitions = getColumns().stream()
+                .filter(field -> !FieldUtils.isTransient(field))
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
@@ -39,53 +33,20 @@ public class CreateQueryBuilder extends QueryBuilder {
     }
 
     private String getColumnDefinition(Field field) {
-        String columDefinition = getColumnName(field) + " " + getDbType(field);
+        String columDefinition = FieldUtils.getColumnName(field) + " " + FieldUtils.getDbType(field);
 
-        if (!isNullable(field)) {
+        if (FieldUtils.isNotNull(field)) {
             columDefinition += " " + NOT_NULL_COLUMN_DEFINITION;
         }
 
-        if (isGeneration(field)) {
+        if (FieldUtils.isGeneration(field)) {
             columDefinition += " " + GENERATION_COLUMN_DEFINITION;
         }
 
-        if (isPrimaryKey(field)) {
+        if (FieldUtils.isPrimaryKey(field)) {
             columDefinition += " " + PRIMARY_KEY_COLUMN_DEFINITION;
         }
 
         return columDefinition;
-    }
-
-    private String getColumnName(Field field) {
-        final Column column = field.getAnnotation(Column.class);
-        if (Objects.nonNull(column) && Objects.nonNull(column.name()) && !column.name().isBlank()) {
-            return column.name();
-        }
-        return field.getName();
-    }
-
-    private String getDbType(Field field) {
-        FieldType fieldType = FieldType.valueOf(field);
-        return fieldType.getDbType();
-    }
-
-    private boolean isNullable(Field field) {
-        final Column column = field.getAnnotation(Column.class);
-        if (Objects.isNull(column)) {
-            return true;
-        }
-        return column.nullable();
-    }
-
-    private boolean isGeneration(Field field) {
-        final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-        if (Objects.isNull(generatedValue)) {
-            return false;
-        }
-        return generatedValue.strategy() == GenerationType.IDENTITY;
-    }
-
-    private boolean isPrimaryKey(Field field) {
-        return field.isAnnotationPresent(Id.class);
     }
 }
