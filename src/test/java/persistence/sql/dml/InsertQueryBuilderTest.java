@@ -35,7 +35,7 @@ class InsertQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("INSERT 쿼리를 생성한다.")
+    @DisplayName("insert 쿼리를 생성한다.")
     void insert() {
         // given
         final Person person = new Person("Jaden", 30, "test@email.com", 1);

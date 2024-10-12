@@ -20,7 +20,7 @@ class DropQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("@Entity 애노테이션이 존재하지 않는 클래스로 인스턴스를 생성하면 예외가 발생한다.")
+    @DisplayName("@Entity 애노테이션이 존재하지 않는 클래스로 인스턴스를 생성하면 예외를 발생한다.")
     void constructor_exception() {
         // when & then
         assertThatThrownBy(() -> new CreateQueryBuilder(NotEntity.class))
@@ -29,7 +29,7 @@ class DropQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("DROP 쿼리를 생성한다.")
+    @DisplayName("drop 쿼리를 생성한다.")
     void drop() {
         // given
         final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
