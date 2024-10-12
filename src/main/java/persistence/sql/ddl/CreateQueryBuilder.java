@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateQueryBuilder extends QueryBuilder {
-    private static final String CREATE_QUERY_TEMPLATE = "CREATE TABLE %s ( %s )";
-
+    private static final String QUERY_TEMPLATE = "CREATE TABLE %s (%s)";
     private static final String NOT_NULL_COLUMN_DEFINITION = "NOT NULL";
     private static final String GENERATION_COLUMN_DEFINITION = "AUTO_INCREMENT";
     private static final String PRIMARY_KEY_COLUMN_DEFINITION = "PRIMARY KEY";
@@ -20,10 +19,10 @@ public class CreateQueryBuilder extends QueryBuilder {
 
     @Override
     public String build() {
-        return super.build(CREATE_QUERY_TEMPLATE, getColumnDefinition());
+        return super.build(QUERY_TEMPLATE, getColumnClause());
     }
 
-    private String getColumnDefinition() {
+    private String getColumnClause() {
         final List<String> columnDefinitions = getColumns().stream()
                 .filter(field -> !FieldUtils.isTransient(field))
                 .map(this::getColumnDefinition)
