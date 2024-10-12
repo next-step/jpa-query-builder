@@ -3,6 +3,7 @@ package persistence.sql.ddl;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public class Column {
 
@@ -34,5 +35,18 @@ public class Column {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Column column = (Column) o;
+        return primaryKey == column.primaryKey && Objects.equals(name, column.name) && columnType == column.columnType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, columnType, primaryKey);
     }
 }
