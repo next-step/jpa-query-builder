@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.metadata;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,10 +47,6 @@ public record Column(
 
     private static boolean notNull(Field field) {
         return field.isAnnotationPresent(jakarta.persistence.Column.class) && !field.getDeclaredAnnotation(jakarta.persistence.Column.class).nullable();
-    }
-
-    public List<ColumnOption> getOptions() {
-        return options;
     }
 
     public boolean isPrimaryKey() {

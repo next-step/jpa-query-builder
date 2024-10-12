@@ -1,5 +1,10 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.metadata.Column;
+import persistence.sql.ddl.metadata.ColumnMetadata;
+import persistence.sql.ddl.metadata.ColumnOption;
+import persistence.sql.ddl.metadata.EntityMetadata;
+
 import java.util.stream.Collectors;
 
 public class QueryBuilder {
@@ -37,7 +42,7 @@ public class QueryBuilder {
                 .append(" ")
                 .append(column.getSqlType());
 
-        String options = column.getOptions().stream()
+        String options = column.options().stream()
                 .map(ColumnOption::getOption)
                 .collect(Collectors.joining(" "));
 
