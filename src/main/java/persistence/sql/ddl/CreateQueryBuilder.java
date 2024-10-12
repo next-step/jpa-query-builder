@@ -51,7 +51,15 @@ public class CreateQueryBuilder {
 
     private static String getTableName(Class<?> clazz) {
         Table annotation = clazz.getAnnotation(Table.class);
-        return annotation != null && !annotation.name().isEmpty() ? annotation.name() : clazz.getSimpleName().toLowerCase();
+        if (annotation == null) {
+            return clazz.getSimpleName().toLowerCase();
+        }
+        
+        if (!annotation.name().isEmpty()) {
+            return annotation.name();
+        }
+
+        return clazz.getSimpleName().toLowerCase();
     }
 
     private static String getFieldName(Field field) {
