@@ -24,7 +24,7 @@ public class EntityFields {
     }
 
     public static <T> EntityFields of(Class<T> clazz) {
-        if (clazz.getAnnotation(jakarta.persistence.Entity.class) == null) {
+        if (!clazz.isAnnotationPresent(jakarta.persistence.Entity.class)) {
             throw new NotEntityException();
         }
 
@@ -49,7 +49,7 @@ public class EntityFields {
 
     private static EntityIdField getIdField(Field[] fields) {
         List<Field> ids = Arrays.stream(fields)
-                .filter(it -> it.getAnnotation(Id.class) != null)
+                .filter(it -> it.isAnnotationPresent(Id.class))
                 .toList();
 
         if (ids.size() != 1) {
@@ -61,7 +61,7 @@ public class EntityFields {
 
     private static List<EntityField> getFields(Field[] fields) {
         return Arrays.stream(fields)
-                .filter(it -> it.getAnnotation(Id.class) == null && it.getAnnotation(Transient.class) == null)
+                .filter(it -> !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class))
                 .map(EntityField::of)
                 .toList();
     }

@@ -43,7 +43,7 @@ public class ReflectionTest {
         Class<Car> carClass = Car.class;
         Car car = new Car("자동차", 10000);
         List<Method> printViewMethods = Arrays.stream(carClass.getDeclaredMethods())
-                .filter(it -> hasAnnotation(it, PrintView.class))
+                .filter(it -> it.isAnnotationPresent(PrintView.class))
                 .toList();
 
         printViewMethods.forEach(it -> invoke(it, car));
@@ -93,10 +93,6 @@ public class ReflectionTest {
                 () -> assertThat(car.getName()).isEqualTo("자동차"),
                 () -> assertThat(car.getPrice()).isEqualTo(10000)
         );
-    }
-
-    private boolean hasAnnotation(Method method, Class<? extends Annotation> annotation) {
-        return method.getAnnotation(annotation) != null;
     }
 
     private Object invoke(Method method, Car car) {
