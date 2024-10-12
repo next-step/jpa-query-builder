@@ -15,6 +15,7 @@ public class EntityFieldTest {
         EntityField entityField = EntityField.of(field);
 
         assertThat(entityField.getName()).isEqualTo("name");
+        assertThat(entityField.getType()).isEqualTo(String.class);
         assertThat(entityField.isNullable()).isTrue();
     }
 
@@ -25,6 +26,18 @@ public class EntityFieldTest {
         EntityField entityField = EntityField.of(field);
 
         assertThat(entityField.getName()).isEqualTo("zip_address");
+        assertThat(entityField.getType()).isEqualTo(String.class);
+        assertThat(entityField.isNullable()).isFalse();
+    }
+
+    @Test
+    public void Column_어노테이션이_있지만_name_이_설정이_안되어_있을_경우_필드의_이름으로_객체를_생성한다() throws NoSuchFieldException {
+        Field field = TestEntity.class.getDeclaredField("home");
+
+        EntityField entityField = EntityField.of(field);
+
+        assertThat(entityField.getName()).isEqualTo("home");
+        assertThat(entityField.getType()).isEqualTo(Integer.class);
         assertThat(entityField.isNullable()).isFalse();
     }
 }

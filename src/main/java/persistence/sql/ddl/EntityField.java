@@ -1,23 +1,28 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 
 public class EntityField {
     private String name;
 
+    private Class<?> type;
+
     private boolean nullable;
 
-    private EntityField(String name, boolean nullable) {
+    private EntityField(String name, Class<?> type, boolean nullable) {
         this.name = name;
+        this.type = type;
         this.nullable = nullable;
     }
 
     public String getName() {
         return name;
+    }
+
+    public Class<?> getType() {
+        return type;
     }
 
     public boolean isNullable() {
@@ -27,6 +32,7 @@ public class EntityField {
     public static EntityField of(Field field) {
         return new EntityField(
             getName(field),
+            field.getType(),
             isNullable(field)
         );
     }
@@ -34,7 +40,7 @@ public class EntityField {
     private static String getName(Field field) {
         Column column = field.getAnnotation(Column.class);
 
-        if (column == null) {
+        if (column == null || column.name().equals("")) {
             return field.getName();
         }
 
