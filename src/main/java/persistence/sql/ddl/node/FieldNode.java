@@ -5,6 +5,8 @@ import jakarta.persistence.Id;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 public class FieldNode implements SQLNode{
     private final Field field;
@@ -37,5 +39,10 @@ public class FieldNode implements SQLNode{
 
     public <T extends Annotation> T getAnnotation(Class<T> columnClass) {
         return field.getAnnotation(columnClass);
+    }
+
+    @SafeVarargs
+    public final boolean containsAnnotations(Class<? extends Annotation>... excludeAnnotations) {
+        return Arrays.stream(excludeAnnotations).anyMatch(field::isAnnotationPresent);
     }
 }

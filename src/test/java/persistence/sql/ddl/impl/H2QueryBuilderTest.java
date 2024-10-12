@@ -25,7 +25,8 @@ class H2QueryBuilderTest {
         EntityNode<?> entityNode = EntityNode.from(CamelCaseTable.class);
 
         // given
-        String expected = "CREATE TABLE camel_case_table (sample_id BIGINT NOT NULL , name VARCHAR(255) , age INTEGER , PRIMARY KEY (sample_id));";
+        String expected = "CREATE TABLE camel_case_table (sample_id BIGINT NOT NULL, name VARCHAR(255) ," +
+                " age INTEGER , PRIMARY KEY (sample_id));";
         // when
         String actual = queryBuilder.buildCreateTableQuery(entityNode);
         // then
@@ -38,12 +39,28 @@ class H2QueryBuilderTest {
         EntityNode<?> entityNode = EntityNode.from(PersonV2.class);
 
         // given
-        String expected = "CREATE TABLE person_v2 (id BIGINT AUTO_INCREMENT NOT NULL, nick_name VARCHAR(255) , old INTEGER , email VARCHAR(255) NOT NULL, PRIMARY KEY (id));";
+        String expected = "CREATE TABLE person_v2 (id BIGINT AUTO_INCREMENT NOT NULL, nick_name VARCHAR(255) ," +
+                " old INTEGER , email VARCHAR(255) NOT NULL, PRIMARY KEY (id));";
         // when
         String actual = queryBuilder.buildCreateTableQuery(entityNode);
         // then
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("buildCreateTableQuery 는 매개변수 클래스를 내의 Transient 애노테이션에 따라 생성 쿼리에서 필드 제외를 한 결과 쿼리를 반환한다.")
+    void buildCreateTableQueryTransient() {
+        EntityNode<?> entityNode = EntityNode.from(PersonV3.class);
+
+        // given
+        String expected = "CREATE TABLE users (id BIGINT AUTO_INCREMENT NOT NULL, nick_name VARCHAR(255) ," +
+                " old INTEGER , email VARCHAR(255) NOT NULL, PRIMARY KEY (id));";
+        // when
+        String actual = queryBuilder.buildCreateTableQuery(entityNode);
+        // then
+        assertThat(actual).isEqualTo(expected);
+    }
+
 
     @Entity
     private static class CamelCaseTable {
@@ -68,6 +85,28 @@ class H2QueryBuilderTest {
 
         @Column(nullable = false)
         private String email;
+
+    }
+
+    @Table(name = "users")
+    @Entity
+    public class PersonV3 {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        @Column(name = "nick_name")
+        private String name;
+
+        @Column(name = "old")
+        private Integer age;
+
+        @Column(nullable = false)
+        private String email;
+
+        @Transient
+        private Integer index;
 
     }
 

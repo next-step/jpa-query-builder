@@ -1,6 +1,7 @@
 package persistence.sql.ddl.impl;
 
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.ddl.QueryColumnSupplier;
 import persistence.sql.ddl.QueryConstraintSupplier;
@@ -38,7 +39,7 @@ public class H2QueryBuilder implements QueryBuilder {
     }
 
     private void buildConstraintQuery(EntityNode<?> entityNode, StringBuilder query) {
-        String constraintQuery = entityNode.getFields().stream()
+        String constraintQuery = entityNode.getFields(Transient.class).stream()
                 .map(this::buildConstraintQuery)
                 .filter(q -> !q.isBlank())
                 .collect(Collectors.joining(", "));
@@ -61,7 +62,7 @@ public class H2QueryBuilder implements QueryBuilder {
     }
 
     private void buildColumnQuery(EntityNode<?> entityNode, StringBuilder query) {
-        for (FieldNode fieldNode : entityNode.getFields()) {
+        for (FieldNode fieldNode : entityNode.getFields(Transient.class)) {
             query.append(buildColumnQuery(fieldNode)).append(", ");
         }
     }

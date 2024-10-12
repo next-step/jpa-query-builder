@@ -2,6 +2,7 @@ package persistence.sql.ddl.node;
 
 import jakarta.persistence.Entity;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,12 @@ public class EntityNode<T> implements SQLNode {
 
     public List<FieldNode> getFields() {
         return Collections.unmodifiableList(fields);
+    }
+
+    @SafeVarargs
+    public final List<FieldNode> getFields(Class<? extends Annotation>... excludeAnnotations) {
+        return fields.stream()
+                .filter(fieldNode -> !fieldNode.containsAnnotations(excludeAnnotations)).toList();
     }
 
     public boolean existsConstraint() {
