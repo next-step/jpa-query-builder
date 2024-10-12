@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 public class TestEntity {
     private String name;
 
-    @Column(name = "zip_address", nullable = false)
+    @Column(name = "zip_address", nullable = false, length = 10)
     private String address;
 
     private Integer defaultId;

@@ -4,19 +4,20 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public record EntityField(String name, Class<?> type, boolean nullable) {
+public record EntityField(String name, Class<?> type, boolean nullable, int length) {
     public static EntityField of(Field field) {
         return new EntityField(
                 getName(field),
                 field.getType(),
-                isNullable(field)
+                isNullable(field),
+                getLength(field)
         );
     }
 
     private static String getName(Field field) {
         Column column = field.getAnnotation(Column.class);
 
-        if (column == null || column.name().equals("")) {
+        if (column == null || column.name().isEmpty()) {
             return field.getName();
         }
 
@@ -33,15 +34,13 @@ public record EntityField(String name, Class<?> type, boolean nullable) {
         return column.nullable();
     }
 
-    public String getName() {
-        return name;
-    }
+    private static int getLength(Field field) {
+        Column column = field.getAnnotation(Column.class);
 
-    public Class<?> getType() {
-        return type;
-    }
+        if (column == null) {
+            return 255;
+        }
 
-    public boolean isNullable() {
-        return nullable;
+        return column.length();
     }
 }

@@ -53,16 +53,4 @@ public record EntityFields (String name, EntityIdField idField, List<EntityField
                 .map(EntityField::of)
                 .toList();
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public EntityIdField getIdField() {
-        return idField;
-    }
-
-    public List<EntityField> getFields() {
-        return fields;
-    }
 }
