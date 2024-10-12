@@ -21,7 +21,7 @@ class ColumnsTest {
     @Test
     void getIdField() throws Exception {
         Columns columns = Columns.from(IncludeId.class);
-        Column expected = Column.from(IncludeId.class.getDeclaredField("id"));
+        ColumnMetadata expected = ColumnMetadata.from(IncludeId.class.getDeclaredField("id"));
         assertThat(columns.getPrimaryKeyColumn()).isEqualTo(expected);
     }
 }

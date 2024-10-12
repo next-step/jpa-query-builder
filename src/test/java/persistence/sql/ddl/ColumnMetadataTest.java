@@ -8,18 +8,18 @@ import java.lang.reflect.Field;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-class ColumnTest {
+class ColumnMetadataTest {
 
     @DisplayName("필드를 받아 컬럼으로 변환한다")
     @Test
     void fromField() throws Exception {
         Field field = IncludeId.class.getDeclaredField("name");
-        Column column = Column.from(field);
+        ColumnMetadata column = ColumnMetadata.from(field);
 
         assertSoftly(softly -> {
             softly.assertThat(column.getName()).isEqualTo("name");
             softly.assertThat(column.getSqlType()).isEqualTo("varchar(255)");
-            softly.assertThat(column.hasPrimaryKey()).isFalse();
+            softly.assertThat(column.isPrimaryKey()).isFalse();
         });
     }
 
@@ -27,12 +27,12 @@ class ColumnTest {
     @Test
     void idField() throws Exception {
         Field field = IncludeId.class.getDeclaredField("id");
-        Column column = Column.from(field);
+        ColumnMetadata column = ColumnMetadata.from(field);
 
         assertSoftly(softly -> {
             softly.assertThat(column.getName()).isEqualTo("id");
             softly.assertThat(column.getSqlType()).isEqualTo("bigint");
-            softly.assertThat(column.hasPrimaryKey()).isTrue();
+            softly.assertThat(column.isPrimaryKey()).isTrue();
         });
     }
 }

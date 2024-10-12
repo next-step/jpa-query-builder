@@ -9,7 +9,7 @@ class QueryBuilderTest {
 
     @Test
     void createDdl() {
-        String expectedQuery = "create table person (id bigint not null, name varchar(255), age integer, primary key (id));";
+        String expectedQuery = "create table person (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id));";
         QueryBuilder queryBuilder = new QueryBuilder();
         String createDdl = queryBuilder.buildCreateDdl(Person.class);
 

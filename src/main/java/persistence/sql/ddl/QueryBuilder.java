@@ -35,10 +35,20 @@ public class QueryBuilder {
                 .collect(Collectors.joining(COLUMN_JOIN_DELIMITER));
     }
 
-    private String generateColumnDefinition(Column column) {
-        if (column.hasPrimaryKey()) {
-            return column.getName() + " " + column.getSqlType() + " not null";
+    private String generateColumnDefinition(ColumnMetadata column) {
+        StringBuilder columnDefinition = new StringBuilder();
+        columnDefinition.append(column.getName())
+                .append(" ")
+                .append(column.getSqlType());
+
+        String options = column.getOptions().stream()
+                .map(ColumnOption::getOption)
+                .collect(Collectors.joining(" "));
+
+        if (!options.isEmpty()) {
+            columnDefinition.append(" ").append(options);
         }
-        return column.getName() + " " + column.getSqlType();
+
+        return columnDefinition.toString();
     }
 }
