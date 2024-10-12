@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
     private static final Map<Class<?>, String> FIELD_TYPE = Map.of(
@@ -75,7 +76,7 @@ public class CreateQueryBuilder {
     }
 
     private boolean isNotNullConstraint(Field field) {
-        if (field.isAnnotationPresent(Column.class)) {
+        if (!field.isAnnotationPresent(Column.class)) {
             return false;
         }
         Column annotation = field.getAnnotation(Column.class);
