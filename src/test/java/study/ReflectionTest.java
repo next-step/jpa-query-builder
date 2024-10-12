@@ -62,12 +62,7 @@ public class ReflectionTest {
                .filter(method->method.getName().startsWith("test")).collect(Collectors.toList());
 
        // Car Object 정의
-       Car testCar = carClass
-               .getConstructor(String.class, int.class)
-               .newInstance("teslar", 4000);
-       logger.info("정의한 Car 정보 : name = {}, price = {}", testCar.getName(), testCar.getPrice());
-       assertThat(testCar.getName()).isEqualTo("teslar");
-       assertThat(testCar.getPrice()).isEqualTo(4000);
+       Car testCar = getTestCar();
 
        // 정의된 메소드 실행
        for (Method method : declaredMethodsStartWithTest) {
@@ -76,9 +71,35 @@ public class ReflectionTest {
        }
    }
 
+   private Car getTestCar() throws Exception {
+       Class<Car> carClass = Car.class;
+
+       Car testCar = carClass
+               .getConstructor(String.class, int.class)
+               .newInstance("teslar", 4000);
+       logger.info("정의한 Car 정보 : name = {}, price = {}", testCar.getName(), testCar.getPrice());
+       assertThat(testCar.getName()).isEqualTo("teslar");
+       assertThat(testCar.getPrice()).isEqualTo(4000);
+       return  testCar;
+   }
+
    @Test
    @DisplayName("요구 사항 3 - @PrintView 애노테이션 메소드 실행")
-   void testAnnotationMethodRun() {
+   void testAnnotationMethodRun() throws Exception {
+        // Car Class에 정의된 메소드 중 PrintView Class로 정의된 Annotation을 가진 메소드 가져오기
+       Class<Car> carClass = Car.class;
+       List<Method> declaredMethodAnnotatedWithPrintView = Arrays.stream(carClass.getDeclaredMethods())
+               .filter(method -> method.isAnnotationPresent(PrintView.class)).collect(Collectors.toList());
+
+       assertThat(declaredMethodAnnotatedWithPrintView.size()).isEqualTo(1);
+
+       // Car Object 정의
+       Car testCar = getTestCar();
+
+       // 정의된 메소드 실행
+       for (Method method : declaredMethodAnnotatedWithPrintView) {
+           method.invoke(testCar);
+       }
 
    }
 }
