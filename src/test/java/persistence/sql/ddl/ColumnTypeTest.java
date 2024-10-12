@@ -17,9 +17,9 @@ class ColumnTypeTest {
     void javaTypeToSqlType(Class<?> javaType, String expectedSqlType) {
         ColumnType columnType = ColumnType.of(javaType);
 
-        String columnDefinition = columnType.getColumnDefinition();
+        String sqlType = columnType.getSqlType();
 
-        assertThat(columnDefinition).isEqualTo(expectedSqlType);
+        assertThat(sqlType).isEqualTo(expectedSqlType);
     }
 
     private static Stream<Arguments> provideColumnTypes() {

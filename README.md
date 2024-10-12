@@ -4,10 +4,14 @@
 
 ### 요구 사항
 
-- [ ] `@Entity`, `@Id`가 사용된 클래스를 받아 create query를 만든다.
+- [ ] create query를 만든다.
   - [X] Long은 bigint로 해석한다.
   - [X] String은 varchar(255)로 해석한다.
   - [X] Integer는 integer로 해석한다.
+  - [ ] 클래스에 `@Entity`가 없으면 예외가 발생한다.
+  - [X] 필드에 `@Id`가 없으면 예외가 발생한다.
+  - [X] `@Id`가 사용된 컬럼은 not null 제약조건을 갖는다.
+  - [X] `@Id`가 사용된 컬럼은 primary key가 된다.
 - [ ] `@GeneratedValue`와 `@Column` 정보를 추가로 읽어 create query를 만든다.
 - [ ] `@Table`과 `@Transient` 정보를 추가로 읽어 create query를 만든다.
 - [ ] drop query를 만든다.

@@ -9,11 +9,11 @@ public enum ColumnType {
     ;
 
     private final Class<?> javaType;
-    private final String columnDefinition;
+    private final String sqlType;
 
-    ColumnType(Class<?> javaType, String columnDefinition) {
+    ColumnType(Class<?> javaType, String sqlType) {
         this.javaType = javaType;
-        this.columnDefinition = columnDefinition;
+        this.sqlType = sqlType;
     }
 
     public static ColumnType of(Class<?> javaType) {
@@ -23,7 +23,7 @@ public enum ColumnType {
                 .orElseThrow(() -> new IllegalArgumentException("No column type found for " + javaType));
     }
 
-    public String getColumnDefinition() {
-        return columnDefinition;
+    public String getSqlType() {
+        return sqlType;
     }
 }
