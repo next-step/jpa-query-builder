@@ -37,12 +37,15 @@ public class ReflectionTest {
         assertThat(declaredFieldNames.contains("name")).isTrue();
 
         // 메소드 출력
-        List<String> declaredMethodNames = Arrays.stream(carClass.getMethods()).map(Method::getName).collect(Collectors.toList());
-        logger.info("선언된 메소드 개수 : {}", carClass.getMethods().length);
+        List<String> declaredMethodNames = Arrays.stream(carClass.getDeclaredMethods()).map(Method::getName).collect(Collectors.toList());
+        logger.info("선언된 메소드 개수 : {}", carClass.getDeclaredMethods().length);
         logger.info("선언된 메소드 이름 : {}", declaredMethodNames);
+        assertThat(carClass.getDeclaredMethods().length).isEqualTo(5);
         assertThat(declaredMethodNames.contains("printView")).isTrue();
         assertThat(declaredMethodNames.contains("testGetName")).isTrue();
         assertThat(declaredMethodNames.contains("testGetPrice")).isTrue();
+        assertThat(declaredMethodNames.contains("getPrice")).isTrue();
+        assertThat(declaredMethodNames.contains("getName")).isTrue();
 
         // 생성자 출력
         logger.info("선언된 생성자 개수 : {}", carClass.getConstructors().length);
@@ -120,5 +123,15 @@ public class ReflectionTest {
        logger.info("정의한 Car 정보 : name = {}, price = {}", testCar.getName(), testCar.getPrice());
        assertThat(testCar.getPrice()).isEqualTo(4200);
        assertThat(testCar.getName()).isEqualTo("소나타");
+   }
+
+   @Test
+   @DisplayName("요구 사항 5 - 인자를 가진 생성자의 인스턴스 생성")
+   void constructorWithArgs() throws Exception {
+        Class<Car> carClass = Car.class;
+
+        logger.info("선언된 생성자 개수: {}", carClass.getDeclaredConstructors().length);
+        logger.info("선언된 생성자 : {}", carClass.getDeclaredConstructors().length);
+
    }
 }
