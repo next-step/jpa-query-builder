@@ -23,6 +23,9 @@ public record ColumnOptionSupplier(short priority) implements QueryColumnSupplie
         }
 
         if (isUnique(fieldNode)) {
+            if (!constraint.isEmpty()) {
+                constraint.append(" ");
+            }
             constraint.append("UNIQUE");
         }
 
