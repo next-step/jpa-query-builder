@@ -15,14 +15,6 @@ public class EntityIdField {
         this.generationType = generationType;
     }
 
-    public EntityField getField() {
-        return field;
-    }
-
-    public GenerationType getGenerationType() {
-        return generationType;
-    }
-
     public static EntityIdField of(Field field) {
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         GenerationType generationType = GenerationType.AUTO;
@@ -35,5 +27,13 @@ public class EntityIdField {
                 EntityField.of(field),
                 generationType
         );
+    }
+
+    public EntityField getField() {
+        return field;
+    }
+
+    public GenerationType getGenerationType() {
+        return generationType;
     }
 }

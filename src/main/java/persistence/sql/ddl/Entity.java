@@ -23,18 +23,6 @@ public class Entity {
         this.fields = fields;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public EntityIdField getIdField() {
-        return idField;
-    }
-
-    public List<EntityField> getFields() {
-        return fields;
-    }
-
     public static <T> Entity of(Class<T> clazz) {
         if (clazz.getAnnotation(jakarta.persistence.Entity.class) == null) {
             throw new NotEntityException();
@@ -76,5 +64,17 @@ public class Entity {
                 .filter(it -> it.getAnnotation(Id.class) == null && it.getAnnotation(Transient.class) == null)
                 .map(EntityField::of)
                 .toList();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public EntityIdField getIdField() {
+        return idField;
+    }
+
+    public List<EntityField> getFields() {
+        return fields;
     }
 }

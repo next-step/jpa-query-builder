@@ -17,23 +17,11 @@ public class EntityField {
         this.nullable = nullable;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Class<?> getType() {
-        return type;
-    }
-
-    public boolean isNullable() {
-        return nullable;
-    }
-
     public static EntityField of(Field field) {
         return new EntityField(
-            getName(field),
-            field.getType(),
-            isNullable(field)
+                getName(field),
+                field.getType(),
+                isNullable(field)
         );
     }
 
@@ -55,5 +43,17 @@ public class EntityField {
         }
 
         return column.nullable();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Class<?> getType() {
+        return type;
+    }
+
+    public boolean isNullable() {
+        return nullable;
     }
 }

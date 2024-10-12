@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.exception.IncorrectIdFieldException;
 import persistence.sql.ddl.entity.*;
+import persistence.sql.ddl.exception.IncorrectIdFieldException;
 import persistence.sql.ddl.exception.NotEntityException;
 
 import static org.assertj.core.api.Assertions.assertThat;
