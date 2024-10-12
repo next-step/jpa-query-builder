@@ -3,6 +3,7 @@ package persistence.sql.ddl
 import exception.ColumnTypeUnavailableException
 import jakarta.persistence.Column
 import jakarta.persistence.Id
+import jakarta.persistence.Transient
 import java.lang.reflect.Field
 import java.util.StringJoiner
 
@@ -12,6 +13,8 @@ data class Column (
     private val isIdColumn: Boolean = field.isAnnotationPresent(Id::class.java)
 
     fun toQuery(): String {
+        if (isTransientField()) return ""
+
         return StringJoiner(" ").apply {
             this.add(fieldName())
             this.add(columnType())
@@ -22,6 +25,8 @@ data class Column (
             }
         }.toString()
     }
+
+    private fun isTransientField(): Boolean = field.isAnnotationPresent(Transient::class.java)
 
     private fun fieldName(): String =
         if (field.isAnnotationPresent(Column::class.java)) {

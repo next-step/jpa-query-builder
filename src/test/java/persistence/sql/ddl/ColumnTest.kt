@@ -2,20 +2,20 @@ package persistence.sql.ddl
 
 import entity.Person
 import exception.ColumnTypeUnavailableException
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.assertThrows
 
 class ColumnTest: DescribeSpec({
 
     describe("toQuery 메소드는") {
-        val clazz = Person::class.java
+        val person = Person::class.java
 
-        context("지원하는 Field 타입이라면") {
+        context("지원하는 Field 타입은") {
 
-            val idColumn = Column(clazz.getDeclaredField("id"))
-            val stringColumn = Column(clazz.getDeclaredField("name"))
-            val intColumn = Column(clazz.getDeclaredField("age"))
+            val idColumn = Column(person.getDeclaredField("id"))
+            val stringColumn = Column(person.getDeclaredField("name"))
+            val intColumn = Column(person.getDeclaredField("age"))
             it("DDL 컬럼 문자열을 반환한다.") {
                 stringColumn.toQuery() shouldBe "nick_name VARCHAR(255) DEFAULT NULL"
                 intColumn.toQuery() shouldBe "old int DEFAULT NULL"
@@ -23,12 +23,20 @@ class ColumnTest: DescribeSpec({
             }
         }
 
-        context("지원하지 않는 Field 타입이라면") {
-            val clazz = Table::class.java
-            val unavailableColumn = Column(clazz.getDeclaredField("columns"))
+        context("지원하지 않는 Field 타입은") {
+            val table = Table::class.java
+            val unavailableColumn = Column(table.getDeclaredField("columns"))
 
             it("지원하지 않는 타입이라는 의미의 예외를 던진다.") {
-                assertThrows<ColumnTypeUnavailableException> { unavailableColumn.toQuery() }
+                shouldThrow<ColumnTypeUnavailableException> { unavailableColumn.toQuery() }
+            }
+        }
+
+        context("Transient 어노테이션이 작성된 필드는") {
+            val transientColumn = Column(person.getDeclaredField("index"))
+
+            it("공백을 반환한다") {
+                transientColumn.toQuery() shouldBe ""
             }
         }
     }
