@@ -9,7 +9,6 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -19,16 +18,6 @@ public class CreateQueryBuilder extends QueryBuilder {
     private static final String NOT_NULL_COLUMN_DEFINITION = "NOT NULL";
     private static final String GENERATION_COLUMN_DEFINITION = "AUTO_INCREMENT";
     private static final String PRIMARY_KEY_COLUMN_DEFINITION = "PRIMARY KEY";
-
-    private static final Map<Class<?>, String> FIELD_TYPE_TO_DB_TYPE_MAPPING;
-
-    static {
-        FIELD_TYPE_TO_DB_TYPE_MAPPING = Map.of(
-                String.class, "VARCHAR(255)",
-                Integer.class, "INTEGER",
-                Long.class, "BIGINT"
-        );
-    }
 
     public CreateQueryBuilder(Class<?> entityClass) {
         super(entityClass);
@@ -75,7 +64,8 @@ public class CreateQueryBuilder extends QueryBuilder {
     }
 
     private String getDbType(Field field) {
-        return FIELD_TYPE_TO_DB_TYPE_MAPPING.get(field.getType());
+        FieldType fieldType = FieldType.valueOf(field);
+        return fieldType.getDbType();
     }
 
     private boolean isNullable(Field field) {
