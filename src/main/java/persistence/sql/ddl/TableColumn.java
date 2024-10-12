@@ -24,6 +24,7 @@ public class TableColumn {
         boolean hasColumnAnnotation = field.isAnnotationPresent(Column.class);
         boolean nullable = false;
         boolean isPrimaryKey = field.isAnnotationPresent(Id.class);
+        boolean isTransient = field.isAnnotationPresent(Transient.class);
         String columnType = field.getType().getSimpleName();
         String columnDefinition = field.getName();
 
@@ -43,11 +44,11 @@ public class TableColumn {
             this.primaryKey = new PrimaryKey(this, generatedValue);
         }
 
-        this.isTransient = field.isAnnotationPresent(Transient.class);
         this.name = columnDefinition;
         this.type = columnType;
         this.nullable = nullable;
         this.isPrimaryKey = isPrimaryKey;
+        this.isTransient = isTransient;
     }
 
     public String name() {
