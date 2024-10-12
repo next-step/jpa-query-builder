@@ -16,7 +16,7 @@ class EntityFieldTest {
         EntityField entityField = EntityField.of(field);
 
         assertAll(
-                () -> assertThat(entityField.name()).isEqualTo("tableName"),
+                () -> assertThat(entityField.name()).isEqualTo("name"),
                 () -> assertThat(entityField.type()).isEqualTo(String.class),
                 () -> assertThat(entityField.nullable()).isTrue(),
                 () -> assertThat(entityField.length()).isEqualTo(255)

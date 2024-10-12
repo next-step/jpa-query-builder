@@ -19,7 +19,7 @@ class EntityFieldsTest {
         assertAll(
                 () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
                 () -> assertThat(entityFields.idField().field().name()).isEqualTo("id"),
-                () -> assertThat(entityFields.fields()).map(EntityField::name).containsExactlyInAnyOrder("tableName", "address")
+                () -> assertThat(entityFields.fields()).map(EntityField::name).containsExactlyInAnyOrder("name", "address")
         );
     }
 
