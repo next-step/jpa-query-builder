@@ -1,5 +1,12 @@
 # Step 2
 
+## TOTO
+1. 엔티티 정보를 핸들링하기 위한 테이블, 필드 처리 클래스 생성
+2. DROP 쿼리 빌더 구현
+3. CREATE 쿼리 빌더 구현
+
+--- 
+
 ## 요구사항 1 - CREATE 쿼리 만들기
 스펙: https://www.h2database.com/html/commands.html#create_table
 
