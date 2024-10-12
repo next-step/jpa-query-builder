@@ -4,19 +4,7 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public class EntityField {
-    private String name;
-
-    private Class<?> type;
-
-    private boolean nullable;
-
-    private EntityField(String name, Class<?> type, boolean nullable) {
-        this.name = name;
-        this.type = type;
-        this.nullable = nullable;
-    }
-
+public record EntityField(String name, Class<?> type, boolean nullable) {
     public static EntityField of(Field field) {
         return new EntityField(
                 getName(field),

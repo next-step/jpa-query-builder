@@ -10,19 +10,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public class EntityFields {
-    private String name;
-
-    private EntityIdField idField;
-
-    private List<EntityField> fields;
-
-    private EntityFields(String name, EntityIdField idField, List<EntityField> fields) {
-        this.name = name;
-        this.idField = idField;
-        this.fields = fields;
-    }
-
+public record EntityFields (String name, EntityIdField idField, List<EntityField> fields){
     public static <T> EntityFields of(Class<T> clazz) {
         if (!clazz.isAnnotationPresent(jakarta.persistence.Entity.class)) {
             throw new NotEntityException();

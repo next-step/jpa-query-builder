@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-public class H2DropDDLGenerator implements DropDDLGenerator {
+public final class H2DropDDLGenerator implements DropDDLGenerator {
     @Override
     public String generate(EntityFields entityFields) {
         String name = entityFields.getName();

@@ -17,9 +17,9 @@ class EntityIdFieldTest {
         EntityIdField entityIdField = EntityIdField.of(field);
 
         assertAll(
-                () -> assertThat(entityIdField.getGenerationType()).isEqualTo(GenerationType.AUTO),
-                () -> assertThat(entityIdField.getField().getName()).isEqualTo("defaultId"),
-                () -> assertThat(entityIdField.getField().isNullable()).isTrue()
+                () -> assertThat(entityIdField.generationType()).isEqualTo(GenerationType.AUTO),
+                () -> assertThat(entityIdField.field().getName()).isEqualTo("defaultId"),
+                () -> assertThat(entityIdField.field().isNullable()).isTrue()
         );
     }
 
@@ -29,6 +29,6 @@ class EntityIdFieldTest {
 
         EntityIdField entityIdField = EntityIdField.of(field);
 
-        assertThat(entityIdField.getGenerationType()).isEqualTo(GenerationType.IDENTITY);
+        assertThat(entityIdField.generationType()).isEqualTo(GenerationType.IDENTITY);
     }
 }

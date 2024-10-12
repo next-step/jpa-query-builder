@@ -5,16 +5,7 @@ import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
 
-public class EntityIdField {
-    private EntityField field;
-
-    private GenerationType generationType;
-
-    public EntityIdField(EntityField field, GenerationType generationType) {
-        this.field = field;
-        this.generationType = generationType;
-    }
-
+public record EntityIdField(EntityField field, GenerationType generationType) {
     public static EntityIdField of(Field field) {
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         GenerationType generationType = GenerationType.AUTO;
@@ -27,13 +18,5 @@ public class EntityIdField {
                 EntityField.of(field),
                 generationType
         );
-    }
-
-    public EntityField getField() {
-        return field;
-    }
-
-    public GenerationType getGenerationType() {
-        return generationType;
     }
 }
