@@ -12,7 +12,7 @@ class TableTest: DescribeSpec({
 
             val table = Table(Person::class.java)
             it ("DDL 쿼리로 변환한다.") {
-                val expect = "CREATE TABLE person (id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id),name VARCHAR(255) DEFAULT NULL,age int DEFAULT NULL)"
+                val expect = "CREATE TABLE person (id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id),nick_name VARCHAR(255) DEFAULT NULL,old int DEFAULT NULL,email VARCHAR(255) NOT NULL)"
 
                 table.toQuery() shouldBe expect
             }

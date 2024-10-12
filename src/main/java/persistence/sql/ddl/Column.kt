@@ -1,6 +1,7 @@
 package persistence.sql.ddl
 
 import exception.ColumnTypeUnavailableException
+import jakarta.persistence.Column
 import jakarta.persistence.Id
 import java.lang.reflect.Field
 import java.util.StringJoiner
@@ -12,7 +13,7 @@ data class Column (
 
     fun toQuery(): String {
         return StringJoiner(" ").apply {
-            this.add(field.name)
+            this.add(fieldName())
             this.add(columnType())
             this.add(nullable())
             if (isIdColumn) {
@@ -22,6 +23,13 @@ data class Column (
         }.toString()
     }
 
+    private fun fieldName(): String =
+        if (field.isAnnotationPresent(Column::class.java)) {
+            field.getAnnotation(Column::class.java).name.ifEmpty { field.name }
+        } else {
+            field.name
+        }
+
     private fun columnType() =
         when (field.type) {
             String::class.java -> "VARCHAR(255)"
@@ -30,5 +38,10 @@ data class Column (
             else -> throw ColumnTypeUnavailableException("사용할 수 없는 컬럼 타입입니다. [$field.type]")
         }
 
-    private fun nullable(): String = if (isIdColumn) "NOT NULL" else "DEFAULT NULL"
+    private fun nullable(): String =
+        if ((field.isAnnotationPresent(Column::class.java) && !field.getAnnotation(Column::class.java).nullable) || field.isAnnotationPresent(Id::class.java)) {
+            "NOT NULL"
+        } else {
+            "DEFAULT NULL"
+        }
 }

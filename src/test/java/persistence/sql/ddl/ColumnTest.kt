@@ -17,8 +17,8 @@ class ColumnTest: DescribeSpec({
             val stringColumn = Column(clazz.getDeclaredField("name"))
             val intColumn = Column(clazz.getDeclaredField("age"))
             it("DDL 컬럼 문자열을 반환한다.") {
-                stringColumn.toQuery() shouldBe "name VARCHAR(255) DEFAULT NULL"
-                intColumn.toQuery() shouldBe "age int DEFAULT NULL"
+                stringColumn.toQuery() shouldBe "nick_name VARCHAR(255) DEFAULT NULL"
+                intColumn.toQuery() shouldBe "old int DEFAULT NULL"
                 idColumn.toQuery() shouldBe "id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id)"
             }
         }
