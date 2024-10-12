@@ -7,6 +7,7 @@ import persistence.sql.ddl.entity.TestEntity;
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class EntityIdFieldTest {
     @Test
@@ -15,9 +16,11 @@ public class EntityIdFieldTest {
 
         EntityIdField entityIdField = EntityIdField.of(field);
 
-        assertThat(entityIdField.getGenerationType()).isEqualTo(GenerationType.AUTO);
-        assertThat(entityIdField.getField().getName()).isEqualTo("defaultId");
-        assertThat(entityIdField.getField().isNullable()).isTrue();
+        assertAll(
+                () -> assertThat(entityIdField.getGenerationType()).isEqualTo(GenerationType.AUTO),
+                () -> assertThat(entityIdField.getField().getName()).isEqualTo("defaultId"),
+                () -> assertThat(entityIdField.getField().isNullable()).isTrue()
+        );
     }
 
     @Test

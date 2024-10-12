@@ -7,6 +7,7 @@ import persistence.sql.ddl.exception.NotEntityException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class EntityTest {
     @Test
@@ -15,9 +16,11 @@ public class EntityTest {
 
         Entity entity = Entity.of(clazz);
 
-        assertThat(entity.getName()).isEqualTo("NormalEntity");
-        assertThat(entity.getIdField().getField().getName()).isEqualTo("id");
-        assertThat(entity.getFields()).map(EntityField::getName).containsExactlyInAnyOrder("name", "address");
+        assertAll(
+                () -> assertThat(entity.getName()).isEqualTo("NormalEntity"),
+                () -> assertThat(entity.getIdField().getField().getName()).isEqualTo("id"),
+                () -> assertThat(entity.getFields()).map(EntityField::getName).containsExactlyInAnyOrder("name", "address")
+        );
     }
 
     @Test

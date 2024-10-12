@@ -6,6 +6,7 @@ import persistence.sql.ddl.entity.TestEntity;
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class EntityFieldTest {
     @Test
@@ -14,9 +15,11 @@ public class EntityFieldTest {
 
         EntityField entityField = EntityField.of(field);
 
-        assertThat(entityField.getName()).isEqualTo("name");
-        assertThat(entityField.getType()).isEqualTo(String.class);
-        assertThat(entityField.isNullable()).isTrue();
+        assertAll(
+                () -> assertThat(entityField.getName()).isEqualTo("name"),
+                () -> assertThat(entityField.getType()).isEqualTo(String.class),
+                () -> assertThat(entityField.isNullable()).isTrue()
+        );
     }
 
     @Test
@@ -25,9 +28,11 @@ public class EntityFieldTest {
 
         EntityField entityField = EntityField.of(field);
 
-        assertThat(entityField.getName()).isEqualTo("zip_address");
-        assertThat(entityField.getType()).isEqualTo(String.class);
-        assertThat(entityField.isNullable()).isFalse();
+        assertAll(
+                () -> assertThat(entityField.getName()).isEqualTo("zip_address"),
+                () -> assertThat(entityField.getType()).isEqualTo(String.class),
+                () -> assertThat(entityField.isNullable()).isFalse()
+        );
     }
 
     @Test
@@ -36,8 +41,10 @@ public class EntityFieldTest {
 
         EntityField entityField = EntityField.of(field);
 
-        assertThat(entityField.getName()).isEqualTo("home");
-        assertThat(entityField.getType()).isEqualTo(Integer.class);
-        assertThat(entityField.isNullable()).isFalse();
+        assertAll(
+                () -> assertThat(entityField.getName()).isEqualTo("home"),
+                () -> assertThat(entityField.getType()).isEqualTo(Integer.class),
+                () -> assertThat(entityField.isNullable()).isFalse()
+        );
     }
 }
