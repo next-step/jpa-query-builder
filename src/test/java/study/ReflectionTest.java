@@ -52,4 +52,27 @@ public class ReflectionTest {
         // Q. 생성자에 정의된 타입 출력
         // Q. 생성자에 정의된 이름 출력
    }
+
+   @Test
+   @DisplayName("test로 시작하는 메소드 실행")
+   void testMethodRun() throws Exception {
+        // Car Class에 정의된 메소드 중 'test'로 시작하는 메소드 가져오기
+       Class<Car> carClass = Car.class;
+       List<Method> declaredMethodsStartWithTest = Arrays.stream(carClass.getDeclaredMethods())
+               .filter(method->method.getName().startsWith("test")).collect(Collectors.toList());
+
+       // Car Object 정의
+       Car testCar = carClass
+               .getConstructor(String.class, int.class)
+               .newInstance("teslar", 4000);
+       logger.info("정의한 Car 정보 : name = {}, price = {}", testCar.getName(), testCar.getPrice());
+       assertThat(testCar.getName()).isEqualTo("teslar");
+       assertThat(testCar.getPrice()).isEqualTo(4000);
+
+       // 정의된 메소드 실행
+       for (Method method : declaredMethodsStartWithTest) {
+           String returnValue = (String)method.invoke(testCar);
+           logger.info("{} 실행 결과 = {}", method.getName(), returnValue);
+       }
+   }
 }
