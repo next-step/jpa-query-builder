@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public enum ColumnType {
     BIGINT(Long.class, "bigint"),
+    INTEGER(Integer.class, "integer"),
     VARCHAR(String.class, "varchar(255)"),
     ;
 
