@@ -1,8 +1,9 @@
 package persistence.sql.ddl.node;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.Types;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 public class FieldNode implements SQLNode{
@@ -21,10 +22,20 @@ public class FieldNode implements SQLNode{
     }
 
     public String getFieldName() {
-        return field.getName();
+        Column columnAnno = field.getAnnotation(Column.class);
+
+        if (columnAnno == null || columnAnno.name().isBlank()) {
+            return field.getName();
+        }
+
+        return columnAnno.name();
     }
 
-    public Types getFieldType() {
-        return Types.findByType(field.getType());
+    public Class<?> getFieldType() {
+        return field.getType();
+    }
+
+    public <T extends Annotation> T getAnnotation(Class<T> columnClass) {
+        return field.getAnnotation(columnClass);
     }
 }

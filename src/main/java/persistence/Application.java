@@ -5,10 +5,9 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.QueryBuilderHelper;
+import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.ddl.TableScanner;
-import persistence.sql.ddl.impl.AnnotatedTableScanner;
-import persistence.sql.ddl.impl.H2QueryBuilder;
+import persistence.sql.ddl.config.PersistenceConfig;
 import persistence.sql.ddl.node.EntityNode;
 
 import java.util.Set;
@@ -24,13 +23,14 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            PersistenceConfig persistenceConfig = PersistenceConfig.getInstance();
 
-            TableScanner tableScanner = new AnnotatedTableScanner();
+            TableScanner tableScanner = persistenceConfig.tableScanner();
             Set<EntityNode<?>> nodes = tableScanner.scan(BASE_PACKAGE);
 
-            QueryBuilderHelper queryBuilder = new H2QueryBuilder();
+            QueryBuilder queryBuilder = persistenceConfig.queryBuilder();
             for (EntityNode<?> node : nodes) {
-                String createTableQuery = queryBuilder.createTableQuery(node);
+                String createTableQuery = queryBuilder.buildCreateTableQuery(node);
                 logger.info("Create table query: {}", createTableQuery);
                 jdbcTemplate.execute(createTableQuery);
             }

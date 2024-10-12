@@ -1,24 +1,77 @@
 package persistence.sql.ddl.impl;
 
 import jakarta.persistence.Table;
-import persistence.sql.ddl.QueryBuilderHelper;
-import persistence.sql.ddl.Types;
+import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.ddl.QueryColumnSupplier;
+import persistence.sql.ddl.QueryConstraintSupplier;
 import persistence.sql.ddl.node.EntityNode;
 import persistence.sql.ddl.node.FieldNode;
+import persistence.sql.ddl.util.NameConverter;
 
 import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
+import java.util.stream.Collectors;
 
-public class H2QueryBuilder extends QueryBuilderHelper {
-    private static final Map<Types, String> columnTypeMap = Map.of(
-            Types.INTEGER, "INT",
-            Types.BIGINT, "BIGINT",
-            Types.VARCHAR, "VARCHAR"
-    );
-    public static final String DEFAULT_FIELD_TYPE = "VARCHAR(255)";
+public class H2QueryBuilder implements QueryBuilder {
+
+    private final NameConverter nameConverter;
+    private final SortedSet<QueryColumnSupplier> columnQuerySuppliers;
+    private final SortedSet<QueryConstraintSupplier> constraintQuerySuppliers;
+
+    public H2QueryBuilder(NameConverter nameConverter,
+                          SortedSet<QueryColumnSupplier> columnQuerySuppliers,
+                          SortedSet<QueryConstraintSupplier> constraintQuerySuppliers) {
+        this.nameConverter = nameConverter;
+        this.columnQuerySuppliers = columnQuerySuppliers;
+        this.constraintQuerySuppliers = constraintQuerySuppliers;
+    }
 
     @Override
-    public <T> String buildCreateTableQuery(EntityNode<T> entityNode) {
+    public String buildCreateTableQuery(EntityNode<?> entityNode) {
+        StringBuilder query = new StringBuilder(buildTableQuery(entityNode));
+        query.append(" (");
+        buildColumnQuery(entityNode, query);
+        buildConstraintQuery(entityNode, query);
+        query.append(");");
+
+        return query.toString();
+    }
+
+    private void buildConstraintQuery(EntityNode<?> entityNode, StringBuilder query) {
+        String constraintQuery = entityNode.getFields().stream()
+                .map(this::buildConstraintQuery)
+                .filter(q -> !q.isBlank())
+                .collect(Collectors.joining(", "));
+
+        System.out.println("constraintQuery = " + constraintQuery);
+        query.append(constraintQuery);
+    }
+
+    private String buildConstraintQuery(FieldNode fieldNode) {
+        List<QueryConstraintSupplier> filteredSuppliers = constraintQuerySuppliers.stream()
+                .filter(supplier -> supplier.supported(fieldNode)).toList();
+
+        if (filteredSuppliers.isEmpty()) {
+            return "";
+        }
+
+        return filteredSuppliers.stream()
+                .map(supplier -> supplier.supply(fieldNode).trim())
+                .collect(Collectors.joining(" , "));
+    }
+
+    private void buildColumnQuery(EntityNode<?> entityNode, StringBuilder query) {
+        for (FieldNode fieldNode : entityNode.getFields()) {
+            query.append(buildColumnQuery(fieldNode)).append(", ");
+        }
+    }
+
+    private String buildColumnQuery(FieldNode fieldNode) {
+        return columnQuerySuppliers.stream().filter(supplier -> supplier.supported(fieldNode))
+                .map(supplier -> supplier.supply(fieldNode).trim()).collect(Collectors.joining(" "));
+    }
+
+    private <T> String buildTableQuery(EntityNode<T> entityNode) {
         Class<T> entityClass = entityNode.getEntityClass();
         String tableName = entityClass.getSimpleName();
 
@@ -26,45 +79,6 @@ public class H2QueryBuilder extends QueryBuilderHelper {
             tableName = entityClass.getAnnotation(Table.class).name();
         }
 
-        return "CREATE TABLE " + camelToSnake(tableName);
-    }
-
-    @Override
-    public String buildPrimaryKeyQuery(List<FieldNode> fieldNodes) {
-        FieldNode primaryFieldNode = fieldNodes.stream()
-                .filter(FieldNode::isPrimaryKey)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No primary key found"));
-
-        return "PRIMARY KEY (%s)".formatted(camelToSnake(primaryFieldNode.getFieldName()));
-    }
-
-    @Override
-    public String buildColumnQuery(FieldNode fieldNode) {
-        String columnType = getColumnType(fieldNode);
-
-        return "%s %s".formatted(camelToSnake(fieldNode.getFieldName()), columnType);
-    }
-
-    private String getColumnType(FieldNode fieldNode) {
-        Types fieldType = fieldNode.getFieldType();
-        String columnType = columnTypeMap.getOrDefault(fieldType, DEFAULT_FIELD_TYPE);
-
-        if (columnType == null) {
-            throw new IllegalArgumentException("Unsupported field type: " + fieldType);
-        }
-
-        if (Types.VARCHAR == fieldType) {
-            // TODO: Add support for custom length
-            return columnType + "(255)";
-        }
-
-        return columnType;
-    }
-
-    @Override
-    public String buildConstraintQuery(FieldNode fieldNode) {
-        // TODO: Implement this method
-        return "";
+        return "CREATE TABLE " + nameConverter.convert(tableName);
     }
 }

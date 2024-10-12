@@ -3,7 +3,6 @@ package persistence.sql.ddl.impl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.node.EntityNode;
-import sample.domain.Person;
 
 import java.util.List;
 import java.util.Set;
