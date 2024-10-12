@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import java.lang.reflect.Field;
 
 public record EntityIdField(EntityField field, GenerationType generationType) {
-    public static EntityIdField of(Field field) {
+    public static EntityIdField from(Field field) {
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         GenerationType generationType = GenerationType.AUTO;
 
@@ -15,7 +15,7 @@ public record EntityIdField(EntityField field, GenerationType generationType) {
         }
 
         return new EntityIdField(
-                EntityField.of(field),
+                EntityField.from(field),
                 generationType
         );
     }

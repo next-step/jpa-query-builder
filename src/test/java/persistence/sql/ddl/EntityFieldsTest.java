@@ -14,7 +14,7 @@ class EntityFieldsTest {
     void 클래스를_분석하여_Entity로_변경한다() {
         Class<NormalEntity> clazz = NormalEntity.class;
 
-        EntityFields entityFields = EntityFields.of(clazz);
+        EntityFields entityFields = EntityFields.from(clazz);
 
         assertAll(
                 () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
@@ -27,7 +27,7 @@ class EntityFieldsTest {
     void Table이_있으면_이름을_Table의_이름을_사용한다() {
         Class<TableEntity> clazz = TableEntity.class;
 
-        EntityFields entityFields = EntityFields.of(clazz);
+        EntityFields entityFields = EntityFields.from(clazz);
 
         assertThat(entityFields.tableName()).isEqualTo("table");
     }
@@ -37,7 +37,7 @@ class EntityFieldsTest {
         Class<NotEntityAnnotationEntity> clazz = NotEntityAnnotationEntity.class;
 
         assertThatExceptionOfType(NotEntityException.class)
-                .isThrownBy(() -> EntityFields.of(clazz));
+                .isThrownBy(() -> EntityFields.from(clazz));
     }
 
     @Test
@@ -45,7 +45,7 @@ class EntityFieldsTest {
         Class<EmptyIdEntity> clazz = EmptyIdEntity.class;
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
-                .isThrownBy(() -> EntityFields.of(clazz));
+                .isThrownBy(() -> EntityFields.from(clazz));
     }
 
     @Test
@@ -53,6 +53,6 @@ class EntityFieldsTest {
         Class<ManyIdsEntity> clazz = ManyIdsEntity.class;
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
-                .isThrownBy(() -> EntityFields.of(clazz));
+                .isThrownBy(() -> EntityFields.from(clazz));
     }
 }

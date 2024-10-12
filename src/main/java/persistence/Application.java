@@ -14,7 +14,7 @@ public class Application {
         CreateDDLGenerator createDDLGenerator = new H2CreateDDLGenerator();
         DropDDLGenerator dropDDLGenerator = new H2DropDDLGenerator();
 
-        EntityFields entityFields = EntityFields.of(Person.class);
+        EntityFields entityFields = EntityFields.from(Person.class);
 
         logger.info("Starting application...");
         try {

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public record EntityFields (String tableName, EntityIdField idField, List<EntityField> fields){
-    public static <T> EntityFields of(Class<T> clazz) {
+    public static <T> EntityFields from(Class<T> clazz) {
         if (!clazz.isAnnotationPresent(jakarta.persistence.Entity.class)) {
             throw new NotEntityException();
         }
@@ -44,13 +44,13 @@ public record EntityFields (String tableName, EntityIdField idField, List<Entity
             throw new IncorrectIdFieldException();
         }
 
-        return EntityIdField.of(ids.get(0));
+        return EntityIdField.from(ids.get(0));
     }
 
     private static List<EntityField> getFields(Field[] fields) {
         return Arrays.stream(fields)
                 .filter(it -> !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class))
-                .map(EntityField::of)
+                .map(EntityField::from)
                 .toList();
     }
 }

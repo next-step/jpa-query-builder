@@ -5,7 +5,7 @@ import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 
 public record EntityField(String name, Class<?> type, boolean nullable, int length) {
-    public static EntityField of(Field field) {
+    public static EntityField from(Field field) {
         return new EntityField(
                 getName(field),
                 field.getType(),

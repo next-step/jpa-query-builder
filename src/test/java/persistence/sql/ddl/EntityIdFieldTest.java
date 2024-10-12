@@ -14,7 +14,7 @@ class EntityIdFieldTest {
     void GeneratedValue가_없으면_generationType은_Auto이다() throws NoSuchFieldException {
         Field field = TestEntity.class.getDeclaredField("defaultId");
 
-        EntityIdField entityIdField = EntityIdField.of(field);
+        EntityIdField entityIdField = EntityIdField.from(field);
 
         assertAll(
                 () -> assertThat(entityIdField.generationType()).isEqualTo(GenerationType.AUTO),
@@ -27,7 +27,7 @@ class EntityIdFieldTest {
     void GeneratedValue가_있으면_generationType은_GeneratedValue의_stratgy를_사용한다() throws NoSuchFieldException {
         Field field = TestEntity.class.getDeclaredField("identityId");
 
-        EntityIdField entityIdField = EntityIdField.of(field);
+        EntityIdField entityIdField = EntityIdField.from(field);
 
         assertThat(entityIdField.generationType()).isEqualTo(GenerationType.IDENTITY);
     }
