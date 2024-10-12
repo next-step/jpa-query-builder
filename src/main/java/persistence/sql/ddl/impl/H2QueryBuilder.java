@@ -42,7 +42,7 @@ public class H2QueryBuilder implements QueryBuilder {
     }
 
     private void buildConstraintQuery(EntityNode<?> entityNode, StringBuilder query) {
-        String constraintQuery = entityNode.getFields(Transient.class).stream()
+        String constraintQuery = entityNode.getFieldsWithoutExcludeAnnotations(Transient.class).stream()
                 .map(this::buildConstraintQuery)
                 .filter(q -> !q.isBlank())
                 .collect(Collectors.joining(", "));
@@ -65,7 +65,7 @@ public class H2QueryBuilder implements QueryBuilder {
     }
 
     private void buildColumnQuery(EntityNode<?> entityNode, StringBuilder query) {
-        for (FieldNode fieldNode : entityNode.getFields(Transient.class)) {
+        for (FieldNode fieldNode : entityNode.getFieldsWithoutExcludeAnnotations(Transient.class)) {
             query.append(buildColumnQuery(fieldNode)).append(", ");
         }
     }

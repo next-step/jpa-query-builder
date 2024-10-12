@@ -32,7 +32,7 @@ public record EntityNode<T>(Class<T> entityClass, List<FieldNode> fields) implem
     }
 
     @SafeVarargs
-    public final List<FieldNode> getFields(Class<? extends Annotation>... excludeAnnotations) {
+    public final List<FieldNode> getFieldsWithoutExcludeAnnotations(Class<? extends Annotation>... excludeAnnotations) {
         return fields.stream()
                 .filter(fieldNode -> !fieldNode.containsAnnotations(excludeAnnotations)).toList();
     }
