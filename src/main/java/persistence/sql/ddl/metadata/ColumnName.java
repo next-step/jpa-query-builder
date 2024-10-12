@@ -1,6 +1,7 @@
 package persistence.sql.ddl.metadata;
 
 import jakarta.persistence.Column;
+import persistence.utils.StringUtils;
 
 import java.lang.reflect.Field;
 
@@ -15,6 +16,7 @@ public record ColumnName(
             }
         }
 
-        return new ColumnName(field.getName());
+        String snakeCase = StringUtils.convertToSnakeCase(field.getName());
+        return new ColumnName(snakeCase);
     }
 }

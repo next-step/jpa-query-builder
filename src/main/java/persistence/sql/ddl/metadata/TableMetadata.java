@@ -2,6 +2,7 @@ package persistence.sql.ddl.metadata;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import persistence.utils.StringUtils;
 
 public class TableMetadata {
     private final String name;
@@ -23,8 +24,7 @@ public class TableMetadata {
             return clazz.getDeclaredAnnotation(Table.class).name();
         }
 
-        String name = clazz.getSimpleName();
-        return name.substring(0, 1).toLowerCase() + name.substring(1);
+        return StringUtils.convertToSnakeCase(clazz.getSimpleName());
     }
 
     public String getName() {
