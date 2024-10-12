@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +15,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 public class ReflectionTest {
@@ -27,6 +31,7 @@ public class ReflectionTest {
             logger.info("name: " + field.getName() + ", type: " + field.getType());
         });
     }
+
     @Test
     @DisplayName("Car 객체 생성자 정보 가지고 오기 ")
     void showClass_2() {
@@ -36,6 +41,7 @@ public class ReflectionTest {
             logger.info("Constructor: " + constructor.getName() + ", Parameter Types " + Arrays.toString(constructor.getParameterTypes()));
         });
     }
+
     @Test
     @DisplayName("Car 객체 메서드에 대한 정보 가지고 오기 ")
     void showClass_3() {
@@ -48,7 +54,7 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("test로 시작하는 메서드 실행하기")
-    void testMethodRun()  throws Exception {
+    void testMethodRun() throws Exception {
         Class<?> carClass = Car.class;
         Object carInstance = carClass.getDeclaredConstructor().newInstance(); // Car 인스턴스 생성
         Method[] methods = carClass.getDeclaredMethods(); // Car 클래스의 메서드들 가져오기
@@ -62,6 +68,35 @@ public class ReflectionTest {
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }
-            });
+                });
     }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메서드 실행 ")
+    void annotationMethodRun() throws Exception {
+        Class<?> carClass = Car.class;
+        Object carInstance = carClass.getDeclaredConstructor().newInstance();
+        Method[] methods = carClass.getDeclaredMethods();
+        // 기존 System.out을 임시로 바꿀 스트림 생성
+
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent)); // System.out을 ByteArrayOutputStream으로 설정
+
+        Arrays.stream(methods)
+                .filter(method -> method.isAnnotationPresent(PrintView.class))
+                .forEach(method -> {
+                    try {
+                        method.invoke(carInstance);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+            });
+        // 메서드 호출 후 출력된 내용을 String으로 변환
+        String output = outContent.toString().trim();
+        logger.info("invoke: " + output);
+
+        // assertThat으로 출력된 내용을 검증
+        assertThat(output).isEqualTo("자동차 정보를 출력 합니다.");
+        }
 }
