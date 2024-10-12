@@ -2,6 +2,8 @@ package persistence.sql;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -10,11 +12,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class QueryBuilder {
+    private static final Logger logger = LoggerFactory.getLogger(QueryBuilder.class);
+
     public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 존재해지 않습니다.";
 
     private final Object entity;
 
-    protected QueryBuilder(Object entity) {
+    public QueryBuilder(Object entity) {
         if (!entity.getClass().isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(NOT_ENTITY_FAILED_MESSAGE);
         }
@@ -22,7 +26,7 @@ public abstract class QueryBuilder {
         this.entity = entity;
     }
 
-    protected abstract String build();
+    public abstract String build();
 
     protected String build(String queryTemplate, String... templateArgs) {
         return String.format(queryTemplate, getArgs(templateArgs));
@@ -31,6 +35,15 @@ public abstract class QueryBuilder {
     protected List<Field> getColumns() {
         return Arrays.stream(entity.getClass().getDeclaredFields())
                 .collect(Collectors.toList());
+    }
+
+    protected Object getValue(Field field) {
+        try {
+            return field.get(entity);
+        } catch (IllegalAccessException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     private Object[] getArgs(String[] templateArgs) {

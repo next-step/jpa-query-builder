@@ -28,6 +28,11 @@ public class FieldUtils {
         return fieldType.getDbType();
     }
 
+    public static boolean isQuotesNeeded(Field field) {
+        FieldType fieldType = FieldType.valueOf(field);
+        return fieldType.isQuotesNeeded();
+    }
+
     public static boolean isGeneration(Field field) {
         final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         if (Objects.isNull(generatedValue)) {
