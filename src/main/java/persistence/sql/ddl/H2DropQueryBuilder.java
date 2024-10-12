@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import model.TableName;
 
-public class DropQueryBuilderDDL {
+public class H2DropQueryBuilder implements DropQueryBuilder {
 
     private static final String SPACE = " ";
 
@@ -11,7 +11,7 @@ public class DropQueryBuilderDDL {
 
     private final Class<?> clazz;
 
-    public DropQueryBuilderDDL(Class<?> clazz) {
+    public H2DropQueryBuilder(Class<?> clazz) {
         this.clazz = clazz;
     }
 
