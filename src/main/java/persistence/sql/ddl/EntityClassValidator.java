@@ -11,7 +11,7 @@ public class EntityClassValidator {
     private EntityClassValidator() {
     }
 
-    static void validate(Class<?> clazz) {
+    public static void validate(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("Entity must be annotated with @Entity");
         }
@@ -19,7 +19,7 @@ public class EntityClassValidator {
         validateHasId(clazz.getDeclaredFields());
     }
 
-    static void validateHasId(Field[] fields) {
+    private static void validateHasId(Field[] fields) {
         List<Field> idFields = Arrays.stream(fields)
                 .filter(field ->
                         field.isAnnotationPresent(Id.class)
