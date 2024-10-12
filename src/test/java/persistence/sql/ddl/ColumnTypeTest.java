@@ -16,4 +16,14 @@ class ColumnTypeTest {
 
         assertThat(columnDefinition).isEqualTo("bigint");
     }
+
+    @DisplayName("String은 varchar(255)로 해석한다")
+    @Test
+    void javaStringToVarchar() {
+        ColumnType columnType = ColumnType.of(String.class);
+
+        String columnDefinition = columnType.getColumnDefinition();
+
+        assertThat(columnDefinition).isEqualTo("varchar(255)");
+    }
 }
