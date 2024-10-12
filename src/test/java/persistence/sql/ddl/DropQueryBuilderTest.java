@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.NotEntity;
 import persistence.sql.Person;
 
 import static org.assertj.core.api.Assertions.*;
@@ -39,14 +39,5 @@ class DropQueryBuilderTest {
         // then
         assertThat(query).isEqualTo(
                 "DROP TABLE IF EXISTS users");
-    }
-
-    static public class NotEntity {
-        @Id
-        private Long id;
-
-        private String name;
-
-        private Integer age;
     }
 }

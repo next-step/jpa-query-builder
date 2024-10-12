@@ -1,8 +1,8 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.NotEntity;
 import persistence.sql.Person;
 
 import static org.assertj.core.api.Assertions.*;
@@ -39,14 +39,5 @@ class CreateQueryBuilderTest {
         // then
         assertThat(query).isEqualTo(
                 "CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL )");
-    }
-
-    static public class NotEntity {
-        @Id
-        private Long id;
-
-        private String name;
-
-        private Integer age;
     }
 }
