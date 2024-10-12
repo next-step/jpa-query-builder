@@ -1,38 +1,29 @@
 package persistence.sql.ddl;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.fixture.IncludeId;
+import persistence.sql.ddl.fixture.NotIncludeId;
 
-import java.lang.reflect.Field;
+import java.util.List;
 
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ColumnMetadataTest {
 
-    @DisplayName("필드를 받아 컬럼으로 변환한다")
+    @DisplayName("필드에 `@Id`가 없으면 예외가 발생한다")
     @Test
-    void fromField() throws Exception {
-        Field field = IncludeId.class.getDeclaredField("name");
-        ColumnMetadata column = ColumnMetadata.from(field);
-
-        assertSoftly(softly -> {
-            softly.assertThat(column.getName()).isEqualTo("name");
-            softly.assertThat(column.getSqlType()).isEqualTo("varchar(255)");
-            softly.assertThat(column.isPrimaryKey()).isFalse();
-        });
+    void notIncludeId() {
+        Assertions.assertThatThrownBy(() -> ColumnMetadata.from(NotIncludeId.class))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("@Id annotation이 추가되면 not null 제약조건을 갖는다.")
+    @DisplayName("@Id가 지정된 컬럼을 반환한다")
     @Test
-    void idField() throws Exception {
-        Field field = IncludeId.class.getDeclaredField("id");
-        ColumnMetadata column = ColumnMetadata.from(field);
-
-        assertSoftly(softly -> {
-            softly.assertThat(column.getName()).isEqualTo("id");
-            softly.assertThat(column.getSqlType()).isEqualTo("bigint");
-            softly.assertThat(column.isPrimaryKey()).isTrue();
-        });
+    void getIdField() throws Exception {
+        ColumnMetadata columnMetadata = ColumnMetadata.from(IncludeId.class);
+        Column expected = Column.from(IncludeId.class.getDeclaredField("id"));
+        assertThat(columnMetadata.getPrimaryKeys()).containsExactly(expected);
     }
 }

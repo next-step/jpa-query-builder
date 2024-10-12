@@ -5,15 +5,17 @@
 ### 요구 사항
 
 - [X] create query를 만든다.
-  - [X] Long은 bigint로 해석한다.
-  - [X] String은 varchar(255)로 해석한다.
-  - [X] Integer는 integer로 해석한다.
-  - [X] 클래스에 `@Entity`가 없으면 예외가 발생한다.
-  - [X] 필드에 `@Id`가 없으면 예외가 발생한다.
-  - [X] `@Id`가 사용된 컬럼은 not null 제약조건을 갖는다.
-  - [X] `@Id`가 사용된 컬럼은 primary key가 된다.
+    - [X] Long은 bigint로 해석한다.
+    - [X] String은 varchar(255)로 해석한다.
+    - [X] Integer는 integer로 해석한다.
+    - [X] 클래스에 `@Entity`가 없으면 예외가 발생한다.
+    - [X] 필드에 `@Id`가 없으면 예외가 발생한다.
+    - [X] `@Id`가 사용된 컬럼은 not null 제약조건을 갖는다.
+    - [X] `@Id`가 사용된 컬럼은 primary key가 된다.
 - [X] `@GeneratedValue`와 `@Column` 정보를 추가로 읽어 create query를 만든다.
-- [ ] `@Table`과 `@Transient` 정보를 추가로 읽어 create query를 만든다.
+- [X] `@Table`과 `@Transient` 정보를 추가로 읽어 create query를 만든다.
+    - [X] `@Table`이 있으면 name을 사용한다.
+    - [X] `@Transient`가 있으면 컬럼에서 제외한다.
 - [ ] drop query를 만든다.
 
 ## 1단계 - Reflection
