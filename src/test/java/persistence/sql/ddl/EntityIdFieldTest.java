@@ -18,8 +18,8 @@ class EntityIdFieldTest {
 
         assertAll(
                 () -> assertThat(entityIdField.generationType()).isEqualTo(GenerationType.AUTO),
-                () -> assertThat(entityIdField.field().name()).isEqualTo("defaultId"),
-                () -> assertThat(entityIdField.field().nullable()).isTrue()
+                () -> assertThat(entityIdField.name()).isEqualTo("defaultId"),
+                () -> assertThat(entityIdField.nullable()).isTrue()
         );
     }
 

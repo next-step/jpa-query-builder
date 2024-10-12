@@ -17,9 +17,9 @@ class EntityFieldsTest {
         EntityFields entityFields = EntityFields.of(clazz);
 
         assertAll(
-                () -> assertThat(entityFields.name()).isEqualTo("NormalEntity"),
+                () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
                 () -> assertThat(entityFields.idField().field().name()).isEqualTo("id"),
-                () -> assertThat(entityFields.fields()).map(EntityField::name).containsExactlyInAnyOrder("name", "address")
+                () -> assertThat(entityFields.fields()).map(EntityField::name).containsExactlyInAnyOrder("tableName", "address")
         );
     }
 
@@ -29,7 +29,7 @@ class EntityFieldsTest {
 
         EntityFields entityFields = EntityFields.of(clazz);
 
-        assertThat(entityFields.name()).isEqualTo("table");
+        assertThat(entityFields.tableName()).isEqualTo("table");
     }
 
     @Test

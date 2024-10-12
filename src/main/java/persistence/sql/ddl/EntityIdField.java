@@ -19,4 +19,16 @@ public record EntityIdField(EntityField field, GenerationType generationType) {
                 generationType
         );
     }
+
+    public String name() {
+        return field.name();
+    }
+
+    public Class<?> type() {
+        return field.type();
+    }
+
+    public boolean nullable() {
+        return field.nullable();
+    }
 }
