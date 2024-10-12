@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.FieldType;
+import persistence.sql.FieldType;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
