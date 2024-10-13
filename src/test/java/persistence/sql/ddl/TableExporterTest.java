@@ -1,6 +1,5 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
