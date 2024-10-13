@@ -1,9 +1,12 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class QueryBuilderDDL {
@@ -26,7 +29,11 @@ public class QueryBuilderDDL {
     }
 
     private String getTableName(Class<?> clazz) {
-        return clazz.getSimpleName().toLowerCase();
+        final var className = clazz.getSimpleName().toLowerCase();
+        final var tableAnotation = clazz.getAnnotation(Table.class);
+        if(Objects.isNull(tableAnotation)) return className;
+        if(tableAnotation.name().isBlank()) return className;
+        return tableAnotation.name();
     }
 
     private String getColumnInfos(Class<?> clazz) {
@@ -35,8 +42,10 @@ public class QueryBuilderDDL {
         List<ColumnInfo> columns = Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract).collect(Collectors.toList());
 
         for (ColumnInfo column : columns) {
-            sb.append(getColumnLine(column));
-            sb.append(", ");
+            if(!column.isTrans()){
+                sb.append(getColumnLine(column));
+                sb.append(", ");
+            }
         }
         sb.append(getPrimaryKey(columns));
         return sb.toString();
