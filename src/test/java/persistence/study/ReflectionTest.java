@@ -91,14 +91,14 @@ public class ReflectionTest {
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }
-            });
+                });
         // 메서드 호출 후 출력된 내용을 String으로 변환
         String output = outContent.toString().trim();
         logger.info("invoke: " + output);
 
         // assertThat으로 출력된 내용을 검증
         assertThat(output).isEqualTo("자동차 정보를 출력 합니다.");
-        }
+    }
 
         @Test
         @DisplayName("private field 값 할당")

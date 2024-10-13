@@ -2,9 +2,11 @@ package persistence;
 
 import database.DatabaseServer;
 import database.H2;
+import domain.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.DDLQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -16,6 +18,14 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
+            String createTableQuery = DDLQueryBuilder.createTable(ddlQueryBuilder, Person.class);
+            logger.info(createTableQuery);
+            jdbcTemplate.execute(createTableQuery); // Create table
+
+            String dropTableQuery = DDLQueryBuilder.dropTable(ddlQueryBuilder, Person.class);
+            logger.info(dropTableQuery);
+            jdbcTemplate.execute(dropTableQuery); // Drop table
 
             server.stop();
         } catch (Exception e) {
