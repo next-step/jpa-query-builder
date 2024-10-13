@@ -1,4 +1,4 @@
-package persistence.sql.ddl.util;
+package persistence.sql.common.util;
 
 /**
  * 카멜 케이스 to 스네이크 케이스 변환기

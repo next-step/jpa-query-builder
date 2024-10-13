@@ -5,9 +5,9 @@ import jakarta.persistence.Transient;
 import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.ddl.QueryColumnSupplier;
 import persistence.sql.ddl.QueryConstraintSupplier;
-import persistence.sql.ddl.node.EntityNode;
-import persistence.sql.ddl.node.FieldNode;
-import persistence.sql.ddl.util.NameConverter;
+import persistence.sql.node.EntityNode;
+import persistence.sql.node.FieldNode;
+import persistence.sql.common.util.NameConverter;
 
 import java.util.List;
 import java.util.SortedSet;

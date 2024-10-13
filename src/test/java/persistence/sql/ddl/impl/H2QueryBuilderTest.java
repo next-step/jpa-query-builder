@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.config.PersistenceConfig;
-import persistence.sql.ddl.node.EntityNode;
+import persistence.sql.ddl.config.PersistenceDDLConfig;
+import persistence.sql.node.EntityNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,8 +15,8 @@ class H2QueryBuilderTest {
 
     @BeforeEach
     void setUp() {
-        PersistenceConfig persistenceConfig = PersistenceConfig.getInstance();
-        queryBuilder = (H2QueryBuilder) persistenceConfig.queryBuilder();
+        PersistenceDDLConfig persistenceDDLConfig = PersistenceDDLConfig.getInstance();
+        queryBuilder = (H2QueryBuilder) persistenceDDLConfig.queryBuilder();
     }
 
     @Test

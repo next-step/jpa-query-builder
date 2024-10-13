@@ -5,18 +5,18 @@ import persistence.sql.ddl.QueryColumnSupplier;
 import persistence.sql.ddl.QueryConstraintSupplier;
 import persistence.sql.ddl.TableScanner;
 import persistence.sql.ddl.impl.*;
-import persistence.sql.ddl.util.CamelToSnakeConverter;
-import persistence.sql.ddl.util.NameConverter;
+import persistence.sql.common.util.CamelToSnakeConverter;
+import persistence.sql.common.util.NameConverter;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class PersistenceConfig {
-    private static final PersistenceConfig INSTANCE = new PersistenceConfig();
+public class PersistenceDDLConfig {
+    private static final PersistenceDDLConfig INSTANCE = new PersistenceDDLConfig();
 
-    private PersistenceConfig() {}
+    private PersistenceDDLConfig() {}
 
-    public static PersistenceConfig getInstance() {
+    public static PersistenceDDLConfig getInstance() {
         return INSTANCE;
     }
 

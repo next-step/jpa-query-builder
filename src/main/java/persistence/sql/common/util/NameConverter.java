@@ -1,4 +1,4 @@
-package persistence.sql.ddl.util;
+package persistence.sql.common.util;
 
 /**
  * 이름 변환기

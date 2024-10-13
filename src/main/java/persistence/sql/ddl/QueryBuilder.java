@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.node.EntityNode;
+import persistence.sql.node.EntityNode;
 
 /**
  * 쿼리 빌더
@@ -18,4 +18,6 @@ public interface QueryBuilder {
      * @param entityNode 엔티티 노드
      */
     String buildDropTableQuery(EntityNode<?> entityNode);
+
+    <T> T buildInsertQuery(EntityNode<T> entityNode)
 }

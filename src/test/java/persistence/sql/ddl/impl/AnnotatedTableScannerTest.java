@@ -2,7 +2,7 @@ package persistence.sql.ddl.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.node.EntityNode;
+import persistence.sql.node.EntityNode;
 
 import java.util.List;
 import java.util.Set;

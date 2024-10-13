@@ -1,8 +1,8 @@
 package persistence.sql.ddl.impl;
 
 import persistence.sql.ddl.QueryConstraintSupplier;
-import persistence.sql.ddl.node.FieldNode;
-import persistence.sql.ddl.util.NameConverter;
+import persistence.sql.node.FieldNode;
+import persistence.sql.common.util.NameConverter;
 
 /**
  * 컬럼 기본키 제약 조건 쿼리 제공자
