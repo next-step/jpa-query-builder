@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.NotEntity;
 import persistence.sql.Person;
-import persistence.sql.QueryBuilder;
+import persistence.sql.Table;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -25,7 +25,7 @@ class DeleteQueryBuilderTest {
         // when & then
         assertThatThrownBy(() -> new DeleteQueryBuilder(NotEntity.class))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(QueryBuilder.NOT_ENTITY_FAILED_MESSAGE);
+                .hasMessage(Table.NOT_ENTITY_FAILED_MESSAGE);
     }
 
     @Test

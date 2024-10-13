@@ -4,13 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.NotEntity;
 import persistence.sql.Person;
-import persistence.sql.QueryBuilder;
+import persistence.sql.Table;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -31,7 +30,7 @@ class SelectQueryBuilderTest {
         // when & then
         assertThatThrownBy(() -> new SelectQueryBuilder(NotEntity.class))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(QueryBuilder.NOT_ENTITY_FAILED_MESSAGE);
+                .hasMessage(Table.NOT_ENTITY_FAILED_MESSAGE);
     }
 
     @Test
@@ -69,10 +68,10 @@ class SelectQueryBuilderTest {
         // when & then
         assertThatThrownBy(() -> selectQueryBuilder.findById(1))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage(QueryBuilder.NOT_ID_FAILED_MESSAGE);
+                .hasMessage(Table.NOT_ID_FAILED_MESSAGE);
     }
 
-    @Table(name = "users")
+    @jakarta.persistence.Table(name = "users")
     @Entity
     private static class NotId {
         @GeneratedValue(strategy = GenerationType.IDENTITY)

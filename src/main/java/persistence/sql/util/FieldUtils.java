@@ -24,12 +24,12 @@ public class FieldUtils {
     }
 
     public static String getDbType(Field field) {
-        FieldType fieldType = FieldType.valueOf(field);
+        final FieldType fieldType = FieldType.valueOf(field);
         return fieldType.getDbType();
     }
 
     public static boolean isQuotesNeeded(Field field) {
-        FieldType fieldType = FieldType.valueOf(field);
+        final FieldType fieldType = FieldType.valueOf(field);
         return fieldType.isQuotesNeeded();
     }
 

@@ -1,30 +1,33 @@
 package persistence.sql.dml;
 
-import persistence.sql.QueryBuilder;
+import persistence.sql.Table;
 import persistence.sql.util.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SelectQueryBuilder extends QueryBuilder {
+public class SelectQueryBuilder {
     private static final String FIND_ALL_QUERY_TEMPLATE = "SELECT %s FROM %s";
     private static final String FIND_BY_ID_QUERY_TEMPLATE = "SELECT %s FROM %s WHERE %s";
 
+    private final Table table;
+
     public SelectQueryBuilder(Class<?> entityClass) {
-        super(entityClass);
+        this.table = new Table(entityClass);
     }
 
     public String findAll() {
-        return super.build(FIND_ALL_QUERY_TEMPLATE, getColumnClause(), getTableName());
+        return table.getQuery(FIND_ALL_QUERY_TEMPLATE, getColumnClause(), table.getTableName());
     }
 
     public String findById(Object id) {
-        return super.build(FIND_BY_ID_QUERY_TEMPLATE, getColumnClause(), getTableName(), getWhereClause(id));
+        return table.getQuery(FIND_BY_ID_QUERY_TEMPLATE, getColumnClause(), table.getTableName(), table.getWhereClause(id));
     }
 
     private String getColumnClause() {
-        final List<String> columnDefinitions = getFields().stream()
+        final List<String> columnDefinitions = table.getFields()
+                .stream()
                 .filter(this::isNotNeeded)
                 .map(FieldUtils::getColumnName)
                 .collect(Collectors.toList());

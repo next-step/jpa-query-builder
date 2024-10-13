@@ -1,15 +1,17 @@
 package persistence.sql.ddl;
 
-import persistence.sql.QueryBuilder;
+import persistence.sql.Table;
 
-public class DropQueryBuilder extends QueryBuilder {
+public class DropQueryBuilder {
     private static final String QUERY_TEMPLATE = "DROP TABLE IF EXISTS %s";
 
+    private final Table table;
+
     public DropQueryBuilder(Class<?> entityClass) {
-        super(entityClass);
+        this.table = new Table(entityClass);
     }
 
     public String drop() {
-        return super.build(QUERY_TEMPLATE, getTableName());
+        return table.getQuery(QUERY_TEMPLATE, table.getTableName());
     }
 }
