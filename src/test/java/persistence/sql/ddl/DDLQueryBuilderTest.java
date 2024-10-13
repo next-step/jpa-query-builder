@@ -20,7 +20,7 @@ class DDLQueryBuilderTest {
         String createTableQuery = DDLQueryBuilder.createTable(ddlQueryBuilder, Person.class);
 
         // Expected: 예상되는 쿼리
-        String expectedQuery = "CREATE TABLE Person (" +
+        String expectedQuery = "CREATE TABLE users (" +
                 "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
                 "nick_name VARCHAR(255), " +
                 "old INTEGER, " +
