@@ -2,7 +2,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.example.Person;
+import persistence.fixture.EntityWithId;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -11,7 +11,7 @@ class CreateQueryBuilderTest {
     @DisplayName("create 쿼리를 생성한다.")
     void create() {
         // given
-        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
+        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(EntityWithId.class);
 
         // when
         final String query = createQueryBuilder.create();

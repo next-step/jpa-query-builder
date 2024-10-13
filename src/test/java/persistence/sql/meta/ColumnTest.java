@@ -2,7 +2,7 @@ package persistence.sql.meta;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.example.Person;
+import persistence.fixture.EntityWithId;
 
 import java.lang.reflect.Field;
 
@@ -140,7 +140,7 @@ class ColumnTest {
     }
 
     private static Field getField(String fieldName) {
-        Class<Person> clazz = Person.class;
+        Class<EntityWithId> clazz = EntityWithId.class;
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getName().equals(fieldName)) {
                 return field;

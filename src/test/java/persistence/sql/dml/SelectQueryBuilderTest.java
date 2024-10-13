@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.example.Person;
+import persistence.fixture.EntityWithId;
 import persistence.fixture.EntityWithoutID;
 import persistence.sql.meta.Table;
 
@@ -13,7 +13,7 @@ class SelectQueryBuilderTest {
     @DisplayName("findAll 쿼리를 생성한다.")
     void findAll() {
         // given
-        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
+        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(EntityWithId.class);
 
         // when
         final String query = selectQueryBuilder.findAll();
@@ -26,7 +26,7 @@ class SelectQueryBuilderTest {
     @DisplayName("findById 쿼리를 생성한다.")
     void findById() {
         // given
-        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
+        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(EntityWithId.class);
 
         // when
         final String query = selectQueryBuilder.findById(1);
