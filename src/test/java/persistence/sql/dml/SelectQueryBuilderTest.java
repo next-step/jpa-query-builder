@@ -8,7 +8,7 @@ import jakarta.persistence.Transient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.example.Person;
-import persistence.sql.NotEntity;
+import persistence.fixture.NotEntity;
 import persistence.sql.meta.Table;
 
 import static org.assertj.core.api.Assertions.*;

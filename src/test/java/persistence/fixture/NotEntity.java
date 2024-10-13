@@ -1,4 +1,4 @@
-package persistence.sql;
+package persistence.fixture;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
