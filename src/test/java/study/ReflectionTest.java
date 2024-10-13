@@ -68,6 +68,16 @@ public class ReflectionTest {
     }
 
     @Test
+    @DisplayName("요구 사항 1 - 클래스 정보 출력 : get Field Type")
+    void getDeclaredInfoInCarClass_getFieldType() {
+        Class<Car> carClass = Car.class;
+        String carClassName = carClass.getSimpleName();
+
+        List<Field> declaredFields = Arrays.stream(carClass.getDeclaredFields()).collect(Collectors.toList());
+        logger.info("선언된 필드의 타입 : {}", declaredFields.stream().map(n->n.getType()).collect(Collectors.toList()));
+    }
+
+    @Test
     @DisplayName("요구 사항 1 - 클래스 정보 출력 : Check Methods")
     void getDeclaredInfoInCarClass_assertMethods() {
         Class<Car> carClass = Car.class;
