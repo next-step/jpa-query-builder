@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -10,9 +11,9 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public record EntityFields (String tableName, EntityIdField idField, List<EntityField> fields){
+public record EntityFields(String tableName, EntityIdField idField, List<EntityField> fields) {
     public static <T> EntityFields from(Class<T> clazz) {
-        if (!clazz.isAnnotationPresent(jakarta.persistence.Entity.class)) {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new NotEntityException();
         }
 
@@ -37,7 +38,7 @@ public record EntityFields (String tableName, EntityIdField idField, List<Entity
 
     private static EntityIdField getIdField(Field[] fields) {
         List<Field> ids = Arrays.stream(fields)
-                .filter(it -> it.isAnnotationPresent(Id.class))
+                .filter(EntityFields::isIdField)
                 .toList();
 
         if (ids.size() != 1) {
@@ -47,10 +48,18 @@ public record EntityFields (String tableName, EntityIdField idField, List<Entity
         return EntityIdField.from(ids.get(0));
     }
 
+    private static boolean isIdField(Field it) {
+        return it.isAnnotationPresent(Id.class);
+    }
+
     private static List<EntityField> getFields(Field[] fields) {
         return Arrays.stream(fields)
-                .filter(it -> !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class))
+                .filter(EntityFields::isNormalField)
                 .map(EntityField::from)
                 .toList();
+    }
+
+    private static boolean isNormalField(Field it) {
+        return !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class);
     }
 }

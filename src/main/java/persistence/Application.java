@@ -6,6 +6,10 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.*;
+import persistence.sql.ddl.generator.CreateDDLGenerator;
+import persistence.sql.ddl.generator.DropDDLGenerator;
+import persistence.sql.ddl.generator.H2CreateDDLGenerator;
+import persistence.sql.ddl.generator.H2DropDDLGenerator;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

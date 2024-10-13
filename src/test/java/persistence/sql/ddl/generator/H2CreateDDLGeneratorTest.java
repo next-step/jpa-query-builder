@@ -1,9 +1,12 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.generator;
 
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.EntityFields;
+import persistence.sql.ddl.Person;
 import persistence.sql.ddl.entity.LengthEntity;
 import persistence.sql.ddl.entity.NotSupportStratgyEntity;
 import persistence.sql.ddl.exception.NotSupportException;
+import persistence.sql.ddl.generator.H2CreateDDLGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
