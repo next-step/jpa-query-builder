@@ -38,6 +38,6 @@
 ### 🚀 4단계 - Simple Entity Object
 
 - [x] 요구사항1 - find
-- [ ] 요구사항2 - persist (insert)
+- [x] 요구사항2 - persist (insert)
 - [ ] 요구사항3 - remove (delete)
 - [ ] 요구사항4 - update

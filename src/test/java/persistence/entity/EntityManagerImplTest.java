@@ -64,6 +64,17 @@ class EntityManagerImplTest {
                 .hasMessageContaining(CustomRowMapper.NO_DEFAULT_CONSTRUCTOR_FAILED_MESSAGE);
     }
 
+    @Test
+    @DisplayName("엔티티를 저장한다.")
+    void persist() {
+        // given
+        final EntityWithId entityWithId = new EntityWithId("Jaden", 30, "test@email.com", 1);
+        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+
+        // when
+        entityManager.persist(entityWithId);
+    }
+
     private void createTable() {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(connection);
         final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
