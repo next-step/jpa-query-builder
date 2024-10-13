@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class DDLQueryBuilder {
 
     private static final String CREATE_TABLE = "CREATE TABLE ";
+    private static final String DROP_TABLE = "DROP TABLE ";
 
     public static String createTable(DDLQueryBuilder ddlQueryBuilder, Class<?> entityClass) {
 
@@ -35,6 +36,15 @@ public class DDLQueryBuilder {
 
 
         return CREATE_TABLE + tableName + " (" + columns + ");";
+    }
+
+    public static String dropTable(DDLQueryBuilder ddlQueryBuilder, Class<?> entityClass) {
+        if (!entityClass.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("This Class is not an Entity ");
+        }
+
+        String tableName = ddlQueryBuilder.getTableName(entityClass);
+        return DROP_TABLE + tableName + ";";
     }
 
     private static void extra(DDLQueryBuilder ddlQueryBuilder, Field field, StringBuilder sb) {

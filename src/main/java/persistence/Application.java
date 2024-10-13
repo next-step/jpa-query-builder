@@ -21,7 +21,11 @@ public class Application {
             DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
             String createTableQuery = DDLQueryBuilder.createTable(ddlQueryBuilder, Person.class);
             logger.info(createTableQuery);
-            jdbcTemplate.execute(createTableQuery);
+            jdbcTemplate.execute(createTableQuery); // Create table
+
+            String dropTableQuery = DDLQueryBuilder.dropTable(ddlQueryBuilder, Person.class);
+            logger.info(dropTableQuery);
+            jdbcTemplate.execute(dropTableQuery); // Drop table
 
             server.stop();
         } catch (Exception e) {

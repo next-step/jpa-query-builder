@@ -16,4 +16,4 @@
   + @GeneratedValue, @Column(name), @Column(nullable) 등 추가
 + [x] Person 클래스에 추가 된 정보를 통해 Create 쿼리를 만들어본다 2
   + @Table(name), @Transient 등 추가 
-+ [ ] Person 클래스에 추가 된 정보를 통해 Drop 쿼리를 만들어본다.
++ [x] Person 클래스에 추가 된 정보를 통해 Drop 쿼리를 만들어본다.

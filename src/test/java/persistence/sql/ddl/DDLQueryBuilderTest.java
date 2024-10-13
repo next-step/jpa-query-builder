@@ -34,4 +34,23 @@ class DDLQueryBuilderTest {
         assertEquals(expectedQuery, createTableQuery);
 
     }
+
+
+    @Test
+    public void testDropTableQueryForPerson() {
+        // Given: DDLQueryBuilder 인스턴스 생성
+        DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
+
+        // When: Person 클래스에 대한 DROP TABLE 쿼리 생성
+        String dropTableQuery = DDLQueryBuilder.dropTable(ddlQueryBuilder, Person.class);
+
+        // Expected: 예상되는 쿼리
+        String expectedQuery = "DROP TABLE users;";
+
+        logger.info("expectedQuery: {}", expectedQuery);
+        logger.info("actualQuery: {}", dropTableQuery);
+
+        // Then: 생성된 쿼리와 예상 쿼리 비교
+        assertEquals(expectedQuery, dropTableQuery);
+    }
 }
