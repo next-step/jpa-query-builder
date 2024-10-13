@@ -18,6 +18,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     private final static String NOT_NULL = " NOT NULL";
     private final static String AUTO_INCREMENT = " AUTO_INCREMENT";
     private final static String COMMA = ", ";
+    private final static String BLANK = " ";
     private final static String TABLE_NAME = "{tableName}";
     private final static String COLUMN_DEFINITIONS = "{columnDefinitions}";
 
@@ -37,7 +38,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
 
     //데이터타입에 따른 컬럼 데이터타입을 가져온다.
     @Override
-    public String getDataType(String dataType) {
+    public String getDataType(Class<?> dataType) {
         return H2DataType.findH2DataTypeByDataType(dataType);
     }
 
@@ -46,7 +47,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         // 테이블 열 정의 생성
         String columnDefinitions = columns.stream()
                 .map(column -> {
-                    String definition = column.getColumnName() + " " + column.getColumnDataType();
+                    String definition = column.getColumnName() + BLANK + column.getColumnDataType();
                     // primary key인 경우 "PRIMARY KEY" 추가
                     if (!column.isCheckNull()) definition += NOT_NULL; //false면 NOT_NULL 조건 추가
                     if (column.isAutoIncrement()) definition += AUTO_INCREMENT; //true면 AutoIncrement 추가
@@ -103,7 +104,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
 
     //Id 어노테이션을 primarykey로 가져온다.
     private void confirmIdAnnotation(List<ColumnData> columnData, Field field) {
-        columnData.add(new ColumnData(field.getName(), getDataType(field.getType().getName()), true, false, confirmGeneratedValueAnnotation(field)));
+        columnData.add(new ColumnData(field.getName(), field.getType(), true, false, confirmGeneratedValueAnnotation(field)));
     }
 
     //GeneratedValue 어노테이션 전략을 확인한다.
@@ -133,7 +134,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         }
         columnData.add(new ColumnData(
                 columnName,
-                getDataType(field.getType().getName()),
+                field.getType(),
                 false,
                 checkNull,
                 false)

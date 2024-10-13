@@ -8,9 +8,9 @@ public class ColumnData {
     private boolean checkNull;
     private boolean autoIncrement;
 
-    public ColumnData(String columnName, String columnDataType, boolean primaryKey, boolean checkNull, boolean autoIncrement) {
+    public ColumnData(String columnName, Class<?> columnDataType, boolean primaryKey, boolean checkNull, boolean autoIncrement) {
         this.columnName = columnName;
-        this.columnDataType = columnDataType;
+        this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
         this.primaryKey = primaryKey;
         this.checkNull = checkNull;
         this.autoIncrement = autoIncrement;
