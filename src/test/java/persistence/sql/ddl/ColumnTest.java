@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class ColumnTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ColumnTest.class);
@@ -53,4 +56,16 @@ class ColumnTest {
                 () -> assertThat(ageColumn.isPrimary()).isFalse()
         );
     }
+    @Test
+    @DisplayName("Person Class로 Column 생성 : 정의되지 않은 타입")
+    void createColumnClassWithPersonClass_error() throws Exception {
+        Assertions.assertThrows(Exception.class, () -> {
+            Column errorTest = new Column(TestClass.class.getDeclaredField("testbool"));
+        });
+    }
+
+    private class TestClass {
+        boolean testbool;
+    }
+
 }
