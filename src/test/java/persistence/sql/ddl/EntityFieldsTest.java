@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.entity.*;
 import persistence.sql.ddl.exception.IncorrectIdFieldException;
 import persistence.sql.ddl.exception.NotEntityException;
+import persistence.sql.ddl.exception.NotFoundFieldException;
+
+import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -19,7 +22,7 @@ class EntityFieldsTest {
         assertAll(
                 () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
                 () -> assertThat(entityFields.idField().field().name()).isEqualTo("id"),
-                () -> assertThat(entityFields.fields()).map(EntityField::name).containsExactlyInAnyOrder("name", "address")
+                () -> assertThat(entityFields.getFieldNames()).containsExactlyInAnyOrder("name", "address")
         );
     }
 
@@ -54,5 +57,43 @@ class EntityFieldsTest {
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
                 .isThrownBy(() -> EntityFields.from(clazz));
+    }
+
+    @Test
+    void 필드_이름_전체를_가져온다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityFields entityFields = EntityFields.from(clazz);
+
+        assertThat(entityFields.getFieldNames()).containsExactlyInAnyOrder("name", "address");
+    }
+
+    @Test
+    void 이름으로_필드를_가져올_수_있다() throws NoSuchFieldException {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        Field field = clazz.getDeclaredField("name");
+        EntityFields entityFields = EntityFields.from(clazz);
+
+        Field result = entityFields.getFieldByName("name");
+
+        assertThat(result).isEqualTo(field);
+    }
+
+    @Test
+    void 없는_이름으로_필드를_가져올시_실패한다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityFields entityFields = EntityFields.from(clazz);
+
+        assertThatExceptionOfType(NotFoundFieldException.class)
+                .isThrownBy(() -> entityFields.getFieldByName("fake"));
+    }
+
+    @Test
+    void Id필드의_이름을_가져올_수_있다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityFields entityFields = EntityFields.from(clazz);
+
+        String idFieldName = entityFields.getIdFieldName();
+
+        assertThat(idFieldName).isEqualTo("id");
     }
 }

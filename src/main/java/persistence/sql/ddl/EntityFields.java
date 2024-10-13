@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.exception.IncorrectIdFieldException;
 import persistence.sql.ddl.exception.NotEntityException;
+import persistence.sql.ddl.exception.NotFoundFieldException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -24,6 +25,15 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
                 getIdField(declaredFields),
                 getFields(declaredFields)
         );
+    }
+
+    public List<String> getFieldNames() {
+        return fields.stream().map(EntityField::name)
+                .toList();
+    }
+
+    public String getIdFieldName() {
+        return idField.name();
     }
 
     private static <T> String getName(Class<T> clazz) {
@@ -61,5 +71,11 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
 
     private static boolean isNormalField(Field it) {
         return !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class);
+    }
+
+    public Field getFieldByName(String fieldName) {
+        return fields.stream().filter(it -> it.isEqualName(fieldName))
+                .findFirst().orElseThrow(NotFoundFieldException::new)
+                .field();
     }
 }
