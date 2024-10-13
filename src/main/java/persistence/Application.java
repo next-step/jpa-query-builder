@@ -13,7 +13,7 @@ public class Application {
     public static void main(String[] args) {
         logger.info("Starting application...");
         try {
-            CreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(Person.class);
+            AbstractCreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(Person.class);
             DropQueryBuilder dropQueryBuilder = new H2DropQueryBuilder(Person.class);
 
             final DatabaseServer server = new H2();
