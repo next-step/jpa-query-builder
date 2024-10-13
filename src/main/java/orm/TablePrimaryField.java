@@ -15,4 +15,12 @@ public class TablePrimaryField extends TableField {
         this.id = field.getAnnotation(Id.class);
         this.generatedValue = field.getAnnotation(GeneratedValue.class);
     }
+
+    public Id getId() {
+        return id;
+    }
+
+    public GeneratedValue getGeneratedValue() {
+        return generatedValue;
+    }
 }

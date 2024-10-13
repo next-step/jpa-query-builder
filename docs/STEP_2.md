@@ -2,8 +2,8 @@
 
 ## TOTO
 1. 엔티티 정보를 핸들링하기 위한 테이블, 필드 처리 클래스 생성
-2. DROP 쿼리 빌더 구현
-3. CREATE 쿼리 빌더 구현
+2. CREATE 쿼리 빌더 구현
+3. DROP 쿼리 빌더 구현
 
 ---
 
@@ -41,12 +41,12 @@ CREATE 문은 문법이 복잡하여 최소한으로만 구현한다.
 
 2. @GeneratedValue  
 ID 생성 전략은 여러가지이다.
-- DB 종속적인 Auto Increment
-- JPA의 채번 테이블 생성
+- DB 종속적인 Auto Increment (IDENTITY)
+- JPA의 채번 테이블 생성 (AUTO)
 - 커스텀 채번 로직 
 
 등이 있는데. Jakarta persistence에서 이런 스펙을 표준으로 제공하니
-최소한 전략으로 빼고 미지원으로 예외를 던지도록 해야한다.
+IDENTITY를 빼고 미지원으로 예외를 던지도록 해야한다.
 
 #### 3. @Table, @Column  
 얘들이 명시되어있으면, 클래스명, 필드명이 아니라 애너테이션 이름으로 만들도록 한다.
@@ -65,7 +65,7 @@ DDL DROP 문을 만든다. 테이블 명을 가져와서 DROP 문에 추가해�
 ```TABLE IF EXISTS table_name;```  
 
 
-2. DROP TABLE 시 외래키 연관관계가 있으면 연관데이터 삭제 대응  
+2. DROP TABLE 시 외래키 연관관계가 있으면 연관데이터 삭제 대응
 ```DROP TABLE IF EXISTS table_name CASCADE;```  
 ```DROP TABLE IF EXISTS table_name RESTRICT;```
 
