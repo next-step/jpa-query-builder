@@ -21,4 +21,4 @@
 - [X] @Entity와 @Id가 사용된 Person class의 create query 생성
 - [X] @GeneratedValue, @Column을 추가하여 Person class 의 create query 생성
 - [X] @Table, @Transient을 추가하여 Person class의 create query 생성
-- [] drop query 생성
+- [X] drop query 생성
