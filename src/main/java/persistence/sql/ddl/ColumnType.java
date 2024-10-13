@@ -9,11 +9,11 @@ public enum ColumnType {
     ;
 
     private final Class<?> javaType;
-    private final String columnType;
+    private final String queryDefinition;
 
     ColumnType(Class<?> javaType, String columnType) {
         this.javaType = javaType;
-        this.columnType = columnType;
+        this.queryDefinition = columnType;
     }
 
     public static ColumnType of(Class<?> javaType) {
@@ -23,8 +23,8 @@ public enum ColumnType {
                 .orElseThrow(() -> new IllegalArgumentException(javaType + "과 매칭되는 타입이 존재하지 않습니다."));
     }
 
-    public String getColumnType() {
-        return columnType;
+    public String getQueryDefinition() {
+        return queryDefinition;
     }
 
     public Class<?> getJavaType() {
