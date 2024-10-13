@@ -61,6 +61,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
                 .replace(COLUMN_DEFINITIONS, columnDefinitions);
     }
 
+    //Drop 쿼리 생성
     public String dropTableQuery(String tableName) {
         return DROP_QUERY.replace(TABLE_NAME, tableName);
     }
