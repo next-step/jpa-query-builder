@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
+@Table(name = "users")
 @Entity
 public class Person {
 
@@ -21,5 +24,8 @@ public class Person {
 
     @Column(nullable = false)
     private String email;
+
+    @Transient
+    private Integer index;
 
 }

@@ -16,5 +16,5 @@
 
 - [x] create 쿼리 만들어보기(Entity, Id)
 - [x] create 쿼리 만들어보기(GeneratedValue, Column)
-- [ ] create 쿼리 만들어보기(Table, Transient)
+- [x] create 쿼리 만들어보기(Table, Transient)
 - [ ] drop 쿼리 만들어보기
