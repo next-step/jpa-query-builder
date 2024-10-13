@@ -13,7 +13,7 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
     private final Connection connection;
 
     public EntityManagerImpl() {
-        connection = H2ConnectionFactory.getConnection();
+        connection = H2ConnectionFactory.newConnection();
     }
 
     @Override

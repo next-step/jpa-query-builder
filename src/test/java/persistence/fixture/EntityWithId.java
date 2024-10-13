@@ -27,6 +27,16 @@ public class EntityWithId {
     @Transient
     private Integer index;
 
+    public EntityWithId() {
+    }
+
+    public EntityWithId(String name, Integer age, String email, Integer index) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
+
     public Long getId() {
         return id;
     }
