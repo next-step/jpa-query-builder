@@ -27,4 +27,10 @@
     - [x] @Column 애노테이션이 선언되어 있지 않을 경우, 필드명을 사용한다.
       - [x] @Column의 속성은 선언되어 있으면 해당 값을 사용한다.
       - [x] @Column의 속성이 선언되어 있지 않을 경우, @Column의 기본 값을 사용한다.
+  - [x] nuallable 여부를 설정한다.
+    - [x] @Column의 nullable 속성을 사용한다.
+    - [x] @Column의 nullable 속성이 선언되어 있지 않을 경우, true를 사용한다.
+  - [x] Column의 길이를 설정한다.
+    - [x] @Column의 length 속성을 사용한다.
+    - [x] @Column의 length 속성이 선언되어 있지 않을 경우, 255를 사용한다.
 - [x] Entity Class의 정보를 바탕으로 drop 쿼리 만들어보기

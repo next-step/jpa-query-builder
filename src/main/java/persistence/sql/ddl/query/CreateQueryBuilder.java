@@ -10,10 +10,10 @@ public class CreateQueryBuilder implements QueryBuilder {
     }
 
     public static class SQLTypeTranslator {
-        public static String translate(String type) {
+        public static String translate(String type, int length) {
             return switch (type) {
                 case "Long" -> "BIGINT";
-                case "String" -> "VARCHAR(255)";
+                case "String" -> "VARCHAR(%s)".formatted(length);
                 case "Integer" -> "INTEGER";
                 default -> throw new IllegalArgumentException("Unknown type: " + type);
             };

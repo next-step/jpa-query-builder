@@ -1,7 +1,7 @@
 package persistence.sql.ddl.definition;
 
 import jakarta.persistence.Column;
-import persistence.sql.ddl.query.CreateQueryBuilder;
+import persistence.sql.ddl.query.CreateQueryBuilder.SQLTypeTranslator;
 
 import java.lang.reflect.Field;
 
@@ -9,21 +9,34 @@ public class ColumnDefinition {
     private final String name;
     private final String type;
     private final boolean nullable;
+    private static final int DEFAULT_LENGTH = 255;
 
     public ColumnDefinition(Field field) {
         this.name = determineColumnName(field);
         this.type = determineColumnType(field);
-        this.nullable = determineNullable(field);
+        this.nullable = determineColumnNullable(field);
     }
 
-    private static boolean determineNullable(Field field) {
+    private static boolean determineColumnNullable(Field field) {
         final boolean hasColumnAnnotation = field.isAnnotationPresent(Column.class);
-        return hasColumnAnnotation && field.getAnnotation(Column.class).nullable();
+        if (!hasColumnAnnotation) {
+            return true;
+        }
+        return field.getAnnotation(Column.class).nullable();
     }
 
     private static String determineColumnType(Field field) {
         final String entityFieldType = field.getType().getSimpleName();
-        return CreateQueryBuilder.SQLTypeTranslator.translate(entityFieldType);
+        final int length = determineColumnLength(field);
+        return SQLTypeTranslator.translate(entityFieldType, length);
+    }
+
+    private static int determineColumnLength(Field field) {
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            return column.length();
+        }
+        return DEFAULT_LENGTH;
     }
 
     private static String determineColumnName(Field field) {
