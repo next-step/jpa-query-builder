@@ -4,15 +4,42 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 
 public class EntityField {
+    private static final Logger logger = LoggerFactory.getLogger(EntityField.class);
+
     private final Field field;
 
     public EntityField(Field field) {
         this.field = field;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EntityField that = (EntityField) o;
+        return Objects.equals(field, that.field);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(field);
+    }
+
+    public Object getValue(Object entity) {
+        try {
+            field.setAccessible(true);
+            return field.get(entity);
+        } catch (IllegalAccessException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     public String getColumnName() {

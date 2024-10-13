@@ -7,7 +7,6 @@ import persistence.fixture.EntityWithoutID;
 import persistence.fixture.EntityWithoutTable;
 import persistence.fixture.NotEntity;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,15 +73,19 @@ class EntityTableTest {
 
     @Test
     @DisplayName("필드 리스트를 반환한다.")
-    void getFields() {
+    void getEntityFields() {
         // given
         final EntityTable entityTable = new EntityTable(EntityWithId.class);
 
         // when
-        final List<Field> fields = entityTable.getFields();
+        final List<EntityField> entityFields = entityTable.getEntityFields();
 
         // then
-        assertThat(fields).containsAll(Arrays.stream(EntityWithId.class.getDeclaredFields()).toList());
+        assertThat(entityFields).containsAll(
+                Arrays.stream(EntityWithId.class.getDeclaredFields())
+                        .map(EntityField::new)
+                        .toList()
+        );
     }
 
     @Test

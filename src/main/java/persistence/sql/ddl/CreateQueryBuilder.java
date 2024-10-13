@@ -3,7 +3,6 @@ package persistence.sql.ddl;
 import persistence.sql.meta.EntityField;
 import persistence.sql.meta.EntityTable;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,7 @@ public class CreateQueryBuilder {
     }
 
     private String getColumnClause() {
-        final List<String> columnDefinitions = entityTable.getFields()
+        final List<String> columnDefinitions = entityTable.getEntityFields()
                 .stream()
                 .filter(this::isNotNeeded)
                 .map(this::getColumnDefinition)
@@ -33,13 +32,11 @@ public class CreateQueryBuilder {
         return String.join(", ", columnDefinitions);
     }
 
-    private boolean isNotNeeded(Field field) {
-        return !new EntityField(field).isTransient();
+    private boolean isNotNeeded(EntityField entityField) {
+        return !entityField.isTransient();
     }
 
-    private String getColumnDefinition(Field field) {
-        final EntityField entityField = new EntityField(field);
-        
+    private String getColumnDefinition(EntityField entityField) {
         String columDefinition = entityField.getColumnName() + " " + entityField.getDbType();
 
         if (entityField.isNotNull()) {

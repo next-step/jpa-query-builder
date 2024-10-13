@@ -6,13 +6,13 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class EntityTable {
     public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 없습니다.";
     public static final String NOT_ID_FAILED_MESSAGE = "필드에 @Id 애노테이션이 없습니다.";
 
     private final Class<?> entityClass;
+    private final EntityFields entityFields;
 
     public EntityTable(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
@@ -20,6 +20,11 @@ public class EntityTable {
         }
 
         this.entityClass = entityClass;
+        this.entityFields = new EntityFields(entityClass);
+    }
+
+    public List<EntityField> getEntityFields() {
+        return entityFields.getEntityFields();
     }
 
     public String getQuery(String queryTemplate, String... templateArgs) {
@@ -33,11 +38,6 @@ public class EntityTable {
         }
         return entityClass.getSimpleName()
                 .toLowerCase();
-    }
-
-    public List<Field> getFields() {
-        return Arrays.stream(entityClass.getDeclaredFields())
-                .collect(Collectors.toList());
     }
 
     public String getWhereClause(Object id) {
