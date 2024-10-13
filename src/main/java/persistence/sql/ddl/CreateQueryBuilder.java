@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import persistence.sql.Table;
-import persistence.sql.util.FieldUtils;
+import persistence.sql.util.Column;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -26,25 +26,31 @@ public class CreateQueryBuilder {
     private String getColumnClause() {
         final List<String> columnDefinitions = table.getFields()
                 .stream()
-                .filter(field -> !FieldUtils.isTransient(field))
+                .filter(this::isNotNeede)
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
     }
 
-    private String getColumnDefinition(Field field) {
-        String columDefinition = FieldUtils.getColumnName(field) + " " + FieldUtils.getDbType(field);
+    private boolean isNotNeede(Field field) {
+        return !new Column(field).isTransient();
+    }
 
-        if (FieldUtils.isNotNull(field)) {
+    private String getColumnDefinition(Field field) {
+        final Column column = new Column(field);
+        
+        String columDefinition = column.getColumnName() + " " + column.getDbType();
+
+        if (column.isNotNull()) {
             columDefinition += " " + NOT_NULL_COLUMN_DEFINITION;
         }
 
-        if (FieldUtils.isGeneration(field)) {
+        if (column.isGeneration()) {
             columDefinition += " " + GENERATION_COLUMN_DEFINITION;
         }
 
-        if (FieldUtils.isId(field)) {
+        if (column.isId()) {
             columDefinition += " " + PRIMARY_KEY_COLUMN_DEFINITION;
         }
 

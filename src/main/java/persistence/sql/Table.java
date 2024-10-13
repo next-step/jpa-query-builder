@@ -1,7 +1,7 @@
 package persistence.sql;
 
 import jakarta.persistence.Entity;
-import persistence.sql.util.FieldUtils;
+import persistence.sql.util.Column;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -42,14 +42,18 @@ public class Table {
     }
 
     public String getWhereClause(Object id) {
-        final Field field = getIdField();
-        return FieldUtils.getColumnName(field) + " = " + id;
+        final Column column = new Column(getIdField());
+        return column.getColumnName() + " = " + id;
     }
 
     public Field getIdField() {
         return Arrays.stream(entityClass.getDeclaredFields())
-                .filter(FieldUtils::isId)
+                .filter(this::isId)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(NOT_ID_FAILED_MESSAGE));
+    }
+
+    private boolean isId(Field field) {
+        return new Column(field).isId();
     }
 }

@@ -1,7 +1,7 @@
 package persistence.sql.dml;
 
 import persistence.sql.Table;
-import persistence.sql.util.FieldUtils;
+import persistence.sql.util.Column;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -29,13 +29,17 @@ public class SelectQueryBuilder {
         final List<String> columnDefinitions = table.getFields()
                 .stream()
                 .filter(this::isNotNeeded)
-                .map(FieldUtils::getColumnName)
+                .map(this::getColumnName)
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
     }
 
     private boolean isNotNeeded(Field field) {
-        return !FieldUtils.isTransient(field);
+        return !new Column(field).isTransient();
+    }
+
+    private String getColumnName(Field field) {
+        return new Column(field).getColumnName();
     }
 }

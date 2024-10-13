@@ -3,7 +3,7 @@ package persistence.sql.dml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.Table;
-import persistence.sql.util.FieldUtils;
+import persistence.sql.util.Column;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -30,21 +30,27 @@ public class InsertQueryBuilder {
         final List<String> columnDefinitions = table.getFields()
                 .stream()
                 .filter(this::isNotNeeded)
-                .map(FieldUtils::getColumnName)
+                .map(this::getColumnName)
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
     }
 
     private boolean isNotNeeded(Field field) {
-        return !FieldUtils.isGeneration(field) && !FieldUtils.isTransient(field);
+        final Column column = new Column(field);
+        return !column.isGeneration() && !column.isTransient();
+    }
+
+    private String getColumnName(Field field) {
+        return new Column(field).getColumnName();
     }
 
     private String getColumnValue(Field field) {
         field.setAccessible(true);
         final String value = String.valueOf(getValue(field));
+        final Column column = new Column(field);
 
-        if (FieldUtils.isQuotesNeeded(field)) {
+        if (column.isQuotesNeeded()) {
             return String.format("'%s'", value);
         }
         return value;

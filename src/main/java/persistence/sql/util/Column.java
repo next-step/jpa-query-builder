@@ -1,6 +1,5 @@
 package persistence.sql.util;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,30 +9,32 @@ import persistence.sql.FieldType;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
-public class FieldUtils {
-    private FieldUtils() {
-        throw new AssertionError();
+public class Column {
+    private final Field field;
+
+    public Column(Field field) {
+        this.field = field;
     }
 
-    public static String getColumnName(Field field) {
-        final Column column = field.getAnnotation(Column.class);
+    public String getColumnName() {
+        final jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
         if (Objects.nonNull(column) && Objects.nonNull(column.name()) && !column.name().isBlank()) {
             return column.name();
         }
         return field.getName();
     }
 
-    public static String getDbType(Field field) {
+    public String getDbType() {
         final FieldType fieldType = FieldType.valueOf(field);
         return fieldType.getDbType();
     }
 
-    public static boolean isQuotesNeeded(Field field) {
+    public boolean isQuotesNeeded() {
         final FieldType fieldType = FieldType.valueOf(field);
         return fieldType.isQuotesNeeded();
     }
 
-    public static boolean isGeneration(Field field) {
+    public boolean isGeneration() {
         final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         if (Objects.isNull(generatedValue)) {
             return false;
@@ -41,19 +42,19 @@ public class FieldUtils {
         return generatedValue.strategy() == GenerationType.IDENTITY;
     }
 
-    public static boolean isNotNull(Field field) {
-        final Column column = field.getAnnotation(Column.class);
+    public boolean isNotNull() {
+        final jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
         if (Objects.isNull(column)) {
             return false;
         }
         return !column.nullable();
     }
 
-    public static boolean isId(Field field) {
+    public boolean isId() {
         return field.isAnnotationPresent(Id.class);
     }
 
-    public static boolean isTransient(Field field) {
+    public boolean isTransient() {
         return field.isAnnotationPresent(Transient.class);
     }
 }
