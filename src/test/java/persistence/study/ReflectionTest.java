@@ -13,6 +13,8 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ReflectionTest {
 
@@ -75,38 +77,22 @@ public class ReflectionTest {
         ).containsExactly("test : Dream Car", "test : 100000000");
     }
 
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() {
+        Class<Car> carClass = Car.class;
+        Car mockCar = mock(carClass);
+        Arrays.stream(carClass.getMethods())
+                        .filter(method -> method.isAnnotationPresent(PrintView.class))
+                        .forEach(method -> invokeMethod(method, mockCar));
+        verify(mockCar).printView();
+    }
+
     private Object invokeMethod(Method method, Car car) {
         try {
             return method.invoke(car);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    @Nested
-    class 요구사항3 {
-
-        @Test
-        @DisplayName("@PrintView 애노테이션 메소드 실행")
-        void testAnnotationMethodRun() {
-            Class<Car> carClass = Car.class;
-            for (Method method : carClass.getMethods()) {
-                invokeMethod(carClass, method);
-            }
-        }
-
-        private void invokeMethod(Class<Car> car, Method method) {
-            if (method.isAnnotationPresent(PrintView.class)) {
-                invoke(car, method);
-            }
-        }
-
-        private void invoke(Class<Car> car, Method method) {
-            try {
-                method.invoke(car.getDeclaredConstructor().newInstance());
-            } catch (Exception exception) {
-                logger.error("Method.invoke() 예외 발생", exception);
-            }
         }
     }
 
