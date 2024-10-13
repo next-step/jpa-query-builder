@@ -32,9 +32,9 @@ public class QueryBuilderDDL {
     private String getColumnInfos(Class<?> clazz) {
         StringBuilder sb = new StringBuilder();
 
-        List<Column> columns = Arrays.stream(clazz.getDeclaredFields()).map(Column::new).collect(Collectors.toList());
+        List<ColumnInfo> columns = Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract).collect(Collectors.toList());
 
-        for (Column column : columns) {
+        for (ColumnInfo column : columns) {
             sb.append(getColumnLine(column));
             sb.append(", ");
         }
@@ -42,20 +42,23 @@ public class QueryBuilderDDL {
         return sb.toString();
     }
 
-    private String getColumnLine(Column column) {
+    private String getColumnLine(ColumnInfo column) {
         StringBuilder sb = new StringBuilder();
         sb.append(column.getName()).append(" ");
         sb.append(column.getColumnType().getQueryDefinition());
-        if(column.isPrimary()) sb.append(" not null");
+        if(!column.getOptions().isEmpty()) {
+            sb.append(" ").append(column.getOptions().stream().collect(Collectors.joining(" ")));
+        }
+
         return sb.toString();
     }
 
-    private String getPrimaryKey(List<Column> columns) {
+    private String getPrimaryKey(List<ColumnInfo> columns) {
         StringBuilder sb = new StringBuilder();
-        List<Column> primaryKey = columns.stream().filter(Column::isPrimary).collect(Collectors.toList());
+        List<ColumnInfo> primaryKey = columns.stream().filter(ColumnInfo::isPrimary).collect(Collectors.toList());
         if(primaryKey.isEmpty()) throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
         sb.append("primary key (");
-        for (Column column : primaryKey) {
+        for (ColumnInfo column : primaryKey) {
             sb.append(column.getName()).append(",");
         }
         sb.deleteCharAt(sb.length() - 1);
