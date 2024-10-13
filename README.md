@@ -34,3 +34,10 @@
 - [x] 요구사항 2 - 주어진 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
 - [x] 요구사항 3 - 주어진 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
 - [x] 요구사항 4 - 주어진 정보를 바탕으로 delete 쿼리 만들어보기
+
+### 🚀 4단계 - Simple Entity Object
+
+- [ ] 요구사항1 - find
+- [ ] 요구사항2 - persist (insert)
+- [ ] 요구사항3 - remove (delete)
+- [ ] 요구사항4 - update
