@@ -88,7 +88,7 @@ public class TableEntity<ENTITY> {
             throw new InvalidIdMappingException("Entity must have one @Id field");
         }
 
-        return new TablePrimaryField(idList.getFirst());
+        return new TablePrimaryField(idList.getFirst(), jpaSettings);
     }
 
     private List<TableField> extractAllPersistenceFields(Class<ENTITY> entityClass) {
@@ -98,6 +98,7 @@ public class TableEntity<ENTITY> {
         for (Field declaredField : declaredFields) {
             boolean transientAnnotated = declaredField.isAnnotationPresent(Transient.class);
             boolean columnAnnotated = declaredField.isAnnotationPresent(Column.class);
+            boolean idAnnotated = declaredField.isAnnotationPresent(Id.class);
 
             if (transientAnnotated && columnAnnotated) {
                 throw new InvalidEntityException(String.format(
@@ -107,7 +108,11 @@ public class TableEntity<ENTITY> {
             }
 
             if (!transientAnnotated) {
-                list.add(new TableField(declaredField, jpaSettings));
+                list.add(
+                        idAnnotated
+                                ? new TablePrimaryField(declaredField, jpaSettings)
+                                : new TableField(declaredField, jpaSettings)
+                );
             }
         }
         return list;

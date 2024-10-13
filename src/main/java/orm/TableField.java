@@ -10,7 +10,6 @@ public class TableField {
 
     private final Field field;
     private final String fieldName;
-    private final boolean isId;
     private final ColumnMeta columnMeta;
 
     private final JpaSettings jpaSettings;
@@ -20,7 +19,6 @@ public class TableField {
         this.jpaSettings = jpaSettings;
         this.field = field;
         this.fieldName = extractFieldName(column, field);
-        this.isId = field.getAnnotation(Id.class) != null;
         this.columnMeta = ColumnMeta.from(column);
     }
 
@@ -41,7 +39,7 @@ public class TableField {
     }
 
     public boolean isId() {
-        return isId;
+        return false;
     }
 
     private String extractFieldName(Column column, Field field) {

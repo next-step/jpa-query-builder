@@ -13,9 +13,9 @@ import java.util.StringJoiner;
 public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
 
     protected final ColumnTypeMapper columnTypeMapper;
+    protected final TableEntity<ENTITY> tableEntity;
 
     protected boolean ifNotExist = false;
-    protected TableEntity<ENTITY> tableEntity;
 
     public CreateTableImpl(TableEntity<ENTITY> tableEntity) {
         this.tableEntity = tableEntity;
