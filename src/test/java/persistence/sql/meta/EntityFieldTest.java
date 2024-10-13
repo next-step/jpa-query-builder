@@ -8,15 +8,15 @@ import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.*;
 
-class ColumnTest {
+class EntityFieldTest {
     @Test
     @DisplayName("컬럼명을 반환한다.")
     void getColumnName() {
         // given
-        final Column column = new Column(getField("name"));
+        final EntityField entityField = new EntityField(getField("name"));
 
         // when
-        final String result = column.getColumnName();
+        final String result = entityField.getColumnName();
 
         // then
         assertThat(result).isEqualTo("nick_name");
@@ -26,10 +26,10 @@ class ColumnTest {
     @DisplayName("db type을 반환한다.")
     void getDbType() {
         // given
-        final Column column = new Column(getField("name"));
+        final EntityField entityField = new EntityField(getField("name"));
 
         // when
-        final String result = column.getDbType();
+        final String result = entityField.getDbType();
 
         // then
         assertThat(result).isEqualTo("VARCHAR(255)");
@@ -39,10 +39,10 @@ class ColumnTest {
     @DisplayName("generation 필드인 경우 true를 반환한다.")
     void isGeneration_true() {
         // given
-        final Column column = new Column(getField("id"));
+        final EntityField entityField = new EntityField(getField("id"));
 
         // when
-        final boolean result = column.isGeneration();
+        final boolean result = entityField.isGeneration();
 
         // then
         assertThat(result).isTrue();
@@ -52,10 +52,10 @@ class ColumnTest {
     @DisplayName("generation 필드가 아닌 경우 false를 반환한다.")
     void isGeneration_false() {
         // given
-        final Column column = new Column(getField("age"));
+        final EntityField entityField = new EntityField(getField("age"));
 
         // when
-        final boolean result = column.isGeneration();
+        final boolean result = entityField.isGeneration();
 
         // then
         assertThat(result).isFalse();
@@ -65,10 +65,10 @@ class ColumnTest {
     @DisplayName("not null 필드인 경우 true를 반환한다.")
     void isNotNull_true() {
         // given
-        final Column column = new Column(getField("email"));
+        final EntityField entityField = new EntityField(getField("email"));
 
         // when
-        final boolean result = column.isNotNull();
+        final boolean result = entityField.isNotNull();
 
         // then
         assertThat(result).isTrue();
@@ -78,10 +78,10 @@ class ColumnTest {
     @DisplayName("not null 필드가 아닌 경우 false를 반환한다.")
     void isNotNull_false() {
         // given
-        final Column column = new Column(getField("age"));
+        final EntityField entityField = new EntityField(getField("age"));
 
         // when
-        final boolean result = column.isNotNull();
+        final boolean result = entityField.isNotNull();
 
         // then
         assertThat(result).isFalse();
@@ -91,10 +91,10 @@ class ColumnTest {
     @DisplayName("primary key 필드인 경우 true를 반환한다.")
     void isId_true() {
         // given
-        final Column column = new Column(getField("id"));
+        final EntityField entityField = new EntityField(getField("id"));
 
         // when
-        final boolean result = column.isId();
+        final boolean result = entityField.isId();
 
         // then
         assertThat(result).isTrue();
@@ -104,10 +104,10 @@ class ColumnTest {
     @DisplayName("primary key 필드가 아닌 경우 false를 반환한다.")
     void isId_false() {
         // given
-        final Column column = new Column(getField("age"));
+        final EntityField entityField = new EntityField(getField("age"));
 
         // when
-        final boolean result = column.isId();
+        final boolean result = entityField.isId();
 
         // then
         assertThat(result).isFalse();
@@ -117,10 +117,10 @@ class ColumnTest {
     @DisplayName("transient 필드인 경우 true를 반환한다.")
     void isTransient_true() {
         // given
-        final Column column = new Column(getField("index"));
+        final EntityField entityField = new EntityField(getField("index"));
 
         // when
-        final boolean result = column.isTransient();
+        final boolean result = entityField.isTransient();
 
         // then
         assertThat(result).isTrue();
@@ -130,10 +130,10 @@ class ColumnTest {
     @DisplayName("transient 필드가 아닌 경우 false를 반환한다.")
     void isTransient_false() {
         // given
-        final Column column = new Column(getField("age"));
+        final EntityField entityField = new EntityField(getField("age"));
 
         // when
-        final boolean result = column.isTransient();
+        final boolean result = entityField.isTransient();
 
         // then
         assertThat(result).isFalse();

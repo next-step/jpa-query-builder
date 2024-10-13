@@ -1,7 +1,7 @@
 package persistence.sql.dml;
 
-import persistence.sql.meta.Column;
-import persistence.sql.meta.Table;
+import persistence.sql.meta.EntityField;
+import persistence.sql.meta.EntityTable;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -11,22 +11,22 @@ public class SelectQueryBuilder {
     private static final String FIND_ALL_QUERY_TEMPLATE = "SELECT %s FROM %s";
     private static final String FIND_BY_ID_QUERY_TEMPLATE = "SELECT %s FROM %s WHERE %s";
 
-    private final Table table;
+    private final EntityTable entityTable;
 
     public SelectQueryBuilder(Class<?> entityClass) {
-        this.table = new Table(entityClass);
+        this.entityTable = new EntityTable(entityClass);
     }
 
     public String findAll() {
-        return table.getQuery(FIND_ALL_QUERY_TEMPLATE, getColumnClause(), table.getTableName());
+        return entityTable.getQuery(FIND_ALL_QUERY_TEMPLATE, getColumnClause(), entityTable.getTableName());
     }
 
     public String findById(Object id) {
-        return table.getQuery(FIND_BY_ID_QUERY_TEMPLATE, getColumnClause(), table.getTableName(), table.getWhereClause(id));
+        return entityTable.getQuery(FIND_BY_ID_QUERY_TEMPLATE, getColumnClause(), entityTable.getTableName(), entityTable.getWhereClause(id));
     }
 
     private String getColumnClause() {
-        final List<String> columnDefinitions = table.getFields()
+        final List<String> columnDefinitions = entityTable.getFields()
                 .stream()
                 .filter(this::isNotNeeded)
                 .map(this::getColumnName)
@@ -36,10 +36,10 @@ public class SelectQueryBuilder {
     }
 
     private boolean isNotNeeded(Field field) {
-        return !new Column(field).isTransient();
+        return !new EntityField(field).isTransient();
     }
 
     private String getColumnName(Field field) {
-        return new Column(field).getColumnName();
+        return new EntityField(field).getColumnName();
     }
 }

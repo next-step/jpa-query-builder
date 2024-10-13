@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Table {
+public class EntityTable {
     public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 없습니다.";
     public static final String NOT_ID_FAILED_MESSAGE = "필드에 @Id 애노테이션이 없습니다.";
 
     private final Class<?> entityClass;
 
-    public Table(Class<?> entityClass) {
+    public EntityTable(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(NOT_ENTITY_FAILED_MESSAGE);
         }
@@ -41,8 +41,8 @@ public class Table {
     }
 
     public String getWhereClause(Object id) {
-        final Column column = new Column(getIdField());
-        return column.getColumnName() + " = " + id;
+        final EntityField entityField = new EntityField(getIdField());
+        return entityField.getColumnName() + " = " + id;
     }
 
     private Field getIdField() {
@@ -53,6 +53,6 @@ public class Table {
     }
 
     private boolean isId(Field field) {
-        return new Column(field).isId();
+        return new EntityField(field).isId();
     }
 }

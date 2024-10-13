@@ -8,10 +8,10 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
-public class Column {
+public class EntityField {
     private final Field field;
 
-    public Column(Field field) {
+    public EntityField(Field field) {
         this.field = field;
     }
 
