@@ -21,45 +21,18 @@ public class ReflectionTest {
         Class<Car> carClass = Car.class;
         assertAll("Car 클래스의 모든 필드, 생성자, 메소드 정보 검증",
                 () -> assertThat(Arrays.stream(carClass.getDeclaredFields())
-                        .map(this::formatField)
+                        .map(Formatter::formatField)
                         .toList())
                         .containsExactlyInAnyOrder("private String name", "private int price"),
                 () -> assertThat(Arrays.stream(carClass.getDeclaredConstructors())
-                        .map(this::formatConstructor)
+                        .map(Formatter::formatConstructor)
                         .toList())
                         .containsExactlyInAnyOrder("public persistence.study.Car(String, int)", "public persistence.study.Car()"),
                 () -> assertThat(Arrays.stream(carClass.getDeclaredMethods())
-                        .map(this::formatMethod)
+                        .map(Formatter::formatMethod)
                         .toList())
                         .containsExactlyInAnyOrder("public void printView()", "public String testGetName()", "public String testGetPrice()")
         );
-    }
-
-    private String formatField(Field field) {
-        return MessageFormat.format("{0} {1} {2}",
-                Modifier.toString(field.getModifiers()),
-                field.getType().getSimpleName(),
-                field.getName());
-    }
-
-    private String formatConstructor(Constructor<?> constructor) {
-        return MessageFormat.format("{0} {1}({2})",
-                Modifier.toString(constructor.getModifiers()),
-                constructor.getName(),
-                formatParameterTypes(constructor.getParameterTypes()));
-    }
-
-    private String formatMethod(Method method) {
-        return MessageFormat.format("{0} {1} {2}({3})",
-                Modifier.toString(method.getModifiers()),
-                method.getReturnType().getSimpleName(),
-                method.getName(),
-                formatParameterTypes(method.getParameterTypes()));
-    }
-
-    private String formatParameterTypes(Class<?>[] types) {
-        return String.join(", ",
-                Arrays.stream(types).map(Class::getSimpleName).toList());
     }
 
     @Test
@@ -129,5 +102,35 @@ public class ReflectionTest {
                 () -> assertEquals(priceField.get(car), 100_000_000));
     }
 
+    static class Formatter {
+
+        public static String formatField(Field field) {
+            return MessageFormat.format("{0} {1} {2}",
+                    Modifier.toString(field.getModifiers()),
+                    field.getType().getSimpleName(),
+                    field.getName());
+        }
+
+        public static String formatConstructor(Constructor<?> constructor) {
+            return MessageFormat.format("{0} {1}({2})",
+                    Modifier.toString(constructor.getModifiers()),
+                    constructor.getName(),
+                    formatParameterTypes(constructor.getParameterTypes()));
+        }
+
+        public static String formatMethod(Method method) {
+            return MessageFormat.format("{0} {1} {2}({3})",
+                    Modifier.toString(method.getModifiers()),
+                    method.getReturnType().getSimpleName(),
+                    method.getName(),
+                    formatParameterTypes(method.getParameterTypes()));
+        }
+
+        public static String formatParameterTypes(Class<?>[] types) {
+            return String.join(", ",
+                    Arrays.stream(types).map(Class::getSimpleName).toList());
+        }
+
+    }
 }
 
