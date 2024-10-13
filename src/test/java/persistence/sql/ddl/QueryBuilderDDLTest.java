@@ -33,4 +33,14 @@ class QueryBuilderDDLTest {
                 .isEqualTo("create table users (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id));");
     }
 
+    @Test
+    @DisplayName("Drop Query Ddl 을 만들 class를 입력하고 compare")
+    void dropQuery_Compare() {
+        QueryBuilderDDL queryBuilderDDL = QueryBuilderDDL.getInstance();
+
+        logger.info(queryBuilderDDL.buildDropDdl(Person.class));
+        assertThat(queryBuilderDDL.buildDropDdl(Person.class))
+                .isEqualTo("drop table users;");
+    }
+
 }
