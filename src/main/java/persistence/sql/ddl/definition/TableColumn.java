@@ -14,7 +14,7 @@ public class TableColumn implements Queryable {
 
     @Override
     public void apply(StringBuilder query, Dialect dialect) {
-        final String type = dialect.translateType(columnDefinition.type(), columnDefinition);
+        final String type = dialect.translateType(columnDefinition);
         query.append(columnDefinition.name()).append(" ").append(type);
 
         if (columnDefinition.shouldNotNull()) {
