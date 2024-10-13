@@ -20,7 +20,7 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
             String createTableQuery = DDLQueryBuilder.createTable(ddlQueryBuilder, Person.class);
-            System.out.println(createTableQuery);
+            logger.info(createTableQuery);
             jdbcTemplate.execute(createTableQuery);
 
             server.stop();
