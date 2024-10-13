@@ -22,7 +22,7 @@ public class ReflectionTest {
     @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
         Class<Car> carClass = Car.class;
-        assertAll("Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력",
+        assertAll("Car 클래스의 모든 필드, 생성자, 메소드 정보 검증",
                 () -> assertThat(Arrays.stream(carClass.getDeclaredFields())
                         .map(this::formatField)
                         .toList())
