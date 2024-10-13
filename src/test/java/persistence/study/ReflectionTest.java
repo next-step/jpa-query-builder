@@ -69,12 +69,10 @@ public class ReflectionTest {
     @DisplayName("test 로 시작하는 메소드 실행")
     void testMethodRun() {
         Car car = new Car("Dream Car", 100_000_000);
-        assertAll("메서드 실행 결과값 검증",
-                () -> assertThat(Arrays.stream(car.getClass().getMethods())
-                        .filter(method -> method.getName().startsWith("test"))
-                        .map(method -> invokeMethod(method, car)))
-                        .containsExactly("test : Dream Car", "test : 100000000")
-        );
+        assertThat(Arrays.stream(car.getClass().getMethods())
+                .filter(method -> method.getName().startsWith("test"))
+                .map(method -> invokeMethod(method, car))
+        ).containsExactly("test : Dream Car", "test : 100000000");
     }
 
     private Object invokeMethod(Method method, Car car) {
