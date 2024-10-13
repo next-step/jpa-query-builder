@@ -1,5 +1,6 @@
 package persistence.reflection;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.study.Car;
@@ -10,6 +11,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Objects;
+
+import static org.assertj.core.api.Assertions.*;
 
 
 public class ReflectionTest {
@@ -65,6 +68,6 @@ public class ReflectionTest {
     void showAnnotation() throws NoSuchMethodException {
         Class<Car> carClass = Car.class;
         Method printView = carClass.getDeclaredMethod("printView");
-        System.out.println(printView.isAnnotationPresent(PrintView.class));
+        assertThat(printView.isAnnotationPresent(PrintView.class)).isEqualTo(true);
     }
 }
