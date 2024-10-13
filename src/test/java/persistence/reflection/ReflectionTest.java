@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import persistence.study.Car;
 import persistence.study.PrintView;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -68,5 +69,27 @@ public class ReflectionTest {
         Class<Car> carClass = Car.class;
         Method printView = carClass.getDeclaredMethod("printView");
         assertThat(printView.isAnnotationPresent(PrintView.class)).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당하기")
+    void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException {
+        // 객체 생성
+        Car genesis = new Car();
+        Class<? extends Car> genesisClass = genesis.getClass();
+
+        // 필드 접근 및 초기화
+        Field declaredFieldName = genesisClass.getDeclaredField("name");
+        declaredFieldName.setAccessible(true);
+        declaredFieldName.set(genesis, "Genesis");
+
+        Field declaredFieldPrice = genesisClass.getDeclaredField("price");
+        declaredFieldPrice.setAccessible(true);
+        declaredFieldPrice.set(genesis, 70000000);
+
+        //검증
+        assertThat(genesis.testGetName()).isEqualTo("test : Genesis");
+        assertThat(genesis.testGetPrice()).isEqualTo("test : 70000000");
+
     }
 }
