@@ -11,7 +11,6 @@ public class ColumnInfo {
     private String name;
     private ColumnType columnType;
     private boolean primary;
-
     private boolean trans;
     private List<String> options;
 
@@ -68,7 +67,7 @@ public class ColumnInfo {
         return options.stream().distinct().collect(Collectors.toList());
     }
 
-    public boolean isTrans() {
-        return trans;
+    public boolean isNotTransient() {
+        return !trans;
     }
 }

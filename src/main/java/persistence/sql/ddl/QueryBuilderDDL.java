@@ -1,6 +1,5 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -46,13 +45,12 @@ public class QueryBuilderDDL {
     private String getColumnInfos(Class<?> clazz) {
         StringBuilder sb = new StringBuilder();
 
-        List<ColumnInfo> columns = Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract).collect(Collectors.toList());
+        List<ColumnInfo> columns = Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract)
+                .filter(ColumnInfo::isNotTransient).collect(Collectors.toList());
 
         for (ColumnInfo column : columns) {
-            if(!column.isTrans()){
-                sb.append(getColumnLine(column));
-                sb.append(", ");
-            }
+            sb.append(getColumnLine(column));
+            sb.append(", ");
         }
         sb.append(getPrimaryKey(columns));
         return sb.toString();
