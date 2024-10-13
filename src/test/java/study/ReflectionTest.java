@@ -43,6 +43,7 @@ public class ReflectionTest {
         // 생성자 출력
         logger.info("선언된 생성자 개수 : {}", carClass.getConstructors().length);
         logger.info("선언된 생성자에 정의된 파라미터 개수 : {}", Arrays.stream(carClass.getConstructors()).map(Constructor::getParameterCount).collect(Collectors.toList()));
+
    }
 
     @Test
