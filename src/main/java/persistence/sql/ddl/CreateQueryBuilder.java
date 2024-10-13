@@ -8,15 +8,9 @@ import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
-    private static final Map<Class<?>, String> FIELD_TYPE = Map.of(
-            Long.class, "BIGINT",
-            String.class, "VARCHAR",
-            Integer.class, "INT"
-    );
 
     public String createTableQuery(Class<?> clazz) {
         String tableName = getTableName(clazz);
@@ -81,7 +75,7 @@ public class CreateQueryBuilder {
     }
 
     private String getFieldType(Field field) {
-        return FIELD_TYPE.get(field.getType());
+        return FieldType.getSqlTypeByClass(field.getType());
     }
 
     private boolean isIdField(Field field) {
