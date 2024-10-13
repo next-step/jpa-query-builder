@@ -23,7 +23,7 @@ public class Application {
             jdbcTemplate.execute(queryBuilderDDL.buildCreateDdl(Person.class));
             jdbcTemplate.execute(queryBuilderDDL.buildDropDdl(Person.class));
 
-//            server.stop();
+            server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
         } finally {
