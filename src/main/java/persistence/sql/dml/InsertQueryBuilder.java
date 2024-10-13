@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder {
-    private static final Logger logger = LoggerFactory.getLogger(Table.class);
+    private static final Logger logger = LoggerFactory.getLogger(InsertQueryBuilder.class);
 
     private static final String QUERY_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
 
