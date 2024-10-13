@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import persistence.study.Car;
 import persistence.study.PrintView;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -91,5 +88,20 @@ public class ReflectionTest {
         assertThat(genesis.testGetName()).isEqualTo("test : Genesis");
         assertThat(genesis.testGetPrice()).isEqualTo("test : 70000000");
 
+    }
+
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        // 객체 생성
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getConstructor(String.class, int.class);
+
+        // 인스턴스 생성
+        Car genesis = constructor.newInstance("GV70", 50_000_000);
+
+        // 검증
+        assertThat(genesis.testGetPrice()).isEqualTo("test : 50000000");
+        assertThat(genesis.testGetName()).isEqualTo("test : GV70");
     }
 }
