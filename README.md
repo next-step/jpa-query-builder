@@ -10,7 +10,8 @@
 
 ## Step 2 - QueryBuilder DDL
 ### 요구 사항
++ [x] Gradle 라이브러리 버전 변경 (H2, logback)
 + [ ] Person 클래스 정보를 바탕으로 create 쿼리를 만들어본다.
-+ [ ] 추가 된 정보를 통해 Create 쿼리를 만들어본다.
-+ [ ] 추가 된 정보를 통해 Create 쿼리를 만들어본다 2
-+ [ ] 추가 된 정보를 통해 Drop 쿼리를 만들어본다.
++ [ ] Person 클래스에 추가 된 정보를 통해 Create 쿼리를 만들어본다.
++ [ ] Person 클래스에 추가 된 정보를 통해 Create 쿼리를 만들어본다 2
++ [ ] Person 클래스에 추가 된 정보를 통해 Drop 쿼리를 만들어본다.
