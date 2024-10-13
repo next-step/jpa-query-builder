@@ -30,7 +30,7 @@ class QueryBuilderDDLTest {
 
         logger.info(queryBuilderDDL.buildCreateDdl(Person.class));
         assertThat(queryBuilderDDL.buildCreateDdl(Person.class))
-                .isEqualTo("create table person (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id));");
+                .isEqualTo("create table users (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id));");
     }
 
 }

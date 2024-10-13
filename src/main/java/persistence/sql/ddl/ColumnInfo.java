@@ -1,9 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -14,12 +11,15 @@ public class ColumnInfo {
     private String name;
     private ColumnType columnType;
     private boolean primary;
+
+    private boolean trans;
     private List<String> options;
 
-    public ColumnInfo(String name, ColumnType columnType, boolean primary, List<String> options) {
+    public ColumnInfo(String name, ColumnType columnType, boolean primary, boolean trans, List<String> options) {
         this.name = name;
         this.columnType = columnType;
         this.primary = primary;
+        this.trans = trans;
         this.options = options;
     }
 
@@ -28,6 +28,7 @@ public class ColumnInfo {
                 extractColumnName(field),
                 ColumnType.of(field.getType()),
                 field.isAnnotationPresent(Id.class),
+                field.isAnnotationPresent(Transient.class),
                 extractOptions(field)
         );
     }
@@ -65,5 +66,9 @@ public class ColumnInfo {
     }
     public List<String> getOptions() {
         return options.stream().distinct().collect(Collectors.toList());
+    }
+
+    public boolean isTrans() {
+        return trans;
     }
 }
