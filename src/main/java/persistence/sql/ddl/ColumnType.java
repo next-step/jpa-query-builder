@@ -16,11 +16,11 @@ public enum ColumnType {
         this.columnType = columnType;
     }
 
-    public static ColumnType of(Class<?> javaType) throws Exception {
+    public static ColumnType of(Class<?> javaType) {
         return Arrays.stream(ColumnType.values())
                 .filter(type -> type.getJavaType() == javaType)
                 .findFirst()
-                .orElseThrow(Exception::new);
+                .orElseThrow(() -> new IllegalArgumentException(javaType + "과 매칭되는 타입이 존재하지 않습니다."));
     }
 
     public String getColumnType() {

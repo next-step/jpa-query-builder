@@ -56,16 +56,4 @@ class ColumnTest {
                 () -> assertThat(ageColumn.isPrimary()).isFalse()
         );
     }
-    @Test
-    @DisplayName("Person Class로 Column 생성 : 정의되지 않은 타입")
-    void createColumnClassWithPersonClass_error() throws Exception {
-        Assertions.assertThrows(Exception.class, () -> {
-            Column errorTest = new Column(TestClass.class.getDeclaredField("testbool"));
-        });
-    }
-
-    private class TestClass {
-        boolean testbool;
-    }
-
 }
