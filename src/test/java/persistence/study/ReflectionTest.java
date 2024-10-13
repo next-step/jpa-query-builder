@@ -1,10 +1,7 @@
 package persistence.study;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.*;
 import java.text.MessageFormat;
@@ -17,8 +14,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class ReflectionTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
     @Test
     @DisplayName("Car 객체 정보 가져오기")
@@ -96,50 +91,42 @@ public class ReflectionTest {
         }
     }
 
-    @Nested
-    class 요구사항4 {
+    @Test
+    @DisplayName("private field 에 값 할당")
+    void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+        Class<Car> carClass = Car.class;
 
-        @Test
-        @DisplayName("private field 에 값 할당")
-        void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException {
-            Class<Car> carClass = Car.class;
+        Field nameField = carClass.getDeclaredField("name");
+        nameField.setAccessible(true);
 
-            Field nameField = carClass.getDeclaredField("name");
-            nameField.setAccessible(true);
+        Field priceField = carClass.getDeclaredField("price");
+        priceField.setAccessible(true);
 
-            Field priceField = carClass.getDeclaredField("price");
-            priceField.setAccessible(true);
+        Car car = carClass.getDeclaredConstructor().newInstance();
+        nameField.set(car, "드림카");
+        priceField.set(car, 100_000_000);
 
-            Car car = new Car();
-            nameField.set(car, "드림카");
-            priceField.set(car, 100_000_000);
-
-            assertAll("Car 객체 필드값 설정 검증",
-                    () -> assertEquals(nameField.get(car), "드림카"),
-                    () -> assertEquals(priceField.get(car), 100_000_000));
-        }
+        assertAll("Car 객체 필드값 설정 검증",
+                () -> assertEquals(nameField.get(car), "드림카"),
+                () -> assertEquals(priceField.get(car), 100_000_000));
     }
 
-    @Nested
-    class 요구사항5 {
+    @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+        Class<Car> carClass = Car.class;
+        Constructor<Car> constructor = carClass.getDeclaredConstructor(String.class, int.class);
+        Car car = constructor.newInstance("드림카", 100_000_000);
 
-        @Test
-        @DisplayName("인자를 가진 생성자의 인스턴스 생성")
-        void constructorWithArgs() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-            Class<Car> carClass = Car.class;
-            Constructor<Car> constructor = carClass.getDeclaredConstructor(String.class, int.class);
-            Car car = constructor.newInstance("드림카", 100_000_000);
+        Field nameField = carClass.getDeclaredField("name");
+        nameField.setAccessible(true);
 
-            Field nameField = carClass.getDeclaredField("name");
-            nameField.setAccessible(true);
+        Field priceField = carClass.getDeclaredField("price");
+        priceField.setAccessible(true);
 
-            Field priceField = carClass.getDeclaredField("price");
-            priceField.setAccessible(true);
-
-            assertAll("Car 객체 필드값 초기화 검증",
-                    () -> assertEquals(nameField.get(car), "드림카"),
-                    () -> assertEquals(priceField.get(car), 100_000_000));
-        }
+        assertAll("Car 객체 필드값 초기화 검증",
+                () -> assertEquals(nameField.get(car), "드림카"),
+                () -> assertEquals(priceField.get(car), 100_000_000));
     }
 
 }
