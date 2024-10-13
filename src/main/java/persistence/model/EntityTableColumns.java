@@ -1,6 +1,7 @@
 package persistence.model;
 
 import jakarta.persistence.Transient;
+import persistence.sql.dialect.Dialect;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,10 +14,10 @@ public class EntityTableColumns {
         this.columns = columns;
     }
 
-    public static EntityTableColumns build(Class<?> entityClass) {
-        List<EntityColumn> columns =  Arrays.stream(entityClass.getDeclaredFields())
+    public static EntityTableColumns build(Class<?> entityClass, Dialect dialect) {
+        List<EntityColumn> columns = Arrays.stream(entityClass.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(EntityColumn::build)
+                .map(field -> EntityColumn.build(field, dialect))
                 .toList();
 
         return new EntityTableColumns(columns);

@@ -19,6 +19,7 @@ dependencies {
     implementation("com.h2database:h2:2.1.214")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.5.0")
 }
 
 tasks.test {

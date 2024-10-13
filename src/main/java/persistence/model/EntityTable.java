@@ -1,9 +1,8 @@
 package persistence.model;
 
 import jakarta.persistence.Table;
-import persistence.model.meta.Constraint;
-import persistence.model.meta.PrimaryConstraint;
 import persistence.model.util.ReflectionUtil;
+import persistence.sql.dialect.Dialect;
 
 import java.util.List;
 
@@ -12,20 +11,16 @@ public class EntityTable {
 
     private final EntityTableColumns columns;
 
-    private final Constraint primaryConstraint;
-
-    private EntityTable(String name, EntityTableColumns columns, Constraint primaryConstraint) {
+    private EntityTable(String name, EntityTableColumns columns) {
         this.name = name;
         this.columns = columns;
-        this.primaryConstraint = primaryConstraint;
     }
 
-    public static EntityTable build(Class<?> entityClass) {
+    public static EntityTable build(Class<?> entityClass, Dialect dialect) {
         String name = getName(entityClass);
-        EntityTableColumns entityColumns = EntityTableColumns.build(entityClass);
-        Constraint primaryConstraint = PrimaryConstraint.build(entityColumns);
+        EntityTableColumns entityColumns = EntityTableColumns.build(entityClass, dialect);
 
-        return new EntityTable(name, entityColumns, primaryConstraint);
+        return new EntityTable(name, entityColumns);
     }
 
     private static String getName(Class<?> entityClass) {
@@ -42,7 +37,7 @@ public class EntityTable {
         return columns.getAll();
     }
 
-    public Constraint getPrimaryConstraint() {
-        return primaryConstraint;
+    public List<EntityColumn> getPrimaryColumns() {
+        return columns.getPrimaryColumns();
     }
 }
