@@ -14,7 +14,7 @@ class DeleteQueryBuilderTest {
         DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
         String deleteQuery = deleteQueryBuilder.delete(Person.class, 1L);
 
-        assertEquals(deleteQuery, "delete FROM users where ID = 1");
+        assertEquals(deleteQuery, "delete FROM users where id = 1");
     }
 
 
