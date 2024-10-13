@@ -50,7 +50,7 @@ class DdlCreateQueryBuilderTest {
 
         // then
         Assertions.assertThat(query)
-            .isEqualTo("CREATE TABLE person (id BIGINT NOT NULL PRIMARY KEY, name VARCHAR(255), age INTEGER)");
+            .isEqualTo("CREATE TABLE person (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255) NOT NULL, old INTEGER NOT NULL, email VARCHAR(255))");
     }
 
 }

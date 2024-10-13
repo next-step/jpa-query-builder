@@ -15,6 +15,6 @@
 ### requirements
 
 - [x] create 쿼리 만들어보기(Entity, Id)
-- [ ] create 쿼리 만들어보기(GeneratedValue, Column)
+- [x] create 쿼리 만들어보기(GeneratedValue, Column)
 - [ ] create 쿼리 만들어보기(Table, Transient)
 - [ ] drop 쿼리 만들어보기

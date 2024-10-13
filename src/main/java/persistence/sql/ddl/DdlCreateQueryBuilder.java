@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 public class DdlCreateQueryBuilder {
@@ -51,13 +54,57 @@ public class DdlCreateQueryBuilder {
     }
 
     private String getColumnDdl(Field field) {
-        String columnDdl = field.getName() +
+        String columnDdl = getColumnName(field) +
             " " +
             FIELD_TYPE_TO_DB_TYPE.get(field.getType());
-        if (field.isAnnotationPresent(Id.class)) {
-            columnDdl += " NOT NULL PRIMARY KEY";
+
+        if (isNotNull(field)) {
+            columnDdl += " NOT NULL";
+        }
+
+        if (isGeneratedValue(field)) {
+            columnDdl += " AUTO_INCREMENT";
+        }
+
+        if (isId(field)) {
+            columnDdl += " PRIMARY KEY";
         }
         return columnDdl;
+    }
+
+    private String getColumnName(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        if (column != null && column.name() != null && !column.name().isEmpty()) {
+            return column.name();
+        }
+
+        return field.getName();
+    }
+
+    private Boolean isNotNull(Field field) {
+        return isNullable(field);
+    }
+
+    private Boolean isNullable(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        if (column == null) {
+            return true;
+        }
+
+        return column.nullable();
+    }
+
+    private Boolean isGeneratedValue(Field field) {
+        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        if (generatedValue == null) {
+            return false;
+        }
+
+        return generatedValue.strategy() == GenerationType.IDENTITY;
+    }
+
+    private Boolean isId(Field field) {
+        return field.isAnnotationPresent(Id.class);
     }
 
 }
