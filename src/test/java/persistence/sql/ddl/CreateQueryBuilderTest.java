@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.domain.Person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

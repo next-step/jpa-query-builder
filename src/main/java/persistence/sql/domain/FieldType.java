@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.domain;
 
 public enum FieldType {
     LONG(Long.class, "BIGINT"),
