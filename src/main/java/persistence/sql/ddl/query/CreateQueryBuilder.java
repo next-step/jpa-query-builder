@@ -1,23 +1,16 @@
 package persistence.sql.ddl.query;
 
-import persistence.sql.ddl.QueryBuilder;
-import persistence.sql.ddl.definition.PrimaryKey;
+import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.ddl.Dialect;
 import persistence.sql.ddl.Queryable;
 import persistence.sql.ddl.definition.TableDefinition;
+import persistence.sql.ddl.definition.TableId;
 
-public class CreateQueryBuilder implements QueryBuilder {
-    public CreateQueryBuilder() {
-    }
+public class CreateQueryBuilder implements DdlQueryBuilder {
+    private final Dialect dialect;
 
-    public static class SQLTypeTranslator {
-        public static String translate(String type, int length) {
-            return switch (type) {
-                case "Long" -> "BIGINT";
-                case "String" -> "VARCHAR(%s)".formatted(length);
-                case "Integer" -> "INTEGER";
-                default -> throw new IllegalArgumentException("Unknown type: " + type);
-            };
-        }
+    public CreateQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     @Override
@@ -29,16 +22,16 @@ public class CreateQueryBuilder implements QueryBuilder {
         query.append(" (");
 
         for (Queryable column : tableDefinition.queryableColumns()) {
-            column.apply(query);
+            column.apply(query, dialect);
         }
 
-        definePrimaryKey(tableDefinition.primaryKey(), query);
+        definePrimaryKey(tableDefinition.tableId(), query);
 
         query.append(");");
         return query.toString();
     }
 
-    private void definePrimaryKey(PrimaryKey pk, StringBuilder query) {
+    private void definePrimaryKey(TableId pk, StringBuilder query) {
         query.append("PRIMARY KEY (").append(pk.name()).append(")");
     }
 }

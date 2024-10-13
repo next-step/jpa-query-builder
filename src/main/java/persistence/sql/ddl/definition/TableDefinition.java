@@ -3,6 +3,7 @@ package persistence.sql.ddl.definition;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import org.jetbrains.annotations.NotNull;
 import persistence.sql.ddl.Queryable;
 
@@ -15,20 +16,16 @@ public class TableDefinition {
 
     private final String tableName;
     private final List<TableColumn> columns;
-    private final PrimaryKey primaryKey;
+    private final TableId tableId;
 
     public TableDefinition(Class<?> entityClass) {
         validate(entityClass);
 
         final Field[] fields = entityClass.getDeclaredFields();
-        final Field pkField = Arrays.stream(entityClass.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Primary key not found"));
 
         this.tableName = determineTableName(entityClass);
         this.columns = createTableColumns(fields);
-        this.primaryKey = new PrimaryKey(pkField);
+        this.tableId = new TableId(fields);
     }
 
     @NotNull
@@ -55,6 +52,7 @@ public class TableDefinition {
     private static List<TableColumn> createTableColumns(Field[] fields) {
         return Arrays.stream(fields)
                 .filter(field -> !field.isAnnotationPresent(Id.class))
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(TableColumn::new)
                 .toList();
     }
@@ -78,8 +76,8 @@ public class TableDefinition {
         }
     }
 
-    public PrimaryKey primaryKey() {
-        return primaryKey;
+    public TableId tableId() {
+        return tableId;
     }
 
     public String tableName() {
@@ -88,7 +86,7 @@ public class TableDefinition {
 
     public List<Queryable> queryableColumns() {
         return Stream.concat(
-                Stream.of(primaryKey),
+                Stream.of(tableId),
                 columns.stream()
         ).toList();
     }

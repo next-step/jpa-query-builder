@@ -6,6 +6,7 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.query.DropQueryBuilder;
@@ -44,7 +45,7 @@ public class Application {
     }
 
     private static void testCreate(JdbcTemplate jdbcTemplate) {
-        CreateQueryBuilder createQuery = new CreateQueryBuilder();
+        CreateQueryBuilder createQuery = new CreateQueryBuilder(new H2Dialect());
         jdbcTemplate.execute(createQuery.build(Person.class));
     }
 

@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.definition.PrimaryKey;
+import persistence.sql.ddl.definition.TableId;
 
 public interface PrimaryKeyGenerationStrategy {
-    String generatePrimaryKeySQL(PrimaryKey pk);
+    String generatePrimaryKeySQL(TableId pk);
 
-    boolean supports(PrimaryKey pk);
+    boolean supports(TableId pk);
 }
