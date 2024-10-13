@@ -1,26 +1,21 @@
 package persistence.model;
 
-import jakarta.persistence.Transient;
-import persistence.sql.dialect.Dialect;
-
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class EntityTableColumns {
-    private final List<EntityColumn> columns;
+    private List<EntityColumn> columns = new ArrayList<>();
 
-    private EntityTableColumns(List<EntityColumn> columns) {
+    public EntityTableColumns(List<EntityColumn> columns) {
         this.columns = columns;
     }
 
-    public static EntityTableColumns build(Class<?> entityClass, Dialect dialect) {
-        List<EntityColumn> columns = Arrays.stream(entityClass.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> EntityColumn.build(field, dialect))
-                .toList();
+    public EntityTableColumns() {
+    }
 
-        return new EntityTableColumns(columns);
+    public void setColumns(List<EntityColumn> columns) {
+        this.columns = columns;
     }
 
     public List<EntityColumn> getAll() {

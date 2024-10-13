@@ -2,25 +2,20 @@ package persistence.model;
 
 import jakarta.persistence.Table;
 import persistence.model.util.ReflectionUtil;
-import persistence.sql.dialect.Dialect;
 
 import java.util.List;
 
 public class EntityTable {
     private final String name;
 
-    private final EntityTableColumns columns;
+    private final EntityTableColumns tableColumns = new EntityTableColumns();
 
-    private EntityTable(String name, EntityTableColumns columns) {
+    private EntityTable(String name) {
         this.name = name;
-        this.columns = columns;
     }
 
-    public static EntityTable build(Class<?> entityClass, Dialect dialect) {
-        String name = getName(entityClass);
-        EntityTableColumns entityColumns = EntityTableColumns.build(entityClass, dialect);
-
-        return new EntityTable(name, entityColumns);
+    public static EntityTable build(Class<?> entityClass) {
+        return new EntityTable(getName(entityClass));
     }
 
     private static String getName(Class<?> entityClass) {
@@ -34,10 +29,14 @@ public class EntityTable {
     }
 
     public List<EntityColumn> getColumns() {
-        return columns.getAll();
+        return tableColumns.getAll();
     }
 
     public List<EntityColumn> getPrimaryColumns() {
-        return columns.getPrimaryColumns();
+        return tableColumns.getPrimaryColumns();
+    }
+
+    public void setColumns(List<EntityColumn> columns) {
+        tableColumns.setColumns(columns);
     }
 }

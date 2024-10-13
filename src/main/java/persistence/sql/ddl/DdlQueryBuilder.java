@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import persistence.model.EntityColumn;
+import persistence.model.EntityFactory;
 import persistence.model.EntityTable;
 import persistence.sql.dialect.Dialect;
 
@@ -15,13 +16,13 @@ public class DdlQueryBuilder {
     }
 
     public String getDropTableQuery(Class<?> entityClass) {
-        EntityTable table = EntityTable.build(entityClass, dialect);
+        EntityTable table = EntityFactory.createTable(entityClass, dialect);
 
         return dialect.getDropTablePhrase() + " " + dialect.getIdentifierQuoted(table.getName());
     }
 
     public String getCreateTableQuery(Class<?> entityClass) {
-        EntityTable table = EntityTable.build(entityClass, dialect);
+        EntityTable table = EntityFactory.createTable(entityClass, dialect);
 
         return dialect.getCreateTablePhrase() +
                 " " +

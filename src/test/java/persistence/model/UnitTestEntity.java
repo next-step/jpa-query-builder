@@ -2,7 +2,7 @@ package persistence.model;
 
 import jakarta.persistence.*;
 
-@Table(name = "person")
+@Table(name = "users")
 @Entity
 public class UnitTestEntity {
     @Id
