@@ -41,7 +41,7 @@ public class DDLColumn {
     }
 
     public String makeColumnsDDL() {
-        return String.join(",", this.fields.stream().map(this::makeColumnDDL).toList());
+        return String.join(",", this.fields.stream().map(this::makeColumnDDL).collect(Collectors.toList()));
     }
 
     public String makeColumnDDL(Field field) {
@@ -62,7 +62,7 @@ public class DDLColumn {
             columnStringBuilder.append("PRIMARY KEY");
         }
 
-        if (field.isAnnotationPresent(GeneratedValue.class)) {
+        if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class)) {
             GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
             String autoIncrementAnnotationString = getStrategyDDL(annotation.strategy());
             columnStringBuilder.append(SPACE);
@@ -96,7 +96,9 @@ public class DDLColumn {
         }
 
         boolean nullable = field.getAnnotation(Column.class).nullable();
-        return Optional.ofNullable(ddlColumnNullableString.get(nullable)).get();
+
+        return Optional.ofNullable(ddlColumnNullableString.get(nullable))
+                .orElseThrow(() -> new IllegalArgumentException("Nullable 조건에 맞는게 있지 않습니다."));
     }
 
     private String getFieldType(Field field) {
@@ -106,7 +108,7 @@ public class DDLColumn {
 
     private String getStrategyDDL(GenerationType generationType) {
         if (generationType == null) {
-            throw new NullPointerException("Generation Type이 존재하지 않습니다.");
+            throw new IllegalArgumentException("Generation Type이 존재하지 않습니다.");
         }
 
         return Optional.ofNullable(ddlStrategyDDLString.get(generationType))

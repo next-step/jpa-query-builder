@@ -1,23 +1,18 @@
 package persistence.sql.ddl.model;
 
 import jakarta.persistence.Table;
+import persistence.sql.ddl.ExceptionUtil;
 
 public class TableName {
     private final String value;
 
     public TableName(Class<?> clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("class가 존재하지 않습니다.");
-        }
+        ExceptionUtil.requireNonNull(clazz);
 
         this.value = getTableName(clazz);
     }
 
     private String getTableName(Class<?> clazz) {
-        if (clazz == null) {
-            throw new NullPointerException("클래스가 존재하지 않습니다.");
-        }
-
         if (!clazz.isAnnotationPresent(Table.class)) {
             return clazz.getSimpleName().toLowerCase();
         }

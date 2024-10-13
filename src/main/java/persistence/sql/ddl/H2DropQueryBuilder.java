@@ -13,9 +13,7 @@ public class H2DropQueryBuilder implements DropQueryBuilder {
     private final Class<?> clazz;
 
     public H2DropQueryBuilder(Class<?> clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("class가 존재하지 않습니다.");
-        }
+        ExceptionUtil.requireNonNull(clazz);
 
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("Entity 클래스가 아닙니다.");
