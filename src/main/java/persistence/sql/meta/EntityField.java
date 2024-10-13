@@ -42,6 +42,15 @@ public class EntityField {
         }
     }
 
+    public void setValue(Object entity, Object value){
+        try {
+            field.setAccessible(true);
+            field.set(entity, value);
+        } catch (IllegalAccessException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
     public String getColumnName() {
         final jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
         if (Objects.nonNull(column) && Objects.nonNull(column.name()) && !column.name().isBlank()) {
@@ -53,6 +62,11 @@ public class EntityField {
     public String getDbType() {
         final FieldType fieldType = FieldType.valueOf(field);
         return fieldType.getDbType();
+    }
+
+    public String getResultSetGetterName() {
+        final FieldType fieldType = FieldType.valueOf(field);
+        return fieldType.getResultSetGetterName();
     }
 
     public boolean isQuotesNeeded() {
