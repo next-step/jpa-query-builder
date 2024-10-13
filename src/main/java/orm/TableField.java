@@ -2,7 +2,7 @@ package orm;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import orm.util.StringUtils;
+import orm.settings.JpaSettings;
 
 import java.lang.reflect.Field;
 
@@ -13,12 +13,19 @@ public class TableField {
     private final boolean isId;
     private final ColumnMeta columnMeta;
 
-    public TableField(Field field) {
+    private final JpaSettings jpaSettings;
+
+    public TableField(Field field, JpaSettings jpaSettings) {
         Column column = field.getAnnotation(Column.class);
+        this.jpaSettings = jpaSettings;
         this.field = field;
-        this.fieldName = initFieldName(column, field);
+        this.fieldName = extractFieldName(column, field);
         this.isId = field.getAnnotation(Id.class) != null;
         this.columnMeta = ColumnMeta.from(column);
+    }
+
+    public TableField(Field field) {
+        this(field, JpaSettings.ofDefault());
     }
 
     public String getFieldName() {
@@ -37,11 +44,7 @@ public class TableField {
         return isId;
     }
 
-    private String initFieldName(Column column, Field field) {
-        if (column != null && StringUtils.isNotBlank(column.name())) {
-            return column.name();
-        }
-
-        return field.getName();
+    private String extractFieldName(Column column, Field field) {
+        return jpaSettings.getNamingStrategy().namingColumn(column, field);
     }
 }

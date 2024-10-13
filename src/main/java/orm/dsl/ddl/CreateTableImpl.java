@@ -4,7 +4,6 @@ import jakarta.persistence.GeneratedValue;
 import orm.TableEntity;
 import orm.TableField;
 import orm.TablePrimaryField;
-import orm.dsl.JpaSettings;
 import orm.dsl.QueryBuilder;
 import orm.dsl.ddl.dialect.h2.ColumnTypeMapper;
 import orm.exception.InvalidIdGenerationException;
@@ -13,16 +12,14 @@ import java.util.StringJoiner;
 
 public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
 
-    protected final JpaSettings settings;
     protected final ColumnTypeMapper columnTypeMapper;
 
     protected boolean ifNotExist = false;
     protected TableEntity<ENTITY> tableEntity;
 
-    public CreateTableImpl(JpaSettings settings, TableEntity<ENTITY> tableEntity) {
-        this.settings = settings;
+    public CreateTableImpl(TableEntity<ENTITY> tableEntity) {
         this.tableEntity = tableEntity;
-        this.columnTypeMapper = ColumnTypeMapper.of(settings.getDialect());
+        this.columnTypeMapper = ColumnTypeMapper.of(tableEntity.getJpaSettings().getDialect());
     }
 
     @Override

@@ -1,10 +1,13 @@
 package orm;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import orm.exception.InvalidEntityException;
 import orm.exception.InvalidIdMappingException;
+import orm.settings.JpaSettings;
 import orm.util.CollectionUtils;
-import orm.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,16 +19,28 @@ public class TableEntity<ENTITY> {
     private final Class<ENTITY> entityClass;
     private final String tableName;
 
+    // columns
     private final TablePrimaryField id;
-
     private final List<TableField> allFields;
 
-    public TableEntity(Class<ENTITY> entityClass) {
+    // settings
+    private final JpaSettings jpaSettings;
+
+    public TableEntity(Class<ENTITY> entityClass, JpaSettings settings) {
         throwIfNotEntity(entityClass);
+        this.jpaSettings = settings;
         this.entityClass = entityClass;
         this.tableName = extractTableName(entityClass);
         this.id = extractId(entityClass);
         this.allFields = extractAllPersistenceFields(entityClass);
+    }
+
+    public TableEntity(Class<ENTITY> entityClass) {
+        this(entityClass, JpaSettings.ofDefault());
+    }
+
+    public JpaSettings getJpaSettings() {
+        return jpaSettings;
     }
 
     public String getTableName() {
@@ -42,8 +57,9 @@ public class TableEntity<ENTITY> {
 
     /**
      * 엔티티가 아닌 경우 예외 발생
-     * @throws InvalidEntityException 엔티티가 아닌 경우
+     *
      * @param entityClass
+     * @throws InvalidEntityException 엔티티가 아닌 경우
      */
     private void throwIfNotEntity(Class<ENTITY> entityClass) {
         if (entityClass.getAnnotation(Entity.class) == null) {
@@ -52,19 +68,14 @@ public class TableEntity<ENTITY> {
     }
 
     private String extractTableName(Class<ENTITY> entityClass) {
-        Table tableAnnotation = entityClass.getAnnotation(Table.class);
-        if (tableAnnotation != null && StringUtils.isNotBlank(tableAnnotation.name())) {
-            return tableAnnotation.name();
-        }
-
-        return entityClass.getName();
+        return jpaSettings.getNamingStrategy().namingTable(entityClass);
     }
-
 
     /**
      * 엔티티로부터 ID 추출
-     * @throws InvalidIdMappingException ID 필드가 없거나 2개 이상인 경우
+     *
      * @return TablePrimaryField ID 필드
+     * @throws InvalidIdMappingException ID 필드가 없거나 2개 이상인 경우
      */
     private TablePrimaryField extractId(Class<ENTITY> entityClass) {
         Field[] declaredFields = entityClass.getDeclaredFields();
@@ -96,8 +107,7 @@ public class TableEntity<ENTITY> {
             }
 
             if (!transientAnnotated) {
-                TableField tableField = new TableField(declaredField);
-                list.add(tableField);
+                list.add(new TableField(declaredField, jpaSettings));
             }
         }
         return list;

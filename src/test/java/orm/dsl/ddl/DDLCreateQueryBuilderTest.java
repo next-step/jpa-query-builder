@@ -22,9 +22,9 @@ public class DDLCreateQueryBuilderTest {
                             id BIGINT AUTO_INCREMENT,
                             annotated_string VARCHAR(255),
                             annotated_length_string VARCHAR(120),
-                            property1StrWithLength VARCHAR(120),
-                            property1StrWithNo VARCHAR(255),
-                            property2NoAnnotation VARCHAR(255),
+                            property1str_with_length VARCHAR(120),
+                            property1str_with_no VARCHAR(255),
+                            property2no_annotation VARCHAR(255),
                             PRIMARY KEY (id)
                         );
                         """
@@ -53,9 +53,9 @@ public class DDLCreateQueryBuilderTest {
                             id BIGINT AUTO_INCREMENT,
                             annotated_string VARCHAR(255),
                             annotated_length_string VARCHAR(120),
-                            property1StrWithLength VARCHAR(120),
-                            property1StrWithNo VARCHAR(255),
-                            property2NoAnnotation VARCHAR(255),
+                            property1str_with_length VARCHAR(120),
+                            property1str_with_no VARCHAR(255),
+                            property2no_annotation VARCHAR(255),
                             PRIMARY KEY (id)
                         );
                         """
