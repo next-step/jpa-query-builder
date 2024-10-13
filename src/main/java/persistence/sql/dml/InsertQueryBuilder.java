@@ -42,7 +42,7 @@ public class InsertQueryBuilder {
     }
 
     private boolean isNotNeeded(EntityField entityField) {
-        return !entityField.isGeneration() && !entityField.isTransient();
+        return !entityField.isGeneration() && entityField.isPersistent();
     }
 
     private String getColumnValue(EntityField entityField) {

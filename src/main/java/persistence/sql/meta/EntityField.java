@@ -80,7 +80,7 @@ public class EntityField {
         return field.isAnnotationPresent(Id.class);
     }
 
-    public boolean isTransient() {
-        return field.isAnnotationPresent(Transient.class);
+    public boolean isPersistent() {
+        return !field.isAnnotationPresent(Transient.class);
     }
 }
