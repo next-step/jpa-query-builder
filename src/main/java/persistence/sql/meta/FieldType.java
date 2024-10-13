@@ -1,4 +1,4 @@
-package persistence.sql;
+package persistence.sql.meta;
 
 import java.lang.reflect.Field;
 

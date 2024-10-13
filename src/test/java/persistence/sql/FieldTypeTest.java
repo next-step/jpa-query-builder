@@ -2,6 +2,7 @@ package persistence.sql;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.meta.FieldType;
 
 import java.lang.reflect.Field;
 

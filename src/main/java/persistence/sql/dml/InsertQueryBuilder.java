@@ -2,8 +2,8 @@ package persistence.sql.dml;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.Table;
-import persistence.sql.util.Column;
+import persistence.sql.meta.Column;
+import persistence.sql.meta.Table;
 
 import java.lang.reflect.Field;
 import java.util.List;

@@ -1,4 +1,4 @@
-package persistence.sql;
+package persistence.example;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,7 +1,7 @@
 package persistence.sql.dml;
 
-import persistence.sql.Table;
-import persistence.sql.util.Column;
+import persistence.sql.meta.Column;
+import persistence.sql.meta.Table;
 
 import java.lang.reflect.Field;
 import java.util.List;

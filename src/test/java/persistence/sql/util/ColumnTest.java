@@ -2,7 +2,8 @@ package persistence.sql.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.Person;
+import persistence.example.Person;
+import persistence.sql.meta.Column;
 
 import java.lang.reflect.Field;
 

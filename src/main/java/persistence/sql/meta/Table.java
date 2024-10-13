@@ -1,7 +1,6 @@
-package persistence.sql;
+package persistence.sql.meta;
 
 import jakarta.persistence.Entity;
-import persistence.sql.util.Column;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
