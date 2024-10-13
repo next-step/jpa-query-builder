@@ -1,11 +1,11 @@
-package orm.dsl;
+package orm.dsl.ddl;
 
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import orm.dsl.ddl.DDLQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static util.SQLUtil.SQL_노멀라이즈;
 
 public class DDLCreateQueryBuilderTest {
 
@@ -16,7 +16,7 @@ public class DDLCreateQueryBuilderTest {
         // given
         DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
         Class<DummyEntity> entityClass = DummyEntity.class;
-        String expectedQuery = 줄바꿈_및_들여쓰기_해제(
+        String expectedQuery = SQL_노멀라이즈(
                 """
                         CREATE TABLE test_table (
                             id BIGINT AUTO_INCREMENT,
@@ -31,7 +31,7 @@ public class DDLCreateQueryBuilderTest {
         );
 
         // when
-        String query = 줄바꿈_및_들여쓰기_해제(
+        String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
                         .buildQuery()
         );
@@ -47,7 +47,7 @@ public class DDLCreateQueryBuilderTest {
         // given
         DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
         Class<DummyEntity> entityClass = DummyEntity.class;
-        String expectedQuery = 줄바꿈_및_들여쓰기_해제(
+        String expectedQuery = SQL_노멀라이즈(
                 """
                         CREATE TABLE IF NOT EXISTS test_table (
                             id BIGINT AUTO_INCREMENT,
@@ -62,7 +62,7 @@ public class DDLCreateQueryBuilderTest {
         );
 
         // when
-        String query = 줄바꿈_및_들여쓰기_해제(
+        String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
                         .ifNotExist()
                         .buildQuery()
@@ -71,11 +71,6 @@ public class DDLCreateQueryBuilderTest {
         // then
         assertThat(query).isEqualTo(expectedQuery);
     }
-
-    private String 줄바꿈_및_들여쓰기_해제(String query) {
-        return query.replaceAll("\\s*\\r?\\n\\s*", "");
-    }
-
 }
 
 @Entity
