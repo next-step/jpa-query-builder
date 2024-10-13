@@ -1,5 +1,5 @@
 package orm.dsl.ddl;
 
-public interface DropTableStep extends DDLFirstStep {
+public interface DropTableStep extends DDLTableIfNotExistStep {
 
 }
