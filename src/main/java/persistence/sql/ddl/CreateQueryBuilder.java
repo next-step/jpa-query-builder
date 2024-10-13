@@ -26,14 +26,14 @@ public class CreateQueryBuilder {
     private String getColumnClause() {
         final List<String> columnDefinitions = entityTable.getFields()
                 .stream()
-                .filter(this::isNotNeede)
+                .filter(this::isNotNeeded)
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
     }
 
-    private boolean isNotNeede(Field field) {
+    private boolean isNotNeeded(Field field) {
         return !new EntityField(field).isTransient();
     }
 
