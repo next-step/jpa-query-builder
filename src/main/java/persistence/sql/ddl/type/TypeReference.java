@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 public enum TypeReference {
 
-    LONG(Long.class, "bigint"),
-    STRING(String.class, "varchar"),
-    INTEGER(Integer.class, "integer")
+    LONG(Long.class, SqlType.BIGINT),
+    STRING(String.class, SqlType.VARCHAR),
+    INTEGER(Integer.class, SqlType.INTEGER)
     ;
 
     private final Class<?> javaType;
