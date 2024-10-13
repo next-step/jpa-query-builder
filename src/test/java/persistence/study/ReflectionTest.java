@@ -1,6 +1,5 @@
 package persistence.study;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.*;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReflectionTest {
@@ -23,7 +22,7 @@ public class ReflectionTest {
     @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
         Class<Car> carClass = Car.class;
-        Assertions.assertAll("Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력",
+        assertAll("Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력",
                 () -> assertThat(Arrays.stream(carClass.getDeclaredFields())
                         .map(this::formatField)
                         .toList())
@@ -66,36 +65,23 @@ public class ReflectionTest {
                 Arrays.stream(types).map(Class::getSimpleName).toList());
     }
 
-    @Nested
-    class 요구사항2 {
+    @Test
+    @DisplayName("test 로 시작하는 메소드 실행")
+    void testMethodRun() {
+        Car car = new Car("Dream Car", 100_000_000);
+        assertAll("메서드 실행 결과값 검증",
+                () -> assertThat(Arrays.stream(car.getClass().getMethods())
+                        .filter(method -> method.getName().startsWith("test"))
+                        .map(method -> invokeMethod(method, car)))
+                        .containsExactly("test : Dream Car", "test : 100000000")
+        );
+    }
 
-        @Test
-        @DisplayName("test 로 시작하는 메소드 실행")
-        void testMethodRun() {
-            Car car = new Car("Dream Car", 100_000_000);
-            StringBuilder builder = new StringBuilder();
-            for (Method method : car.getClass().getMethods()) {
-                invokeMethod(car, method)
-                        .ifPresent((obj) -> builder.append(obj).append(System.lineSeparator()));
-            }
-            logger.debug(builder.toString());
-        }
-
-        private Optional<Object> invokeMethod(Car car, Method method) {
-            if (method.getName().contains("test")) {
-                return invoke(car, method);
-            }
-            return Optional.empty();
-        }
-
-        private Optional<Object> invoke(Car car, Method method) {
-            try {
-                Object returnObject = method.invoke(car);
-                return Optional.of(returnObject);
-            } catch (Exception exception) {
-                logger.error("Method.invoke() 예외 발생", exception);
-            }
-            return Optional.empty();
+    private Object invokeMethod(Method method, Car car) {
+        try {
+            return method.invoke(car);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -144,7 +130,7 @@ public class ReflectionTest {
             nameField.set(car, "드림카");
             priceField.set(car, 100_000_000);
 
-            Assertions.assertAll("Car 객체 필드값 설정 검증",
+            assertAll("Car 객체 필드값 설정 검증",
                     () -> assertEquals(nameField.get(car), "드림카"),
                     () -> assertEquals(priceField.get(car), 100_000_000));
         }
@@ -166,7 +152,7 @@ public class ReflectionTest {
             Field priceField = carClass.getDeclaredField("price");
             priceField.setAccessible(true);
 
-            Assertions.assertAll("Car 객체 필드값 초기화 검증",
+            assertAll("Car 객체 필드값 초기화 검증",
                     () -> assertEquals(nameField.get(car), "드림카"),
                     () -> assertEquals(priceField.get(car), 100_000_000));
         }
