@@ -45,7 +45,7 @@ public class Table {
         return column.getColumnName() + " = " + id;
     }
 
-    public Field getIdField() {
+    private Field getIdField() {
         return Arrays.stream(entityClass.getDeclaredFields())
                 .filter(this::isId)
                 .findFirst()
