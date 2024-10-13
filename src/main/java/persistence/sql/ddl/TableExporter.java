@@ -1,29 +1,23 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import persistence.sql.ddl.mapping.Column;
+import persistence.sql.ddl.mapping.Table;
+import persistence.sql.ddl.type.SqlType;
 import persistence.sql.ddl.type.TypeReference;
-
-import java.lang.reflect.Field;
 
 public class TableExporter {
 
     public String getSqlCreateQueryString(Class<?> clazz) {
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new RuntimeException("@Entity not exist. class = " + clazz.getName());
-        }
+        Table table = Table.from(clazz);
 
         StringBuilder queryBuilder = new StringBuilder();
-        String tableName = clazz.getSimpleName().toLowerCase();
-
         queryBuilder.append( tableCreateString() )
                 .append( " " )
-                .append( tableName )
+                .append( table.name() )
                 .append( " (" );
 
-        Field[] fields = clazz.getDeclaredFields();
         boolean isFirst = true;
-        for (Field field : fields) {
+        for (Column column : table.columns()) {
             if (isFirst) {
                 isFirst = false;
             }
@@ -31,25 +25,29 @@ public class TableExporter {
                 queryBuilder.append(", ");
             }
 
-            String sqlType = TypeReference.getSqlType(field.getType());
-            queryBuilder.append(snakeCase(field.getName()))
+            String sqlType = TypeReference.getSqlType(column.getJavaType());
+            queryBuilder.append(column.getName())
                     .append( " " )
                     .append( sqlType );
-            if (sqlType.equals("varchar")) {
-                queryBuilder.append("(255)");
+
+            if (sqlType.equals(SqlType.VARCHAR)) {
+                queryBuilder.append(" ( ")
+                        .append(column.getLength())
+                        .append(" ) ");
             }
 
-            if (field.isAnnotationPresent(Id.class)) {
+            if (column.isIdentity() || !column.isNullable()) {
                 queryBuilder.append( " " )
                         .append( "not null" );
             }
+
         }
 
-        if (hasPrimaryKey(fields)) {
-            Field primaryKeyField = getPrimaryField(fields);
+        if (table.hasPrimaryKey()) {
+            Column primaryColumn = table.primaryColumn();
             queryBuilder.append( ", " )
                     .append("primary key (")
-                    .append(primaryKeyField.getName())
+                    .append(primaryColumn.getName())
                     .append(")");
         }
 
@@ -61,25 +59,4 @@ public class TableExporter {
         return "create table";
     }
 
-    private String snakeCase(String columnName) {
-        return columnName.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
-    }
-
-    private boolean hasPrimaryKey(Field[] fields) {
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Id.class)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Field getPrimaryField(Field[] fields) {
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Id.class)) {
-                return field;
-            }
-        }
-        throw new RuntimeException("primary key field not exist.");
-    }
 }
