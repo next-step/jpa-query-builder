@@ -3,6 +3,7 @@ package persistence.reflection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.study.Car;
+import persistence.study.PrintView;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,5 +58,13 @@ public class ReflectionTest {
             }
             return methodName;
         }).filter(Objects::nonNull).forEach(name -> log.info(name.toString()));
+    }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void showAnnotation() throws NoSuchMethodException {
+        Class<Car> carClass = Car.class;
+        Method printView = carClass.getDeclaredMethod("printView");
+        System.out.println(printView.isAnnotationPresent(PrintView.class));
     }
 }
