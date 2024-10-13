@@ -13,13 +13,14 @@ public class Column {
     private ColumnType columnType;
     private boolean primary;
 
-    public Column(Field field) {
+    public Column(Field field) throws Exception {
         try{
             this.name = field.getName();
             this.columnType = ColumnType.of(field.getType());
             this.primary = field.isAnnotationPresent(Id.class);
         } catch (Exception e) {
-            logger.info("{} 으로 정의된 필드의 타입({})이 정의되지 않았습니다.", field.getName(), field.getType());
+            logger.error("{} 으로 정의된 필드의 타입({})이 정의되지 않았습니다.", field.getName(), field.getType());
+            throw new Exception(field.getName() +" 으로 정의된 필드의 타입("+ field.getType() +")이 정의되지 않았습니다.");
         }
     }
 
