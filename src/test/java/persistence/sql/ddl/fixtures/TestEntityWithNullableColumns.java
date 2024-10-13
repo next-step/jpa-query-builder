@@ -3,7 +3,7 @@ package persistence.sql.ddl.fixtures;
 import jakarta.persistence.*;
 
 @Entity
-public class NullableTestEntity {
+public class TestEntityWithNullableColumns {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

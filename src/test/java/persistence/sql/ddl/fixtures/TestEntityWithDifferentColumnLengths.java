@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class ColumnLengthTestEntity {
+public class TestEntityWithDifferentColumnLengths {
 
     @Id
     private Long id;

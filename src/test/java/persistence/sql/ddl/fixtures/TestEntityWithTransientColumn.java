@@ -3,7 +3,7 @@ package persistence.sql.ddl.fixtures;
 import jakarta.persistence.*;
 
 @Entity
-public class TransientTestEntity {
+public class TestEntityWithTransientColumn {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

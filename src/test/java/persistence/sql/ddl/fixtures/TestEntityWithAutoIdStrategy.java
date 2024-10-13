@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class EntityWithAutoIdStrategy {
+public class TestEntityWithAutoIdStrategy {
     @Id
     private Long id;
 }
