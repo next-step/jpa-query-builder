@@ -21,15 +21,15 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     private final static String TABLE_NAME = "{tableName}";
     private final static String COLUMN_DEFINITIONS = "{columnDefinitions}";
 
+    //create 쿼리를 생성한다.
     @Override
-    //create쿼리를 생성한다.
     public String buildCreateQuery(Class<?> entityClass) {
         confirmEntityAnnotation(entityClass);
         return createTableQuery(confirmTableAnnotation(entityClass), getColumnData(entityClass));
     }
 
+    //drop 쿼리를 생성한다.
     @Override
-    //drop쿼리를 생성한다.
     public String buildDropQuery(Class<?> entityClass) {
         confirmEntityAnnotation(entityClass);
         return dropTableQuery(confirmTableAnnotation(entityClass));
