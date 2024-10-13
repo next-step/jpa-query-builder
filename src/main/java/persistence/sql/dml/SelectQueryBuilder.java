@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -47,7 +48,26 @@ public class SelectQueryBuilder {
         return field.getName();
     }
 
-    public String findById(Class<?> clazz, long l) {
-        return "select id, nick_name, old, email FROM users where id = 1";
+    public String findById(Class<?> clazz, Object idValue) {
+        String selectQuery = findAll(clazz);
+        String idField = getIdField(clazz);
+        String formattedIdValue = getFormattedId(idValue);
+        return String.format("%s where %s = %s", selectQuery, idField, formattedIdValue);
+    }
+
+    private String getFormattedId(Object idValue) {
+        if (idValue instanceof String) {
+            return String.format(("'%s'"), idValue);
+        }
+        return idValue.toString();
+    }
+
+    private String getIdField(Class<?> clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (field.isAnnotationPresent(Id.class)) {
+                return field.getName();
+            }
+        }
+        throw new IllegalArgumentException("@Id 어노테이션이 존재하지 않음");
     }
 }

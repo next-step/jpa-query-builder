@@ -26,4 +26,13 @@ class SelectQueryBuilderTest {
 
         assertEquals(findByIdQuery, "select id, nick_name, old, email FROM users where id = 1");
     }
+
+    @Test
+    @DisplayName("Person 객체로 Select(findById) Query 만들기")
+    void findByStringIdQuery() {
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        String findByIdQuery = selectQueryBuilder.findById(Person.class, "yang");
+
+        assertEquals(findByIdQuery, "select id, nick_name, old, email FROM users where id = 'yang'");
+    }
 }
