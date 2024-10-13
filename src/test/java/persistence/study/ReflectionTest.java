@@ -7,82 +7,63 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReflectionTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
-    @Nested
-    class 요구사항1 {
+    @Test
+    @DisplayName("Car 객체 정보 가져오기")
+    void showClass() {
+        Class<Car> carClass = Car.class;
+        Assertions.assertAll("Car 클래스의 모든 필드, 생성자, 메소드에 대한 정보를 출력",
+                () -> assertThat(Arrays.stream(carClass.getDeclaredFields())
+                        .map(this::formatField)
+                        .toList())
+                        .containsExactlyInAnyOrder("private String name", "private int price"),
+                () -> assertThat(Arrays.stream(carClass.getDeclaredConstructors())
+                        .map(this::formatConstructor)
+                        .toList())
+                        .containsExactlyInAnyOrder("public persistence.study.Car(String, int)", "public persistence.study.Car()"),
+                () -> assertThat(Arrays.stream(carClass.getDeclaredMethods())
+                        .map(this::formatMethod)
+                        .toList())
+                        .containsExactlyInAnyOrder("public void printView()", "public String testGetName()", "public String testGetPrice()")
+        );
+    }
 
-        @Test
-        @DisplayName("Car 객체 정보 가져오기")
-        void showClass() {
-            Class<Car> carClass = Car.class;
-            String builder = getClassName(carClass) +
-                    getFields(carClass) +
-                    getConstructors(carClass) +
-                    getMethods(carClass);
-            logger.debug(builder);
-        }
+    private String formatField(Field field) {
+        return MessageFormat.format("{0} {1} {2}",
+                Modifier.toString(field.getModifiers()),
+                field.getType().getSimpleName(),
+                field.getName());
+    }
 
-        private String getClassName(Class<Car> clazz) {
-            return "클래스명: " + clazz.getName() + System.lineSeparator();
-        }
+    private String formatConstructor(Constructor<?> constructor) {
+        return MessageFormat.format("{0} {1}({2})",
+                Modifier.toString(constructor.getModifiers()),
+                constructor.getName(),
+                formatParameterTypes(constructor.getParameterTypes()));
+    }
 
-        private String getFields(Class<Car> clazz) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("필드: ").append(System.lineSeparator());
-            for (Field field : clazz.getDeclaredFields()) {
-                builder.append(field.getModifiers())
-                        .append(" ")
-                        .append(field.getName())
-                        .append(System.lineSeparator());
-            }
-            return builder.toString();
-        }
+    private String formatMethod(Method method) {
+        return MessageFormat.format("{0} {1} {2}({3})",
+                Modifier.toString(method.getModifiers()),
+                method.getReturnType().getSimpleName(),
+                method.getName(),
+                formatParameterTypes(method.getParameterTypes()));
+    }
 
-        private String getConstructors(Class<Car> clazz) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("생성자: ").append(System.lineSeparator());
-            for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-                builder.append(constructor.getModifiers())
-                        .append(" ")
-                        .append(constructor.getName());
-                builder.append("(")
-                        .append(getParameterTypes(constructor))
-                        .append(")")
-                        .append(System.lineSeparator());
-            }
-            return builder.toString();
-        }
-
-        private String getParameterTypes(Constructor<?> constructor) {
-            Class<?>[] classes = constructor.getParameterTypes();
-            String[] allTypes = new String[classes.length];
-            for (int i = 0; i < classes.length; i++) {
-                allTypes[i] = classes[i].getName();
-            }
-            return String.join(", ", allTypes);
-        }
-
-        private String getMethods(Class<Car> clazz) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("메서드: ").append(System.lineSeparator());
-            for (Method method : clazz.getDeclaredMethods()) {
-                builder.append(method.getModifiers()).append(" ")
-                        .append(method.getName())
-                        .append(System.lineSeparator());
-            }
-            return builder.toString();
-        }
+    private String formatParameterTypes(Class<?>[] types) {
+        return String.join(", ",
+                Arrays.stream(types).map(Class::getSimpleName).toList());
     }
 
     @Nested
