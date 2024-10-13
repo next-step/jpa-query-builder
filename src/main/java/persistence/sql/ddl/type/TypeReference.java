@@ -26,11 +26,10 @@ public enum TypeReference {
     }
 
     public static String getSqlType(Class<?> clazz) {
-        try {
-            return sqlTypes.get(clazz);
-        } catch (NullPointerException  ex) {
+        if (!sqlTypes.containsKey(clazz)) {
             throw new RuntimeException("class '" + clazz.getName() + "' sql type not exist.");
         }
+        return sqlTypes.get(clazz);
     }
 
 }
