@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -11,6 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ColumnTypeTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ColumnTypeTest.class);
+
+    @Test
+    @DisplayName("정의되지 않은 필드의 타입 오류 출력")
+    void invalidColumnType() {
+        Class<Boolean> booleanClass = Boolean.class;
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            ColumnType.of(booleanClass);
+        });
+    }
 
     @Test
     @DisplayName("Long으로 정의된 필드의 타입을 BigInt로 변환하여 반환")
