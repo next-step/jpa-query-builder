@@ -1,7 +1,8 @@
 package persistence.sql.ddl.query;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.PrimaryKey;
+import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
+import persistence.sql.ddl.definition.PrimaryKey;
 
 public class IdentityKeyGenerationStrategy implements PrimaryKeyGenerationStrategy {
 
@@ -11,7 +12,7 @@ public class IdentityKeyGenerationStrategy implements PrimaryKeyGenerationStrate
     }
 
     @Override
-    public Boolean supports(PrimaryKey pk) {
+    public boolean supports(PrimaryKey pk) {
         return pk.generationType().equals(GenerationType.IDENTITY);
     }
 }

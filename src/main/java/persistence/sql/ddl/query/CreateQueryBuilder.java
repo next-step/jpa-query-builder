@@ -1,17 +1,11 @@
 package persistence.sql.ddl.query;
 
-import persistence.sql.ddl.PrimaryKey;
-import persistence.sql.ddl.TableColumn;
-import persistence.sql.ddl.TableInfo;
-
-import java.util.List;
+import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.ddl.definition.PrimaryKey;
+import persistence.sql.ddl.Queryable;
+import persistence.sql.ddl.definition.TableDefinition;
 
 public class CreateQueryBuilder implements QueryBuilder {
-    private final List<PrimaryKeyGenerationStrategy> pkGenerationStrategies = List.of(
-            new AutoKeyGenerationStrategy(),
-            new IdentityKeyGenerationStrategy()
-    );
-
     public CreateQueryBuilder() {
     }
 
@@ -28,29 +22,20 @@ public class CreateQueryBuilder implements QueryBuilder {
 
     @Override
     public String build(Class<?> entityClazz) {
-        TableInfo tableInfo = getSchemaInformation(entityClazz);
-        PrimaryKeyGenerationStrategy pkStrategy = getPrimaryKeyGenerationStrategy(tableInfo);
-
+        TableDefinition tableDefinition = new TableDefinition(entityClazz);
         StringBuilder query = new StringBuilder();
 
-        query.append("CREATE TABLE ").append(tableInfo.tableName());
+        query.append("CREATE TABLE ").append(tableDefinition.tableName());
         query.append(" (");
 
-        for (TableColumn column : tableInfo.columns()) {
-            column.applyToQuery(query, pkStrategy);
+        for (Queryable column : tableDefinition.queryableColumns()) {
+            column.apply(query);
         }
 
-        definePrimaryKey(tableInfo.primaryKey(), query);
+        definePrimaryKey(tableDefinition.primaryKey(), query);
 
         query.append(");");
         return query.toString();
-    }
-
-    private PrimaryKeyGenerationStrategy getPrimaryKeyGenerationStrategy(TableInfo tableInfo) {
-        return pkGenerationStrategies.stream()
-                .filter(strategy -> strategy.supports(tableInfo.primaryKey()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Primary key generation strategy not found"));
     }
 
     private void definePrimaryKey(PrimaryKey pk, StringBuilder query) {
