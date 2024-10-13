@@ -28,6 +28,13 @@ public class QueryBuilderDDL {
         return sb.toString();
     }
 
+    public String buildDropDdl(Class<?> clazz) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("drop table ");
+        sb.append(getTableName(clazz)).append(";");
+        return sb.toString();
+    }
+
     private String getTableName(Class<?> clazz) {
         final var className = clazz.getSimpleName().toLowerCase();
         final var tableAnotation = clazz.getAnnotation(Table.class);
