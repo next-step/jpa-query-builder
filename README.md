@@ -129,3 +129,99 @@ public class Person {
             └── NameConverter.java ------------------ 이름 변환 인터페이스
 
 ```
+
+
+## 3단계 - QueryBuilder DML
+
+## 요구사항
+### 0. 사전 정보
+```java
+@Table(name = "users")
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name")
+    private String name;
+
+    @Column(name = "old")
+    private Integer age;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Transient
+    private Integer index;
+
+}
+
+```
+
+### 1. 위의 정보를 바탕으로 insert 구현해보기
+> 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다   
+> 위의 정보를 통해 Person 클래스의 정보를 업데이트 해준다   
+> @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자
+
+- columns 과 values 를 나누어서 구현해보자
+  - insert into table (column1, column2, column3) values (value1, value2, value3)
+```java
+     private String columnsClause(Class<?> clazz) {
+         //logic...
+     }
+ 
+     private String valueClause(Object object) {
+        //logic... 
+     }
+
+```
+### 2. 요구사항 2 - 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
+> 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다   
+> 쿼리 실행을 통해 데이터를 여러 row 를 넣어 정상적으로 나오는지 확인해보자
+
+```java
+public interface Database {
+    // logic... 
+    ResultSet executeQuery(String sql);
+}
+
+```
+
+### 3. 요구사항 3 - 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
+> 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다
+
+```java
+private String whereClause(String selectQuery, Class<?> clazz) {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(selectQuery);
+    stringBuilder.append(" where ");
+    //logic ...
+}
+
+```
+### 4. 요구사항 4 - 위의 정보를 바탕으로 delete 쿼리 만들어보기
+> 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다   
+> @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
