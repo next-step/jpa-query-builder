@@ -15,6 +15,14 @@ public class H2DataTypeTest {
     @ParameterizedTest
     @CsvSource(value = {"java.lang.String:VARCHAR(255)", "java.lang.Integer:INTEGER", "java.lang.Long:BIGINT"}, delimiter = ':')
     void getDataTypeTest(String dataType, String h2DataType) {
-        assertThat(H2DataType.findH2DataTypeByDataType(dataType)).isEqualTo(h2DataType);
+        assertThat(H2DataType.findH2DataTypeByDataType(getClassForName(dataType))).isEqualTo(h2DataType);
+    }
+
+    private Class<?> getClassForName(String className) {
+        try {
+            return Class.forName(className);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("없는 클래스명");
+        }
     }
 }
