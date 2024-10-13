@@ -6,6 +6,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/*
+- 변수 데이터타입에 따른 H2 컬럼 데이터타입을 가져온다.
+*/
 public class H2DataTypeTest {
 
     @DisplayName("변수 데이터타입에 따른 H2 컬럼 데이터타입을 가져온다.")

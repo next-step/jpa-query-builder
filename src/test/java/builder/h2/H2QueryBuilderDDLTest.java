@@ -7,6 +7,19 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+
+/*
+- create 쿼리 생성시 Entity어노테이션이 존재하지 않으면 예외를 발생시킨다.
+- create쿼리를 생성 시 @Id가 지정된 변수를 PK로 가져간다.
+- create쿼리를 생성 시 @Column이 지정되어있지 않으면 변수명을 컬럼명으로 생성한다.
+- create쿼리를 생성 시 @Column이 지정되어 있으면 확인하여 생성한다.
+- create쿼리를 생성 시 @Id가 2개 이상이면 예외가 발생한다.
+- create쿼리를 생성 시 @Table이 지정되어있다면 테이블명을 가져온다.
+- create쿼리를 생성 시 @GeneratedValue가 지정되어있다면 AUTOINCREMENT을 추가한다.
+- create쿼리를 생성 시 @Transient가 지정되어있다면 컬럼을 생성하지 않는다.
+- drop쿼리를 생성한다.
+- drop쿼리를 생성할시 @Entity가 없다면 예외를 발생시킨다.
+*/
 public class H2QueryBuilderDDLTest {
 
     @DisplayName("create 쿼리 생성시 Entity어노테이션이 존재하지 않으면 예외를 발생시킨다.")
@@ -143,7 +156,7 @@ public class H2QueryBuilderDDLTest {
         );
     }
 
-    @DisplayName("create쿼리를 생성 시 @GeneratedValue가 지정되어있다면 테이블명을 가져온다.")
+    @DisplayName("create쿼리를 생성 시 @GeneratedValue가 지정되어있다면 AUTOINCREMENT을 추가한다.")
     @Test
     void existGeneratedValueAnnotationOverTwoTest() {
         @Table(name = "users")
