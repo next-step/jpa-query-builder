@@ -11,12 +11,19 @@ class SelectQueryBuilderTest {
 
     @Test
     @DisplayName("Person 객체로 Select(findAll) Query 만들기")
-    void createTableQuery() {
+    void findAllQuery() {
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
         String findAllQuery = selectQueryBuilder.findAll(Person.class);
 
         assertEquals(findAllQuery, "select id, nick_name, old, email FROM users");
     }
 
+    @Test
+    @DisplayName("Person 객체로 Select(findById) Query 만들기")
+    void findByIdQuery() {
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        String findByIdQuery = selectQueryBuilder.findById(Person.class, 1L);
 
+        assertEquals(findByIdQuery, "select id, nick_name, old, email FROM users where id = 1");
+    }
 }

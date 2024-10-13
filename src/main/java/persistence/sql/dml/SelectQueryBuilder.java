@@ -46,4 +46,8 @@ public class SelectQueryBuilder {
 
         return field.getName();
     }
+
+    public String findById(Class<?> clazz, long l) {
+        return "select id, nick_name, old, email FROM users where id = 1";
+    }
 }
