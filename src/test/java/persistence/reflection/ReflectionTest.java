@@ -4,8 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.study.Car;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 public class ReflectionTest {
@@ -36,5 +39,23 @@ public class ReflectionTest {
         // 메서드 정보 출력
         Arrays.stream(carClass.getDeclaredMethods()).forEach(method -> log.info("Method is {}", method.getName()));
 
+    }
+
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    void showTestMethods() {
+        Car genesisCar = new Car("Genesis", 50_000_000);
+        Arrays.stream(genesisCar.getClass().getDeclaredMethods()).map(method -> {
+            Object methodName = null;
+            if (method.getName().startsWith("test")) {
+                try {
+                    methodName = method.invoke(genesisCar);
+
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return methodName;
+        }).filter(Objects::nonNull).forEach(name -> log.info(name.toString()));
     }
 }
