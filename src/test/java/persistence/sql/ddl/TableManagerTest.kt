@@ -1,9 +1,10 @@
 package persistence.sql.ddl
 
 import entity.Person
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Assertions.*
+import persistence.Application
 
 class TableManagerTest: DescribeSpec({
 
@@ -17,10 +18,10 @@ class TableManagerTest: DescribeSpec({
             }
         }
 
-        context("Entity 어노테이션이 작성되어 있지 않다면") {
-            val tableManager = TableManager(Column::class.java)
-            it("빈 리스트를 반환한다.") {
-                tableManager.createQuery() shouldBe listOf()
+        context("Entity 어노테이션이 작성되어 있지 않은 클래스가 존재한다면") {
+            it("TableManger 객체 생성에 실패하며, 잘못된 파라미터가 전달되었다는 의미의 예외를 던진다.") {
+                shouldThrow<IllegalArgumentException> { TableManager(Application::class.java, TableManager::class.java, Table::class.java, Column::class.java) }
+                    .message shouldBe "Entity 어노테이션을 작성해주세요. [persistence.Application, persistence.sql.ddl.TableManager, persistence.sql.ddl.Table, ...]"
             }
         }
     }
