@@ -17,14 +17,17 @@ class Table (
     }
 
     private fun extractTableName(): String {
-        return this.clazz.getAnnotation(Table::class.java)?.name ?: this.simpleName
+        return this.clazz.getAnnotation(Table::class.java)?.name
+            ?: this.simpleName
     }
 
-    private fun columnsToQuery(): String = columns.map { it.createQuery() }
-        .filter { it.isNotEmpty() }
-        .joinToString(",")
+    private fun columnsToQuery(): String {
+        return columns.map { it.createQuery() }
+            .filter { it.isNotEmpty() }
+            .joinToString(",")
+    }
 
-    private fun extractColumn(clazz: Class<*>): List<Column> =
-        clazz.declaredFields.map { Column(it) }
-
+    private fun extractColumn(clazz: Class<*>): List<Column> {
+        return clazz.declaredFields.map { Column(it) }
+    }
 }
