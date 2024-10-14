@@ -28,11 +28,8 @@ class ColumnTypeTest {
         Class<Long> longClass = Long.class;
         ColumnType columnDef = ColumnType.of(longClass);
         logger.info("{} 자바 타입을 변환한 결과값 : {}", columnDef.getJavaType(), columnDef.getQueryDefinition());
-        assertAll(
-                () -> assertThat(columnDef.getQueryDefinition()).isEqualTo(ColumnType.BIGINT.getQueryDefinition()),
-                () -> assertThat(columnDef.getJavaType()).isEqualTo(ColumnType.BIGINT.getJavaType()),
-                () -> assertThat(columnDef.getQueryDefinition()).isEqualTo("bigint")
-        );
+
+        assertThat(columnDef).isEqualTo(ColumnType.BIGINT);
     }
 
     @Test
@@ -41,11 +38,7 @@ class ColumnTypeTest {
         Class<String> stringClass = String.class;
         ColumnType columnDef = ColumnType.of(stringClass);
         logger.info("{} 자바 타입을 변환한 결과값 : {}", columnDef.getJavaType(), columnDef.getQueryDefinition());
-        assertAll(
-                () -> assertThat(columnDef.getQueryDefinition()).isEqualTo(ColumnType.VARCHAR.getQueryDefinition()),
-                () -> assertThat(columnDef.getJavaType()).isEqualTo(ColumnType.VARCHAR.getJavaType()),
-                () -> assertThat(columnDef.getQueryDefinition()).isEqualTo("varchar(255)")
-        );
+        assertThat(columnDef).isEqualTo(ColumnType.VARCHAR);
     }
 
     @Test
@@ -54,11 +47,7 @@ class ColumnTypeTest {
         Class<Integer> integerClass = Integer.class;
         ColumnType columnDef = ColumnType.of(integerClass);
         logger.info("{} 자바 타입을 변환한 결과값 : {}", columnDef.getJavaType(), columnDef.getQueryDefinition());
-        assertAll(
-                () -> assertThat(columnDef.getQueryDefinition()).isEqualTo(ColumnType.INTEGER.getQueryDefinition()),
-                () -> assertThat(columnDef.getJavaType()).isEqualTo(ColumnType.INTEGER.getJavaType()),
-                () -> assertThat(columnDef.getQueryDefinition()).isEqualTo("integer")
-        );
+        assertThat(columnDef).isEqualTo(ColumnType.INTEGER);
     }
 
 }
