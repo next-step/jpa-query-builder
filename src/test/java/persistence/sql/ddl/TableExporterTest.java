@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.fixture.PersonWithEntityIdFixture;
 import persistence.sql.ddl.fixture.PersonWithGeneratedValueColumnFixture;
+import persistence.sql.ddl.fixture.PersonWithTableTransientFixture;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +36,20 @@ public class TableExporterTest {
                 + "primary key (id)"
                 + ")";
         assertEquals(exporter.getSqlCreateQueryString(PersonWithGeneratedValueColumnFixture.class), expectedQuery);
+    }
+
+    @Test
+    @DisplayName("[성공] Person @Table @Transient 클래스에 대한 create query 검증")
+    void createQueryWithTableTransient() {
+        TableExporter exporter = new TableExporter();
+        String expectedQuery = "create table users ("
+                + "id bigint auto_increment, "
+                + "nick_name varchar(255), "
+                + "old integer, "
+                + "email varchar(255) not null, "
+                + "primary key (id)"
+                + ")";
+        assertEquals(exporter.getSqlCreateQueryString(PersonWithTableTransientFixture.class), expectedQuery);
     }
 
     @Test
