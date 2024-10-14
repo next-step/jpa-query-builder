@@ -1,8 +1,6 @@
 package persistence.sql.dml;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import persistence.sql.MetadataUtils;
 
@@ -11,9 +9,14 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder {
+    private final MetadataUtils metadataUtils;
+
+    public InsertQueryBuilder(Class<?> clazz) {
+        this.metadataUtils = new MetadataUtils(clazz);
+    }
+
     public String getInsertQuery(Object object) {
         Class<?> clazz = object.getClass();
-        MetadataUtils metadataUtils = new MetadataUtils(clazz);
         String tableName = metadataUtils.getTableName();
         String tableColumns = columnsClause(clazz);
         String tableValues = valueClause(object);
@@ -24,20 +27,8 @@ public class InsertQueryBuilder {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(GeneratedValue.class))
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(this::getTableColumn)
+                .map(metadataUtils::getFieldName)
                 .collect(Collectors.joining(", "));
-    }
-
-    private String getTableColumn(Field field) {
-        Column annotation = field.getAnnotation(Column.class);
-        if (annotation == null) {
-            return field.getName();
-        }
-        if (!annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return field.getName();
     }
 
     private String valueClause(Object object) {

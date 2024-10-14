@@ -3,7 +3,6 @@ package persistence.sql.ddl;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import persistence.sql.MetadataUtils;
 import persistence.sql.domain.FieldType;
@@ -13,6 +12,11 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
+    private final MetadataUtils metadataUtils;
+
+    public CreateQueryBuilder(Class<?> clazz) {
+        this.metadataUtils = new MetadataUtils(clazz);
+    }
 
     public String createTableQuery(Class<?> clazz) {
         MetadataUtils metadataUtils = new MetadataUtils(clazz);
@@ -29,7 +33,7 @@ public class CreateQueryBuilder {
     }
 
     private String getFieldDefinition(Field field) {
-        String fieldName = getFieldName(field);
+        String fieldName = metadataUtils.getFieldName(field);
         String fieldType = getFieldType(field);
         StringBuilder result = new StringBuilder(String.format("%s %s", fieldName, fieldType));
         if (isIdField(field)) {
@@ -42,18 +46,6 @@ public class CreateQueryBuilder {
             result.append(" NOT NULL");
         }
         return result.toString();
-    }
-
-    private static String getFieldName(Field field) {
-        Column annotation = field.getAnnotation(Column.class);
-        if (annotation == null) {
-            return field.getName();
-        }
-        if (!annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return field.getName();
     }
 
     private boolean isNotNullConstraint(Field field) {

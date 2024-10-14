@@ -1,6 +1,5 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Table;
 import persistence.sql.MetadataUtils;
 
 public class DropQueryBuilder {
