@@ -23,7 +23,7 @@ public class Application {
             jpaPersistentEntity.createTable(Person.class);
             jpaPersistentEntity.dropTable(Person.class);
 
-            String sql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_person.sql");
+            String sql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_person_v2.sql");
             jdbcTemplate.execute(sql);
 
             server.stop();
