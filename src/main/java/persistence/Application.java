@@ -26,7 +26,7 @@ public class Application {
             final String sql = queryGenerator.create(Person.class);
             jdbcTemplate.execute(sql);
 
-            jdbcTemplate.verifyTableCreation();
+            jdbcTemplate.verifyTableCreation(Person.class);
 
             server.stop();
         } catch (Exception e) {
