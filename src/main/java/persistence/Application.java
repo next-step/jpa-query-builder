@@ -3,6 +3,7 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,13 +23,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final String sql = """
-                    CREATE TABLE PERSON (
-                        id BIGINT PRIMARY KEY,
-                        name VARCHAR(255),
-                        age INTEGER
-                    );
-                    """;
+            final String sql = create();
             jdbcTemplate.execute(sql);
 
             final List<String> tableNames = jdbcTemplate.query(
@@ -51,5 +46,17 @@ public class Application {
         } finally {
             logger.info("Application finished");
         }
+    }
+
+    @NotNull
+    private String create() {
+        final String sql = """
+                CREATE TABLE PERSON (
+                    id BIGINT PRIMARY KEY,
+                    name VARCHAR(255),
+                    age INTEGER
+                );
+                """;
+        return sql;
     }
 }
