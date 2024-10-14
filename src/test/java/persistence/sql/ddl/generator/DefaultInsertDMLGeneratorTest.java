@@ -5,11 +5,11 @@ import persistence.sql.ddl.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2InsertDMLGeneratorTest {
+class DefaultInsertDMLGeneratorTest {
     @Test
     void DML을_생성한다() {
         Person person = new Person(null, "soora", 10, "soora@naver.com", 5);
-        H2InsertDMLGenerator generator = new H2InsertDMLGenerator();
+        DefaultInsertDMLGenerator generator = new DefaultInsertDMLGenerator();
 
         String dml = generator.generate(person);
 

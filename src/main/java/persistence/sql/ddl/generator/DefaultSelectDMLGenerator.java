@@ -2,7 +2,7 @@ package persistence.sql.ddl.generator;
 
 import persistence.sql.ddl.EntityFields;
 
-public class H2SelectDMLGenerator implements SelectDMLGenerator {
+public class DefaultSelectDMLGenerator implements SelectDMLGenerator {
     @Override
     public String generateFindAll(EntityFields entityFields) {
         return "select * from %s;".formatted(entityFields.tableName());

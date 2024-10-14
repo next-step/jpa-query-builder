@@ -6,11 +6,11 @@ import persistence.sql.ddl.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2DeleteDMLGeneratorTest {
+class DefaultDeleteDMLGeneratorTest {
     @Test
     void deleteAll_DML을_생성한다() {
         EntityFields entityFields = EntityFields.from(Person.class);
-        H2DeleteDMLGenerator generator = new H2DeleteDMLGenerator();
+        DefaultDeleteDMLGenerator generator = new DefaultDeleteDMLGenerator();
 
         String dml = generator.generateDeleteAll(entityFields);
 
@@ -20,7 +20,7 @@ class H2DeleteDMLGeneratorTest {
     @Test
     void deleteById_DML을_생성한다() {
         EntityFields entityFields = EntityFields.from(Person.class);
-        H2DeleteDMLGenerator generator = new H2DeleteDMLGenerator();
+        DefaultDeleteDMLGenerator generator = new DefaultDeleteDMLGenerator();
 
         String dml = generator.generateDeleteById(entityFields, 3);
 

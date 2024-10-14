@@ -10,11 +10,11 @@ import persistence.sql.ddl.exception.NotSupportException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-class H2CreateDDLGeneratorTest {
+class DefaultCreateDDLGeneratorTest {
     @Test
     void DDL을_생성한다() {
         EntityFields entityFields = EntityFields.from(Person.class);
-        H2CreateDDLGenerator h2Creator = new H2CreateDDLGenerator();
+        DefaultCreateDDLGenerator h2Creator = new DefaultCreateDDLGenerator();
 
         String ddl = h2Creator.generate(entityFields);
 
@@ -24,7 +24,7 @@ class H2CreateDDLGeneratorTest {
     @Test
     void 컬럼의_길이가_지정된_DDL을_생성한다() {
         EntityFields entityFields = EntityFields.from(LengthEntity.class);
-        H2CreateDDLGenerator h2Creator = new H2CreateDDLGenerator();
+        DefaultCreateDDLGenerator h2Creator = new DefaultCreateDDLGenerator();
 
         String ddl = h2Creator.generate(entityFields);
 
@@ -34,7 +34,7 @@ class H2CreateDDLGeneratorTest {
     @Test
     void 제공되지_않는_전략을_사용시_실패한다() {
         EntityFields entityFields = EntityFields.from(NotSupportStratgyEntity.class);
-        H2CreateDDLGenerator h2Creator = new H2CreateDDLGenerator();
+        DefaultCreateDDLGenerator h2Creator = new DefaultCreateDDLGenerator();
 
         assertThatExceptionOfType(NotSupportException.class)
             .isThrownBy(() -> h2Creator.generate(entityFields));

@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class H2InsertDMLGenerator implements InsertDMLGenerator {
+public class DefaultInsertDMLGenerator implements InsertDMLGenerator {
     @Override
     public String generate(Object entity) {
         EntityFields entityFields = EntityFields.from(entity.getClass());

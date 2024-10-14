@@ -6,11 +6,11 @@ import persistence.sql.ddl.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2SelectDMLGeneratorTest {
+class DefaultSelectDMLGeneratorTest {
     @Test
     void findAll_DML을_생성한다() {
         EntityFields entityFields = EntityFields.from(Person.class);
-        H2SelectDMLGenerator generator = new H2SelectDMLGenerator();
+        DefaultSelectDMLGenerator generator = new DefaultSelectDMLGenerator();
 
         String dml = generator.generateFindAll(entityFields);
 
@@ -20,7 +20,7 @@ class H2SelectDMLGeneratorTest {
     @Test
     void findById_DML을_생성한다() {
         EntityFields entityFields = EntityFields.from(Person.class);
-        H2SelectDMLGenerator generator = new H2SelectDMLGenerator();
+        DefaultSelectDMLGenerator generator = new DefaultSelectDMLGenerator();
 
         String dml = generator.generateFindById(entityFields, 3);
 

@@ -17,11 +17,11 @@ public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
-        CreateDDLGenerator createDDLGenerator = new H2CreateDDLGenerator();
-        DropDDLGenerator dropDDLGenerator = new H2DropDDLGenerator();
-        InsertDMLGenerator insertDMLGenerator = new H2InsertDMLGenerator();
-        SelectDMLGenerator selectDMLGenerator = new H2SelectDMLGenerator();
-        DeleteDMLGenerator deleteDMLGenerator = new H2DeleteDMLGenerator();
+        CreateDDLGenerator createDDLGenerator = new DefaultCreateDDLGenerator();
+        DropDDLGenerator dropDDLGenerator = new DefaultDropDDLGenerator();
+        InsertDMLGenerator insertDMLGenerator = new DefaultInsertDMLGenerator();
+        SelectDMLGenerator selectDMLGenerator = new DefaultSelectDMLGenerator();
+        DeleteDMLGenerator deleteDMLGenerator = new DefaultDeleteDMLGenerator();
 
         EntityFields entityFields = EntityFields.from(Person.class);
         Person personForSave1 = new Person(null, "soora", 10, "soora@naver.com", 5);

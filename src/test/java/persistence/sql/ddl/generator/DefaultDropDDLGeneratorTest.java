@@ -6,13 +6,13 @@ import persistence.sql.ddl.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class H2DropDDLGeneratorTest {
+class DefaultDropDDLGeneratorTest {
     @Test
     void DDL을_생성한다() {
         EntityFields entityFields = EntityFields.from(Person.class);
-        H2DropDDLGenerator h2DropDDLGenerator = new H2DropDDLGenerator();
+        DefaultDropDDLGenerator defaultDropDDLGenerator = new DefaultDropDDLGenerator();
 
-        String ddl = h2DropDDLGenerator.generate(entityFields);
+        String ddl = defaultDropDDLGenerator.generate(entityFields);
 
         assertThat(ddl).isEqualTo("DROP TABLE users;");
     }
