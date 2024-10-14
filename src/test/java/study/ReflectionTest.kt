@@ -4,6 +4,7 @@ import entity.Person
 import jakarta.persistence.Column
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
+import jakarta.persistence.Table
 import org.assertj.core.api.Assertions.*
 import org.assertj.core.api.SoftAssertions.*
 import org.junit.jupiter.api.DisplayName
@@ -122,7 +123,7 @@ class ReflectionTest {
 
     @Test
     @DisplayName("필드에 선언된 어노테이션의 값을 조회한다")
-    fun annotationValue() {
+    fun fieldAnnotation() {
         val clazz = Person::class.java
 
         val idField = clazz.getDeclaredField("id")
@@ -134,5 +135,13 @@ class ReflectionTest {
             it.assertThat(nameField.getAnnotation(Column::class.java).name).isEqualTo("nick_name")
             it.assertThat(emailField.getAnnotation(Column::class.java).nullable).isFalse
         }
+    }
+
+    @Test
+    @DisplayName("클래스에 선언된 어노테이션의 값을 조회한다")
+    fun clasAnnotation() {
+        val clazz = Person::class.java
+
+        assertThat(clazz.getAnnotation(Table::class.java).name).isEqualTo("users")
     }
 }
