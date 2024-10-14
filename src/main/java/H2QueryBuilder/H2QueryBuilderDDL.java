@@ -16,7 +16,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     private final static String NOT_NULL       = " NOT NULL";
     private final static String AUTO_INCREMENT = " AUTO_INCREMENT";
     private final static String TABLE_NAME     = "{tableName}";
-    private final static String COLUMN_INFO    = "{columnDefinitions}";
+    private final static String COLUMN_INFO    = "{columnInfo}";
 
     @Override
     public String create(Class<?> entityClass) {
