@@ -74,3 +74,35 @@
       }
   ```
 - [x] 정보를 바탕으로 drop 쿼리 만들어보기
+
+---
+
+## step3
+
+요구사항
+
+- [ ] 아래 정보를 바탕으로 insert 구현해보기
+  ```java
+    @Table(name = "users")
+    @Entity
+    public class Person {
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
+      private Long id;
+
+      @Column(name = "nick_name")
+      private String name;
+
+      @Column(name = "old")
+      private Integer age;
+
+      @Column(nullable = false)
+      private String email;
+
+      @Transient
+      private Integer index;
+      }
+  ```
+- [ ] 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
+- [ ] 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
+- [ ] 위의 정보를 바탕으로 delete 쿼리 만들어보기
