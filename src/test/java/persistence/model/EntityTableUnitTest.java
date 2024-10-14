@@ -3,21 +3,17 @@ package persistence.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.dialect.Dialect;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class EntityTableUnitTest {
     EntityTable entityTable;
-    Dialect dialect;
 
     @BeforeEach
     void setup() {
         entityTable = EntityTable.build(UnitTestEntity.class);
-        dialect = mock(Dialect.class);
     }
 
     @Test
@@ -31,10 +27,10 @@ public class EntityTableUnitTest {
     public void testSetColumns() throws NoSuchFieldException {
         // given
         entityTable.setColumns(List.of(
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("id"), dialect),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("name"), dialect),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("email"), dialect),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("age"), dialect)
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("id")),
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("name")),
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("email")),
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("age"))
         ));
 
         assertEquals(4, entityTable.getColumns().size());
@@ -45,10 +41,10 @@ public class EntityTableUnitTest {
     public void testGetPrimary() throws NoSuchFieldException {
         // given
         entityTable.setColumns(List.of(
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("id"), dialect),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("name"), dialect),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("email"), dialect),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("age"), dialect)
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("id")),
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("name")),
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("email")),
+                EntityColumn.build(UnitTestEntity.class.getDeclaredField("age"))
         ));
 
         assertEquals(1, entityTable.getPrimaryColumns().size());

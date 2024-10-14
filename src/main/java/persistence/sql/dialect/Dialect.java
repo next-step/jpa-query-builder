@@ -49,12 +49,12 @@ public abstract class Dialect {
         };
     }
 
-    public DataType getDataType(Class<?> javaType) {
+    public String getDataTypeFullName(Class<?> javaType, int length) {
         DataType dataType = dataTypeRegistry.get(javaType);
         if (dataType == null) {
             throw new NoSuchElementException("UNSUPPORTED JAVA TYPE : " + javaType.getSimpleName());
         }
-        return dataType;
+        return dataType.getFullName(length);
     }
 
     public String getQuote() {

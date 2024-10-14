@@ -3,7 +3,6 @@ package persistence.sql.dialect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.model.meta.DataType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,29 +44,29 @@ class DialectUnitTest {
     @Test
     @DisplayName("표준 타입을 가져온다.")
     void testGetCommonDataType() {
-        DataType intType = dialect.getDataType(Integer.class);
-        DataType varcharType = dialect.getDataType(String.class);
-        DataType bigIntType = dialect.getDataType(Long.class);
+        String intType = dialect.getDataTypeFullName(Integer.class, -1);
+        String varcharType = dialect.getDataTypeFullName(String.class, 500);
+        String bigIntType = dialect.getDataTypeFullName(Long.class, -1);
 
         assertAll(
-                () -> assertEquals(INTEGER, intType.sqlTypeCode()),
-                () -> assertEquals(VARCHAR, varcharType.sqlTypeCode()),
-                () -> assertEquals(BIGINT, bigIntType.sqlTypeCode())
+                () -> assertEquals("int", intType),
+                () -> assertEquals("varchar(500)", varcharType),
+                () -> assertEquals("bigint", bigIntType)
         );
     }
 
     @Test
     void testGetExtendedDataType() {
-        DataType dataType = dialect.getDataType(LocalDateTime.class);
+        String dataType = dialect.getDataTypeFullName(LocalDateTime.class, 255);
 
-        assertEquals(TIMESTAMP, dataType.sqlTypeCode());
+        assertEquals("DATETIME", dataType);
     }
 
     @Test
     @DisplayName("등록되지 않은 타입을 조회하려 하면 에러가 발생한다.")
     void testGetDataTypeThrowsExceptionForUnsupportedType() {
         assertThrows(NoSuchElementException.class, () -> {
-            dialect.getDataType(Double.class);
+            dialect.getDataTypeFullName(Double.class, 255);
         });
     }
 
