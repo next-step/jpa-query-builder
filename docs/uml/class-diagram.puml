@@ -1,12 +1,10 @@
 @startuml
 interface QueryBuilder {
-    + String getQuery()
+    + String buildQuery()
 }
 
-class DDLQueryBuilder {
-    + Object<<Entity>> entity
-    + DropTableStep dropTable(String tableName)
-    + CreateTableStep createTable(String tableName)
+interface DDLTableIfNotExistStep extends QueryBuilder{
+    + QueryBuilder ifNotExist()
 }
 
 
@@ -14,26 +12,58 @@ class DMLQueryBuilder {
 
 }
 
-interface CreateTableStep {
+interface CreateTableStep extends DDLTableIfNotExistStep {
 
 }
 
-interface DropTableStep {
+interface DropTableStep extends DDLTableIfNotExistStep {
 
 }
 
-interface DropTableConditionStep {
+abstract class CreateTableImpl extends CreateTableStep{
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2CreateTableImpl extends CreateTableImpl {
 
 }
 
+abstract class DropTableImpl extends DropTableStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
 
-QueryBuilder <|-- DDLQueryBuilder : extends
-DDLQueryBuilder <|-- DropTableStep : extends
-DDLQueryBuilder <|-- CreateTableStep : extends
+class H2DropTableImpl extends DropTableImpl {
 
-DropTableStep <|-- DropTableConditionStep
+}
 
+class JpaSettings {
+    + SQLDialect dialect
+    + NamingStrategy
+}
 
-QueryBuilder <|-- DMLQueryBuilder
+TableEntity *--	TableField
+TableEntity *--	JpaSettings
+
+TableField *-- JpaSettings
+
+class TableEntity {
+    + String tableName;
+    + TablePrimaryField id;
+    + List<? extends TableField> allFields
+}
+
+class TableField {
+    - Field field;
+    - String fieldName;
+    - ColumnMeta columnMeta;
+    - JpaSettings jpaSettings;
+}
+
+class TablePrimaryField extends TableField {
+    - @Id
+    - @GeneratedValue
+}
 
 @enduml

@@ -91,6 +91,11 @@ public class TableEntity<ENTITY> {
         return new TablePrimaryField(idList.getFirst(), jpaSettings);
     }
 
+    /**
+     * 모든 영속성 필드 추출
+     * @param entityClass
+     * @return
+     */
     private List<TableField> extractAllPersistenceFields(Class<ENTITY> entityClass) {
         Field[] declaredFields = entityClass.getDeclaredFields();
 
