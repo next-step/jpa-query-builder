@@ -19,6 +19,8 @@ dependencies {
     implementation("com.h2database:h2:2.1.214")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.slf4j:slf4j-api:1.7.32")
+    testImplementation("ch.qos.logback:logback-classic:1.2.6")
 }
 
 tasks.test {
