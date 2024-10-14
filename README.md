@@ -17,6 +17,7 @@
 
 1. [x] 클래스의 필드 정보를 읽어서 컬럼 DDL을 문자열로 반환하는 `Column` 클래스 추가
 2. [x] `@Entity`, `@Id`가 작성된 클래스 기준 create 쿼리 생성
+3. [x] `@Table`, `@Column`, `@GeneratedValue`, `@Transient` 처리 추가
 
 ### 엣지 케이스
 

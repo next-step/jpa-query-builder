@@ -17,9 +17,9 @@ class ApplicationTest : StringSpec({
         val tableManager = TableManager(Person::class.java)
 
         tableManager.createQuery().forEach(jdbcTemplate::execute)
-        jdbcTemplate.execute("select * from person")
+        jdbcTemplate.execute("select * from users")
 
         tableManager.dropQuery().forEach(jdbcTemplate::execute)
-        shouldThrow<RuntimeException> { jdbcTemplate.execute("select * from person") }
+        shouldThrow<RuntimeException> { jdbcTemplate.execute("select * from users") }
     }
 })

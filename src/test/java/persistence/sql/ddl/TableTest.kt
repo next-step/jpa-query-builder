@@ -12,7 +12,7 @@ class TableTest: DescribeSpec({
 
             val table = Table(Person::class.java)
             it ("테이블을 생성하는 쿼리를 반환한다") {
-                val expect = "CREATE TABLE person (id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id),nick_name VARCHAR(255) DEFAULT NULL,old int DEFAULT NULL,email VARCHAR(255) NOT NULL)"
+                val expect = "CREATE TABLE users (id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id),nick_name VARCHAR(255) DEFAULT NULL,old int DEFAULT NULL,email VARCHAR(255) NOT NULL)"
 
                 table.createQuery() shouldBe expect
             }
@@ -25,7 +25,7 @@ class TableTest: DescribeSpec({
 
             val table = Table(Person::class.java)
             it("테이블을 제거하는 쿼리를 반환한다") {
-                val expect = "DROP TABLE person"
+                val expect = "DROP TABLE users"
 
                 table.dropQuery() shouldBe expect
             }

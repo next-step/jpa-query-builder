@@ -1,16 +1,24 @@
 package persistence.sql.ddl
 
+import jakarta.persistence.Table
+
 class Table (
     private val clazz: Class<*>
 ) {
+    private val simpleName = clazz.simpleName.lowercase()
     private val columns: List<Column> = extractColumn(clazz)
 
     fun createQuery(): String {
-        val tableName = this.clazz.simpleName.lowercase()
-        return "CREATE TABLE $tableName (${columnsToQuery()})"
+        return "CREATE TABLE ${extractTableName()} (${columnsToQuery()})"
     }
 
-    fun dropQuery() = "DROP TABLE ${this.clazz.simpleName.lowercase()}"
+    fun dropQuery(): String {
+        return "DROP TABLE ${extractTableName()}"
+    }
+
+    private fun extractTableName(): String {
+        return this.clazz.getAnnotation(Table::class.java)?.name ?: this.simpleName
+    }
 
     private fun columnsToQuery(): String = columns.map { it.createQuery() }
         .filter { it.isNotEmpty() }

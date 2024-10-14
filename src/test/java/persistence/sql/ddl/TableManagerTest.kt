@@ -12,7 +12,7 @@ class TableManagerTest: DescribeSpec({
             val tableManager = TableManager(Person::class.java)
             it("테이블을 생성하는 쿼리를 반환한다.") {
                 tableManager.createQuery() shouldBe listOf(
-                    "CREATE TABLE person (id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id),nick_name VARCHAR(255) DEFAULT NULL,old int DEFAULT NULL,email VARCHAR(255) NOT NULL)"
+                    "CREATE TABLE users (id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id),nick_name VARCHAR(255) DEFAULT NULL,old int DEFAULT NULL,email VARCHAR(255) NOT NULL)"
                 )
             }
         }
