@@ -13,12 +13,13 @@ public class JdbcTemplate {
         this.connection = connection;
     }
 
-    public void execute(final String sql) {
+    public String execute(final String sql) {
         try (final Statement statement = connection.createStatement()) {
             statement.execute(sql);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return sql;
     }
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
