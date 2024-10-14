@@ -27,15 +27,6 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
         );
     }
 
-    public List<String> getFieldNames() {
-        return fields.stream().map(EntityField::name)
-            .toList();
-    }
-
-    public String getIdFieldName() {
-        return idField.name();
-    }
-
     private static <T> String getTableName(Class<T> clazz) {
         Table table = clazz.getAnnotation(Table.class);
 
@@ -71,6 +62,15 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
 
     private static boolean isNormalField(Field it) {
         return !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class);
+    }
+
+    public List<String> getFieldNames() {
+        return fields.stream().map(EntityField::name)
+            .toList();
+    }
+
+    public String getIdFieldName() {
+        return idField.name();
     }
 
     public Field getFieldByName(String fieldName) {

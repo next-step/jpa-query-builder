@@ -2,44 +2,28 @@ package persistence.sql.ddl;
 
 import persistence.sql.ddl.exception.NotSupportException;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.HashMap;
+import java.sql.Types;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class SqlJdbcTypes {
-    private static final Map<Class<?>, Integer> javaTypeToSqlTypeMap = new HashMap<>(32);
+public enum SqlJdbcTypes {
+    VARCHAR(Types.VARCHAR, String.class),
+    INTEGER(Types.INTEGER, Integer.class, int.class),
+    BIGINT(Types.BIGINT, Long.class, long.class);
 
-    static {
-        javaTypeToSqlTypeMap.put(String.class, Types.VARCHAR);
-        javaTypeToSqlTypeMap.put(boolean.class, Types.BOOLEAN);
-        javaTypeToSqlTypeMap.put(Boolean.class, Types.BOOLEAN);
-        javaTypeToSqlTypeMap.put(byte.class, Types.TINYINT);
-        javaTypeToSqlTypeMap.put(Byte.class, Types.TINYINT);
-        javaTypeToSqlTypeMap.put(short.class, Types.SMALLINT);
-        javaTypeToSqlTypeMap.put(Short.class, Types.SMALLINT);
-        javaTypeToSqlTypeMap.put(int.class, Types.INTEGER);
-        javaTypeToSqlTypeMap.put(Integer.class, Types.INTEGER);
-        javaTypeToSqlTypeMap.put(long.class, Types.BIGINT);
-        javaTypeToSqlTypeMap.put(Long.class, Types.BIGINT);
-        javaTypeToSqlTypeMap.put(BigInteger.class, Types.BIGINT);
-        javaTypeToSqlTypeMap.put(float.class, Types.FLOAT);
-        javaTypeToSqlTypeMap.put(Float.class, Types.FLOAT);
-        javaTypeToSqlTypeMap.put(double.class, Types.DOUBLE);
-        javaTypeToSqlTypeMap.put(Double.class, Types.DOUBLE);
-        javaTypeToSqlTypeMap.put(BigDecimal.class, Types.DECIMAL);
-        javaTypeToSqlTypeMap.put(LocalDate.class, Types.DATE);
-        javaTypeToSqlTypeMap.put(LocalTime.class, Types.TIME);
-        javaTypeToSqlTypeMap.put(LocalDateTime.class, Types.TIMESTAMP);
-        javaTypeToSqlTypeMap.put(Date.class, Types.DATE);
-        javaTypeToSqlTypeMap.put(Time.class, Types.TIME);
-        javaTypeToSqlTypeMap.put(Timestamp.class, Types.TIMESTAMP);
-        javaTypeToSqlTypeMap.put(Blob.class, Types.BLOB);
-        javaTypeToSqlTypeMap.put(Clob.class, Types.CLOB);
+    private static final Map<Class<?>, Integer> javaTypeToSqlTypeMap =
+        Arrays.stream(SqlJdbcTypes.values())
+            .flatMap(it -> it.classes.stream().map(clazz -> Map.entry(clazz, it.types)))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+    private final int types;
+    private final List<Class<?>> classes;
+
+    SqlJdbcTypes(int types, Class<?>... clazz) {
+        this.types = types;
+        this.classes = Arrays.stream(clazz).toList();
     }
 
     public static <T> Integer typeOf(Class<T> clazz) {

@@ -13,6 +13,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class H2DialectTest {
+    static Stream<Arguments> fields() {
+        return Stream.of(
+            Arguments.of(Long.class, "BIGINT"),
+            Arguments.of(String.class, "VARCHAR(%d)"),
+            Arguments.of(Integer.class, "INTEGER")
+        );
+    }
+
+    static Stream<Arguments> idFields() {
+        return Stream.of(
+            Arguments.of(Long.class, "BIGINT"),
+            Arguments.of(Integer.class, "INTEGER")
+        );
+    }
+
     @MethodSource("fields")
     @ParameterizedTest
     void 필드_정의를_구할_수_있다(Class<?> clazz, String definition) {
@@ -49,20 +64,5 @@ class H2DialectTest {
 
         assertThatExceptionOfType(NotSupportException.class)
             .isThrownBy(() -> h2Dialect.getIdFieldDefinition(Integer.MAX_VALUE));
-    }
-
-    static Stream<Arguments> fields() {
-        return Stream.of(
-            Arguments.of(Long.class, "BIGINT"),
-            Arguments.of(String.class, "VARCHAR(%d)"),
-            Arguments.of(Integer.class, "INTEGER")
-        );
-    }
-
-    static Stream<Arguments> idFields() {
-        return Stream.of(
-            Arguments.of(Long.class, "BIGINT"),
-            Arguments.of(Integer.class, "INTEGER")
-        );
     }
 }
