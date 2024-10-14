@@ -18,6 +18,10 @@
 1. [x] 클래스의 필드 정보를 읽어서 컬럼 DDL을 문자열로 반환하는 `Column` 클래스 추가
 2. [x] `@Entity`, `@Id`가 작성된 클래스 기준 create 쿼리 생성
 3. [x] `@Table`, `@Column`, `@GeneratedValue`, `@Transient` 처리 추가
+4. [x] Column에 몰려있던 파싱과 검증 책임을 parse 패키지에 위임
+    - [x] ColumnParser와 TableParser 인터페이스 구현체를 가진 ParseConfig 추가
+    - [x] ParseType 추가
+    - [x] DefinitionQueryManager 생성자에 대한 복잡도를 감추기 위해 QueryManagerFactory 추가 
 
 ### 엣지 케이스
 

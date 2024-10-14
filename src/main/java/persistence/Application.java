@@ -6,7 +6,8 @@ import entity.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.TableManager;
+import persistence.sql.QueryManagerFactory;
+import persistence.sql.ddl.DefinitionQueryManager;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -18,10 +19,10 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final TableManager tableManager = new TableManager(Person.class);
+            final DefinitionQueryManager definitionQueryManager = QueryManagerFactory.INSTANCE.definition(Person.class);
 
-            tableManager.createQuery().forEach(jdbcTemplate::execute);
-            tableManager.dropQuery().forEach(jdbcTemplate::execute);
+            definitionQueryManager.createQuery().forEach(jdbcTemplate::execute);
+            definitionQueryManager.dropQuery().forEach(jdbcTemplate::execute);
 
             server.stop();
         } catch (Exception e) {

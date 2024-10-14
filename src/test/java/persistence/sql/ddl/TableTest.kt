@@ -3,6 +3,9 @@ package persistence.sql.ddl
 import entity.Person
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import parse.ParseConfig
+import persistence.sql.QueryManagerFactory
+import persistence.sql.ddl.table.Table
 
 class TableTest: DescribeSpec({
 
@@ -10,9 +13,9 @@ class TableTest: DescribeSpec({
 
         context("클래스의 정보로") {
 
-            val table = Table(Person::class.java)
+            val table = QueryManagerFactory.table(Person::class.java)
             it ("테이블을 생성하는 쿼리를 반환한다") {
-                val expect = "CREATE TABLE users (id bigint NOT NULL AUTO_INCREMENT , PRIMARY KEY (id),nick_name VARCHAR(255) DEFAULT NULL,old int DEFAULT NULL,email VARCHAR(255) NOT NULL)"
+                val expect = "CREATE TABLE users"
 
                 table.createQuery() shouldBe expect
             }
@@ -23,7 +26,7 @@ class TableTest: DescribeSpec({
 
         context("클래스의 정보로") {
 
-            val table = Table(Person::class.java)
+            val table = QueryManagerFactory.table(Person::class.java)
             it("테이블을 제거하는 쿼리를 반환한다") {
                 val expect = "DROP TABLE users"
 
