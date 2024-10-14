@@ -96,8 +96,12 @@ public class H2QueryBuilderDDL extends QueryBuilder implements QueryBuilderDDL {
 
         if (field.isAnnotationPresent(Column.class)) {
             Column column = field.getAnnotation(Column.class);
-            columnName = column.name().isEmpty() ? columnName : column.name();
-            isNullable = column.nullable();
+            DDLColumnDataList.add(
+                    DDLColumnData.createColumn(column.name().isEmpty() ? columnName : column.name(),
+                            field.getType(),
+                            !column.nullable())
+            );
+            return;
         }
 
         DDLColumnDataList.add(DDLColumnData.createColumn(columnName, field.getType(), !isNullable));
