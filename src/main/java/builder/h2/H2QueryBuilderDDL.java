@@ -26,20 +26,14 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     @Override
     public String buildCreateQuery(Class<?> entityClass) {
         confirmEntityAnnotation(entityClass);
-        return createTableQuery(confirmTableAnnotation(entityClass), getColumnData(entityClass));
+        return createTableQuery(getTableName(entityClass), getColumnData(entityClass));
     }
 
     //drop 쿼리를 생성한다.
     @Override
     public String buildDropQuery(Class<?> entityClass) {
         confirmEntityAnnotation(entityClass);
-        return dropTableQuery(confirmTableAnnotation(entityClass));
-    }
-
-    //데이터타입에 따른 컬럼 데이터타입을 가져온다.
-    @Override
-    public String getDataType(Class<?> dataType) {
-        return H2DataType.findH2DataTypeByDataType(dataType);
+        return dropTableQuery(getTableName(entityClass));
     }
 
     //create 쿼리를 생성한다.
@@ -49,7 +43,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
                 .map(column -> {
                     String definition = column.getColumnName() + BLANK + column.getColumnDataType();
                     // primary key인 경우 "PRIMARY KEY" 추가
-                    if (!column.isCheckNull()) definition += NOT_NULL; //false면 NOT_NULL 조건 추가
+                    if (column.isNotNull()) definition += NOT_NULL; //false면 NOT_NULL 조건 추가
                     if (column.isAutoIncrement()) definition += AUTO_INCREMENT; //true면 AutoIncrement 추가
                     if (column.isPrimaryKey()) definition += PRIMARY_KEY; //PK면 PK조건 추가
                     return definition;
@@ -73,29 +67,65 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         }
     }
 
+    //Table 어노테이션 여부를 확인한다.
+    private String getTableName(Class<?> entityClass) {
+        if (entityClass.isAnnotationPresent(Table.class)) {
+            Table table = entityClass.getAnnotation(Table.class);
+            return table.name();
+        }
+        return entityClass.getSimpleName();
+    }
+
     //변수들의 정보를 가져온다.
     private List<ColumnData> getColumnData(Class<?> entityClass) {
         Field[] fields = entityClass.getDeclaredFields();
-        List<ColumnData> columnData = new ArrayList<>();
+        List<ColumnData> columnDataList = new ArrayList<>();
 
         for (Field field : fields) {
-            confirmAnnotation(columnData, field);
+            createTableColumnData(columnDataList, field);
         }
 
-        return columnData;
+        return columnDataList;
     }
 
-    private void confirmAnnotation(List<ColumnData> columnData, Field field) {
+    //테이블에 생성될 필드(컬럼)들을 생성한다.
+    private void createTableColumnData(List<ColumnData> columnDataList, Field field) {
+        getPrimaryKey(columnDataList, field);
+        getColumnAnnotationData(columnDataList, field);
+    }
+
+    //Id 어노테이션을 primarykey로 가져온다.
+    private void getPrimaryKey(List<ColumnData> columnDataList, Field field) {
         if (field.isAnnotationPresent(Id.class)) {
-            confirmIdOverTwo(columnData);
-            confirmIdAnnotation(columnData, field);
-        } else {
-            confirmColumnAnnotation(columnData, field);
+            confirmIdAnnotationOverTwo(columnDataList);
+            ColumnData columnData = new ColumnData();
+            columnData.createPk(field.getName(), field.getType(), confirmGeneratedValueAnnotation(field));
+            columnDataList.add(columnData);
         }
     }
 
-    private void confirmIdOverTwo(List<ColumnData> columnData) {
-        boolean hasPrimaryKey = columnData.stream()
+    //Column 어노테이션 여부를 확인하여 변수의 컬럼타입을 가져온다.
+    private void getColumnAnnotationData(List<ColumnData> columnDataList, Field field) {
+        if (field.isAnnotationPresent(Transient.class) || field.isAnnotationPresent(Id.class))
+            return; // Transient 어노테이션이 있거나 @Id인 경우 검증하지 않음
+
+        String columnName = field.getName();
+        boolean isNullable = true;
+
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            columnName = column.name().isEmpty() ? columnName : column.name();
+            isNullable = column.nullable();
+        }
+
+        ColumnData columnData = new ColumnData();
+        columnData.createColumn(columnName, field.getType(), !isNullable);
+        columnDataList.add(columnData);
+    }
+
+    //Entity에 @Id가 2개 이상은 아닐지 확인한다.
+    private void confirmIdAnnotationOverTwo(List<ColumnData> columnDataList) {
+        boolean hasPrimaryKey = columnDataList.stream()
                 .anyMatch(ColumnData::isPrimaryKey); // primaryKey가 true인 컬럼이 하나라도 있는지 확인
 
         if (hasPrimaryKey) {
@@ -103,53 +133,13 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         }
     }
 
-    //Id 어노테이션을 primarykey로 가져온다.
-    private void confirmIdAnnotation(List<ColumnData> columnData, Field field) {
-        columnData.add(new ColumnData(field.getName(), field.getType(), true, false, confirmGeneratedValueAnnotation(field)));
-    }
-
     //GeneratedValue 어노테이션 전략을 확인한다.
-    public boolean confirmGeneratedValueAnnotation(Field field) {
-        boolean autoIncrement = false;
-        if (field.isAnnotationPresent(GeneratedValue.class)) {
-            GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-            GenerationType generationType = generatedValue.strategy();
-            if (generationType == GenerationType.IDENTITY) {
-                autoIncrement = true;
-            }
+    private boolean confirmGeneratedValueAnnotation(Field field) {
+        if (!field.isAnnotationPresent(GeneratedValue.class)) {
+            return false;
         }
-        return autoIncrement;
-    }
-
-    //Column 어노테이션 여부를 확인하여 변수의 컬럼타입을 가져온다.
-    private void confirmColumnAnnotation(List<ColumnData> columnData, Field field) {
-        String columnName = field.getName();
-        boolean checkNull = true;
-        if (field.isAnnotationPresent(Transient.class)) return; //Transient 어노테이션 존재시 테이블에 추가 X
-        if (field.isAnnotationPresent(Column.class)) {
-            Column column = field.getAnnotation(Column.class);
-            if (!column.name().isEmpty()) {
-                columnName = column.name();
-            }
-            checkNull = column.nullable();
-        }
-        columnData.add(new ColumnData(
-                columnName,
-                field.getType(),
-                false,
-                checkNull,
-                false)
-        );
-    }
-
-    //Table 어노테이션 여부를 확인한다.
-    private String confirmTableAnnotation(Class<?> entityClass) {
-        String tableName = entityClass.getSimpleName();
-        if (entityClass.isAnnotationPresent(Table.class)) {
-            Table table = entityClass.getAnnotation(Table.class);
-            tableName = table.name();
-        }
-        return tableName;
+        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        return generatedValue.strategy() == GenerationType.IDENTITY;
     }
 
 }
