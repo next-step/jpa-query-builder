@@ -3,22 +3,23 @@ package persistence.sql.ddl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.fixture.PersonWithEntityIdFixture;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class TableExporterTest {
 
     @Test
-    @DisplayName("[성공] Person 클래스에 대한 create 쿼리 생성")
+    @DisplayName("[성공] Person @Entity @Id 클래스에 대한 create query 검증")
     void createQuery() {
         TableExporter exporter = new TableExporter();
-        String expectedQuery = "create table person ("
-                + "id bigint not null, "
+        String expectedQuery = "create table PersonWithEntityIdFixture ("
+                + "id bigint auto_increment, "
                 + "name varchar(255), "
                 + "age integer, "
                 + "primary key (id)"
                 + ")";
-        Assertions.assertEquals(exporter.getSqlCreateQueryString(Person.class), expectedQuery);
+        Assertions.assertEquals(exporter.getSqlCreateQueryString(PersonWithEntityIdFixture.class), expectedQuery);
     }
 
     @Test
