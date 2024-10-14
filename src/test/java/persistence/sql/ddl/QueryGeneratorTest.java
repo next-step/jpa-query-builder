@@ -14,9 +14,9 @@ class QueryGeneratorTest {
     private String expected() {
         return """
                 CREATE TABLE PERSON (
-                    id BIGINT PRIMARY KEY,
-                    name VARCHAR(255),
-                    age INTEGER
-                );""";
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    nick_name VARCHAR(255),
+                    old INTEGER,
+                    email VARCHAR(255) NOT NULL);""";
     }
 }
