@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.QueryGenerator;
 
-import java.util.List;
-
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
@@ -27,19 +25,7 @@ public class Application {
             final String sql = queryGenerator.create();
             jdbcTemplate.execute(sql);
 
-            final List<String> tableNames = jdbcTemplate.query(
-                    "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'PERSON'",
-                    resultSet -> resultSet.getString("TABLE_NAME")
-            );
-
-            final boolean isTableCreated = !tableNames.isEmpty();
-
-            if (isTableCreated) {
-                logger.info("Person 테이블이 성공적으로 생성되었습니다.");
-            } else {
-                logger.error("Person 테이블 생성에 실패했습니다.");
-                throw new IllegalStateException("Person 테이블 생성에 실패했습니다.");
-            }
+            jdbcTemplate.verifyTableCreation();
 
             server.stop();
         } catch (Exception e) {
