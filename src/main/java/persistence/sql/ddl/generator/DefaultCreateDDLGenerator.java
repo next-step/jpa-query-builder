@@ -5,7 +5,6 @@ import persistence.sql.ddl.EntityFields;
 import persistence.sql.ddl.EntityIdField;
 import persistence.sql.ddl.SqlJdbcTypes;
 import persistence.sql.ddl.dialect.H2Dialect;
-import persistence.sql.ddl.exception.NotSupportException;
 
 import java.sql.Types;
 import java.util.stream.Collectors;
