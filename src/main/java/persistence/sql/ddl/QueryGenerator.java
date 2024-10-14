@@ -24,7 +24,7 @@ public class QueryGenerator {
     private String getTableName(final Class<?> clazz) {
         final Table tableAnnotation = clazz.getAnnotation(Table.class);
         if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {
-            return tableAnnotation.name();
+            return tableAnnotation.name().toUpperCase();
         }
         return clazz.getSimpleName().toUpperCase();
     }
