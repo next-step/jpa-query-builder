@@ -3,6 +3,7 @@ package persistence.entity;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
@@ -27,5 +28,12 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
         final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entity);
         final String sql = insertQueryBuilder.insert();
         jdbcTemplate.execute(sql);
+    }
+
+    @Override
+    public void remove(Object entity) {
+        final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entity.getClass());
+        jdbcTemplate.execute(deleteQueryBuilder.delete(entity));
+
     }
 }

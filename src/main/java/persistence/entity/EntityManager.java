@@ -5,5 +5,5 @@ public interface EntityManager<T> {
 
     void persist(Object entity);
 
-//    void remove(Object entity);
+    void remove(Object entity);
 }

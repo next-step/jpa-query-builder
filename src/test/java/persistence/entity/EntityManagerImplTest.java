@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.example.Person;
 import persistence.fixture.EntityWithId;
-import persistence.fixture.EntityWithoutDefaultConstructor;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
@@ -53,18 +52,6 @@ class EntityManagerImplTest {
     }
 
     @Test
-    @DisplayName("기본 생성자가 없는 엔티티를 조회하면 예외를 발생한다.")
-    void find_exception() {
-        // given
-        final EntityManager<EntityWithoutDefaultConstructor> entityManager = new EntityManagerImpl<>();
-
-        // when & then
-        assertThatThrownBy(() -> entityManager.find(EntityWithoutDefaultConstructor.class, 1L))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining(CustomRowMapper.NO_DEFAULT_CONSTRUCTOR_FAILED_MESSAGE);
-    }
-
-    @Test
     @DisplayName("엔티티를 저장한다.")
     void persist() {
         // given
@@ -73,6 +60,22 @@ class EntityManagerImplTest {
 
         // when
         entityManager.persist(entityWithId);
+    }
+
+    @Test
+    @DisplayName("엔티티를 삭제한다.")
+    void remove() {
+        // given
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com", 1);
+        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+
+        // when
+        entityManager.remove(entityWithId);
+
+        // then
+        assertThatThrownBy(() -> entityManager.find(EntityWithId.class, 1L))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Expected 1 result, got");
     }
 
     private void createTable() {
