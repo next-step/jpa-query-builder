@@ -32,7 +32,7 @@ class ColumnTest {
         logger.info("{} 의 타입은 {}, primary 는 {}", nameColumn.getName(), nameColumn.getColumnType().getJavaType(), nameColumn.isPrimaryKey());
         assertAll(
                 () -> assertThat(nameColumn.getColumnType()).isEqualTo(ColumnType.VARCHAR),
-                () -> assertThat(nameColumn.getName()).isEqualTo("name"),
+                () -> assertThat(nameColumn.getName()).isEqualTo("nick_name"),
                 () -> assertThat(nameColumn.isPrimaryKey()).isFalse()
         );
     }
@@ -44,7 +44,7 @@ class ColumnTest {
         logger.info("{} 의 타입은 {}, primary 는 {}", ageColumn.getName(), ageColumn.getColumnType().getJavaType(), ageColumn.isPrimaryKey());
         assertAll(
                 () -> assertThat(ageColumn.getColumnType()).isEqualTo(ColumnType.INTEGER),
-                () -> assertThat(ageColumn.getName()).isEqualTo("age"),
+                () -> assertThat(ageColumn.getName()).isEqualTo("old"),
                 () -> assertThat(ageColumn.isPrimaryKey()).isFalse()
         );
     }
