@@ -1,20 +1,16 @@
 package H2QueryBuilder;
 
+import common.ErrorCode;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public enum H2DataType {
     LONG(Long.class, "BIGINT"),
     STRING(String.class, "VARCHAR"),
-    INTEGER(Integer.class, "INT");
-
-    private static final Map<Class<?>, H2DataType> typeMappingMap = new HashMap<>();
-
-    static {
-        for (H2DataType type : H2DataType.values()) {
-            typeMappingMap.put(type.javaType, type);
-        }
-    }
+    INTEGER(Integer.class, "INT"),
+    UNCONFIRMED(String.class, "미확인데이터");
 
     private final Class<?> javaType;
     private final String sqlType;
@@ -24,11 +20,16 @@ public enum H2DataType {
         this.sqlType  = sqlType;
     }
 
-    public static H2DataType getMapping(Class<?> javaType) {
-        return typeMappingMap.get(javaType);
-    }
-
     public String getSqlType() {
         return sqlType;
     }
+
+    public static String findH2DataTypeByDataType(Class<?> dataType) {
+        return Arrays.stream(values())
+                .filter(type -> type.javaType.equals(dataType))
+                .map(H2DataType::getSqlType)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.NOT_ALLOWED_DATATYPE.getErrorMsg(dataType.getTypeName())));
+    }
+
 }
