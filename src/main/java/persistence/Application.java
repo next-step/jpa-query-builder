@@ -12,6 +12,7 @@ import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.UpdateQueryBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,6 +35,10 @@ public class Application {
             final Person entity = new Person("Jaden", 30, "test@email.com", 1);
             final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entity);
             jdbcTemplate.execute(insertQueryBuilder.insert());
+
+            final Person updatedEntity = new Person(1L, "Jackson", 20, "test2@email.com");
+            final UpdateQueryBuilder updateQueryBuilder = new UpdateQueryBuilder(entity);
+            jdbcTemplate.execute(updateQueryBuilder.update());
 
             final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
             final List<Person> people = jdbcTemplate.query(selectQueryBuilder.findAll(), new PersonRowMapper());
