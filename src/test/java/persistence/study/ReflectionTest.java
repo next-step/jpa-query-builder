@@ -76,6 +76,29 @@ public class ReflectionTest {
     }
 
     @Test
+    @DisplayName("private field에 값 할당")
+    public void privateFieldAccess() throws IllegalAccessException {
+        Car tesla = new Car("Tesla", 1000);
+        assertThat(tesla.getName()).isEqualTo("Tesla");
+        assertThat(tesla.getPrice()).isEqualTo(1000);
+
+        Class<Car> carClass = Car.class;
+        for (Field declaredField : carClass.getDeclaredFields()) {
+            if (!declaredField.isAccessible()) {
+                declaredField.setAccessible(true);
+                if (declaredField.getName().equals("name")) {
+                    declaredField.set(tesla, "BMW");
+                } else if (declaredField.getName().equals("price")) {
+                    declaredField.set(tesla, 2000);
+                }
+            }
+        }
+
+        assertThat(tesla.getName()).isEqualTo("BMW");
+        assertThat(tesla.getPrice()).isEqualTo(2000);
+    }
+
+    @Test
     @DisplayName("클래스 이름 검증")
     void testReflectionAPI() {
         Class<Car> carClass = Car.class;
@@ -90,7 +113,7 @@ public class ReflectionTest {
         Class<Car> carClass = Car.class;
         Integer length = carClass.getDeclaredMethods().length;
 
-        assertThat(length).isEqualTo(2);
+        assertThat(length).isEqualTo(3);
     }
 
     @Test

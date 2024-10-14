@@ -19,11 +19,11 @@ public class Car {
         System.out.println("자동차 정보를 출력 합니다.");
     }
 
-    public String testGetName() {
-        return "test : " + name;
+    public String getName() {
+        return name;
     }
 
-    public String testGetPrice() {
-        return "test : " + price;
+    public int getPrice() {
+        return price;
     }
 }
