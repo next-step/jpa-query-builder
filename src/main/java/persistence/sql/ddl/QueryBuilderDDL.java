@@ -69,7 +69,7 @@ public class QueryBuilderDDL {
 
     private String getPrimaryKey(List<ColumnInfo> columns) {
         StringBuilder sb = new StringBuilder();
-        List<ColumnInfo> primaryKey = columns.stream().filter(ColumnInfo::isPrimary).collect(Collectors.toList());
+        List<ColumnInfo> primaryKey = columns.stream().filter(ColumnInfo::isPrimaryKey).collect(Collectors.toList());
         if(primaryKey.isEmpty()) throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
         sb.append("primary key (");
         for (ColumnInfo column : primaryKey) {

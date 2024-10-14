@@ -10,15 +10,15 @@ public class ColumnInfo {
 
     private String name;
     private ColumnType columnType;
-    private boolean primary;
-    private boolean trans;
+    private boolean primaryKey;
+    private boolean transientAnnotaion;
     private List<String> options;
 
-    public ColumnInfo(String name, ColumnType columnType, boolean primary, boolean trans, List<String> options) {
+    public ColumnInfo(String name, ColumnType columnType, boolean primaryKey, boolean transientAnnotation, List<String> options) {
         this.name = name;
         this.columnType = columnType;
-        this.primary = primary;
-        this.trans = trans;
+        this.primaryKey = primaryKey;
+        this.transientAnnotaion = transientAnnotation;
         this.options = options;
     }
 
@@ -60,14 +60,14 @@ public class ColumnInfo {
         return columnType;
     }
 
-    public boolean isPrimary() {
-        return primary;
+    public boolean isPrimaryKey() {
+        return primaryKey;
     }
     public List<String> getOptions() {
         return options.stream().distinct().collect(Collectors.toList());
     }
 
     public boolean isNotTransient() {
-        return !trans;
+        return !transientAnnotaion;
     }
 }
