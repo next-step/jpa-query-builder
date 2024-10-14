@@ -1,5 +1,6 @@
 package persistence;
 
+import common.SqlParser;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
@@ -16,6 +17,9 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+
+            String sql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_person.sql");
+            jdbcTemplate.execute(sql);
 
             server.stop();
         } catch (Exception e) {
