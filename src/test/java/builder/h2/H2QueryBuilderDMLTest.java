@@ -9,10 +9,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /*
-- Insert 쿼리 문자열 생성하기
-- FindAll 쿼리 문자열 생성하기
-- FindById 쿼리 문자열 생성하기
-- Delete 쿼리 문자열 생성하기
+- insert 쿼리 문자열 생성하기
+- findAll 쿼리 문자열 생성하기
+- findById 쿼리 문자열 생성하기
+- deleteById 쿼리 문자열 생성하기
+- deleteAll 쿼리 문자열 생성한다.
 */
 public class H2QueryBuilderDMLTest {
 
