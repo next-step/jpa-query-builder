@@ -37,8 +37,12 @@ public class QueryBuilderDDL {
     private String getTableName(Class<?> clazz) {
         final var className = clazz.getSimpleName().toLowerCase();
         final var tableAnotation = clazz.getAnnotation(Table.class);
-        if(Objects.isNull(tableAnotation)) return className;
-        if(tableAnotation.name().isBlank()) return className;
+        if(Objects.isNull(tableAnotation)) {
+            return className;
+        }
+        if(tableAnotation.name().isBlank()) {
+            return className;
+        }
         return tableAnotation.name();
     }
 
@@ -70,7 +74,9 @@ public class QueryBuilderDDL {
     private String getPrimaryKey(List<ColumnInfo> columns) {
         StringBuilder sb = new StringBuilder();
         List<ColumnInfo> primaryKey = columns.stream().filter(ColumnInfo::isPrimaryKey).collect(Collectors.toList());
-        if(primaryKey.isEmpty()) throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
+        if(primaryKey.isEmpty()) {
+            throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
+        }
         sb.append("primary key (");
         for (ColumnInfo column : primaryKey) {
             sb.append(column.getName()).append(",");

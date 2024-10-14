@@ -36,9 +36,13 @@ public class ColumnInfo {
         List<String> options = new ArrayList<>();
         final var columnAnotation = field.getAnnotation(Column.class);
 
-        if(field.isAnnotationPresent(Id.class)) {options.add("not null");}
+        if(field.isAnnotationPresent(Id.class)) {
+            options.add("not null");
+        }
 
-        if(!Objects.isNull(columnAnotation) && !columnAnotation.nullable()) {options.add("not null");}
+        if(!Objects.isNull(columnAnotation) && !columnAnotation.nullable()) {
+            options.add("not null");
+        }
 
         final var generatedValue = field.getAnnotation(GeneratedValue.class);
         if(!Objects.isNull(generatedValue) && generatedValue.strategy().equals(GenerationType.IDENTITY)){
