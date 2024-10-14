@@ -18,7 +18,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            String sql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_person_v2.sql");
+            String sql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_users.sql");
             jdbcTemplate.execute(sql);
 
             server.stop();
