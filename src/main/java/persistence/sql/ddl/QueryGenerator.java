@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 
@@ -39,9 +41,18 @@ public class QueryGenerator {
                 .append(" ")
                 .append(columnType);
 
+        if (isIdentity(field)) {
+            sql.append(" AUTO_INCREMENT");
+        }
+
         if (isIdField(field)) {
             sql.append(" PRIMARY KEY");
         }
+    }
+
+    private boolean isIdentity(final Field field) {
+        final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        return generatedValue != null && generatedValue.strategy() == GenerationType.IDENTITY;
     }
 
     private boolean isIdField(final Field field) {
