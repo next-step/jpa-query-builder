@@ -1,31 +1,35 @@
-package persistence.sql.ddl.config;
+package persistence.sql.config;
 
-import persistence.sql.ddl.QueryBuilder;
+import database.DatabaseServer;
+import database.H2;
+import persistence.sql.common.util.CamelToSnakeConverter;
+import persistence.sql.common.util.NameConverter;
 import persistence.sql.ddl.QueryColumnSupplier;
 import persistence.sql.ddl.QueryConstraintSupplier;
 import persistence.sql.ddl.TableScanner;
 import persistence.sql.ddl.impl.*;
-import persistence.sql.common.util.CamelToSnakeConverter;
-import persistence.sql.common.util.NameConverter;
+import persistence.sql.dml.Database;
+import persistence.sql.dml.EntityManager;
+import persistence.sql.dml.impl.DefaultDatabase;
+import persistence.sql.dml.impl.DefaultEntityManager;
 
+import java.sql.SQLException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class PersistenceDDLConfig {
-    private static final PersistenceDDLConfig INSTANCE = new PersistenceDDLConfig();
+public class PersistenceConfig {
+    private static final PersistenceConfig INSTANCE = new PersistenceConfig();
 
-    private PersistenceDDLConfig() {}
+    private DatabaseServer databaseServer;
 
-    public static PersistenceDDLConfig getInstance() {
+    private PersistenceConfig() {}
+
+    public static PersistenceConfig getInstance() {
         return INSTANCE;
     }
 
     public TableScanner tableScanner() {
         return new AnnotatedTableScanner();
-    }
-
-    public QueryBuilder queryBuilder() {
-        return new H2QueryBuilder(nameConverter(), columnQuerySuppliers(), constraintQuerySuppliers());
     }
 
     public NameConverter nameConverter() {
@@ -49,5 +53,21 @@ public class PersistenceDDLConfig {
         suppliers.add(new ConstraintPrimaryKeySupplier((short) 1, nameConverter()));
 
         return suppliers;
+    }
+
+    public EntityManager entityManager() throws SQLException {
+        return new DefaultEntityManager(database());
+    }
+
+    public Database database() throws SQLException {
+        return new DefaultDatabase(databaseServer());
+    }
+
+    public DatabaseServer databaseServer() throws SQLException {
+        if (databaseServer == null) {
+            databaseServer = new H2();
+            return databaseServer;
+        }
+        return databaseServer;
     }
 }

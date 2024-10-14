@@ -97,7 +97,7 @@ public class Person {
 3. H2QueryBuilder는 생성된 쿼리문자열을 반환합니다.
 4. JdbcTemplate을 통해 쿼리를 실행합니다.
 
-## 📦 queryBuilder package 구조
+## 📦 DDLQueryBuilder package 구조
 ```
 .
 ├── Application.java

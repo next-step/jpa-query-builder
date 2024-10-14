@@ -5,9 +5,11 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.QueryBuilderFactory;
+import persistence.sql.data.QueryType;
 import persistence.sql.ddl.TableScanner;
-import persistence.sql.ddl.config.PersistenceDDLConfig;
+import persistence.sql.config.PersistenceConfig;
+import persistence.sql.dml.impl.SimpleMetadataLoader;
 import persistence.sql.node.EntityNode;
 
 import java.util.Set;
@@ -23,23 +25,24 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            PersistenceDDLConfig persistenceDDLConfig = PersistenceDDLConfig.getInstance();
+            PersistenceConfig persistenceConfig = PersistenceConfig.getInstance();
 
-            TableScanner tableScanner = persistenceDDLConfig.tableScanner();
+            TableScanner tableScanner = persistenceConfig.tableScanner();
             Set<EntityNode<?>> nodes = tableScanner.scan(BASE_PACKAGE);
 
-            QueryBuilder queryBuilder = persistenceDDLConfig.queryBuilder();
+            QueryBuilderFactory factory = QueryBuilderFactory.getInstance();
             for (EntityNode<?> node : nodes) {
-                String createTableQuery = queryBuilder.buildCreateTableQuery(node);
+                String createTableQuery = factory.buildQuery(QueryType.CREATE, new SimpleMetadataLoader<>(node.entityClass()), null);
                 logger.info("Create table query: {}", createTableQuery);
                 jdbcTemplate.execute(createTableQuery);
             }
 
             for (EntityNode<?> node : nodes) {
-                String dropTableQuery = queryBuilder.buildDropTableQuery(node);
-                logger.info("Create table query: {}", dropTableQuery);
+                String dropTableQuery = factory.buildQuery(QueryType.DROP, new SimpleMetadataLoader<>(node.entityClass()), null);
+                logger.info("drop table query: {}", dropTableQuery);
                 jdbcTemplate.execute(dropTableQuery);
             }
+
 
 
             //server.stop();

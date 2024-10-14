@@ -3,6 +3,7 @@ package persistence.sql.node;
 import jakarta.persistence.Entity;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,5 +36,12 @@ public record EntityNode<T>(Class<T> entityClass, List<FieldNode> fields) implem
     public final List<FieldNode> getFieldsWithoutExcludeAnnotations(Class<? extends Annotation>... excludeAnnotations) {
         return fields.stream()
                 .filter(fieldNode -> !fieldNode.containsAnnotations(excludeAnnotations)).toList();
+    }
+
+    public FieldNode getIdField() {
+        return fields.stream()
+                .filter(FieldNode::isPrimaryKey)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Primary key not found"));
     }
 }

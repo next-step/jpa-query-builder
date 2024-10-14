@@ -1,4 +1,4 @@
-package sample.domain;
+package persistence.sql.fixture;
 
 import jakarta.persistence.*;
 

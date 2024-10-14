@@ -21,6 +21,10 @@ public class FieldNode implements SQLNode{
         return new FieldNode(field);
     }
 
+    public Field getField() {
+        return field;
+    }
+
     public boolean isPrimaryKey() {
         return field.isAnnotationPresent(Id.class);
     }
@@ -46,5 +50,11 @@ public class FieldNode implements SQLNode{
     @SafeVarargs
     public final boolean containsAnnotations(Class<? extends Annotation>... excludeAnnotations) {
         return Arrays.stream(excludeAnnotations).anyMatch(field::isAnnotationPresent);
+    }
+
+    public Object extractFieldValue(Object entity) throws IllegalAccessException {
+        field.setAccessible(true);
+
+        return field.get(entity);
     }
 }
