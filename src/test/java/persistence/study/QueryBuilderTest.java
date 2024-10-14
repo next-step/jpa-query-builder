@@ -63,7 +63,7 @@ public class QueryBuilderTest {
 
     @Test
     @DisplayName("엔티티 스캐너 스캔 테스트")
-    void createBasicDdl() throws NoSuchFieldException, IllegalAccessException {
+    void createBasicDdl() throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
         EntityScanner entityScanner = new EntityScanner();
         entityScanner.scan("example.entity");
 
@@ -78,7 +78,7 @@ public class QueryBuilderTest {
 
     @Test
     @DisplayName("엔티티 스캔 > DDL 쿼리 생성")
-    void createBasicDdlQueries() {
+    void createBasicDdlQueries() throws ClassNotFoundException {
         EntityScanner entityScanner = new EntityScanner();
         entityScanner.scan("example.entity");
         List<String> ddlQueries = entityScanner.getDdlQueries();
