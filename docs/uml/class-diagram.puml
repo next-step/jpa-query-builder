@@ -1,0 +1,69 @@
+@startuml
+interface QueryBuilder {
+    + String buildQuery()
+}
+
+interface DDLTableIfNotExistStep extends QueryBuilder{
+    + QueryBuilder ifNotExist()
+}
+
+
+class DMLQueryBuilder {
+
+}
+
+interface CreateTableStep extends DDLTableIfNotExistStep {
+
+}
+
+interface DropTableStep extends DDLTableIfNotExistStep {
+
+}
+
+abstract class CreateTableImpl extends CreateTableStep{
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2CreateTableImpl extends CreateTableImpl {
+
+}
+
+abstract class DropTableImpl extends DropTableStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2DropTableImpl extends DropTableImpl {
+
+}
+
+class JpaSettings {
+    + SQLDialect dialect
+    + NamingStrategy
+}
+
+TableEntity *--	TableField
+TableEntity *--	JpaSettings
+
+TableField *-- JpaSettings
+
+class TableEntity {
+    + String tableName;
+    + TablePrimaryField id;
+    + List<? extends TableField> allFields
+}
+
+class TableField {
+    - Field field;
+    - String fieldName;
+    - ColumnMeta columnMeta;
+    - JpaSettings jpaSettings;
+}
+
+class TablePrimaryField extends TableField {
+    - @Id
+    - @GeneratedValue
+}
+
+@enduml
