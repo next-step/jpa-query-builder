@@ -1,35 +1,31 @@
 package persistence.sql.ddl.mapping;
 
-import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public class Column {
+public class TableColumn {
+
+    private static final Long DEFAULT_LENGTH = 255L;
 
     private Class<?> javaType;
     private String name;
     private long length;
     private boolean nullable;
-    private boolean identity;
 
-    public Column(Field field) {
+    public TableColumn(Field field) {
         this.javaType = field.getType();
         this.name = field.getName();
-        this.length = 255L;
+        this.length = DEFAULT_LENGTH;
         this.nullable = true;
-        this.identity = false;
 
-        if (field.isAnnotationPresent(jakarta.persistence.Column.class)) {
-            jakarta.persistence.Column annotation = field.getAnnotation(jakarta.persistence.Column.class);
+        if (field.isAnnotationPresent(Column.class)) {
+            Column annotation = field.getAnnotation(Column.class);
             if (!annotation.name().isBlank()) {
                 this.name = annotation.name();
             }
             this.nullable = annotation.nullable();
             this.length = annotation.length();
-        }
-
-        if (field.isAnnotationPresent(Id.class)) {
-            this.identity = true;
         }
     }
 
@@ -37,19 +33,16 @@ public class Column {
         return javaType;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public long getLength() {
+    public long length() {
         return length;
     }
 
-    public boolean isNullable() {
+    public boolean nullable() {
         return nullable;
     }
 
-    public boolean isIdentity() {
-        return identity;
-    }
 }
