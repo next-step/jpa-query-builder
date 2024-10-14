@@ -23,8 +23,16 @@ public class Application {
             jpaPersistentEntity.createTable(Person.class);
             jpaPersistentEntity.dropTable(Person.class);
 
-            String sql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_users.sql");
-            jdbcTemplate.execute(sql);
+            String createPersonSql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_person_v2.sql");
+            String createUserSql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_users.sql");
+
+            String dropPersonSql = SqlParser.parse("src/main/java/persistence/sql/ddl/drop_person.sql");
+            String dropUserSql = SqlParser.parse("src/main/java/persistence/sql/ddl/drop_users.sql");
+
+            jdbcTemplate.execute(createPersonSql);
+            jdbcTemplate.execute(createUserSql);
+            jdbcTemplate.execute(dropPersonSql);
+            jdbcTemplate.execute(dropUserSql);
 
             server.stop();
         } catch (Exception e) {
