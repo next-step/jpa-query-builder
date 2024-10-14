@@ -3,8 +3,6 @@ package H2QueryBuilder;
 import common.ErrorCode;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public enum H2DataType {
     LONG(Long.class, "BIGINT"),
