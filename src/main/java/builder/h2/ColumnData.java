@@ -4,17 +4,9 @@ public class ColumnData {
 
     private String columnName;
     private String columnDataType;
-    private boolean primaryKey;
-    private boolean checkNull;
-    private boolean autoIncrement;
-
-    public ColumnData(String columnName, Class<?> columnDataType, boolean primaryKey, boolean checkNull, boolean autoIncrement) {
-        this.columnName = columnName;
-        this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
-        this.primaryKey = primaryKey;
-        this.checkNull = checkNull;
-        this.autoIncrement = autoIncrement;
-    }
+    private boolean isPrimaryKey;
+    private boolean isNotNull;
+    private boolean isAutoIncrement;
 
     public String getColumnName() {
         return columnName;
@@ -25,14 +17,30 @@ public class ColumnData {
     }
 
     public boolean isPrimaryKey() {
-        return primaryKey;
+        return isPrimaryKey;
     }
 
-    public boolean isCheckNull() {
-        return checkNull;
+    public boolean isNotNull() {
+        return isNotNull;
     }
 
     public boolean isAutoIncrement() {
-        return autoIncrement;
+        return isAutoIncrement;
+    }
+
+    public void createPk(String columnName, Class<?> columnDataType, boolean isAutoIncrement) {
+        this.columnName = columnName;
+        this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
+        this.isPrimaryKey = true;
+        this.isNotNull = true;
+        this.isAutoIncrement = isAutoIncrement;
+    }
+
+    public void createColumn(String columnName, Class<?> columnDataType, boolean isNotNull) {
+        this.columnName = columnName;
+        this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
+        this.isPrimaryKey = false;
+        this.isNotNull = isNotNull;
+        this.isAutoIncrement = false;
     }
 }
