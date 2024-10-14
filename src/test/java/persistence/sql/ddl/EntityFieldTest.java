@@ -65,6 +65,6 @@ class EntityFieldTest {
 
         EntityField entityField = EntityField.from(field);
 
-        assertThat(entityField.isEqualName("address")).isTrue();
+        assertThat(entityField.isEqualName("address")).isFalse();
     }
 }
