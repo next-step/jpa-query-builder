@@ -14,8 +14,8 @@ public class CreateQueryBuilder {
 
     private final EntityTable entityTable;
 
-    public CreateQueryBuilder(Class<?> entityClass) {
-        this.entityTable = new EntityTable(entityClass);
+    public CreateQueryBuilder(Class<?> entityType) {
+        this.entityTable = new EntityTable(entityType);
     }
 
     public String create() {

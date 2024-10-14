@@ -18,10 +18,10 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
     }
 
     @Override
-    public T find(Class<T> entityClass, Long id) {
-        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(entityClass);
+    public T find(Class<T> clazz, Long id) {
+        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(clazz);
         final String sql = selectQueryBuilder.findById(id);
-        return jdbcTemplate.queryForObject(sql, new CustomRowMapper<>(entityClass));
+        return jdbcTemplate.queryForObject(sql, new CustomRowMapper<>(clazz));
     }
 
     @Override

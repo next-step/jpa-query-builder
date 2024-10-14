@@ -12,8 +12,8 @@ public class SelectQueryBuilder {
 
     private final EntityTable entityTable;
 
-    public SelectQueryBuilder(Class<?> entityClass) {
-        this.entityTable = new EntityTable(entityClass);
+    public SelectQueryBuilder(Class<?> entityType) {
+        this.entityTable = new EntityTable(entityType);
     }
 
     public String findAll() {

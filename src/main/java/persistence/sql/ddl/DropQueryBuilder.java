@@ -7,8 +7,8 @@ public class DropQueryBuilder {
 
     private final EntityTable entityTable;
 
-    public DropQueryBuilder(Class<?> entityClass) {
-        this.entityTable = new EntityTable(entityClass);
+    public DropQueryBuilder(Class<?> entityType) {
+        this.entityTable = new EntityTable(entityType);
     }
 
     public String drop() {
