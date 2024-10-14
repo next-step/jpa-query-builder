@@ -1,5 +1,6 @@
 package builder.h2;
 
+import builder.h2.ddl.H2QueryBuilderDDL;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
