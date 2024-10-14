@@ -12,6 +12,11 @@ public class QueryGenerator {
     private static final String INDENTATION = "    ";
     private static final int VARCHAR_DEFAULT_LENGTH = 255;
 
+    public String drop(final Class<?> clazz) {
+        final String tableName = getTableName(clazz);
+        return "DROP TABLE IF EXISTS " + tableName + ";";
+    }
+
     public String create(final Class<?> clazz) {
         final StringBuilder sql = new StringBuilder();
         final String tableName = getTableName(clazz);
