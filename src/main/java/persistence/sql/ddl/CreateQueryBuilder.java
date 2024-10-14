@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import persistence.sql.MetadataUtils;
 import persistence.sql.domain.FieldType;
 
 import java.lang.reflect.Field;
@@ -14,22 +15,10 @@ import java.util.stream.Collectors;
 public class CreateQueryBuilder {
 
     public String createTableQuery(Class<?> clazz) {
-        String tableName = getTableName(clazz);
+        MetadataUtils metadataUtils = new MetadataUtils(clazz);
+        String tableName = metadataUtils.getTableName();
         String fieldDefinitions = getFieldDefinitions(clazz);
         return String.format("create table %s (%s)", tableName, fieldDefinitions);
-    }
-
-    private static String getTableName(Class<?> clazz) {
-        Table annotation = clazz.getAnnotation(Table.class);
-        if (annotation == null) {
-            return clazz.getSimpleName().toLowerCase();
-        }
-
-        if (!annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return clazz.getSimpleName().toLowerCase();
     }
 
     private String getFieldDefinitions(Class<?> clazz) {

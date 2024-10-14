@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import persistence.sql.MetadataUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -12,25 +13,12 @@ import java.util.stream.Collectors;
 public class InsertQueryBuilder {
     public String getInsertQuery(Object object) {
         Class<?> clazz = object.getClass();
-        String tableName = getTableName(clazz);
+        MetadataUtils metadataUtils = new MetadataUtils(clazz);
+        String tableName = metadataUtils.getTableName();
         String tableColumns = columnsClause(clazz);
         String tableValues = valueClause(object);
         return String.format("insert into %s (%s) VALUES (%s)", tableName, tableColumns, tableValues);
     }
-
-    private static String getTableName(Class<?> clazz) {
-        Table annotation = clazz.getAnnotation(Table.class);
-        if (annotation == null) {
-            return clazz.getSimpleName().toLowerCase();
-        }
-
-        if (!annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return clazz.getSimpleName().toLowerCase();
-    }
-
 
     private String columnsClause(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())

@@ -2,30 +2,18 @@ package persistence.sql.dml;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import persistence.sql.MetadataUtils;
 
 import java.lang.reflect.Field;
 
 public class DeleteQueryBuilder {
     public String delete(Class<?> clazz, Object idValue) {
-        String tableName = getTableName(clazz);
+        MetadataUtils metadataUtils = new MetadataUtils(clazz);
+        String tableName = metadataUtils.getTableName();
         String idField = getIdField(clazz);
         String formattedIdValue = getFormattedId(idValue);
         return String.format("delete FROM %s where %s = %s", tableName, idField, formattedIdValue);
     }
-
-    private static String getTableName(Class<?> clazz) {
-        Table annotation = clazz.getAnnotation(Table.class);
-        if (annotation == null) {
-            return clazz.getSimpleName().toLowerCase();
-        }
-
-        if (!annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return clazz.getSimpleName().toLowerCase();
-    }
-
 
     private String getFormattedId(Object idValue) {
         if (idValue instanceof String) {
