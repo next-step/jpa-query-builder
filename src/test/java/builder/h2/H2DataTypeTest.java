@@ -21,8 +21,8 @@ public class H2DataTypeTest {
     private Class<?> getClassForName(String className) {
         try {
             return Class.forName(className);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("없는 클래스명");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("존재하지 않는 클래스입니다.");
         }
     }
 }
