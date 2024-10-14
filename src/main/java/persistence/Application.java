@@ -22,13 +22,14 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            jdbcTemplate.execute("""
+            final String sql = """
                     CREATE TABLE PERSON (
                         id BIGINT PRIMARY KEY,
                         name VARCHAR(255),
                         age INTEGER
                     );
-                    """);
+                    """;
+            jdbcTemplate.execute(sql);
 
             final List<String> tableNames = jdbcTemplate.query(
                     "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'PERSON'",
