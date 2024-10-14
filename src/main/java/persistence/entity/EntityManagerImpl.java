@@ -33,8 +33,8 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
 
     @Override
     public void remove(Object entity) {
-        final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entity.getClass());
-        jdbcTemplate.execute(deleteQueryBuilder.delete(entity));
+        final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entity);
+        jdbcTemplate.execute(deleteQueryBuilder.delete());
     }
 
     @Override

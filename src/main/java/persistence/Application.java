@@ -47,8 +47,8 @@ public class Application {
             final Person person = jdbcTemplate.queryForObject(selectQueryBuilder.findById(1), new PersonRowMapper());
             logger.debug(person.toString());
 
-            final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(Person.class);
-            jdbcTemplate.execute(deleteQueryBuilder.delete(entity));
+            final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entity);
+            jdbcTemplate.execute(deleteQueryBuilder.delete());
 
             final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
             jdbcTemplate.execute(dropQueryBuilder.drop());
