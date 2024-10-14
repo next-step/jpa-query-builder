@@ -8,7 +8,7 @@ class QueryGeneratorTest {
     @Test
     void create() {
         final QueryGenerator queryGenerator = new QueryGenerator();
-        assertEquals(expected(), queryGenerator.create());
+        assertEquals(expected(), queryGenerator.create(Person.class));
     }
 
     private String expected() {

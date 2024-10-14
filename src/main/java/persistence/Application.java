@@ -5,6 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.Person;
 import persistence.sql.ddl.QueryGenerator;
 
 public class Application {
@@ -22,7 +23,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             final QueryGenerator queryGenerator = new QueryGenerator();
-            final String sql = queryGenerator.create();
+            final String sql = queryGenerator.create(Person.class);
             jdbcTemplate.execute(sql);
 
             jdbcTemplate.verifyTableCreation();
