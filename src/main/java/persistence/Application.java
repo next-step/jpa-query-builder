@@ -31,6 +31,7 @@ public class Application {
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
+            throw new RuntimeException(e);
         } finally {
             logger.info("Application finished");
         }
