@@ -45,7 +45,9 @@ public class QueryGenerator {
         if (isIdentity(field)) {
             sql.append(" AUTO_INCREMENT");
         }
-
+        if (!isNullable(field)) {
+            sql.append(" NOT NULL");
+        }
         if (isIdField(field)) {
             sql.append(" PRIMARY KEY");
         }
@@ -58,6 +60,11 @@ public class QueryGenerator {
     private boolean isIdentity(final Field field) {
         final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         return generatedValue != null && generatedValue.strategy() == GenerationType.IDENTITY;
+    }
+
+    private boolean isNullable(final Field field) {
+        final Column column = field.getAnnotation(Column.class);
+        return column == null || column.nullable();
     }
 
     private boolean isIdField(final Field field) {
