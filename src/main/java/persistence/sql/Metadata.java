@@ -6,10 +6,10 @@ import jakarta.persistence.Table;
 
 import java.lang.reflect.Field;
 
-public class MetadataUtils {
+public class Metadata {
     private final Class<?> clazz;
 
-    public MetadataUtils(Class<?> clazz) {
+    public Metadata(Class<?> clazz) {
         this.clazz = clazz;
     }
 
