@@ -45,7 +45,12 @@ public class EntityTable {
         return entityField.getColumnName() + " = " + id;
     }
 
-    public EntityField getIdEntityField() {
+    public Object getIdValue(Object entity) {
+        final EntityField entityField = getIdEntityField();
+        return entityField.getValue(entity);
+    }
+
+    private EntityField getIdEntityField() {
         final Field field = Arrays.stream(entityClass.getDeclaredFields())
                 .filter(this::isId)
                 .findFirst()
