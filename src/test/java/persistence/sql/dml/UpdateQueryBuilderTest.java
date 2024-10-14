@@ -11,7 +11,7 @@ class UpdateQueryBuilderTest {
     @DisplayName("update 쿼리를 생성한다.")
     void update() {
         // given
-        final EntityWithId entityWithId = new EntityWithId(1L, "Jackson", 20, "test2@email.com", 2);
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jackson", 20, "test2@email.com");
         final UpdateQueryBuilder updateQueryBuilder = new UpdateQueryBuilder(entityWithId);
 
         // when

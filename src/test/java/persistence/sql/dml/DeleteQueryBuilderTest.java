@@ -12,7 +12,7 @@ class DeleteQueryBuilderTest {
     void delete() {
         // given
         final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(EntityWithId.class);
-        final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com", 1);
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com");
 
         // when
         final String query = deleteQueryBuilder.delete(entityWithId);

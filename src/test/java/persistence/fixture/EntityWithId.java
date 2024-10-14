@@ -37,12 +37,11 @@ public class EntityWithId {
         this.index = index;
     }
 
-    public EntityWithId(Long id, String name, Integer age, String email, Integer index) {
+    public EntityWithId(Long id, String name, Integer age, String email) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
-        this.index = index;
     }
 
     public Long getId() {

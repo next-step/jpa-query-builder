@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.example.Person;
+import persistence.fixture.EntityWithId;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -11,8 +11,8 @@ class InsertQueryBuilderTest {
     @DisplayName("insert 쿼리를 생성한다.")
     void insert() {
         // given
-        final Person person = new Person("Jaden", 30, "test@email.com", 1);
-        final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(person);
+        final EntityWithId entityWithId = new EntityWithId("Jaden", 30, "test@email.com", 1);
+        final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entityWithId);
 
         // when
         final String query = insertQueryBuilder.insert();

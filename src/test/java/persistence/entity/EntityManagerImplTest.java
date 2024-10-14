@@ -43,10 +43,10 @@ class EntityManagerImplTest {
         // then
         assertAll(
                 () -> assertThat(entityWithId).isNotNull(),
-                () -> assertThat(entityWithId.getId()).isNotNull(),
-                () -> assertThat(entityWithId.getName()).isNotNull(),
-                () -> assertThat(entityWithId.getAge()).isNotNull(),
-                () -> assertThat(entityWithId.getEmail()).isNotNull(),
+                () -> assertThat(entityWithId.getId()).isEqualTo(1),
+                () -> assertThat(entityWithId.getName()).isEqualTo("Jaden"),
+                () -> assertThat(entityWithId.getAge()).isEqualTo(30),
+                () -> assertThat(entityWithId.getEmail()).isEqualTo("test@email.com"),
                 () -> assertThat(entityWithId.getIndex()).isNull()
         );
     }
@@ -55,8 +55,8 @@ class EntityManagerImplTest {
     @DisplayName("엔티티를 저장한다.")
     void persist() {
         // given
-        final EntityWithId entityWithId = new EntityWithId("Jaden", 30, "test@email.com", 1);
         final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+        final EntityWithId entityWithId = new EntityWithId("Jaden", 30, "test@email.com", 1);
 
         // when
         entityManager.persist(entityWithId);
@@ -66,9 +66,9 @@ class EntityManagerImplTest {
         assertAll(
                 () -> assertThat(savedEntity).isNotNull(),
                 () -> assertThat(savedEntity.getId()).isNotNull(),
-                () -> assertThat(savedEntity.getName()).isNotNull(),
-                () -> assertThat(savedEntity.getAge()).isNotNull(),
-                () -> assertThat(savedEntity.getEmail()).isNotNull(),
+                () -> assertThat(savedEntity.getName()).isEqualTo(entityWithId.getName()),
+                () -> assertThat(savedEntity.getAge()).isEqualTo(entityWithId.getAge()),
+                () -> assertThat(savedEntity.getEmail()).isEqualTo(entityWithId.getEmail()),
                 () -> assertThat(savedEntity.getIndex()).isNull()
         );
     }
@@ -77,8 +77,8 @@ class EntityManagerImplTest {
     @DisplayName("엔티티를 삭제한다.")
     void remove() {
         // given
-        final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com", 1);
         final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com");
 
         // when
         entityManager.remove(entityWithId);
@@ -93,8 +93,8 @@ class EntityManagerImplTest {
     @DisplayName("엔티티를 수정한다.")
     void update() {
         // given
-        final EntityWithId entityWithId = new EntityWithId(1L, "Jackson", 20, "test2@email.com", 1);
         final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jackson", 20, "test2@email.com");
 
         // when
         entityManager.update(entityWithId);
