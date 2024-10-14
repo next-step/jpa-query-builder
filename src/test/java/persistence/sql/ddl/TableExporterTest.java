@@ -1,17 +1,18 @@
 package persistence.sql.ddl;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.fixture.PersonWithEntityIdFixture;
+import persistence.sql.ddl.fixture.PersonWithGeneratedValueColumnFixture;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TableExporterTest {
 
     @Test
     @DisplayName("[성공] Person @Entity @Id 클래스에 대한 create query 검증")
-    void createQuery() {
+    void createQueryWithEntityId() {
         TableExporter exporter = new TableExporter();
         String expectedQuery = "create table PersonWithEntityIdFixture ("
                 + "id bigint auto_increment, "
@@ -19,7 +20,21 @@ public class TableExporterTest {
                 + "age integer, "
                 + "primary key (id)"
                 + ")";
-        Assertions.assertEquals(exporter.getSqlCreateQueryString(PersonWithEntityIdFixture.class), expectedQuery);
+        assertEquals(exporter.getSqlCreateQueryString(PersonWithEntityIdFixture.class), expectedQuery);
+    }
+
+    @Test
+    @DisplayName("[성공] Person @GeneratedValue @Column 클래스에 대한 create query 검증")
+    void createQueryWithGeneratedValueColumn() {
+        TableExporter exporter = new TableExporter();
+        String expectedQuery = "create table PersonWithGeneratedValueColumnFixture ("
+                + "id bigint auto_increment, "
+                + "nick_name varchar(255), "
+                + "old integer, "
+                + "email varchar(255) not null, "
+                + "primary key (id)"
+                + ")";
+        assertEquals(exporter.getSqlCreateQueryString(PersonWithGeneratedValueColumnFixture.class), expectedQuery);
     }
 
     @Test
