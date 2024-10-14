@@ -26,8 +26,8 @@ public class DdlCreateQueryBuilder {
         return this;
     }
 
-    public DdlCreateQueryBuilder add(ConstraintComponentBuilder constraintComponentBuilder) {
-        this.constraintComponentBuilders.add(constraintComponentBuilder);
+    public DdlCreateQueryBuilder add(List<ConstraintComponentBuilder> constraintComponentBuilders) {
+        this.constraintComponentBuilders.addAll(constraintComponentBuilders);
         return this;
     }
 

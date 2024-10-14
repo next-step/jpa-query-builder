@@ -2,33 +2,48 @@ package persistence.sql.ddl.create.component.constraint;
 
 import jakarta.persistence.Id;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConstraintComponentBuilder {
     private static final String INDENT = "\t";
     private static final String COMMA_NEW_LINE = ",\n";
-    private final StringBuilder componentBuilder = new StringBuilder(INDENT);
+    private final StringBuilder componentBuilder = new StringBuilder();
 
-    private ConstraintComponentBuilder(Field field, Annotation annotation) {
-        this.componentBuilder
-                .append("CONSTRAINT ");
+    private ConstraintComponentBuilder() {
+    }
 
-        if (annotation.annotationType().equals(Id.class)) {
-            appendPrimaryKeyConstraint(field.getName());
-        } else {
-            throw new IllegalArgumentException("Constraint type not supported!");
+    public static List<ConstraintComponentBuilder> from(Field field) {
+        List<ConstraintComponentBuilder> constraintComponentBuilders = new ArrayList<>();
+
+        if (field.isAnnotationPresent(Id.class)) {
+            constraintComponentBuilders.add(getPrimaryKeyConstraintComponent(field.getName()));
         }
+        /* TODO : else if () ... appendForeignKeyConstraint, etc. */
+
+        return constraintComponentBuilders;
     }
 
-    public static ConstraintComponentBuilder of(Field field, Annotation annotation) {
-        return new ConstraintComponentBuilder(field, annotation);
+    private static ConstraintComponentBuilder getPrimaryKeyConstraintComponent(String fieldName) {
+        ConstraintComponentBuilder constraintComponentBuilder = new ConstraintComponentBuilder();
+        return constraintComponentBuilder
+                .appendCommonConstraintPrefix()
+                .appendPrimaryKeyConstraint(fieldName);
     }
 
-    private void appendPrimaryKeyConstraint(String fieldName) {
+    private ConstraintComponentBuilder appendCommonConstraintPrefix() {
+        this.componentBuilder
+                .append(INDENT)
+                .append("CONSTRAINT ");
+        return this;
+    }
+
+    private ConstraintComponentBuilder appendPrimaryKeyConstraint(String fieldName) {
         this.componentBuilder
                 .append("pk_").append(fieldName).append(INDENT)
                 .append("primary key (").append(fieldName).append(")").append(COMMA_NEW_LINE);
+        return this;
     }
 
     /* TODO : foreign key constraint, etc. */

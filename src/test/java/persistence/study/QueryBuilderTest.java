@@ -10,7 +10,6 @@ import persistence.sql.ddl.create.component.DdlCreateQueryBuilder;
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
 import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
@@ -33,10 +32,8 @@ public class QueryBuilderTest {
     void createDdlConstraintComponentTest() {
         Class<Person> personClass = Person.class;
         for (Field field : personClass.getDeclaredFields()) {
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                String constraintComponent =
-                        ConstraintComponentBuilder.of(field, annotation).getComponentBuilder().toString();
-                logger.debug("Constraint : {}", constraintComponent);
+            for (ConstraintComponentBuilder constraintComponentBuilder : ConstraintComponentBuilder.from(field)) {
+                logger.debug("Constraint : {}", constraintComponentBuilder.getComponentBuilder().toString());
             }
         }
     }
@@ -50,11 +47,7 @@ public class QueryBuilderTest {
         DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
         for (Field field : fields) {
             queryBuilder.add(ColumnComponentBuilder.from(field));
-        }
-        for (Field field : fields) {
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                queryBuilder.add(ConstraintComponentBuilder.of(field, annotation));
-            }
+            queryBuilder.add(ConstraintComponentBuilder.from(field));
         }
         String ddlQuery = queryBuilder.build(personClass.getSimpleName());
 
