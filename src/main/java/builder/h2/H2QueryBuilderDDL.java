@@ -98,9 +98,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     private void getPrimaryKey(List<ColumnData> columnDataList, Field field) {
         if (field.isAnnotationPresent(Id.class)) {
             confirmIdAnnotationOverTwo(columnDataList);
-            ColumnData columnData = new ColumnData();
-            columnData.createPk(field.getName(), field.getType(), confirmGeneratedValueAnnotation(field));
-            columnDataList.add(columnData);
+            columnDataList.add(ColumnData.createPk(field.getName(), field.getType(), confirmGeneratedValueAnnotation(field)));
         }
     }
 
@@ -118,9 +116,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
             isNullable = column.nullable();
         }
 
-        ColumnData columnData = new ColumnData();
-        columnData.createColumn(columnName, field.getType(), !isNullable);
-        columnDataList.add(columnData);
+        columnDataList.add(ColumnData.createColumn(columnName, field.getType(), !isNullable));
     }
 
     //Entity에 @Id가 2개 이상은 아닐지 확인한다.

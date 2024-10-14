@@ -2,11 +2,19 @@ package builder.h2;
 
 public class ColumnData {
 
-    private String columnName;
-    private String columnDataType;
-    private boolean isPrimaryKey;
-    private boolean isNotNull;
-    private boolean isAutoIncrement;
+    private final String columnName;
+    private final String columnDataType;
+    private final boolean isPrimaryKey;
+    private final boolean isNotNull;
+    private final boolean isAutoIncrement;
+
+    public ColumnData(String columnName, String columnDataType, boolean isPrimaryKey, boolean isNotNull, boolean isAutoIncrement) {
+        this.columnName = columnName;
+        this.columnDataType = columnDataType;
+        this.isPrimaryKey = isPrimaryKey;
+        this.isNotNull = isNotNull;
+        this.isAutoIncrement = isAutoIncrement;
+    }
 
     public String getColumnName() {
         return columnName;
@@ -29,20 +37,24 @@ public class ColumnData {
     }
 
     //PK 컬럼을 생성한다.
-    public void createPk(String columnName, Class<?> columnDataType, boolean isAutoIncrement) {
-        this.columnName = columnName;
-        this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
-        this.isPrimaryKey = true;
-        this.isNotNull = true;
-        this.isAutoIncrement = isAutoIncrement;
+    public static ColumnData createPk(String columnName, Class<?> columnDataType, boolean isAutoIncrement) {
+        return new ColumnData(
+                columnName,
+                H2DataType.findH2DataTypeByDataType(columnDataType),
+                true,
+                true,
+                isAutoIncrement
+        );
     }
 
     //일반 컬럼을 생성한다.
-    public void createColumn(String columnName, Class<?> columnDataType, boolean isNotNull) {
-        this.columnName = columnName;
-        this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
-        this.isPrimaryKey = false;
-        this.isNotNull = isNotNull;
-        this.isAutoIncrement = false;
+    public static ColumnData createColumn(String columnName, Class<?> columnDataType, boolean isNotNull) {
+        return new ColumnData(
+                columnName,
+                H2DataType.findH2DataTypeByDataType(columnDataType),
+                false,
+                isNotNull,
+                false
+        );
     }
 }
