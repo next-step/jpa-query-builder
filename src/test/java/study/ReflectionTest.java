@@ -3,7 +3,6 @@ package study;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,8 +28,8 @@ public class ReflectionTest {
         Car car = new Car("자동차", 10000);
         Class<Car> carClass = Car.class;
         List<Method> testMethods = Arrays.stream(carClass.getDeclaredMethods())
-                .filter(it -> it.getName().startsWith("test"))
-                .toList();
+            .filter(it -> it.getName().startsWith("test"))
+            .toList();
 
         List<Object> results = testMethods.stream().map(it -> invoke(it, car)).toList();
 
@@ -43,8 +42,8 @@ public class ReflectionTest {
         Class<Car> carClass = Car.class;
         Car car = new Car("자동차", 10000);
         List<Method> printViewMethods = Arrays.stream(carClass.getDeclaredMethods())
-                .filter(it -> it.isAnnotationPresent(PrintView.class))
-                .toList();
+            .filter(it -> it.isAnnotationPresent(PrintView.class))
+            .toList();
 
         printViewMethods.forEach(it -> invoke(it, car));
     }
@@ -74,8 +73,8 @@ public class ReflectionTest {
         Car car = carClass.newInstance();
 
         assertAll(
-                () -> assertThat(car.name()).isNull(),
-                () -> assertThat(car.getPrice()).isZero()
+            () -> assertThat(car.name()).isNull(),
+            () -> assertThat(car.getPrice()).isZero()
         );
     }
 
@@ -84,14 +83,14 @@ public class ReflectionTest {
     void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<Car> carClass = Car.class;
         Constructor<?> constructor = Arrays.stream(carClass.getDeclaredConstructors())
-                .filter(it -> it.getParameterCount() > 0)
-                .findFirst().get();
+            .filter(it -> it.getParameterCount() > 0)
+            .findFirst().get();
 
         Car car = (Car) constructor.newInstance("자동차", 10000);
 
         assertAll(
-                () -> assertThat(car.name()).isEqualTo("자동차"),
-                () -> assertThat(car.getPrice()).isEqualTo(10000)
+            () -> assertThat(car.name()).isEqualTo("자동차"),
+            () -> assertThat(car.getPrice()).isEqualTo(10000)
         );
     }
 

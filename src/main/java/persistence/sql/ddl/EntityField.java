@@ -4,19 +4,20 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public record EntityField(String name, Class<?> type, boolean nullable, int length) {
+public record EntityField(Field field, String name, Class<?> type, boolean nullable, int length) {
     public static EntityField from(Field field) {
+        Column column = field.getAnnotation(Column.class);
+
         return new EntityField(
-                getName(field),
-                field.getType(),
-                isNullable(field),
-                getLength(field)
+            field,
+            getName(field, column),
+            field.getType(),
+            isNullable(column),
+            getLength(column)
         );
     }
 
-    private static String getName(Field field) {
-        Column column = field.getAnnotation(Column.class);
-
+    private static String getName(Field field, Column column) {
         if (column == null || column.name().isEmpty()) {
             return field.getName();
         }
@@ -24,9 +25,7 @@ public record EntityField(String name, Class<?> type, boolean nullable, int leng
         return column.name();
     }
 
-    private static boolean isNullable(Field field) {
-        Column column = field.getAnnotation(Column.class);
-
+    private static boolean isNullable(Column column) {
         if (column == null) {
             return true;
         }
@@ -34,13 +33,15 @@ public record EntityField(String name, Class<?> type, boolean nullable, int leng
         return column.nullable();
     }
 
-    private static int getLength(Field field) {
-        Column column = field.getAnnotation(Column.class);
-
+    private static int getLength(Column column) {
         if (column == null) {
-            return 255;
+            return (int) AnnotationUtils.getDefaultValue(Column.class, "length");
         }
 
         return column.length();
+    }
+
+    public boolean isEqualName(String name) {
+        return this.name.equals(name);
     }
 }

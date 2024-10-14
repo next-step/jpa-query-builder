@@ -1,6 +1,9 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.generator;
 
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.EntityFields;
+import persistence.sql.ddl.Person;
+import persistence.sql.ddl.dialect.H2Dialect;
 import persistence.sql.ddl.entity.LengthEntity;
 import persistence.sql.ddl.entity.NotSupportStratgyEntity;
 import persistence.sql.ddl.exception.NotSupportException;
@@ -8,11 +11,12 @@ import persistence.sql.ddl.exception.NotSupportException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-class H2CreateDDLGeneratorTest {
+class DefaultCreateDDLGeneratorTest {
     @Test
     void DDL을_생성한다() {
         EntityFields entityFields = EntityFields.from(Person.class);
-        H2CreateDDLGenerator h2Creator = new H2CreateDDLGenerator();
+        H2Dialect h2Dialect = new H2Dialect();
+        DefaultCreateDDLGenerator h2Creator = new DefaultCreateDDLGenerator(h2Dialect);
 
         String ddl = h2Creator.generate(entityFields);
 
@@ -22,7 +26,8 @@ class H2CreateDDLGeneratorTest {
     @Test
     void 컬럼의_길이가_지정된_DDL을_생성한다() {
         EntityFields entityFields = EntityFields.from(LengthEntity.class);
-        H2CreateDDLGenerator h2Creator = new H2CreateDDLGenerator();
+        H2Dialect h2Dialect = new H2Dialect();
+        DefaultCreateDDLGenerator h2Creator = new DefaultCreateDDLGenerator(h2Dialect);
 
         String ddl = h2Creator.generate(entityFields);
 
@@ -32,9 +37,10 @@ class H2CreateDDLGeneratorTest {
     @Test
     void 제공되지_않는_전략을_사용시_실패한다() {
         EntityFields entityFields = EntityFields.from(NotSupportStratgyEntity.class);
-        H2CreateDDLGenerator h2Creator = new H2CreateDDLGenerator();
+        H2Dialect h2Dialect = new H2Dialect();
+        DefaultCreateDDLGenerator h2Creator = new DefaultCreateDDLGenerator(h2Dialect);
 
         assertThatExceptionOfType(NotSupportException.class)
-                .isThrownBy(() -> h2Creator.generate(entityFields));
+            .isThrownBy(() -> h2Creator.generate(entityFields));
     }
 }

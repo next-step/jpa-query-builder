@@ -7,17 +7,20 @@ import java.lang.reflect.Field;
 
 public record EntityIdField(EntityField field, GenerationType generationType) {
     public static EntityIdField from(Field field) {
-        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-        GenerationType generationType = GenerationType.AUTO;
+        return new EntityIdField(
+            EntityField.from(field),
+            getGenerationType(field)
+        );
+    }
 
-        if (generatedValue != null) {
-            generationType = generatedValue.strategy();
+    private static GenerationType getGenerationType(Field field) {
+        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+
+        if (generatedValue == null) {
+            return (GenerationType) AnnotationUtils.getDefaultValue(GeneratedValue.class, "strategy");
         }
 
-        return new EntityIdField(
-                EntityField.from(field),
-                generationType
-        );
+        return generatedValue.strategy();
     }
 
     public String name() {

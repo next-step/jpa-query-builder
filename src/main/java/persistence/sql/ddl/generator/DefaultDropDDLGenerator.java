@@ -1,6 +1,8 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.generator;
 
-public final class H2DropDDLGenerator implements DropDDLGenerator {
+import persistence.sql.ddl.EntityFields;
+
+public final class DefaultDropDDLGenerator implements DropDDLGenerator {
     @Override
     public String generate(EntityFields entityFields) {
         String name = entityFields.tableName();
