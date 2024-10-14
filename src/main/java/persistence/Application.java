@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.EntityFields;
 import persistence.sql.ddl.Person;
+import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.ddl.dialect.H2Dialect;
 import persistence.sql.ddl.generator.*;
 
 import java.util.List;
@@ -17,7 +19,9 @@ public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
-        CreateDDLGenerator createDDLGenerator = new DefaultCreateDDLGenerator();
+        Dialect h2Dialect = new H2Dialect();
+
+        CreateDDLGenerator createDDLGenerator = new DefaultCreateDDLGenerator(h2Dialect);
         DropDDLGenerator dropDDLGenerator = new DefaultDropDDLGenerator();
         InsertDMLGenerator insertDMLGenerator = new DefaultInsertDMLGenerator();
         SelectDMLGenerator selectDMLGenerator = new DefaultSelectDMLGenerator();

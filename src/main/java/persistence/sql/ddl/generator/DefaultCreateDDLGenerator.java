@@ -4,14 +4,18 @@ import persistence.sql.ddl.EntityField;
 import persistence.sql.ddl.EntityFields;
 import persistence.sql.ddl.EntityIdField;
 import persistence.sql.ddl.SqlJdbcTypes;
-import persistence.sql.ddl.dialect.H2Dialect;
+import persistence.sql.ddl.dialect.Dialect;
 
 import java.sql.Types;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class DefaultCreateDDLGenerator implements CreateDDLGenerator {
-    private static final H2Dialect h2Dialect = new H2Dialect();
+    private final Dialect dialect;
+
+    public DefaultCreateDDLGenerator(Dialect dialect) {
+        this.dialect = dialect;
+    }
 
     @Override
     public String generate(EntityFields entityFields) {
@@ -38,8 +42,8 @@ public final class DefaultCreateDDLGenerator implements CreateDDLGenerator {
         Integer type = SqlJdbcTypes.typeOf(idField.type());
 
         String name = idField.name();
-        String typeDefinition = h2Dialect.getFieldDefinition(type);
-        String strategy = h2Dialect.getGenerationDefinition(idField.generationType());
+        String typeDefinition = dialect.getFieldDefinition(type);
+        String strategy = dialect.getGenerationDefinition(idField.generationType());
 
         return "%s %s %s".formatted(name, typeDefinition, strategy);
     }
@@ -55,7 +59,7 @@ public final class DefaultCreateDDLGenerator implements CreateDDLGenerator {
     private String getFieldTypeDefinition(EntityField field) {
         Integer type = SqlJdbcTypes.typeOf(field.type());
 
-        String typeDefinition = h2Dialect.getFieldDefinition(type);
+        String typeDefinition = dialect.getFieldDefinition(type);
 
         if (type == Types.VARCHAR) {
             return typeDefinition.formatted(field.length());
