@@ -6,12 +6,14 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import persistence.sql.ddl.column.ColumnParser
 import persistence.sql.ddl.table.TableParser
+import java.util.Locale
 
 object ParseConfig {
 
     val TABLE_NAME_PARSER = TableParser {
-        it.getAnnotation(Table::class.java)?.name
+        val name = it.getAnnotation(Table::class.java)?.name
             ?: it.simpleName
+        name.lowercase(Locale.getDefault())
     }
 
     val COLUMN_NAME_PARSER = ColumnParser { field ->
