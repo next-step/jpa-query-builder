@@ -12,8 +12,6 @@ import java.sql.ResultSet;
 
 public class CustomRowMapper<T> implements RowMapper<T> {
     private static final Logger logger = LoggerFactory.getLogger(CustomRowMapper.class);
-    public static final String NO_DEFAULT_CONSTRUCTOR_FAILED_MESSAGE = "엔티티 클래스에 기본 생성자가 없습니다.";
-    private static final String INSTANCE_CREATION_FAILED_MESSAGE = "엔티티 인스턴스 생성을 실패하였습니다.";
 
     private final Class<T> clazz;
 
@@ -23,22 +21,12 @@ public class CustomRowMapper<T> implements RowMapper<T> {
 
     @Override
     public T mapRow(ResultSet resultSet) {
-        final T entity = createInstance();
+        final T entity = new InstanceFactory<>(clazz).createInstance();
         new EntityTable(clazz).getEntityFields()
                 .stream()
                 .filter(EntityField::isPersistent)
                 .forEach(entityField -> mapField(resultSet, entityField, entity));
         return entity;
-    }
-
-    private T createInstance() {
-        try {
-            return clazz.getDeclaredConstructor().newInstance();
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException(NO_DEFAULT_CONSTRUCTOR_FAILED_MESSAGE);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalStateException(INSTANCE_CREATION_FAILED_MESSAGE);
-        }
     }
 
     private void mapField(ResultSet resultSet, EntityField entityField, T entity) {
