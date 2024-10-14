@@ -23,10 +23,11 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             final QueryGenerator queryGenerator = new QueryGenerator();
-            final String sql = queryGenerator.create(Person.class);
-            jdbcTemplate.execute(sql);
-
+            final String createSql = queryGenerator.create(Person.class);
+            jdbcTemplate.execute(createSql);
             jdbcTemplate.verifyTableCreation(Person.class);
+            final String dropSql = queryGenerator.drop(Person.class);
+            jdbcTemplate.execute(dropSql);
 
             server.stop();
         } catch (Exception e) {

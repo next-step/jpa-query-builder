@@ -14,7 +14,7 @@ public class QueryGenerator {
 
     public String drop(final Class<?> clazz) {
         final String tableName = getTableName(clazz);
-        return "DROP TABLE IF EXISTS " + tableName + ";";
+        return "DROP TABLE IF EXISTS %s CASCADE;".formatted(tableName);
     }
 
     public String create(final Class<?> clazz) {
