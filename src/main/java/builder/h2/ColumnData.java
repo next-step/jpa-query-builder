@@ -28,6 +28,7 @@ public class ColumnData {
         return isAutoIncrement;
     }
 
+    //PK 컬럼을 생성한다.
     public void createPk(String columnName, Class<?> columnDataType, boolean isAutoIncrement) {
         this.columnName = columnName;
         this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
@@ -36,6 +37,7 @@ public class ColumnData {
         this.isAutoIncrement = isAutoIncrement;
     }
 
+    //일반 컬럼을 생성한다.
     public void createColumn(String columnName, Class<?> columnDataType, boolean isNotNull) {
         this.columnName = columnName;
         this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
