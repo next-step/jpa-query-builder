@@ -41,15 +41,16 @@ public class EntityTable {
     }
 
     public String getWhereClause(Object id) {
-        final EntityField entityField = new EntityField(getIdField());
+        final EntityField entityField = getIdEntityField();
         return entityField.getColumnName() + " = " + id;
     }
 
-    private Field getIdField() {
-        return Arrays.stream(entityClass.getDeclaredFields())
+    public EntityField getIdEntityField() {
+        final Field field = Arrays.stream(entityClass.getDeclaredFields())
                 .filter(this::isId)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(NOT_ID_FAILED_MESSAGE));
+        return new EntityField(field);
     }
 
     private boolean isId(Field field) {

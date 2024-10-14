@@ -1,5 +1,6 @@
 package persistence.sql.dml;
 
+import persistence.sql.meta.EntityField;
 import persistence.sql.meta.EntityTable;
 
 public class DeleteQueryBuilder {
@@ -11,7 +12,9 @@ public class DeleteQueryBuilder {
         this.entityTable = new EntityTable(entityClass);
     }
 
-    public String delete(Object id) {
+    public String delete(Object entity) {
+        final EntityField entityField = entityTable.getIdEntityField();
+        final Object id = entityField.getValue(entity);
         return entityTable.getQuery(QUERY_TEMPLATE, entityTable.getTableName(), entityTable.getWhereClause(id));
     }
 }

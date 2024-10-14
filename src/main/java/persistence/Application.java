@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import persistence.example.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
@@ -30,9 +31,8 @@ public class Application {
             final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
             jdbcTemplate.execute(createQueryBuilder.create());
 
-            final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(
-                    new Person("Jaden", 30, "test@email.com", 1)
-            );
+            final Person entity = new Person("Jaden", 30, "test@email.com", 1);
+            final InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(entity);
             jdbcTemplate.execute(insertQueryBuilder.insert());
 
             final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
@@ -41,6 +41,9 @@ public class Application {
 
             final Person person = jdbcTemplate.queryForObject(selectQueryBuilder.findById(1), new PersonRowMapper());
             logger.debug(person.toString());
+
+            final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(Person.class);
+            jdbcTemplate.execute(deleteQueryBuilder.delete(entity));
 
             final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
             jdbcTemplate.execute(dropQueryBuilder.drop());
