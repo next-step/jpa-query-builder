@@ -23,7 +23,7 @@ public class QueryBuilderTest {
     void createDdlColumnComponentTest() {
         Class<Person> personClass = Person.class;
         for (Field field : personClass.getDeclaredFields()) {
-            String columnComponent = ColumnComponentBuilder.of(field).getComponentBuilder().toString();
+            String columnComponent = ColumnComponentBuilder.from(field).getComponentBuilder().toString();
             logger.debug("Person.{} : {}", field.getName(),columnComponent);
         }
     }
@@ -35,7 +35,7 @@ public class QueryBuilderTest {
         for (Field field : personClass.getDeclaredFields()) {
             for (Annotation annotation : field.getDeclaredAnnotations()) {
                 String constraintComponent =
-                        ConstraintComponentBuilder.from(field, annotation).getComponentBuilder().toString();
+                        ConstraintComponentBuilder.of(field, annotation).getComponentBuilder().toString();
                 logger.debug("Constraint : {}", constraintComponent);
             }
         }
@@ -49,11 +49,11 @@ public class QueryBuilderTest {
         Field[] fields = personClass.getDeclaredFields();
         DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
         for (Field field : fields) {
-            queryBuilder.add(ColumnComponentBuilder.of(field));
+            queryBuilder.add(ColumnComponentBuilder.from(field));
         }
         for (Field field : fields) {
             for (Annotation annotation : field.getDeclaredAnnotations()) {
-                queryBuilder.add(ConstraintComponentBuilder.from(field, annotation));
+                queryBuilder.add(ConstraintComponentBuilder.of(field, annotation));
             }
         }
         String ddlQuery = queryBuilder.build(personClass.getSimpleName());

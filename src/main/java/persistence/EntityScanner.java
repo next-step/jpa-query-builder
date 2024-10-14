@@ -63,11 +63,11 @@ public class EntityScanner {
         Field[] fields = entityClass.getDeclaredFields();
         DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
         for (Field field : fields) {
-            queryBuilder.add(ColumnComponentBuilder.of(field));
+            queryBuilder.add(ColumnComponentBuilder.from(field));
         }
         for (Field field : fields) {
             for (Annotation annotation : field.getDeclaredAnnotations()) {
-                queryBuilder.add(ConstraintComponentBuilder.from(field, annotation));
+                queryBuilder.add(ConstraintComponentBuilder.of(field, annotation));
             }
         }
         return queryBuilder.build(entityClass.getSimpleName());

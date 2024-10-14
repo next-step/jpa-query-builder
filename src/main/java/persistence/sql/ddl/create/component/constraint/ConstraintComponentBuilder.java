@@ -10,11 +10,7 @@ public class ConstraintComponentBuilder implements ComponentBuilder {
     private static final String INDENT = "\t";
     private final StringBuilder componentBuilder = new StringBuilder(INDENT);
 
-    public static ConstraintComponentBuilder from(Field field, Annotation annotation) {
-        return new ConstraintComponentBuilder(field, annotation);
-    }
-
-    public ConstraintComponentBuilder(Field field, Annotation annotation) {
+    private ConstraintComponentBuilder(Field field, Annotation annotation) {
         this.componentBuilder
                 .append("CONSTRAINT ");
 
@@ -23,6 +19,10 @@ public class ConstraintComponentBuilder implements ComponentBuilder {
         } else {
             throw new IllegalArgumentException("Constraint type not supported!");
         }
+    }
+
+    public static ConstraintComponentBuilder of(Field field, Annotation annotation) {
+        return new ConstraintComponentBuilder(field, annotation);
     }
 
     private void appendPrimaryKeyConstraint(String fieldName) {
