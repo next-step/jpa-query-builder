@@ -3,6 +3,7 @@ package orm.dsl.ddl;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static util.SQLUtil.SQL_노멀라이즈;
@@ -10,7 +11,30 @@ import static util.SQLUtil.SQL_노멀라이즈;
 public class DDLCreateQueryBuilderTest {
 
     @Test
-    @DisplayName("CREATE 문 생성 테스트")
+    @DisplayName("CREATE 문 생성 테스트, @GeneratedValue 어노테이션이 없는 경우")
+    void DDL_CREATE_문_테스트() {
+
+        // given
+        DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
+        Class<Person> entityClass = Person.class;
+        String expectedQuery = SQL_노멀라이즈(
+                """
+                        CREATE TABLE person (id BIGINT,name VARCHAR(255),PRIMARY KEY (id));
+                        """
+        );
+
+        // when
+        String query = SQL_노멀라이즈(
+                ddlQueryBuilder.createTable(entityClass)
+                        .buildQuery()
+        );
+
+        // then
+        assertThat(query).isEqualTo(expectedQuery);
+    }
+
+    @Test
+    @DisplayName("CREATE 문 생성 테스트, @GeneratedValue 어노테이션이 있는")
     void DDL_CREATE_문_테스트_1() {
 
         // given

@@ -29,7 +29,7 @@ public class SnakeForPropertyNamingStrategy implements NamingStrategy {
             return tableAnnotation.name();
         }
 
-        final String tableName = entityClass.getName();
+        final String tableName = entityClass.getSimpleName();
         return tableName.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
     }
 }

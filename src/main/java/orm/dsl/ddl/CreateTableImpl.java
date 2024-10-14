@@ -42,8 +42,12 @@ public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
         TablePrimaryField id = tableEntity.getId();
         GeneratedValue generatedValue = id.getGeneratedValue();
 
+        StringJoiner pkColumn = new StringJoiner(" ")
+                .add(id.getFieldName())
+                .add(mappedRDBType);
+
         if (generatedValue == null) {
-            return "";
+            return pkColumn.toString();
         }
 
         final String keyword = switch (generatedValue.strategy()) {
@@ -51,10 +55,7 @@ public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
             default -> throw new InvalidIdGenerationException("Unsupported GenerationType: " + generatedValue.strategy());
         };
 
-        return new StringJoiner(" ")
-                .add(id.getFieldName())
-                .add(mappedRDBType)
-                .add(keyword)
+        return pkColumn.add(keyword)
                 .toString();
     }
 

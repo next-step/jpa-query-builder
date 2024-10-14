@@ -5,6 +5,8 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import orm.dsl.ddl.DDLQueryBuilder;
+import persistence.sql.ddl.Person;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -16,7 +18,12 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            final String ddl = new DDLQueryBuilder()
+                    .createTable(Person.class)
+                    .ifNotExist()
+                    .buildQuery();
 
+            jdbcTemplate.execute(ddl);
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

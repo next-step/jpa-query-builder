@@ -1,7 +1,6 @@
 package orm;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import orm.settings.JpaSettings;
 
 import java.lang.reflect.Field;
