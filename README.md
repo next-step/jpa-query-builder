@@ -11,7 +11,7 @@
 - [x] 인자를 가진 생성자의 인스턴스를 생성한다.
 
 ### Step2
-- [ ] Person 클래스를 생성한다.
+- [x] Person 클래스를 생성한다.
 - [ ] Person 클래스에 대한 테이블을 생성하는 SQL CREATE 쿼리를 만든다.
 - [ ] Reflection API를 사용하여 생성된 쿼리를 실행한다.
 - [ ] @GeneratedValue와 @Column 어노테이션이 적용된 필드들이 반영된 SQL CREATE 쿼리를 생성한다.
