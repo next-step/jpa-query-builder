@@ -8,8 +8,8 @@ import java.lang.reflect.Field;
 public record EntityIdField(EntityField field, GenerationType generationType) {
     public static EntityIdField from(Field field) {
         return new EntityIdField(
-                EntityField.from(field),
-                getGenerationType(field)
+            EntityField.from(field),
+            getGenerationType(field)
         );
     }
 

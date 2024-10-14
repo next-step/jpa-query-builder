@@ -4,13 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import persistence.sql.ddl.EntityField;
 import persistence.sql.ddl.SqlJdbcTypes;
-import persistence.sql.ddl.entity.LengthEntity;
-import persistence.sql.ddl.entity.TestEntity;
 import persistence.sql.ddl.exception.NotSupportException;
 
-import java.lang.reflect.Field;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +29,7 @@ class H2DialectTest {
         H2Dialect h2Dialect = new H2Dialect();
 
         assertThatExceptionOfType(NotSupportException.class)
-                .isThrownBy(() -> h2Dialect.getFieldDefinition(Integer.MAX_VALUE));
+            .isThrownBy(() -> h2Dialect.getFieldDefinition(Integer.MAX_VALUE));
     }
 
     @MethodSource("idFields")
@@ -52,21 +48,21 @@ class H2DialectTest {
         H2Dialect h2Dialect = new H2Dialect();
 
         assertThatExceptionOfType(NotSupportException.class)
-                .isThrownBy(() -> h2Dialect.getIdFieldDefinition(Integer.MAX_VALUE));
+            .isThrownBy(() -> h2Dialect.getIdFieldDefinition(Integer.MAX_VALUE));
     }
 
     static Stream<Arguments> fields() {
         return Stream.of(
-                Arguments.of(Long.class, "BIGINT"),
-                Arguments.of(String.class, "VARCHAR(%d)"),
-                Arguments.of(Integer.class, "INTEGER")
+            Arguments.of(Long.class, "BIGINT"),
+            Arguments.of(String.class, "VARCHAR(%d)"),
+            Arguments.of(Integer.class, "INTEGER")
         );
     }
 
     static Stream<Arguments> idFields() {
         return Stream.of(
-                Arguments.of(Long.class, "BIGINT"),
-                Arguments.of(Integer.class, "INTEGER")
+            Arguments.of(Long.class, "BIGINT"),
+            Arguments.of(Integer.class, "INTEGER")
         );
     }
 }

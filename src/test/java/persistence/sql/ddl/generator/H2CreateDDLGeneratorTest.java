@@ -6,7 +6,6 @@ import persistence.sql.ddl.Person;
 import persistence.sql.ddl.entity.LengthEntity;
 import persistence.sql.ddl.entity.NotSupportStratgyEntity;
 import persistence.sql.ddl.exception.NotSupportException;
-import persistence.sql.ddl.generator.H2CreateDDLGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -38,6 +37,6 @@ class H2CreateDDLGeneratorTest {
         H2CreateDDLGenerator h2Creator = new H2CreateDDLGenerator();
 
         assertThatExceptionOfType(NotSupportException.class)
-                .isThrownBy(() -> h2Creator.generate(entityFields));
+            .isThrownBy(() -> h2Creator.generate(entityFields));
     }
 }

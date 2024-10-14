@@ -2,7 +2,7 @@ package persistence.sql.ddl.generator;
 
 import persistence.sql.ddl.EntityFields;
 
-public class H2DeleteDMLGenerator implements DeleteDMLGenerator{
+public class H2DeleteDMLGenerator implements DeleteDMLGenerator {
     @Override
     public String generateDeleteAll(EntityFields entityFields) {
         return "delete from %s;".formatted(entityFields.tableName());

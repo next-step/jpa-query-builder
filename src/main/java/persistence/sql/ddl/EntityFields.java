@@ -21,15 +21,15 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
         Field[] declaredFields = clazz.getDeclaredFields();
 
         return new EntityFields(
-                getTableName(clazz),
-                getIdField(declaredFields),
-                getFields(declaredFields)
+            getTableName(clazz),
+            getIdField(declaredFields),
+            getFields(declaredFields)
         );
     }
 
     public List<String> getFieldNames() {
         return fields.stream().map(EntityField::name)
-                .toList();
+            .toList();
     }
 
     public String getIdFieldName() {
@@ -48,8 +48,8 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
 
     private static EntityIdField getIdField(Field[] fields) {
         List<Field> ids = Arrays.stream(fields)
-                .filter(EntityFields::isIdField)
-                .toList();
+            .filter(EntityFields::isIdField)
+            .toList();
 
         if (ids.size() != 1) {
             throw new IncorrectIdFieldException();
@@ -64,9 +64,9 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
 
     private static List<EntityField> getFields(Field[] fields) {
         return Arrays.stream(fields)
-                .filter(EntityFields::isNormalField)
-                .map(EntityField::from)
-                .toList();
+            .filter(EntityFields::isNormalField)
+            .map(EntityField::from)
+            .toList();
     }
 
     private static boolean isNormalField(Field it) {
@@ -75,7 +75,7 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
 
     public Field getFieldByName(String fieldName) {
         return fields.stream().filter(it -> it.isEqualName(fieldName))
-                .findFirst().orElseThrow(NotFoundFieldException::new)
-                .field();
+            .findFirst().orElseThrow(NotFoundFieldException::new)
+            .field();
     }
 }

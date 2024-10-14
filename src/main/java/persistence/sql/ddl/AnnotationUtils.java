@@ -4,7 +4,7 @@ public class AnnotationUtils {
     public static <T> Object getDefaultValue(Class<T> clazz, String name) {
         try {
             return clazz.getMethod(name)
-                    .getDefaultValue();
+                .getDefaultValue();
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

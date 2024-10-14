@@ -1,7 +1,6 @@
 package persistence.sql.ddl.generator;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.EntityFields;
 import persistence.sql.ddl.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -16,11 +16,11 @@ class EntityFieldTest {
         EntityField entityField = EntityField.from(field);
 
         assertAll(
-                () -> assertThat(entityField.field()).isEqualTo(field),
-                () -> assertThat(entityField.name()).isEqualTo("name"),
-                () -> assertThat(entityField.type()).isEqualTo(String.class),
-                () -> assertThat(entityField.nullable()).isTrue(),
-                () -> assertThat(entityField.length()).isEqualTo(255)
+            () -> assertThat(entityField.field()).isEqualTo(field),
+            () -> assertThat(entityField.name()).isEqualTo("name"),
+            () -> assertThat(entityField.type()).isEqualTo(String.class),
+            () -> assertThat(entityField.nullable()).isTrue(),
+            () -> assertThat(entityField.length()).isEqualTo(255)
         );
     }
 
@@ -31,9 +31,9 @@ class EntityFieldTest {
         EntityField entityField = EntityField.from(field);
 
         assertAll(
-                () -> assertThat(entityField.name()).isEqualTo("zip_address"),
-                () -> assertThat(entityField.nullable()).isFalse(),
-                () -> assertThat(entityField.length()).isEqualTo(10)
+            () -> assertThat(entityField.name()).isEqualTo("zip_address"),
+            () -> assertThat(entityField.nullable()).isFalse(),
+            () -> assertThat(entityField.length()).isEqualTo(10)
         );
     }
 
@@ -44,9 +44,9 @@ class EntityFieldTest {
         EntityField entityField = EntityField.from(field);
 
         assertAll(
-                () -> assertThat(entityField.name()).isEqualTo("home"),
-                () -> assertThat(entityField.type()).isEqualTo(Integer.class),
-                () -> assertThat(entityField.nullable()).isFalse()
+            () -> assertThat(entityField.name()).isEqualTo("home"),
+            () -> assertThat(entityField.type()).isEqualTo(Integer.class),
+            () -> assertThat(entityField.nullable()).isFalse()
         );
     }
 

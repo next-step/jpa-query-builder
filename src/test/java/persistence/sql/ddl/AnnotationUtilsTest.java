@@ -17,6 +17,6 @@ class AnnotationUtilsTest {
     @Test
     void 애노테이션에_없는_값의_경우_실패한다() {
         assertThatRuntimeException()
-                .isThrownBy(() -> AnnotationUtils.getDefaultValue(Column.class, "fake"));
+            .isThrownBy(() -> AnnotationUtils.getDefaultValue(Column.class, "fake"));
     }
 }

@@ -9,11 +9,11 @@ public record EntityField(Field field, String name, Class<?> type, boolean nulla
         Column column = field.getAnnotation(Column.class);
 
         return new EntityField(
-                field,
-                getName(field, column),
-                field.getType(),
-                isNullable(column),
-                getLength(column)
+            field,
+            getName(field, column),
+            field.getType(),
+            isNullable(column),
+            getLength(column)
         );
     }
 

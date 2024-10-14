@@ -20,9 +20,9 @@ class EntityFieldsTest {
         EntityFields entityFields = EntityFields.from(clazz);
 
         assertAll(
-                () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
-                () -> assertThat(entityFields.idField().field().name()).isEqualTo("id"),
-                () -> assertThat(entityFields.getFieldNames()).containsExactlyInAnyOrder("name", "address")
+            () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
+            () -> assertThat(entityFields.idField().field().name()).isEqualTo("id"),
+            () -> assertThat(entityFields.getFieldNames()).containsExactlyInAnyOrder("name", "address")
         );
     }
 
@@ -40,7 +40,7 @@ class EntityFieldsTest {
         Class<NotEntityAnnotationEntity> clazz = NotEntityAnnotationEntity.class;
 
         assertThatExceptionOfType(NotEntityException.class)
-                .isThrownBy(() -> EntityFields.from(clazz));
+            .isThrownBy(() -> EntityFields.from(clazz));
     }
 
     @Test
@@ -48,7 +48,7 @@ class EntityFieldsTest {
         Class<EmptyIdEntity> clazz = EmptyIdEntity.class;
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
-                .isThrownBy(() -> EntityFields.from(clazz));
+            .isThrownBy(() -> EntityFields.from(clazz));
     }
 
     @Test
@@ -56,7 +56,7 @@ class EntityFieldsTest {
         Class<ManyIdsEntity> clazz = ManyIdsEntity.class;
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
-                .isThrownBy(() -> EntityFields.from(clazz));
+            .isThrownBy(() -> EntityFields.from(clazz));
     }
 
     @Test
@@ -84,7 +84,7 @@ class EntityFieldsTest {
         EntityFields entityFields = EntityFields.from(clazz);
 
         assertThatExceptionOfType(NotFoundFieldException.class)
-                .isThrownBy(() -> entityFields.getFieldByName("fake"));
+            .isThrownBy(() -> entityFields.getFieldByName("fake"));
     }
 
     @Test
