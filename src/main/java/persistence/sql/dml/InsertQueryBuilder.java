@@ -35,7 +35,7 @@ public class InsertQueryBuilder {
         final List<String> columnDefinitions = entityTable.getEntityFields()
                 .stream()
                 .filter(this::isNotNeeded)
-                .map(this::getColumnValue)
+                .map(entityField -> entityField.getValue(entity))
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
@@ -43,13 +43,5 @@ public class InsertQueryBuilder {
 
     private boolean isNotNeeded(EntityField entityField) {
         return !entityField.isGeneration() && entityField.isPersistent();
-    }
-
-    private String getColumnValue(EntityField entityField) {
-        final String value = String.valueOf(entityField.getValue(entity));
-        if (entityField.isQuotesNeeded()) {
-            return String.format("'%s'", value);
-        }
-        return value;
     }
 }

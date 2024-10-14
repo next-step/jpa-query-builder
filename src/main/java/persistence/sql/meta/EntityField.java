@@ -32,10 +32,14 @@ public class EntityField {
         return Objects.hashCode(field);
     }
 
-    public Object getValue(Object entity) {
+    public String getValue(Object entity) {
         try {
             field.setAccessible(true);
-            return field.get(entity);
+            final String value = String.valueOf(field.get(entity));
+            if (isQuotesNeeded()) {
+                return String.format("'%s'", value);
+            }
+            return value;
         } catch (IllegalAccessException e) {
             logger.error(e.getMessage(), e);
             return null;
