@@ -1,5 +1,6 @@
 package persistence;
 
+import common.SqlParser;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
@@ -21,6 +22,9 @@ public class Application {
             PersistentEntity jpaPersistentEntity = new PersistentEntity(jdbcTemplate);
             jpaPersistentEntity.createTable(Person.class);
             jpaPersistentEntity.dropTable(Person.class);
+
+            String sql = SqlParser.parse("src/main/java/persistence/sql/ddl/create_person.sql");
+            jdbcTemplate.execute(sql);
 
             server.stop();
         } catch (Exception e) {
