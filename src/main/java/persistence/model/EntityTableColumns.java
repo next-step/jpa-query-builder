@@ -27,4 +27,10 @@ public class EntityTableColumns {
                 .filter(EntityColumn::isPrimary)
                 .collect(Collectors.toList());
     }
+
+    public List<EntityColumn> getNonPrimaryColumns() {
+        return columns.stream()
+                .filter(column -> !column.isPrimary())
+                .collect(Collectors.toList());
+    }
 }

@@ -36,7 +36,22 @@ public class EntityTable {
         return tableColumns.getPrimaryColumns();
     }
 
+    public List<EntityColumn> getNonPrimaryColumns() {
+        return tableColumns.getNonPrimaryColumns();
+    }
+
     public void setColumns(List<EntityColumn> columns) {
         tableColumns.setColumns(columns);
     }
+
+    public List<EntityColumn> getInsertableColumns(EntityTable table) {
+        return table.isPrimaryColumnsValueSet()
+                ? table.getColumns()
+                : table.getNonPrimaryColumns();
+    }
+
+    public Boolean isPrimaryColumnsValueSet() {
+        return getPrimaryColumns().stream().allMatch(EntityColumn::isValueNotNull);
+    }
+
 }

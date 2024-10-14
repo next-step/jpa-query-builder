@@ -40,7 +40,6 @@ public class PersonWithTransientAnnotation {
         this.email = email;
     }
 
-    protected PersonWithTransientAnnotation() {
-
+    public PersonWithTransientAnnotation() {
     }
 }

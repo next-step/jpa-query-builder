@@ -19,9 +19,9 @@ public class DmlQueryBuilderTest {
     @Test
     @DisplayName("모든 필드의 값이 채워진 객체의 insert문을 생성한다.")
     void testCreateInsertQueryWithAllColumnsSet() {
-        String expectedQuery = "INSERT INTO \"person\" " +
+        String expectedQuery = "INSERT INTO \"users\" " +
                 "(\"id\", \"nick_name\", \"old\", \"email\") " +
-                "VALUES (1, '홍길동', 20, 'hong@test.com')";
+                "VALUES (1, '홍길동', 20, 'test@test.com')";
 
         PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
                 1L, "홍길동", 20, "test@test.com", 1
@@ -34,9 +34,9 @@ public class DmlQueryBuilderTest {
     @Test
     @DisplayName("id가 없는 객체의 insert문을 생성한다.")
     void testCreateInsertQueryWithoutId() {
-        String expectedQuery = "INSERT INTO \"person\" " +
+        String expectedQuery = "INSERT INTO \"users\" " +
                 "(\"nick_name\", \"old\", \"email\") " +
-                "VALUES ('홍길동', 20, 'hong@test.com')";
+                "VALUES ('홍길동', 20, 'test@test.com')";
 
         PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
                 "홍길동", 20, "test@test.com", 1
@@ -49,9 +49,9 @@ public class DmlQueryBuilderTest {
     @Test
     @DisplayName("null이 포함된 객체의 insert문을 생성한다.")
     void testCreateInsertQueryWithNull() {
-        String expectedQuery = "INSERT INTO \"person\" " +
+        String expectedQuery = "INSERT INTO \"users\" " +
                 "(\"nick_name\", \"old\", \"email\") " +
-                "VALUES (NULL, NULL, 'hong@test.com')";
+                "VALUES (NULL, NULL, 'test@test.com')";
 
         PersonWithTransientAnnotation user = new PersonWithTransientAnnotation("test@test.com");
         String resultQuery = queryBuilder.getInsertQuery(user);

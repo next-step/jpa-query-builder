@@ -16,13 +16,13 @@ public class DdlQueryBuilder {
     }
 
     public String getDropTableQuery(Class<?> entityClass) {
-        EntityTable table = EntityFactory.createTable(entityClass);
+        EntityTable table = EntityFactory.createEmptySchema(entityClass);
 
         return dialect.getDropTablePhrase() + " " + dialect.getIdentifierQuoted(table.getName());
     }
 
     public String getCreateTableQuery(Class<?> entityClass) {
-        EntityTable table = EntityFactory.createTable(entityClass);
+        EntityTable table = EntityFactory.createEmptySchema(entityClass);
 
         return dialect.getCreateTablePhrase() +
                 " " +
