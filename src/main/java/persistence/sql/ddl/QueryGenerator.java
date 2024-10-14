@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 
 public class QueryGenerator {
@@ -24,14 +25,17 @@ public class QueryGenerator {
 
     private void appendColumnDefinitions(final StringBuilder sql, final Class<?> entityClass) {
         final Field[] fields = entityClass.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            appendColumnDefinition(sql, fields[i]);
-            if (i < fields.length - 1) {
-                sql.append(",");
+        boolean firstColumn = true;
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Transient.class)) {
+                continue;
             }
-            sql.append("\n");
-        }
-    }
+            if (!firstColumn) {
+                sql.append(",\n");
+            }
+            appendColumnDefinition(sql, field);
+            firstColumn = false;
+        }    }
 
     private void appendColumnDefinition(final StringBuilder sql, final Field field) {
         final String columnName = getColumnName(field);
