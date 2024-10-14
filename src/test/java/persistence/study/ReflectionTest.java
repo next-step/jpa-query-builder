@@ -60,6 +60,20 @@ public class ReflectionTest {
         }
     }
 
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    void testAnnotationMethodRun() {
+        Class<Car> carClass = Car.class;
+        for (Method method : carClass.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(PrintView.class)) {
+                try {
+                    method.invoke(new Car());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Test
     @DisplayName("클래스 이름 검증")

@@ -14,10 +14,10 @@ public class Car {
         this.price = price;
     }
 
-//    @PrintView
-//    public void printView() {
-//        System.out.println("자동차 정보를 출력 합니다.");
-//    }
+    @PrintView
+    public void printView() {
+        System.out.println("자동차 정보를 출력 합니다.");
+    }
 
     public String testGetName() {
         return "test : " + name;
