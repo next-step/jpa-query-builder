@@ -14,13 +14,4 @@ public class H2Dialect implements Dialect {
             default -> throw new NotSupportException();
         };
     }
-
-    @Override
-    public String getIdFieldDefinition(int type) {
-        return switch (type) {
-            case Types.BIGINT -> "BIGINT";
-            case Types.INTEGER -> "INTEGER";
-            default -> throw new NotSupportException();
-        };
-    }
 }
