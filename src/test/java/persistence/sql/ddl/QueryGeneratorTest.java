@@ -11,6 +11,12 @@ class QueryGeneratorTest {
         assertEquals(expected(), queryGenerator.create(Person.class));
     }
 
+    @Test
+    void drop() {
+        final QueryGenerator queryGenerator = new QueryGenerator();
+        assertEquals("DROP TABLE IF EXISTS USERS CASCADE;", queryGenerator.drop(Person.class));
+    }
+
     private String expected() {
         return """
                 CREATE TABLE USERS (
