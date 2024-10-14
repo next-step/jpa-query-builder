@@ -6,7 +6,8 @@ import domain.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.DDLQueryBuilder;
+import persistence.sql.ddl.CreateTableQueryBuilder;
+import persistence.sql.ddl.DropTableQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -18,12 +19,13 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
-            String createTableQuery = DDLQueryBuilder.createTable(ddlQueryBuilder, Person.class);
+            CreateTableQueryBuilder createTableQueryBuilder = new CreateTableQueryBuilder();
+            String createTableQuery = createTableQueryBuilder.createTable(Person.class);
             logger.info(createTableQuery);
             jdbcTemplate.execute(createTableQuery); // Create table
 
-            String dropTableQuery = DDLQueryBuilder.dropTable(ddlQueryBuilder, Person.class);
+            DropTableQueryBuilder ddlQueryBuilder = new DropTableQueryBuilder();
+            String dropTableQuery = DropTableQueryBuilder.dropTable( Person.class);
             logger.info(dropTableQuery);
             jdbcTemplate.execute(dropTableQuery); // Drop table
 
