@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.UpdateQueryBuilder;
 
 public class EntityManagerImpl<T> implements EntityManager<T> {
     private static final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
@@ -34,6 +35,11 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
     public void remove(Object entity) {
         final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(entity.getClass());
         jdbcTemplate.execute(deleteQueryBuilder.delete(entity));
+    }
 
+    @Override
+    public void update(Object entity) {
+        final UpdateQueryBuilder updateQueryBuilder = new UpdateQueryBuilder(entity);
+        jdbcTemplate.execute(updateQueryBuilder.update());
     }
 }

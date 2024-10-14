@@ -89,6 +89,28 @@ class EntityManagerImplTest {
                 .hasMessageContaining("Expected 1 result, got");
     }
 
+    @Test
+    @DisplayName("엔티티를 수정한다.")
+    void update() {
+        // given
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jackson", 20, "test2@email.com", 1);
+        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+
+        // when
+        entityManager.update(entityWithId);
+
+        // then
+        final EntityWithId savedEntity = entityManager.find(EntityWithId.class, 1L);
+        assertAll(
+                () -> assertThat(savedEntity).isNotNull(),
+                () -> assertThat(savedEntity.getId()).isEqualTo(entityWithId.getId()),
+                () -> assertThat(savedEntity.getName()).isEqualTo(entityWithId.getName()),
+                () -> assertThat(savedEntity.getAge()).isEqualTo(entityWithId.getAge()),
+                () -> assertThat(savedEntity.getEmail()).isEqualTo(entityWithId.getEmail()),
+                () -> assertThat(savedEntity.getIndex()).isNull()
+        );
+    }
+
     private void createTable() {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(connection);
         final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
