@@ -99,6 +99,22 @@ public class ReflectionTest {
     }
 
     @Test
+    @DisplayName("인자를 가진 생성자의 인스턴스 생성")
+    void constructorWithArgs() {
+        Class<Car> carClass = Car.class;
+        Constructor<?>[] constructors = carClass.getConstructors();
+
+        Arrays.stream(constructors).filter(constructor -> constructor.getParameterCount() > 0).findFirst().ifPresent(constructor -> {
+            try {
+                Object instance = constructor.newInstance("BMW", 2000);
+                assertThat(instance).isInstanceOf(Car.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Test
     @DisplayName("클래스 이름 검증")
     void testReflectionAPI() {
         Class<Car> carClass = Car.class;
