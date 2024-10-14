@@ -60,6 +60,17 @@ class EntityManagerImplTest {
 
         // when
         entityManager.persist(entityWithId);
+
+        // then
+        final EntityWithId savedEntity = entityManager.find(EntityWithId.class, 1L);
+        assertAll(
+                () -> assertThat(savedEntity).isNotNull(),
+                () -> assertThat(savedEntity.getId()).isNotNull(),
+                () -> assertThat(savedEntity.getName()).isNotNull(),
+                () -> assertThat(savedEntity.getAge()).isNotNull(),
+                () -> assertThat(savedEntity.getEmail()).isNotNull(),
+                () -> assertThat(savedEntity.getIndex()).isNull()
+        );
     }
 
     @Test
