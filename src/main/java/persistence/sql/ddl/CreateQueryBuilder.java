@@ -3,38 +3,26 @@ package persistence.sql.ddl;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import persistence.sql.MetadataUtils;
+import persistence.sql.domain.FieldType;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CreateQueryBuilder {
-    private static final Map<Class<?>, String> FIELD_TYPE = Map.of(
-            Long.class, "BIGINT",
-            String.class, "VARCHAR",
-            Integer.class, "INT"
-    );
+    private final MetadataUtils metadataUtils;
 
-    public String createTableQuery(Class<?> clazz) {
-        String tableName = getTableName(clazz);
-        String fieldDefinitions = getFieldDefinitions(clazz);
-        return String.format("create table %s (%s)", tableName, fieldDefinitions);
+    public CreateQueryBuilder(Class<?> clazz) {
+        this.metadataUtils = new MetadataUtils(clazz);
     }
 
-    private static String getTableName(Class<?> clazz) {
-        Table annotation = clazz.getAnnotation(Table.class);
-        if (annotation == null) {
-            return clazz.getSimpleName().toLowerCase();
-        }
-
-        if (!annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return clazz.getSimpleName().toLowerCase();
+    public String createTableQuery(Class<?> clazz) {
+        MetadataUtils metadataUtils = new MetadataUtils(clazz);
+        String tableName = metadataUtils.getTableName();
+        String fieldDefinitions = getFieldDefinitions(clazz);
+        return String.format("create table %s (%s)", tableName, fieldDefinitions);
     }
 
     private String getFieldDefinitions(Class<?> clazz) {
@@ -45,7 +33,7 @@ public class CreateQueryBuilder {
     }
 
     private String getFieldDefinition(Field field) {
-        String fieldName = getFieldName(field);
+        String fieldName = metadataUtils.getFieldName(field);
         String fieldType = getFieldType(field);
         StringBuilder result = new StringBuilder(String.format("%s %s", fieldName, fieldType));
         if (isIdField(field)) {
@@ -60,18 +48,6 @@ public class CreateQueryBuilder {
         return result.toString();
     }
 
-    private static String getFieldName(Field field) {
-        Column annotation = field.getAnnotation(Column.class);
-        if (annotation == null) {
-            return field.getName();
-        }
-        if (!annotation.name().isEmpty()) {
-            return annotation.name();
-        }
-
-        return field.getName();
-    }
-
     private boolean isNotNullConstraint(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {
             return false;
@@ -81,7 +57,7 @@ public class CreateQueryBuilder {
     }
 
     private String getFieldType(Field field) {
-        return FIELD_TYPE.get(field.getType());
+        return FieldType.getSqlTypeByClass(field.getType());
     }
 
     private boolean isIdField(Field field) {
