@@ -1,4 +1,4 @@
-package persistence.sql.ddl.component.column;
+package persistence.sql.ddl.create.component.column;
 
 import java.util.HashMap;
 import java.util.Map;

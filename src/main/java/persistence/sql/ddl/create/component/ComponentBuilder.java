@@ -1,4 +1,4 @@
-package persistence.sql.ddl.component;
+package persistence.sql.ddl.create.component;
 
 public interface ComponentBuilder {
     StringBuilder getComponentBuilder();

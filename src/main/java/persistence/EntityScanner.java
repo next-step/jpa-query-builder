@@ -1,9 +1,9 @@
 package persistence;
 
 import jakarta.persistence.Entity;
-import persistence.sql.ddl.component.DdlQueryBuilder;
-import persistence.sql.ddl.component.column.ColumnComponentBuilder;
-import persistence.sql.ddl.component.constraint.ConstraintComponentBuilder;
+import persistence.sql.ddl.create.component.DdlCreateQueryBuilder;
+import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
+import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -53,15 +53,15 @@ public class EntityScanner {
         return classes;
     }
 
-    public List<String> getDdlQueries() {
+    public List<String> getDdlCreateQueries() {
         return this.entityClasses.stream()
-                .map(this::generateDdlQuery)
+                .map(this::generateDdlCreateQuery)
                 .collect(Collectors.toList());
     }
 
-    private String generateDdlQuery(Class<?> entityClass) {
+    private String generateDdlCreateQuery(Class<?> entityClass) {
         Field[] fields = entityClass.getDeclaredFields();
-        DdlQueryBuilder queryBuilder = DdlQueryBuilder.newInstance();
+        DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
         for (Field field : fields) {
             queryBuilder.add(ColumnComponentBuilder.of(field));
         }

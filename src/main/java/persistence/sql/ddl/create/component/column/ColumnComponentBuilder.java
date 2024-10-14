@@ -1,6 +1,6 @@
-package persistence.sql.ddl.component.column;
+package persistence.sql.ddl.create.component.column;
 
-import persistence.sql.ddl.component.ComponentBuilder;
+import persistence.sql.ddl.create.component.ComponentBuilder;
 
 import java.lang.reflect.Field;
 

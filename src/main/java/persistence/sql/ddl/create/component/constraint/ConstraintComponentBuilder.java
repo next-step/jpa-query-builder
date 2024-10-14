@@ -1,7 +1,7 @@
-package persistence.sql.ddl.component.constraint;
+package persistence.sql.ddl.create.component.constraint;
 
 import jakarta.persistence.Id;
-import persistence.sql.ddl.component.ComponentBuilder;
+import persistence.sql.ddl.create.component.ComponentBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

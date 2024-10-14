@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.EntityScanner;
-import persistence.sql.ddl.component.DdlQueryBuilder;
-import persistence.sql.ddl.component.column.ColumnComponentBuilder;
-import persistence.sql.ddl.component.constraint.ConstraintComponentBuilder;
+import persistence.sql.ddl.create.component.DdlCreateQueryBuilder;
+import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
+import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -47,7 +47,7 @@ public class QueryBuilderTest {
         Class<Person> personClass = Person.class;
 
         Field[] fields = personClass.getDeclaredFields();
-        DdlQueryBuilder queryBuilder = DdlQueryBuilder.newInstance();
+        DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
         for (Field field : fields) {
             queryBuilder.add(ColumnComponentBuilder.of(field));
         }
@@ -81,7 +81,7 @@ public class QueryBuilderTest {
     void createBasicDdlQueries() throws ClassNotFoundException {
         EntityScanner entityScanner = new EntityScanner();
         entityScanner.scan("example.entity");
-        List<String> ddlQueries = entityScanner.getDdlQueries();
+        List<String> ddlQueries = entityScanner.getDdlCreateQueries();
         System.out.println(ddlQueries);
     }
 }

@@ -1,18 +1,18 @@
-package persistence.sql.ddl.component;
+package persistence.sql.ddl.create.component;
 
-public class DdlQueryBuilder {
+public class DdlCreateQueryBuilder {
     private final StringBuilder query = new StringBuilder();
 
-    public DdlQueryBuilder() {
+    private DdlCreateQueryBuilder() {
         this.query
                 .append("CREATE TABLE {TABLE_NAME} (\n");
     }
 
-    public static DdlQueryBuilder newInstance() {
-        return new DdlQueryBuilder();
+    public static DdlCreateQueryBuilder newInstance() {
+        return new DdlCreateQueryBuilder();
     }
 
-    public DdlQueryBuilder add(ComponentBuilder componentBuilder) {
+    public DdlCreateQueryBuilder add(ComponentBuilder componentBuilder) {
         this.query
                 .append(componentBuilder.getComponentBuilder())
                 .append(",\n");
