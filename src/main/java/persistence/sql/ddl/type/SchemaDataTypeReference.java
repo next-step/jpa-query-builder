@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public enum TypeReference {
+public enum SchemaDataTypeReference {
 
     LONG(Long.class, SqlType.BIGINT),
     STRING(String.class, SqlType.VARCHAR),
@@ -20,7 +20,7 @@ public enum TypeReference {
                 .collect(Collectors.toConcurrentMap(reference -> reference.javaType, reference -> reference.sqlType));
     }
 
-    TypeReference(Class<?> javaType, String sqlType) {
+    SchemaDataTypeReference(Class<?> javaType, String sqlType) {
         this.javaType = javaType;
         this.sqlType = sqlType;
     }

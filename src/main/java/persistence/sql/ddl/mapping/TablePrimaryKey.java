@@ -2,7 +2,7 @@ package persistence.sql.ddl.mapping;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.type.PrimaryKeyGenerateType;
+import persistence.sql.ddl.type.TablePrimaryKeyGenerateType;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class TablePrimaryKey {
 
     private final TableColumn column;
-    private final PrimaryKeyGenerateType generateType;
+    private final TablePrimaryKeyGenerateType generateType;
 
     public static TablePrimaryKey from(Field[] fields) {
         Field keyField = Arrays.stream(fields)
@@ -21,17 +21,17 @@ public class TablePrimaryKey {
         return new TablePrimaryKey(new TableColumn(keyField), generateType(keyField));
     }
 
-    private TablePrimaryKey(TableColumn column, PrimaryKeyGenerateType generateType) {
+    private TablePrimaryKey(TableColumn column, TablePrimaryKeyGenerateType generateType) {
         this.column = column;
         this.generateType = generateType;
     }
 
-    private static PrimaryKeyGenerateType generateType(Field keyField) {
+    private static TablePrimaryKeyGenerateType generateType(Field keyField) {
         if (keyField.isAnnotationPresent(GeneratedValue.class)) {
             GeneratedValue annotation = keyField.getAnnotation(GeneratedValue.class);
-            return PrimaryKeyGenerateType.lookup(annotation.strategy());
+            return TablePrimaryKeyGenerateType.lookup(annotation.strategy());
         }
-        return PrimaryKeyGenerateType.IDENTITY;
+        return TablePrimaryKeyGenerateType.IDENTITY;
     }
 
     public TableColumn column() {
@@ -42,7 +42,7 @@ public class TablePrimaryKey {
         return column.name();
     }
 
-    public PrimaryKeyGenerateType generateType() {
+    public TablePrimaryKeyGenerateType generateType() {
         return generateType;
     }
 
