@@ -13,7 +13,7 @@ class QueryGeneratorTest {
 
     private String expected() {
         return """
-                CREATE TABLE PERSON (
+                CREATE TABLE users (
                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
                     nick_name VARCHAR(255),
                     old INTEGER,
