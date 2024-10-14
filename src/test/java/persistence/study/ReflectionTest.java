@@ -43,6 +43,23 @@ public class ReflectionTest {
         Arrays.stream(methods).forEach(method -> logger.info("method name: {}, modifiers: {}, parameterType: {}", method.getName(), method.getModifiers(), method.getParameterTypes()));
     }
 
+    @Test
+    @DisplayName("test로 시작하는 메소드 실행")
+    void testMethodRun() {
+        Car tesla = new Car("Tesla", 1000);
+        Class<? extends Car> carClass = tesla.getClass();
+        for (Method declaredMethod : carClass.getDeclaredMethods()) {
+            if (declaredMethod.getName().startsWith("test")) {
+                try {
+                    Object invoke = declaredMethod.invoke(tesla);
+                    System.out.println(invoke);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
     @Test
     @DisplayName("클래스 이름 검증")
