@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jdbc.JdbcTemplate;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +11,19 @@ public class QueryBuilder {
     Class<Person> personClass = Person.class;
 
     public void Builder(final JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.execute("CREATE TABLE " + personClass.getSimpleName() + "(" + getPersonMetadata() + ")" );
+        jdbcTemplate.execute("CREATE TABLE " + getTableName() + "(" + getPersonMetadata() + ")");
+    }
+
+    public void Dropper(final JdbcTemplate jdbcTemplate) {
+        jdbcTemplate.execute("DROP TABLE " + getTableName() + " IF EXISTS");
+    }
+
+    @NotNull
+    private String getTableName() {
+        if (personClass.isAnnotationPresent(Table.class)) {
+            return personClass.getAnnotation(Table.class).name();
+        }
+        return personClass.getSimpleName();
     }
 
 
@@ -19,13 +31,36 @@ public class QueryBuilder {
         String query = "";
         int count = 0;
         for (Field field : personClass.getDeclaredFields()) {
-            query += field.getName() + " " + getSqlType(field) + getPrimaryKey(field);
+            if (field.isAnnotationPresent(Transient.class)) continue;
+
+            query += getColumnName(field) + " " + getSqlType(field) + getPrimaryKey(field) + getAutoIncrement(field) + getNullable(field);
             count++;
-            if (Arrays.stream(personClass.getDeclaredFields()).count() != count) {
+            if (Arrays.stream(personClass.getDeclaredFields()).count() - 1 != count) {
                 query += ", ";
             }
         }
         return query;
+    }
+
+    private String getNullable(Field field) {
+        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).nullable()) {
+            return " NOT NULL";
+        }
+        return "";
+    }
+
+    private String getColumnName(Field field) {
+        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isEmpty()) {
+            return field.getAnnotation(Column.class).name();
+        }
+        return field.getName();
+    }
+
+    private static String getAutoIncrement(Field field) {
+        if (field.isAnnotationPresent(GeneratedValue.class) == true) {
+            return " AUTO_INCREMENT";
+        }
+        return "";
     }
 
     private static String getPrimaryKey(Field field) {

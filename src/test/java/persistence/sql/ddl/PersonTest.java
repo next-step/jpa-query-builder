@@ -1,14 +1,11 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class PersonTest {
@@ -16,33 +13,47 @@ public class PersonTest {
     private static final Logger logger = LoggerFactory.getLogger(PersonTest.class);
 
     @Test
-    void Test() {
-        logger.debug(personClass.getName()); //persistence.sql.ddl.Person
-        logger.debug(personClass.getSimpleName()); // Person
-        logger.debug(Arrays.toString(personClass.getDeclaredAnnotations())); //[@jakarta.persistence.Entity(name="")]
-        logger.debug(Arrays.toString(personClass.getDeclaredFields())); //[private java.lang.Long persistence.sql.ddl.Person.id, private java.lang.String persistence.sql.ddl.Person.name, private java.lang.Integer persistence.sql.ddl.Person.age]
-        logger.debug(Arrays.toString(personClass.getDeclaredConstructors())); //public persistence.sql.ddl.Person()]
-
-        for (Field field : personClass.getDeclaredFields()) {
-//            field.setAccessible(true);
-            logger.debug(field.getType().getSimpleName());
-            logger.debug(field.getName());
-            logger.debug(String.valueOf(field.isAnnotationPresent(Id.class)));
-        }
+    void getTableName() {
+        logger.debug(String.valueOf(personClass.getAnnotation(Table.class).name()));
     }
 
     @Test
-    void getPersonMetadata() {
+    void getPersonMetadata() throws NoSuchFieldException {
         String query = "";
         int count = 0;
+
         for (Field field : personClass.getDeclaredFields()) {
-            query += field.getName() + " " + getSqlType(field) + getPrimaryKey(field);
+            if (field.isAnnotationPresent(Transient.class)) {
+                continue;
+            }
+            query += getColumnName(field) + " " + getSqlType(field) + getPrimaryKey(field) + getAutoIncrement(field) + getNullable(field);
             count++;
-            if (Arrays.stream(personClass.getDeclaredFields()).count() != count) {
+            if (Arrays.stream(personClass.getDeclaredFields()).count() - 1 != count) {
                 query += ", ";
             }
         }
         logger.debug(query);
+    }
+
+    private String getNullable(Field field) {
+        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).nullable()) {
+            return " NOT NULL";
+        }
+        return "";
+    }
+
+    private String getColumnName(Field field) {
+        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isEmpty()) {
+            return field.getAnnotation(Column.class).name();
+        }
+        return field.getName();
+    }
+
+    private static String getAutoIncrement(Field field) {
+        if (field.isAnnotationPresent(GeneratedValue.class) == true) {
+            return " AUTO_INCREMENT";
+        }
+        return "";
     }
 
     private static String getPrimaryKey(Field field) {
@@ -62,5 +73,12 @@ public class PersonTest {
         return field.getType().getSimpleName();
     }
 
+    @Test
+    void getColumnAnnotationValue() throws NoSuchFieldException {
+        Field field1 = personClass.getDeclaredField("name");
+        Column column = field1.getAnnotation(Column.class);
+        String columnName = column.name();
+        System.out.println(columnName);
+    }
 }
 
