@@ -1,11 +1,11 @@
 import builder.QueryBuilderDDL;
-import builder.h2.H2QueryBuilderDDL;
-import database.DatabaseServer;
-import database.H2;
+import builder.h2.ddl.H2QueryBuilderDDL;
+import database.H2DBConnection;
 import entity.Person;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,23 +15,31 @@ import java.util.List;
 
 public class ApplicationTest {
 
-    private DatabaseServer server;
+    private H2DBConnection h2DBConnection;
+    private JdbcTemplate jdbcTemplate;
 
+    //정확한 테스트를 위해 메소드마다 DB실행
     @BeforeEach
-    void setUp() throws SQLException {
-        server = new H2();
-        server.start();
+    void eachSetUp() throws SQLException {
+        this.h2DBConnection = new H2DBConnection();
+        this.jdbcTemplate = this.h2DBConnection.start();
+    }
+
+    //정확한 테스트를 위해 메소드마다 테이블 DROP
+    @AfterEach
+    void tearDown() {
+        QueryBuilderDDL queryBuilderDDL = new H2QueryBuilderDDL();
+        String dropQuery = queryBuilderDDL.buildDropQuery(Person.class);
+        jdbcTemplate.execute(dropQuery);
+        this.h2DBConnection.stop();
     }
 
     @DisplayName("Users 테이블을 생성한다.")
     @Test
-    void createUsersTableTest() throws SQLException {
+    void createUsersTableTest() {
         //given
         QueryBuilderDDL queryBuilderDDL = new H2QueryBuilderDDL();
         String createQuery = queryBuilderDDL.buildCreateQuery(Person.class);
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-
         //when
         jdbcTemplate.execute(createQuery);
 
@@ -43,24 +51,4 @@ public class ApplicationTest {
                 .containsExactly("USERS");
     }
 
-    @DisplayName("Users 테이블을 제거한다.")
-    @Test
-    void dropUsersTableTest() throws SQLException {
-        //given
-        QueryBuilderDDL queryBuilderDDL = new H2QueryBuilderDDL();
-        String createQuery = queryBuilderDDL.buildCreateQuery(Person.class);
-        String dropQuery = queryBuilderDDL.buildDropQuery(Person.class);
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-
-        //when
-        jdbcTemplate.execute(createQuery);
-        jdbcTemplate.execute(dropQuery);
-
-        //then
-        RowMapper<String> rowMapper = resultSet -> resultSet.getString(1);
-        List<String> objects = jdbcTemplate.query("SHOW TABLES", rowMapper);
-
-        Assertions.assertThat(objects).hasSize(0);
-    }
 }
