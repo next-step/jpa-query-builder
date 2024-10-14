@@ -25,7 +25,7 @@ public class H2QueryBuilderDML extends QueryBuilder implements QueryBuilderDML {
     private final static String ENTITY_PK_NAME = "{entityPkName}";
     private final static String SINGLE_QUOTE = "'";
 
-    //insert 쿼리를 생성한다.
+    //insert 쿼리를 생성한다. Insert 쿼리는 인스턴스의 데이터를 받아야함
     @Override
     public <T> String buildInsertQuery(T entityInstance) {
         confirmEntityAnnotation(entityInstance.getClass());
