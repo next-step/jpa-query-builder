@@ -21,7 +21,7 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
         Field[] declaredFields = clazz.getDeclaredFields();
 
         return new EntityFields(
-                getName(clazz),
+                getTableName(clazz),
                 getIdField(declaredFields),
                 getFields(declaredFields)
         );
@@ -36,7 +36,7 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
         return idField.name();
     }
 
-    private static <T> String getName(Class<T> clazz) {
+    private static <T> String getTableName(Class<T> clazz) {
         Table table = clazz.getAnnotation(Table.class);
 
         if (table == null) {
