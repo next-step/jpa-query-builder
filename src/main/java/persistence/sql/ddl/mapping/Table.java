@@ -17,7 +17,11 @@ public class Table {
         }
 
         Entity annotation = clazz.getAnnotation(Entity.class);
-        return new Table(annotation.name());
+        if (!annotation.name().isEmpty()) {
+            return new Table(annotation.name());
+        }
+
+        return new Table(clazz.getSimpleName());
     }
 
     public Table(String name) {
