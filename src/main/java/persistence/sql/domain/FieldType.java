@@ -3,7 +3,8 @@ package persistence.sql.domain;
 public enum FieldType {
     LONG(Long.class, "BIGINT"),
     STRING(String.class, "VARCHAR"),
-    INTEGER(Integer.class, "INT");
+    INTEGER(Integer.class, "INT"),
+    ;
     private final Class<?> type;
     private final String sqlType;
 
@@ -26,7 +27,7 @@ public enum FieldType {
                 return fieldType.getSqlType();
             }
         }
-        return "UNKNOWN_TYPE";
+        throw new IllegalArgumentException("Unknown Type");
     }
 
 }
