@@ -58,4 +58,26 @@ public class DmlQueryBuilderTest {
 
         assertEquals(expectedQuery, resultQuery);
     }
+
+    @Test
+    @DisplayName("조건절 없이 테이블의 모든 레코드 조회")
+    void testCreateSelectQueryWithoutClauses() {
+        String expectedQuery = "SELECT * FROM \"users\"";
+
+        String resultQuery =  queryBuilder.getSelectQuery();
+
+        assertEquals(expectedQuery, resultQuery);
+    }
+
+    @Test
+    @DisplayName("조건절로 테이블의 모든 레코드 조회")
+    void testCreateSelectQueryWithClauses() {
+        String expectedQuery = "SELECT * FROM \"users\"" +
+                "WHERE (\"email\" = 'test@test.com' AND \"nick_name\" = '홍길동')" +
+                "OR (\"id\" = 1)";
+
+        String resultQuery =  queryBuilder.getSelectQuery(); // ADD parameters later...
+
+        assertEquals(expectedQuery, resultQuery);
+    }
 }
