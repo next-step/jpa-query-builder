@@ -14,7 +14,7 @@ public class ColumnInfo {
     private boolean transientAnnotaion;
     private List<String> options;
 
-    public ColumnInfo(String name, ColumnType columnType, boolean primaryKey, boolean transientAnnotation, List<String> options) {
+    private ColumnInfo(String name, ColumnType columnType, boolean primaryKey, boolean transientAnnotation, List<String> options) {
         this.name = name;
         this.columnType = columnType;
         this.primaryKey = primaryKey;
