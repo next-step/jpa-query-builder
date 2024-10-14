@@ -28,14 +28,16 @@ public class H2InsertDMLGenerator implements InsertDMLGenerator {
     }
 
     private Object getValue(EntityFields entityFields, String fieldName, Object object) {
-        try {
-            Field field = entityFields.getFieldByName(fieldName);
+        Field field = entityFields.getFieldByName(fieldName);
 
+        try {
             field.setAccessible(true);
 
             return field.get(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
+        } finally {
+            field.setAccessible(false);
         }
     }
 }
