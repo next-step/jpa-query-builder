@@ -1,4 +1,4 @@
-package persistence.sql.ddl.create.component;
+package persistence.sql.ddl.create;
 
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
 import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;

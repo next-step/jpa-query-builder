@@ -1,12 +1,11 @@
 package persistence;
 
 import jakarta.persistence.Entity;
-import persistence.sql.ddl.create.component.DdlCreateQueryBuilder;
+import persistence.sql.ddl.create.DdlCreateQueryBuilder;
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
 import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
