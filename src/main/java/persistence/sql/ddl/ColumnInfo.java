@@ -53,8 +53,8 @@ public class ColumnInfo {
     }
 
     private static String extractColumnName(Field field){
-        final var columnAnotation = field.getAnnotation(Column.class);
-        return Objects.isNull(columnAnotation) || columnAnotation.name().isBlank() ? field.getName() : columnAnotation.name();
+        final var columnAnnotation = field.getAnnotation(Column.class);
+        return Objects.isNull(columnAnnotation) || columnAnnotation.name().isBlank() ? field.getName() : columnAnnotation.name();
     }
     public String getName() {
         return name;
@@ -73,5 +73,15 @@ public class ColumnInfo {
 
     public boolean isNotTransient() {
         return !transientAnnotaion;
+    }
+
+    public String generateQuery() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(" ");
+        sb.append(columnType.getQueryDefinition());
+        if(!options.isEmpty()) {
+            sb.append(" ").append(options.stream().collect(Collectors.joining(" ")));
+        }
+        return sb.toString();
     }
 }
