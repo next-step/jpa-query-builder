@@ -1,16 +1,14 @@
 package persistence.sql.dml.query;
 
 import persistence.sql.ColumnDefinitionAware;
-import persistence.sql.DataManipulationQueryBuilder;
 import persistence.sql.definition.TableDefinition;
 
-public class InsertQueryBuilder implements DataManipulationQueryBuilder {
+public class InsertQueryBuilder {
     private static final String EMPTY_STRING = "";
 
     public InsertQueryBuilder() {
     }
 
-    @Override
     public String build(Object entity) {
         final Class<?> entityClass = entity.getClass();
         final TableDefinition tableDefinition = new TableDefinition(entityClass);

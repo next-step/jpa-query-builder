@@ -1,18 +1,16 @@
 package persistence.sql.ddl.query;
 
 import persistence.sql.Dialect;
-import persistence.sql.QueryBuilder;
 import persistence.sql.definition.TableDefinition;
 import persistence.sql.definition.TableId;
 
-public class CreateQueryBuilder implements QueryBuilder {
+public class CreateQueryBuilder {
     private final Dialect dialect;
 
     public CreateQueryBuilder(Dialect dialect) {
         this.dialect = dialect;
     }
 
-    @Override
     public String build(Class<?> entityClass) {
         TableDefinition tableDefinition = new TableDefinition(entityClass);
         StringBuilder query = new StringBuilder();
