@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
+import org.h2.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -75,12 +76,11 @@ public class ColumnInfo {
     }
 
     public String generateColumnQuery() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(name).append(" ");
-        sb.append(columnType.getQueryDefinition());
-        if(!options.isEmpty()) {
-            sb.append(" ").append(options.stream().collect(Collectors.joining(" ")));
+        String columnQuery = String.join(" ", name, columnType.getQueryDefinition());
+        String optionQuery = options.stream().collect(Collectors.joining(" "));
+        if(StringUtils.isNullOrEmpty(optionQuery)) {
+            return columnQuery;
         }
-        return sb.toString();
+        return String.join(" ", columnQuery, optionQuery);
     }
 }
