@@ -2,6 +2,7 @@ package persistence.sql.model;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Transient;
+import persistence.sql.ddl.ExceptionUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +13,8 @@ public class EntityColumnNames {
     private final List<EntityColumnName> entityColumnNames;
 
     public EntityColumnNames(Class<?> clazz) {
+        ExceptionUtil.requireNonNull(clazz);
+
         this.entityColumnNames = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(GeneratedValue.class))
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
@@ -24,6 +27,4 @@ public class EntityColumnNames {
                 .map(EntityColumnName::getValue)
                 .collect(Collectors.joining(", "));
     }
-
-
 }

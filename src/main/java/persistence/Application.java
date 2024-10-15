@@ -3,7 +3,6 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.*;
@@ -12,8 +11,6 @@ import persistence.sql.dml.H2SelectQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class Application {
@@ -36,7 +33,15 @@ public class Application {
             jdbcTemplate.execute(insertQueryBuilder.makeQuery());
 
             SelectQueryBuilder selectQueryBuilder = new H2SelectQueryBuilder(Person.class);
-            List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAllQuery(), resultSet -> {
+            List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(), resultSet -> {
+                String email = resultSet.getString("email");
+                int age = resultSet.getInt("old");
+                String nickname = resultSet.getString("nick_name");
+                return new Person(nickname, age, email, 0);
+            });
+
+
+            Person getByIdPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(1L), resultSet -> {
                 String email = resultSet.getString("email");
                 int age = resultSet.getInt("old");
                 String nickname = resultSet.getString("nick_name");
