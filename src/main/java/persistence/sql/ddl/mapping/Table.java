@@ -1,6 +1,7 @@
 package persistence.sql.ddl.mapping;
 
 import jakarta.persistence.Entity;
+import persistence.sql.ddl.exception.NotExistException;
 
 public class Table {
 
@@ -8,7 +9,7 @@ public class Table {
 
     public static Table from(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new RuntimeException("@Entity not exist. class = " + clazz.getName());
+            throw new NotExistException("@Entity annotation. class = " + clazz.getName());
         }
         
         if (clazz.isAnnotationPresent(jakarta.persistence.Table.class)) {

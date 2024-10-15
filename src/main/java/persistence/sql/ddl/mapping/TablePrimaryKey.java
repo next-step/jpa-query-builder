@@ -2,6 +2,7 @@ package persistence.sql.ddl.mapping;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import persistence.sql.ddl.exception.NotExistException;
 import persistence.sql.ddl.type.TablePrimaryKeyGenerateType;
 
 import java.lang.reflect.Field;
@@ -16,7 +17,7 @@ public class TablePrimaryKey {
         Field keyField = Arrays.stream(fields)
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Primary key not exist."));
+                .orElseThrow(() -> new NotExistException("primary key."));
 
         return new TablePrimaryKey(new TableColumn(keyField), generateType(keyField));
     }
