@@ -6,14 +6,16 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.sql.ddl.H2Dialect;
+import persistence.sql.H2Dialect;
 import persistence.sql.ddl.query.CreateQueryBuilder;
-import persistence.sql.ddl.Person;
+import persistence.sql.Person;
 import persistence.sql.ddl.query.DropQueryBuilder;
+import persistence.sql.dml.query.DeleteByIdQueryBuilder;
+import persistence.sql.dml.query.InsertQueryBuilder;
+import persistence.sql.dml.query.SelectAllQueryBuilder;
+import persistence.sql.dml.query.SelectByIdQueryBuilder;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
+import java.util.List;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -22,19 +24,26 @@ public class Application {
         logger.info("Starting application...");
         try {
             final DatabaseServer server = new H2();
+            final Class<?> testClass = Person.class;
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             // create table
-            testCreate(jdbcTemplate);
+            create(jdbcTemplate, testClass);
 
             // test insert and select
-            testInsert(jdbcTemplate);
-            testSelect(jdbcTemplate);
+            insert(jdbcTemplate, testClass);
+            selectAll(jdbcTemplate, testClass);
+            selectById(jdbcTemplate, testClass, 1L);
+            selectById(jdbcTemplate, testClass, 2L);
+            selectById(jdbcTemplate, testClass, 3L);
+
+            deleteById(jdbcTemplate, testClass, 1L);
+            selectAll(jdbcTemplate, testClass);
 
             // drop table
-            testDrop(jdbcTemplate);
+            drop(jdbcTemplate);
 
             server.stop();
         } catch (Exception e) {
@@ -44,12 +53,12 @@ public class Application {
         }
     }
 
-    private static void testCreate(JdbcTemplate jdbcTemplate) {
+    private static void create(JdbcTemplate jdbcTemplate, Class<?> testClass) {
         CreateQueryBuilder createQuery = new CreateQueryBuilder(new H2Dialect());
-        jdbcTemplate.execute(createQuery.build(Person.class));
+        jdbcTemplate.execute(createQuery.build(testClass));
     }
 
-    private static void testDrop(JdbcTemplate jdbcTemplate) {
+    private static void drop(JdbcTemplate jdbcTemplate) {
         DropQueryBuilder dropQuery = new DropQueryBuilder();
         String build = dropQuery.build(Person.class);
         logger.info("Drop query: {}", build);
@@ -58,23 +67,65 @@ public class Application {
 //            jdbcTemplate.execute("select * from users");
     }
 
-    private static void testSelect(JdbcTemplate jdbcTemplate) {
-        String selectSQL = "SELECT * FROM users where id = 1";
-        Map<String, Object> result = jdbcTemplate.queryForObject(selectSQL, new RowMapper<Map<String, Object>>() {
-            @Override
-            public Map<String, Object> mapRow(ResultSet resultSet) throws SQLException {
-                return Map.of("nick_name", resultSet.getString("nick_name"), "old", resultSet.getInt("old"));
-            }
-        });
+    private static void selectAll(JdbcTemplate jdbcTemplate, Class<?> testClass) {
+        SelectAllQueryBuilder selectAllQuery = new SelectAllQueryBuilder();
+        String query = selectAllQuery.build(testClass);
 
-        for (Map.Entry<String, Object> row : result.entrySet()) {
-            logger.info("Row: column={}, value={}", row.getKey(), row.getValue());
+        List<Person> people = jdbcTemplate.query(query, (RowMapper) rs -> new Person(
+                rs.getLong("id"),
+                rs.getString("nick_name"),
+                rs.getInt("old"),
+                rs.getString("email"),
+                1 // transient
+        ));
+
+        for (Person person : people) {
+            logger.info("Person: {}", person);
         }
     }
 
-    private static void testInsert(JdbcTemplate jdbcTemplate) {
-        String insertSQL = "INSERT INTO users (nick_name, old, email) VALUES ('John Doe', 30, 'chanho0912@gmail.com')";
-        jdbcTemplate.execute(insertSQL);
+    private static void selectById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
+        SelectByIdQueryBuilder selectByIdQueryBuilder = new SelectByIdQueryBuilder();
+        String query = selectByIdQueryBuilder.build(testClass);
+        query = query.replace("?", id.toString());
+
+        List<Person> people = jdbcTemplate.query(query, (RowMapper) rs -> new Person(
+                rs.getLong("id"),
+                rs.getString("nick_name"),
+                rs.getInt("old"),
+                rs.getString("email"),
+                1 // transient
+        ));
+
+        for (Person person : people) {
+            logger.info("Person: {}", person);
+        }
+    }
+
+    private static void insert(JdbcTemplate jdbcTemplate, Class<?> testClass) {
+        InsertQueryBuilder insertQuery = new InsertQueryBuilder();
+        Person person1 = new Person(1L, "a", 10, "aaa@gmail.com", 1);
+        Person person2 = new Person(2L, "b", 20, "bbb@gmail.com", 2);
+        Person person3 = new Person(3L, "c", 30, "ccc@gmail.com", 3);
+
+        String query1 = insertQuery.build(person1);
+        String query2 = insertQuery.build(person2);
+        String query3 = insertQuery.build(person3);
+
+        jdbcTemplate.execute(query1);
+        jdbcTemplate.execute(query2);
+        jdbcTemplate.execute(query3);
+
         logger.info("Data inserted successfully!");
+    }
+
+    private static void deleteById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
+        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder();
+        String query = deleteByIdQueryBuilder.build(testClass);
+        query = query.replace("?", id.toString());
+
+        jdbcTemplate.execute(query);
+
+        logger.info("Data deleted successfully!");
     }
 }

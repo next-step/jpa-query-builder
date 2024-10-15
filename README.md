@@ -34,3 +34,11 @@
     - [x] @Column의 length 속성을 사용한다.
     - [x] @Column의 length 속성이 선언되어 있지 않을 경우, 255를 사용한다.
 - [x] Entity Class의 정보를 바탕으로 drop 쿼리 만들어보기
+
+## 3단계 - QueryBuilder DML
+
+- [x] Person 정보를 바탕으로 insert 구현해보기
+  - [x] column clause와 value clause를 나누어 작성한다. 
+- [x] Person 정보를 바탕으로 select * (findAll) 구현해보기
+- [x] Person 정보를 바탕으로 select * where (findById) 구현해보기
+- [x] Person 정보를 바탕으로 delete 구현해보기

@@ -6,8 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.Dialect;
-import persistence.sql.ddl.H2Dialect;
+import persistence.sql.Dialect;
+import persistence.sql.H2Dialect;
+import persistence.sql.definition.TableId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -38,8 +39,8 @@ public class TableIdTest {
 
         Dialect dialect = new H2Dialect();
 
-        tableId1.apply(query1, dialect);
-        tableId2.apply(query2, dialect);
+        tableId1.applyToCreateQuery(query1, dialect);
+        tableId2.applyToCreateQuery(query2, dialect);
 
         // Then
         assertAll(
