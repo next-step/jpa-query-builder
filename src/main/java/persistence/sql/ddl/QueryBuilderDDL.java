@@ -43,10 +43,7 @@ public class QueryBuilderDDL {
         List<ColumnInfo> columns = Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract)
                 .filter(ColumnInfo::isNotTransient).collect(Collectors.toList());
 
-        for (ColumnInfo column : columns) {
-            sb.append(column.generateQuery());
-            sb.append(", ");
-        }
+        sb.append(columns.stream().map(ColumnInfo::generateQuery).collect(Collectors.joining(",")));
         sb.append(generatePrimaryKeyQuery(columns));
         return sb.toString();
     }
