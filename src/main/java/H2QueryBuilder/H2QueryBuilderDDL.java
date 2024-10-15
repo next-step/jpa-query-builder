@@ -76,9 +76,9 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         }
 
         if ( field.isAnnotationPresent(Id.class) ) {
-            columnDatas.add(new ColumnData(columnName, field.getType(), isGenerateValueIdentity(field), !isNullable, true));
+            columnDatas.add(new ColumnData(columnName, field.getType(), true, true, isGenerateValueIdentity(field)));
         } else {
-            columnDatas.add(new ColumnData(columnName, field.getType(), isGenerateValueIdentity(field), !isNullable, false));
+            columnDatas.add(new ColumnData(columnName, field.getType(), false, !isNullable, isGenerateValueIdentity(field)));
         }
     }
 
