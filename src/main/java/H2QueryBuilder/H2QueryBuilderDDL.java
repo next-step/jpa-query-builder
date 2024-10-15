@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class H2QueryBuilderDDL implements QueryBuilderDDL {
     private final static String CREATE_QUERY   = "CREATE TABLE {tableName} ({columnInfo});";
+    private final static String DROP_QUERY     = "DROP TABLE {tableName};";
     private final static String PRIMARY_KEY    = " PRIMARY KEY";
     private final static String NOT_NULL       = " NOT NULL";
     private final static String AUTO_INCREMENT = " AUTO_INCREMENT";
@@ -89,5 +90,14 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         }
 
         return field.getAnnotation(GeneratedValue.class).strategy() == GenerationType.IDENTITY;
+    }
+
+    @Override
+    public String drop(Class<?> entityClass) {
+        if ( !entityClass.isAnnotationPresent(Entity.class) ) {
+            throw new IllegalArgumentException(ErrorCode.NOT_EXIST_ENTITY_ANNOTATION.getErrorMsg());
+        }
+
+        return DROP_QUERY.replace(TABLE_NAME, getTableName(entityClass));
     }
 }
