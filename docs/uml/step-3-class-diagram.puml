@@ -1,20 +1,31 @@
 @startuml
 interface QueryBuilder {
-    + String buildQuery()
+    + String build()
 }
 
 ' QueryBuilder 들
-class DDLQueryBuilder extends QueryBuilder{
-
+class DDLQueryBuilder {
+    + CreateTableStep createTable ()
+    + DropTableStep dropTable ()
 }
 
-class DQLQueryBuilder extends QueryBuilder{
-
+class DQLQueryBuilder {
+    + SelectStep select ()
+    + SelectFromStep selectFrom ()
 }
 
-class DMLQueryBuilder extends QueryBuilder {
-
+class DMLQueryBuilder {
+    + InsertIntoStep insert ()
+    + DeleteFromStep delete ()
 }
+
+
+' 이거도 그리면 좋지만 안이쁘니 숨기자...
+DDLQueryBuilder -[hidden]..> CreateTableStep:returns
+DDLQueryBuilder -[hidden]..> DropTableStep:returns
+
+DMLQueryBuilder -[hidden]..> InsertIntoStep:returns
+DMLQueryBuilder -[hidden]..> DeleteFromStep:returns
 
 ' Step 들 정의
 interface CreateTableStep extends DDLTableIfNotExistStep {
@@ -25,27 +36,35 @@ interface DropTableStep extends DDLTableIfNotExistStep {
 
 }
 
-interface SelectStep extends DQLQueryBuilder {
+interface SelectStep {
 
 }
 
-interface SelectFromStep extends DQLQueryBuilder {
+interface SelectFromStep {
 
 }
 
-interface DeleteFromStep extends DMLQueryBuilder {
+interface InsertIntoStep extends InsertIntoValuesStep {
 
 }
 
-interface FromStep extends SelectStep, DeleteFromStep, SelectFromStep {
+interface InsertIntoValuesStep extends QueryBuilder {
 
 }
 
-interface WhereStep extends FromStep {
+interface DeleteFromStep {
 
 }
 
-interface DDLTableIfNotExistStep extends DDLQueryBuilder {
+interface FromStep extends SelectStep, DeleteFromStep, SelectFromStep, QueryBuilder {
+
+}
+
+interface WhereStep extends FromStep, QueryBuilder {
+
+}
+
+interface DDLTableIfNotExistStep extends QueryBuilder {
     + QueryBuilder ifNotExist()
 }
 
