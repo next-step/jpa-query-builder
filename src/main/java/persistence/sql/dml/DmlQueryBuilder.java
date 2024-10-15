@@ -5,6 +5,7 @@ import persistence.model.EntityFactory;
 import persistence.model.EntityTable;
 import persistence.model.meta.Value;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dml.clause.FindOption;
 
 import java.util.List;
 
@@ -21,8 +22,13 @@ public class DmlQueryBuilder {
         EntityTable table = EntityFactory.createPopulatedSchema(entityObject);
 
         List<EntityColumn> columns = table.getInsertableColumns(table);
-        List<String> columnNames = columns.stream().map(EntityColumn::getName).toList();
-        List<Value> values = columns.stream().map(EntityColumn::getValue).toList();
+        List<String> columnNames = columns.stream()
+                .map(EntityColumn::getName)
+                .toList();
+        List<Object> values = columns.stream()
+                .map(EntityColumn::getValue)
+                .map(Value::getValue)
+                .toList();
 
         String columnNamesJoined = dialect.getIdentifiersQuoted(columnNames);
         String valueNames = dialect.getValuesQuoted(values);
@@ -30,5 +36,30 @@ public class DmlQueryBuilder {
         String tableName = table.getName();
 
         return String.format(INSERT_FORMAT, dialect.getIdentifierQuoted(tableName), columnNamesJoined, valueNames);
+    }
+
+    public String getSelectQuery(Class<?> entityClass, FindOption findOption) {
+        String SELECT_ALL = "*";
+        String SELECT_FORMAT = "SELECT %s FROM %s";
+
+        EntityTable table = EntityFactory.createEmptySchema(entityClass);
+
+        List<String> selectingColumnNames = findOption.getSelectingColumns().stream()
+                .map(EntityColumn::getName)
+                .toList();
+
+        String selectingColumnNamesJoined = selectingColumnNames.isEmpty()
+                ? SELECT_ALL
+                : dialect.getIdentifiersQuoted(selectingColumnNames);
+
+        String query = String.format(
+                SELECT_FORMAT,
+                selectingColumnNamesJoined,
+                dialect.getIdentifierQuoted(table.getName())
+        );
+        if (!findOption.getWhere().isEmpty()) {
+            return query + " " + findOption.joinWhereClauses(dialect);
+        }
+        return query;
     }
 }

@@ -1,7 +1,6 @@
 package persistence.sql.dialect;
 
 import persistence.model.meta.DataType;
-import persistence.model.meta.Value;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.stream.Collectors;
 import static java.sql.Types.*;
 
 public abstract class Dialect {
-
     protected final String identifierQuote = "\"";
 
     protected final String valueQuote = "'";
@@ -33,8 +31,7 @@ public abstract class Dialect {
         DataType dataType = new DataType(
                 typeCode,
                 mapSqlCodeToJavaType(typeCode),
-                mapSqlCodeToNamePattern(typeCode),
-                mapSqlCodeToIsQuoteRequiredValue(typeCode)
+                mapSqlCodeToNamePattern(typeCode)
         );
         dataTypeRegistry.put(mapSqlCodeToJavaType(typeCode), dataType);
     }
@@ -53,14 +50,6 @@ public abstract class Dialect {
             case BIGINT -> "bigint";
             case INTEGER -> "int";
             case VARCHAR -> "varchar(%d)";
-            default -> throw new IllegalArgumentException("UNKNOWN TYPE. sql code = " + typeCode);
-        };
-    }
-
-    protected Boolean mapSqlCodeToIsQuoteRequiredValue(int typeCode) {
-        return switch (typeCode) {
-            case BIGINT, INTEGER -> false;
-            case VARCHAR -> true;
             default -> throw new IllegalArgumentException("UNKNOWN TYPE. sql code = " + typeCode);
         };
     }
@@ -87,19 +76,18 @@ public abstract class Dialect {
                 .collect(Collectors.joining(", "));
     }
 
-    public String getValueQuoted(Value value) {
-        Object columnValue = value.getValue();
-        if (columnValue == null) {
+    public String getValueQuoted(Object value) {
+        System.out.println(value);
+        if (value == null) {
             return getNullPhrase(true);
         }
-        DataType dataType = dataTypeRegistry.get(value.getType());
-        if (dataType.isQuoteRequired()) {
-            return valueQuote + columnValue + valueQuote;
+        if (value instanceof String) {
+            return valueQuote + value + valueQuote;
         }
-        return columnValue.toString();
+        return value.toString();
     }
 
-    public String getValuesQuoted(List<Value> values) {
+    public String getValuesQuoted(List<Object> values) {
         return values.stream()
                 .map(this::getValueQuoted)
                 .collect(Collectors.joining(", "));

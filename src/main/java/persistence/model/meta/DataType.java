@@ -3,8 +3,7 @@ package persistence.model.meta;
 public record DataType(
         int sqlTypeCode,
         Class<?> javaType,
-        String namePattern,
-        Boolean isQuoteRequired
+        String namePattern
 ) {
     public String getFullName(int length) {
         if (namePattern.contains("%d")) {

@@ -20,15 +20,9 @@ public class EntityFactory {
 
         List<EntityColumn> columns = Arrays.stream(entityClass.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> {
-                    System.out.println(field.getName());
-                    System.out.println("------");
-                    System.out.println(entityObject.toString());
-                    System.out.println(entityObject == null);
-                    return entityObject == null
+                .map(field -> entityObject == null
                             ? EntityColumn.build(field)
-                            : EntityColumn.build(field, entityObject);
-                })
+                            : EntityColumn.build(field, entityObject))
                 .toList();
 
         table.setColumns(columns);
