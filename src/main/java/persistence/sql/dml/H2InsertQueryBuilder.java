@@ -14,6 +14,9 @@ public class H2InsertQueryBuilder implements InsertQueryBuilder {
     private final Object object;
 
     public H2InsertQueryBuilder(Object object) {
+        if (object == null) {
+            throw new IllegalArgumentException("object가 존재하지 않습니다.");
+        }
         this.object = object;
     }
 
