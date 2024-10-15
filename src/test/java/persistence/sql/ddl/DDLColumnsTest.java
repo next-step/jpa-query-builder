@@ -2,8 +2,8 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.DDLColumn;
 import persistence.sql.ddl.Person;
+import persistence.sql.ddl.DDLColumn;
 
 import java.lang.reflect.Field;
 
@@ -13,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("DDL Column 테스트")
 class DDLColumnsTest {
-    
+
     @Test
     void Entity_컬럼_이용한_DDL_가져오기() {
         DDLColumn ddlColumn = new DDLColumn(Person.class.getDeclaredFields());
         String sql = ddlColumn.makeColumnsDDL();
-        assertThat(sql).isEqualTo("id BIGINT PRIMARY KEY AUTO_INCREMENT,name VARCHAR(255) NULL,age INTEGER NULL,email VARCHAR(255) NOT NULL");
+        assertThat(sql).isEqualTo("id BIGINT PRIMARY KEY AUTO_INCREMENT,nick_name VARCHAR(255) NULL,old INTEGER NULL,email VARCHAR(255) NOT NULL");
     }
 
     @Test

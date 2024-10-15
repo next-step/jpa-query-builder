@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
+import persistence.sql.model.EntityColumnName;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -46,7 +47,7 @@ public class DDLColumn {
 
     public String makeColumnDDL(Field field) {
         StringBuilder columnStringBuilder = new StringBuilder();
-        columnStringBuilder.append(getColumnName(field));
+        columnStringBuilder.append(new EntityColumnName(field).getValue());
         columnStringBuilder.append(SPACE);
         columnStringBuilder.append(getFieldType(field));
 
@@ -70,20 +71,6 @@ public class DDLColumn {
         }
 
         return columnStringBuilder.toString();
-    }
-
-
-    private String getColumnName(Field field) {
-        if (!field.isAnnotationPresent(Column.class)) {
-            return field.getName();
-        }
-
-        String columnName = field.getAnnotation(Column.class).name();
-        if (columnName.isEmpty()) {
-            return field.getName();
-        }
-
-        return field.getName();
     }
 
     private String getColumnNullable(Field field) {

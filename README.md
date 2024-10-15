@@ -1,7 +1,7 @@
 # jpa-query-builder
 
 - SQL 쿼리 빌더 구현
-  - Step1 
+  - Step1
     - 요구 사항
       - [x] 1 : 클래스 정보 출력
       - [x] 2 : test로 시작하는 메소드 실행
@@ -18,8 +18,10 @@
       - [x] 테스트 코드 추가
       - [x] 인터페이스 추가
   - Step3
-    - 요구 사항
-      - [] 1 : insert 구현해보기
+    - 요구 사항 및 기능 구현
+      - [x] 1 : insert 구현해보기
+        - [x] 1-1 : 테스트코드 작성
+        - [x] EntityColumnName 클래스 추가로 인한 Step2에서 구현한 ColumnName 객체로 변경 및 테스트 코드 추가
       - [] 2 : 모두 조회(findAll) 기능 구현해보기
       - [] 3 : 단건 조회(findById) 기능 구현해보기
       - [] 4 : delete 쿼리 만들어보기
