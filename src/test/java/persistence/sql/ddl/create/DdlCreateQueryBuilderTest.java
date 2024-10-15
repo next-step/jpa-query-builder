@@ -29,7 +29,7 @@ public class DdlCreateQueryBuilderTest {
         Class<PersonV1> personClass = PersonV1.class;
         for (Field field : personClass.getDeclaredFields()) {
             for (ConstraintComponentBuilder constraintComponentBuilder : ConstraintComponentBuilder.from(field)) {
-                logger.debug("Constraint : {}", constraintComponentBuilder.build().toString());
+                logger.debug("Constraint : {}", constraintComponentBuilder.build());
             }
         }
     }
