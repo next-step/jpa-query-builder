@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class QueryBuilder {
+    private final FieldTypeMapper fieldTypeMapper = new FieldTypeMapper();
+
     public String create(Class<?> entity) {
         String createTableQuery = this.getCreateTableQuery(entity);
         String columnDefinitions = this.generateColumnDefinitions(entity);
@@ -28,19 +30,8 @@ public class QueryBuilder {
 
     private String generateColumnDefinitions(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
-        List<String> columns = Arrays.stream(fields).filter(field -> !field.isAnnotationPresent(Transient.class)).map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.mapFieldTypeToSQLType(field) + this.mapFieldAnnotationToSQLType((field)))).toList();
+        List<String> columns = Arrays.stream(fields).filter(field -> !field.isAnnotationPresent(Transient.class)).map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.mapFieldAnnotationToSQLType((field)))).toList();
         return String.join(", ", columns);
-    }
-
-    private String mapFieldTypeToSQLType(Field field) {
-        if (field.getType().equals(String.class)) {
-            return "VARCHAR(255)";
-        } else if (field.getType().equals(Integer.class)) {
-            return "INTEGER";
-        } else if (field.getType().equals(Long.class)) {
-            return "BIGINT";
-        }
-        return "";
     }
 
     private String mapFieldAnnotationToSQLType(Field field) {
