@@ -13,7 +13,7 @@ public class H2ConnectionFactory {
         throw new AssertionError();
     }
 
-    public static Connection getConnection() {
+    static Connection getConnection() {
         final H2 server = getServer();
         return cretaeConnection(server);
     }

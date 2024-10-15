@@ -14,7 +14,7 @@ public class CustomRowMapper<T> implements RowMapper<T> {
 
     private final Class<T> clazz;
 
-    public CustomRowMapper(Class<T> clazz) {
+    CustomRowMapper(Class<T> clazz) {
         this.clazz = clazz;
     }
 

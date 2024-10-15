@@ -15,7 +15,7 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public EntityManagerImpl(Connection connection) {
+    EntityManagerImpl(Connection connection) {
         this.jdbcTemplate = new JdbcTemplate(connection);
     }
 

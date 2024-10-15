@@ -8,11 +8,11 @@ public class InstanceFactory<T> {
 
     private final Class<T> clazz;
 
-    public InstanceFactory(Class<T> clazz) {
+    InstanceFactory(Class<T> clazz) {
         this.clazz = clazz;
     }
 
-    public T createInstance() {
+    T createInstance() {
         try {
             return clazz.getDeclaredConstructor().newInstance();
         } catch (NoSuchMethodException e) {
