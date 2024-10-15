@@ -5,6 +5,7 @@ import jdbc.JdbcTemplate;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.UpdateQueryBuilder;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -38,6 +39,15 @@ public class EntityManagerImpl implements EntityManager {
         String deleteQuery = deleteQueryBuilder.delete(clazz, getIdValue(entity));
 
         jdbcTemplate.execute(deleteQuery);
+    }
+
+    @Override
+    public Object update(Object entity) {
+        UpdateQueryBuilder updateQueryBuilder = new UpdateQueryBuilder();
+        String updateQuery = updateQueryBuilder.update(entity, getIdValue(entity));
+
+        jdbcTemplate.execute(updateQuery);
+        return entity;
     }
 
     private Object getIdValue(Object entity) {

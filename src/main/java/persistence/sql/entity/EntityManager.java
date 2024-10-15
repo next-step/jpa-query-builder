@@ -6,4 +6,6 @@ public interface EntityManager {
     Object persist(Object entity);
 
     void remove(Object entity);
+
+    Object update(Object entity);
 }
