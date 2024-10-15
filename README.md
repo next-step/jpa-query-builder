@@ -21,3 +21,6 @@
   - [ ] @Column.name 어노테이션을 컬럼명으로 사용
   - [ ] @Column.nullable 어노테이션을 NOT NULL로 사용
   - [ ] @GeneratedValue 어노테이션을 기본키 매핑으로 사용
+- [ ] BrandNewPerson Entity로 create 쿼리 만들어보기
+  - [ ] @Transient 어노테이션은 컬럼에서 제외
+  - [ ] @Table 어노테이션을 테이블명으로 사용
