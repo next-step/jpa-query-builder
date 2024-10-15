@@ -2,6 +2,8 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.dialect.Dialect;
+import persistence.dialect.H2Dialect;
 import persistence.fixture.EntityWithId;
 
 import static org.assertj.core.api.Assertions.*;
@@ -11,7 +13,8 @@ class CreateQueryBuilderTest {
     @DisplayName("create 쿼리를 생성한다.")
     void create() {
         // given
-        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(EntityWithId.class);
+        final Dialect dialect = new H2Dialect();
+        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(EntityWithId.class, dialect);
 
         // when
         final String query = createQueryBuilder.create();

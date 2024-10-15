@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
+import persistence.dialect.Dialect;
 import persistence.sql.meta.EntityField;
 import persistence.sql.meta.EntityTable;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +14,11 @@ public class CreateQueryBuilder {
     private static final String PRIMARY_KEY_COLUMN_DEFINITION = "PRIMARY KEY";
 
     private final EntityTable entityTable;
+    private final Dialect dialect;
 
-    public CreateQueryBuilder(Class<?> entityClass) {
-        this.entityTable = new EntityTable(entityClass);
+    public CreateQueryBuilder(Class<?> entityType, Dialect dialect) {
+        this.entityTable = new EntityTable(entityType);
+        this.dialect = dialect;
     }
 
     public String create() {
@@ -24,23 +26,17 @@ public class CreateQueryBuilder {
     }
 
     private String getColumnClause() {
-        final List<String> columnDefinitions = entityTable.getFields()
+        final List<String> columnDefinitions = entityTable.getEntityFields()
                 .stream()
-                .filter(this::isNotNeeded)
+                .filter(EntityField::isPersistent)
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
     }
 
-    private boolean isNotNeeded(Field field) {
-        return !new EntityField(field).isTransient();
-    }
-
-    private String getColumnDefinition(Field field) {
-        final EntityField entityField = new EntityField(field);
-        
-        String columDefinition = entityField.getColumnName() + " " + entityField.getDbType();
+    private String getColumnDefinition(EntityField entityField) {
+        String columDefinition = entityField.getColumnName() + " " + getDbType(entityField);
 
         if (entityField.isNotNull()) {
             columDefinition += " " + NOT_NULL_COLUMN_DEFINITION;
@@ -55,5 +51,15 @@ public class CreateQueryBuilder {
         }
 
         return columDefinition;
+    }
+
+    private String getDbType(EntityField entityField) {
+        final String dbTypeName = dialect.getDbTypeName(entityField);
+        final int columnLength = entityField.getColumnLength();
+
+        if (columnLength == 0) {
+            return dbTypeName;
+        }
+        return String.format("%s(%s)", dbTypeName, columnLength);
     }
 }

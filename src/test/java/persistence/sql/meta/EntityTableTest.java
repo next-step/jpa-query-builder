@@ -7,7 +7,6 @@ import persistence.fixture.EntityWithoutID;
 import persistence.fixture.EntityWithoutTable;
 import persistence.fixture.NotEntity;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +30,23 @@ class EntityTableTest {
         assertThatThrownBy(() -> new EntityTable(NotEntity.class))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(EntityTable.NOT_ENTITY_FAILED_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("필드 리스트를 반환한다.")
+    void getEntityFields() {
+        // given
+        final EntityTable entityTable = new EntityTable(EntityWithId.class);
+
+        // when
+        final List<EntityField> entityFields = entityTable.getEntityFields();
+
+        // then
+        assertThat(entityFields).containsAll(
+                Arrays.stream(EntityWithId.class.getDeclaredFields())
+                        .map(EntityField::new)
+                        .toList()
+        );
     }
 
     @Test
@@ -73,19 +89,6 @@ class EntityTableTest {
     }
 
     @Test
-    @DisplayName("필드 리스트를 반환한다.")
-    void getFields() {
-        // given
-        final EntityTable entityTable = new EntityTable(EntityWithId.class);
-
-        // when
-        final List<Field> fields = entityTable.getFields();
-
-        // then
-        assertThat(fields).containsAll(Arrays.stream(EntityWithId.class.getDeclaredFields()).toList());
-    }
-
-    @Test
     @DisplayName("where절을 반환한다.")
     void getWhereClause() {
         // given
@@ -106,6 +109,33 @@ class EntityTableTest {
 
         // when & then
         assertThatThrownBy(() -> entityTable.getWhereClause(1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(EntityTable.NOT_ID_FAILED_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("id 값을 반환한다.")
+    void getIdValue() {
+        // given
+        final EntityTable entityTable = new EntityTable(EntityWithId.class);
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com");
+
+        // when
+        final Object idValue = entityTable.getIdValue(entityWithId);
+
+        // then
+        assertThat(idValue).isEqualTo("1");
+    }
+
+    @Test
+    @DisplayName("@ID 애노테이션이 없는 엔티티로 id 값을 반환면 예외를 발생한다.")
+    void getIdValue_exception() {
+        // given
+        final EntityTable entityTable = new EntityTable(EntityWithoutID.class);
+        final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com");
+
+        // when & then
+        assertThatThrownBy(() -> entityTable.getIdValue(entityWithId))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(EntityTable.NOT_ID_FAILED_MESSAGE);
     }
