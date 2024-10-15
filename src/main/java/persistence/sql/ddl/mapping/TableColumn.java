@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 
 public class TableColumn {
 
+    private static final long DEFAULT_LENGTH = 255L;
+
     private final int type;
     private String name;
     private long length;
@@ -30,8 +32,15 @@ public class TableColumn {
 
     private void setLength(Field field) {
         if (ColumnType.isNotVarcharType(field.getType())) {
+            this.length = 0;
             return;
         }
+
+        if (notExistColumnAnnotation(field)) {
+            this.length = DEFAULT_LENGTH;
+            return;
+        }
+
         Column annotation = field.getAnnotation(Column.class);
         this.length = annotation.length();
     }
