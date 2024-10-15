@@ -9,13 +9,17 @@ public class ColumnDefinition {
     private static final int DEFAULT_LENGTH = 255;
 
     private final String name;
-    private final SqlType type;
+    private final SqlType sqlType;
+    private final Class<?> nativeType;
+    private final String declaredName;
     private final boolean nullable;
     private final int length;
 
     public ColumnDefinition(Field field) {
+        this.nativeType = field.getType();
+        this.declaredName = field.getName();
         this.name = determineColumnName(field);
-        this.type = determineColumnType(field);
+        this.sqlType = determineColumnType(field);
         this.nullable = determineColumnNullable(field);
         this.length = determineColumnLength(field);
     }
@@ -58,8 +62,8 @@ public class ColumnDefinition {
         return name;
     }
 
-    public SqlType type() {
-        return type;
+    public SqlType sqlType() {
+        return sqlType;
     }
 
     public boolean shouldNotNull() {
@@ -72,5 +76,9 @@ public class ColumnDefinition {
 
     public boolean nullable() {
         return nullable;
+    }
+
+    public String declaredName() {
+        return declaredName;
     }
 }

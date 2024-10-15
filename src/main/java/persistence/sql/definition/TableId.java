@@ -5,9 +5,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.Dialect;
 import persistence.sql.Queryable;
+import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
 import persistence.sql.ddl.query.AutoKeyGenerationStrategy;
 import persistence.sql.ddl.query.IdentityKeyGenerationStrategy;
-import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -53,12 +53,18 @@ public class TableId implements Queryable {
                 .orElseThrow(() -> new IllegalStateException("Unsupported primary key generation strategy"));
     }
 
+    public GenerationType generationType() {
+        return generationType;
+    }
+
+    @Override
     public String name() {
         return columnDefinition.name();
     }
 
-    public GenerationType generationType() {
-        return generationType;
+    @Override
+    public String declaredName() {
+        return columnDefinition.declaredName();
     }
 
     @Override

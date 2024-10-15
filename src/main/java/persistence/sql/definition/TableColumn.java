@@ -23,4 +23,14 @@ public class TableColumn implements Queryable {
 
         query.append(", ");
     }
+
+    @Override
+    public String name() {
+        return columnDefinition.name();
+    }
+
+    @Override
+    public String declaredName() {
+        return columnDefinition.declaredName();
+    }
 }

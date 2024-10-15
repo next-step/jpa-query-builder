@@ -49,15 +49,15 @@ public class ColumnDefinitionTest {
 
     @Test
     @DisplayName("Column의 type은 SqlType으로 생성된다")
-    void shouldCreateColumnType() throws Exception {
+    void shouldCreateColumnSqlType() throws Exception {
         ColumnDefinition column3 = new ColumnDefinition(ColumnDefinitionTestEntity.class.getDeclaredField("column3"));
         ColumnDefinition column4 = new ColumnDefinition(ColumnDefinitionTestEntity.class.getDeclaredField("column4"));
         ColumnDefinition column5 = new ColumnDefinition(ColumnDefinitionTestEntity.class.getDeclaredField("column5"));
 
         assertAll(
-                () -> assertThat(column3.type()).isEqualTo(SqlType.VARCHAR),
-                () -> assertThat(column4.type()).isEqualTo(SqlType.BIGINT),
-                () -> assertThat(column5.type()).isEqualTo(SqlType.INTEGER)
+                () -> assertThat(column3.sqlType()).isEqualTo(SqlType.VARCHAR),
+                () -> assertThat(column4.sqlType()).isEqualTo(SqlType.BIGINT),
+                () -> assertThat(column5.sqlType()).isEqualTo(SqlType.INTEGER)
         );
 
     }
