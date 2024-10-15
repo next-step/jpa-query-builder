@@ -8,13 +8,15 @@ import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 import persistence.sql.dml.UpdateQueryBuilder;
 
+import java.sql.Connection;
+
 public class EntityManagerImpl<T> implements EntityManager<T> {
     private static final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
 
     private final JdbcTemplate jdbcTemplate;
 
-    public EntityManagerImpl() {
-        this.jdbcTemplate = new JdbcTemplate(H2ConnectionFactory.newConnection());
+    public EntityManagerImpl(Connection connection) {
+        this.jdbcTemplate = new JdbcTemplate(connection);
     }
 
     @Override

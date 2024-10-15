@@ -13,9 +13,9 @@ public class H2ConnectionFactory {
         throw new AssertionError();
     }
 
-    public static Connection newConnection() {
+    public static Connection getConnection() {
         final H2 server = getServer();
-        return newConnection(server);
+        return cretaeConnection(server);
     }
 
     private static H2 getServer() {
@@ -28,7 +28,7 @@ public class H2ConnectionFactory {
         return server;
     }
 
-    private static Connection newConnection(H2 server) {
+    private static Connection cretaeConnection(H2 server) {
         try {
             return server.getConnection();
         } catch (SQLException e) {

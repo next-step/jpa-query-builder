@@ -21,7 +21,7 @@ class EntityManagerImplTest {
 
     @BeforeEach
     void setUp() {
-        connection= H2ConnectionFactory.newConnection();
+        connection= H2ConnectionFactory.getConnection();
         createTable();
         insertData();
     }
@@ -35,7 +35,7 @@ class EntityManagerImplTest {
     @DisplayName("엔티티를 조회한다.")
     void find() {
         // given
-        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>(connection);
 
         // when
         final EntityWithId entityWithId = entityManager.find(EntityWithId.class, 1L);
@@ -55,7 +55,7 @@ class EntityManagerImplTest {
     @DisplayName("엔티티를 저장한다.")
     void persist() {
         // given
-        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>(connection);
         final EntityWithId entityWithId = new EntityWithId("Jaden", 30, "test@email.com", 1);
 
         // when
@@ -77,7 +77,7 @@ class EntityManagerImplTest {
     @DisplayName("엔티티를 삭제한다.")
     void remove() {
         // given
-        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>(connection);
         final EntityWithId entityWithId = new EntityWithId(1L, "Jaden", 30, "test@email.com");
 
         // when
@@ -93,7 +93,7 @@ class EntityManagerImplTest {
     @DisplayName("엔티티를 수정한다.")
     void update() {
         // given
-        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>();
+        final EntityManager<EntityWithId> entityManager = new EntityManagerImpl<>(connection);
         final EntityWithId entityWithId = new EntityWithId(1L, "Jackson", 20, "test2@email.com");
 
         // when
