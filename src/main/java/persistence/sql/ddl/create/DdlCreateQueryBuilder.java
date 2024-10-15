@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DdlCreateQueryBuilder {
+    private static final String COMMA_NEW_LINE = ",\n";
 
     private final StringBuilder query = new StringBuilder();
     private final List<ColumnComponentBuilder> columnComponentBuilders = new ArrayList<>();
@@ -14,7 +15,7 @@ public class DdlCreateQueryBuilder {
 
     private DdlCreateQueryBuilder() {
         this.query
-                .append("CREATE TABLE {TABLE_NAME} (\n");
+                .append("create table {TABLE_NAME} (\n");
     }
 
     public static DdlCreateQueryBuilder newInstance() {
@@ -33,11 +34,11 @@ public class DdlCreateQueryBuilder {
 
     public String build(String entityClassName) {
         this.columnComponentBuilders.stream()
-                .map(ColumnComponentBuilder::getComponentBuilder)
-                .forEach(query::append);
+                .map(ColumnComponentBuilder::build)
+                .forEach(builder -> query.append(builder).append(COMMA_NEW_LINE));
         this.constraintComponentBuilders.stream()
-                .map(ConstraintComponentBuilder::getComponentBuilder)
-                .forEach(query::append);
+                .map(ConstraintComponentBuilder::build)
+                .forEach(builder -> query.append(builder).append(COMMA_NEW_LINE));
 
         query.setLength(query.length() - 2);
         return query.append("\n);").toString().replace("{TABLE_NAME}", entityClassName.toLowerCase());

@@ -18,7 +18,7 @@ public class DdlCreateQueryBuilderTest {
     void createColumnComponentTest() {
         Class<PersonV1> personClass = PersonV1.class;
         for (Field field : personClass.getDeclaredFields()) {
-            String columnComponent = ColumnComponentBuilder.from(field).getComponentBuilder().toString();
+            String columnComponent = ColumnComponentBuilder.from(field).build();
             logger.debug("Person.{} : {}", field.getName(), columnComponent);
         }
     }
@@ -29,7 +29,7 @@ public class DdlCreateQueryBuilderTest {
         Class<PersonV1> personClass = PersonV1.class;
         for (Field field : personClass.getDeclaredFields()) {
             for (ConstraintComponentBuilder constraintComponentBuilder : ConstraintComponentBuilder.from(field)) {
-                logger.debug("Constraint : {}", constraintComponentBuilder.getComponentBuilder().toString());
+                logger.debug("Constraint : {}", constraintComponentBuilder.build().toString());
             }
         }
     }
