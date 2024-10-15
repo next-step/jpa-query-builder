@@ -1,7 +1,6 @@
 package persistence.sql.ddl.query;
 
 import jakarta.persistence.GenerationType;
-import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
 import persistence.sql.definition.TableId;
 
 public class AutoKeyGenerationStrategy implements PrimaryKeyGenerationStrategy {

@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.ddl.query;
 
 import persistence.sql.definition.TableId;
 

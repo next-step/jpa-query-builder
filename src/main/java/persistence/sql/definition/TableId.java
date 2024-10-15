@@ -5,7 +5,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.Queryable;
 import persistence.sql.Dialect;
-import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
+import persistence.sql.ddl.query.PrimaryKeyGenerationStrategy;
 import persistence.sql.ddl.query.AutoKeyGenerationStrategy;
 import persistence.sql.ddl.query.IdentityKeyGenerationStrategy;
 
