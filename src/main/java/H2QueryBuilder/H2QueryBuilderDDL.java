@@ -27,22 +27,30 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         if ( !entityClass.isAnnotationPresent(Entity.class) ) {
             throw new IllegalArgumentException(ErrorCode.NOT_EXIST_ENTITY_ANNOTATION.getErrorMsg());
         }
-        StringBuilder sb = new StringBuilder();
 
         String columnInfo = getColumn(entityClass)
                 .stream()
                 .map(columnData -> {
-                                        sb.append(columnData.getColumnName()).append(" ").append(columnData.getColumnDataType());
-                                        if (columnData.isNotNull()) sb.append(NOT_NULL);
-                                        if (columnData.isAutoIncrement()) sb.append(AUTO_INCREMENT);
-                                        if (columnData.isPrimeKey()) sb.append(PRIMARY_KEY);
-                                        return sb.toString();
+                                        String info = columnData.getColumnName() + " " + columnData.getColumnDataType();
+                                        if (columnData.isNotNull()) info += NOT_NULL;
+                                        if (columnData.isAutoIncrement()) info += AUTO_INCREMENT;
+                                        if (columnData.isPrimeKey()) info += PRIMARY_KEY;
+                                        return info;
                                     })
                 .collect(Collectors.joining(", "));
 
         return CREATE_QUERY
-                .replace(TABLE_NAME, entityClass.getSimpleName())
+                .replace(TABLE_NAME, getTableName(entityClass))
                 .replace(COLUMN_INFO, columnInfo);
+    }
+
+    // table 이름 가져오기
+    private String getTableName(Class<?> entityClass) {
+        if (entityClass.isAnnotationPresent(Table.class)) {
+            Table table = entityClass.getAnnotation(Table.class);
+            return table.name();
+        }
+        return entityClass.getSimpleName();
     }
 
     //조립된 컬럼 가져오기
@@ -57,18 +65,20 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
 
     // column 조립
     private void generateTableColumnData(List<ColumnData> columnDatas, Field field) {
-        if ( field.isAnnotationPresent(Id.class) ) {
-            columnDatas.add(new ColumnData(field.getName(), field.getType(), isGenerateValueIdentity(field), false, true));
-        }
+        String columnName = field.getName();
+        boolean isNullable = true;
 
         if ( field.isAnnotationPresent(Column.class) ) {
-            String columnName = field.getName();
-            boolean isNullable;
-
             Column column = field.getAnnotation(Column.class);
             columnName  = column.name().isEmpty() ? columnName : column.name();
             isNullable = column.nullable();
-            columnDatas.add(new ColumnData(columnName, field.getType(), false, !isNullable, false));
+
+        }
+
+        if ( field.isAnnotationPresent(Id.class) ) {
+            columnDatas.add(new ColumnData(columnName, field.getType(), isGenerateValueIdentity(field), !isNullable, true));
+        } else {
+            columnDatas.add(new ColumnData(columnName, field.getType(), isGenerateValueIdentity(field), !isNullable, false));
         }
     }
 
