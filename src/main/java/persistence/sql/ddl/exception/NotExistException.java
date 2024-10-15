@@ -8,8 +8,4 @@ public class NotExistException extends RuntimeException {
         super(MESSAGE_PREFIX + message);
     }
 
-    public NotExistException(String message, Throwable cause) {
-        super(MESSAGE_PREFIX + message, cause);
-    }
-
 }

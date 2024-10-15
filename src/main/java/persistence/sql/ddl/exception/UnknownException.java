@@ -8,8 +8,4 @@ public class UnknownException extends RuntimeException {
         super(MESSAGE_PREFIX + message);
     }
 
-    public UnknownException(String message, Throwable cause) {
-        super(MESSAGE_PREFIX + message, cause);
-    }
-
 }
