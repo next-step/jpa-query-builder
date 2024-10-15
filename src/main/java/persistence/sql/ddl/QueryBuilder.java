@@ -16,7 +16,8 @@ public class QueryBuilder {
     }
 
     public String drop(Class<?> entity) {
-        return "";
+        String tableName = entity.isAnnotationPresent(Table.class) ? entity.getAnnotation(Table.class).name() : entity.getSimpleName();;
+        return "DROP TABLE %s;".formatted(tableName);
     }
 
     private String getCreateTableQuery(Class<?> entity) {
