@@ -8,10 +8,14 @@
 - [ ] 인자를 가진 생성자의 인스턴스 생성
 
 ## 🚀 2단계 - QueryBuilder DDL
+### 고려해야 하는 부분
+* 단일 데이터베이스(H2)만 고려하지 않고, 여러 종류의 데이터베이스가 연동되더라도 사용할 수 있는 코드를 작성하자.
+  * 어떤 인터페이스들이 추출되어야 하는가? (추상화 레벨)
+
+### 기능 도출
+* 클래스의 @Annotation 식별
+* Java 데이터타입과 SQL 데이터타입을 매핑
+* Query String 생성
+
 ### 요구사항
-- [ ] Person 클래스에 대한 create 쿼리 생성
-  - [ ] @Entity, @Id 처리
-  - [ ] @Entity, @Id, @GeneratedValue, @Column 처리
-  - [ ] @Table, @Entity, @Id, @GeneratedValue, @Column, @Transient 처리
-- [ ] Person 클래스에 대한 drop 쿼리 생성
-  - [ ] @Entity, @Table 처리
+- [ ] Entity 클래스 정보를 바탕으로 create, drop 쿼리 만들어보기 
