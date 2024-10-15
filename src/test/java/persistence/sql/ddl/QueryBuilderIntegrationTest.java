@@ -1,8 +1,11 @@
+
 package persistence.sql.ddl;
 
 
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.Test;
+import persistence.sql.dml.H2InsertQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.model.TableName;
 
 import java.util.List;
@@ -17,7 +20,7 @@ public class QueryBuilderIntegrationTest {
     void 테이블_생성() {
         Class<Person> clazz = Person.class;
 
-        AbstractCreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(clazz);
+        CreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(clazz);
         JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
         jdbcTemplate.execute(createQueryBuilder.makeQuery());
 
@@ -47,5 +50,23 @@ public class QueryBuilderIntegrationTest {
         );
 
         assertThat(tableNames).isEmpty();
+    }
+
+    @Test
+    void 데이터_삽입() {
+
+
+        final String name = "이름";
+        final Integer age = 11;
+        final String email = "email@test.com";
+        Person person = new Person(name, age, email, null);
+
+        JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
+
+        CreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(Person.class);
+        jdbcTemplate.execute(createQueryBuilder.makeQuery());
+
+        InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
+        jdbcTemplate.execute(insertQueryBuilder.makeQuery());
     }
 }

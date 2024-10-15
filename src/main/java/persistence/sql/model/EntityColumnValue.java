@@ -13,7 +13,11 @@ public class EntityColumnValue {
     private String makeColumnValue(Field field, Object object) {
         field.setAccessible(true);
         try {
-            return String.valueOf(field.get(object));
+            Object fieldObject = field.get(object);
+            if (field.get(object) instanceof String) {
+                return String.format("'%s'", String.valueOf(fieldObject));
+            }
+            return String.valueOf(fieldObject);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("해당 객체에 접근할 수 없습니다.");
         }

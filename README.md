@@ -20,8 +20,8 @@
   - Step3
     - 요구 사항 및 기능 구현
       - [x] 1 : insert 구현해보기
-        - [x] 1-1 : 테스트코드 작성
-        - [x] EntityColumnName 클래스 추가로 인한 Step2에서 구현한 ColumnName 객체로 변경 및 테스트 코드 추가
+        - [x] 테스트코드 작성
+        - [x] EntityColumnName 클래스 추가로 인한 Step2 ColumnName 객체 활용 및 테스트 코드 에러 수정
       - [] 2 : 모두 조회(findAll) 기능 구현해보기
       - [] 3 : 단건 조회(findById) 기능 구현해보기
       - [] 4 : delete 쿼리 만들어보기
