@@ -16,9 +16,9 @@ public class QueryBuilder {
     }
 
     private String getCreateTableQuery(Class<?> entity) {
-        String entityName = entity.getSimpleName();
+        String tableName = entity.isAnnotationPresent(Table.class) ? entity.getAnnotation(Table.class).name() : entity.getSimpleName();;
 
-        return "CREATE TABLE %s".formatted(entityName);
+        return "CREATE TABLE %s".formatted(tableName);
     }
 
     private String generateColumnDefinitions(Class<?> entity) {
