@@ -1,12 +1,13 @@
 package persistence.sql.dml;
 
 import domain.Person;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SelectQueryBuilderTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void findAll() {
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
         String expectedQuery = "SELECT * FROM users;";
@@ -15,7 +16,7 @@ class SelectQueryBuilderTest {
         assertEquals(expectedQuery, actualQuery);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void findById() {
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
         String expectedQuery = "SELECT * FROM users WHERE id = 1;";

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateTableQueryBuilder;
 import persistence.sql.ddl.DropTableQueryBuilder;
+import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
@@ -43,6 +44,11 @@ public class Application {
             String findOne = selectQueryBuilder.findById(Person.class, 1L);
             logger.info(findOne);
             jdbcTemplate.execute(findOne); // Select data
+
+            DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
+            deleteQueryBuilder.deleteById(Person.class, 1L);
+            logger.info(deleteQueryBuilder.deleteById(Person.class, 1L));
+            jdbcTemplate.execute(deleteQueryBuilder.deleteById(Person.class, 1L)); // Delete data
 
             DropTableQueryBuilder ddlQueryBuilder = new DropTableQueryBuilder();
             String dropTableQuery = DropTableQueryBuilder.dropTable( Person.class);
