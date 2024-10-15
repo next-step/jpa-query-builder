@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,10 +40,20 @@ public class QueryBuilder {
     }
 
     private String mapFieldAnnotationToSQLType(Field field) {
+        List<String> query = new ArrayList<>();
+
         if (field.isAnnotationPresent(Id.class)) {
-            return " PRIMARY KEY";
+            query.add("PRIMARY KEY");
         }
-        return "";
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            if (!column.nullable()) {
+                query.add("NOT NULL");
+            }
+        }
+
+        String result = String.join(" ", query);
+        return result.isEmpty() ? "" : " " + result;
     }
 
     private String getColumnNameFromAnnotation(Field field) {
