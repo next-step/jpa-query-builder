@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateTableQueryBuilder;
 import persistence.sql.ddl.DropTableQueryBuilder;
+import persistence.sql.dml.InsertQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -24,9 +25,19 @@ public class Application {
             logger.info(createTableQuery);
             jdbcTemplate.execute(createTableQuery); // Create table
 
+            InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+            Person person = new Person();
+            person.setName("2xample");
+            person.setAge(30);
+            person.setEmail("2xample.gmail.com");
+            String insertQuery = insertQueryBuilder.insert(person);
+            logger.info(insertQuery);
+            jdbcTemplate.execute(insertQuery); // Insert data
+
             DropTableQueryBuilder ddlQueryBuilder = new DropTableQueryBuilder();
             String dropTableQuery = DropTableQueryBuilder.dropTable( Person.class);
             logger.info(dropTableQuery);
+
             jdbcTemplate.execute(dropTableQuery); // Drop table
 
             server.stop();
