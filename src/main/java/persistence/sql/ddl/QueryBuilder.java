@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -49,6 +51,12 @@ public class QueryBuilder {
             Column column = field.getAnnotation(Column.class);
             if (!column.nullable()) {
                 query.add("NOT NULL");
+            }
+        }
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
+            GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+            if (generatedValue.strategy().equals(GenerationType.IDENTITY)) {
+                query.add("AUTO_INCREMENT");
             }
         }
 
