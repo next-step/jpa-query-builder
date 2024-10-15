@@ -21,7 +21,7 @@ public class Application {
             final String ddl = new DDLQueryBuilder()
                     .createTable(Person.class)
                     .ifNotExist()
-                    .buildQuery();
+                    .build();
 
             jdbcTemplate.execute(ddl);
             server.stop();

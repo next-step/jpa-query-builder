@@ -7,7 +7,7 @@ public record ColumnMeta(
         int length
 ) {
     public static ColumnMeta from(Column column) {
-        var nullable = column == null ? true : column.nullable();
+        var nullable = column == null || column.nullable();
         var length = column == null ? 255 : column.length();
 
         return new ColumnMeta(

@@ -14,9 +14,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TableEntity<ENTITY> {
+/**
+ * 엔티티 클래스로부터 테이블 정보를 추출한 클래스
+ *
+ *  @param <E> @Entity 어노테이션이 붙은 클래스
+ */
+public class TableEntity<E> {
 
-    private final Class<ENTITY> entityClass;
     private final String tableName;
 
     // columns
@@ -26,16 +30,15 @@ public class TableEntity<ENTITY> {
     // settings
     private final JpaSettings jpaSettings;
 
-    public TableEntity(Class<ENTITY> entityClass, JpaSettings settings) {
+    public TableEntity(Class<E> entityClass, JpaSettings settings) {
         throwIfNotEntity(entityClass);
         this.jpaSettings = settings;
-        this.entityClass = entityClass;
         this.tableName = extractTableName(entityClass);
         this.id = extractId(entityClass);
         this.allFields = extractAllPersistenceFields(entityClass);
     }
 
-    public TableEntity(Class<ENTITY> entityClass) {
+    public TableEntity(Class<E> entityClass) {
         this(entityClass, JpaSettings.ofDefault());
     }
 
@@ -61,13 +64,13 @@ public class TableEntity<ENTITY> {
      * @param entityClass
      * @throws InvalidEntityException 엔티티가 아닌 경우
      */
-    private void throwIfNotEntity(Class<ENTITY> entityClass) {
+    private void throwIfNotEntity(Class<E> entityClass) {
         if (entityClass.getAnnotation(Entity.class) == null) {
             throw new InvalidEntityException(entityClass.getName() + " is not an entity");
         }
     }
 
-    private String extractTableName(Class<ENTITY> entityClass) {
+    private String extractTableName(Class<E> entityClass) {
         return jpaSettings.getNamingStrategy().namingTable(entityClass);
     }
 
@@ -77,7 +80,7 @@ public class TableEntity<ENTITY> {
      * @return TablePrimaryField ID 필드
      * @throws InvalidIdMappingException ID 필드가 없거나 2개 이상인 경우
      */
-    private TablePrimaryField extractId(Class<ENTITY> entityClass) {
+    private TablePrimaryField extractId(Class<E> entityClass) {
         Field[] declaredFields = entityClass.getDeclaredFields();
 
         var idList = Arrays.stream(declaredFields)
@@ -96,7 +99,7 @@ public class TableEntity<ENTITY> {
      * @param entityClass
      * @return
      */
-    private List<TableField> extractAllPersistenceFields(Class<ENTITY> entityClass) {
+    private List<TableField> extractAllPersistenceFields(Class<E> entityClass) {
         Field[] declaredFields = entityClass.getDeclaredFields();
 
         List<TableField> list = new ArrayList<>(declaredFields.length);

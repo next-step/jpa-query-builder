@@ -26,7 +26,7 @@ public class DDLCreateQueryBuilderTest {
         // when
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
-                        .buildQuery()
+                        .build()
         );
 
         // then
@@ -57,7 +57,7 @@ public class DDLCreateQueryBuilderTest {
         // when
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
-                        .buildQuery()
+                        .build()
         );
 
         // then
@@ -89,7 +89,7 @@ public class DDLCreateQueryBuilderTest {
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
                         .ifNotExist()
-                        .buildQuery()
+                        .build()
         );
 
         // then

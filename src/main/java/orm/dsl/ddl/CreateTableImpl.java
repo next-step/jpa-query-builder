@@ -67,6 +67,9 @@ public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
     }
 
     protected String renderIfNotExist() {
-        return ifNotExist ? "IF NOT EXISTS" : "";
+        if (ifNotExist) {
+            return "IF NOT EXISTS";
+        }
+        return "";
     }
 }

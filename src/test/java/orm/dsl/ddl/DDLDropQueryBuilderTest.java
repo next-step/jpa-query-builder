@@ -25,7 +25,7 @@ public class DDLDropQueryBuilderTest {
         // when
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.dropTable(entityClass)
-                        .buildQuery()
+                        .build()
         );
 
         // then
@@ -49,7 +49,7 @@ public class DDLDropQueryBuilderTest {
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.dropTable(entityClass)
                         .ifNotExist()
-                        .buildQuery()
+                        .build()
         );
 
         // then
