@@ -47,6 +47,11 @@
 - [ ] 4.2 - delete 차단 설정 추가 (optional)
 
 
+## UMl
+![class-diagram](./uml/step-3-class-diagram.puml)
 
-
+## 느낀점
+설계하고 만들다보니...   
+jOOQ + JPA 그 어딘가의 중간쯤이 되어버린 것 같다.  
+예전에 완전히 죽어버린 [requery](https://github.com/requery/requery)라는 녀석이 생각난다.  
 

@@ -1,0 +1,98 @@
+@startuml
+interface QueryBuilder {
+    + String buildQuery()
+}
+
+' QueryBuilder 들
+class DDLQueryBuilder extends QueryBuilder{
+
+}
+
+class DQLQueryBuilder extends QueryBuilder{
+
+}
+
+class DMLQueryBuilder extends QueryBuilder {
+
+}
+
+' Step 들 정의
+interface CreateTableStep extends DDLTableIfNotExistStep {
+
+}
+
+interface DropTableStep extends DDLTableIfNotExistStep {
+
+}
+
+interface SelectStep extends DQLQueryBuilder {
+
+}
+
+interface SelectFromStep extends DQLQueryBuilder {
+
+}
+
+interface DeleteFromStep extends DMLQueryBuilder {
+
+}
+
+interface FromStep extends SelectStep, DeleteFromStep, SelectFromStep {
+
+}
+
+interface WhereStep extends FromStep {
+
+}
+
+interface DDLTableIfNotExistStep extends DDLQueryBuilder {
+    + QueryBuilder ifNotExist()
+}
+
+abstract class CreateTableImpl extends CreateTableStep{
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2CreateTableImpl extends CreateTableImpl {
+
+}
+
+abstract class DropTableImpl extends DropTableStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2DropTableImpl extends DropTableImpl {
+
+}
+
+class JpaSettings {
+    + SQLDialect dialect
+    + NamingStrategy
+}
+
+TableEntity *--	TableField
+TableEntity *--	JpaSettings
+
+TableField *-- JpaSettings
+
+class TableEntity {
+    + String tableName;
+    + TablePrimaryField id;
+    + List<? extends TableField> allFields
+}
+
+class TableField {
+    - Field field;
+    - String fieldName;
+    - ColumnMeta columnMeta;
+    - JpaSettings jpaSettings;
+}
+
+class TablePrimaryField extends TableField {
+    - @Id
+    - @GeneratedValue
+}
+
+@enduml
