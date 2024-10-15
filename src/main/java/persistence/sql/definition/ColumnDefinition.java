@@ -10,13 +10,11 @@ public class ColumnDefinition {
 
     private final String name;
     private final SqlType sqlType;
-    private final Class<?> nativeType;
     private final String declaredName;
     private final boolean nullable;
     private final int length;
 
     public ColumnDefinition(Field field) {
-        this.nativeType = field.getType();
         this.declaredName = field.getName();
         this.name = determineColumnName(field);
         this.sqlType = determineColumnType(field);
