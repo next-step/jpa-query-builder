@@ -2,9 +2,8 @@ package orm.dsl.ddl;
 
 import orm.SQLDialect;
 import orm.TableEntity;
-import orm.settings.JpaSettings;
-import orm.dsl.ddl.dialect.h2.H2CreateTableImpl;
 import orm.dsl.ddl.dialect.h2.H2DropTableImpl;
+import orm.settings.JpaSettings;
 import orm.settings.SnakeForPropertyNamingStrategy;
 
 public class DDLQueryBuilder {
@@ -17,11 +16,21 @@ public class DDLQueryBuilder {
                 .withNamingStrategy(new SnakeForPropertyNamingStrategy());
     }
 
+    public DDLQueryBuilder(JpaSettings settings) {
+        this.settings = settings;
+    }
+
     public <ENTITY> CreateTableStep createTable(Class<ENTITY> entityClass) {
-        return new H2CreateTableImpl<>(new TableEntity<>(entityClass, settings));
+        return new ImplQueryBuilder(dialect())
+                .buildCreateTable(new TableEntity<>(entityClass, settings));
     }
 
     public <ENTITY> DropTableStep dropTable(Class<ENTITY> entityClass) {
-        return new H2DropTableImpl<>(new TableEntity<>(entityClass, settings));
+        return new ImplQueryBuilder(dialect())
+                .buildDropTable(new TableEntity<>(entityClass, settings));
+    }
+
+    public SQLDialect dialect() {
+        return this.settings.getDialect();
     }
 }
