@@ -24,3 +24,4 @@
 - [ ] BrandNewPerson Entity로 create 쿼리 만들어보기
   - [ ] @Transient 어노테이션은 컬럼에서 제외
   - [ ] @Table 어노테이션을 테이블명으로 사용
+- [ ] BrandNewPerson Entity로 drop 쿼리 만들어보기

@@ -29,4 +29,12 @@ public class QueryBuilderTest {
         String expectedQuery = "CREATE TABLE users (id BIGINT PRIMARY KEY AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);";
         assertThat(queryBuilder.create(BrandNewPerson.class)).isEqualTo(expectedQuery);
     }
+
+    @Test
+    @DisplayName("BrandNewPerson 엔티티의 drop 쿼리를 생성한다")
+    void testDropBrandNewPersonQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String expectedQuery = "DROP TABLE users;";
+        assertThat(queryBuilder.drop(BrandNewPerson.class)).isEqualTo(expectedQuery);
+    }
 }

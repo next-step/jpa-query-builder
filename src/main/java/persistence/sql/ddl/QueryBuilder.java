@@ -15,6 +15,10 @@ public class QueryBuilder {
         return "%s (%s);".formatted(createTableQuery, columnDefinitions);
     }
 
+    public String drop(Class<?> entity) {
+        return "";
+    }
+
     private String getCreateTableQuery(Class<?> entity) {
         String tableName = entity.isAnnotationPresent(Table.class) ? entity.getAnnotation(Table.class).name() : entity.getSimpleName();;
 
