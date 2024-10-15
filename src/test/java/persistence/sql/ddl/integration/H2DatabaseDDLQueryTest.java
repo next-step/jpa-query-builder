@@ -41,9 +41,7 @@ public class H2DatabaseDDLQueryTest {
         jdbcTemplate.execute(queryBuilder.build(Person.class, new H2Dialect()));
 
         Integer count = jdbcTemplate.queryForObject(
-                "select count(1) from information_schema.tables"
-                        + " where table_name = 'USERS'"
-                        + " and table_schema = 'PUBLIC'",
+                getTableExistCheckSelectQuery(),
                 (rs) -> rs.getInt(1)
         );
         assertEquals(count, 1);
@@ -57,18 +55,14 @@ public class H2DatabaseDDLQueryTest {
         CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
         jdbcTemplate.execute(createQueryBuilder.build(Person.class, new H2Dialect()));
         Integer tableCountAfterCreate = jdbcTemplate.queryForObject(
-                "select count(1) from information_schema.tables"
-                        + " where table_name = 'USERS'"
-                        + " and table_schema = 'PUBLIC'",
+                getTableExistCheckSelectQuery(),
                 (rs) -> rs.getInt(1)
         );
 
         DropQueryBuilder dropQueryBuilder = new DropQueryBuilder();
         jdbcTemplate.execute(dropQueryBuilder.build(Person.class, new H2Dialect()));
         Integer tableCountAfterDrop = jdbcTemplate.queryForObject(
-                "select count(1) from information_schema.tables"
-                        + " where table_name = 'USERS'"
-                        + " and table_schema = 'PUBLIC'",
+                getTableExistCheckSelectQuery(),
                 (rs) -> rs.getInt(1)
         );
 
@@ -76,5 +70,10 @@ public class H2DatabaseDDLQueryTest {
                 () -> assertEquals(tableCountAfterCreate, 1),
                 () -> assertEquals(tableCountAfterDrop, 0)
         );
+    }
+
+    private String getTableExistCheckSelectQuery() {
+        return """
+                select count(1) from information_schema.tables where table_name = 'USERS' and table_schema = 'PUBLIC'""";
     }
 }

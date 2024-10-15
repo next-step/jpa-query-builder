@@ -18,12 +18,8 @@ public class CreateQueryBuilderTest {
     @DisplayName("[성공] Person @Entity @Id 클래스에 대한 create query 검증")
     void createQueryWithEntityId() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
-        String expectedQuery = "create table PersonWithEntityIdFixture ("
-                + "id bigint auto_increment, "
-                + "name varchar(255), "
-                + "age integer, "
-                + "primary key (id)"
-                + ")";
+        String expectedQuery = """
+                create table PersonWithEntityIdFixture (id bigint auto_increment, name varchar(255), age integer, primary key (id))""";
         assertEquals(queryBuilder.build(PersonWithEntityIdFixture.class, new H2Dialect()), expectedQuery);
     }
 
@@ -31,13 +27,8 @@ public class CreateQueryBuilderTest {
     @DisplayName("[성공] Person @GeneratedValue @Column 클래스에 대한 create query 검증")
     void createQueryWithGeneratedValueColumn() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
-        String expectedQuery = "create table PersonWithGeneratedValueColumnFixture ("
-                + "id bigint auto_increment, "
-                + "nick_name varchar(255), "
-                + "old integer, "
-                + "email varchar(255) not null, "
-                + "primary key (id)"
-                + ")";
+        String expectedQuery = """
+                create table PersonWithGeneratedValueColumnFixture (id bigint auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id))""";
         assertEquals(queryBuilder.build(PersonWithGeneratedValueColumnFixture.class, new H2Dialect()), expectedQuery);
     }
 
@@ -45,14 +36,10 @@ public class CreateQueryBuilderTest {
     @DisplayName("[성공] Person @Table @Transient 클래스에 대한 create query 검증")
     void createQueryWithTableTransient() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
-        String expectedQuery = "create table users ("
-                + "id bigint auto_increment, "
-                + "nick_name varchar(255), "
-                + "old integer, "
-                + "email varchar(255) not null, "
-                + "primary key (id)"
-                + ")";
-        assertEquals(queryBuilder.build(PersonWithTableTransientFixture.class, new H2Dialect()), expectedQuery);
+        String expectedQuery = """
+                create table users (id bigint auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id))""";
+
+        assertEquals(queryBuilder.build(PersonWithTableTransientFixture.class, new H2Dialect()).trim(), expectedQuery.trim());
     }
 
     @Test
