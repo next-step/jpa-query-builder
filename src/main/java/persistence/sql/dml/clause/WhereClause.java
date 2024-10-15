@@ -18,13 +18,13 @@ public class WhereClause implements Clause {
 
     @Override
     public String toSql(Dialect dialect) {
-        String equalOperatorsSQL = equalClauses
+        String equalClausesSql = equalClauses
                 .stream().map(equalClause -> equalClause.toSql(dialect))
                 .collect(Collectors.joining(" AND "));
 
-        if (equalOperatorsSQL.isEmpty()) {
+        if (equalClausesSql.isEmpty()) {
             return "";
         }
-        return "(" + equalOperatorsSQL + ")";
+        return "(" + equalClausesSql + ")";
     }
 }

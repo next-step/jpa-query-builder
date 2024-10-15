@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class DataTypeRegistry {
-    protected final Map<Class<?>, DataType> registry = new HashMap<>();
+    private final Map<Class<?>, DataType> registry = new HashMap<>();
 
     DataTypeMappingStrategy dataTypeMappingStrategy;
 
