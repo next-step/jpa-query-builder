@@ -9,6 +9,7 @@ import java.util.List;
 
 public class QueryBuilder {
     private final FieldTypeMapper fieldTypeMapper = new FieldTypeMapper();
+    private final FieldAnnotationMapper fieldAnnotationMapper = new FieldAnnotationMapper();
 
     public String create(Class<?> entity) {
         String createTableQuery = this.getCreateTableQuery(entity);
@@ -30,31 +31,8 @@ public class QueryBuilder {
 
     private String generateColumnDefinitions(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
-        List<String> columns = Arrays.stream(fields).filter(field -> !field.isAnnotationPresent(Transient.class)).map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.mapFieldAnnotationToSQLType((field)))).toList();
+        List<String> columns = Arrays.stream(fields).filter(field -> !field.isAnnotationPresent(Transient.class)).map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType((field)))).toList();
         return String.join(", ", columns);
-    }
-
-    private String mapFieldAnnotationToSQLType(Field field) {
-        List<String> query = new ArrayList<>();
-
-        if (field.isAnnotationPresent(Id.class)) {
-            query.add("PRIMARY KEY");
-        }
-        if (field.isAnnotationPresent(Column.class)) {
-            Column column = field.getAnnotation(Column.class);
-            if (!column.nullable()) {
-                query.add("NOT NULL");
-            }
-        }
-        if (field.isAnnotationPresent(GeneratedValue.class)) {
-            GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-            if (generatedValue.strategy().equals(GenerationType.IDENTITY)) {
-                query.add("AUTO_INCREMENT");
-            }
-        }
-
-        String result = String.join(" ", query);
-        return result.isEmpty() ? "" : " " + result;
     }
 
     private String getColumnNameFromAnnotation(Field field) {
