@@ -1,9 +1,9 @@
 package persistence.sql.dml.query;
 
-import persistence.sql.Queryable;
+import persistence.sql.ColumnDefinitionAware;
 import persistence.sql.definition.TableDefinition;
 
-public class InsertQueryBuilder implements DmlQueryBuilder {
+public class InsertQueryBuilder implements DataManipulationQueryBuilder {
     private static final String EMPTY_STRING = "";
 
     public InsertQueryBuilder() {
@@ -32,7 +32,7 @@ public class InsertQueryBuilder implements DmlQueryBuilder {
         final TableDefinition tableDefinition = new TableDefinition(entityClass);
         return tableDefinition.queryableColumns()
                 .stream()
-                .map(Queryable::name)
+                .map(ColumnDefinitionAware::name)
                 .reduce((column1, column2) -> column1 + ", " + column2)
                 .orElse(EMPTY_STRING);
     }
@@ -44,14 +44,6 @@ public class InsertQueryBuilder implements DmlQueryBuilder {
                 .map(column -> column.valueAsString(object))
                 .reduce((value1, value2) -> value1 + ", " + value2)
                 .orElse(EMPTY_STRING);
-    }
-
-    private String whereClause(String selectQuery, Class<?> entityClass) {
-        StringBuilder query = new StringBuilder();
-        query.append(selectQuery);
-        query.append(" where ");
-//    ...
-        return query.toString();
     }
 
 }

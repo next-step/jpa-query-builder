@@ -32,4 +32,15 @@ public class Person {
         this.email = email;
         this.index = index;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", index=" + index +
+                '}';
+    }
 }

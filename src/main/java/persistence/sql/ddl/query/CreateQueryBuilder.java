@@ -1,12 +1,12 @@
 package persistence.sql.ddl.query;
 
-import persistence.sql.ddl.DdlQueryBuilder;
-import persistence.sql.Dialect;
 import persistence.sql.Queryable;
+import persistence.sql.Dialect;
+import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.definition.TableDefinition;
 import persistence.sql.definition.TableId;
 
-public class CreateQueryBuilder implements DdlQueryBuilder {
+public class CreateQueryBuilder implements QueryBuilder {
     private final Dialect dialect;
 
     public CreateQueryBuilder(Dialect dialect) {
@@ -14,16 +14,14 @@ public class CreateQueryBuilder implements DdlQueryBuilder {
     }
 
     @Override
-    public String build(Class<?> entityClazz) {
-        TableDefinition tableDefinition = new TableDefinition(entityClazz);
+    public String build(Class<?> entityClass) {
+        TableDefinition tableDefinition = new TableDefinition(entityClass);
         StringBuilder query = new StringBuilder();
 
         query.append("CREATE TABLE ").append(tableDefinition.tableName());
         query.append(" (");
 
-        for (Queryable column : tableDefinition.queryableColumns()) {
-            column.apply(query, dialect);
-        }
+        tableDefinition.queryableColumns().forEach(column -> column.applyToCreateQuery(query, dialect));
 
         definePrimaryKey(tableDefinition.tableId(), query);
 

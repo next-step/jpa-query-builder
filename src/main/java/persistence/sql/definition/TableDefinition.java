@@ -84,7 +84,7 @@ public class TableDefinition {
         return tableName;
     }
 
-    public List<Queryable> queryableColumns() {
+    public List<? extends Queryable> queryableColumns() {
         return Stream.concat(
                 Stream.of(tableId),
                 columns.stream()

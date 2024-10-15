@@ -1,5 +1,5 @@
 package persistence.sql.dml.query;
 
-public interface DmlQueryBuilder {
+public interface DataManipulationQueryBuilder {
     String build(Object entity);
 }

@@ -3,8 +3,8 @@ package persistence.sql.definition;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.Dialect;
 import persistence.sql.Queryable;
+import persistence.sql.Dialect;
 import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
 import persistence.sql.ddl.query.AutoKeyGenerationStrategy;
 import persistence.sql.ddl.query.IdentityKeyGenerationStrategy;
@@ -16,8 +16,8 @@ import java.util.List;
 public class TableId implements Queryable {
 
     private static final List<PrimaryKeyGenerationStrategy> pkGenerationStrategies = List.of(
-        new AutoKeyGenerationStrategy(),
-        new IdentityKeyGenerationStrategy()
+            new AutoKeyGenerationStrategy(),
+            new IdentityKeyGenerationStrategy()
     );
 
     private final GenerationType generationType;
@@ -68,7 +68,7 @@ public class TableId implements Queryable {
     }
 
     @Override
-    public void apply(StringBuilder query, Dialect dialect) {
+    public void applyToCreateQuery(StringBuilder query, Dialect dialect) {
         final String type = dialect.translateType(columnDefinition);
         query.append(columnDefinition.name()).append(" ").append(type);
 

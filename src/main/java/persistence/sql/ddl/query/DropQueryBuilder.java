@@ -1,13 +1,13 @@
 package persistence.sql.ddl.query;
 
-import persistence.sql.ddl.DdlQueryBuilder;
+import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.definition.TableDefinition;
 
-public class DropQueryBuilder implements DdlQueryBuilder {
+public class DropQueryBuilder implements QueryBuilder {
 
     @Override
-    public String build(Class<?> entityClazz) {
-        TableDefinition tableDefinition = new TableDefinition(entityClazz);
+    public String build(Class<?> entityClass) {
+        TableDefinition tableDefinition = new TableDefinition(entityClass);
         return "DROP TABLE " + tableDefinition.tableName() + " if exists;";
     }
 }

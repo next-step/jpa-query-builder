@@ -1,7 +1,7 @@
 package persistence.sql.definition;
 
-import persistence.sql.Dialect;
 import persistence.sql.Queryable;
+import persistence.sql.Dialect;
 
 import java.lang.reflect.Field;
 
@@ -13,7 +13,7 @@ public class TableColumn implements Queryable {
     }
 
     @Override
-    public void apply(StringBuilder query, Dialect dialect) {
+    public void applyToCreateQuery(StringBuilder query, Dialect dialect) {
         final String type = dialect.translateType(columnDefinition);
         query.append(columnDefinition.name()).append(" ").append(type);
 
