@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import domain.Person;
 import persistence.sql.ddl.test.NoExistEntity;
 
-class DdlCreateQueryBuilderTest {
+class DdlQueryBuilderTest {
 
     @DisplayName("@Entity 어노테이션이 존재하면 인스턴스를 생성해야 한다")
     @Test
@@ -18,12 +18,12 @@ class DdlCreateQueryBuilderTest {
         Class<Person> entityClass = Person.class;
 
         // when
-        DdlCreateQueryBuilder builder = new DdlCreateQueryBuilder(entityClass);
+        DdlQueryBuilder builder = new DdlQueryBuilder(entityClass);
 
         // then
         Assertions.assertThat(builder)
             .isNotNull()
-            .isInstanceOf(DdlCreateQueryBuilder.class);
+            .isInstanceOf(DdlQueryBuilder.class);
     }
 
     @DisplayName("@Entity 어노테이션이 존재하지 않으면 에러가 발생한다")
@@ -33,7 +33,7 @@ class DdlCreateQueryBuilderTest {
         Class<NoExistEntity> entityClass = NoExistEntity.class;
 
         // when & then
-        assertThatThrownBy(() -> new DdlCreateQueryBuilder(entityClass))
+        assertThatThrownBy(() -> new DdlQueryBuilder(entityClass))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("@Entity 어노테이션이 존재하지 않습니다");
     }
@@ -43,14 +43,29 @@ class DdlCreateQueryBuilderTest {
     void buildCreateQuery() {
         // given
         Class<Person> entityClass = Person.class;
-        DdlCreateQueryBuilder builder = new DdlCreateQueryBuilder(entityClass);
+        DdlQueryBuilder builder = new DdlQueryBuilder(entityClass);
 
         // when
-        String query = builder.build();
+        String query = builder.buildCreateTable();
 
         // then
         Assertions.assertThat(query)
             .isEqualTo("CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255) NOT NULL, old INTEGER NOT NULL, email VARCHAR(255))");
+    }
+
+    @DisplayName("Drop Query를 반환해야 한다")
+    @Test
+    void buildDropQuery() {
+        // given
+        Class<Person> entityClass = Person.class;
+        DdlQueryBuilder builder = new DdlQueryBuilder(entityClass);
+
+        // when
+        String query = builder.buildDropTable();
+
+        // then
+        Assertions.assertThat(query)
+            .isEqualTo("DROP TABLE IF EXISTS users");
     }
 
 }

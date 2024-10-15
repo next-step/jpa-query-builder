@@ -14,7 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
-public class DdlCreateQueryBuilder {
+public class DdlQueryBuilder {
 
     private static final String NO_ENTITY_ANNOTATION = "@Entity 어노테이션이 존재하지 않습니다";
     private static final Map<Class<?>, String> FIELD_TYPE_TO_DB_TYPE = Map.of(
@@ -25,7 +25,7 @@ public class DdlCreateQueryBuilder {
 
     private final Class<?> entityClass;
 
-    public DdlCreateQueryBuilder(Class<?> entityClass) {
+    public DdlQueryBuilder(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(NO_ENTITY_ANNOTATION);
         }
@@ -33,13 +33,19 @@ public class DdlCreateQueryBuilder {
         this.entityClass = entityClass;
     }
 
-    public String build() {
+    public String buildCreateTable() {
         return "CREATE TABLE" +
             " " +
             getTableName() +
             " (" +
             getColumns() +
             ")";
+    }
+
+    public String buildDropTable() {
+        return "DROP TABLE IF EXISTS" +
+            " " +
+            getTableName();
     }
 
     private String getTableName() {
