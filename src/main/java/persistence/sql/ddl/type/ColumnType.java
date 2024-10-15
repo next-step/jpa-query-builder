@@ -12,8 +12,8 @@ public enum ColumnType {
     INTEGER(Integer.class, Types.INTEGER)
     ;
 
-    private Class<?> javaType;
-    private int sqlType;
+    private final Class<?> javaType;
+    private final int sqlType;
 
     ColumnType(Class<?> javaType, int sqlType) {
         this.javaType = javaType;
