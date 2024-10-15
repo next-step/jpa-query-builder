@@ -1,9 +1,9 @@
 package persistence.sql.ddl.mapping;
 
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.ddl.exception.NotExistException;
-import persistence.sql.ddl.type.TablePrimaryKeyGenerateType;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class TablePrimaryKey {
 
     private final TableColumn column;
-    private final TablePrimaryKeyGenerateType generateType;
+    private final GenerationType generationType;
 
     public static TablePrimaryKey from(Field[] fields) {
         Field keyField = Arrays.stream(fields)
@@ -19,20 +19,20 @@ public class TablePrimaryKey {
                 .findFirst()
                 .orElseThrow(() -> new NotExistException("primary key."));
 
-        return new TablePrimaryKey(new TableColumn(keyField), generateType(keyField));
+        return new TablePrimaryKey(new TableColumn(keyField), generationType(keyField));
     }
 
-    private TablePrimaryKey(TableColumn column, TablePrimaryKeyGenerateType generateType) {
+    private TablePrimaryKey(TableColumn column, GenerationType generationType) {
         this.column = column;
-        this.generateType = generateType;
+        this.generationType = generationType;
     }
 
-    private static TablePrimaryKeyGenerateType generateType(Field keyField) {
-        if (keyField.isAnnotationPresent(GeneratedValue.class)) {
-            GeneratedValue annotation = keyField.getAnnotation(GeneratedValue.class);
-            return TablePrimaryKeyGenerateType.lookup(annotation.strategy());
+    private static GenerationType generationType(Field field) {
+        if (field.isAnnotationPresent(GeneratedValue.class)) {
+            GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
+            return annotation.strategy();
         }
-        return TablePrimaryKeyGenerateType.IDENTITY;
+        return GenerationType.AUTO;
     }
 
     public TableColumn column() {
@@ -43,8 +43,8 @@ public class TablePrimaryKey {
         return column.name();
     }
 
-    public TablePrimaryKeyGenerateType generateType() {
-        return generateType;
+    public GenerationType generationType() {
+        return generationType;
     }
 
 }

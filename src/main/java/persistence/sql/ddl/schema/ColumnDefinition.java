@@ -1,26 +1,25 @@
 package persistence.sql.ddl.schema;
 
+import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.mapping.TableColumn;
-import persistence.sql.ddl.type.SqlType;
-import persistence.sql.ddl.type.SchemaDataTypeReference;
+import persistence.sql.ddl.type.ColumnType;
 
 public class ColumnDefinition {
 
-    public static String define(TableColumn column) {
+    public static String define(TableColumn column, Dialect dialect) {
         StringBuilder builder = new StringBuilder();
 
-        String sqlType = SchemaDataTypeReference.getSqlType(column.getJavaType());
-        builder.append(column.name())
+        builder.append( column.name() )
                 .append( " " )
-                .append( sqlType );
+                .append( dialect.getColumnType(column.type()));
 
-        if (sqlType.equals(SqlType.VARCHAR)) {
+        if (ColumnType.isVarcharType(column.type())) {
             builder.append("(")
                     .append(column.length())
                     .append(")");
         }
 
-        if (!column.nullable()) {
+        if (column.notNull()) {
             builder.append( " " )
                     .append( "not null" );
         }

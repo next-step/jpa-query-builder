@@ -7,7 +7,7 @@ import java.sql.Types;
 
 public interface Dialect {
 
-    default String columnType(int type) {
+    default String getColumnType(int type) {
         if (Types.BIGINT == type) {
             return "bigint";
         }
@@ -23,6 +23,6 @@ public interface Dialect {
         throw new UnknownException("sql type : " + type);
     }
 
-    String identityGenerateType(GenerationType type);
+    String getIdentityGenerationType(GenerationType type);
 
 }

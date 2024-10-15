@@ -61,7 +61,7 @@ public class TableColumn {
         return !name.isBlank();
     }
 
-    private boolean notNull() {
+    public boolean notNull() {
         return !nullable;
     }
 
@@ -75,10 +75,6 @@ public class TableColumn {
 
     public long length() {
         return length;
-    }
-
-    public boolean nullable() {
-        return nullable;
     }
 
 }

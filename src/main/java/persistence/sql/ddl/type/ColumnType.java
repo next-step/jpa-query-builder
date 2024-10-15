@@ -32,4 +32,8 @@ public enum ColumnType {
         return Types.VARCHAR != getSqlType(javaType);
     }
 
+    public static boolean isVarcharType(int sqlType) {
+        return Types.VARCHAR == sqlType;
+    }
+
 }

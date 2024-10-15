@@ -6,7 +6,7 @@ import persistence.sql.ddl.exception.UnknownException;
 public class H2Dialect implements Dialect {
 
     @Override
-    public String identityGenerateType(GenerationType type) {
+    public String getIdentityGenerationType(GenerationType type) {
         if (GenerationType.AUTO == type) {
             return "auto_increment";
         }
