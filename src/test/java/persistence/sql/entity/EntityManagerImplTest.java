@@ -14,6 +14,7 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EntityManagerImplTest {
 
@@ -70,5 +71,17 @@ class EntityManagerImplTest {
                 () -> assertThat(expectPerson.getIndex()).isEqualTo(resultPerson.getIndex()),
                 () -> assertThat(expectPerson.getName()).isEqualTo(resultPerson.getName())
         );
+    }
+
+
+    @Test
+    @DisplayName("EntityManager의 remove구현")
+    void entityManager_remove() {
+        Person expectPerson = new Person(2L, "yang2", 25, "rhfpdk92@naver.com");
+
+        entityManager.persist(expectPerson);
+        entityManager.remove(expectPerson);
+
+        assertThrows(RuntimeException.class, () -> entityManager.find(Person.class, 2L));
     }
 }
