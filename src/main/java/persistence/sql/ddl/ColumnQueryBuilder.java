@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ColumnQueryBuilder {
-
-    public static List<ColumnInfo> extract(Class<?> clazz) {
+    private static ColumnQueryBuilder queryBuilderDDL = new ColumnQueryBuilder();
+    private ColumnQueryBuilder() { }
+    public static ColumnQueryBuilder getInstance() {
+        return queryBuilderDDL;
+    }
+    public List<ColumnInfo> extract(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract)
                 .filter(ColumnInfo::isNotTransient).collect(Collectors.toList());
     }
 
-    public static String extractPrimaryKeyQuery(Class<?> clazz) {
+    public String extractPrimaryKeyQuery(Class<?> clazz) {
         List<ColumnInfo> columnInfos = extract(clazz);
         StringBuilder sb = new StringBuilder();
         List<ColumnInfo> primaryKey = columnInfos.stream().filter(ColumnInfo::isPrimaryKey).collect(Collectors.toList());
@@ -24,10 +28,10 @@ public class ColumnQueryBuilder {
         return sb.toString();
     }
 
-    public static String generateQuery(Class<?> clazz) {
+    public String generateDdlQuery(Class<?> clazz) {
         List<ColumnInfo> columnInfos = extract(clazz);
 
-        String columnQuery = columnInfos.stream().map(ColumnInfo::generateColumnQuery).collect(Collectors.joining(", "));
+        String columnQuery = columnInfos.stream().map(ColumnInfo::generateColumnDdlQuery).collect(Collectors.joining(", "));
         String primaryQuery = extractPrimaryKeyQuery(clazz);
 
         return String.join(", ", columnQuery, primaryQuery);

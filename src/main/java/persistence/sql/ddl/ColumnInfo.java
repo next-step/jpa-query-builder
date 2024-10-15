@@ -75,7 +75,7 @@ public class ColumnInfo {
         return !transientAnnotaion;
     }
 
-    public String generateColumnQuery() {
+    public String generateColumnDdlQuery() {
         String columnQuery = String.join(" ", name, columnType.getQueryDefinition());
         String optionQuery = options.stream().collect(Collectors.joining(" "));
         if(StringUtils.isNullOrEmpty(optionQuery)) {

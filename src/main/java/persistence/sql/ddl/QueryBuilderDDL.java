@@ -8,10 +8,12 @@ public class QueryBuilderDDL {
     }
 
     public String buildCreateDdl(Class<?> clazz){
-        return TableQueryBuilder.generateCreateTable(clazz);
+        TableQueryBuilder tableQueryBuilder = TableQueryBuilder.getInstance();
+        return tableQueryBuilder.generateCreateTable(clazz);
     }
 
     public String buildDropDdl(Class<?> clazz) {
-        return TableQueryBuilder.generateDropTable(clazz);
+        TableQueryBuilder tableQueryBuilder = TableQueryBuilder.getInstance();
+        return tableQueryBuilder.generateDropTable(clazz);
     }
 }
