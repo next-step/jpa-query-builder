@@ -3,6 +3,7 @@ package persistence.sql.ddl.mapping;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
+import persistence.sql.ddl.exception.NotExistException;
 import persistence.sql.ddl.fixture.PersonWithEntityIdFixture;
 import persistence.sql.ddl.fixture.PersonWithEntityNamePropertyFixture;
 import persistence.sql.ddl.fixture.PersonWithoutEntityFixture;
@@ -13,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class TableTest {
 
     @Test
-    @DisplayName("[실패] @Entity 애노테이션이 없는 경우 RuntimeException 발생")
+    @DisplayName("[실패] @Entity 애노테이션이 없는 경우 NotExistException 발생")
     void notExistEntityAnnotation() {
         assertThatThrownBy(() -> Table.from(PersonWithoutEntityFixture.class))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("@Entity not exist. class = persistence.sql.ddl.fixture.PersonWithoutEntityFixture");
+                .isInstanceOf(NotExistException.class)
+                .hasMessage("Not exist @Entity annotation. class = persistence.sql.ddl.fixture.PersonWithoutEntityFixture");
     }
 
     @Test
