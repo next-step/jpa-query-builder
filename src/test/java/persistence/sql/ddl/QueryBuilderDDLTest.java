@@ -78,7 +78,7 @@ class QueryBuilderDDLTest {
     }
 
     @Test
-    @DisplayName("Create Query Ddl 을 만들 class를 입력하고 compare")
+    @DisplayName("Person Class의 Create Query Ddl 을 만들 class를 입력하고 compare - @Entity, @Id 대응")
     void createQuery_Compare_withDummyPerson1() {
         QueryBuilderDDL queryBuilderDDL = QueryBuilderDDL.getInstance();
 
@@ -88,7 +88,7 @@ class QueryBuilderDDLTest {
     }
 
     @Test
-    @DisplayName("Create Query Ddl 을 만들 class를 입력하고 compare")
+    @DisplayName("Person Class의 Create Query Ddl 을 만들 class를 입력하고 compare - @Column의 전략과 name, nullable 대응")
     void createQuery_Compare_withDummyPerson2() {
         QueryBuilderDDL queryBuilderDDL = QueryBuilderDDL.getInstance();
 
@@ -98,7 +98,7 @@ class QueryBuilderDDLTest {
     }
 
     @Test
-    @DisplayName("Create Query Ddl 을 만들 class를 입력하고 compare")
+    @DisplayName("Person Class의 Create Query Ddl 을 만들 class를 입력하고 compare - @Table의 name, @Transient 대응")
     void createQuery_Compare_withDummyPerson3() {
         QueryBuilderDDL queryBuilderDDL = QueryBuilderDDL.getInstance();
 
@@ -108,13 +108,13 @@ class QueryBuilderDDLTest {
     }
 
     @Test
-    @DisplayName("Drop Query Ddl 을 만들 class를 입력하고 compare")
+    @DisplayName("Person Class의 Drop Query Ddl 을 만들 class를 입력하고 compare")
     void dropQuery_Compare() {
         QueryBuilderDDL queryBuilderDDL = QueryBuilderDDL.getInstance();
 
         logger.info(queryBuilderDDL.buildDropDdl(Person.class));
         assertThat(queryBuilderDDL.buildDropDdl(Person.class))
-                .isEqualTo("drop table users;");
+                .isEqualTo("drop table if exists users;");
     }
 
 }

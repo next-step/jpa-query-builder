@@ -32,7 +32,7 @@ public class QueryBuilderDDL {
 
         TableInfo table = TableInfo.extract(clazz);
 
-        sb.append("drop table ");
+        sb.append("drop table if exists ");
         sb.append(table.getTableName()).append(";");
         return sb.toString();
     }
@@ -43,8 +43,8 @@ public class QueryBuilderDDL {
         List<ColumnInfo> columns = Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract)
                 .filter(ColumnInfo::isNotTransient).collect(Collectors.toList());
 
-        sb.append(columns.stream().map(ColumnInfo::generateQuery).collect(Collectors.joining(",")));
-        sb.append(generatePrimaryKeyQuery(columns));
+        String columnQuery = columns.stream().map(ColumnInfo::generateQuery).collect(Collectors.joining(", "));
+        sb.append(String.join(", ", columnQuery, generatePrimaryKeyQuery(columns)));
         return sb.toString();
     }
 
