@@ -84,4 +84,24 @@ class EntityManagerImplTest {
 
         assertThrows(RuntimeException.class, () -> entityManager.find(Person.class, 2L));
     }
+
+    @Test
+    @DisplayName("EntityManager의 update구현")
+    void entityManager_update() {
+        Person person = new Person(2L, "yang2", 25, "rhfpdk92@naver.com");
+        Person updatePerson = new Person(2L, "yang3", 25, "rhfpdk92@gmail.com");
+
+        entityManager.persist(person);
+        entityManager.update(updatePerson);
+        Person resultPerson = entityManager.find(Person.class, 2L);
+
+        assertAll(
+                () -> assertThat(updatePerson.getAge()).isEqualTo(resultPerson.getAge()),
+                () -> assertThat(updatePerson.getEmail()).isEqualTo(resultPerson.getEmail()),
+                () -> assertThat(updatePerson.getId()).isEqualTo(resultPerson.getId()),
+                () -> assertThat(updatePerson.getIndex()).isEqualTo(resultPerson.getIndex()),
+                () -> assertThat(updatePerson.getName()).isEqualTo(resultPerson.getName())
+        );
+
+    }
 }
