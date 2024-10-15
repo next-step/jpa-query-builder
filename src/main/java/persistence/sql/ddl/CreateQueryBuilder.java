@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import persistence.dialect.Dialect;
 import persistence.sql.meta.EntityField;
 import persistence.sql.meta.EntityTable;
 
@@ -13,9 +14,11 @@ public class CreateQueryBuilder {
     private static final String PRIMARY_KEY_COLUMN_DEFINITION = "PRIMARY KEY";
 
     private final EntityTable entityTable;
+    private final Dialect dialect;
 
-    public CreateQueryBuilder(Class<?> entityType) {
+    public CreateQueryBuilder(Class<?> entityType, Dialect dialect) {
         this.entityTable = new EntityTable(entityType);
+        this.dialect = dialect;
     }
 
     public String create() {
@@ -33,7 +36,7 @@ public class CreateQueryBuilder {
     }
 
     private String getColumnDefinition(EntityField entityField) {
-        String columDefinition = entityField.getColumnName() + " " + entityField.getDbType();
+        String columDefinition = entityField.getColumnName() + " " + getDbType(entityField);
 
         if (entityField.isNotNull()) {
             columDefinition += " " + NOT_NULL_COLUMN_DEFINITION;
@@ -48,5 +51,15 @@ public class CreateQueryBuilder {
         }
 
         return columDefinition;
+    }
+
+    private String getDbType(EntityField entityField) {
+        final String dbTypeName = dialect.getDbTypeName(entityField);
+        final int columnLength = entityField.getColumnLength();
+
+        if (columnLength == 0) {
+            return dbTypeName;
+        }
+        return String.format("%s(%s)", dbTypeName, columnLength);
     }
 }

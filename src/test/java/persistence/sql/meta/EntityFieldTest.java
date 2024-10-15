@@ -23,19 +23,6 @@ class EntityFieldTest {
     }
 
     @Test
-    @DisplayName("db type을 반환한다.")
-    void getDbType() {
-        // given
-        final EntityField entityField = new EntityField(getField("name"));
-
-        // when
-        final String result = entityField.getDbType();
-
-        // then
-        assertThat(result).isEqualTo("VARCHAR(255)");
-    }
-
-    @Test
     @DisplayName("generation 필드인 경우 true를 반환한다.")
     void isGeneration_true() {
         // given

@@ -1,6 +1,7 @@
 package persistence.sql.meta;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class EntityTable {
     }
 
     public String getTableName() {
-        final jakarta.persistence.Table table = entityType.getAnnotation(jakarta.persistence.Table.class);
+        final Table table = entityType.getAnnotation(Table.class);
         if (Objects.nonNull(table) && Objects.nonNull(table.name()) && !table.name().isBlank()) {
             return table.name();
         }

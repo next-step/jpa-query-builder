@@ -1,5 +1,6 @@
 package persistence.sql.meta;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -8,11 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Objects;
 
 public class EntityField {
     private static final Logger logger = LoggerFactory.getLogger(EntityField.class);
+    private static final int DEFAULT_LENGTH = 0;
 
+    private final List<Class<?>> quotesNeededTypes = List.of(String.class);
+    private final List<Class<?>> lengthNeededTypes = List.of(String.class);
     private final Field field;
 
     public EntityField(Field field) {
@@ -46,6 +51,10 @@ public class EntityField {
         }
     }
 
+    private boolean isQuotesNeeded() {
+        return quotesNeededTypes.contains(getType());
+    }
+
     public void setValue(Object entity, Object value){
         try {
             field.setAccessible(true);
@@ -56,25 +65,23 @@ public class EntityField {
     }
 
     public String getColumnName() {
-        final jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
+        final Column column = field.getAnnotation(Column.class);
         if (Objects.nonNull(column) && Objects.nonNull(column.name()) && !column.name().isBlank()) {
             return column.name();
         }
         return field.getName();
     }
 
+    public int getColumnLength() {
+        final Column column = field.getAnnotation(Column.class);
+        if (!lengthNeededTypes.contains(getType())) {
+            return DEFAULT_LENGTH;
+        }
+        return column.length();
+    }
+
     public Class<?> getType() {
         return field.getType();
-    }
-
-    public String getDbType() {
-        final FieldType fieldType = FieldType.valueOf(field);
-        return fieldType.getDbType();
-    }
-
-    public boolean isQuotesNeeded() {
-        final FieldType fieldType = FieldType.valueOf(field);
-        return fieldType.isQuotesNeeded();
     }
 
     public boolean isGeneration() {
@@ -86,7 +93,7 @@ public class EntityField {
     }
 
     public boolean isNotNull() {
-        final jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
+        final Column column = field.getAnnotation(Column.class);
         if (Objects.isNull(column)) {
             return false;
         }

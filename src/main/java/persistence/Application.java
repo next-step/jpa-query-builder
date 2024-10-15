@@ -6,6 +6,8 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.dialect.Dialect;
+import persistence.dialect.H2Dialect;
 import persistence.example.Person;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
@@ -28,8 +30,9 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            final Dialect dialect = new H2Dialect();
 
-            final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
+            final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class, dialect);
             jdbcTemplate.execute(createQueryBuilder.create());
 
             final Person entity = new Person("Jaden", 30, "test@email.com", 1);

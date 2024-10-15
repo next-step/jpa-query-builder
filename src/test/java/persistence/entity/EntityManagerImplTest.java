@@ -5,6 +5,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.dialect.Dialect;
+import persistence.dialect.H2Dialect;
 import persistence.example.Person;
 import persistence.fixture.EntityWithId;
 import persistence.sql.ddl.CreateQueryBuilder;
@@ -18,10 +20,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EntityManagerImplTest {
     private Connection connection;
+    private Dialect dialect;
 
     @BeforeEach
     void setUp() {
         connection= H2ConnectionFactory.getConnection();
+        dialect = new H2Dialect();
+
         createTable();
         insertData();
     }
@@ -113,7 +118,7 @@ class EntityManagerImplTest {
 
     private void createTable() {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(connection);
-        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class);
+        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class, dialect);
         jdbcTemplate.execute(createQueryBuilder.create());
     }
 
