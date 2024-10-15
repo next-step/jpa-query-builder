@@ -6,9 +6,9 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.QueryBuilderFactory;
+import persistence.sql.config.PersistenceConfig;
 import persistence.sql.data.QueryType;
 import persistence.sql.ddl.TableScanner;
-import persistence.sql.config.PersistenceConfig;
 import persistence.sql.dml.impl.SimpleMetadataLoader;
 import persistence.sql.node.EntityNode;
 

@@ -56,7 +56,7 @@ public class PersistenceConfig {
     }
 
     public EntityManager entityManager() throws SQLException {
-        return new DefaultEntityManager(database());
+        return new DefaultEntityManager(database(), nameConverter());
     }
 
     public Database database() throws SQLException {
