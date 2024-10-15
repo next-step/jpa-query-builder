@@ -13,4 +13,12 @@ public class QueryBuilderTest {
         String expectedQuery = "CREATE TABLE Person (id BIGINT PRIMARY KEY, name VARCHAR(255), age INTEGER);";
         assertThat(queryBuilder.create(Person.class)).isEqualTo(expectedQuery);
     }
+
+    @Test
+    @DisplayName("NewPerson 엔티티 create 쿼리를 생성한다")
+    void testCreateNewPersonQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String expectedQuery = "CREATE TABLE NewPerson (id BIGINT PRIMARY KEY AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);";
+        assertThat(queryBuilder.create(NewPerson.class)).isEqualTo(expectedQuery);
+    }
 }

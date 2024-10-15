@@ -17,3 +17,7 @@
   - [ ] 엔티티 이름을 테이블명으로 사용
   - [ ] 엔티티 필드를 컬럼으로 사용
   - [ ] @Id 어노테이션을 PRIMARY KEY로 지정
+- [ ] NewPerson Entity로 create 쿼리 만들어보기
+  - [ ] @Column.name 어노테이션을 컬럼명으로 사용
+  - [ ] @Column.nullable 어노테이션을 NOT NULL로 사용
+  - [ ] @GeneratedValue 어노테이션을 기본키 매핑으로 사용
