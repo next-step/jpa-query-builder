@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReflectionTest {
 
@@ -23,38 +24,90 @@ public class ReflectionTest {
     @DisplayName("요구 사항 1 - 클래스 정보 출력")
     void getDeclaredInfoInCarClass() {
         Class<Car> carClass = Car.class;
-        String carClassName = carClass.getSimpleName();
 
         // class 이름 출력
         logger.info("Car 클래스 이름 : {}", carClass.getSimpleName());
-        assertThat(carClassName).isEqualTo("Car");
 
         // 선언된 필드 출력
         List<String> declaredFieldNames = Arrays.stream(carClass.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
         logger.info("선언된 필드 개수 : {}", carClass.getDeclaredFields().length);
         logger.info("선언된 필드 : {}", declaredFieldNames);
-        assertThat(declaredFieldNames.contains("price")).isTrue();
-        assertThat(declaredFieldNames.contains("name")).isTrue();
+
 
         // 메소드 출력
         List<String> declaredMethodNames = Arrays.stream(carClass.getDeclaredMethods()).map(Method::getName).collect(Collectors.toList());
         logger.info("선언된 메소드 개수 : {}", carClass.getDeclaredMethods().length);
         logger.info("선언된 메소드 이름 : {}", declaredMethodNames);
-        assertThat(carClass.getDeclaredMethods().length).isEqualTo(5);
-        assertThat(declaredMethodNames.contains("printView")).isTrue();
-        assertThat(declaredMethodNames.contains("testGetName")).isTrue();
-        assertThat(declaredMethodNames.contains("testGetPrice")).isTrue();
-        assertThat(declaredMethodNames.contains("getPrice")).isTrue();
-        assertThat(declaredMethodNames.contains("getName")).isTrue();
+
 
         // 생성자 출력
         logger.info("선언된 생성자 개수 : {}", carClass.getConstructors().length);
         logger.info("선언된 생성자에 정의된 파라미터 개수 : {}", Arrays.stream(carClass.getConstructors()).map(Constructor::getParameterCount).collect(Collectors.toList()));
+   }
+
+    @Test
+    @DisplayName("요구 사항 1 - 클래스 정보 출력 : Check Class Name ")
+    void getDeclaredInfoInCarClass_assertClassSimpleName() {
+        Class<Car> carClass = Car.class;
+        String carClassName = carClass.getSimpleName();
+        assertThat(carClassName).isEqualTo("Car");
+    }
+
+    @Test
+    @DisplayName("요구 사항 1 - 클래스 정보 출력 : Check Fields")
+    void getDeclaredInfoInCarClass_assertFields() {
+        Class<Car> carClass = Car.class;
+        String carClassName = carClass.getSimpleName();
+
+        List<String> declaredFieldNames = Arrays.stream(carClass.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
+        assertAll(
+                () -> assertThat(declaredFieldNames.contains("price")).isTrue(),
+                () -> assertThat(declaredFieldNames.contains("name")).isTrue()
+        );
+
+    }
+
+    @Test
+    @DisplayName("요구 사항 1 - 클래스 정보 출력 : get Field Type")
+    void getDeclaredInfoInCarClass_getFieldType() {
+        Class<Car> carClass = Car.class;
+        String carClassName = carClass.getSimpleName();
+
+        List<Field> declaredFields = Arrays.stream(carClass.getDeclaredFields()).collect(Collectors.toList());
+        logger.info("선언된 필드의 타입 : {}", declaredFields.stream().map(n->n.getType()).collect(Collectors.toList()));
+    }
+
+    @Test
+    @DisplayName("요구 사항 1 - 클래스 정보 출력 : Check Methods")
+    void getDeclaredInfoInCarClass_assertMethods() {
+        Class<Car> carClass = Car.class;
+        String carClassName = carClass.getSimpleName();
+
+        List<String> declaredMethodNames = Arrays.stream(carClass.getDeclaredMethods()).map(Method::getName).collect(Collectors.toList());
+
+        assertAll(
+                () -> assertThat(carClass.getDeclaredMethods().length).isEqualTo(5),
+                () -> assertThat(declaredMethodNames.contains("printView")).isTrue(),
+                () -> assertThat(declaredMethodNames.contains("testGetName")).isTrue(),
+                () -> assertThat(declaredMethodNames.contains("testGetPrice")).isTrue(),
+                () -> assertThat(declaredMethodNames.contains("getPrice")).isTrue(),
+                () -> assertThat(declaredMethodNames.contains("getName")).isTrue()
+        );
+
+
+    }
+
+    @Test
+    @DisplayName("요구 사항 1 - 클래스 정보 출력 : Check Constructors")
+    void getDeclaredInfoInCarClass_assertConstructors() {
+        Class<Car> carClass = Car.class;
+        String carClassName = carClass.getSimpleName();
+
         assertThat(carClass.getConstructors().length).isEqualTo(2);
 
         // Q. 생성자에 정의된 타입 출력
         // Q. 생성자에 정의된 이름 출력
-   }
+    }
 
    @Test
    @DisplayName("요구 사항 2 - test로 시작하는 메소드 실행")
@@ -81,8 +134,12 @@ public class ReflectionTest {
                .getConstructor(String.class, int.class)
                .newInstance("teslar", 4000);
        logger.info("정의한 Car 정보 : name = {}, price = {}", testCar.getName(), testCar.getPrice());
-       assertThat(testCar.getName()).isEqualTo("teslar");
-       assertThat(testCar.getPrice()).isEqualTo(4000);
+
+       assertAll(
+               () -> assertThat(testCar.getName()).isEqualTo("teslar"),
+               () -> assertThat(testCar.getPrice()).isEqualTo(4000)
+       );
+
        return  testCar;
    }
 
@@ -121,8 +178,11 @@ public class ReflectionTest {
        nameField.set(testCar, "소나타");
 
        logger.info("정의한 Car 정보 : name = {}, price = {}", testCar.getName(), testCar.getPrice());
-       assertThat(testCar.getPrice()).isEqualTo(4200);
-       assertThat(testCar.getName()).isEqualTo("소나타");
+
+       assertAll(
+               () -> assertThat(testCar.getPrice()).isEqualTo(4200),
+               () -> assertThat(testCar.getName()).isEqualTo("소나타")
+       );
    }
 
    @Test
@@ -132,13 +192,14 @@ public class ReflectionTest {
 
         List<Constructor> declaredConstructorWithParameter = Arrays.stream(carClass.getDeclaredConstructors()).filter(constructor-> constructor.getParameters().length > 0).collect(Collectors.toList());
         logger.info("선언된 생성자 개수: {}", carClass.getDeclaredConstructors().length);
-        assertThat(declaredConstructorWithParameter.size()).isEqualTo(1);
 
-        if(declaredConstructorWithParameter.size()>0) {
-            Constructor constructorWithNameAndPrice = declaredConstructorWithParameter.get(0);
-            Car newCar = (Car) constructorWithNameAndPrice.newInstance("teslar", 4000);
-            assertThat(newCar.getName()).isEqualTo("teslar");
-            assertThat(newCar.getPrice()).isEqualTo(4000);
-        }
+        assertThat(declaredConstructorWithParameter.size()).isEqualTo(1);
+        Constructor constructorWithNameAndPrice = declaredConstructorWithParameter.get(0);
+        Car newCar = (Car) constructorWithNameAndPrice.newInstance("teslar", 4000);
+
+        assertAll(
+                () -> assertThat(newCar.getName()).isEqualTo("teslar"),
+                () -> assertThat(newCar.getPrice()).isEqualTo(4000)
+        );
    }
 }
