@@ -1,10 +1,10 @@
 package persistence.sql.ddl.query;
 
 import persistence.sql.ddl.DdlQueryBuilder;
-import persistence.sql.ddl.Dialect;
-import persistence.sql.ddl.Queryable;
-import persistence.sql.ddl.definition.TableDefinition;
-import persistence.sql.ddl.definition.TableId;
+import persistence.sql.Dialect;
+import persistence.sql.Queryable;
+import persistence.sql.definition.TableDefinition;
+import persistence.sql.definition.TableId;
 
 public class CreateQueryBuilder implements DdlQueryBuilder {
     private final Dialect dialect;

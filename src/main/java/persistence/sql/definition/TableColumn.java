@@ -1,7 +1,7 @@
-package persistence.sql.ddl.definition;
+package persistence.sql.definition;
 
-import persistence.sql.ddl.Dialect;
-import persistence.sql.ddl.Queryable;
+import persistence.sql.Dialect;
+import persistence.sql.Queryable;
 
 import java.lang.reflect.Field;
 

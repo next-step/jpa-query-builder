@@ -1,7 +1,7 @@
-package persistence.sql.ddl.definition;
+package persistence.sql.definition;
 
 import jakarta.persistence.Column;
-import persistence.sql.ddl.SqlType;
+import persistence.sql.SqlType;
 
 import java.lang.reflect.Field;
 

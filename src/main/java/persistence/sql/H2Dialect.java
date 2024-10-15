@@ -1,6 +1,6 @@
-package persistence.sql.ddl;
+package persistence.sql;
 
-import persistence.sql.ddl.definition.ColumnDefinition;
+import persistence.sql.definition.ColumnDefinition;
 
 import java.util.Map;
 

@@ -5,8 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.Dialect;
-import persistence.sql.ddl.H2Dialect;
+import persistence.sql.Dialect;
+import persistence.sql.H2Dialect;
+import persistence.sql.definition.TableColumn;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

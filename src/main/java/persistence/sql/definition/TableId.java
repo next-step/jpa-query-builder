@@ -1,10 +1,10 @@
-package persistence.sql.ddl.definition;
+package persistence.sql.definition;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.Dialect;
-import persistence.sql.ddl.Queryable;
+import persistence.sql.Dialect;
+import persistence.sql.Queryable;
 import persistence.sql.ddl.query.AutoKeyGenerationStrategy;
 import persistence.sql.ddl.query.IdentityKeyGenerationStrategy;
 import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
