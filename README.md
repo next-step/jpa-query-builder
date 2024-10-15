@@ -18,7 +18,11 @@
 
 ### 요구사항
 
-- [X] @Entity와 @Id가 사용된 Person class의 create query 생성
-- [X] @GeneratedValue, @Column을 추가하여 Person class 의 create query 생성
-- [X] @Table, @Transient을 추가하여 Person class의 create query 생성
-- [X] drop query 생성
+- [X] Person Class의 Create Query 생성
+  - [X] Person Class에 @Entity가 사용되지 않았으면 Create Query를 할 수 없으므로 오류 출력
+  - [X] @Id가 사용된 필드의 경우 해당 컬럼 생성 문에 not null 포함 및 primary key에 추가
+  - [X] @GeneratedValue 의 값이 IDENTITY일 때 컬럼 생성 문에 auto_increment 포함
+  - [X] @Column name에 따라 컬럼 이름 변경 
+  - [X] @Table name에 따라 테이블 이름 변경
+  - [X] @Transient 이 포함된 컬럼은 컬럼 생성하지 않음
+- [X] Person Class의 Drop Query 생성
