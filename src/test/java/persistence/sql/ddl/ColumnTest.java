@@ -19,7 +19,7 @@ class ColumnTest {
         ColumnInfo idColumn = ColumnInfo.extract(Person.class.getDeclaredField("id"));
         logger.info("{} 의 타입은 {}, primary 는 {}", idColumn.getName(), idColumn.getColumnType().getJavaType(), idColumn.isPrimaryKey());
         assertAll(
-                () -> assertThat(idColumn.getColumnType()).isEqualTo(ColumnType.BIGINT),
+                () -> assertThat(idColumn.getColumnType()).isEqualTo(JPAColumnType.BIGINT),
                 () -> assertThat(idColumn.getName()).isEqualTo("id"),
                 () -> assertThat(idColumn.isPrimaryKey()).isTrue()
         );
@@ -31,7 +31,7 @@ class ColumnTest {
         ColumnInfo nameColumn = ColumnInfo.extract(Person.class.getDeclaredField("name"));
         logger.info("{} 의 타입은 {}, primary 는 {}", nameColumn.getName(), nameColumn.getColumnType().getJavaType(), nameColumn.isPrimaryKey());
         assertAll(
-                () -> assertThat(nameColumn.getColumnType()).isEqualTo(ColumnType.VARCHAR),
+                () -> assertThat(nameColumn.getColumnType()).isEqualTo(JPAColumnType.VARCHAR),
                 () -> assertThat(nameColumn.getName()).isEqualTo("nick_name"),
                 () -> assertThat(nameColumn.isPrimaryKey()).isFalse()
         );
@@ -43,7 +43,7 @@ class ColumnTest {
         ColumnInfo ageColumn = ColumnInfo.extract(Person.class.getDeclaredField("age"));
         logger.info("{} 의 타입은 {}, primary 는 {}", ageColumn.getName(), ageColumn.getColumnType().getJavaType(), ageColumn.isPrimaryKey());
         assertAll(
-                () -> assertThat(ageColumn.getColumnType()).isEqualTo(ColumnType.INTEGER),
+                () -> assertThat(ageColumn.getColumnType()).isEqualTo(JPAColumnType.INTEGER),
                 () -> assertThat(ageColumn.getName()).isEqualTo("old"),
                 () -> assertThat(ageColumn.isPrimaryKey()).isFalse()
         );

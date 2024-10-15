@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 public class ColumnInfo {
     private String name;
-    private ColumnType columnType;
+    private JPAColumnType columnType;
     private boolean primaryKey;
     private boolean transientAnnotaion;
     private List<String> options;
 
-    private ColumnInfo(String name, ColumnType columnType, boolean primaryKey, boolean transientAnnotation, List<String> options) {
+    private ColumnInfo(String name, JPAColumnType columnType, boolean primaryKey, boolean transientAnnotation, List<String> options) {
         this.name = name;
         this.columnType = columnType;
         this.primaryKey = primaryKey;
@@ -25,7 +25,7 @@ public class ColumnInfo {
     public static ColumnInfo extract(Field field) {
         return new ColumnInfo(
                 extractColumnName(field),
-                ColumnType.of(field.getType()),
+                JPAColumnType.of(field.getType()),
                 field.isAnnotationPresent(Id.class),
                 field.isAnnotationPresent(Transient.class),
                 extractOptions(field)
@@ -60,7 +60,7 @@ public class ColumnInfo {
         return name;
     }
 
-    public ColumnType getColumnType() {
+    public JPAColumnType getColumnType() {
         return columnType;
     }
 

@@ -18,7 +18,7 @@ class ColumnTypeTest {
     void invalidColumnType() {
         Class<Boolean> booleanClass = Boolean.class;
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ColumnType.of(booleanClass);
+            JPAColumnType.of(booleanClass);
         });
     }
 
@@ -26,28 +26,28 @@ class ColumnTypeTest {
     @DisplayName("Long으로 정의된 필드의 타입을 BigInt로 변환하여 반환")
     void convertLongJavaTypeToBigIntDef() throws Exception {
         Class<Long> longClass = Long.class;
-        ColumnType columnDef = ColumnType.of(longClass);
+        JPAColumnType columnDef = JPAColumnType.of(longClass);
         logger.info("{} 자바 타입을 변환한 결과값 : {}", columnDef.getJavaType(), columnDef.getQueryDefinition());
 
-        assertThat(columnDef).isEqualTo(ColumnType.BIGINT);
+        assertThat(columnDef).isEqualTo(JPAColumnType.BIGINT);
     }
 
     @Test
     @DisplayName("String으로 정의된 필드의 타입을 varchar(255)로 변환하여 반환")
     void convertStringJavaTypeTovarcharDef() throws Exception {
         Class<String> stringClass = String.class;
-        ColumnType columnDef = ColumnType.of(stringClass);
+        JPAColumnType columnDef = JPAColumnType.of(stringClass);
         logger.info("{} 자바 타입을 변환한 결과값 : {}", columnDef.getJavaType(), columnDef.getQueryDefinition());
-        assertThat(columnDef).isEqualTo(ColumnType.VARCHAR);
+        assertThat(columnDef).isEqualTo(JPAColumnType.VARCHAR);
     }
 
     @Test
     @DisplayName("Integer으로 정의된 필드의 타입을 integer로 변환하여 반환")
     void convertIntegerJavaTypeTointegerDef() throws Exception {
         Class<Integer> integerClass = Integer.class;
-        ColumnType columnDef = ColumnType.of(integerClass);
+        JPAColumnType columnDef = JPAColumnType.of(integerClass);
         logger.info("{} 자바 타입을 변환한 결과값 : {}", columnDef.getJavaType(), columnDef.getQueryDefinition());
-        assertThat(columnDef).isEqualTo(ColumnType.INTEGER);
+        assertThat(columnDef).isEqualTo(JPAColumnType.INTEGER);
     }
 
 }
