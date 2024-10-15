@@ -46,4 +46,24 @@ public class Metadata {
 
         return field.getName();
     }
+
+    public String getFieldValue(Object entity, Field field) {
+        field.setAccessible(true);
+        try {
+            Object fieldValue = field.get(entity);
+            if (fieldValue == null) {
+                return "null";
+            }
+            return getFormattedId(fieldValue);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("필드에 접근할 수 없음");
+        }
+    }
+
+    private String getFormattedId(Object idValue) {
+        if (idValue instanceof String) {
+            return String.format(("'%s'"), idValue);
+        }
+        return idValue.toString();
+    }
 }
