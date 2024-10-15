@@ -6,10 +6,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.*;
-import persistence.sql.dml.H2InsertQueryBuilder;
-import persistence.sql.dml.H2SelectQueryBuilder;
-import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.*;
 
 import java.util.List;
 
@@ -42,13 +39,17 @@ public class Application {
 
 
             Person getByIdPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(1L), resultSet -> {
+                Long id = resultSet.getLong("id");
                 String email = resultSet.getString("email");
                 int age = resultSet.getInt("old");
                 String nickname = resultSet.getString("nick_name");
-                return new Person(nickname, age, email, 0);
+                return new Person(id, nickname, age, email);
             });
 
-
+            DeleteQueryBuilder deleteQueryBuilder = new H2DeleteQueryBuilder(getByIdPerson);
+            String delete = deleteQueryBuilder.delete();
+            System.out.println("delete = " + delete);
+//            jdbcTemplate.execute(deleteQueryBuilder.delete());
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

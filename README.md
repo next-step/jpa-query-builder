@@ -26,4 +26,4 @@
       - [x] 2 : 모두 조회(findAll) 기능 구현해보기
         - [x] EntityColumnNames 추가
       - [x] 3 : 단건 조회(findById) 기능 구현해보기
-      - [] 4 : delete 쿼리 만들어보기
+      - [x] 4 : delete 쿼리 구현

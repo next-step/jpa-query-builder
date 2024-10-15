@@ -15,7 +15,7 @@ class EntityColumnNamesTest {
         EntityColumnNames entityColumnNames = new EntityColumnNames(Person.class);
         String columnNames = entityColumnNames.getColumnNames();
 
-        assertThat(columnNames).isEqualTo("nick_name, old, email");
+        assertThat(columnNames).isEqualTo("id, nick_name, old, email");
     }
 
     @Test

@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Transient;
+import persistence.sql.ddl.ExceptionUtil;
 import persistence.sql.model.EntityColumnName;
 import persistence.sql.model.EntityColumnValue;
 import persistence.sql.model.TableName;
@@ -14,9 +15,7 @@ public class H2InsertQueryBuilder implements InsertQueryBuilder {
     private final Object object;
 
     public H2InsertQueryBuilder(Object object) {
-        if (object == null) {
-            throw new IllegalArgumentException("object가 존재하지 않습니다.");
-        }
+        ExceptionUtil.requireNonNull(object);
         this.object = object;
     }
 
