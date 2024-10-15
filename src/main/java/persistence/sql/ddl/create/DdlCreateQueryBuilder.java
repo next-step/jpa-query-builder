@@ -31,7 +31,7 @@ public class DdlCreateQueryBuilder {
         return this;
     }
 
-    public String build(String tableName) {
+    public String build(String entityClassName) {
         this.columnComponentBuilders.stream()
                 .map(ColumnComponentBuilder::getComponentBuilder)
                 .forEach(query::append);
@@ -40,6 +40,6 @@ public class DdlCreateQueryBuilder {
                 .forEach(query::append);
 
         query.setLength(query.length() - 2);
-        return query.append("\n);").toString().replace("{TABLE_NAME}", tableName.toLowerCase());
+        return query.append("\n);").toString().replace("{TABLE_NAME}", entityClassName.toLowerCase());
     }
 }

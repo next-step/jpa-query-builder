@@ -1,6 +1,6 @@
 package persistence.sql.ddl.create;
 
-import example.entity.Person;
+import example.entity.PersonV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ public class DdlCreateQueryBuilderTest {
     @Test
     @DisplayName("Column component 생성 테스트")
     void createColumnComponentTest() {
-        Class<Person> personClass = Person.class;
+        Class<PersonV1> personClass = PersonV1.class;
         for (Field field : personClass.getDeclaredFields()) {
             String columnComponent = ColumnComponentBuilder.from(field).getComponentBuilder().toString();
             logger.debug("Person.{} : {}", field.getName(), columnComponent);
@@ -26,7 +26,7 @@ public class DdlCreateQueryBuilderTest {
     @Test
     @DisplayName("Constraint component 생성 테스트")
     void createConstraintComponentTest() {
-        Class<Person> personClass = Person.class;
+        Class<PersonV1> personClass = PersonV1.class;
         for (Field field : personClass.getDeclaredFields()) {
             for (ConstraintComponentBuilder constraintComponentBuilder : ConstraintComponentBuilder.from(field)) {
                 logger.debug("Constraint : {}", constraintComponentBuilder.getComponentBuilder().toString());
@@ -37,7 +37,7 @@ public class DdlCreateQueryBuilderTest {
     @Test
     @DisplayName("DDL Create query 생성 테스트")
     void createDdlCreateQueryTest() {
-        Class<Person> personClass = Person.class;
+        Class<PersonV1> personClass = PersonV1.class;
 
         Field[] fields = personClass.getDeclaredFields();
         DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
