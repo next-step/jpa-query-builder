@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 import persistence.sql.meta.EntityField;
 import persistence.sql.meta.EntityTable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class CustomRowMapper<T> implements RowMapper<T> {
     private static final Logger logger = LoggerFactory.getLogger(CustomRowMapper.class);
@@ -31,17 +30,10 @@ public class CustomRowMapper<T> implements RowMapper<T> {
 
     private void mapField(ResultSet resultSet, EntityField entityField, T entity) {
         try {
-            final Object value = getValue(resultSet, entityField);
+            final Object value = resultSet.getObject(entityField.getColumnName(), entityField.getType());
             entityField.setValue(entity, value);
-
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        } catch (SQLException e) {
             logger.error(e.getMessage(), e);
         }
-    }
-
-    private Object getValue(ResultSet resultSet, EntityField entityField) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        final Method getterMethod = resultSet.getClass()
-                .getDeclaredMethod(entityField.getResultSetGetterName(), String.class);
-        return getterMethod.invoke(resultSet, entityField.getColumnName());
     }
 }

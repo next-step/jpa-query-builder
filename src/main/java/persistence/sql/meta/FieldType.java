@@ -3,18 +3,16 @@ package persistence.sql.meta;
 import java.lang.reflect.Field;
 
 public enum FieldType {
-    STRING("VARCHAR(255)", true, "getString"),
-    INTEGER("INTEGER", false, "getInt"),
-    LONG("BIGINT", false, "getLong");
+    STRING("VARCHAR(255)", true),
+    INTEGER("INTEGER", false),
+    LONG("BIGINT", false);
 
     private final String dbType;
     private final boolean quotesNeeded;
-    private final String resultSetGetterName;
 
-    FieldType(String dbType, boolean quotesNeeded, String resultSetGetterName) {
+    FieldType(String dbType, boolean quotesNeeded) {
         this.dbType = dbType;
         this.quotesNeeded = quotesNeeded;
-        this.resultSetGetterName = resultSetGetterName;
     }
 
     public static FieldType valueOf(Field field) {
@@ -28,9 +26,5 @@ public enum FieldType {
 
     public boolean isQuotesNeeded() {
         return quotesNeeded;
-    }
-
-    public String getResultSetGetterName() {
-        return resultSetGetterName;
     }
 }

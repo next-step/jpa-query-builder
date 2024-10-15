@@ -63,14 +63,13 @@ public class EntityField {
         return field.getName();
     }
 
+    public Class<?> getType() {
+        return field.getType();
+    }
+
     public String getDbType() {
         final FieldType fieldType = FieldType.valueOf(field);
         return fieldType.getDbType();
-    }
-
-    public String getResultSetGetterName() {
-        final FieldType fieldType = FieldType.valueOf(field);
-        return fieldType.getResultSetGetterName();
     }
 
     public boolean isQuotesNeeded() {
