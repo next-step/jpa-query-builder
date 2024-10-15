@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
 import database.DatabaseServer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.QueryBuilderFactory;
@@ -16,10 +16,11 @@ import java.util.Set;
 
 public class TestEntityInitialize {
     private static final Logger logger = LoggerFactory.getLogger(TestEntityInitialize.class);
-    static DatabaseServer server;
+    DatabaseServer server;
+    Set<EntityNode<?>> nodes;
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         try {
             PersistenceConfig config = PersistenceConfig.getInstance();
             Database database = config.database();
@@ -27,7 +28,7 @@ public class TestEntityInitialize {
             server.start();
 
             TableScanner tableScanner = config.tableScanner();
-            Set<EntityNode<?>> nodes = tableScanner.scan("persistence.sql.fixture");
+            nodes = tableScanner.scan("persistence.sql.fixture");
 
             QueryBuilderFactory factory = QueryBuilderFactory.getInstance();
             for (EntityNode<?> node : nodes) {
@@ -42,9 +43,17 @@ public class TestEntityInitialize {
         }
     }
 
-    @AfterAll
-    static void destroy() {
+    @AfterEach
+    void destroy() {
         try {
+            PersistenceConfig config = PersistenceConfig.getInstance();
+            Database database = config.database();
+            QueryBuilderFactory factory = QueryBuilderFactory.getInstance();
+            for (EntityNode<?> node : nodes) {
+                String createTableQuery = factory.buildQuery(QueryType.DROP,
+                        new SimpleMetadataLoader<>(node.entityClass()), null);
+                database.executeUpdate(createTableQuery);
+            }
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

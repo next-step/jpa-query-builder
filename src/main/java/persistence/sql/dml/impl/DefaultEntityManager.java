@@ -1,10 +1,10 @@
 package persistence.sql.dml.impl;
 
+import persistence.sql.QueryBuilderFactory;
+import persistence.sql.data.QueryType;
 import persistence.sql.dml.Database;
 import persistence.sql.dml.EntityManager;
 import persistence.sql.dml.MetadataLoader;
-import persistence.sql.QueryBuilderFactory;
-import persistence.sql.data.QueryType;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class DefaultEntityManager implements EntityManager {
@@ -91,7 +90,13 @@ public class DefaultEntityManager implements EntityManager {
 
         String findQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.SELECT, loader, primaryKey);
 
-        return database.executeQuery(findQuery, rs -> mapRowResultSetToEntity(rs, loader));
+        return database.executeQuery(findQuery, resultSet -> {
+            if (resultSet.next()) {
+                return mapRowResultSetToEntity(resultSet, loader);
+            }
+
+            return null;
+        });
     }
 
     @Override

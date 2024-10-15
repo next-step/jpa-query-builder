@@ -1,13 +1,12 @@
 package persistence.sql.dml.impl;
 
 import database.DatabaseServer;
+import jdbc.RowMapper;
 import persistence.sql.dml.Database;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
-import java.util.function.Function;
 
 public class DefaultDatabase implements Database {
     private final DatabaseServer server;
@@ -38,15 +37,11 @@ public class DefaultDatabase implements Database {
     }
 
     @Override
-    public <T> T executeQuery(String query, Function<ResultSet, T> mapRowMapperFunction) {
+    public <T> T executeQuery(String query, RowMapper<T> rowMapper) {
         try (Connection connection = server.getConnection()) {
             ResultSet resultSet = connection.createStatement().executeQuery(query);
 
-            if(!resultSet.next()) {
-                return null;
-            }
-
-            return mapRowMapperFunction.apply(resultSet);
+            return rowMapper.mapRow(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to execute query: " + query, e);

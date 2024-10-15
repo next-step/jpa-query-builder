@@ -42,7 +42,7 @@ class DefaultEntityManagerTest extends TestEntityInitialize {
     @DisplayName("persist 함수는 엔티티가 이미 존재하는 경우 병합을 수행한다.")
     void testPersistWithMerge() {
         // given
-        PersonV3 person = new PersonV3("catsbi", 55, "casbi@naver.com", 123);
+        PersonV3 person = new PersonV3("catsbi", 25, "casbi@naver.com", 123);
 
         // when
         entityManager.persist(person);
