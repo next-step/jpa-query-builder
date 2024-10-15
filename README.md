@@ -22,6 +22,8 @@
       - [x] 1 : insert 구현해보기
         - [x] 테스트코드 작성
         - [x] EntityColumnName 클래스 추가로 인한 Step2 ColumnName 객체 활용 및 테스트 코드 에러 수정
-      - [] 2 : 모두 조회(findAll) 기능 구현해보기
+        - [x] ColumnValue가 String일 경우 추가 처리 ('' 추가)
+      - [x] 2 : 모두 조회(findAll) 기능 구현해보기
+        - [x] EntityColumnNames 추가
       - [] 3 : 단건 조회(findById) 기능 구현해보기
       - [] 4 : delete 쿼리 만들어보기

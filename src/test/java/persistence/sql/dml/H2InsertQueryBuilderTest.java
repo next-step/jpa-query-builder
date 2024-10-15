@@ -15,11 +15,11 @@ class H2InsertQueryBuilderTest {
         final String name = "이름";
         final Integer age = 11;
         final String email = "email@test.com";
-
         Person person = new Person(name, age, email, null);
-        InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
 
+        InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
         String sql = insertQueryBuilder.makeQuery();
+
         assertThat(sql).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES (이름, 11, email@test.com)");
     }
 
