@@ -21,6 +21,10 @@ public class WhereClause implements Clause {
         String equalOperatorsSQL = equalClauses
                 .stream().map(equalClause -> equalClause.toSql(dialect))
                 .collect(Collectors.joining(" AND "));
+
+        if (equalOperatorsSQL.isEmpty()) {
+            return "";
+        }
         return "(" + equalOperatorsSQL + ")";
     }
 }

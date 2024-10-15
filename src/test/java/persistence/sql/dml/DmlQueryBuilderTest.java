@@ -10,6 +10,7 @@ import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.clause.EqualClause;
 import persistence.sql.dml.clause.FindOption;
 import persistence.sql.dml.clause.FindOptionBuilder;
+import persistence.sql.dml.clause.WhereClause;
 import persistence.sql.fixture.PersonWithTransientAnnotation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,7 +67,7 @@ public class DmlQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("조건절 없이 테이블의 모든 레코드 조회")
+    @DisplayName("조건절 없이 테이블의 모든 레코드를 조회한다.")
     void testCreateSelectQueryWithoutClauses() {
         String expectedQuery = "SELECT * FROM \"users\"";
 
@@ -81,7 +82,7 @@ public class DmlQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("조건절로 테이블의 모든 레코드 조회")
+    @DisplayName("조건절로 테이블의 모든 레코드를 조회한다.")
     void testCreateSelectQueryWithClauses() {
         String expectedQuery = "SELECT * FROM \"users\" " +
                 "WHERE (\"email\" = 'test@test.com' AND \"nick_name\" = '홍길동') " +
@@ -107,7 +108,7 @@ public class DmlQueryBuilderTest {
     }
 
     @Test
-    @DisplayName("pk로 테이블의 특정 레코드 조회")
+    @DisplayName("pk로 테이블의 특정 레코드를 조회한다.")
     void testCreateSelectSpecificColumnsQueryWithClauses() {
         String expectedQuery = "SELECT \"email\", \"nick_name\", \"id\" FROM \"users\" " +
                 "WHERE (\"id\" = 1)";
@@ -121,13 +122,29 @@ public class DmlQueryBuilderTest {
         EqualClause equalClause = new EqualClause(idColumn, 1);
 
         FindOption findOption = new FindOptionBuilder()
-                .where(equalClause)
                 .selectColumns(emailColumn, nameColumn, idColumn)
+                .where(equalClause)
                 .build();
 
         String resultQuery = queryBuilder.getSelectQuery(
                 PersonWithTransientAnnotation.class,
                 findOption
+        );
+
+        assertEquals(expectedQuery, resultQuery);
+    }
+
+    @Test
+    @DisplayName("pk로 테이블의 특정 레코드를 삭제한다.")
+    void testCreateDeleteQueryById() {
+        String expectedQuery = "DELETE FROM \"users\" WHERE (\"id\" = 1)";
+
+        EntityTable table = EntityFactory.createEmptySchema(PersonWithTransientAnnotation.class);
+        EntityColumn idColumn = getColumnByName(table, "id");
+
+        String resultQuery = queryBuilder.getDeleteQuery(
+                PersonWithTransientAnnotation.class,
+                new WhereClause(new EqualClause(idColumn, 1L))
         );
 
         assertEquals(expectedQuery, resultQuery);

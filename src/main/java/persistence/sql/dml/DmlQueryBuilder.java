@@ -6,6 +6,7 @@ import persistence.model.EntityTable;
 import persistence.model.meta.Value;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dml.clause.FindOption;
+import persistence.sql.dml.clause.WhereClause;
 
 import java.util.List;
 
@@ -61,5 +62,16 @@ public class DmlQueryBuilder {
             return query + " " + findOption.joinWhereClauses(dialect);
         }
         return query;
+    }
+
+    public String getDeleteQuery(Class<?> entityClass, WhereClause where) {
+        String DELETE_FORMAT = "DELETE FROM %s";
+
+        return null;
+
+//        EntityTable table = EntityFactory.createEmptySchema(entityClass);
+//        String tableName = table.getName();
+//
+//
     }
 }
