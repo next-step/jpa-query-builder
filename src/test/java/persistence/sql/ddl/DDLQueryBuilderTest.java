@@ -13,10 +13,10 @@ class DDLQueryBuilderTest {
     @Test
     public void testCreateTableQueryForPerson() {
         // Given: DDLQueryBuilder 인스턴스 생성
-        CreateTableQueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder();
+        QueryBuilderAdapter ddlQueryBuilder = new CreateTableQueryBuilder();
 
         // When: Person 클래스에 대한 CREATE TABLE 쿼리 생성
-        String createTableQuery = ddlQueryBuilder.createTable( Person.class);
+        String createTableQuery = ddlQueryBuilder.executeQuery( Person.class, DDLType.CREATE);
 
         // Expected: 예상되는 쿼리
         String expectedQuery = "CREATE TABLE users (" +
@@ -38,10 +38,10 @@ class DDLQueryBuilderTest {
     @Test
     public void testDropTableQueryForPerson() {
         // Given: DDLQueryBuilder 인스턴스 생성
-        DropTableQueryBuilder ddlQueryBuilder = new DropTableQueryBuilder();
+        QueryBuilderAdapter ddlQueryBuilder = new DropTableQueryBuilder();
 
         // When: Person 클래스에 대한 DROP TABLE 쿼리 생성
-        String dropTableQuery = ddlQueryBuilder.dropTable( Person.class);
+        String dropTableQuery = ddlQueryBuilder.executeQuery( Person.class, DDLType.DROP);
 
         // Expected: 예상되는 쿼리
         String expectedQuery = "DROP TABLE users;";
