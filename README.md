@@ -19,3 +19,16 @@
 + Table 어노테이션 정보 가져오기
 + GeneratedValue 어노테이션 정보 가져오기
 + Transient 어노테이션 정보 가져오기
+
+### 2단계 - QueryBuilder DML
++ Insert 쿼리 문자열 생성하기
++ FindAll 쿼리 문자열 생성하기
++ FindAll 호출 시 List로 응답하기
++ FindById 쿼리 문자열 생성하기
++ FindById 호출 시 단일 객체로 응답하기
++ Delete 쿼리 문자열 생성하기
++ Person 데이터를 전부 가져온다.
++ Person 1L 데이터를 가져온다.
++ Person 1L 데이터를 삭제한다.
++ Person 1L 데이터를 가져온다.
++ Person 데이터를 전체 가져온다.
