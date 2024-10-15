@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateTableQueryBuilder;
 import persistence.sql.ddl.DropTableQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
+import persistence.sql.dml.SelectQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -33,6 +34,15 @@ public class Application {
             String insertQuery = insertQueryBuilder.insert(person);
             logger.info(insertQuery);
             jdbcTemplate.execute(insertQuery); // Insert data
+
+            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+            String selectQuery = selectQueryBuilder.findAll(Person.class);
+            logger.info(selectQuery);
+            jdbcTemplate.execute(selectQuery); // Select data
+
+            String findOne = selectQueryBuilder.findById(Person.class, 1L);
+            logger.info(findOne);
+            jdbcTemplate.execute(findOne); // Select data
 
             DropTableQueryBuilder ddlQueryBuilder = new DropTableQueryBuilder();
             String dropTableQuery = DropTableQueryBuilder.dropTable( Person.class);

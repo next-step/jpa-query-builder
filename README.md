@@ -20,7 +20,7 @@
 
 ## Step 3 - QueryBuilder DML
 ### 요구 사항
-+ [ ] Person 클래스 정보를 바탕으로 insert 쿼리를 만들어본다.
-+ [ ] Person 클래스 정보를 바탕으로 select 쿼리를 만들어본다.(findAll)
++ [x] Person 클래스 정보를 바탕으로 insert 쿼리를 만들어본다.
++ [x] Person 클래스 정보를 바탕으로 select 쿼리를 만들어본다.(findAll)
 + [ ] Person 클래스 정보를 바탕으로 select 쿼리를 만들어본다.(findById)
 + [ ] Person 클래스 정보를 바탕으로 delete 쿼리를 만들어본다.
