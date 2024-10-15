@@ -1,8 +1,10 @@
-package orm.dsl.ddl;
+package orm.dsl;
 
 import orm.SQLDialect;
 import orm.TableEntity;
-import orm.dsl.QueryBuilder;
+import orm.dsl.step.ddl.CreateTableStep;
+import orm.dsl.step.ddl.DropTableStep;
+import orm.dsl.dialect.DialectStatementMap;
 
 import java.lang.reflect.InvocationTargetException;
 

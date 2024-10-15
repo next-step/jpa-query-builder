@@ -1,4 +1,4 @@
-package orm.dsl.ddl;
+package orm.dsl.step.ddl;
 
 import orm.dsl.QueryBuilder;
 

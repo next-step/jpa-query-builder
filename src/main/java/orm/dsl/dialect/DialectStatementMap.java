@@ -1,8 +1,10 @@
-package orm.dsl.ddl;
+package orm.dsl.dialect;
 
 import orm.SQLDialect;
-import orm.dsl.ddl.dialect.h2.H2CreateTableImpl;
-import orm.dsl.ddl.dialect.h2.H2DropTableImpl;
+import orm.dsl.ddl.CreateTableImpl;
+import orm.dsl.ddl.DropTableImpl;
+import orm.dsl.dialect.h2.H2CreateTableImpl;
+import orm.dsl.dialect.h2.H2DropTableImpl;
 
 import java.util.Map;
 
