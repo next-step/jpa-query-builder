@@ -55,10 +55,7 @@ public class QueryBuilderDDL {
             throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
         }
         sb.append("primary key (");
-        for (ColumnInfo column : primaryKey) {
-            sb.append(column.getName()).append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1);
+        sb.append(primaryKey.stream().map(ColumnInfo::getName).collect(Collectors.joining(", ")));
         sb.append(")");
         return sb.toString();
     }
