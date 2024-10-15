@@ -19,6 +19,13 @@
 - [x] 주어진 정보(@Entity, @Table, @Id, @Column, @Transient )를 바탕으로 insert 쿼리 만들어보기
 - [x] 주어진 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
 - [x] 주어진 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
-- [ ] 주어진 정보를 바탕으로 delete 쿼리 만들어보기
+- [x] 주어진 정보를 바탕으로 delete 쿼리 만들어보기
+
+
+## 4단계 요구사항
+- [x] find 구현
+- [ ] persist(insert) 구현
+- [ ] remove(delete) 구현
+- [ ] update 구현
 
 
