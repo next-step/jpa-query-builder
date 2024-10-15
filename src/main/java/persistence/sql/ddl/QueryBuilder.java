@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -22,7 +23,7 @@ public class QueryBuilder {
 
     private String generateColumnDefinitions(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
-        List<String> columns = Arrays.stream(fields).map(field -> "%s %s".formatted(field.getName(), this.mapFieldTypeToSQLType(field) + this.mapFieldAnnotationToSQLType((field)))).toList();
+        List<String> columns = Arrays.stream(fields).map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.mapFieldTypeToSQLType(field) + this.mapFieldAnnotationToSQLType((field)))).toList();
         return String.join(", ", columns);
     }
 
@@ -42,5 +43,13 @@ public class QueryBuilder {
             return " PRIMARY KEY";
         }
         return "";
+    }
+
+    private String getColumnNameFromAnnotation(Field field) {
+        if (!field.isAnnotationPresent(Column.class)) {
+            return "";
+        }
+        Column column = field.getAnnotation(Column.class);
+        return column.name();
     }
 }
