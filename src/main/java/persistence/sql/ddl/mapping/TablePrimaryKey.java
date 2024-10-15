@@ -32,7 +32,7 @@ public class TablePrimaryKey {
             GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
             return annotation.strategy();
         }
-        return GenerationType.AUTO;
+        return GenerationType.IDENTITY;
     }
 
     public TableColumn column() {

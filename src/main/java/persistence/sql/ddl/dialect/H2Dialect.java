@@ -7,7 +7,7 @@ public class H2Dialect implements Dialect {
 
     @Override
     public String getIdentityGenerationType(GenerationType type) {
-        if (GenerationType.AUTO == type) {
+        if (GenerationType.IDENTITY == type) {
             return "auto_increment";
         }
 
