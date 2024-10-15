@@ -2,18 +2,23 @@ package persistence.sql.ddl;
 
 import persistence.sql.ddl.model.DDLColumn;
 
-public class H2CreateQueryBuilder extends AbstractCreateQueryBuilder{
-
+public class H2CreateQueryBuilder extends AbstractCreateQueryBuilder {
     private static final String LEFT_PARENTHESIS = "(";
     private static final String RIGHT_PARENTHESIS = ")";
-
 
     public H2CreateQueryBuilder(Class<?> clazz) {
         super(clazz);
     }
 
     @Override
-    protected String generateColumnDefinitions() {
+    public String makeQuery() {
+        StringBuilder makeStringBuilder = new StringBuilder();
+        makeStringBuilder.append(super.createTableStatement());
+        makeStringBuilder.append(generateColumnDefinitions());
+        return makeStringBuilder.toString();
+    }
+
+    private String generateColumnDefinitions() {
         DDLColumn ddlColumns = new DDLColumn(super.clazz.getDeclaredFields());
 
         StringBuilder columnDefinitionStringBuilder = new StringBuilder();

@@ -27,10 +27,5 @@ public abstract class AbstractCreateQueryBuilder implements CreateQueryBuilder {
 
         return "CREATE TABLE IF NOT EXISTS " + tableName.getValue();
     }
-    protected abstract String generateColumnDefinitions();
 
-    @Override
-    public String makeQuery() {
-        return createTableStatement() + generateColumnDefinitions();
-    }
 }
