@@ -1,5 +1,6 @@
 package persistence.sql;
 
+import persistence.sql.clause.Clause;
 import persistence.sql.common.util.CamelToSnakeConverter;
 import persistence.sql.data.QueryType;
 import persistence.sql.ddl.impl.CreateQueryBuilder;
@@ -21,8 +22,8 @@ public class QueryBuilderFactory {
         store.put(QueryType.CREATE, CreateQueryBuilder.createDefault());
         store.put(QueryType.DROP, new DropQueryBuilder(CamelToSnakeConverter.getInstance()));
         store.put(QueryType.SELECT, new SelectQueryBuilder(CamelToSnakeConverter.getInstance()));
-        store.put(QueryType.INSERT, new InsertQueryBuilder(CamelToSnakeConverter.getInstance()));
-        store.put(QueryType.UPDATE, new UpdateQueryBuilder(CamelToSnakeConverter.getInstance()));
+        store.put(QueryType.INSERT, new InsertQueryBuilder());
+        store.put(QueryType.UPDATE, new UpdateQueryBuilder());
         store.put(QueryType.DELETE, new DeleteQueryBuilder(CamelToSnakeConverter.getInstance()));
     }
 
@@ -33,9 +34,9 @@ public class QueryBuilderFactory {
         return INSTANCE;
     }
 
-    public String buildQuery(QueryType queryType, MetadataLoader<?> metadataLoader, Object value) {
+    public String buildQuery(QueryType queryType, MetadataLoader<?> metadataLoader, Clause... clauses) {
         if (store.containsKey(queryType)) {
-            return store.get(queryType).build(metadataLoader, value);
+            return store.get(queryType).build(metadataLoader, clauses);
         }
 
         throw new IllegalArgumentException("Unsupported query type: " + queryType);

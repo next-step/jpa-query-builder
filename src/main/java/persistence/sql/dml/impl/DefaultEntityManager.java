@@ -1,6 +1,12 @@
 package persistence.sql.dml.impl;
 
+import jakarta.persistence.Id;
+import persistence.sql.clause.Clause;
 import persistence.sql.QueryBuilderFactory;
+import persistence.sql.clause.InsertColumnValueClause;
+import persistence.sql.clause.SetValueClause;
+import persistence.sql.clause.WhereConditionalClause;
+import persistence.sql.common.util.NameConverter;
 import persistence.sql.data.QueryType;
 import persistence.sql.dml.Database;
 import persistence.sql.dml.EntityManager;
@@ -19,9 +25,11 @@ public class DefaultEntityManager implements EntityManager {
     private static final Logger logger = Logger.getLogger(DefaultEntityManager.class.getName());
 
     private final Database database;
+    private final NameConverter nameConverter;
 
-    public DefaultEntityManager(Database database) {
+    public DefaultEntityManager(Database database, NameConverter nameConverter) {
         this.database = database;
+        this.nameConverter = nameConverter;
     }
 
     @Override
@@ -37,7 +45,9 @@ public class DefaultEntityManager implements EntityManager {
             return;
         }
 
-        String insertQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.INSERT, loader, entity);
+        InsertColumnValueClause clause = InsertColumnValueClause.newInstance(entity, nameConverter);
+
+        String insertQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.INSERT, loader, clause);
         database.executeUpdate(insertQuery);
     }
 
@@ -63,8 +73,13 @@ public class DefaultEntityManager implements EntityManager {
         }
 
         MetadataLoader<?> loader = new SimpleMetadataLoader<>(entity.getClass());
+        List<Field> fields = loader.getFieldAllByPredicate(field -> !field.isAnnotationPresent(Id.class));
 
-        String mergeQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.UPDATE, loader, entity);
+        Clause[] clauses = fields.stream()
+                .map(field -> SetValueClause.newInstance(field, entity, loader.getColumnName(field, nameConverter)))
+                .toArray(Clause[]::new);
+
+        String mergeQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.UPDATE, loader, clauses);
         database.executeUpdate(mergeQuery);
     }
 
@@ -74,9 +89,17 @@ public class DefaultEntityManager implements EntityManager {
             throw new IllegalArgumentException("Entity must not be null");
         }
 
-        MetadataLoader<?> loader = new SimpleMetadataLoader<>(entity.getClass());
 
-        String removeQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.DELETE, loader, entity);
+        MetadataLoader<?> loader = new SimpleMetadataLoader<>(entity.getClass());
+        Field pkField = loader.getPrimaryKeyField();
+        Object extractedValue = Clause.extractValue(pkField, entity);
+        String value = Clause.toColumnValue(extractedValue);
+
+        WhereConditionalClause clause = WhereConditionalClause.builder()
+                .column(loader.getColumnName(pkField, nameConverter))
+                .eq(value);
+
+        String removeQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.DELETE, loader, clause);
         database.executeUpdate(removeQuery);
     }
 
@@ -87,8 +110,13 @@ public class DefaultEntityManager implements EntityManager {
         }
 
         MetadataLoader<T> loader = new SimpleMetadataLoader<>(returnType);
+        String value = Clause.toColumnValue(primaryKey);
 
-        String findQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.SELECT, loader, primaryKey);
+        WhereConditionalClause clause = WhereConditionalClause.builder()
+                .column(loader.getColumnName(loader.getPrimaryKeyField(), nameConverter))
+                .eq(value);
+
+        String findQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.SELECT, loader, clause);
 
         return database.executeQuery(findQuery, resultSet -> {
             if (resultSet.next()) {
@@ -103,7 +131,7 @@ public class DefaultEntityManager implements EntityManager {
     public <T> List<T> findAll(Class<T> entityClass) {
         MetadataLoader<T> loader = new SimpleMetadataLoader<>(entityClass);
 
-        String findAllQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.SELECT, loader, null);
+        String findAllQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.SELECT, loader);
         try (ResultSet resultSet = database.executeQuery(findAllQuery)) {
 
             List<T> entities = new ArrayList<>();

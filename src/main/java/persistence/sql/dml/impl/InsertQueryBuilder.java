@@ -1,22 +1,17 @@
 package persistence.sql.dml.impl;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
-import persistence.sql.common.util.NameConverter;
-import persistence.sql.dml.MetadataLoader;
+import persistence.sql.clause.Clause;
 import persistence.sql.QueryBuilder;
+import persistence.sql.clause.InsertColumnValueClause;
+import persistence.sql.common.util.NameConverter;
 import persistence.sql.data.QueryType;
+import persistence.sql.dml.MetadataLoader;
 
-import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder implements QueryBuilder {
-    private final NameConverter nameConverter;
-
-    public InsertQueryBuilder(NameConverter nameConverter) {
-        this.nameConverter = nameConverter;
-    }
 
     @Override
     public QueryType queryType() {
@@ -29,27 +24,25 @@ public class InsertQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String build(MetadataLoader<?> loader, Object value) {
+    public String build(MetadataLoader<?> loader, Clause... clauses) {
         String tableName = loader.getTableName();
-        List<Field> existValueFields = getExistValueFields(loader, value);
+        if (clauses.length == 0) {
+            throw new UnsupportedOperationException("Conditional clauses are not supported for insert query");
+        }
 
-        String columns = existValueFields.stream()
-                .map(loader::getColumnName)
-                .map(nameConverter::convert)
+        List<Clause> insertColumnValueClauses = Arrays.stream(clauses)
+                .filter(clause -> clause instanceof InsertColumnValueClause).toList();
+
+        if (insertColumnValueClauses.isEmpty()) {
+            throw new UnsupportedOperationException("InsertColumnValueClause is required for insert query");
+        }
+
+        String columns = insertColumnValueClauses.getFirst().column();
+        String values = Arrays.stream(clauses)
+                .filter(clause -> clause instanceof InsertColumnValueClause)
+                .map(Clause::clause)
                 .collect(Collectors.joining(DELIMITER));
 
-        String values = existValueFields.stream().map(field -> {
-            Object columnValue = extractValue(field, value);
-            return toColumnValue(columnValue);
-        }).collect(Collectors.joining(DELIMITER));
-
-        return "INSERT INTO %s (%s) VALUES (%s)".formatted(tableName, columns, values);
-    }
-
-    private List<Field> getExistValueFields(MetadataLoader<?> loader, Object value) {
-        List<Field> fields = loader.getFieldAllByPredicate(field ->
-                !field.isAnnotationPresent(Id.class) && !field.isAnnotationPresent(Transient.class));
-
-        return fields.stream().filter(field -> extractValue(field, value) != null).toList();
+        return "INSERT INTO %s (%s) VALUES %s".formatted(tableName, columns, values);
     }
 }

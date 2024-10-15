@@ -46,25 +46,25 @@ public class SimpleMetadataLoader<T> implements MetadataLoader<T> {
     }
 
     @Override
-    public String getColumnName(int index) {
+    public String getColumnName(int index, NameConverter nameConverter) {
         Field declaredField = getField(index);
 
-        return getValueByField(declaredField);
+        return getColumnNameByField(declaredField, nameConverter);
     }
 
     @Override
-    public String getColumnName(Field field) {
+    public String getColumnName(Field field, NameConverter nameConverter) {
         Field foundField = Arrays.stream(clazz.getDeclaredFields())
                 .filter(this::isNotTransient)
                 .filter(field::equals)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Field not found"));
 
-        return getValueByField(foundField);
+        return getColumnNameByField(foundField, nameConverter);
     }
 
     @Nullable
-    private static String getValueByField(Field declaredField) {
+    private static String getColumnNameByField(Field declaredField, NameConverter nameConverter) {
         if (declaredField.isAnnotationPresent(Transient.class)) {
             return null;
         }
@@ -74,7 +74,7 @@ public class SimpleMetadataLoader<T> implements MetadataLoader<T> {
             return anno.name();
         }
 
-        return declaredField.getName();
+        return nameConverter.convert(declaredField.getName());
     }
 
     @Override
@@ -100,7 +100,7 @@ public class SimpleMetadataLoader<T> implements MetadataLoader<T> {
         int columnCount = getColumnCount();
 
         return IntStream.range(0, columnCount)
-                .mapToObj(this::getColumnName)
+                .mapToObj(index -> getColumnName(index, nameConverter))
                 .toList();
     }
 

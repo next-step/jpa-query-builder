@@ -1,9 +1,13 @@
 package persistence.sql.dml.impl;
 
-import persistence.sql.common.util.NameConverter;
-import persistence.sql.dml.MetadataLoader;
+import persistence.sql.clause.Clause;
+import persistence.sql.clause.ConditionalClause;
 import persistence.sql.QueryBuilder;
+import persistence.sql.common.util.NameConverter;
 import persistence.sql.data.QueryType;
+import persistence.sql.dml.MetadataLoader;
+
+import java.util.Arrays;
 
 public class DeleteQueryBuilder implements QueryBuilder {
     private final NameConverter nameConverter;
@@ -23,10 +27,24 @@ public class DeleteQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String build(MetadataLoader<?> loader, Object value) {
+    public String build(MetadataLoader<?> loader, Clause... clauses) {
         String tableName = loader.getTableName();
-        String whereClause = getWhereIdClause(loader, value);
+        StringBuilder query = new StringBuilder("DELETE FROM " + nameConverter.convert(tableName));
 
-        return "DELETE FROM %s WHERE %s".formatted(nameConverter.convert(tableName), whereClause);
+        if (clauses.length == 0) {
+            return query.toString();
+        }
+
+        ConditionalClause[] conditionalClauses = Arrays.stream(clauses)
+                .filter(clause -> clause instanceof ConditionalClause)
+                .map(clause -> (ConditionalClause) clause)
+                .toArray(ConditionalClause[]::new);
+
+        if (conditionalClauses.length > 0) {
+            query.append(" WHERE ");
+            query.append(getWhereClause(conditionalClauses));
+        }
+
+        return query.toString();
     }
 }

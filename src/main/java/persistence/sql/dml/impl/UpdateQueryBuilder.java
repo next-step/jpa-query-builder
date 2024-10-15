@@ -1,22 +1,17 @@
 package persistence.sql.dml.impl;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
-import persistence.sql.common.util.NameConverter;
-import persistence.sql.dml.MetadataLoader;
+import persistence.sql.clause.Clause;
+import persistence.sql.clause.ConditionalClause;
 import persistence.sql.QueryBuilder;
+import persistence.sql.clause.SetValueClause;
 import persistence.sql.data.QueryType;
+import persistence.sql.dml.MetadataLoader;
 
-import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UpdateQueryBuilder implements QueryBuilder {
-    private final NameConverter nameConverter;
-
-    public UpdateQueryBuilder(NameConverter nameConverter) {
-        this.nameConverter = nameConverter;
-    }
-
     @Override
     public QueryType queryType() {
         return QueryType.UPDATE;
@@ -28,25 +23,39 @@ public class UpdateQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String build(MetadataLoader<?> loader, Object value) {
+    public String build(MetadataLoader<?> loader, Clause... clauses) {
         String tableName = loader.getTableName();
-        String setClause = getSetClause(loader, value);
-        String whereClause = getWhereIdClause(loader, value);
+        String setClause = getSetClause(clauses);
+        String whereClause = getWhereClause(clauses);
+        StringBuilder query = new StringBuilder("UPDATE %s SET %s".formatted(tableName, setClause));
 
-        return "UPDATE %s SET %s WHERE %s".formatted(tableName, setClause, whereClause);
-    }
-
-    private String getSetClause(MetadataLoader<?> loader, Object value) {
-        StringBuilder sb = new StringBuilder();
-        List<Field> fields = loader.getFieldAllByPredicate(field -> !field.isAnnotationPresent(Id.class) && !field.isAnnotationPresent(Transient.class));
-
-        for (Field field : fields) {
-            String columnName = loader.getColumnName(field);
-            Object columnValue = extractValue(field, value);
-
-            sb.append("%s = %s, ".formatted(nameConverter.convert(columnName), toColumnValue(columnValue)));
+        if (whereClause != null && !whereClause.isBlank()) {
+            query.append(" WHERE ").append(whereClause);
         }
 
-        return sb.substring(0, sb.length() - 2);
+        return query.toString();
+    }
+
+    private String getWhereClause(Clause[] clauses) {
+        ConditionalClause[] conditionalClauses = Arrays.stream(clauses)
+                .filter(clause -> clause instanceof ConditionalClause)
+                .map(clause -> (ConditionalClause) clause)
+                .toArray(ConditionalClause[]::new);
+
+        return getWhereClause(conditionalClauses);
+    }
+
+    private String getSetClause(Clause... clauses) {
+        List<SetValueClause> setConditionalClauses = Arrays.stream(clauses)
+                .filter(clause -> clause instanceof SetValueClause)
+                .map(clause -> (SetValueClause) clause)
+                .toList();
+
+        if (setConditionalClauses.isEmpty()) {
+            throw new IllegalArgumentException("Set clause is required");
+        }
+        return setConditionalClauses.stream()
+                .map(SetValueClause::clause)
+                .collect(Collectors.joining(DELIMITER));
     }
 }

@@ -1,6 +1,7 @@
 package persistence.sql.ddl.impl;
 
 import jakarta.persistence.Transient;
+import persistence.sql.clause.Clause;
 import persistence.sql.QueryBuilder;
 import persistence.sql.common.util.CamelToSnakeConverter;
 import persistence.sql.common.util.NameConverter;
@@ -53,7 +54,7 @@ public class CreateQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String build(MetadataLoader<?> loader, Object value) {
+    public String build(MetadataLoader<?> loader, Clause... clauses) {
         String tableName = loader.getTableName();
         String columns = loader.getFieldAllByPredicate(field -> !field.isAnnotationPresent(Transient.class))
                 .stream().map(FieldNode::from)

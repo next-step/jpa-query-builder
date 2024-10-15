@@ -1,5 +1,6 @@
 package persistence.sql.ddl.impl;
 
+import persistence.sql.clause.Clause;
 import persistence.sql.QueryBuilder;
 import persistence.sql.common.util.NameConverter;
 import persistence.sql.data.QueryType;
@@ -23,7 +24,7 @@ public class DropQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public String build(MetadataLoader<?> loader, Object value) {
+    public String build(MetadataLoader<?> loader, Clause... clauses) {
         String tableName = loader.getTableName();
 
         return "DROP TABLE " + nameConverter.convert(tableName);

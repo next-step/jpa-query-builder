@@ -32,9 +32,9 @@ public interface MetadataLoader<T> {
     /**
      * 컬럼명을 조회해 반환한다.
      */
-    String getColumnName(int index);
+    String getColumnName(int index, NameConverter nameConverter);
 
-    String getColumnName(Field field);
+    String getColumnName(Field field, NameConverter nameConverter);
 
     /**
      * 필드명을 조회해 반환한다.
