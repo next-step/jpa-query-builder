@@ -1,5 +1,7 @@
 package persistence.sql.ddl.create.component.column;
 
+import jakarta.persistence.Column;
+
 import java.lang.reflect.Field;
 
 public class ColumnComponentBuilder {
@@ -14,9 +16,17 @@ public class ColumnComponentBuilder {
         ColumnComponentBuilder columnComponentBuilder = new ColumnComponentBuilder();
         columnComponentBuilder.componentBuilder
                 .append(INDENT)
-                .append(field.getName()).append(INDENT)
+                .append(getTableName(field)).append(INDENT)
                 .append(DataTypeConverter.convert(field.getType())).append(COMMA_NEW_LINE);
         return columnComponentBuilder;
+    }
+
+    private static String getTableName(Field field) {
+        if (!field.isAnnotationPresent(Column.class)) {
+            return field.getName();
+        }
+
+        return field.getAnnotation(Column.class).name();
     }
 
     /* TODO : append comment, nullable or not, etc. */
