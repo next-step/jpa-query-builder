@@ -64,14 +64,18 @@ public class DmlQueryBuilder {
         return query;
     }
 
-    public String getDeleteQuery(Class<?> entityClass, WhereClause where) {
+    public String getDeleteQuery(Class<?> entityClass, FindOption findOption) {
         String DELETE_FORMAT = "DELETE FROM %s";
 
-        return null;
+        EntityTable table = EntityFactory.createEmptySchema(entityClass);
+        String tableName = table.getName();
 
-//        EntityTable table = EntityFactory.createEmptySchema(entityClass);
-//        String tableName = table.getName();
-//
-//
+        String deleteSql = String.format(DELETE_FORMAT, dialect.getIdentifierQuoted(tableName));
+
+        String whereClauseSql = findOption.joinWhereClauses(dialect);
+        if (whereClauseSql.isEmpty()) {
+            return deleteSql;
+        }
+        return deleteSql + " " + whereClauseSql;
     }
 }

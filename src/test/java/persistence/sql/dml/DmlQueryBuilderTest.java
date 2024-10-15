@@ -10,7 +10,6 @@ import persistence.sql.dialect.H2Dialect;
 import persistence.sql.dml.clause.EqualClause;
 import persistence.sql.dml.clause.FindOption;
 import persistence.sql.dml.clause.FindOptionBuilder;
-import persistence.sql.dml.clause.WhereClause;
 import persistence.sql.fixture.PersonWithTransientAnnotation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -144,7 +143,9 @@ public class DmlQueryBuilderTest {
 
         String resultQuery = queryBuilder.getDeleteQuery(
                 PersonWithTransientAnnotation.class,
-                new WhereClause(new EqualClause(idColumn, 1L))
+                new FindOptionBuilder()
+                        .where(new EqualClause(idColumn, 1L))
+                        .build()
         );
 
         assertEquals(expectedQuery, resultQuery);

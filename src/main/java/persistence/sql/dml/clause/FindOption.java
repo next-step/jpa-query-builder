@@ -23,17 +23,6 @@ public class FindOption {
         return selectingColumns;
     }
 
-    public List<String> getSelectingColumnNames() {
-        String SELECT_ALL = "*";
-        List<String> selectingColumnNames = selectingColumns.stream()
-                .map(EntityColumn::getName)
-                .toList();
-
-        return selectingColumnNames.isEmpty()
-                ? List.of(SELECT_ALL)
-                : selectingColumnNames;
-    }
-
     public String joinWhereClauses(Dialect dialect) {
         String whereQuery = "WHERE ";
 
