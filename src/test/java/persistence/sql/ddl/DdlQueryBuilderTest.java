@@ -1,10 +1,11 @@
 package persistence.sql.ddl;
 
+import database.H2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.dialect.DialectFactory;
 import persistence.sql.fixture.Person;
-import persistence.sql.dialect.H2Dialect;
 import persistence.sql.fixture.PersonWithAnnotations;
 import persistence.sql.fixture.PersonWithTransientAnnotation;
 
@@ -15,7 +16,7 @@ public class DdlQueryBuilderTest {
 
     @BeforeEach
     void setUp() {
-        queryBuilder = new DdlQueryBuilder(new H2Dialect());
+        queryBuilder = new DdlQueryBuilder(DialectFactory.create(H2.class));
     }
 
     @Test()
@@ -26,7 +27,7 @@ public class DdlQueryBuilderTest {
                 "\"name\" varchar(255) NULL, " +
                 "\"age\" int NULL, " +
                 "PRIMARY KEY (\"id\"));";
-        String resultQuery = queryBuilder.getCreateTableQuery(Person.class);
+        String resultQuery = queryBuilder.buildCreateTableQuery(Person.class);
 
         assertEquals(expectedQuery, resultQuery);
     }
@@ -40,7 +41,7 @@ public class DdlQueryBuilderTest {
                 "\"old\" int NULL, " +
                 "\"email\" varchar(255) NOT NULL, " +
                 "PRIMARY KEY (\"id\"));";
-        String resultQuery = queryBuilder.getCreateTableQuery(PersonWithAnnotations.class);
+        String resultQuery = queryBuilder.buildCreateTableQuery(PersonWithAnnotations.class);
 
         assertEquals(expectedQuery, resultQuery);
     }
@@ -54,7 +55,7 @@ public class DdlQueryBuilderTest {
                 "\"old\" int NULL, " +
                 "\"email\" varchar(100) NOT NULL, " +
                 "PRIMARY KEY (\"id\"));";
-        String resultQuery = queryBuilder.getCreateTableQuery(PersonWithTransientAnnotation.class);
+        String resultQuery = queryBuilder.buildCreateTableQuery(PersonWithTransientAnnotation.class);
 
         assertEquals(expectedQuery, resultQuery);
     }
@@ -63,7 +64,7 @@ public class DdlQueryBuilderTest {
     @DisplayName("DROP TABLE 쿼리를 생성한다.")
     void dropDdlTest() {
         String expectedQuery = "DROP TABLE IF EXISTS \"users\"";
-        String resultQuery = queryBuilder.getDropTableQuery(PersonWithTransientAnnotation.class);
+        String resultQuery = queryBuilder.buildDropTableQuery(PersonWithTransientAnnotation.class);
 
         assertEquals(expectedQuery, resultQuery);
     }

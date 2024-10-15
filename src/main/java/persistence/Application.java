@@ -6,7 +6,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DdlQueryBuilder;
-import persistence.sql.dialect.H2Dialect;
+import persistence.sql.dialect.DialectFactory;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -14,7 +14,7 @@ public class Application {
     public static void main(String[] args) {
         logger.info("Starting application...");
 
-        DdlQueryBuilder queryBuilder = new DdlQueryBuilder(new H2Dialect());
+        DdlQueryBuilder queryBuilder = new DdlQueryBuilder(DialectFactory.create(H2.class));
 
         try {
             final DatabaseServer server = new H2();
@@ -22,8 +22,8 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            jdbcTemplate.execute(queryBuilder.getCreateTableQuery(ExampleEntity.class));
-            jdbcTemplate.execute(queryBuilder.getDropTableQuery(ExampleEntity.class));
+            jdbcTemplate.execute(queryBuilder.buildCreateTableQuery(ExampleEntity.class));
+            jdbcTemplate.execute(queryBuilder.buildDropTableQuery(ExampleEntity.class));
 
 //            server.stop();
         } catch (Exception e) {

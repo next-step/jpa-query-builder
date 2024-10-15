@@ -1,12 +1,13 @@
 package persistence.sql.dml;
 
+import database.H2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.model.EntityColumn;
 import persistence.model.EntityFactory;
 import persistence.model.EntityTable;
-import persistence.sql.dialect.H2Dialect;
+import persistence.sql.dialect.DialectFactory;
 import persistence.sql.dml.clause.EqualClause;
 import persistence.sql.dml.clause.FindOption;
 import persistence.sql.dml.clause.FindOptionBuilder;
@@ -19,7 +20,7 @@ public class DmlQueryBuilderTest {
 
     @BeforeEach
     void setup() {
-        queryBuilder = new DmlQueryBuilder(new H2Dialect());
+        queryBuilder = new DmlQueryBuilder(DialectFactory.create(H2.class));
     }
 
     @Test
@@ -32,7 +33,7 @@ public class DmlQueryBuilderTest {
         PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
                 1L, "홍길동", 20, "test@test.com", 1
         );
-        String resultQuery = queryBuilder.getInsertQuery(user);
+        String resultQuery = queryBuilder.buildInsertQuery(user);
 
         assertEquals(expectedQuery, resultQuery);
     }
@@ -47,7 +48,7 @@ public class DmlQueryBuilderTest {
         PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
                 "홍길동", 20, "test@test.com", 1
         );
-        String resultQuery = queryBuilder.getInsertQuery(user);
+        String resultQuery = queryBuilder.buildInsertQuery(user);
 
         assertEquals(expectedQuery, resultQuery);
     }
@@ -60,7 +61,7 @@ public class DmlQueryBuilderTest {
                 "VALUES (NULL, NULL, 'test@test.com')";
 
         PersonWithTransientAnnotation user = new PersonWithTransientAnnotation("test@test.com");
-        String resultQuery = queryBuilder.getInsertQuery(user);
+        String resultQuery = queryBuilder.buildInsertQuery(user);
 
         assertEquals(expectedQuery, resultQuery);
     }
@@ -72,7 +73,7 @@ public class DmlQueryBuilderTest {
 
         FindOption findOption = new FindOptionBuilder().build();
 
-        String resultQuery =  queryBuilder.getSelectQuery(
+        String resultQuery =  queryBuilder.buildSelectQuery(
                 PersonWithTransientAnnotation.class,
                 findOption
         );
@@ -98,7 +99,7 @@ public class DmlQueryBuilderTest {
                 .where(equalClause3)
                 .build();
 
-        String resultQuery = queryBuilder.getSelectQuery(
+        String resultQuery = queryBuilder.buildSelectQuery(
                 PersonWithTransientAnnotation.class,
                 findOption
         );
@@ -125,7 +126,7 @@ public class DmlQueryBuilderTest {
                 .where(equalClause)
                 .build();
 
-        String resultQuery = queryBuilder.getSelectQuery(
+        String resultQuery = queryBuilder.buildSelectQuery(
                 PersonWithTransientAnnotation.class,
                 findOption
         );
@@ -141,7 +142,7 @@ public class DmlQueryBuilderTest {
         EntityTable table = EntityFactory.createEmptySchema(PersonWithTransientAnnotation.class);
         EntityColumn idColumn = getColumnByName(table, "id");
 
-        String resultQuery = queryBuilder.getDeleteQuery(
+        String resultQuery = queryBuilder.buildDeleteQuery(
                 PersonWithTransientAnnotation.class,
                 new FindOptionBuilder()
                         .where(new EqualClause(idColumn, 1L))

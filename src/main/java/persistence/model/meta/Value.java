@@ -5,11 +5,8 @@ import java.lang.reflect.Field;
 public class Value {
     private Object value = null;
 
-    private Class<?> type;
-
-    private Value(Object value, Class<?> type) {
+    private Value(Object value) {
         this.value = value;
-        this.type = type;
     }
 
     private Value() {
@@ -22,8 +19,7 @@ public class Value {
             if (value == null) {
                 return new Value();
             }
-            Class<?> type = field.getType();
-            return new Value(value, type);
+            return new Value(value);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -31,10 +27,6 @@ public class Value {
 
     public Object getValue() {
         return value;
-    }
-
-    public Class<?> getType() {
-        return type;
     }
 
     public Boolean isNull() {
