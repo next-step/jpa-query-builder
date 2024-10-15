@@ -5,6 +5,7 @@ import persistence.sql.ddl.Person;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,11 +23,14 @@ class EntityColumnValueTest {
                 .map(field -> new EntityColumnValue(field, person))
                 .collect(Collectors.toList());
 
-        assertAll(() -> {
-            assertTrue(entityColumnValues.stream().anyMatch(x -> x.getValue().equals(name)));
-            assertTrue(entityColumnValues.stream().anyMatch(x -> x.getValue().equals(String.valueOf(age))));
-            assertTrue(entityColumnValues.stream().anyMatch(x -> x.getValue().equals(email)));
-        });
+        List<String> fieldValues = entityColumnValues.stream()
+                .map(EntityColumnValue::getValueInClause)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        assertTrue(fieldValues.stream().anyMatch(x -> x.equals(String.format("'%s'", name))));
+        assertTrue(fieldValues.stream().anyMatch(x -> x.equals(String.valueOf(age))));
+        assertTrue(fieldValues.stream().anyMatch(x -> x.equals(String.format("'%s'", email))));
     }
 
 }

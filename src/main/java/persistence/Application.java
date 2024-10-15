@@ -47,9 +47,7 @@ public class Application {
             });
 
             DeleteQueryBuilder deleteQueryBuilder = new H2DeleteQueryBuilder(getByIdPerson);
-            String delete = deleteQueryBuilder.delete();
-            System.out.println("delete = " + delete);
-//            jdbcTemplate.execute(deleteQueryBuilder.delete());
+            jdbcTemplate.execute(deleteQueryBuilder.delete());
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

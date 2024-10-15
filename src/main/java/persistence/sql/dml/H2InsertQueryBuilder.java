@@ -7,6 +7,7 @@ import persistence.sql.model.EntityColumnName;
 import persistence.sql.model.EntityColumnValue;
 import persistence.sql.model.TableName;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,12 @@ public class H2InsertQueryBuilder implements InsertQueryBuilder {
         return Arrays.stream(object.getClass().getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .filter(field -> !field.isAnnotationPresent(GeneratedValue.class))
-                .map(field -> new EntityColumnValue(field, object).getValue())
+                .map(field -> getValueInClause(object, field))
                 .collect(Collectors.joining(", "));
+    }
+
+    private String getValueInClause(Object object, Field field) {
+        EntityColumnValue entityColumnValue = new EntityColumnValue(field, object);
+        return entityColumnValue.getValueInClause();
     }
 }

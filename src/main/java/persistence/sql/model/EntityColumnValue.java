@@ -12,13 +12,19 @@ public class EntityColumnValue {
         this.object = object;
     }
 
-    public String getValue() {
+    public String getValueInClause() {
         field.setAccessible(true);
         try {
             Object fieldObject = field.get(object);
+
             if (field.get(object) instanceof String) {
                 return String.format("'%s'", String.valueOf(fieldObject));
             }
+
+            if (field.get(object) == null) {
+                return null;
+            }
+
             return String.valueOf(fieldObject);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("해당 객체에 접근할 수 없습니다.");

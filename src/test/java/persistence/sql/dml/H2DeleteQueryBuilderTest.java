@@ -11,16 +11,16 @@ class H2DeleteQueryBuilderTest {
 
     @Test
     void DELETE_쿼리_생성() {
-        DeleteQueryBuilder deleteQueryBuilder = new H2DeleteQueryBuilder(Person.class);
-        String delete = deleteQueryBuilder.delete();
-        assertThat(deleteQueryBuilder.delete()).isEqualTo("drop table users");
+        Person person = new Person(1L, "name", 1, "email@email.com");
+        DeleteQueryBuilder deleteQueryBuilder = new H2DeleteQueryBuilder(person);
+        assertThat(deleteQueryBuilder.delete()).isEqualTo("DELETE FROM users WHERE id=1");
     }
 
     @Test
     void 객체_생성시_Null_일_경우() {
         assertThatThrownBy(() -> new H2DeleteQueryBuilder(null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ExceptionUtil.CLASS_NULL_MESSAGE);
+                .hasMessage(ExceptionUtil.OBJECT_NULL_MESSAGE);
     }
 
 }
