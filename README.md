@@ -12,7 +12,9 @@
 
 ### 1-2. QueryBuilder DDL
 
-- [ ] @Entity 애너테이션으로 테이블 스캔하는 스캐너 구현
-- [ ] DDL Query를 구성하는 열 정보, 제약조건 정보 컴포넌트화
-- [ ] DDL Query 컴포넌트 조합하는 Query Builder 구현
-- [ ] 테이블 스캐너에서 DDL Query 빌드하는 로직 구현
+- [x] @Entity 애너테이션으로 테이블 스캔하는 스캐너 구현
+- [x] DDL Query를 구성하는 열 정보, 제약조건 정보 컴포넌트화
+- [x] DDL Query 컴포넌트 조합하는 Query Builder 구현
+- [x] 테이블 스캐너에서 DDL Query 빌드하는 로직 구현
+- [x] @Id, @GeneratedValue, @Column(name, nullable), @Transient 적용
+- [x] CREATE, DROP 쿼리 빌더 구현
