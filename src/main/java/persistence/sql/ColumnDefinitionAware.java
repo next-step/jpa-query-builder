@@ -1,5 +1,7 @@
 package persistence.sql;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
@@ -25,9 +27,14 @@ public interface ColumnDefinitionAware {
                 .orElseThrow(() -> new IllegalArgumentException("Field not found"));
 
         if (value instanceof String) {
-            return "'" + value + "'";
+            return wrapQuotationMark(value);
         }
 
         return value.toString();
+    }
+
+    @NotNull
+    private static String wrapQuotationMark(Object value) {
+        return "'" + value + "'";
     }
 }
