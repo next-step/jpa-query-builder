@@ -53,4 +53,20 @@ class EntityManagerImplTest {
                 () -> assertThat(expectPerson.getName()).isEqualTo(resultPerson.getName())
         );
     }
+
+    @Test
+    @DisplayName("EntityManager의 persist구현")
+    void entityManager_persist() {
+        Person expectPerson = new Person(2L, "yang2", 25, "rhfpdk92@naver.com");
+        Object persist = entityManager.persist(expectPerson);
+        Person resultPerson = entityManager.find(Person.class, 2L);
+
+        assertAll(
+                () -> assertThat(expectPerson.getAge()).isEqualTo(resultPerson.getAge()),
+                () -> assertThat(expectPerson.getEmail()).isEqualTo(resultPerson.getEmail()),
+                () -> assertThat(expectPerson.getId()).isEqualTo(resultPerson.getId()),
+                () -> assertThat(expectPerson.getIndex()).isEqualTo(resultPerson.getIndex()),
+                () -> assertThat(expectPerson.getName()).isEqualTo(resultPerson.getName())
+        );
+    }
 }
