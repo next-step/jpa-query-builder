@@ -58,7 +58,9 @@ class EntityManagerImplTest {
     @DisplayName("EntityManager의 persist구현")
     void entityManager_persist() {
         Person expectPerson = new Person(2L, "yang2", 25, "rhfpdk92@naver.com");
-        Object persist = entityManager.persist(expectPerson);
+
+        entityManager.persist(expectPerson);
+
         Person resultPerson = entityManager.find(Person.class, 2L);
 
         assertAll(
