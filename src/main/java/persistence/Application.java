@@ -10,6 +10,7 @@ import persistence.sql.H2Dialect;
 import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.Person;
 import persistence.sql.ddl.query.DropQueryBuilder;
+import persistence.sql.dml.query.DeleteByIdQueryBuilder;
 import persistence.sql.dml.query.InsertQueryBuilder;
 import persistence.sql.dml.query.SelectAllQueryBuilder;
 import persistence.sql.dml.query.SelectByIdQueryBuilder;
@@ -29,17 +30,20 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             // create table
-            testCreate(jdbcTemplate, testClass);
+            create(jdbcTemplate, testClass);
 
             // test insert and select
-            testInsert(jdbcTemplate, testClass);
-            testSelect(jdbcTemplate, testClass);
-            testSelectById(jdbcTemplate, testClass, 1L);
-            testSelectById(jdbcTemplate, testClass, 2L);
-            testSelectById(jdbcTemplate, testClass, 3L);
+            insert(jdbcTemplate, testClass);
+            selectAll(jdbcTemplate, testClass);
+            selectById(jdbcTemplate, testClass, 1L);
+            selectById(jdbcTemplate, testClass, 2L);
+            selectById(jdbcTemplate, testClass, 3L);
+
+            deleteById(jdbcTemplate, testClass, 1L);
+            selectAll(jdbcTemplate, testClass);
 
             // drop table
-            testDrop(jdbcTemplate);
+            drop(jdbcTemplate);
 
             server.stop();
         } catch (Exception e) {
@@ -49,12 +53,12 @@ public class Application {
         }
     }
 
-    private static void testCreate(JdbcTemplate jdbcTemplate, Class<?> testClass) {
+    private static void create(JdbcTemplate jdbcTemplate, Class<?> testClass) {
         CreateQueryBuilder createQuery = new CreateQueryBuilder(new H2Dialect());
         jdbcTemplate.execute(createQuery.build(testClass));
     }
 
-    private static void testDrop(JdbcTemplate jdbcTemplate) {
+    private static void drop(JdbcTemplate jdbcTemplate) {
         DropQueryBuilder dropQuery = new DropQueryBuilder();
         String build = dropQuery.build(Person.class);
         logger.info("Drop query: {}", build);
@@ -63,7 +67,7 @@ public class Application {
 //            jdbcTemplate.execute("select * from users");
     }
 
-    private static void testSelect(JdbcTemplate jdbcTemplate, Class<?> testClass) {
+    private static void selectAll(JdbcTemplate jdbcTemplate, Class<?> testClass) {
         SelectAllQueryBuilder selectAllQuery = new SelectAllQueryBuilder();
         String query = selectAllQuery.build(testClass);
 
@@ -80,7 +84,7 @@ public class Application {
         }
     }
 
-    private static void testSelectById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
+    private static void selectById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
         SelectByIdQueryBuilder selectByIdQueryBuilder = new SelectByIdQueryBuilder();
         String query = selectByIdQueryBuilder.build(testClass);
         query = query.replace("?", id.toString());
@@ -98,7 +102,7 @@ public class Application {
         }
     }
 
-    private static void testInsert(JdbcTemplate jdbcTemplate, Class<?> testClass) {
+    private static void insert(JdbcTemplate jdbcTemplate, Class<?> testClass) {
         InsertQueryBuilder insertQuery = new InsertQueryBuilder();
         Person person1 = new Person(1L, "a", 10, "aaa@gmail.com", 1);
         Person person2 = new Person(2L, "b", 20, "bbb@gmail.com", 2);
@@ -113,5 +117,15 @@ public class Application {
         jdbcTemplate.execute(query3);
 
         logger.info("Data inserted successfully!");
+    }
+
+    private static void deleteById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
+        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder();
+        String query = deleteByIdQueryBuilder.build(testClass);
+        query = query.replace("?", id.toString());
+
+        jdbcTemplate.execute(query);
+
+        logger.info("Data deleted successfully!");
     }
 }

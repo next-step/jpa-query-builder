@@ -1,6 +1,6 @@
 package persistence.sql.dml.query;
 
-import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.QueryBuilder;
 import persistence.sql.definition.TableDefinition;
 
 public class SelectByIdQueryBuilder implements QueryBuilder {

@@ -1,6 +1,7 @@
 package persistence.sql.dml.query;
 
 import persistence.sql.ColumnDefinitionAware;
+import persistence.sql.DataManipulationQueryBuilder;
 import persistence.sql.definition.TableDefinition;
 
 public class InsertQueryBuilder implements DataManipulationQueryBuilder {

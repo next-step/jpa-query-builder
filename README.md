@@ -41,4 +41,4 @@
   - [x] column clause와 value clause를 나누어 작성한다. 
 - [x] Person 정보를 바탕으로 select * (findAll) 구현해보기
 - [x] Person 정보를 바탕으로 select * where (findById) 구현해보기
-- [ ] Person 정보를 바탕으로 delete 구현해보기
+- [x] Person 정보를 바탕으로 delete 구현해보기

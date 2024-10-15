@@ -1,8 +1,7 @@
 package persistence.sql.ddl.query;
 
-import persistence.sql.Queryable;
 import persistence.sql.Dialect;
-import persistence.sql.ddl.QueryBuilder;
+import persistence.sql.QueryBuilder;
 import persistence.sql.definition.TableDefinition;
 import persistence.sql.definition.TableId;
 
