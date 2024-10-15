@@ -2,10 +2,13 @@ package persistence;
 
 import database.DatabaseServer;
 import database.H2;
-import persistence.sql.ddl.*;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.*;
+import persistence.sql.dml.*;
+
+import java.util.List;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -21,8 +24,30 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             jdbcTemplate.execute(createQueryBuilder.makeQuery());
-            jdbcTemplate.execute(dropQueryBuilder.makeQuery());
-            
+
+            Person person = new Person("name", 10, "test@email.com", 1);
+            InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
+            jdbcTemplate.execute(insertQueryBuilder.makeQuery());
+
+            SelectQueryBuilder selectQueryBuilder = new H2SelectQueryBuilder(Person.class);
+            List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(), resultSet -> {
+                String email = resultSet.getString("email");
+                int age = resultSet.getInt("old");
+                String nickname = resultSet.getString("nick_name");
+                return new Person(nickname, age, email, 0);
+            });
+
+
+            Person getByIdPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(1L), resultSet -> {
+                Long id = resultSet.getLong("id");
+                String email = resultSet.getString("email");
+                int age = resultSet.getInt("old");
+                String nickname = resultSet.getString("nick_name");
+                return new Person(id, nickname, age, email);
+            });
+
+            DeleteQueryBuilder deleteQueryBuilder = new H2DeleteQueryBuilder(getByIdPerson);
+            jdbcTemplate.execute(deleteQueryBuilder.delete());
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

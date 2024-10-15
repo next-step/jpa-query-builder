@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
-import persistence.sql.ddl.model.TableName;
+import persistence.sql.model.TableName;
 
 public abstract class AbstractCreateQueryBuilder implements CreateQueryBuilder {
     protected final Class<?> clazz;
@@ -25,12 +25,7 @@ public abstract class AbstractCreateQueryBuilder implements CreateQueryBuilder {
         stringBuilder.append(SPACE);
         stringBuilder.append(tableName.getValue());
 
-        return "CREATE TABLE " + clazz.getSimpleName();
+        return "CREATE TABLE IF NOT EXISTS " + tableName.getValue();
     }
-    protected abstract String generateColumnDefinitions();
 
-    @Override
-    public String makeQuery() {
-        return createTableStatement() + generateColumnDefinitions();
-    }
 }

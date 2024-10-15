@@ -1,4 +1,4 @@
-package persistence.sql.ddl.model;
+package persistence.sql.model;
 
 import jakarta.persistence.Table;
 import persistence.sql.ddl.ExceptionUtil;

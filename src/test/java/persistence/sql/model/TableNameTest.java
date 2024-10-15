@@ -1,12 +1,12 @@
-package persistence.sql.ddl.model;
+package persistence.sql.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
+import persistence.sql.model.TableName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("테이블 이름 Test")
 class TableNameTest {
