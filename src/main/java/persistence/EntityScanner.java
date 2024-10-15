@@ -2,6 +2,7 @@ package persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import persistence.sql.ddl.create.DdlCreateQueryBuilder;
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
 import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
@@ -63,6 +64,9 @@ public class EntityScanner {
         Field[] fields = entityClass.getDeclaredFields();
         DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
         for (Field field : fields) {
+            if (field.isAnnotationPresent(Transient.class)) {
+                continue;
+            }
             queryBuilder.add(ColumnComponentBuilder.from(field));
             queryBuilder.add(ConstraintComponentBuilder.from(field));
         }
