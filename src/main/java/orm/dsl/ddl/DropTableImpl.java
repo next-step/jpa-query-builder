@@ -2,6 +2,7 @@ package orm.dsl.ddl;
 
 import orm.TableEntity;
 import orm.dsl.QueryBuilder;
+import orm.dsl.step.ddl.DropTableStep;
 
 public abstract class DropTableImpl<ENTITY> implements DropTableStep {
 

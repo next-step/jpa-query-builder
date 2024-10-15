@@ -5,7 +5,8 @@ import orm.TableEntity;
 import orm.TableField;
 import orm.TablePrimaryField;
 import orm.dsl.QueryBuilder;
-import orm.dsl.ddl.dialect.h2.ColumnTypeMapper;
+import orm.dsl.dialect.h2.ColumnTypeMapper;
+import orm.dsl.step.ddl.CreateTableStep;
 import orm.exception.InvalidIdGenerationException;
 
 import java.util.StringJoiner;

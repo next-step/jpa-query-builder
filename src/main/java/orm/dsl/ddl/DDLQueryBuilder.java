@@ -1,19 +1,19 @@
 package orm.dsl.ddl;
 
+import orm.QueryProvider;
 import orm.SQLDialect;
 import orm.TableEntity;
-import orm.dsl.ddl.dialect.h2.H2DropTableImpl;
+import orm.dsl.ImplQueryBuilder;
+import orm.dsl.step.ddl.CreateTableStep;
+import orm.dsl.step.ddl.DropTableStep;
 import orm.settings.JpaSettings;
-import orm.settings.SnakeForPropertyNamingStrategy;
 
-public class DDLQueryBuilder {
+public class DDLQueryBuilder implements QueryProvider {
 
     private final JpaSettings settings;
 
     public DDLQueryBuilder() {
-        this.settings = new JpaSettings()
-                .withDialect(SQLDialect.H2)
-                .withNamingStrategy(new SnakeForPropertyNamingStrategy());
+        this.settings = JpaSettings.ofDefault();
     }
 
     public DDLQueryBuilder(JpaSettings settings) {
