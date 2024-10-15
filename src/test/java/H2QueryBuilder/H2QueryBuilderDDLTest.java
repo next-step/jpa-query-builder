@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class H2QueryBuilderDDLTest {
-    @DisplayName("create쿼리 검증 1")
+    @DisplayName("create 쿼리 검증 1")
     @Test
     void confirmIdAnnotationTest() {
         //given
@@ -29,7 +29,7 @@ class H2QueryBuilderDDLTest {
         );
     }
 
-    @DisplayName("create쿼리 검증 2")
+    @DisplayName("create 쿼리 검증 2")
     @Test
     void notExistColumnAnnotationTest() {
         //given
@@ -54,7 +54,7 @@ class H2QueryBuilderDDLTest {
         );
     }
 
-    @DisplayName("create쿼리 검증 3")
+    @DisplayName("create 쿼리 검증 3")
     @Test
     void existGeneratedValueAnnotationOverTwoTest() {
         //given
@@ -84,7 +84,7 @@ class H2QueryBuilderDDLTest {
         );
     }
 
-    @DisplayName("drop쿼리 검증 1")
+    @DisplayName("drop 쿼리 검증 1")
     @Test
     void createDropQueryTest() {
         //given
