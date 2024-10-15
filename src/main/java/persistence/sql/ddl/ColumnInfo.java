@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ColumnInfo {
-
     private String name;
     private ColumnType columnType;
     private boolean primaryKey;
@@ -75,7 +74,7 @@ public class ColumnInfo {
         return !transientAnnotaion;
     }
 
-    public String generateQuery() {
+    public String generateColumnQuery() {
         StringBuilder sb = new StringBuilder();
         sb.append(name).append(" ");
         sb.append(columnType.getQueryDefinition());
