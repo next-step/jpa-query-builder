@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
-import persistence.sql.ddl.model.TableName;
+import persistence.sql.model.TableName;
 
 public abstract class AbstractCreateQueryBuilder implements CreateQueryBuilder {
     protected final Class<?> clazz;

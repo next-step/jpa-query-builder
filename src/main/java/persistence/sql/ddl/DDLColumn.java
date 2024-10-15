@@ -1,4 +1,4 @@
-package persistence.sql.ddl.model;
+package persistence.sql.ddl;
 
 import jakarta.persistence.*;
 

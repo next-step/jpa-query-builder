@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.model.TableName;
+import persistence.sql.model.TableName;
 
 import java.util.List;
 

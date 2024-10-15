@@ -1,7 +1,5 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.model.DDLColumn;
-
 public class H2CreateQueryBuilder extends AbstractCreateQueryBuilder {
     private static final String LEFT_PARENTHESIS = "(";
     private static final String RIGHT_PARENTHESIS = ")";

@@ -2,6 +2,7 @@ package persistence.sql.ddl.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.DDLColumn;
 import persistence.sql.ddl.Person;
 
 import java.lang.reflect.Field;
