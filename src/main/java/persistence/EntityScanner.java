@@ -6,6 +6,7 @@ import jakarta.persistence.Transient;
 import persistence.sql.ddl.create.DdlCreateQueryBuilder;
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
 import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
+import persistence.sql.ddl.drop.DdlDropQueryBuilder;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -60,6 +61,12 @@ public class EntityScanner {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getDdlDropQueries() {
+        return this.entityClasses.stream()
+                .map(this::generateDdlDropQuery)
+                .collect(Collectors.toList());
+    }
+
     private String generateDdlCreateQuery(Class<?> entityClass) {
         Field[] fields = entityClass.getDeclaredFields();
         DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
@@ -71,6 +78,11 @@ public class EntityScanner {
             queryBuilder.add(ConstraintComponentBuilder.from(field));
         }
         return queryBuilder.build(getNameFromClass(entityClass));
+    }
+
+    private String generateDdlDropQuery(Class<?> entityClass) {
+        DdlDropQueryBuilder ddlDropQueryBuilder = DdlDropQueryBuilder.newInstance();
+        return ddlDropQueryBuilder.build(getNameFromClass(entityClass));
     }
 
     private String getNameFromClass(Class<?> entityClass) {

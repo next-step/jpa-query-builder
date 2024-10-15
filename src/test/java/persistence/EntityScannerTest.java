@@ -14,7 +14,7 @@ public class EntityScannerTest {
 
     @Test
     @DisplayName("엔티티 스캐너 스캔 테스트")
-    void createBasicDdl() throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+    void entityScanningTest() throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
         EntityScanner entityScanner = new EntityScanner();
         entityScanner.scan("example.entity");
 
@@ -28,11 +28,20 @@ public class EntityScannerTest {
     }
 
     @Test
-    @DisplayName("엔티티 스캔 > DDL 쿼리 생성")
-    void createBasicDdlQueries() throws ClassNotFoundException {
+    @DisplayName("엔티티 스캔 > DDL CREATE 쿼리 생성")
+    void createDdlCreateQueriesTest() throws ClassNotFoundException {
         EntityScanner entityScanner = new EntityScanner();
         entityScanner.scan("example.entity");
         List<String> ddlCreateQueries = entityScanner.getDdlCreateQueries();
-        logger.debug("DDL Create queries :\n{}", ddlCreateQueries);
+        logger.debug("DDL CREATE QUERIES :\n{}", ddlCreateQueries);
+    }
+
+    @Test
+    @DisplayName("엔티티 스캔 > DDL DROP 쿼리 생성")
+    void createDdlDropQueriesTest() throws ClassNotFoundException {
+        EntityScanner entityScanner = new EntityScanner();
+        entityScanner.scan("example.entity");
+        List<String> ddlDropQueries = entityScanner.getDdlDropQueries();
+        logger.debug("DDL DROP QUERIES :\n{}", ddlDropQueries);
     }
 }

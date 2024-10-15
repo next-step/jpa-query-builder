@@ -9,13 +9,10 @@ import java.util.List;
 public class DdlCreateQueryBuilder {
     private static final String COMMA_NEW_LINE = ",\n";
 
-    private final StringBuilder query = new StringBuilder();
     private final List<ColumnComponentBuilder> columnComponentBuilders = new ArrayList<>();
     private final List<ConstraintComponentBuilder> constraintComponentBuilders = new ArrayList<>();
 
     private DdlCreateQueryBuilder() {
-        this.query
-                .append("create table {TABLE_NAME} (\n");
     }
 
     public static DdlCreateQueryBuilder newInstance() {
@@ -33,14 +30,18 @@ public class DdlCreateQueryBuilder {
     }
 
     public String build(String entityClassName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("create table {TABLE_NAME} (\n");
+
         this.columnComponentBuilders.stream()
                 .map(ColumnComponentBuilder::build)
-                .forEach(builder -> query.append(builder).append(COMMA_NEW_LINE));
+                .forEach(builder -> stringBuilder.append(builder).append(COMMA_NEW_LINE));
         this.constraintComponentBuilders.stream()
                 .map(ConstraintComponentBuilder::build)
-                .forEach(builder -> query.append(builder).append(COMMA_NEW_LINE));
+                .forEach(builder -> stringBuilder.append(builder).append(COMMA_NEW_LINE));
 
-        query.setLength(query.length() - 2);
-        return query.append("\n);").toString().replace("{TABLE_NAME}", entityClassName.toLowerCase());
+        stringBuilder.setLength(stringBuilder.length() - 2);
+        return stringBuilder.append("\n);").toString().replace("{TABLE_NAME}", entityClassName.toLowerCase());
     }
 }

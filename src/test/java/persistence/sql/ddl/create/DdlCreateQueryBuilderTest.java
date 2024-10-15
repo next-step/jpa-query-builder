@@ -45,8 +45,8 @@ public class DdlCreateQueryBuilderTest {
             queryBuilder.add(ColumnComponentBuilder.from(field));
             queryBuilder.add(ConstraintComponentBuilder.from(field));
         }
-        String ddlQuery = queryBuilder.build(personClass.getSimpleName());
+        String createQuery = queryBuilder.build(personClass.getSimpleName());
 
-        logger.debug("DDL Query : {}", ddlQuery);
+        logger.debug("DDL create query : {}", createQuery);
     }
 }
