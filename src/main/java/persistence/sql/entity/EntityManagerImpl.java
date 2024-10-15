@@ -1,6 +1,7 @@
 package persistence.sql.entity;
 
 import jdbc.JdbcTemplate;
+import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 
 import java.sql.Connection;
@@ -25,7 +26,10 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public Object persist(Object entity) {
-        return null;
+        Class<?> clazz = entity.getClass();
+        String insertQuery = new InsertQueryBuilder(clazz).getInsertQuery(entity);
+        jdbcTemplate.execute(insertQuery);
+        return entity;
     }
 
     @Override
