@@ -48,27 +48,27 @@ public class QueryGenerator {
 
     private String getColumnDefinition(final Field field) {
         return INDENTATION +
-               getColumnName(field) +
+               columnName(field) +
                " " +
-               getColumnType(field) +
-               getIdentityClause(field) +
-               getNullableClause(field) +
-               getPrimaryKeyClause(field);
+               columnType(field) +
+               identityClause(field) +
+               nullableClause(field) +
+               primaryKeyClause(field);
     }
 
-    private String getPrimaryKeyClause(final Field field) {
+    private String primaryKeyClause(final Field field) {
         return isIdField(field) ? " PRIMARY KEY" : "";
     }
 
-    private String getNullableClause(final Field field) {
+    private String nullableClause(final Field field) {
         return isNullable(field) ? "" : " NOT NULL";
     }
 
-    private String getIdentityClause(final Field field) {
+    private String identityClause(final Field field) {
         return isIdentity(field) ? " AUTO_INCREMENT" : "";
     }
 
-    private String getColumnName(final Field field) {
+    private String columnName(final Field field) {
         final Column column = field.getAnnotation(Column.class);
         return (column != null && !column.name().isEmpty()) ? column.name() : field.getName().toLowerCase();
     }
@@ -86,7 +86,7 @@ public class QueryGenerator {
         return field.isAnnotationPresent(Id.class);
     }
 
-    private String getColumnType(final Field field) {
+    private String columnType(final Field field) {
         final Class<?> type = field.getType();
         if (type == Long.class) {
             return "BIGINT";
