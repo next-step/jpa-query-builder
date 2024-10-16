@@ -11,9 +11,21 @@ public class TableName {
 
     String getTableName(final Class<?> clazz) {
         final Table tableAnnotation = clazz.getAnnotation(Table.class);
-        if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {
-            return tableAnnotation.name().toUpperCase();
+        if (hasTableName(tableAnnotation)) {
+            return tableNameFrom(tableAnnotation);
         }
+        return tableNameFrom(clazz);
+    }
+
+    private boolean hasTableName(final Table tableAnnotation) {
+        return tableAnnotation != null && !tableAnnotation.name().isEmpty();
+    }
+
+    private String tableNameFrom(final Table tableAnnotation) {
+        return tableAnnotation.name().toUpperCase();
+    }
+
+    private String tableNameFrom(final Class<?> clazz) {
         return clazz.getSimpleName().toUpperCase();
     }
 }
