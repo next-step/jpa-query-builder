@@ -2,6 +2,7 @@ package persistence.sql.meta;
 
 import org.h2.util.StringUtils;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
