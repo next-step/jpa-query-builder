@@ -28,10 +28,9 @@ public class Application {
             jdbcTemplate.execute(createTableQuery); // Create table
 
             InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
-            Person person = new Person();
-            person.setName("2xample");
-            person.setAge(30);
-            person.setEmail("2xample.gmail.com");
+
+            Person person = Person.of(null, "2xample", 30, "2xample.gmail.com", null);
+
             String insertQuery = insertQueryBuilder.insert(person);
             logger.info(insertQuery);
             jdbcTemplate.execute(insertQuery); // Insert data
