@@ -1,11 +1,11 @@
-package persistence.sql.ddl.definition;
+package persistence.sql.definition;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.jetbrains.annotations.NotNull;
-import persistence.sql.ddl.Queryable;
+import persistence.sql.Queryable;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -84,10 +84,16 @@ public class TableDefinition {
         return tableName;
     }
 
-    public List<Queryable> queryableColumns() {
+    public List<? extends Queryable> queryableColumns() {
         return Stream.concat(
                 Stream.of(tableId),
                 columns.stream()
         ).toList();
+    }
+
+    public List<? extends Queryable> hasValueColumns(Object entity) {
+        return queryableColumns().stream()
+                .filter(column -> column.hasValue(entity))
+                .toList();
     }
 }

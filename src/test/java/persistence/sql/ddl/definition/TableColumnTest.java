@@ -5,13 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.Dialect;
-import persistence.sql.ddl.H2Dialect;
+import persistence.sql.Dialect;
+import persistence.sql.H2Dialect;
+import persistence.sql.definition.TableColumn;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class TableColumnTest {
+class TableColumnTest {
 
     @Entity
     private static class TableColumnTestEntity {
@@ -50,11 +51,11 @@ public class TableColumnTest {
 
         Dialect dialect = new H2Dialect();
 
-        tableColumn1.apply(query1, dialect);
-        tableColumn2.apply(query2, dialect);
-        tableColumn3.apply(query3, dialect);
-        tableColumn4.apply(query4, dialect);
-        tableColumn5.apply(query5, dialect);
+        tableColumn1.applyToCreateQuery(query1, dialect);
+        tableColumn2.applyToCreateQuery(query2, dialect);
+        tableColumn3.applyToCreateQuery(query3, dialect);
+        tableColumn4.applyToCreateQuery(query4, dialect);
+        tableColumn5.applyToCreateQuery(query5, dialect);
 
         // Then
         assertAll(

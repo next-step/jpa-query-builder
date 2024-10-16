@@ -3,11 +3,12 @@ package persistence.sql.ddl.definition;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.definition.TableDefinition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class TableDefinitionTest {
+class TableDefinitionTest {
 
     @Entity
     @Table(name = "test_table")

@@ -1,13 +1,13 @@
-package persistence.sql.ddl.definition;
+package persistence.sql.definition;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.Dialect;
-import persistence.sql.ddl.Queryable;
+import persistence.sql.Dialect;
+import persistence.sql.Queryable;
 import persistence.sql.ddl.query.AutoKeyGenerationStrategy;
 import persistence.sql.ddl.query.IdentityKeyGenerationStrategy;
-import persistence.sql.ddl.PrimaryKeyGenerationStrategy;
+import persistence.sql.ddl.query.PrimaryKeyGenerationStrategy;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -16,8 +16,8 @@ import java.util.List;
 public class TableId implements Queryable {
 
     private static final List<PrimaryKeyGenerationStrategy> pkGenerationStrategies = List.of(
-        new AutoKeyGenerationStrategy(),
-        new IdentityKeyGenerationStrategy()
+            new AutoKeyGenerationStrategy(),
+            new IdentityKeyGenerationStrategy()
     );
 
     private final GenerationType generationType;
@@ -53,16 +53,17 @@ public class TableId implements Queryable {
                 .orElseThrow(() -> new IllegalStateException("Unsupported primary key generation strategy"));
     }
 
-    public String name() {
-        return columnDefinition.name();
-    }
-
     public GenerationType generationType() {
         return generationType;
     }
 
     @Override
-    public void apply(StringBuilder query, Dialect dialect) {
+    public String name() {
+        return columnDefinition.name();
+    }
+
+    @Override
+    public void applyToCreateQuery(StringBuilder query, Dialect dialect) {
         final String type = dialect.translateType(columnDefinition);
         query.append(columnDefinition.name()).append(" ").append(type);
 
@@ -71,5 +72,21 @@ public class TableId implements Queryable {
         }
 
         query.append(" ").append(strategy.generatePrimaryKeySQL(this)).append(", ");
+    }
+
+    @Override
+    public boolean hasValue(Object entity) {
+        return columnDefinition.hasValue(entity);
+    }
+
+    @Override
+    public String getValue(Object entity) {
+        final Object value = columnDefinition.valueAsString(entity);
+
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+
+        return value.toString();
     }
 }

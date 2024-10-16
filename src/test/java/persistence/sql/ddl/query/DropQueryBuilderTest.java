@@ -2,11 +2,11 @@ package persistence.sql.ddl.query;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.Person;
+import persistence.sql.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DropQueryBuilderTest {
+class DropQueryBuilderTest {
 
     @Test
     @DisplayName("should create a DROP TABLE query")
