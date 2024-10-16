@@ -1,6 +1,5 @@
 package persistence.sql.dml.query;
 
-import persistence.sql.ColumnDefinitionAware;
 import persistence.sql.Queryable;
 import persistence.sql.definition.TableDefinition;
 
@@ -31,7 +30,7 @@ public class InsertQueryBuilder {
     private String columnsClause(List<? extends Queryable> targetColumns) {
         return targetColumns
                 .stream()
-                .map(ColumnDefinitionAware::name)
+                .map(Queryable::name)
                 .reduce((column1, column2) -> column1 + ", " + column2)
                 .orElse(EMPTY_STRING);
     }

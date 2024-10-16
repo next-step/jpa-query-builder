@@ -49,9 +49,4 @@ public class TableColumn implements Queryable {
         return columnDefinition.name();
     }
 
-    @Override
-    public String declaredName() {
-        return columnDefinition.declaredName();
-    }
-
 }

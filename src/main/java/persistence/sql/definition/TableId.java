@@ -63,11 +63,6 @@ public class TableId implements Queryable {
     }
 
     @Override
-    public String declaredName() {
-        return columnDefinition.declaredName();
-    }
-
-    @Override
     public void applyToCreateQuery(StringBuilder query, Dialect dialect) {
         final String type = dialect.translateType(columnDefinition);
         query.append(columnDefinition.name()).append(" ").append(type);
