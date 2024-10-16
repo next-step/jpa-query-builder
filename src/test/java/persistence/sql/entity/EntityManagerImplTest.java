@@ -3,10 +3,12 @@ package persistence.sql.entity;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.domain.Person;
 
@@ -37,6 +39,13 @@ class EntityManagerImplTest {
         jdbcTemplate.execute(insertQuery);
 
         entityManager = new EntityManagerImpl(server.getConnection());
+    }
+
+    @AfterEach
+    void afterEach() {
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder();
+        String dropTableQuery = dropQueryBuilder.dropTableQuery(Person.class);
+        jdbcTemplate.execute(dropTableQuery);
     }
 
     @Test
