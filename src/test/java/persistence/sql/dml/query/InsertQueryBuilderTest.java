@@ -1,5 +1,7 @@
 package persistence.sql.dml.query;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.Person;
@@ -19,4 +21,25 @@ public class InsertQueryBuilderTest {
         assertThat(query).isEqualTo( "INSERT INTO users (id, nick_name, old, email) VALUES (1, 'john_doe', 30, 'chanho0912@gmail.com');");
     }
 
+    @Entity
+    private static class Empty {
+        @Id
+        private Long id;
+
+        private String name;
+
+        public Empty() {
+        }
+
+        public Empty(Long id) {
+            this.id = id;
+        }
+    }
+
+    @Test
+    void test() {
+        Empty empty = new Empty(1L);
+        String actual = sut.build(empty);
+        System.out.println(actual);
+    }
 }

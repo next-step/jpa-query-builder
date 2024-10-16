@@ -3,11 +3,11 @@ package persistence.sql.definition;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.Queryable;
 import persistence.sql.Dialect;
-import persistence.sql.ddl.query.PrimaryKeyGenerationStrategy;
+import persistence.sql.Queryable;
 import persistence.sql.ddl.query.AutoKeyGenerationStrategy;
 import persistence.sql.ddl.query.IdentityKeyGenerationStrategy;
+import persistence.sql.ddl.query.PrimaryKeyGenerationStrategy;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -77,5 +77,25 @@ public class TableId implements Queryable {
         }
 
         query.append(" ").append(strategy.generatePrimaryKeySQL(this)).append(", ");
+    }
+
+    @Override
+    public boolean hasValue(Object object) {
+        final Object value = columnDefinition.valueAsString(object);
+        return value != null;
+    }
+
+    @Override
+    public String getValue(Object object) {
+        final Object value = columnDefinition.valueAsString(object);
+        if (value == null) {
+            throw new IllegalStateException("Value is null");
+        }
+
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+
+        return value.toString();
     }
 }

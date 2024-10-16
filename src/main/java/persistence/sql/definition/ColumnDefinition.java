@@ -1,9 +1,13 @@
 package persistence.sql.definition;
 
 import jakarta.persistence.Column;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import persistence.sql.SqlType;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class ColumnDefinition {
     private static final int DEFAULT_LENGTH = 255;
@@ -78,5 +82,25 @@ public class ColumnDefinition {
 
     public String declaredName() {
         return declaredName;
+    }
+
+    @Nullable
+    public Object valueAsString(Object entity) {
+        Field[] declaredFields = entity.getClass().getDeclaredFields();
+
+        return Arrays.stream(declaredFields).sequential()
+                .filter(field -> field.getName().equals(declaredName()))
+                .map(field -> {
+                    try {
+                        field.setAccessible(true);
+                        return Optional.ofNullable(field.get(entity));
+                    } catch (IllegalAccessException e) {
+                        throw new IllegalStateException("Cannot access field value", e);
+                    }
+
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Field not found"))
+                .orElse(null);
     }
 }

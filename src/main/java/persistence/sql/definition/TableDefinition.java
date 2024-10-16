@@ -90,4 +90,10 @@ public class TableDefinition {
                 columns.stream()
         ).toList();
     }
+
+    public List<? extends Queryable> hasValueColumns(Object entity) {
+        return queryableColumns().stream()
+                .filter(column -> column.hasValue(entity))
+                .toList();
+    }
 }
