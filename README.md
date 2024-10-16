@@ -42,3 +42,11 @@
 - [x] Person 정보를 바탕으로 select * (findAll) 구현해보기
 - [x] Person 정보를 바탕으로 select * where (findById) 구현해보기
 - [x] Person 정보를 바탕으로 delete 구현해보기
+
+## 4단계 - Simple Entity Object 
+- [ ] 간이 Entity Manager Interface 구현해보기
+  - [ ] 요구사항1 - find
+  - [ ] 요구사항2 - persist (insert)
+  - [ ] 요구사항3 - delete
+  - [ ] 요구사항4 - update
+    - [ ] update query builder 생성.
