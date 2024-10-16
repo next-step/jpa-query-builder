@@ -16,4 +16,4 @@ class DeleteDDLQueryBuilderTest {
 
         assertEquals(expectedQuery, actualQuery);
     }
-    }
+}

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SelectDDLQueryBuilderTest {
-
     @Test
     void findAll() {
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
