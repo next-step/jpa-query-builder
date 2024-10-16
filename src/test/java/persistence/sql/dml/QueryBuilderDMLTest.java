@@ -139,4 +139,24 @@ class QueryBuilderDMLTest {
         String expected = "select id, nick_name, old, email from users where id=1 and nick_name=hyeongyeong";
         assertThat(queryBuilderDML.findById(person)).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("입력받은 object의 deleteById query 생성")
+    void generateDelteByIdQuery() throws Exception {
+        DummyPerson person = getCustomPerson();
+
+        QueryBuilderDML queryBuilderDML = QueryBuilderDML.getInstance();
+        String expected = "delete from users where id=1";
+        assertThat(queryBuilderDML.deleteById(person)).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("입력받은 object의 deleteById query 생성 - multiple id 일 때")
+    void generateDelteByIdQuery_multipleIds() throws Exception {
+        DummyPerson2 person = getCustomPerson2();
+
+        QueryBuilderDML queryBuilderDML = QueryBuilderDML.getInstance();
+        String expected = "delete from users where id=1 and nick_name=hyeongyeong";
+        assertThat(queryBuilderDML.deleteById(person)).isEqualTo(expected);
+    }
 }

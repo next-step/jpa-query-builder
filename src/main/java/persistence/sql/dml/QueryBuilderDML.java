@@ -34,6 +34,12 @@ public class QueryBuilderDML {
         return whereClause(String.format(findAllFormat, columnsClause(object.getClass()), tableInfo.getTableName()), object);
     }
 
+    public String deleteById(Object object) throws Exception {
+        TableInfo tableInfo = new TableInfo(object.getClass());
+        String findAllFormat = "delete from %s";
+        return whereClause(String.format(findAllFormat, tableInfo.getTableName()), object);
+    }
+
     private String columnsClause(Class<?> clazz) {
         ColumnFields columnInfos = new ColumnFields(clazz);
         return columnInfos.getColumnFields()
