@@ -6,14 +6,15 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entity.EntityManager;
+import persistence.entity.EntityManagerImpl;
 import persistence.sql.H2Dialect;
-import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.Person;
+import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.ddl.query.DropQueryBuilder;
 import persistence.sql.dml.query.DeleteByIdQueryBuilder;
 import persistence.sql.dml.query.InsertQueryBuilder;
 import persistence.sql.dml.query.SelectAllQueryBuilder;
-import persistence.sql.dml.query.SelectByIdQueryBuilder;
 
 import java.util.List;
 
@@ -35,9 +36,9 @@ public class Application {
             // test insert and select
             insert(jdbcTemplate, testClass);
             selectAll(jdbcTemplate, testClass);
-            selectById(jdbcTemplate, testClass, 1L);
-            selectById(jdbcTemplate, testClass, 2L);
-            selectById(jdbcTemplate, testClass, 3L);
+            selectById(server, 1L);
+            selectById(server, 2L);
+            selectById(server, 3L);
 
             deleteById(jdbcTemplate, testClass, 1L);
             selectAll(jdbcTemplate, testClass);
@@ -84,21 +85,11 @@ public class Application {
         }
     }
 
-    private static void selectById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
-        SelectByIdQueryBuilder selectByIdQueryBuilder = new SelectByIdQueryBuilder();
-        String query = selectByIdQueryBuilder.build(testClass, id);
+    private static void selectById(DatabaseServer databaseServer, Long id) {
+        final EntityManager em = new EntityManagerImpl(databaseServer);
 
-        List<Person> people = jdbcTemplate.query(query, (RowMapper) rs -> new Person(
-                rs.getLong("id"),
-                rs.getString("nick_name"),
-                rs.getInt("old"),
-                rs.getString("email"),
-                1 // transient
-        ));
-
-        for (Person person : people) {
-            logger.info("Person: {}", person);
-        }
+        Person person = em.find(Person.class, id);
+        logger.info("Person: {}", person);
     }
 
     private static void insert(JdbcTemplate jdbcTemplate, Class<?> testClass) {
