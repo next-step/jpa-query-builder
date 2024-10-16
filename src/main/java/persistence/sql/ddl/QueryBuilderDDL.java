@@ -11,21 +11,15 @@ public class QueryBuilderDDL {
     }
 
     public String buildCreateDdl(Class<?> clazz){
+        String createFormat = "create table %s (%s);";
         TableInfo tableInfo = new TableInfo(clazz);
         ColumnInfos columnInfos = new ColumnInfos(clazz);
-        StringBuilder sb = new StringBuilder();
-        sb.append("create table ");
-        sb.append(tableInfo.getTableName()).append(" (");
-        sb.append(columnInfos.generateDdlQuery());
-        sb.append(");");
-        return sb.toString();
+        return String.format(createFormat, tableInfo.getTableName(), columnInfos.generateDdlQuery());
     }
 
     public String buildDropDdl(Class<?> clazz) {
+        String dropFormat = "drop table if exists %s;";
         TableInfo tableInfo = new TableInfo(clazz);
-        StringBuilder sb = new StringBuilder();
-        sb.append("drop table if exists ");
-        sb.append(tableInfo.getTableName()).append(";");
-        return sb.toString();
+        return String.format(dropFormat, tableInfo.getTableName());
     }
 }
