@@ -49,11 +49,17 @@ public class QueryGenerator {
     private String getColumnDefinition(final Field field) {
         final String columnName = getColumnName(field);
         final String columnType = getColumnType(field);
+        final String identityClause = isIdentity(field) ? " AUTO_INCREMENT" : "";
+        final String nullableClause = isNullable(field) ? "" : " NOT NULL";
+        final String primaryKeyClause = isIdField(field) ? " PRIMARY KEY" : "";
 
-        return INDENTATION + columnName + " " + columnType +
-               (isIdentity(field) ? " AUTO_INCREMENT" : "") +
-               (isNullable(field) ? "" : " NOT NULL") +
-               (isIdField(field) ? " PRIMARY KEY" : "");
+        return INDENTATION +
+               columnName +
+               " " +
+               columnType +
+               identityClause +
+               nullableClause +
+               primaryKeyClause;
     }
 
     private String getColumnName(final Field field) {
