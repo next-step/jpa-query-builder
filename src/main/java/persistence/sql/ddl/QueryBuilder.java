@@ -1,45 +1,50 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
-import jdbc.JdbcTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QueryBuilder {
-    Class<Person> personClass = Person.class;
+    Class<?> clazz;
+    SqlTypeMapper sqlTypeMapper;
 
-    public void Builder(final JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.execute("CREATE TABLE " + getTableName() + "(" + getPersonMetadata() + ")");
+    public QueryBuilder(Class<?> clazz, SqlTypeMapper sqlTypeMapper) {
+        this.clazz = clazz;
+        this.sqlTypeMapper = sqlTypeMapper;
     }
 
-    public void Dropper(final JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.execute("DROP TABLE " + getTableName() + " IF EXISTS");
+    public String builder() {
+        return "CREATE TABLE " + getTableName() + "(" + getPersonMetadata() + ")";
+    }
+
+    public String dropper() {
+        return "DROP TABLE " + getTableName() + " IF EXISTS";
     }
 
     @NotNull
     private String getTableName() {
-        if (personClass.isAnnotationPresent(Table.class)) {
-            return personClass.getAnnotation(Table.class).name();
+        if (clazz.isAnnotationPresent(Table.class)) {
+            return clazz.getAnnotation(Table.class).name();
         }
-        return personClass.getSimpleName();
+        return clazz.getSimpleName();
     }
 
 
     public String getPersonMetadata() {
-        String query = "";
-        int count = 0;
-        for (Field field : personClass.getDeclaredFields()) {
+        StringBuilder query = new StringBuilder();
+        List<String> columnArrayList = new ArrayList<>();
+        for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(Transient.class)) continue;
 
-            query += getColumnName(field) + " " + getSqlType(field) + getPrimaryKey(field) + getAutoIncrement(field) + getNullable(field);
-            count++;
-            if (Arrays.stream(personClass.getDeclaredFields()).count() - 1 != count) {
-                query += ", ";
-            }
+            String column = getColumnName(field) + " " + getSqlType(field) + getPrimaryKey(field) + getAutoIncrement(field) + getNullable(field);
+            columnArrayList.add(column);
         }
-        return query;
+        query.append(String.join(", ", columnArrayList));
+
+        return query.toString();
     }
 
     private String getNullable(Field field) {
