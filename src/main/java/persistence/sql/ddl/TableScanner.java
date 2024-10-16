@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.sql.ddl.node.EntityNode;
+import persistence.sql.node.EntityNode;
 
 import java.util.Set;
 

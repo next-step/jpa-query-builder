@@ -1,4 +1,4 @@
-package persistence.sql.ddl.node;
+package persistence.sql.node;
 
 /**
  * SQL 노드

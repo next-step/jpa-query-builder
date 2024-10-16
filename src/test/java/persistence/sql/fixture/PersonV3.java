@@ -1,4 +1,4 @@
-package sample.domain;
+package persistence.sql.fixture;
 
 import jakarta.persistence.*;
 
@@ -75,5 +75,16 @@ public class PersonV3 {
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    @Override
+    public String toString() {
+        return "PersonV3{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", index=" + index +
+                '}';
     }
 }

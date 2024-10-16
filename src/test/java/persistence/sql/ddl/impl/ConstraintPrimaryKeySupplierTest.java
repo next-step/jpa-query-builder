@@ -6,8 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.node.FieldNode;
-import persistence.sql.ddl.util.CamelToSnakeConverter;
+import persistence.sql.common.util.CamelToSnakeConverter;
+import persistence.sql.node.FieldNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

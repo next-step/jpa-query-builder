@@ -3,7 +3,7 @@ package persistence.sql.ddl.impl;
 import jakarta.persistence.Entity;
 import org.reflections.Reflections;
 import persistence.sql.ddl.TableScanner;
-import persistence.sql.ddl.node.EntityNode;
+import persistence.sql.node.EntityNode;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;

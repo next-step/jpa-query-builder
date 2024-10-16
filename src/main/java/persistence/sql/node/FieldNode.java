@@ -1,4 +1,4 @@
-package persistence.sql.ddl.node;
+package persistence.sql.node;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -19,6 +19,10 @@ public class FieldNode implements SQLNode{
 
     public static FieldNode from(Field field) {
         return new FieldNode(field);
+    }
+
+    public Field getField() {
+        return field;
     }
 
     public boolean isPrimaryKey() {
@@ -46,5 +50,11 @@ public class FieldNode implements SQLNode{
     @SafeVarargs
     public final boolean containsAnnotations(Class<? extends Annotation>... excludeAnnotations) {
         return Arrays.stream(excludeAnnotations).anyMatch(field::isAnnotationPresent);
+    }
+
+    public Object extractFieldValue(Object entity) throws IllegalAccessException {
+        field.setAccessible(true);
+
+        return field.get(entity);
     }
 }

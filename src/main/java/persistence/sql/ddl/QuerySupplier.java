@@ -1,7 +1,7 @@
 package persistence.sql.ddl;
 
 import org.jetbrains.annotations.NotNull;
-import persistence.sql.ddl.node.FieldNode;
+import persistence.sql.node.FieldNode;
 
 /**
  * 쿼리 제공자

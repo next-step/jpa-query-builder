@@ -3,7 +3,7 @@ package persistence.sql.ddl.impl;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import persistence.sql.ddl.QueryColumnSupplier;
-import persistence.sql.ddl.node.FieldNode;
+import persistence.sql.node.FieldNode;
 
 import java.util.List;
 
