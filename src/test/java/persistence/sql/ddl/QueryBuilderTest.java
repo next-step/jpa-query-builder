@@ -24,6 +24,13 @@ public class QueryBuilderTest {
     }
 
     @Test
+    @DisplayName("@Entity가 없는 경우 에러가 발생한다")
+    void testWithoutEntity() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        assertThatIllegalArgumentException().isThrownBy(() -> queryBuilder.create(PersonWithoutEntity.class));
+    }
+
+    @Test
     @DisplayName("NewPerson 엔티티 create 쿼리를 생성한다")
     void testCreateNewPersonQuery() {
         QueryBuilder queryBuilder = new QueryBuilder();

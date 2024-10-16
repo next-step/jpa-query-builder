@@ -3,7 +3,6 @@ package persistence.sql.ddl;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +40,7 @@ public class QueryBuilder {
     }
 
     private String getTableName(Class<?> entity) {
+        this.throwIfNotEntity(entity);
         Table table = entity.getAnnotation(Table.class);
         if (table == null) {
             return entity.getSimpleName();
@@ -49,5 +49,11 @@ public class QueryBuilder {
             return entity.getSimpleName();
         }
         return table.name();
+    }
+
+    private void throwIfNotEntity(Class<?> entity) {
+        if (!entity.isAnnotationPresent(Entity.class)) {
+            throw new IllegalArgumentException("Class %s is not an entity".formatted(entity.getSimpleName()));
+        }
     }
 }
