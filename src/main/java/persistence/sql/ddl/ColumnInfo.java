@@ -44,6 +44,7 @@ public class ColumnInfo {
             options.add("not null");
         }
 
+        // TODO : 전략패턴 사용해서 GeneratedValue 재구현
         final var generatedValue = field.getAnnotation(GeneratedValue.class);
         if(!Objects.isNull(generatedValue) && generatedValue.strategy().equals(GenerationType.IDENTITY)){
             options.add("auto_increment");
@@ -73,14 +74,5 @@ public class ColumnInfo {
 
     public boolean isNotTransient() {
         return !transientAnnotaion;
-    }
-
-    public String generateColumnDdlQuery() {
-        String columnQuery = String.join(" ", name, columnType.getQueryDefinition());
-        String optionQuery = options.stream().collect(Collectors.joining(" "));
-        if(StringUtils.isNullOrEmpty(optionQuery)) {
-            return columnQuery;
-        }
-        return String.join(" ", columnQuery, optionQuery);
     }
 }

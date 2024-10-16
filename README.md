@@ -27,7 +27,7 @@
   - [X] @Transient 이 포함된 컬럼은 컬럼 생성하지 않음
 - [X] Person Class의 Drop Query 생성
 
-## 2단계 QueryBuilderDML
+## 3단계 QueryBuilderDML
 
 ### 요구사항
 

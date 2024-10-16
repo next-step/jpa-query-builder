@@ -1,22 +1,25 @@
 package persistence.sql.ddl;
 
+import org.h2.util.StringUtils;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColumnQueryBuilder {
-    private static ColumnQueryBuilder queryBuilderDDL = new ColumnQueryBuilder();
-    private ColumnQueryBuilder() { }
-    public static ColumnQueryBuilder getInstance() {
-        return queryBuilderDDL;
+public class ColumnInfos {
+
+    private List<ColumnInfo> columnInfos;
+
+    public ColumnInfos(Class<?> clazz) {
+        this.columnInfos = extract(clazz);
     }
+
     public List<ColumnInfo> extract(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract)
                 .filter(ColumnInfo::isNotTransient).collect(Collectors.toList());
     }
 
-    public String extractPrimaryKeyQuery(Class<?> clazz) {
-        List<ColumnInfo> columnInfos = extract(clazz);
+    public String extractPrimaryKeyQuery() {
         StringBuilder sb = new StringBuilder();
         List<ColumnInfo> primaryKey = columnInfos.stream().filter(ColumnInfo::isPrimaryKey).collect(Collectors.toList());
         if(primaryKey.isEmpty()) {
@@ -28,12 +31,19 @@ public class ColumnQueryBuilder {
         return sb.toString();
     }
 
-    public String generateDdlQuery(Class<?> clazz) {
-        List<ColumnInfo> columnInfos = extract(clazz);
-
-        String columnQuery = columnInfos.stream().map(ColumnInfo::generateColumnDdlQuery).collect(Collectors.joining(", "));
-        String primaryQuery = extractPrimaryKeyQuery(clazz);
+    public String generateDdlQuery() {
+        String columnQuery = columnInfos.stream().map(ColumnInfos::generateColumnDdlQuery).collect(Collectors.joining(", "));
+        String primaryQuery = extractPrimaryKeyQuery();
 
         return String.join(", ", columnQuery, primaryQuery);
+    }
+
+    private static String generateColumnDdlQuery(ColumnInfo columnInfo) {
+        String columnQuery = String.join(" ", columnInfo.getName(), columnInfo.getColumnType().getQueryDefinition());
+        String optionQuery = columnInfo.getOptions().stream().collect(Collectors.joining(" "));
+        if(StringUtils.isNullOrEmpty(optionQuery)) {
+            return columnQuery;
+        }
+        return String.join(" ", columnQuery, optionQuery);
     }
 }
