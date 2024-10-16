@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class H2QueryBuilderDDL implements QueryBuilderDDL {
-    private final static String CREATE_QUERY   = "CREATE TABLE {tableName} ({columnInfo});";
-    private final static String DROP_QUERY     = "DROP TABLE {tableName};";
+    private final static String CREATE_QUERY   = "CREATE TABLE %s (%s);";  // %s를 사용하여 테이블 이름과 컬럼 정보를 대체
+    private final static String DROP_QUERY     = "DROP TABLE %s;";
     private final static String PRIMARY_KEY    = " PRIMARY KEY";
     private final static String NOT_NULL       = " NOT NULL";
     private final static String AUTO_INCREMENT = " AUTO_INCREMENT";
@@ -40,9 +40,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
                                     })
                 .collect(Collectors.joining(", "));
 
-        return CREATE_QUERY
-                .replace(TABLE_NAME, getTableName(entityClass))
-                .replace(COLUMN_INFO, columnInfo);
+        return String.format(CREATE_QUERY, getTableName(entityClass), columnInfo);
     }
 
     // table 이름 가져오기
@@ -98,6 +96,6 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
             throw new IllegalArgumentException(ErrorCode.NOT_EXIST_ENTITY_ANNOTATION.getErrorMsg());
         }
 
-        return DROP_QUERY.replace(TABLE_NAME, getTableName(entityClass));
+        return String.format(DROP_QUERY, getTableName(entityClass));
     }
 }
