@@ -1,13 +1,13 @@
 package H2QueryBuilder;
 
-public class ColumnData {
+public class TableColumnAttribute {
     private final String columnName;
     private final String columnDataType;
     private final boolean isPrimeKey;
     private final boolean isNotNull;
     private final boolean isAutoIncrement;
 
-    public ColumnData(String columnName, Class<?> columnDataType, boolean isPrimeKey, boolean isNotNull, boolean isAutoIncrement) {
+    public TableColumnAttribute(String columnName, Class<?> columnDataType, boolean isPrimeKey, boolean isNotNull, boolean isAutoIncrement) {
         this.columnName = columnName;
         this.columnDataType = H2DataType.findH2DataTypeByDataType(columnDataType);
         this.isPrimeKey = isPrimeKey;

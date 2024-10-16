@@ -31,11 +31,11 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
 
         String columnInfo = getColumn(entityClass)
                 .stream()
-                .map(columnData -> {
-                                        String info = columnData.getColumnName() + " " + columnData.getColumnDataType();
-                                        if (columnData.isNotNull()) info += NOT_NULL;
-                                        if (columnData.isAutoIncrement()) info += AUTO_INCREMENT;
-                                        if (columnData.isPrimeKey()) info += PRIMARY_KEY;
+                .map(tableColumnAttribute -> {
+                                        String info = tableColumnAttribute.getColumnName() + " " + tableColumnAttribute.getColumnDataType();
+                                        if (tableColumnAttribute.isNotNull()) info += NOT_NULL;
+                                        if (tableColumnAttribute.isAutoIncrement()) info += AUTO_INCREMENT;
+                                        if (tableColumnAttribute.isPrimeKey()) info += PRIMARY_KEY;
                                         return info;
                                     })
                 .collect(Collectors.joining(", "));
@@ -55,17 +55,17 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     }
 
     //조립된 컬럼 가져오기
-    private List<ColumnData> getColumn(Class<?> entityClass) {
-        List<ColumnData> columnDatas = new ArrayList<>();
+    private List<TableColumnAttribute> getColumn(Class<?> entityClass) {
+        List<TableColumnAttribute> tableColumnAttributes = new ArrayList<>();
 
         Field[] fields = entityClass.getDeclaredFields();
-        Arrays.stream(fields).forEach(field -> generateTableColumnData(columnDatas, field));
+        Arrays.stream(fields).forEach(field -> generateTableColumnData(tableColumnAttributes, field));
 
-        return columnDatas;
+        return tableColumnAttributes;
     }
 
     // column 조립
-    private void generateTableColumnData(List<ColumnData> columnDatas, Field field) {
+    private void generateTableColumnData(List<TableColumnAttribute> tableColumnAttributes, Field field) {
         String columnName = field.getName();
         boolean isNullable = true;
 
@@ -77,9 +77,9 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         }
 
         if ( field.isAnnotationPresent(Id.class) ) {
-            columnDatas.add(new ColumnData(columnName, field.getType(), true, true, isGenerateValueIdentity(field)));
+            tableColumnAttributes.add(new TableColumnAttribute(columnName, field.getType(), true, true, isGenerateValueIdentity(field)));
         } else {
-            columnDatas.add(new ColumnData(columnName, field.getType(), false, !isNullable, isGenerateValueIdentity(field)));
+            tableColumnAttributes.add(new TableColumnAttribute(columnName, field.getType(), false, !isNullable, isGenerateValueIdentity(field)));
         }
     }
 
