@@ -11,12 +11,13 @@ import java.util.stream.Stream;
 
 public class ColumnDefinitions {
     private static final String INDENTATION = "    ";
-    private static final int VARCHAR_DEFAULT_LENGTH = 255;
 
     private final Class<?> clazz;
+    private final DatabaseDialect dialect;
 
-    public ColumnDefinitions(final Class<?> clazz) {
+    public ColumnDefinitions(final Class<?> clazz, final DatabaseDialect dialect) {
         this.clazz = clazz;
+        this.dialect = dialect;
     }
 
     String value(final Class<?> entityClass) {
@@ -32,27 +33,20 @@ public class ColumnDefinitions {
                 INDENTATION,
                 columnName(field),
                 columnType(field),
-                identityClause(field),
-                nullableClause(field),
-                primaryKeyClause(field));
-    }
-
-    private String primaryKeyClause(final Field field) {
-        return isIdField(field) ? " PRIMARY KEY" : "";
-    }
-
-    private String nullableClause(final Field field) {
-        return isNullable(field) ? "" : " NOT NULL";
-    }
-
-    private String identityClause(final Field field) {
-        return isIdentity(field) ? " AUTO_INCREMENT" : "";
+                dialect.identityClause(isIdentity(field)),
+                dialect.nullableClause(isNullable(field)),
+                dialect.primaryKeyClause(isIdField(field)));
     }
 
     private String columnName(final Field field) {
         final Column column = field.getAnnotation(Column.class);
         return (column != null && !column.name().isEmpty()) ? column.name() : field.getName().toLowerCase();
     }
+
+    private String columnType(final Field field) {
+        return ColumnType.fromJavaType(field.getType()).getDefinition(dialect);
+    }
+
     private boolean isIdentity(final Field field) {
         final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         return generatedValue != null && generatedValue.strategy() == GenerationType.IDENTITY;
@@ -65,18 +59,5 @@ public class ColumnDefinitions {
 
     private boolean isIdField(final Field field) {
         return field.isAnnotationPresent(Id.class);
-    }
-
-    private String columnType(final Field field) {
-        final Class<?> type = field.getType();
-        if (type == Long.class) {
-            return "BIGINT";
-        } else if (type == String.class) {
-            return "VARCHAR(" + VARCHAR_DEFAULT_LENGTH + ")";
-        } else if (type == Integer.class) {
-            return "INTEGER";
-        } else {
-            return "VARCHAR(" + VARCHAR_DEFAULT_LENGTH + ")";
-        }
     }
 }

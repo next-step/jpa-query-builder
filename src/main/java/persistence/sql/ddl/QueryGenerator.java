@@ -11,7 +11,8 @@ public class QueryGenerator {
 
     public String create(final Class<?> clazz) {
         final TableName tableName = new TableName(clazz);
-        final ColumnDefinitions columnDefinitions = new ColumnDefinitions(clazz);
+        final DatabaseDialect dialect = new H2Dialect();
+        final ColumnDefinitions columnDefinitions = new ColumnDefinitions(clazz, dialect);
         return CREATE_TABLE_TEMPLATE.formatted(
                 tableName.value(clazz),
                 columnDefinitions.value(clazz));
