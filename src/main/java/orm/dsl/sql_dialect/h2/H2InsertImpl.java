@@ -1,4 +1,4 @@
-package orm.dsl.dialect.h2;
+package orm.dsl.sql_dialect.h2;
 
 import orm.TableEntity;
 import orm.dsl.dml.InsertImpl;

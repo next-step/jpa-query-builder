@@ -4,7 +4,7 @@ import orm.SQLDialect;
 import orm.TableEntity;
 import orm.dsl.step.ddl.CreateTableStep;
 import orm.dsl.step.ddl.DropTableStep;
-import orm.dsl.dialect.DialectStatementMap;
+import orm.dsl.sql_dialect.DialectStatementMap;
 import orm.dsl.step.dml.InsertIntoStep;
 
 import java.lang.reflect.InvocationTargetException;
