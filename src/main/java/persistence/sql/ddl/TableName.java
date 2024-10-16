@@ -2,10 +2,10 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Table;
 
-public class TableName {
+class TableName {
     private final Class<?> clazz;
 
-    public TableName(final Class<?> clazz) {
+    TableName(final Class<?> clazz) {
         this.clazz = clazz;
     }
 

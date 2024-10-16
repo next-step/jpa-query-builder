@@ -9,13 +9,13 @@ import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ColumnDefinitions {
+class ColumnDefinitions {
     private static final String INDENTATION = "    ";
 
     private final Class<?> clazz;
     private final DatabaseDialect dialect;
 
-    public ColumnDefinitions(final Class<?> clazz, final DatabaseDialect dialect) {
+    ColumnDefinitions(final Class<?> clazz, final DatabaseDialect dialect) {
         this.clazz = clazz;
         this.dialect = dialect;
     }

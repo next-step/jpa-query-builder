@@ -13,14 +13,14 @@ enum ColumnType {
         this.javaType = javaType;
     }
 
-    public static ColumnType fromJavaType(Class<?> type) {
+    static ColumnType fromJavaType(Class<?> type) {
         return Arrays.stream(values())
                 .filter(columnType -> columnType.javaType.equals(type))
                 .findFirst()
                 .orElse(VARCHAR);
     }
 
-    public String getDefinition(DatabaseDialect dialect) {
+    String getDefinition(DatabaseDialect dialect) {
         return dialect.getColumnTypeDefinition(this);
     }
 }
