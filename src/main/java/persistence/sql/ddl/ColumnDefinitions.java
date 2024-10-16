@@ -19,7 +19,7 @@ public class ColumnDefinitions {
         this.clazz = clazz;
     }
 
-    String getColumnDefinitions(final Class<?> entityClass) {
+    String value(final Class<?> entityClass) {
         final Field[] fields = entityClass.getDeclaredFields();
         return Stream.of(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))

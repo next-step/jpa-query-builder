@@ -3,14 +3,14 @@ package persistence.sql.ddl;
 public class QueryGenerator {
     public String drop(final Class<?> clazz) {
         final TableName tableName = new TableName(clazz);
-        return "DROP TABLE IF EXISTS %s CASCADE;".formatted(tableName.getTableName(clazz));
+        return "DROP TABLE IF EXISTS %s CASCADE;".formatted(tableName.value(clazz));
     }
 
     public String create(final Class<?> clazz) {
         final TableName tableName = new TableName(clazz);
         final ColumnDefinitions columnDefinitions = new ColumnDefinitions(clazz);
-        return getTableHeader(tableName.getTableName(clazz)) +
-               columnDefinitions.getColumnDefinitions(clazz) +
+        return getTableHeader(tableName.value(clazz)) +
+               columnDefinitions.value(clazz) +
                getTableFooter();
     }
 
