@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.create.component.ComponentUtils;
+import persistence.sql.NameUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class ColumnComponentBuilder {
     }
 
     private void setName(Field field) {
-        this.name = ComponentUtils.getNameFromField(field);
+        this.name = NameUtils.getColumnName(field);
     }
 
     private void setType(Field field) {

@@ -1,7 +1,7 @@
 package persistence.sql.ddl.create.component.constraint;
 
 import jakarta.persistence.Id;
-import persistence.sql.ddl.create.component.ComponentUtils;
+import persistence.sql.NameUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ConstraintComponentBuilder {
     }
 
     private void setPrimaryKeyName(Field field) {
-        this.name = "{TABLE_NAME}_pk_" + ComponentUtils.getNameFromField(field);
+        this.name = "{TABLE_NAME}_pk_" + NameUtils.getColumnName(field);
     }
 
     private void setPrimaryKeyType() {
@@ -46,7 +46,7 @@ public class ConstraintComponentBuilder {
     }
 
     private void setColumnName(Field field) {
-        this.columnName = ComponentUtils.getNameFromField(field);
+        this.columnName = NameUtils.getColumnName(field);
     }
 
     /* TODO : foreign key constraint, etc. */

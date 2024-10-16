@@ -1,8 +1,8 @@
 package persistence;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import persistence.sql.NameUtils;
 import persistence.sql.ddl.create.CreateQueryBuilder;
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
 import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
@@ -77,19 +77,11 @@ public class EntityScanner {
             queryBuilder.add(ColumnComponentBuilder.from(field));
             queryBuilder.add(ConstraintComponentBuilder.from(field));
         }
-        return queryBuilder.build(getNameFromClass(entityClass));
+        return queryBuilder.build(NameUtils.getTableName(entityClass));
     }
 
     private String generateDdlDropQuery(Class<?> entityClass) {
         DropQueryBuilder dropQueryBuilder = DropQueryBuilder.newInstance();
-        return dropQueryBuilder.build(getNameFromClass(entityClass));
-    }
-
-    private String getNameFromClass(Class<?> entityClass) {
-        if (entityClass.isAnnotationPresent(Table.class)
-                && !"".equals(entityClass.getAnnotation(Table.class).name())) {
-            return entityClass.getAnnotation(Table.class).name();
-        }
-        return entityClass.getSimpleName();
+        return dropQueryBuilder.build(NameUtils.getTableName(entityClass));
     }
 }
