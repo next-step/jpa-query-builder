@@ -19,7 +19,7 @@ public class ColumnFields {
                 .filter(ColumnField::isNotTransient).collect(Collectors.toList());
     }
 
-    public String extractPrimaryKeyQuery() {
+    public String generatePrimaryKeyQuery() {
         StringBuilder sb = new StringBuilder();
         List<ColumnField> primaryKey = columnFields.stream().filter(ColumnField::isPrimaryKey).collect(Collectors.toList());
         if(primaryKey.isEmpty()) {
@@ -33,7 +33,7 @@ public class ColumnFields {
 
     public String generateDdlQuery() {
         String columnQuery = columnFields.stream().map(ColumnFields::generateColumnDdlQuery).collect(Collectors.joining(", "));
-        String primaryQuery = extractPrimaryKeyQuery();
+        String primaryQuery = generatePrimaryKeyQuery();
 
         return String.join(", ", columnQuery, primaryQuery);
     }
