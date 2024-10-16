@@ -1,4 +1,4 @@
-package persistence.sql.meta.EntityType;
+package persistence.sql.meta.entityType;
 
 public interface ColumnType {
     String getQueryDefinition();

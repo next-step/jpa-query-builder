@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-import persistence.sql.meta.ColumnInfos;
+import persistence.sql.meta.ColumnFields;
 import persistence.sql.meta.TableInfo;
 
 public class QueryBuilderDDL {
@@ -13,7 +13,7 @@ public class QueryBuilderDDL {
     public String buildCreateDdl(Class<?> clazz){
         String createFormat = "create table %s (%s);";
         TableInfo tableInfo = new TableInfo(clazz);
-        ColumnInfos columnInfos = new ColumnInfos(clazz);
+        ColumnFields columnInfos = new ColumnFields(clazz);
         return String.format(createFormat, tableInfo.getTableName(), columnInfos.generateDdlQuery());
     }
 

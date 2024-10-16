@@ -6,44 +6,48 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColumnInfos {
+public class ColumnFields {
 
-    private List<ColumnInfo> columnInfos;
+    private List<ColumnField> columnFields;
 
-    public ColumnInfos(Class<?> clazz) {
-        this.columnInfos = extract(clazz);
+    public ColumnFields(Class<?> clazz) {
+        this.columnFields = extract(clazz);
     }
 
-    public List<ColumnInfo> extract(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields()).map(ColumnInfo::extract)
-                .filter(ColumnInfo::isNotTransient).collect(Collectors.toList());
+    private List<ColumnField> extract(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields()).map(ColumnField::new)
+                .filter(ColumnField::isNotTransient).collect(Collectors.toList());
     }
 
     public String extractPrimaryKeyQuery() {
         StringBuilder sb = new StringBuilder();
-        List<ColumnInfo> primaryKey = columnInfos.stream().filter(ColumnInfo::isPrimaryKey).collect(Collectors.toList());
+        List<ColumnField> primaryKey = columnFields.stream().filter(ColumnField::isPrimaryKey).collect(Collectors.toList());
         if(primaryKey.isEmpty()) {
             throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
         }
         sb.append("primary key (");
-        sb.append(primaryKey.stream().map(ColumnInfo::getName).collect(Collectors.joining(", ")));
+        sb.append(primaryKey.stream().map(ColumnField::getName).collect(Collectors.joining(", ")));
         sb.append(")");
         return sb.toString();
     }
 
     public String generateDdlQuery() {
-        String columnQuery = columnInfos.stream().map(ColumnInfos::generateColumnDdlQuery).collect(Collectors.joining(", "));
+        String columnQuery = columnFields.stream().map(ColumnFields::generateColumnDdlQuery).collect(Collectors.joining(", "));
         String primaryQuery = extractPrimaryKeyQuery();
 
         return String.join(", ", columnQuery, primaryQuery);
     }
 
-    private static String generateColumnDdlQuery(ColumnInfo columnInfo) {
+    private static String generateColumnDdlQuery(ColumnField columnInfo) {
         String columnQuery = String.join(" ", columnInfo.getName(), columnInfo.getColumnType().getQueryDefinition());
         String optionQuery = columnInfo.getOptions().stream().collect(Collectors.joining(" "));
         if(StringUtils.isNullOrEmpty(optionQuery)) {
             return columnQuery;
         }
         return String.join(" ", columnQuery, optionQuery);
+    }
+
+    public List<ColumnField> getColumnFields() {
+        return columnFields;
     }
 }

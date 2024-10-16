@@ -1,23 +1,23 @@
-package persistence.sql.meta.EntityType;
+package persistence.sql.meta.entityType;
 
 import java.util.Arrays;
 
-public enum H2ColumnType implements ColumnType {
+public enum MySQLColumnType implements ColumnType {
     BIGINT(Long.class, "bigint"),
-    VARCHAR(String.class, "varchar(255)"),
-    INTEGER(Integer.class, "integer"),
+    VARCHAR(String.class, "varchar2"),
+    INTEGER(Integer.class, "INT"),
     ;
 
     private final Class<?> javaType;
     private final String queryDefinition;
 
-    H2ColumnType(Class<?> javaType, String columnType) {
+    MySQLColumnType(Class<?> javaType, String columnType) {
         this.javaType = javaType;
         this.queryDefinition = columnType;
     }
 
-    public static H2ColumnType of(Class<?> javaType) {
-        return Arrays.stream(H2ColumnType.values())
+    public static MySQLColumnType of(Class<?> javaType) {
+        return Arrays.stream(MySQLColumnType.values())
                 .filter(type -> type.getJavaType() == javaType)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(javaType + "과 매칭되는 타입이 존재하지 않습니다."));

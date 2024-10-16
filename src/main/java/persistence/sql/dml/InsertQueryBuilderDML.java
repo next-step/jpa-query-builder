@@ -1,8 +1,14 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.QueryBuilderDDL;
-import persistence.sql.meta.ColumnInfos;
+import persistence.sql.meta.ColumnField;
+import persistence.sql.meta.ColumnFields;
 import persistence.sql.meta.TableInfo;
+import persistence.sql.sample.Person;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class InsertQueryBuilderDML {
     private static InsertQueryBuilderDML queryBuilderDML = new InsertQueryBuilderDML();
@@ -11,18 +17,32 @@ public class InsertQueryBuilderDML {
         return queryBuilderDML;
     }
 
-    public String getQuery(Class<?> clazz) {
+    public String getQuery(Person person) throws Exception {
+        TableInfo tableInfo = new TableInfo(person.getClass());
         String insertFormat = "insert into %s (%s) values (%s);";
-        return String.format(insertFormat, columnsClause(clazz), valueClause(clazz));
+        return String.format(insertFormat, tableInfo.getTableName(), columnsClause(person.getClass()), valueClause(person));
     }
 
     private String columnsClause(Class<?> clazz) {
-        ColumnInfos columnInfos = new ColumnInfos(clazz);
-        return "";
+        ColumnFields columnInfos = new ColumnFields(clazz);
+        return columnInfos.getColumnFields()
+                .stream().map(ColumnField::getName)
+                .collect(Collectors.joining(", "));
     }
 
-    private String valueClause(Object object) {
-        return "";
+    private String valueClause(Object object) throws Exception {
+        ColumnFields columnInfos = new ColumnFields(object.getClass());
+        List<Field> fields = columnInfos.getColumnFields().stream()
+                .filter(ColumnField::isNotTransient)
+                .map(ColumnField::getField)
+                .collect(Collectors.toList());
+
+        List<String> values = new ArrayList<>();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            values.add(String.valueOf(field.get(object)));
+        }
+        return String.join(", ", values);
     }
 
 }
