@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InsertDDLQueryBuilderTest {
+class InsertQueryBuilderTest {
 
     @Test
     public void testInsertQuery() {

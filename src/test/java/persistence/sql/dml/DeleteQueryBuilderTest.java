@@ -1,13 +1,12 @@
 package persistence.sql.dml;
 
 import domain.Person;
-import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class DeleteDDLQueryBuilderTest {
+class DeleteQueryBuilderTest {
     @Test
     public void testDeleteById() {
         DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
