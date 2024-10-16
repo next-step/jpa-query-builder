@@ -1,11 +1,12 @@
 package persistence.sql.definition;
 
 import jakarta.persistence.Column;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import persistence.sql.SqlType;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class ColumnDefinition {
@@ -83,31 +84,46 @@ public class ColumnDefinition {
         return declaredName;
     }
 
-    @Nullable
+    public boolean hasValue(Object entity) {
+        final Field[] declaredFields = entity.getClass().getDeclaredFields();
+        final Field targetField = findMatchingField(declaredFields);
+
+        return getValueFromObject(entity, targetField).isPresent();
+    }
+
     public Object valueAsString(Object entity) {
-        Field[] declaredFields = entity.getClass().getDeclaredFields();
+        final Field[] declaredFields = entity.getClass().getDeclaredFields();
+        final Field targetField = findMatchingField(declaredFields);
 
-        return Arrays.stream(declaredFields).sequential()
-                .filter(field -> field.getName().equals(declaredName()))
-                .map(field -> {
-                    boolean wasAccessible = field.canAccess(entity);
-                    try {
-                        if (!wasAccessible) {
-                            field.setAccessible(true);
-                        }
+        return getValueFromObject(entity, targetField)
+                .orElseThrow(() -> new NoSuchElementException("Value is null"));
+    }
 
-                        return Optional.ofNullable(field.get(entity));
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalStateException("Cannot access field value", e);
-                    } finally {
-                        if (!wasAccessible) {
-                            field.setAccessible(false);
-                        }
-                    }
+    private Field findMatchingField(Field[] declaredFields) {
+        for (Field field : declaredFields) {
+            if (field.getName().equals(declaredName())) {
+                return field;
+            }
+        }
 
-                })
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Field not found"))
-                .orElse(null);
+        throw new NoSuchElementException("Field not found");
+    }
+
+    @NotNull
+    private static Optional<Object> getValueFromObject(Object entity, Field field) {
+        boolean wasAccessible = field.canAccess(entity);
+        try {
+            if (!wasAccessible) {
+                field.setAccessible(true);
+            }
+
+            return Optional.ofNullable(field.get(entity));
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Cannot access field value", e);
+        } finally {
+            if (!wasAccessible) {
+                field.setAccessible(false);
+            }
+        }
     }
 }

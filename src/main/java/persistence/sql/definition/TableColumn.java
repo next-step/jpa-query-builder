@@ -25,17 +25,13 @@ public class TableColumn implements Queryable {
     }
 
     @Override
-    public boolean hasValue(Object object) {
-        final Object value = columnDefinition.valueAsString(object);
-        return value != null;
+    public boolean hasValue(Object entity) {
+        return columnDefinition.hasValue(entity);
     }
 
     @Override
-    public String getValue(Object object) {
-        final Object value = columnDefinition.valueAsString(object);
-        if (value == null) {
-            throw new IllegalStateException("Value is null");
-        }
+    public String getValue(Object entity) {
+        final Object value = columnDefinition.valueAsString(entity);
 
         if (value instanceof String) {
             return "'" + value + "'";

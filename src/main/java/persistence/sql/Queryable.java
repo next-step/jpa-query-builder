@@ -4,9 +4,9 @@ public interface Queryable {
 
     void applyToCreateQuery(StringBuilder query, Dialect dialect);
 
-    boolean hasValue(Object object);
+    boolean hasValue(Object entity);
 
-    String getValue(Object object);
+    String getValue(Object entity);
 
     String name();
 
