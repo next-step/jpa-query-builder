@@ -10,8 +10,8 @@ public class DeleteByIdQueryBuilderTest {
 
     @Test
     void testDeleteById() {
-        final String sql = sut.build(Person.class);
+        final String sql = sut.build(Person.class, 1L);
 
-        assertThat(sql).isEqualTo("DELETE FROM users WHERE id = ?;");
+        assertThat(sql).isEqualTo("DELETE FROM users WHERE id = 1;");
     }
 }

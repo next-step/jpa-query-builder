@@ -86,8 +86,7 @@ public class Application {
 
     private static void selectById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
         SelectByIdQueryBuilder selectByIdQueryBuilder = new SelectByIdQueryBuilder();
-        String query = selectByIdQueryBuilder.build(testClass);
-        query = query.replace("?", id.toString());
+        String query = selectByIdQueryBuilder.build(testClass, id);
 
         List<Person> people = jdbcTemplate.query(query, (RowMapper) rs -> new Person(
                 rs.getLong("id"),
@@ -121,8 +120,7 @@ public class Application {
 
     private static void deleteById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
         DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder();
-        String query = deleteByIdQueryBuilder.build(testClass);
-        query = query.replace("?", id.toString());
+        String query = deleteByIdQueryBuilder.build(testClass, id);
 
         jdbcTemplate.execute(query);
 
