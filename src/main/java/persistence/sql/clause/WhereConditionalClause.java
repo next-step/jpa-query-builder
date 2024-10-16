@@ -1,5 +1,7 @@
 package persistence.sql.clause;
 
+import persistence.sql.data.ClauseType;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +10,11 @@ public record WhereConditionalClause(String column, String value, String operato
         if (column == null || value == null || operator == null) {
             throw new IllegalArgumentException("Column, value, operator must not be null");
         }
+    }
+
+    @Override
+    public boolean supported(ClauseType clauseType) {
+        return clauseType == ClauseType.WHERE;
     }
 
     public static WhereExpression builder() {

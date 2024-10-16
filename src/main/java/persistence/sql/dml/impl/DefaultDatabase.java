@@ -26,17 +26,6 @@ public class DefaultDatabase implements Database {
     }
 
     @Override
-    public ResultSet executeQuery(String query) {
-        try {
-            Connection connection = server.getConnection();
-            return connection.createStatement().executeQuery(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to execute query: " + query, e);
-        }
-    }
-
-    @Override
     public <T> T executeQuery(String query, RowMapper<T> rowMapper) {
         try (Connection connection = server.getConnection()) {
             ResultSet resultSet = connection.createStatement().executeQuery(query);
