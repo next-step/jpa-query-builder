@@ -26,3 +26,12 @@
   - [X] @Table name에 따라 테이블 이름 변경
   - [X] @Transient 이 포함된 컬럼은 컬럼 생성하지 않음
 - [X] Person Class의 Drop Query 생성
+
+## 3단계 QueryBuilderDML
+
+### 요구사항
+
+- [] Person class 의 insert query 생성
+- [] Person class 의 findAll query 생성
+- [] Person class 의 findById query 생성
+- [] Person class 의 delete query 생성

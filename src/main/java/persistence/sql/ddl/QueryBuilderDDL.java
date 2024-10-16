@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import persistence.sql.meta.ColumnFields;
+import persistence.sql.meta.TableInfo;
+
 public class QueryBuilderDDL {
     private static QueryBuilderDDL queryBuilderDDL = new QueryBuilderDDL();
     private QueryBuilderDDL() { }
@@ -8,12 +11,15 @@ public class QueryBuilderDDL {
     }
 
     public String buildCreateDdl(Class<?> clazz){
-        TableQueryBuilder tableQueryBuilder = TableQueryBuilder.getInstance();
-        return tableQueryBuilder.generateCreateTable(clazz);
+        String createFormat = "create table %s (%s);";
+        TableInfo tableInfo = new TableInfo(clazz);
+        ColumnFields columnInfos = new ColumnFields(clazz);
+        return String.format(createFormat, tableInfo.getTableName(), columnInfos.generateDdlQuery());
     }
 
     public String buildDropDdl(Class<?> clazz) {
-        TableQueryBuilder tableQueryBuilder = TableQueryBuilder.getInstance();
-        return tableQueryBuilder.generateDropTable(clazz);
+        String dropFormat = "drop table if exists %s;";
+        TableInfo tableInfo = new TableInfo(clazz);
+        return String.format(dropFormat, tableInfo.getTableName());
     }
 }
