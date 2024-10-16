@@ -1,15 +1,17 @@
 package orm;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import orm.exception.EntityHasNoDefaultConstructorException;
 import orm.exception.InvalidEntityException;
 import orm.exception.InvalidIdMappingException;
 import orm.settings.JpaSettings;
 import orm.util.CollectionUtils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,11 +19,15 @@ import java.util.List;
 /**
  * 엔티티 클래스로부터 테이블 정보를 추출한 클래스
  *
- *  @param <E> @Entity 어노테이션이 붙은 클래스
+ * @param <E> @Entity 어노테이션이 붙은 클래스
  */
 public class TableEntity<E> {
+    private static final Logger logger = LoggerFactory.getLogger(TableEntity.class);
 
     private final String tableName;
+
+    private final E entity;
+    private final Class<E> tableClass;
 
     // columns
     private final TablePrimaryField id;
@@ -34,12 +40,29 @@ public class TableEntity<E> {
         throwIfNotEntity(entityClass);
         this.jpaSettings = settings;
         this.tableName = extractTableName(entityClass);
+        this.tableClass = entityClass;
+        this.entity = createNewInstanceByDefaultConstructor(entityClass);
+        this.id = extractId(entityClass);
+        this.allFields = extractAllPersistenceFields(entityClass);
+    }
+
+    public TableEntity(E entity, JpaSettings settings) {
+        Class<E> entityClass = (Class<E>) entity.getClass();
+        throwIfNotEntity(entityClass);
+        this.jpaSettings = settings;
+        this.tableName = extractTableName(entityClass);
+        this.tableClass = entityClass;
+        this.entity = entity;
         this.id = extractId(entityClass);
         this.allFields = extractAllPersistenceFields(entityClass);
     }
 
     public TableEntity(Class<E> entityClass) {
         this(entityClass, JpaSettings.ofDefault());
+    }
+
+    public TableEntity(E entity) {
+        this(entity, JpaSettings.ofDefault());
     }
 
     public JpaSettings getJpaSettings() {
@@ -50,12 +73,30 @@ public class TableEntity<E> {
         return tableName;
     }
 
+    // id 컬럼
     public TablePrimaryField getId() {
         return id;
     }
 
+    // id(pk) 생성 전략
+    public GenerationType getIdGenerationType() {
+        return getId().getGeneratedValue().strategy();
+    }
+
+    // id 제외 모든 컬럼
+    public List<TableField> getNonIdFields() {
+        return allFields.stream()
+                .filter(field -> !field.isId())
+                .toList();
+    }
+
+    // id 포함 모든 컬럼
     public List<TableField> getAllFields() {
         return allFields;
+    }
+
+    public Class<E> getTableClass() {
+        return tableClass;
     }
 
     /**
@@ -91,11 +132,12 @@ public class TableEntity<E> {
             throw new InvalidIdMappingException("Entity must have one @Id field");
         }
 
-        return new TablePrimaryField(idList.getFirst(), jpaSettings);
+        return new TablePrimaryField(idList.getFirst(), entity, jpaSettings);
     }
 
     /**
      * 모든 영속성 필드 추출
+     *
      * @param entityClass
      * @return
      */
@@ -118,11 +160,24 @@ public class TableEntity<E> {
             if (!transientAnnotated) {
                 list.add(
                         idAnnotated
-                                ? new TablePrimaryField(declaredField, jpaSettings)
-                                : new TableField(declaredField, jpaSettings)
+                                ? new TablePrimaryField(declaredField, entity, jpaSettings)
+                                : new TableField(declaredField, entity, jpaSettings)
                 );
             }
         }
         return list;
+    }
+
+    private E createNewInstanceByDefaultConstructor(Class<E> entityClass) {
+        try {
+            Constructor<E> defaultConstructor = entityClass.getDeclaredConstructor();
+            defaultConstructor.setAccessible(true);
+            return defaultConstructor.newInstance();
+        } catch (
+                NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e
+        ) {
+            logger.error(e.getMessage());
+            throw new EntityHasNoDefaultConstructorException("entity must contain default constructor");
+        }
     }
 }

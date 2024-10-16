@@ -5,6 +5,7 @@ import orm.TableEntity;
 import orm.dsl.step.ddl.CreateTableStep;
 import orm.dsl.step.ddl.DropTableStep;
 import orm.dsl.dialect.DialectStatementMap;
+import orm.dsl.step.dml.InsertIntoStep;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -23,6 +24,10 @@ public class ImplQueryBuilder {
 
     public <E> DropTableStep buildDropTable(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getDropTableImpl(dialect));
+    }
+
+    public <E> InsertIntoStep buildInsert(TableEntity<E> tableEntity) {
+        return newInstanceOfImpl(tableEntity, statementMap.getInsertIntoImpl(dialect));
     }
 
     private <E, T extends QueryBuilder> T newInstanceOfImpl(TableEntity<E> tableEntity, Class<T> implClass) {

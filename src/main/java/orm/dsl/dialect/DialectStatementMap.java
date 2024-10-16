@@ -5,6 +5,8 @@ import orm.dsl.ddl.CreateTableImpl;
 import orm.dsl.ddl.DropTableImpl;
 import orm.dsl.dialect.h2.H2CreateTableImpl;
 import orm.dsl.dialect.h2.H2DropTableImpl;
+import orm.dsl.dialect.h2.H2InsertImpl;
+import orm.dsl.dml.InsertImpl;
 
 import java.util.Map;
 
@@ -26,6 +28,10 @@ public class DialectStatementMap {
         return dropTableImplMap.get(dialect);
     }
 
+    public Class<? extends InsertImpl> getInsertIntoImpl(SQLDialect dialect) {
+        return null;
+    }
+
     private Map<SQLDialect, Class<? extends CreateTableImpl>> initSelectImplMap() {
         return Map.ofEntries(
                 Map.entry(SQLDialect.H2, H2CreateTableImpl.class)
@@ -35,6 +41,12 @@ public class DialectStatementMap {
     private Map<SQLDialect, Class<? extends DropTableImpl>> initDropImplMap() {
         return Map.ofEntries(
                 Map.entry(SQLDialect.H2, H2DropTableImpl.class)
+        );
+    }
+
+    private Map<SQLDialect, Class<? extends InsertImpl>> initInsertImplMap() {
+        return Map.ofEntries(
+                Map.entry(SQLDialect.H2, H2InsertImpl.class)
         );
     }
 }

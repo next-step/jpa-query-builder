@@ -32,6 +32,7 @@
 
 ## TODO
 
+- [x] 1.0 - TableField에 엔티티 필드의 데이터 저장되도록 구현
 - [ ] 1.1 - insert 구현 
 - [ ] 1.2 - bulk insert 구현 (optional)
 

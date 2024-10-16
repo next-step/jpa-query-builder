@@ -21,11 +21,11 @@ class DMLQueryBuilder {
 
 
 ' 이거도 그리면 좋지만 안이쁘니 숨기자...
-DDLQueryBuilder -[hidden]..> CreateTableStep:returns
-DDLQueryBuilder -[hidden]..> DropTableStep:returns
+'DDLQueryBuilder -[hidden]..> CreateTableStep:returns
+'DDLQueryBuilder -[hidden]..> DropTableStep:returns
 
-DMLQueryBuilder -[hidden]..> InsertIntoStep:returns
-DMLQueryBuilder -[hidden]..> DeleteFromStep:returns
+'DMLQueryBuilder -[hidden]..> InsertIntoStep:returns
+'DMLQueryBuilder -[hidden]..> DeleteFromStep:returns
 
 ' Step 들 정의
 interface CreateTableStep extends DDLTableIfNotExistStep {
@@ -36,31 +36,27 @@ interface DropTableStep extends DDLTableIfNotExistStep {
 
 }
 
-interface SelectStep {
+interface SelectStep extends FromStep {
 
 }
 
-interface SelectFromStep {
+interface SelectFromStep extends WhereStep {
 
 }
 
-interface InsertIntoStep extends InsertIntoValuesStep {
+interface DeleteFromStep extends WhereStep {
 
 }
 
-interface InsertIntoValuesStep extends QueryBuilder {
+interface FromStep extends WhereStep, QueryBuilder {
 
 }
 
-interface DeleteFromStep {
+interface WhereStep extends QueryBuilder {
 
 }
 
-interface FromStep extends SelectStep, DeleteFromStep, SelectFromStep, QueryBuilder {
-
-}
-
-interface WhereStep extends FromStep, QueryBuilder {
+interface InsertIntoStep extends QueryBuilder {
 
 }
 
@@ -77,12 +73,33 @@ class H2CreateTableImpl extends CreateTableImpl {
 
 }
 
+' DROP
 abstract class DropTableImpl extends DropTableStep {
     - JpaSettings
     - TableEntity<ENTITY> tableEntity
 }
 
 class H2DropTableImpl extends DropTableImpl {
+
+}
+
+' INSERT
+abstract class InsertImpl extends InsertIntoStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2InsertImpl extends InsertImpl {
+
+}
+
+' SELECT
+abstract class SelectImpl extends SelectStep, SelectFromStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2SelectImpl extends SelectImpl {
 
 }
 
