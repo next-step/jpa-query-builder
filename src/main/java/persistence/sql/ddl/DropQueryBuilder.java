@@ -1,11 +1,11 @@
 package persistence.sql.ddl;
 
-import persistence.sql.MetadataUtils;
+import persistence.sql.Metadata;
 
 public class DropQueryBuilder {
     public String dropTableQuery(Class<?> clazz) {
-        MetadataUtils metadataUtils = new MetadataUtils(clazz);
-        String tableName = metadataUtils.getTableName();
+        Metadata metadata = new Metadata(clazz);
+        String tableName = metadata.getTableName();
         return String.format("drop table %s", tableName);
     }
 }

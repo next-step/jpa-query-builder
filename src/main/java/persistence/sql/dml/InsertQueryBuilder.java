@@ -2,22 +2,22 @@ package persistence.sql.dml;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Transient;
-import persistence.sql.MetadataUtils;
+import persistence.sql.Metadata;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class InsertQueryBuilder {
-    private final MetadataUtils metadataUtils;
+    private final Metadata metadata;
 
     public InsertQueryBuilder(Class<?> clazz) {
-        this.metadataUtils = new MetadataUtils(clazz);
+        this.metadata = new Metadata(clazz);
     }
 
     public String getInsertQuery(Object object) {
         Class<?> clazz = object.getClass();
-        String tableName = metadataUtils.getTableName();
+        String tableName = metadata.getTableName();
         String tableColumns = columnsClause(clazz);
         String tableValues = valueClause(object);
         return String.format("insert into %s (%s) VALUES (%s)", tableName, tableColumns, tableValues);
@@ -27,7 +27,7 @@ public class InsertQueryBuilder {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(GeneratedValue.class))
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(metadataUtils::getFieldName)
+                .map(metadata::getFieldName)
                 .collect(Collectors.joining(", "));
     }
 

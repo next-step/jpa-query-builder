@@ -17,6 +17,7 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
+
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

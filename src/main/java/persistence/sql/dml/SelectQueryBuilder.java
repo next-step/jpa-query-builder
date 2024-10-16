@@ -1,21 +1,21 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.Transient;
-import persistence.sql.MetadataUtils;
+import persistence.sql.Metadata;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class SelectQueryBuilder {
-    private final MetadataUtils metadataUtils;
+    private final Metadata metadata;
 
     public SelectQueryBuilder(Class<?> clazz) {
-        this.metadataUtils = new MetadataUtils(clazz);
+        this.metadata = new Metadata(clazz);
     }
 
     public String findAll(Class<?> clazz) {
-        MetadataUtils metadataUtils = new MetadataUtils(clazz);
-        String tableName = metadataUtils.getTableName();
+        Metadata metadata = new Metadata(clazz);
+        String tableName = metadata.getTableName();
         String tableColumns = getTableColumns(clazz);
         return String.format("select %s FROM %s", tableColumns, tableName);
     }
@@ -23,14 +23,14 @@ public class SelectQueryBuilder {
     private String getTableColumns(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(metadataUtils::getFieldName)
+                .map(metadata::getFieldName)
                 .collect(Collectors.joining(", "));
     }
 
     public String findById(Class<?> clazz, Object idValue) {
-        MetadataUtils metadataUtils = new MetadataUtils(clazz);
+        Metadata metadata = new Metadata(clazz);
         String selectQuery = findAll(clazz);
-        String idField = metadataUtils.getIdField();
+        String idField = metadata.getIdField();
         String formattedIdValue = getFormattedId(idValue);
         return String.format("%s where %s = %s", selectQuery, idField, formattedIdValue);
     }
