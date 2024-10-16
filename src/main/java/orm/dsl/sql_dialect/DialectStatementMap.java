@@ -3,10 +3,12 @@ package orm.dsl.sql_dialect;
 import orm.SQLDialect;
 import orm.dsl.ddl.CreateTableImpl;
 import orm.dsl.ddl.DropTableImpl;
+import orm.dsl.dml.SelectImpl;
 import orm.dsl.sql_dialect.h2.H2CreateTableImpl;
 import orm.dsl.sql_dialect.h2.H2DropTableImpl;
 import orm.dsl.sql_dialect.h2.H2InsertImpl;
 import orm.dsl.dml.InsertImpl;
+import orm.dsl.sql_dialect.h2.H2SelectImpl;
 
 import java.util.Map;
 
@@ -15,11 +17,13 @@ public class DialectStatementMap {
     private final Map<SQLDialect, Class<? extends CreateTableImpl>> createTableImplMap;
     private final Map<SQLDialect, Class<? extends DropTableImpl>> dropTableImplMap;
     private final Map<SQLDialect, Class<? extends InsertImpl>> insertImplMap;
+    private final Map<SQLDialect, Class<? extends SelectImpl>> selectImplMap;
 
     public DialectStatementMap() {
-        this.createTableImplMap = initSelectImplMap();
+        this.createTableImplMap = initCreateImplMap();
         this.dropTableImplMap = initDropImplMap();
         this.insertImplMap = initInsertImplMap();
+        this.selectImplMap = initSelectImplMap();
     }
 
     public Class<? extends CreateTableImpl> getCreateTableImpl(SQLDialect dialect) {
@@ -34,7 +38,11 @@ public class DialectStatementMap {
         return insertImplMap.get(dialect);
     }
 
-    private Map<SQLDialect, Class<? extends CreateTableImpl>> initSelectImplMap() {
+    public Class<? extends SelectImpl> getSelectImpl(SQLDialect dialect) {
+        return selectImplMap.get(dialect);
+    }
+
+    private Map<SQLDialect, Class<? extends CreateTableImpl>> initCreateImplMap() {
         return Map.ofEntries(
                 Map.entry(SQLDialect.H2, H2CreateTableImpl.class)
         );
@@ -49,6 +57,12 @@ public class DialectStatementMap {
     private Map<SQLDialect, Class<? extends InsertImpl>> initInsertImplMap() {
         return Map.ofEntries(
                 Map.entry(SQLDialect.H2, H2InsertImpl.class)
+        );
+    }
+
+    private Map<SQLDialect, Class<? extends SelectImpl>> initSelectImplMap() {
+        return Map.ofEntries(
+                Map.entry(SQLDialect.H2, H2SelectImpl.class)
         );
     }
 }

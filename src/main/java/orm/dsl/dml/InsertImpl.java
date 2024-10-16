@@ -23,13 +23,13 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
 
     public InsertImpl(TableEntity<E> tableEntity) {
         this.tableEntity = tableEntity;
-        this.inertFields = tableEntity.getAllFields();
+        this.inertFields = extractInsertFields(tableEntity);
     }
 
     @Override
     public <T> InsertIntoStep values(T entity) {
         throwIfNotMatchingEntity(tableEntity, entity);
-        this.inertValues = List.of(extractInsertFields(entity));
+        this.inertValues = List.of(extractInsertValues(entity));
         return this;
     }
 
@@ -40,7 +40,7 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
         }
 
         this.inertValues = entityList.stream()
-                .map(this::extractInsertFields)
+                .map(this::extractInsertValues)
                 .collect(Collectors.toUnmodifiableList());
 
         return this;
@@ -83,8 +83,14 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
      * Auto Increment 인 경우 ID 컬럼 포함.
      * 그 외의 경우 ID 컬럼 제외하고 insert 할 컬럼들 추출
      */
-    private <T> List<? extends TableField> extractInsertFields(T entity) {
+    private <T> List<? extends TableField> extractInsertValues(T entity) {
         TableEntity<T> tableEntity = new TableEntity<>(entity);
+        return tableEntity.getIdGenerationType() == GenerationType.IDENTITY
+                ? tableEntity.getNonIdFields()
+                : tableEntity.getAllFields();
+    }
+
+    private <T> List<? extends TableField> extractInsertFields(TableEntity<T> tableEntity ) {
         return tableEntity.getIdGenerationType() == GenerationType.IDENTITY
                 ? tableEntity.getNonIdFields()
                 : tableEntity.getAllFields();

@@ -36,10 +36,6 @@ interface DropTableStep extends DDLTableIfNotExistStep {
 
 }
 
-interface SelectStep extends FromStep {
-
-}
-
 interface SelectFromStep extends WhereStep {
 
 }
@@ -94,7 +90,7 @@ class H2InsertImpl extends InsertImpl {
 }
 
 ' SELECT
-abstract class SelectImpl extends SelectStep, SelectFromStep {
+abstract class SelectImpl extends SelectFromStep {
     - JpaSettings
     - TableEntity<ENTITY> tableEntity
 }

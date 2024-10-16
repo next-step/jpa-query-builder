@@ -1,8 +1,6 @@
 package orm.dsl.dml;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -47,6 +45,26 @@ public class DMLQueryBuilderInsertTest {
         // then
         assertThat(query).isEqualTo("INSERT INTO person (id,name,age) VALUES (1,설동민,30), (2,설동민2,30), (2,설동민3,30)");
     }
+
+    @Test
+    @DisplayName("테이블 pk가 AutoIncrement 인 경우, INSERT 절에 PK를 제외하고 쿼리를 만든다.")
+    void DML_INSERT_문_AI_테스트() {
+        // given
+        DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder();
+        final var people = List.of(
+                new PersonWithAI(1L, 30, "설동민"),
+                new PersonWithAI(2L, 30, "설동민2"),
+                new PersonWithAI(2L, 30, "설동민3")
+        ) ;
+
+        // when
+        String query = dmlQueryBuilder.insertInto(PersonWithAI.class)
+                .values(people)
+                .build();
+
+        // then
+        assertThat(query).isEqualTo("INSERT INTO person_ai (name,age) VALUES (설동민,30), (설동민2,30), (설동민3,30)");
+    }
 }
 
 @Entity
@@ -64,6 +82,28 @@ class Person {
     }
 
     public Person( Long id, int age, String name) {
+        this.age = age;
+        this.id = id;
+        this.name = name;
+    }
+}
+
+@Entity
+@Table(name = "person_ai")
+class PersonWithAI {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    private int age;
+
+    public PersonWithAI() {
+    }
+
+    public PersonWithAI(Long id, int age, String name) {
         this.age = age;
         this.id = id;
         this.name = name;
