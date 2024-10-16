@@ -19,14 +19,11 @@ public class QueryBuilder {
     }
 
     public String drop(Class<?> entity) {
-        String tableName = entity.isAnnotationPresent(Table.class) ? entity.getAnnotation(Table.class).name() : entity.getSimpleName();;
-        return "DROP TABLE %s;".formatted(tableName);
+        return "DROP TABLE %s;".formatted(this.getTableName(entity));
     }
 
     private String getCreateTableQuery(Class<?> entity) {
-        String tableName = entity.isAnnotationPresent(Table.class) ? entity.getAnnotation(Table.class).name() : entity.getSimpleName();;
-
-        return "CREATE TABLE %s".formatted(tableName);
+        return "CREATE TABLE %s".formatted(this.getTableName(entity));
     }
 
     private String generateColumnDefinitions(Class<?> entity) {
@@ -41,5 +38,16 @@ public class QueryBuilder {
         }
         Column column = field.getAnnotation(Column.class);
         return column.name();
+    }
+
+    private String getTableName(Class<?> entity) {
+        Table table = entity.getAnnotation(Table.class);
+        if (table == null) {
+            return entity.getSimpleName();
+        }
+        if (table.name().isBlank()) {
+            return entity.getSimpleName();
+        }
+        return table.name();
     }
 }

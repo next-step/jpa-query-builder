@@ -2,16 +2,22 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.entity.BrandNewPerson;
-import persistence.sql.entity.NewPerson;
-import persistence.sql.entity.Person;
+import persistence.sql.entity.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class QueryBuilderTest {
     @Test
     @DisplayName("Person 엔티티 create 쿼리를 생성한다")
     void testCreatePersonQuery() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String expectedQuery = "CREATE TABLE Person (id BIGINT PRIMARY KEY, name VARCHAR(255), age INTEGER);";
+        assertThat(queryBuilder.create(Person.class)).isEqualTo(expectedQuery);
+    }
+
+    @Test
+    @DisplayName("@Table이 선언되었지만 name이 없는 경우 entity name이 테이블 이름이 되어야한다")
+    void testWithoutTableEntityAnnotation() {
         QueryBuilder queryBuilder = new QueryBuilder();
         String expectedQuery = "CREATE TABLE Person (id BIGINT PRIMARY KEY, name VARCHAR(255), age INTEGER);";
         assertThat(queryBuilder.create(Person.class)).isEqualTo(expectedQuery);
