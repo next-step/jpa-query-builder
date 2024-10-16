@@ -47,19 +47,13 @@ public class QueryGenerator {
     }
 
     private String getColumnDefinition(final Field field) {
-        final String columnName = getColumnName(field);
-        final String columnType = getColumnType(field);
-        final String identityClause = getIdentityClause(field);
-        final String nullableClause = getNullableClause(field);
-        final String primaryKeyClause = getPrimaryKeyClause(field);
-
         return INDENTATION +
-               columnName +
+               getColumnName(field) +
                " " +
-               columnType +
-               identityClause +
-               nullableClause +
-               primaryKeyClause;
+               getColumnType(field) +
+               getIdentityClause(field) +
+               getNullableClause(field) +
+               getPrimaryKeyClause(field);
     }
 
     private String getPrimaryKeyClause(final Field field) {
