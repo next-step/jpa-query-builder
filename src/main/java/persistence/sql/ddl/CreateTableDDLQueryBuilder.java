@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
-public class CreateTableQueryBuilder extends QueryBuilder implements QueryBuilderAdapter {
+public class CreateTableDDLQueryBuilder extends DDLQueryBuilder implements QueryBuilderAdapter {
     @Override
     public String executeQuery(Class<?> entityClass, DDLType ddlType) {
         if(ddlType == DDLType.CREATE) {

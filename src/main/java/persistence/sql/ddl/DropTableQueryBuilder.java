@@ -17,7 +17,7 @@ public class DropTableQueryBuilder implements QueryBuilderAdapter {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("This Class is not an Entity ");
         }
-        String tableName = CreateTableQueryBuilder.getTableName(entityClass);
+        String tableName = CreateTableDDLQueryBuilder.getTableName(entityClass);
         return DROP_TABLE + tableName + ";";
     }
 }

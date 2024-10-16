@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class DeleteQueryBuilderTest {
+class DeleteDDLQueryBuilderTest {
     @Test
     public void testDeleteById() {
         DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();

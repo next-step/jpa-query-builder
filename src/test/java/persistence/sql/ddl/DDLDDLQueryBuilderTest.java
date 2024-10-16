@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DDLQueryBuilderTest {
-    private static final Logger logger = LoggerFactory.getLogger(DDLQueryBuilderTest.class);
+class DDLDDLQueryBuilderTest {
+    private static final Logger logger = LoggerFactory.getLogger(DDLDDLQueryBuilderTest.class);
 
     @Test
     public void testCreateTableQueryForPerson() {
         // Given: DDLQueryBuilder 인스턴스 생성
-        QueryBuilderAdapter ddlQueryBuilder = new CreateTableQueryBuilder();
+        QueryBuilderAdapter ddlQueryBuilder = new CreateTableDDLQueryBuilder();
 
         // When: Person 클래스에 대한 CREATE TABLE 쿼리 생성
         String createTableQuery = ddlQueryBuilder.executeQuery( Person.class, DDLType.CREATE);
