@@ -1,4 +1,5 @@
 package orm.dsl.step.dml;
 
-public interface SelectFromStep {
+public interface SelectFromStep extends WhereStep {
+
 }

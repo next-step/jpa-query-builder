@@ -2,9 +2,10 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "person")
 public class Person {
 
     @Id
@@ -12,7 +13,14 @@ public class Person {
 
     private String name;
 
-    @Transient
     private Integer age;
 
+    public Person() {
+    }
+
+    public Person(Long id, Integer age, String name) {
+        this.age = age;
+        this.id = id;
+        this.name = name;
+    }
 }

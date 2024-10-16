@@ -32,8 +32,7 @@ public class ImplQueryBuilder {
     }
 
     public <E> SelectFromStep buildSelect(TableEntity<E> tableEntity) {
-//        return newInstanceOfImpl(tableEntity, statementMap.getSelectImpl(dialect));
-        return null;
+        return newInstanceOfImpl(tableEntity, statementMap.getSelectImpl(dialect));
     }
 
     private <E, T extends QueryBuilder> T newInstanceOfImpl(TableEntity<E> tableEntity, Class<T> implClass) {

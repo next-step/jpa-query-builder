@@ -1,8 +1,9 @@
 package orm.dsl.dml;
 
-import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.Person;
+import test_entity.PersonWithAI;
 
 import java.util.List;
 
@@ -67,45 +68,3 @@ public class DMLQueryBuilderInsertTest {
     }
 }
 
-@Entity
-@Table(name = "person")
-class Person {
-
-    @Id
-    private Long id;
-
-    private String name;
-
-    private int age;
-
-    public Person() {
-    }
-
-    public Person( Long id, int age, String name) {
-        this.age = age;
-        this.id = id;
-        this.name = name;
-    }
-}
-
-@Entity
-@Table(name = "person_ai")
-class PersonWithAI {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
-
-    private int age;
-
-    public PersonWithAI() {
-    }
-
-    public PersonWithAI(Long id, int age, String name) {
-        this.age = age;
-        this.id = id;
-        this.name = name;
-    }
-}

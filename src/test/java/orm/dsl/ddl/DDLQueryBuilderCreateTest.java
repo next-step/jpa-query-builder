@@ -19,7 +19,7 @@ public class DDLQueryBuilderCreateTest {
         Class<Person> entityClass = Person.class;
         String expectedQuery = SQL_노멀라이즈(
                 """
-                        CREATE TABLE person (id BIGINT,name VARCHAR(255),PRIMARY KEY (id));
+                        CREATE TABLE person (id BIGINT,name VARCHAR(255),age INTEGER,PRIMARY KEY (id));
                         """
         );
 

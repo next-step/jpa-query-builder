@@ -1,6 +1,7 @@
 package orm.dsl.dml;
 
 import jakarta.persistence.GenerationType;
+import orm.QueryRenderer;
 import orm.TableEntity;
 import orm.TableField;
 import orm.dsl.step.dml.InsertIntoStep;
@@ -48,22 +49,17 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
 
     @Override
     public String build() {
+        QueryRenderer queryRenderer = new QueryRenderer();
         var queryToken = List.of(
                 "INSERT INTO",
                 tableEntity.getTableName(),
-                "(%s)".formatted(renderInsertColumns()),
+                "(%s)".formatted(queryRenderer.singleColumnListDotted(inertFields)),
                 "VALUES",
-                "%s".formatted(renderInsertValues())
+                "%s".formatted(queryRenderer.renderBulkInsertValues(inertValues))
 
         );
 
         return String.join(" ", queryToken);
-    }
-
-    protected String renderInsertColumns() {
-        return inertFields.stream()
-                .map(TableField::getFieldName)
-                .collect(Collectors.joining(","));
     }
 
     protected String renderInsertValues() {

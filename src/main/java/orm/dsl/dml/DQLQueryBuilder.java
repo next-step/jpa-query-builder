@@ -4,7 +4,6 @@ import orm.QueryProvider;
 import orm.SQLDialect;
 import orm.TableEntity;
 import orm.dsl.ImplQueryBuilder;
-import orm.dsl.step.dml.InsertIntoStep;
 import orm.dsl.step.dml.SelectFromStep;
 import orm.settings.JpaSettings;
 
@@ -21,9 +20,8 @@ public class DQLQueryBuilder implements QueryProvider {
     }
 
     public <E> SelectFromStep selectFrom(Class<E> entityClass) {
-        return null;
-//        return new ImplQueryBuilder(dialect())
-//                .buildInsert(new TableEntity<>(entityClass, settings));
+        return new ImplQueryBuilder(dialect())
+                .buildSelect(new TableEntity<>(entityClass, settings));
     }
 
     @Override
