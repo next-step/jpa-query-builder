@@ -1,7 +1,6 @@
 package persistence.sql.definition;
 
 import jakarta.persistence.Column;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import persistence.sql.SqlType;
 
@@ -91,11 +90,19 @@ public class ColumnDefinition {
         return Arrays.stream(declaredFields).sequential()
                 .filter(field -> field.getName().equals(declaredName()))
                 .map(field -> {
+                    boolean wasAccessible = field.canAccess(entity);
                     try {
-                        field.setAccessible(true);
+                        if (!wasAccessible) {
+                            field.setAccessible(true);
+                        }
+
                         return Optional.ofNullable(field.get(entity));
                     } catch (IllegalAccessException e) {
                         throw new IllegalStateException("Cannot access field value", e);
+                    } finally {
+                        if (!wasAccessible) {
+                            field.setAccessible(false);
+                        }
                     }
 
                 })
