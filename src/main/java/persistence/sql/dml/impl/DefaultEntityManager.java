@@ -130,20 +130,16 @@ public class DefaultEntityManager implements EntityManager {
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
         MetadataLoader<T> loader = new SimpleMetadataLoader<>(entityClass);
-
         String findAllQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.SELECT, loader);
-        try (ResultSet resultSet = database.executeQuery(findAllQuery)) {
 
+        return database.executeQuery(findAllQuery, resultSet -> {
             List<T> entities = new ArrayList<>();
             while (resultSet.next()) {
                 entities.add(mapRowResultSetToEntity(resultSet, loader));
             }
 
             return entities;
-        } catch (SQLException e) {
-            logger.severe("Failed to find all entities");
-            throw new NoSuchElementException(e);
-        }
+        });
     }
 
     private <T> T mapRowResultSetToEntity(ResultSet resultSet, MetadataLoader<T> loader) {

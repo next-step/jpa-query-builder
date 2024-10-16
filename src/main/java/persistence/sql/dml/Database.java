@@ -15,9 +15,6 @@ public interface Database {
      */
     void executeUpdate(String query);
 
-
-    ResultSet executeQuery(String query);
-
     /**
      * SELECT 쿼리를 실행하고 결과를 반환한다.
      *
