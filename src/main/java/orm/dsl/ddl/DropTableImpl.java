@@ -4,12 +4,12 @@ import orm.TableEntity;
 import orm.dsl.QueryBuilder;
 import orm.dsl.step.ddl.DropTableStep;
 
-public abstract class DropTableImpl<ENTITY> implements DropTableStep {
+public abstract class DropTableImpl<E> implements DropTableStep {
 
-    protected final TableEntity<ENTITY> tableEntity;
+    protected final TableEntity<E> tableEntity;
     protected boolean ifNotExist = false;
 
-    public DropTableImpl(TableEntity<ENTITY> tableEntity) {
+    public DropTableImpl(TableEntity<E> tableEntity) {
         this.tableEntity = tableEntity;
     }
 

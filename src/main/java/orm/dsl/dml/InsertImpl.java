@@ -6,6 +6,7 @@ import orm.TableField;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.exception.InvalidEntityException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,14 +18,18 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     // insert 할 컬럼들
     protected List<? extends TableField> inertFields;
 
+    // insert 할 값들
+    protected List<List<? extends TableField>> inertValues;
+
     public InsertImpl(TableEntity<E> tableEntity) {
         this.tableEntity = tableEntity;
+        this.inertFields = tableEntity.getAllFields();
     }
 
     @Override
     public <T> InsertIntoStep values(T entity) {
         throwIfNotMatchingEntity(tableEntity, entity);
-        this.inertFields = extractInsertFields();
+        this.inertValues = List.of(extractInsertFields(entity));
         return this;
     }
 
@@ -34,7 +39,10 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
             throwIfNotMatchingEntity(tableEntity, entity);
         }
 
-        this.inertFields = extractInsertFields();
+        this.inertValues = entityList.stream()
+                .map(this::extractInsertFields)
+                .collect(Collectors.toUnmodifiableList());
+
         return this;
     }
 
@@ -43,32 +51,40 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
         var queryToken = List.of(
                 "INSERT INTO",
                 tableEntity.getTableName(),
-                "(%s)".formatted(insertColumns()),
+                "(%s)".formatted(renderInsertColumns()),
                 "VALUES",
-                "(%s)".formatted(""/*insertValues()*/)
+                "%s".formatted(renderInsertValues())
 
         );
 
         return String.join(" ", queryToken);
     }
 
-    /*private String insertValues() {
-        return inertFields.stream()
-                .map(TableField::getFieldValue)
-                .collect(Collectors.joining(","));
-    }*/
-
-    protected String insertColumns() {
+    protected String renderInsertColumns() {
         return inertFields.stream()
                 .map(TableField::getFieldName)
                 .collect(Collectors.joining(","));
+    }
+
+    protected String renderInsertValues() {
+        List<String> result = new ArrayList<>(inertValues.size());
+        for (List<? extends TableField> inertValue : inertValues) {
+            result.add("(%s)".formatted(inertValue.stream()
+                    .map(TableField::getFieldValue)
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(",")))
+            );
+        }
+
+        return String.join(", ", result);
     }
 
     /**
      * Auto Increment 인 경우 ID 컬럼 포함.
      * 그 외의 경우 ID 컬럼 제외하고 insert 할 컬럼들 추출
      */
-    private List<? extends TableField> extractInsertFields() {
+    private <T> List<? extends TableField> extractInsertFields(T entity) {
+        TableEntity<T> tableEntity = new TableEntity<>(entity);
         return tableEntity.getIdGenerationType() == GenerationType.IDENTITY
                 ? tableEntity.getNonIdFields()
                 : tableEntity.getAllFields();

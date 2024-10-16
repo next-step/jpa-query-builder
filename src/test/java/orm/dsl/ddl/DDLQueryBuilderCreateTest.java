@@ -8,7 +8,7 @@ import persistence.sql.ddl.Person;
 import static org.assertj.core.api.Assertions.assertThat;
 import static util.SQLUtil.SQL_노멀라이즈;
 
-public class DDLCreateQueryBuilderTest {
+public class DDLQueryBuilderCreateTest {
 
     @Test
     @DisplayName("CREATE 문 생성 테스트, @GeneratedValue 어노테이션이 없는 경우")

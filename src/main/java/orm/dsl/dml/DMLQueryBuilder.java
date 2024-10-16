@@ -4,10 +4,8 @@ import orm.QueryProvider;
 import orm.SQLDialect;
 import orm.TableEntity;
 import orm.dsl.ImplQueryBuilder;
-import orm.dsl.step.ddl.CreateTableStep;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.settings.JpaSettings;
-import orm.settings.SnakeForPropertyNamingStrategy;
 
 public class DMLQueryBuilder implements QueryProvider {
 
@@ -21,10 +19,9 @@ public class DMLQueryBuilder implements QueryProvider {
         this.settings = settings;
     }
 
-    public <ENTITY> InsertIntoStep insertInto(Class<ENTITY> entityClass) {
-//        return new ImplQueryBuilder(dialect())
-//                .buildCreateTable(new TableEntity<>(entityClass, settings));
-        return null;
+    public <E> InsertIntoStep insertInto(Class<E> entityClass) {
+        return new ImplQueryBuilder(dialect())
+                .buildInsert(new TableEntity<>(entityClass, settings));
     }
 
     @Override

@@ -14,10 +14,12 @@ public class DialectStatementMap {
 
     private final Map<SQLDialect, Class<? extends CreateTableImpl>> createTableImplMap;
     private final Map<SQLDialect, Class<? extends DropTableImpl>> dropTableImplMap;
+    private final Map<SQLDialect, Class<? extends InsertImpl>> insertImplMap;
 
     public DialectStatementMap() {
         this.createTableImplMap = initSelectImplMap();
         this.dropTableImplMap = initDropImplMap();
+        this.insertImplMap = initInsertImplMap();
     }
 
     public Class<? extends CreateTableImpl> getCreateTableImpl(SQLDialect dialect) {
@@ -29,7 +31,7 @@ public class DialectStatementMap {
     }
 
     public Class<? extends InsertImpl> getInsertIntoImpl(SQLDialect dialect) {
-        return null;
+        return insertImplMap.get(dialect);
     }
 
     private Map<SQLDialect, Class<? extends CreateTableImpl>> initSelectImplMap() {

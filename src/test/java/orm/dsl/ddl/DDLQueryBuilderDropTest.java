@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static util.SQLUtil.SQL_노멀라이즈;
 
-public class DDLDropQueryBuilderTest {
+public class DDLQueryBuilderDropTest {
 
     @Test
     @DisplayName("DROP 절 생성 테스트")

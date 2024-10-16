@@ -11,14 +11,14 @@ import orm.exception.InvalidIdGenerationException;
 
 import java.util.StringJoiner;
 
-public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
+public abstract class CreateTableImpl<E> implements CreateTableStep {
 
     protected final ColumnTypeMapper columnTypeMapper;
-    protected final TableEntity<ENTITY> tableEntity;
+    protected final TableEntity<E> tableEntity;
 
     protected boolean ifNotExist = false;
 
-    public CreateTableImpl(TableEntity<ENTITY> tableEntity) {
+    public CreateTableImpl(TableEntity<E> tableEntity) {
         this.tableEntity = tableEntity;
         this.columnTypeMapper = ColumnTypeMapper.of(tableEntity.getJpaSettings().getDialect());
     }

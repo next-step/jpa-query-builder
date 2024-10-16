@@ -80,7 +80,11 @@ public class TableEntity<E> {
 
     // id(pk) 생성 전략
     public GenerationType getIdGenerationType() {
-        return getId().getGeneratedValue().strategy();
+        GeneratedValue generatedValue = getId().getGeneratedValue();
+        if (generatedValue == null) {
+            return null;
+        }
+        return generatedValue.strategy();
     }
 
     // id 제외 모든 컬럼

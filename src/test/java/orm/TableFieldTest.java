@@ -44,7 +44,7 @@ public class TableFieldTest {
     void 테이블_필드_데이터존재_검증() {
 
         // given
-        Person person = new Person(1, 1L, "name"); // 모든 필드에 데이터가 있음
+        Person person = new Person(1L, 30, "설동민");; // 모든 필드에 데이터가 있음
         var tableEntity = new TableEntity<>(person);
 
         // when
@@ -102,7 +102,7 @@ class Person {
     public Person() {
     }
 
-    public Person(int age, Long id, String name) {
+    public Person(Long id, int age, String name) {
         this.age = age;
         this.id = id;
         this.name = name;

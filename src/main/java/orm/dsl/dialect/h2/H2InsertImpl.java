@@ -3,9 +3,9 @@ package orm.dsl.dialect.h2;
 import orm.TableEntity;
 import orm.dsl.dml.InsertImpl;
 
-public class H2InsertImpl<ENTITY> extends InsertImpl<ENTITY> {
+public class H2InsertImpl<E> extends InsertImpl<E> {
 
-    public H2InsertImpl(TableEntity<ENTITY> tableEntity) {
+    public H2InsertImpl(TableEntity<E> tableEntity) {
         super(tableEntity);
     }
 }
