@@ -4,13 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.create.component.ComponentBuilder;
+import persistence.sql.NameUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColumnComponentBuilder implements ComponentBuilder {
+public class ColumnComponentBuilder {
     private String name;
     private String type;
     private final List<String> options = new ArrayList<>();
@@ -31,11 +31,11 @@ public class ColumnComponentBuilder implements ComponentBuilder {
     }
 
     private void setName(Field field) {
-        this.name = getNameFromField(field);
+        this.name = NameUtils.getColumnName(field);
     }
 
     private void setType(Field field) {
-        this.type = DataTypeConverter.convert(field.getType());
+        this.type = ColumnDataType.convert(field.getType());
     }
 
     private void setOptions(Field field) {

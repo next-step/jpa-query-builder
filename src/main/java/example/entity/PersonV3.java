@@ -22,4 +22,16 @@ public class PersonV3 {
     private String email;
     @Transient
     private Integer index;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
