@@ -34,13 +34,13 @@ public class Application {
             create(jdbcTemplate, testClass);
 
             // test insert and select
-            insert(jdbcTemplate, testClass);
+            insert(server);
             selectAll(jdbcTemplate, testClass);
             selectById(server, 1L);
             selectById(server, 2L);
             selectById(server, 3L);
 
-            deleteById(jdbcTemplate, testClass, 1L);
+            deleteById(server);
             selectAll(jdbcTemplate, testClass);
 
             // drop table
@@ -92,29 +92,24 @@ public class Application {
         logger.info("Person: {}", person);
     }
 
-    private static void insert(JdbcTemplate jdbcTemplate, Class<?> testClass) {
-        InsertQueryBuilder insertQuery = new InsertQueryBuilder();
+    private static void insert(DatabaseServer databaseServer) {
+        final EntityManager em = new EntityManagerImpl(databaseServer);
+
         Person person1 = new Person(1L, "a", 10, "aaa@gmail.com", 1);
         Person person2 = new Person(2L, "b", 20, "bbb@gmail.com", 2);
         Person person3 = new Person(3L, "c", 30, "ccc@gmail.com", 3);
 
-        String query1 = insertQuery.build(person1);
-        String query2 = insertQuery.build(person2);
-        String query3 = insertQuery.build(person3);
-
-        jdbcTemplate.execute(query1);
-        jdbcTemplate.execute(query2);
-        jdbcTemplate.execute(query3);
+        em.persist(person1);
+        em.persist(person2);
+        em.persist(person3);
 
         logger.info("Data inserted successfully!");
     }
 
-    private static void deleteById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
-        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder();
-        String query = deleteByIdQueryBuilder.build(testClass, id);
-
-        jdbcTemplate.execute(query);
-
-        logger.info("Data deleted successfully!");
+    private static void deleteById(DatabaseServer databaseServer) {
+        final EntityManager em = new EntityManagerImpl(databaseServer);
+        Person person1 = new Person(1L, "a", 10, "aaa@gmail.com", 1);
+        em.remove(person1);
+        logger.info("Person 1 Data deleted successfully!");
     }
 }
