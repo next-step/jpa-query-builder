@@ -6,25 +6,25 @@ import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilde
 import java.util.ArrayList;
 import java.util.List;
 
-public class DdlCreateQueryBuilder {
+public class CreateQueryBuilder {
     private static final String COMMA_NEW_LINE = ",\n";
 
     private final List<ColumnComponentBuilder> columnComponentBuilders = new ArrayList<>();
     private final List<ConstraintComponentBuilder> constraintComponentBuilders = new ArrayList<>();
 
-    private DdlCreateQueryBuilder() {
+    private CreateQueryBuilder() {
     }
 
-    public static DdlCreateQueryBuilder newInstance() {
-        return new DdlCreateQueryBuilder();
+    public static CreateQueryBuilder newInstance() {
+        return new CreateQueryBuilder();
     }
 
-    public DdlCreateQueryBuilder add(ColumnComponentBuilder columnComponentBuilder) {
+    public CreateQueryBuilder add(ColumnComponentBuilder columnComponentBuilder) {
         this.columnComponentBuilders.add(columnComponentBuilder);
         return this;
     }
 
-    public DdlCreateQueryBuilder add(List<ConstraintComponentBuilder> constraintComponentBuilders) {
+    public CreateQueryBuilder add(List<ConstraintComponentBuilder> constraintComponentBuilders) {
         this.constraintComponentBuilders.addAll(constraintComponentBuilders);
         return this;
     }

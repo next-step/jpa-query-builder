@@ -10,8 +10,8 @@ import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilde
 
 import java.lang.reflect.Field;
 
-public class DdlCreateQueryBuilderTest {
-    private static final Logger logger = LoggerFactory.getLogger(DdlCreateQueryBuilderTest.class);
+public class CreateQueryBuilderTest {
+    private static final Logger logger = LoggerFactory.getLogger(CreateQueryBuilderTest.class);
 
     @Test
     @DisplayName("Column component 생성 테스트")
@@ -40,7 +40,7 @@ public class DdlCreateQueryBuilderTest {
         Class<PersonV1> personClass = PersonV1.class;
 
         Field[] fields = personClass.getDeclaredFields();
-        DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
+        CreateQueryBuilder queryBuilder = CreateQueryBuilder.newInstance();
         for (Field field : fields) {
             queryBuilder.add(ColumnComponentBuilder.from(field));
             queryBuilder.add(ConstraintComponentBuilder.from(field));
