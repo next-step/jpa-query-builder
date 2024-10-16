@@ -1,7 +1,6 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
-import org.h2.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -9,12 +8,12 @@ import java.util.stream.Collectors;
 
 public class ColumnInfo {
     private String name;
-    private JPAColumnType columnType;
+    private H2ColumnType columnType;
     private boolean primaryKey;
     private boolean transientAnnotaion;
     private List<String> options;
 
-    private ColumnInfo(String name, JPAColumnType columnType, boolean primaryKey, boolean transientAnnotation, List<String> options) {
+    private ColumnInfo(String name, H2ColumnType columnType, boolean primaryKey, boolean transientAnnotation, List<String> options) {
         this.name = name;
         this.columnType = columnType;
         this.primaryKey = primaryKey;
@@ -25,7 +24,7 @@ public class ColumnInfo {
     public static ColumnInfo extract(Field field) {
         return new ColumnInfo(
                 extractColumnName(field),
-                JPAColumnType.of(field.getType()),
+                H2ColumnType.of(field.getType()),
                 field.isAnnotationPresent(Id.class),
                 field.isAnnotationPresent(Transient.class),
                 extractOptions(field)
@@ -61,7 +60,7 @@ public class ColumnInfo {
         return name;
     }
 
-    public JPAColumnType getColumnType() {
+    public H2ColumnType getColumnType() {
         return columnType;
     }
 
