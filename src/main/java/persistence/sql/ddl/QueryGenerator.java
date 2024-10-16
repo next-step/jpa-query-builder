@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;
@@ -15,23 +14,15 @@ public class QueryGenerator {
     private static final int VARCHAR_DEFAULT_LENGTH = 255;
 
     public String drop(final Class<?> clazz) {
-        final String tableName = getTableName(clazz);
-        return "DROP TABLE IF EXISTS %s CASCADE;".formatted(tableName);
+        final TableName tableName = new TableName(clazz);
+        return "DROP TABLE IF EXISTS %s CASCADE;".formatted(tableName.getTableName(clazz));
     }
 
     public String create(final Class<?> clazz) {
-        final String tableName = getTableName(clazz);
-        return getTableHeader(tableName) +
+        final TableName tableName = new TableName(clazz);
+        return getTableHeader(tableName.getTableName(clazz)) +
                getColumnDefinitions(clazz) +
                getTableFooter();
-    }
-
-    private String getTableName(final Class<?> clazz) {
-        final Table tableAnnotation = clazz.getAnnotation(Table.class);
-        if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {
-            return tableAnnotation.name().toUpperCase();
-        }
-        return clazz.getSimpleName().toUpperCase();
     }
 
     private String getTableHeader(final String tableName) {
