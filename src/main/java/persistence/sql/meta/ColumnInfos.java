@@ -1,4 +1,4 @@
-package persistence.sql.ddl;
+package persistence.sql.meta;
 
 import org.h2.util.StringUtils;
 

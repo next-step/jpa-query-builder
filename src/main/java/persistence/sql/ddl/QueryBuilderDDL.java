@@ -1,5 +1,8 @@
 package persistence.sql.ddl;
 
+import persistence.sql.meta.ColumnInfos;
+import persistence.sql.meta.TableInfo;
+
 public class QueryBuilderDDL {
     private static QueryBuilderDDL queryBuilderDDL = new QueryBuilderDDL();
     private QueryBuilderDDL() { }

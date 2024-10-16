@@ -1,6 +1,7 @@
-package persistence.sql.ddl;
+package persistence.sql.meta;
 
 import jakarta.persistence.*;
+import persistence.sql.meta.EntityType.H2ColumnType;
 
 import java.lang.reflect.Field;
 import java.util.*;
