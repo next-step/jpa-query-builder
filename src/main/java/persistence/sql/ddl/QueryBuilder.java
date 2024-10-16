@@ -27,7 +27,10 @@ public class QueryBuilder {
 
     private String generateColumnDefinitions(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
-        List<String> columns = Arrays.stream(fields).filter(field -> !field.isAnnotationPresent(Transient.class)).map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType((field)))).toList();
+        List<String> columns = Arrays.stream(fields)
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType((field))))
+                .toList();
         return String.join(", ", columns);
     }
 
