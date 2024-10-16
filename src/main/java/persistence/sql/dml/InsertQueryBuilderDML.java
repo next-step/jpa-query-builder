@@ -17,10 +17,10 @@ public class InsertQueryBuilderDML {
         return queryBuilderDML;
     }
 
-    public String getQuery(Person person) throws Exception {
-        TableInfo tableInfo = new TableInfo(person.getClass());
+    public String getQuery(Object object) throws Exception {
+        TableInfo tableInfo = new TableInfo(object.getClass());
         String insertFormat = "insert into %s (%s) values (%s);";
-        return String.format(insertFormat, tableInfo.getTableName(), columnsClause(person.getClass()), valueClause(person));
+        return String.format(insertFormat, tableInfo.getTableName(), columnsClause(object.getClass()), valueClause(object));
     }
 
     private String columnsClause(Class<?> clazz) {

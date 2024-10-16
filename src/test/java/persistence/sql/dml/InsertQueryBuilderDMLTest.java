@@ -1,5 +1,6 @@
 package persistence.sql.dml;
 
+import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.sample.Person;
@@ -13,6 +14,28 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 class InsertQueryBuilderDMLTest {
 
+    @Table(name = "users")
+    @Entity
+    public class DummyPerson {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        @Column(name = "nick_name")
+        private String name;
+
+        @Column(name = "old")
+        private Integer age;
+
+        @Column(nullable = false)
+        private String email;
+
+        @Transient
+        private Integer index;
+
+    }
+
     @Test
     @DisplayName("Person class에 대한 Insert Query 생성")
     void generateInsertQuery() throws Exception {
@@ -20,12 +43,12 @@ class InsertQueryBuilderDMLTest {
         InsertQueryBuilderDML insertQueryBuilderDML = InsertQueryBuilderDML.getInstance();
         String expected = "insert into users (id, nick_name, old, email) values (1, hyeongyeong, 30, kohy0329@naver.com);";
 
-        Person person = getCustomPerson();
+        DummyPerson person = getCustomPerson();
         assertThat(insertQueryBuilderDML.getQuery(person)).isEqualTo(expected);
     }
 
-    private Person getCustomPerson() throws Exception{
-        Person person = new Person();
+    private DummyPerson getCustomPerson() throws Exception{
+        DummyPerson person = new DummyPerson();
 
         Field idField = person.getClass().getDeclaredField("id");
         Field nameField = person.getClass().getDeclaredField("name");
