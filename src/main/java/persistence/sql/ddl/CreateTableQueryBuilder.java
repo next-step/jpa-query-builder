@@ -6,19 +6,16 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
-public class CreateTableDDLQueryBuilder extends DDLQueryBuilder implements QueryBuilderAdapter {
-    @Override
-    public String executeQuery(Class<?> entityClass, DDLType ddlType) {
-        if(ddlType == DDLType.CREATE) {
-            return createTable(entityClass);
-        }
-        throw new IllegalArgumentException("Unsupported DDL Type");
-    }
+public class CreateTableQueryBuilder extends DDLQueryBuilder {
 
     private static final String CREATE_TABLE = "CREATE TABLE ";
 
+    @Override
+    public String executeQuery(Class<?> entityClass) {
+            return createTable(entityClass);
+    }
 
-    public String createTable( Class<?> entityClass) {
+    public String createTable(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("This Class is not an Entity ");
         }
@@ -33,7 +30,7 @@ public class CreateTableDDLQueryBuilder extends DDLQueryBuilder implements Query
                     sb.append(columnName).append(" ");
                     sb.append(H2DBDataType.castType(type));
 
-                    appendColumnAttributes( field, sb);
+                    appendColumnAttributes(field, sb);
 
                     return sb.toString();
                 }).collect(Collectors.joining(", "));

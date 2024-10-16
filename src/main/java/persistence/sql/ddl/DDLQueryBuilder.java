@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 
-public abstract class DDLQueryBuilder {
+public abstract class DDLQueryBuilder implements QueryBuilderAdapter {
 
     static void appendColumnAttributes(Field field, StringBuilder sb) {
         if (isPrimaryKey(field)) {
