@@ -7,8 +7,7 @@ import java.util.Arrays;
 public enum H2DataType {
     LONG(Long.class, "BIGINT"),
     STRING(String.class, "VARCHAR"),
-    INTEGER(Integer.class, "INT"),
-    UNCONFIRMED(String.class, "미확인데이터");
+    INTEGER(Integer.class, "INT");
 
     private final Class<?> javaType;
     private final String sqlType;
