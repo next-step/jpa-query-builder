@@ -35,7 +35,7 @@ public class ColumnComponentBuilder {
     }
 
     private void setType(Field field) {
-        this.type = DataTypeConverter.convert(field.getType());
+        this.type = ColumnDataType.convert(field.getType());
     }
 
     private void setOptions(Field field) {
