@@ -11,10 +11,9 @@ public class TableName {
 
     String getTableName(final Class<?> clazz) {
         final Table tableAnnotation = clazz.getAnnotation(Table.class);
-        if (hasTableName(tableAnnotation)) {
-            return tableNameFrom(tableAnnotation);
-        }
-        return tableNameFrom(clazz);
+        return hasTableName(tableAnnotation) ?
+                tableNameFrom(tableAnnotation) :
+                tableNameFrom(clazz);
     }
 
     private boolean hasTableName(final Table tableAnnotation) {
