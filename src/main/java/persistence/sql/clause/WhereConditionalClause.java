@@ -4,6 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record WhereConditionalClause(String column, String value, String operator) implements ConditionalClause {
+    public WhereConditionalClause {
+        if (column == null || value == null || operator == null) {
+            throw new IllegalArgumentException("Column, value, operator must not be null");
+        }
+    }
 
     public static WhereExpression builder() {
         return new WhereExpression();
