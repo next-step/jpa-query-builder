@@ -29,17 +29,20 @@ public class QueryBuilder {
         Field[] fields = entity.getDeclaredFields();
         List<String> columns = Arrays.stream(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field).isEmpty() ? field.getName() : this.getColumnNameFromAnnotation(field), this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType((field))))
+                .map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field), this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType((field))))
                 .toList();
         return String.join(", ", columns);
     }
 
     private String getColumnNameFromAnnotation(Field field) {
         if (!field.isAnnotationPresent(Column.class)) {
-            return "";
+            return field.getName();
         }
-        Column column = field.getAnnotation(Column.class);
-        return column.name();
+        String columnName = field.getAnnotation(Column.class).name();
+        if (columnName.isEmpty()) {
+            return field.getName();
+        }
+        return columnName;
     }
 
     private String getTableName(Class<?> entity) {
