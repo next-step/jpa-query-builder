@@ -2,6 +2,9 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.entity.BrandNewPerson;
+import persistence.sql.entity.NewPerson;
+import persistence.sql.entity.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
