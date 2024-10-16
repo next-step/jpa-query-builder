@@ -12,12 +12,12 @@ import persistence.sql.ddl.fixtures.TestEntityWithTransientColumn;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CreateQueryBuilderTest {
+class CreateQueryBuilderTest {
     private final Dialect dialect = new H2Dialect();
 
     @Test
     @DisplayName("Should create a CREATE TABLE query")
-    public void shouldCreateCreateTableQuery() {
+    void shouldCreateCreateTableQuery() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder(dialect);
         String query = queryBuilder.build(Person.class);
 
@@ -28,7 +28,7 @@ public class CreateQueryBuilderTest {
 
     @Test
     @DisplayName("Should create create table query for TestEntityWithAutoIdStrategy")
-    public void shouldCreateCreateTableQueryForEntityWithAutoIdStrategy() {
+    void shouldCreateCreateTableQueryForEntityWithAutoIdStrategy() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder(dialect);
         String query = queryBuilder.build(TestEntityWithAutoIdStrategy.class);
 
@@ -38,7 +38,7 @@ public class CreateQueryBuilderTest {
 
     @Test
     @DisplayName("Should create a CREATE TABLE query for TestEntityWithIdentityIdStrategy")
-    public void shouldCreateCreateTableQueryForEntityWithIdentityIdStrategy() {
+    void shouldCreateCreateTableQueryForEntityWithIdentityIdStrategy() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder(dialect);
         String query = queryBuilder.build(TestEntityWithIdentityIdStrategy.class);
 
@@ -49,7 +49,7 @@ public class CreateQueryBuilderTest {
 
     @Test
     @DisplayName("Should create a CREATE TABLE query for TestEntityWithNullableColumns")
-    public void shouldCreateCreateTableQueryForNullableTestEntity() {
+    void shouldCreateCreateTableQueryForNullableTestEntity() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder(dialect);
         String query = queryBuilder.build(TestEntityWithNullableColumns.class);
 
@@ -60,7 +60,7 @@ public class CreateQueryBuilderTest {
 
     @Test
     @DisplayName("Should create a CREATE TABLE query for TestEntityWithTransientColumn")
-    public void shouldCreateCreateTableQueryForTransientTestEntity() {
+    void shouldCreateCreateTableQueryForTransientTestEntity() {
         CreateQueryBuilder queryBuilder = new CreateQueryBuilder(dialect);
 
         // When

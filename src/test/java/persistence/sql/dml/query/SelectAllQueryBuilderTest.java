@@ -6,13 +6,13 @@ import persistence.sql.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SelectAllQueryBuilderTest {
-    private final SelectAllQueryBuilder sut = new SelectAllQueryBuilder();
+class SelectAllQueryBuilderTest {
+    private final SelectAllQueryBuilder queryBuilder = new SelectAllQueryBuilder();
 
     @Test
     @DisplayName("Should build select all query")
     void shouldBuildSelectAllQuery() {
-        String query = sut.build(Person.class);
+        String query = queryBuilder.build(Person.class);
 
         assertThat(query).isEqualTo("SELECT * FROM users;");
     }

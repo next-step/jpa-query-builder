@@ -12,7 +12,7 @@ import persistence.sql.definition.TableColumn;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class TableColumnTest {
+class TableColumnTest {
 
     @Entity
     private static class TableColumnTestEntity {

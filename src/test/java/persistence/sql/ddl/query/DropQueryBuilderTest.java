@@ -6,7 +6,7 @@ import persistence.sql.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DropQueryBuilderTest {
+class DropQueryBuilderTest {
 
     @Test
     @DisplayName("should create a DROP TABLE query")

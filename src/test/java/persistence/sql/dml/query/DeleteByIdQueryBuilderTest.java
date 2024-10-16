@@ -5,13 +5,13 @@ import persistence.sql.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DeleteByIdQueryBuilderTest {
-    private final DeleteByIdQueryBuilder sut = new DeleteByIdQueryBuilder();
+class DeleteByIdQueryBuilderTest {
+    private final DeleteByIdQueryBuilder queryBuilder = new DeleteByIdQueryBuilder();
 
     @Test
     void testDeleteById() {
-        final String sql = sut.build(Person.class, 1L);
+        final String query = queryBuilder.build(Person.class, 1L);
 
-        assertThat(sql).isEqualTo("DELETE FROM users WHERE id = 1;");
+        assertThat(query).isEqualTo("DELETE FROM users WHERE id = 1;");
     }
 }
