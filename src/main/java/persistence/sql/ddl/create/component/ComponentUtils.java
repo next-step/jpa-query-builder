@@ -4,10 +4,9 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public interface ComponentBuilder {
-    String build();
+public class ComponentUtils {
 
-    default String getNameFromField(Field field) {
+    public static String getNameFromField(Field field) {
         if (field.isAnnotationPresent(Column.class)
                 && !"".equals(field.getAnnotation(Column.class).name())) {
             return field.getAnnotation(Column.class).name();
