@@ -1,8 +1,8 @@
 package persistence.sql.dml.impl;
 
 import jakarta.persistence.Id;
-import persistence.sql.clause.Clause;
 import persistence.sql.QueryBuilderFactory;
+import persistence.sql.clause.Clause;
 import persistence.sql.clause.InsertColumnValueClause;
 import persistence.sql.clause.SetValueClause;
 import persistence.sql.clause.WhereConditionalClause;
@@ -18,7 +18,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 public class DefaultEntityManager implements EntityManager {
@@ -88,7 +87,6 @@ public class DefaultEntityManager implements EntityManager {
         if (entity == null) {
             throw new IllegalArgumentException("Entity must not be null");
         }
-
 
         MetadataLoader<?> loader = new SimpleMetadataLoader<>(entity.getClass());
         Field pkField = loader.getPrimaryKeyField();

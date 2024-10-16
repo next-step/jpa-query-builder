@@ -1,9 +1,8 @@
 package persistence.sql.dml.impl;
 
-import persistence.sql.clause.Clause;
 import persistence.sql.QueryBuilder;
+import persistence.sql.clause.Clause;
 import persistence.sql.clause.InsertColumnValueClause;
-import persistence.sql.common.util.NameConverter;
 import persistence.sql.data.QueryType;
 import persistence.sql.dml.MetadataLoader;
 
