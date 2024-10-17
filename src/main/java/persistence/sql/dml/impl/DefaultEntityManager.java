@@ -70,8 +70,13 @@ public class DefaultEntityManager implements EntityManager {
         if (entity == null) {
             throw new IllegalArgumentException("Entity must not be null");
         }
-
         MetadataLoader<?> loader = new SimpleMetadataLoader<>(entity.getClass());
+
+        if (isNew(entity, loader)) {
+            persist(entity);
+            return;
+        }
+
         List<Field> fields = loader.getFieldAllByPredicate(field -> !field.isAnnotationPresent(Id.class));
 
         Clause[] clauses = fields.stream()

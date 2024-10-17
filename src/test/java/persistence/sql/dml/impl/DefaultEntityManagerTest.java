@@ -95,13 +95,51 @@ class DefaultEntityManagerTest extends TestEntityInitialize {
         entityManager.persist(person);
         PersonV3 actual = entityManager.find(PersonV3.class, 1L);
 
+        actual.setName("newCatsbi");
+        actual.setAge(123);
         entityManager.persist(actual);
         List<PersonV3> persons = entityManager.findAll(PersonV3.class);
 
         assertThat(persons).hasSize(1);
+        assertThat(persons.getFirst().getName()).isEqualTo("newCatsbi");
+        assertThat(persons.getFirst().getAge()).isEqualTo(123);
     }
 
     @Test
+    @DisplayName("merge 함수는 식별자가 이미 존재하는 Row의 식별자인 경우 엔티티를 병합한다.")
+    void testMerge() {
+        // given
+        PersonV3 person = new PersonV3("catsbi", 55, "casbi@naver.com", 123);
+        entityManager.persist(person);
+
+        // when
+        PersonV3 newPerson = new PersonV3(1L, "hansol", 33, "hansol@naver.com", 123);
+        entityManager.merge(newPerson);
+
+        // then
+        PersonV3 mergedPerson = entityManager.find(PersonV3.class, 1L);
+        assertThat(mergedPerson).isNotNull();
+        assertThat(mergedPerson.getName()).isEqualTo("hansol");
+        assertThat(mergedPerson.getAge()).isEqualTo(33);
+        assertThat(mergedPerson.getEmail()).isEqualTo("hansol@naver.com");
+    }
+
+    @Test
+    @DisplayName("merge 함수는 식별자가 존재하지 않는 Row의 식별자인 경우 엔티티를 저장한다.")
+    void testMergeWithNewEntity() {
+        // given
+        PersonV3 person = new PersonV3("catsbi", 55, "casbi@naver.com", 123);
+        entityManager.persist(person);
+
+        PersonV3 foundPerson = entityManager.find(PersonV3.class, 1L);
+        foundPerson.setId(2L);
+        entityManager.merge(foundPerson);
+
+        List<PersonV3> foundPersons = entityManager.findAll(PersonV3.class);
+        assertThat(foundPersons).hasSize(2);
+    }
+
+        @Test
     @DisplayName("remove 함수는 엔티티를 삭제한다.")
     void testRemove() {
         // given
