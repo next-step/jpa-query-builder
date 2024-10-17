@@ -12,7 +12,6 @@ import orm.exception.NotYetImplementedException;
 import orm.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class SelectImpl<E> implements SelectFromStep<E>{
@@ -44,7 +43,7 @@ public abstract class SelectImpl<E> implements SelectFromStep<E>{
         QueryRenderer queryRenderer = new QueryRenderer();
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT ");
-        queryBuilder.append(queryRenderer.singleColumnListDotted(tableEntity.getAllFields()));
+        queryBuilder.append(queryRenderer.joinColumnNamesWithComma(tableEntity.getAllFields()));
         queryBuilder.append(" FROM ");
         queryBuilder.append(tableEntity.getTableName());
 

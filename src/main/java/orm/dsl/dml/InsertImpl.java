@@ -56,7 +56,7 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
         var queryToken = List.of(
                 "INSERT INTO",
                 tableEntity.getTableName(),
-                "(%s)".formatted(queryRenderer.singleColumnListDotted(inertFields)),
+                "(%s)".formatted(queryRenderer.joinColumnNamesWithComma(inertFields)),
                 "VALUES",
                 "%s".formatted(queryRenderer.renderBulkInsertValues(inertValues))
 
