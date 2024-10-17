@@ -48,37 +48,24 @@ public class JdbcTemplate {
     }
 
     public void verifyTableCreation(final Class<?> clazz) {
-        final String tableName = getTableName(clazz);
-        final List<String> tableNames = query(
-                "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '%s'".formatted(tableName),
-                resultSet -> resultSet.getString("TABLE_NAME")
-        );
-
-        final boolean isTableCreated = !tableNames.isEmpty();
-
-        if (isTableCreated) {
-            logger.info("%s 테이블이 성공적으로 생성되었습니다.".formatted(tableName));
-        } else {
-            logger.error("Person 테이블 생성에 실패했습니다.");
-            throw new IllegalStateException("Person 테이블 생성에 실패했습니다.");
-        }
+        final boolean isTableCreated = isTableCreated(clazz);
+        if (!isTableCreated) throw new IllegalStateException("테이블 생성에 실패했습니다.");
+        logger.info("테이블이 성공적으로 생성되었습니다.");
     }
 
     public void verifyTableDeletion(final Class<?> clazz) {
+        final boolean isTableCreated = isTableCreated(clazz);
+        if (isTableCreated) throw new IllegalStateException("테이블 삭제에 실패했습니다.");
+        logger.info("테이블이 성공적으로 삭제되었습니다.");
+    }
+
+    private boolean isTableCreated(final Class<?> clazz) {
         final String tableName = getTableName(clazz);
         final List<String> tableNames = query(
                 "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC' AND TABLE_NAME = '%s'".formatted(tableName),
                 resultSet -> resultSet.getString("TABLE_NAME")
         );
-
-        final boolean isTableDeleted = tableNames.isEmpty();
-
-        if (isTableDeleted) {
-            logger.info("%s 테이블이 성공적으로 삭제되었습니다.".formatted(tableName));
-        } else {
-            logger.error("%s 테이블 삭제에 실패했습니다.".formatted(tableName));
-            throw new IllegalStateException("%s 테이블 삭제에 실패했습니다.".formatted(tableName));
-        }
+        return !tableNames.isEmpty();
     }
 
     private String getTableName(final Class<?> clazz) {
@@ -87,4 +74,5 @@ public class JdbcTemplate {
             return tableAnnotation.name().toUpperCase();
         }
         return clazz.getSimpleName().toUpperCase();
-    }}
+    }
+}
