@@ -73,7 +73,6 @@ public class TableEntity<E> {
         return tableName;
     }
 
-    // id 컬럼
     public TablePrimaryField getId() {
         return id;
     }
