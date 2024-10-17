@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class QueryBuilder {
-    private final FieldTypeMapper fieldTypeMapper = new FieldTypeMapper();
     private final FieldAnnotationMapper fieldAnnotationMapper = new FieldAnnotationMapper();
 
     public String create(Class<?> entity) {
@@ -46,7 +45,7 @@ public class QueryBuilder {
     }
 
     private String getColumnTypeFromAnnotation(Field field) {
-        return this.fieldTypeMapper.mapFieldTypeToSQLType(field) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType(field);
+        return ColumnType.getSqlType(field.getType()) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType(field);
     }
 
     private String getTableName(Class<?> entity) {
