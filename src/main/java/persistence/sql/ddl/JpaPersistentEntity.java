@@ -5,10 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import jdbc.JdbcTemplate;
 
 public class JpaPersistentEntity {
@@ -28,22 +31,21 @@ public class JpaPersistentEntity {
     public void createTable(Class<?> entityClass) {
         isEntity(entityClass);
 
-        String tableName = entityClass.getSimpleName();
+        String tableName = getTableName(entityClass);
         StringBuilder sql = new StringBuilder(
             "CREATE TABLE IF NOT EXISTS " +
                 tableName +
                 " (\n"
         );
 
-        Field[] fields = entityClass.getDeclaredFields();
-        Map<String, String> columnDefinitions = getColumnDefinitions(fields);
-
-        for (Map.Entry<String, String> entry : columnDefinitions.entrySet()) {
+        Map<String, String> columnDefinitions = getColumnDefinitions(entityClass);
+        for (Entry<String, String> entry : columnDefinitions.entrySet()) {
             sql.append(entry.getKey())
                 .append(" ")
                 .append(entry.getValue())
                 .append(",\n");
         }
+
         sql.setLength(sql.length() - 2);
         sql.append("\n);");
 
@@ -60,11 +62,26 @@ public class JpaPersistentEntity {
         }
     }
 
-    private Map<String, String> getColumnDefinitions(Field[] fields) {
-        Map<String, String> columnDefinitions = new HashMap<>();
+    private String getTableName(Class<?> entityClass) {
+        if (entityClass.isAnnotationPresent(Table.class)) {
+            Table table = entityClass.getAnnotation(Table.class);
+            return table.name();
+        } else {
+            return entityClass.getSimpleName();
+        }
+    }
+
+
+    private Map<String, String> getColumnDefinitions(Class<?> entityClass) {
+        Map<String, String> columnDefinitions = new LinkedHashMap<>();
+        Field[] fields = entityClass.getDeclaredFields();
 
         for (Field field : fields) {
             field.setAccessible(true);
+
+            if (field.isAnnotationPresent(Transient.class)) {
+                continue;
+            }
 
             String columnName;
             if (field.isAnnotationPresent(Column.class)) {
