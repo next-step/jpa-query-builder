@@ -12,8 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 - insert 쿼리 문자열 생성하기
 - findAll 쿼리 문자열 생성하기
 - findById 쿼리 문자열 생성하기
+- Object 인스턴스를 받아 findById 쿼리 문자열 생성한다.
+- Object 인스턴스를 받아 UPDATE 쿼리 문자열 생성한다.
 - deleteById 쿼리 문자열 생성하기
 - deleteAll 쿼리 문자열 생성한다.
+- Object를 받아 deleteById 쿼리 문자열 생성한다.
 */
 public class H2QueryBuilderDMLTest {
 
@@ -63,6 +66,30 @@ public class H2QueryBuilderDMLTest {
                 .isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 'sangki';");
     }
 
+    @DisplayName("Object 인스턴스를 받아 findById 쿼리 문자열 생성한다.")
+    @Test
+    void buildFindObjectStringTest() {
+        //given
+        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
+        Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
+
+        //when, then
+        assertThat(queryBuilderDML.buildFindObjectQuery(person))
+                .isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1;");
+    }
+
+    @DisplayName("Object 인스턴스를 받아 Update 쿼리 문자열 생성한다.")
+    @Test
+    void buildUpdateObjectStringTest() {
+        //given
+        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
+        Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
+
+        //when, then
+        assertThat(queryBuilderDML.buildUpdateQuery(person))
+                .isEqualTo("UPDATE users SET nick_name='sangki', old=29, email='test@test.com' WHERE id = 1;");
+    }
+
     @DisplayName("deleteById 쿼리 문자열 생성한다.")
     @Test
     void buildDeleteByIdTest() {
@@ -83,5 +110,17 @@ public class H2QueryBuilderDMLTest {
         //when, then
         assertThat(queryBuilderDML.buildDeleteQuery(Person.class))
                 .isEqualTo("DELETE FROM users;");
+    }
+
+    @DisplayName("Object를 받아 deleteById 쿼리 문자열 생성한다.")
+    @Test
+    void buildDeleteObjectTest() {
+        //given
+        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
+        Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
+
+        //when, then
+        assertThat(queryBuilderDML.buildDeleteObjectQuery(person))
+                .isEqualTo("DELETE FROM users WHERE id = 1;");
     }
 }

@@ -2,19 +2,21 @@ package builder.h2.dml;
 
 public class DMLColumnData {
 
+    private final static String SINGLE_QUOTE = "'";
+
     private final String columnName;
     private Class<?> columnType;
     private Object columnValue;
     private boolean isPrimaryKey;
 
-    public DMLColumnData(String columnName, Class<?> columnType, Object columnValue, boolean isPrimaryKey) {
+    private DMLColumnData(String columnName, Class<?> columnType, Object columnValue, boolean isPrimaryKey) {
         this.columnName = columnName;
         this.columnType = columnType;
         this.columnValue = columnValue;
         this.isPrimaryKey = isPrimaryKey;
     }
 
-    public DMLColumnData(String columnName, Class<?> columnType, boolean isPrimaryKey) {
+    private DMLColumnData(String columnName, Class<?> columnType, boolean isPrimaryKey) {
         this.columnName = columnName;
         this.columnType = columnType;
         this.isPrimaryKey = isPrimaryKey;
@@ -54,5 +56,14 @@ public class DMLColumnData {
 
     public boolean isPrimaryKey() {
         return isPrimaryKey;
+    }
+
+    //Value가 String.class 이면 작은따옴표로 묶어준다.
+    public String getColumnValueByType() {
+        if (this.columnType == String.class) {
+            return SINGLE_QUOTE + this.getColumnValue() + SINGLE_QUOTE;
+        }
+
+        return String.valueOf(this.columnValue);
     }
 }
