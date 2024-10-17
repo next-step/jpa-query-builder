@@ -45,7 +45,7 @@ public class QueryBuilder {
 
     private String getColumnTypeFromAnnotation(Field field) {
         List<String> columnNameWithDefinition = new ArrayList<>();
-        columnNameWithDefinition.add(ColumnType.getSqlType(field.getType()));
+        columnNameWithDefinition.add(ColumnDataType.getSqlType(field.getType()));
         columnNameWithDefinition.addAll(this.columnDefinitionMapper.mapAnnotationToSQLDefinition(field));
 
         return columnNameWithDefinition
