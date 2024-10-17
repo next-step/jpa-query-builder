@@ -8,19 +8,19 @@ import java.util.List;
 
 public class FindOptionBuilder {
     private List<EntityColumn> selectingColumns = new ArrayList<>();
-    private final List<WhereClause> whereClauses = new ArrayList<>();
+    private final List<Clause> whereClauses = new ArrayList<>();
 
     public FindOptionBuilder selectColumns(EntityColumn... selectingColumn) {
         this.selectingColumns = Arrays.stream(selectingColumn).toList();
         return this;
     }
 
-    public FindOptionBuilder where(EqualClause equalClause) {
+    public FindOptionBuilder where(Clause equalClause) {
         this.whereClauses.add(new WhereClause(equalClause));
         return this;
     }
 
-    public FindOptionBuilder where(EqualClause... equalClause) {
+    public FindOptionBuilder where(Clause... equalClause) {
         this.whereClauses.add(new WhereClause(Arrays.stream(equalClause).toList()));
         return this;
     }

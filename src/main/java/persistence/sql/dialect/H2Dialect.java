@@ -26,6 +26,4 @@ public class H2Dialect extends Dialect {
     public Boolean checkIfExitsBeforeDropTable() {
         return true;
     }
-
-    ;
 }

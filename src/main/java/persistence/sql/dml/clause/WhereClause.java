@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class WhereClause implements Clause {
-    private final List<EqualClause> equalClauses;
+    private final List<Clause> equalClauses;
 
-    public WhereClause(List<EqualClause> equalClauses) {
+    public WhereClause(List<Clause> equalClauses) {
         this.equalClauses = equalClauses;
     }
 
-    public WhereClause(EqualClause equalClause) {
+    public WhereClause(Clause equalClause) {
         this.equalClauses = List.of(equalClause);
     }
 

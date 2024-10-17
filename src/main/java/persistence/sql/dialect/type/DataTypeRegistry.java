@@ -7,27 +7,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class DataTypeRegistry {
-    private final Map<Class<?>, DataType> registry = new HashMap<>();
+public abstract class DataTypeRegistry {
+    protected final Map<Class<?>, DataType> registry = new HashMap<>();
 
-    DataTypeMappingStrategy dataTypeMappingStrategy;
-
-    public DataTypeRegistry(DataTypeMappingStrategy dataTypeMappingStrategy) {
-        this.dataTypeMappingStrategy = dataTypeMappingStrategy;
+    protected DataTypeRegistry() {
         registerDataType();
     }
 
     private void registerDataType() {
-        List<Integer> typeCodes = dataTypeMappingStrategy.getMappingSqlCodes();
+        List<Integer> typeCodes = getMappingSqlCodes();
 
         for (Integer typeCode : typeCodes) {
-            Class<?> javaType = dataTypeMappingStrategy.mapSqlCodeToJavaType(typeCode);
-            String typeNamePattern = dataTypeMappingStrategy.mapSqlCodeToNamePattern(typeCode);
+            Class<?> javaType = mapSqlCodeToJavaType(typeCode);
+            String typeNamePattern = mapSqlCodeToNamePattern(typeCode);
 
             DataType dataType = new DataType(typeCode, javaType, typeNamePattern);
             registry.put(javaType, dataType);
         }
     }
+
+    abstract List<Integer> getMappingSqlCodes();
+
+    abstract Class<?> mapSqlCodeToJavaType(int typeCode);
+
+    abstract String mapSqlCodeToNamePattern(int typeCode);
 
     public DataType getDataType(Class<?> javaType) {
         DataType dataType = registry.get(javaType);

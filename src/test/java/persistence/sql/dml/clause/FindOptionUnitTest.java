@@ -9,6 +9,7 @@ import persistence.sql.dialect.Dialect;
 import persistence.sql.fixture.PersonWithTransientAnnotation;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,12 +23,16 @@ public class FindOptionUnitTest {
 
     @BeforeEach
     void setUp() throws NoSuchFieldException {
-        // Mocking the Dialect and EntityColumns
         mockDialect = Mockito.mock(Dialect.class);
-        column1 = EntityColumn.build(PersonWithTransientAnnotation.class.getDeclaredField("name"));
-        column2 = EntityColumn.build(PersonWithTransientAnnotation.class.getDeclaredField("email"));
+        column1 = EntityColumn.build(
+                PersonWithTransientAnnotation.class.getDeclaredField("name"),
+                Optional.empty())
+        ;
+        column2 = EntityColumn.build(
+                PersonWithTransientAnnotation.class.getDeclaredField("email"),
+                Optional.empty()
+        );
 
-        // Mocking WhereClauses
         mockWhereClause1 = new WhereClause(new EqualClause(column1, "foo"));
         mockWhereClause2 = new WhereClause(new EqualClause(column2, "test@test.com"));
 

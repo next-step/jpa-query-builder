@@ -10,14 +10,19 @@ import persistence.sql.fixture.PersonWithTransientAnnotation;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WhereClauseUnitTest {
     private Dialect mockDialect;
 
+    private EntityColumn emailColumn;
+
+    private EntityColumn nameColumn;
+
     @BeforeEach
-    void setup() {
+    void setup() throws NoSuchFieldException {
         mockDialect = Mockito.mock(Dialect.class);
 
         Mockito.when(mockDialect.getIdentifierQuoted(Mockito.anyString()))
@@ -25,14 +30,22 @@ public class WhereClauseUnitTest {
 
         Mockito.when(mockDialect.getValueQuoted(Mockito.anyString()))
                 .thenAnswer(invocation -> "'" + invocation.getArgument(0) + "'");
+
+        emailColumn = EntityColumn.build(
+                PersonWithTransientAnnotation.class.getDeclaredField("email"),
+                Optional.empty()
+        );
+        nameColumn = EntityColumn.build(
+                PersonWithTransientAnnotation.class.getDeclaredField("name"),
+                Optional.empty()
+        );
     }
 
     @Test
     @DisplayName("하나의 Equal 조건만 가진 조건절의 SQL문을 생성한다.")
-    void testToSqlWithSingleEqualClause() throws NoSuchFieldException {
+    void testToSqlWithSingleEqualClause() {
         // given
-        EntityColumn column = EntityColumn.build(PersonWithTransientAnnotation.class.getDeclaredField("email"));
-        EqualClause equalClause = new EqualClause(column, "test@test.com");
+        EqualClause equalClause = new EqualClause(emailColumn, "test@test.com");
         WhereClause whereClause = new WhereClause(equalClause);
 
         // when
@@ -44,13 +57,10 @@ public class WhereClauseUnitTest {
 
     @Test
     @DisplayName("여러 Equal 조건을 가진 조건절을 AND로 묶어 SQL문을 생성한다.")
-    void testToSqlWithMultipleEqualClauses() throws NoSuchFieldException {
+    void testToSqlWithMultipleEqualClauses() {
         // given
-        EntityColumn column1 = EntityColumn.build(PersonWithTransientAnnotation.class.getDeclaredField("email"));
-        EntityColumn column2 = EntityColumn.build(PersonWithTransientAnnotation.class.getDeclaredField("name"));
-
-        EqualClause equalClause1 = new EqualClause(column1, "test@test.com");
-        EqualClause equalClause2 = new EqualClause(column2, "홍길동");
+        EqualClause equalClause1 = new EqualClause(emailColumn, "test@test.com");
+        EqualClause equalClause2 = new EqualClause(nameColumn, "홍길동");
         WhereClause whereClause = new WhereClause(Arrays.asList(equalClause1, equalClause2));
 
         // when

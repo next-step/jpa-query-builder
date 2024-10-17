@@ -4,14 +4,18 @@ import java.util.List;
 
 import static java.sql.Types.*;
 
-public class H2DataTypeMappingStrategy implements DataTypeMappingStrategy {
+public class H2DataTypeRegistry extends DataTypeRegistry {
+    public H2DataTypeRegistry() {
+        super();
+    }
+
     @Override
-    public List<Integer> getMappingSqlCodes() {
+    protected List<Integer> getMappingSqlCodes() {
         return List.of(BIGINT, INTEGER, VARCHAR);
     }
 
     @Override
-    public Class<?> mapSqlCodeToJavaType(int typeCode) {
+    protected Class<?> mapSqlCodeToJavaType(int typeCode) {
         return switch (typeCode) {
             case BIGINT -> Long.class;
             case INTEGER -> Integer.class;
@@ -21,7 +25,7 @@ public class H2DataTypeMappingStrategy implements DataTypeMappingStrategy {
     }
 
     @Override
-    public String mapSqlCodeToNamePattern(int typeCode) {
+    protected String mapSqlCodeToNamePattern(int typeCode) {
         return switch (typeCode) {
             case BIGINT -> "bigint";
             case INTEGER -> "int";

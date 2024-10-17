@@ -8,6 +8,8 @@ import persistence.model.EntityColumn;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.fixture.PersonWithTransientAnnotation;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EqualClauseUnitTest {
@@ -18,7 +20,10 @@ public class EqualClauseUnitTest {
     @BeforeEach
     void setUp() throws NoSuchFieldException {
         mockDialect = Mockito.mock(Dialect.class);
-        column = EntityColumn.build(PersonWithTransientAnnotation.class.getDeclaredField("name"));
+        column = EntityColumn.build(
+                PersonWithTransientAnnotation.class.getDeclaredField("name"),
+                Optional.empty()
+        );
 
         Mockito.when(mockDialect.getIdentifierQuoted(Mockito.anyString()))
                 .thenAnswer(invocation -> "\"" + invocation.getArgument(0) + "\"");

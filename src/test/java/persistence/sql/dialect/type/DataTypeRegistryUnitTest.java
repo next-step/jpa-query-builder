@@ -16,17 +16,38 @@ public class DataTypeRegistryUnitTest {
 
     @BeforeEach
     void setUp() {
-        dataTypeRegistry = new DataTypeRegistry(new TestDataTypeMappingStrategy());
+        dataTypeRegistry = new DataTypeRegistry() {
+            @Override
+            List<Integer> getMappingSqlCodes() {
+                return List.of(INTEGER);
+            }
+
+            @Override
+            Class<?> mapSqlCodeToJavaType(int typeCode) {
+                if (typeCode == INTEGER) {
+                    return Integer.class;
+                }
+                throw new IllegalArgumentException();
+            }
+
+            @Override
+            String mapSqlCodeToNamePattern(int typeCode) {
+                if (typeCode == INTEGER) {
+                    return "int";
+                }
+                throw new IllegalArgumentException();
+            }
+        };
     }
 
     @Test
     @DisplayName("등록된 데이터타입 객체를 정상적으로 불러온다.")
     void testGetDataType() {
-        DataType stringDataType = dataTypeRegistry.getDataType(String.class);
+        DataType stringDataType = dataTypeRegistry.getDataType(Integer.class);
 
         assertAll(
-                () -> assertEquals("varchar(%d)", stringDataType.namePattern()),
-                () -> assertEquals(VARCHAR, stringDataType.sqlTypeCode())
+                () -> assertEquals("int", stringDataType.namePattern()),
+                () -> assertEquals(INTEGER, stringDataType.sqlTypeCode())
         );
     }
 
@@ -37,28 +58,5 @@ public class DataTypeRegistryUnitTest {
             dataTypeRegistry.getDataType(Double.class);
         });
         assertEquals("UNSUPPORTED JAVA TYPE : Double", exception.getMessage());
-    }
-
-    private static class TestDataTypeMappingStrategy implements DataTypeMappingStrategy {
-        @Override
-        public List<Integer> getMappingSqlCodes() {
-            return List.of(VARCHAR);
-        }
-
-        @Override
-        public Class<?> mapSqlCodeToJavaType(int typeCode) {
-            return switch (typeCode) {
-                case VARCHAR -> String.class;
-                default -> throw new IllegalArgumentException("UNKNOWN TYPE. sql code = " + typeCode);
-            };
-        }
-
-        @Override
-        public String mapSqlCodeToNamePattern(int typeCode) {
-            return switch (typeCode) {
-                case VARCHAR -> "varchar(%d)";
-                default -> throw new IllegalArgumentException("UNKNOWN TYPE. sql code = " + typeCode);
-            };
-        }
     }
 }

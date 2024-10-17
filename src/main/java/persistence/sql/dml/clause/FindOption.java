@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 
 public class FindOption {
     private final List<EntityColumn> selectingColumns;
-    private final List<WhereClause> whereClauses;
+    private final List<Clause> whereClauses;
 
-    public FindOption(List<EntityColumn> selectingColumns, List<WhereClause> whereClauses) {
+    public FindOption(List<EntityColumn> selectingColumns, List<Clause> whereClauses) {
         this.selectingColumns = selectingColumns;
         this.whereClauses = whereClauses;
     }
 
-    public List<WhereClause> getWhere() {
+    public List<Clause> getWhere() {
         return whereClauses;
     }
 

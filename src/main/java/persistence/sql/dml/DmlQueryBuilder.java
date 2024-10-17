@@ -12,16 +12,22 @@ import java.util.List;
 public class DmlQueryBuilder {
     private final Dialect dialect;
 
+    private static final String INSERT_FORMAT = "INSERT INTO %s (%s) VALUES (%s)";
+
+    private static final String DELETE_FORMAT = "DELETE FROM %s";
+
+    private static final String SELECT_FORMAT = "SELECT %s FROM %s";
+
+    private static final String SELECT_ALL = "*";
+
     public DmlQueryBuilder(Dialect dialect) {
         this.dialect = dialect;
     }
 
     public String buildInsertQuery(Object entityObject) {
-        String INSERT_FORMAT = "INSERT INTO %s (%s) VALUES (%s)";
-
         EntityTable table = EntityFactory.createPopulatedSchema(entityObject);
 
-        List<EntityColumn> insertingColumns = table.getInsertableColumns(table);
+        List<EntityColumn> insertingColumns = table.getActiveColumns(table);
         List<String> insertingColumnNames = insertingColumns.stream()
                 .map(EntityColumn::getName)
                 .toList();
@@ -40,9 +46,6 @@ public class DmlQueryBuilder {
     }
 
     public String buildSelectQuery(Class<?> entityClass, FindOption findOption) {
-        String SELECT_ALL = "*";
-        String SELECT_FORMAT = "SELECT %s FROM %s";
-
         EntityTable table = EntityFactory.createEmptySchema(entityClass);
 
         List<String> selectingColumnNames = findOption.getSelectingColumns().stream()
@@ -65,8 +68,6 @@ public class DmlQueryBuilder {
     }
 
     public String buildDeleteQuery(Class<?> entityClass, FindOption findOption) {
-        String DELETE_FORMAT = "DELETE FROM %s";
-
         EntityTable table = EntityFactory.createEmptySchema(entityClass);
         String tableName = table.getName();
 

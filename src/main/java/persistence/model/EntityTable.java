@@ -44,13 +44,13 @@ public class EntityTable {
         tableColumns.setColumns(columns);
     }
 
-    public List<EntityColumn> getInsertableColumns(EntityTable table) {
+    public List<EntityColumn> getActiveColumns(EntityTable table) {
         return table.isPrimaryColumnsValueSet()
                 ? table.getColumns()
                 : table.getNonPrimaryColumns();
     }
 
-    public Boolean isPrimaryColumnsValueSet() {
+    private Boolean isPrimaryColumnsValueSet() {
         return getPrimaryColumns().stream().allMatch(EntityColumn::isValueNotNull);
     }
 
