@@ -6,15 +6,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class QueryGeneratorTest {
-    @Test
     @DisplayName("클래스 정보를 바탕으로 CREATE TABLE 쿼리를 생성한다.")
+    @Test
     void create() {
         final QueryGenerator queryGenerator = new QueryGenerator();
         assertEquals(expected(), queryGenerator.create(Person.class));
     }
 
-    @Test
     @DisplayName("클래스 정보를 바탕으로 DROP TABLE 쿼리를 생성한다.")
+    @Test
     void drop() {
         final QueryGenerator queryGenerator = new QueryGenerator();
         assertEquals("DROP TABLE IF EXISTS USERS CASCADE;", queryGenerator.drop(Person.class));
