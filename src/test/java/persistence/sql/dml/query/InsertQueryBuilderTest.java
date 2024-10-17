@@ -1,4 +1,4 @@
-package persistence.sql.dml;
+package persistence.sql.dml.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

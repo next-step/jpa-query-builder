@@ -1,12 +1,10 @@
-package persistence.sql.dml;
+package persistence.sql.dml.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
-import persistence.sql.dml.query.DMLQueryBuilder;
-import persistence.sql.dml.query.SelectQueryBuilder;
 
 public class SelectQueryBuilderTest {
 
