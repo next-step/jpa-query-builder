@@ -11,16 +11,15 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class H2InsertQueryBuilder implements InsertQueryBuilder {
+public class InsertQuery {
 
     private final Object object;
 
-    public H2InsertQueryBuilder(Object object) {
+    public InsertQuery(Object object) {
         ExceptionUtil.requireNonNull(object);
         this.object = object;
     }
 
-    @Override
     public String makeQuery() {
         TableName tableName = new TableName(object.getClass());
 

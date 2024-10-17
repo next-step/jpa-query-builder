@@ -30,10 +30,10 @@ public class Application {
             jdbcTemplate.execute(createQueryBuilder.build());
 
             Person person = new Person("name", 10, "test@email.com", 1);
-            InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
+            InsertQuery insertQueryBuilder = new InsertQuery(person);
             jdbcTemplate.execute(insertQueryBuilder.makeQuery());
 
-            SelectQueryBuilder selectQueryBuilder = new H2SelectQueryBuilder(Person.class);
+            SelectQuery selectQueryBuilder = new SelectQuery(Person.class);
             List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(), resultSet -> {
                 String email = resultSet.getString("email");
                 int age = resultSet.getInt("old");
@@ -50,8 +50,8 @@ public class Application {
                 return new Person(id, nickname, age, email);
             });
 
-            DeleteQueryBuilder deleteQueryBuilder = new H2DeleteQueryBuilder(getByIdPerson);
-            jdbcTemplate.execute(deleteQueryBuilder.delete());
+            DeleteQuery deleteQueryBuilder = new DeleteQuery(getByIdPerson);
+            jdbcTemplate.execute(deleteQueryBuilder.makeQuery());
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

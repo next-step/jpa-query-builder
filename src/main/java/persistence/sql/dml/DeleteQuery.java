@@ -5,13 +5,13 @@ import persistence.sql.model.EntityColumnNames;
 import persistence.sql.model.EntityColumnValues;
 import persistence.sql.model.TableName;
 
-public class H2DeleteQueryBuilder implements DeleteQueryBuilder {
+public class DeleteQuery {
 
     private static final String SPACE = " ";
     private final Object object;
     private final Class<?> clazz;
 
-    public H2DeleteQueryBuilder(Object object) {
+    public DeleteQuery(Object object) {
         ExceptionUtil.requireNonNull(object);
 
         if (object instanceof Class) {
@@ -22,8 +22,7 @@ public class H2DeleteQueryBuilder implements DeleteQueryBuilder {
         this.object = object;
     }
 
-    @Override
-    public String delete() {
+    public String makeQuery() {
         TableName tableName = new TableName(clazz);
 
         StringBuilder deleteStringBuilder = new StringBuilder();

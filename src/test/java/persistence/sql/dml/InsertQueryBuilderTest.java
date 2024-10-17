@@ -9,7 +9,7 @@ import persistence.sql.ddl.Person;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class H2InsertQueryBuilderTest {
+class InsertQueryBuilderTest {
 
     @Test
     void 데이터_삽입() {
@@ -18,7 +18,7 @@ class H2InsertQueryBuilderTest {
         final String email = "email@test.com";
         Person person = new Person(name, age, email, null);
 
-        InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
+        InsertQuery insertQueryBuilder = new InsertQuery(person);
         String sql = insertQueryBuilder.makeQuery();
 
         assertThat(sql).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('이름', 11, 'email@test.com')");
@@ -27,7 +27,7 @@ class H2InsertQueryBuilderTest {
     @ParameterizedTest
     @NullSource
     void 매개변수_값이_Null_일때(Object object) {
-        assertThatThrownBy(() -> new H2InsertQueryBuilder(object))
+        assertThatThrownBy(() -> new InsertQuery(object))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ExceptionUtil.OBJECT_NULL_MESSAGE);
     }
