@@ -19,11 +19,16 @@ public class SelectQueryBuilder implements DMLQueryBuilder {
 
     @Override
     public String build(Class<?> clazz) {
+        return build(clazz, List.of());
+    }
+
+    public String build(Class<?> clazz, List<WhereCondition> whereConditions) {
         SelectMetadata selectMetadata = new SelectMetadata(
                 new TableName(clazz),
                 Arrays.stream(clazz.getDeclaredFields())
                         .map(ColumnName::new)
-                        .toList()
+                        .toList(),
+                whereConditions
         );
 
         StringBuilder builder = new StringBuilder();
