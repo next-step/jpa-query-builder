@@ -8,6 +8,7 @@ import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
 import persistence.sql.H2Dialect;
 import persistence.sql.ddl.query.CreateQueryBuilder;
+import persistence.sql.ddl.query.DropQueryBuilder;
 
 import java.sql.SQLException;
 
@@ -52,7 +53,9 @@ public class EntityManagerTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws SQLException {
+        String query = new DropQueryBuilder().build(EntityManagerMergeTestEntity.class);
+        new JdbcTemplate(server.getConnection()).execute(query);
         server.stop();
     }
 
