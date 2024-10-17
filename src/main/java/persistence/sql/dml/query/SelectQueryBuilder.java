@@ -52,17 +52,16 @@ public class SelectQueryBuilder implements DMLQueryBuilder {
         StringBuilder builder = new StringBuilder();
         builder.append( " " )
                 .append( WHERE )
-                .append( " " )
                 .append( whereConditions.stream()
                         .map(columnConditionClause())
-                        .collect(Collectors.joining(AND, " ", " "))
+                        .collect(Collectors.joining(AND, " ", ""))
                 );
         return builder.toString();
     }
 
     @NotNull
     private Function<WhereCondition, String> columnConditionClause() {
-        return condition -> condition.columnName().value() + " " + condition.operator() + "?";
+        return condition -> condition.columnName().value() + " " + condition.operator() + " ?";
     }
 
 }
