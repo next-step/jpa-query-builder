@@ -12,18 +12,15 @@ public class QueryBuilder {
     private final ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper();
 
     public String create(Class<?> entity) {
-        String createTableQuery = this.getCreateTableQuery(entity);
+        TableInfo tableInfo = new TableInfo(entity);
         String columnDefinitions = this.generateColumnDefinitions(entity);
 
-        return "%s (%s);".formatted(createTableQuery, columnDefinitions);
+        return "CREATE TABLE %s (%s);".formatted(tableInfo.getTableName(), columnDefinitions);
     }
 
     public String drop(Class<?> entity) {
-        return "DROP TABLE %s;".formatted(this.getTableName(entity));
-    }
-
-    private String getCreateTableQuery(Class<?> entity) {
-        return "CREATE TABLE %s".formatted(this.getTableName(entity));
+        TableInfo tableInfo = new TableInfo(entity);
+        return "DROP TABLE %s;".formatted(tableInfo.getTableName());
     }
 
     private String generateColumnDefinitions(Class<?> entity) {
@@ -55,23 +52,5 @@ public class QueryBuilder {
                 .stream()
                 .filter(definition -> !definition.isEmpty())
                 .collect(Collectors.joining(" "));
-    }
-
-    private String getTableName(Class<?> entity) {
-        this.throwIfNotEntity(entity);
-        Table table = entity.getAnnotation(Table.class);
-        if (table == null) {
-            return entity.getSimpleName();
-        }
-        if (table.name().isBlank()) {
-            return entity.getSimpleName();
-        }
-        return table.name();
-    }
-
-    private void throwIfNotEntity(Class<?> entity) {
-        if (!entity.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Class %s is not an entity".formatted(entity.getSimpleName()));
-        }
     }
 }
