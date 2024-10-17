@@ -43,7 +43,7 @@
 - [ ] 3.3 - Policies 구현 (optional)
 - [ ] 3.4 - Where 조건절 문자열 없이 구현 (optional)
 - 
-- [ ] 4.1 - delete 쿼리 만들어보기
+- [x] 4.1 - delete 쿼리 만들어보기
 - [ ] 4.2 - delete 차단 설정 추가 (optional)
 
 ## UMl

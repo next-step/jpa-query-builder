@@ -1,11 +1,11 @@
 package orm.dsl;
 
-import jdbc.JdbcTemplate;
 import orm.SQLDialect;
 import orm.TableEntity;
 import orm.dsl.sql_dialect.DialectStatementMap;
 import orm.dsl.step.ddl.CreateTableStep;
 import orm.dsl.step.ddl.DropTableStep;
+import orm.dsl.step.dml.DeleteFromStep;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.dsl.step.dml.SelectFromStep;
 
@@ -41,6 +41,10 @@ public class ImplQueryBuilder {
 
     public <E> SelectFromStep<E> buildSelect(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getSelectImpl(dialect));
+    }
+
+    public <E> DeleteFromStep buildDelete(TableEntity<E> tableEntity) {
+        return newInstanceOfImpl(tableEntity, statementMap.getDeleteIntoImpl(dialect));
     }
 
     private <E, T extends QueryBuilder> T newInstanceOfImpl(TableEntity<E> tableEntity, Class<T> implClass) {
