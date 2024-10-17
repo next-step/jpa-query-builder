@@ -53,6 +53,14 @@ public class JpaPersistentEntity {
         jdbcTemplate.execute(sql.toString());
     }
 
+    public void dropEntity(Class<?> entityClass) {
+        isEntity(entityClass);
+        String tableName = getTableName(entityClass);
+        String sql = "DROP TABLE IF EXISTS " + tableName + ";";
+        System.out.println("Generated SQL: " + sql);
+        jdbcTemplate.execute(sql);
+    }
+
     private void isEntity(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(
