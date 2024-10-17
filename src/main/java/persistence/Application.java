@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.QueryGenerator;
 
+import java.sql.SQLException;
+
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
@@ -17,25 +19,42 @@ public class Application {
 
     private void run() {
         logger.info("Starting application...");
+        DatabaseServer server = null;
         try {
-            final DatabaseServer server = new H2();
-            server.start();
-
-            final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final QueryGenerator queryGenerator = new QueryGenerator();
-            final String createSql = queryGenerator.create(Person.class);
-            jdbcTemplate.execute(createSql);
-            jdbcTemplate.verifyTableCreation(Person.class);
-            final String dropSql = queryGenerator.drop(Person.class);
-            jdbcTemplate.execute(dropSql);
-            jdbcTemplate.verifyTableDeletion(Person.class);
-
-            server.stop();
+            server = setUp();
+            executeQueries(server);
         } catch (Exception e) {
-            logger.error("Error occurred", e);
-            throw new RuntimeException(e);
+            handleException(e);
         } finally {
-            logger.info("Application finished");
+            cleanUp(server);
         }
+        logger.info("Application finished");
+    }
+
+    private DatabaseServer setUp() throws SQLException {
+        final DatabaseServer server;
+        server = new H2();
+        server.start();
+        return server;
+    }
+
+    private void executeQueries(final DatabaseServer server) throws SQLException {
+        final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+        final QueryGenerator queryGenerator = new QueryGenerator();
+        final String createSql = queryGenerator.create(Person.class);
+        jdbcTemplate.execute(createSql);
+        jdbcTemplate.verifyTableCreation(Person.class);
+        final String dropSql = queryGenerator.drop(Person.class);
+        jdbcTemplate.execute(dropSql);
+        jdbcTemplate.verifyTableDeletion(Person.class);
+    }
+
+    private void handleException(final Exception e) {
+        logger.error("Error occurred", e);
+        throw new RuntimeException(e);
+    }
+
+    private void cleanUp(final DatabaseServer server) {
+        server.stop();
     }
 }
