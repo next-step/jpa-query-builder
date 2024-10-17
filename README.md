@@ -23,10 +23,10 @@
 ## 🚀 2단계 - QueryBuilder DML
 
 ### 요구 사항
-* [ ] insert, delete 쿼리 생성
+* [ ] insert, select, delete 쿼리 생성
 * [ ] 모두 조회 (findAll), 단건 조회 (findById) 기능
 
 ### 기능 도출
-* `insert`, `delete` Query String 생성
+* `insert`, `select`, `delete` Query String 생성
   * `where` 조건 처리
 * Query 실행
