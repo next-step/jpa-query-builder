@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class H2QueryBuilderDDL extends QueryBuilder implements QueryBuilderDDL {
@@ -62,60 +64,64 @@ public class H2QueryBuilderDDL extends QueryBuilder implements QueryBuilderDDL {
 
     //변수들의 정보를 가져온다.
     private List<DDLColumnData> getDDLColumnData(Class<?> entityClass) {
-        Field[] fields = entityClass.getDeclaredFields();
-        List<DDLColumnData> DDLColumnDataList = new ArrayList<>();
+        List<DDLColumnData> columnData = Arrays.stream(entityClass.getDeclaredFields())
+                .map(this::createTableDDLColumnData)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
-        for (Field field : fields) {
-            createTableDDLColumnData(DDLColumnDataList, field);
-        }
-
-        return DDLColumnDataList;
+        confirmIdAnnotationOverTwo(columnData);
+        return columnData;
     }
 
     //테이블에 생성될 필드(컬럼)들을 생성한다.
-    private void createTableDDLColumnData(List<DDLColumnData> DDLColumnDataList, Field field) {
-        getPrimaryKey(DDLColumnDataList, field);
-        getColumnAnnotationData(DDLColumnDataList, field);
+    private DDLColumnData createTableDDLColumnData(Field field) {
+        if (field.isAnnotationPresent(Id.class)) {
+            return getPrimaryKey(field);
+        }
+        return getColumnAnnotationData(field);
     }
 
     //Id 어노테이션을 primarykey로 가져온다.
-    private void getPrimaryKey(List<DDLColumnData> DDLColumnDataList, Field field) {
-        if (field.isAnnotationPresent(Id.class)) {
-            confirmIdAnnotationOverTwo(DDLColumnDataList);
-            DDLColumnDataList.add(DDLColumnData.createPk(field.getName(), field.getType(), confirmGeneratedValueAnnotation(field)));
-        }
+    private DDLColumnData getPrimaryKey(Field field) {
+        return DDLColumnData.createPk(
+                field.getName(),
+                field.getType(),
+                confirmGeneratedValueAnnotation(field)
+        );
     }
 
     //Column 어노테이션 여부를 확인하여 변수의 컬럼타입을 가져온다.
-    private void getColumnAnnotationData(List<DDLColumnData> DDLColumnDataList, Field field) {
-        if (field.isAnnotationPresent(Transient.class) || field.isAnnotationPresent(Id.class))
-            return; // Transient 어노테이션이 있거나 @Id인 경우 검증하지 않음
-
+    private DDLColumnData getColumnAnnotationData(Field field) {
+        if (field.isAnnotationPresent(Transient.class)) {
+            return null;
+        }
         String columnName = field.getName();
         boolean isNullable = true;
 
         if (field.isAnnotationPresent(Column.class)) {
             Column column = field.getAnnotation(Column.class);
             columnName = column.name().isEmpty() ? columnName : column.name();
-            DDLColumnDataList.add(
-                    DDLColumnData.createColumn(
-                            columnName,
-                            field.getType(),
-                            !column.nullable())
-            );
-            return;
+            return DDLColumnData.createColumn(
+                    columnName,
+                    field.getType(),
+                    !column.nullable());
         }
 
-        DDLColumnDataList.add(DDLColumnData.createColumn(columnName, field.getType(), !isNullable));
+        return DDLColumnData.createColumn(
+                columnName,
+                field.getType(),
+                !isNullable
+        );
     }
 
-    //Entity에 @Id가 2개 이상은 아닐지 확인한다.
+    // Entity에 @Id가 2개 이상은 아닐지 확인한다.
     private void confirmIdAnnotationOverTwo(List<DDLColumnData> DDLColumnDataList) {
-        boolean hasPrimaryKey = DDLColumnDataList.stream()
-                .anyMatch(DDLColumnData::isPrimaryKey); // primaryKey가 true인 컬럼이 하나라도 있는지 확인
+        long primaryKeyCount = DDLColumnDataList.stream()
+                .filter(DDLColumnData::isPrimaryKey)
+                .count();
 
-        if (hasPrimaryKey) {
-            throw new IllegalArgumentException(ID_ANNOTATION_OVER_ONE);
+        if (primaryKeyCount >= 2) {
+            throw new IllegalArgumentException(ID_ANNOTATION_OVER_ONE); // 2개 이상이면 예외 발생
         }
     }
 
