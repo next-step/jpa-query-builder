@@ -3,8 +3,6 @@ package persistence.sql.dml;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import persistence.sql.ddl.dialect.Dialect;
-import persistence.sql.extract.ColumnPropertyExtractor;
-import persistence.sql.extract.TablePropertyExtractor;
 
 public class InsertQueryBuilder implements DMLQueryBuilder {
 
@@ -14,35 +12,42 @@ public class InsertQueryBuilder implements DMLQueryBuilder {
     @Override
     public String build(Class<?> clazz, Dialect dialect) {
         InsertMetadata insertMetadata = new InsertMetadata(
-                TablePropertyExtractor.getName(clazz),
+                new TableName(clazz),
                 Arrays.stream(clazz.getDeclaredFields())
-                        .map(ColumnPropertyExtractor::getName)
+                        .map(ColumnName::new)
                         .toList()
         );
 
         StringBuilder builder = new StringBuilder();
         builder.append( COLUMN_INSERT_STRING )
                 .append( " " )
-                .append( insertMetadata.tableName() )
-                .append( columnsClause(builder, insertMetadata) )
+                .append( insertMetadata.tableName().value() )
+                .append( columnsClause(insertMetadata) )
+                .append( " " )
                 .append( COLUMN_VALUE_STRING )
-                .append( valueClause(builder, insertMetadata) );
+                .append( valueClause(insertMetadata) );
 
         return builder.toString();
     }
 
-    private StringBuilder columnsClause(StringBuilder builder, InsertMetadata metadata) {
+    private String columnsClause(InsertMetadata metadata) {
+        StringBuilder builder = new StringBuilder();
         return builder.append( " (" )
-                .append( String.join(",", metadata.columnNames()) )
-                .append(")");
+                .append( metadata.columnNames().stream()
+                        .map(ColumnName::value)
+                        .collect(Collectors.joining(", ")))
+                .append(")")
+                .toString();
     }
 
-    private StringBuilder valueClause(StringBuilder builder, InsertMetadata metadata) {
+    private String valueClause(InsertMetadata metadata) {
+        StringBuilder builder = new StringBuilder();
         return builder.append(" (")
                 .append( metadata.columnNames().stream()
                         .map(name -> "?")
-                        .collect(Collectors.joining(",")) )
-                .append(")");
+                        .collect(Collectors.joining(", ")) )
+                .append(")")
+                .toString();
     }
 
 }
