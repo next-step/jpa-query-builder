@@ -1,8 +1,15 @@
 package persistence.sql.dialect;
 
+import persistence.sql.dialect.type.DataTypeRegistry;
+
 public class H2Dialect extends Dialect {
-    public H2Dialect() {
-        super();
+    public H2Dialect(DataTypeRegistry dataTypeRegistry) {
+        super(dataTypeRegistry);
+    }
+
+    @Override
+    public String getNullDefinitionPhrase(Boolean isNull) {
+        return isNull ? "NULL" : "NOT NULL";
     }
 
     @Override
@@ -13,5 +20,10 @@ public class H2Dialect extends Dialect {
     @Override
     public Boolean shouldSpecifyNotNullOnIdentity() {
         return false;
-    };
+    }
+
+    @Override
+    public Boolean checkIfExitsBeforeDropTable() {
+        return true;
+    }
 }

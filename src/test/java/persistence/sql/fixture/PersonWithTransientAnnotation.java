@@ -20,4 +20,26 @@ public class PersonWithTransientAnnotation {
 
     @Transient
     private Integer index;
+
+    public PersonWithTransientAnnotation(Long id, String name, Integer age, String email, Integer index) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
+
+    public PersonWithTransientAnnotation(String name, Integer age, String email, Integer index) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
+
+    public PersonWithTransientAnnotation(String email) {
+        this.email = email;
+    }
+
+    public PersonWithTransientAnnotation() {
+    }
 }
