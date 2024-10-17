@@ -15,16 +15,16 @@ public class ImplQueryBuilder {
 
     private static final DialectStatementMap statementMap = new DialectStatementMap();
     private final SQLDialect dialect;
-    private final QueryExecutor queryExecutor;
+    private final QueryRunner queryRunner;
 
     public ImplQueryBuilder(SQLDialect dialect) {
         this.dialect = dialect;
-        this.queryExecutor = new QueryExecutor();
+        this.queryRunner = new QueryRunner();
     }
 
-    public ImplQueryBuilder(SQLDialect dialect, QueryExecutor queryExecutor) {
+    public ImplQueryBuilder(SQLDialect dialect, QueryRunner queryRunner) {
         this.dialect = dialect;
-        this.queryExecutor = queryExecutor;
+        this.queryRunner = queryRunner;
     }
 
     public <E> CreateTableStep buildCreateTable(TableEntity<E> tableEntity) {
@@ -49,7 +49,7 @@ public class ImplQueryBuilder {
 
     private <E, T extends QueryBuilder> T newInstanceOfImpl(TableEntity<E> tableEntity, Class<T> implClass) {
         try {
-            return implClass.getDeclaredConstructor(TableEntity.class, QueryExecutor.class).newInstance(tableEntity, queryExecutor);
+            return implClass.getDeclaredConstructor(TableEntity.class, QueryRunner.class).newInstance(tableEntity, queryRunner);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);

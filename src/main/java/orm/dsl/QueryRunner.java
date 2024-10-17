@@ -3,17 +3,15 @@ package orm.dsl;
 import jdbc.JdbcTemplate;
 import orm.row_mapper.DefaultRowMapper;
 
-import java.sql.ResultSet;
-
-public class QueryExecutor {
+public class QueryRunner {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public QueryExecutor() {
+    public QueryRunner() {
         this.jdbcTemplate = null;
     }
 
-    public QueryExecutor(JdbcTemplate jdbcTemplate) {
+    public QueryRunner(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

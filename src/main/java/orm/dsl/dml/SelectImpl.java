@@ -3,7 +3,7 @@ package orm.dsl.dml;
 import jdbc.RowMapper;
 import orm.QueryRenderer;
 import orm.TableEntity;
-import orm.dsl.QueryExecutor;
+import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
 import orm.dsl.step.dml.ConditionStep;
 import orm.dsl.step.dml.SelectFromStep;
@@ -15,13 +15,13 @@ import java.util.List;
 
 public abstract class SelectImpl<E> implements SelectFromStep<E>{
 
-    private final QueryExecutor queryExecutor;
+    private final QueryRunner queryRunner;
     private final TableEntity<E> tableEntity;
     private final List<Condition> selectConditions;
 
-    public SelectImpl(TableEntity<E> tableEntity, QueryExecutor queryExecutor) {
+    public SelectImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
         this.tableEntity = tableEntity;
-        this.queryExecutor = queryExecutor;
+        this.queryRunner = queryRunner;
         this.selectConditions = new ArrayList<>();
     }
 

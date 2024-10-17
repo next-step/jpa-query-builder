@@ -2,7 +2,7 @@ package orm.dsl.sql_dialect.h2;
 
 import orm.TableEntity;
 import orm.TableField;
-import orm.dsl.QueryExecutor;
+import orm.dsl.QueryRunner;
 import orm.dsl.ddl.CreateTableImpl;
 
 import java.util.StringJoiner;
@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class H2CreateTableImpl<ENTITY> extends CreateTableImpl<ENTITY> {
 
-    public H2CreateTableImpl(TableEntity<ENTITY> tableEntity, QueryExecutor queryExecutor) {
-        super(tableEntity, queryExecutor);
+    public H2CreateTableImpl(TableEntity<ENTITY> tableEntity, QueryRunner queryRunner) {
+        super(tableEntity, queryRunner);
     }
 
     @Override

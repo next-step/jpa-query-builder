@@ -1,12 +1,11 @@
 package orm.dsl.ddl;
 
 import jakarta.persistence.GeneratedValue;
-import jdbc.JdbcTemplate;
 import orm.TableEntity;
 import orm.TableField;
 import orm.TablePrimaryField;
 import orm.dsl.QueryBuilder;
-import orm.dsl.QueryExecutor;
+import orm.dsl.QueryRunner;
 import orm.dsl.sql_dialect.h2.ColumnTypeMapper;
 import orm.dsl.step.ddl.CreateTableStep;
 import orm.exception.InvalidIdGenerationException;
@@ -15,16 +14,16 @@ import java.util.StringJoiner;
 
 public abstract class CreateTableImpl<E> implements CreateTableStep {
 
-    protected final QueryExecutor queryExecutor;
+    protected final QueryRunner queryRunner;
     protected final ColumnTypeMapper columnTypeMapper;
     protected final TableEntity<E> tableEntity;
 
     protected boolean ifNotExist = false;
 
-    public CreateTableImpl(TableEntity<E> tableEntity, QueryExecutor queryExecutor) {
+    public CreateTableImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
         this.tableEntity = tableEntity;
         this.columnTypeMapper = ColumnTypeMapper.of(tableEntity.getJpaSettings().getDialect());
-        this.queryExecutor = queryExecutor;
+        this.queryRunner = queryRunner;
     }
 
     @Override

@@ -4,7 +4,7 @@ import jakarta.persistence.GenerationType;
 import orm.QueryRenderer;
 import orm.TableEntity;
 import orm.TableField;
-import orm.dsl.QueryExecutor;
+import orm.dsl.QueryRunner;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.exception.InvalidEntityException;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public abstract class InsertImpl<E> implements InsertIntoStep {
 
-    private final QueryExecutor queryExecutor;
+    private final QueryRunner queryRunner;
 
     // insert 할 테이블
     protected final TableEntity<E> tableEntity;
@@ -25,10 +25,10 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     // insert 할 값들
     protected List<List<? extends TableField>> inertValues;
 
-    public InsertImpl(TableEntity<E> tableEntity, QueryExecutor queryExecutor) {
+    public InsertImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
         this.tableEntity = tableEntity;
         this.inertFields = extractInsertFields(tableEntity);
-        this.queryExecutor = queryExecutor;
+        this.queryRunner = queryRunner;
     }
 
     @Override

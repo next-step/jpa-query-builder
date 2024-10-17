@@ -5,34 +5,34 @@ import orm.QueryProvider;
 import orm.SQLDialect;
 import orm.TableEntity;
 import orm.dsl.ImplQueryBuilder;
-import orm.dsl.QueryExecutor;
+import orm.dsl.QueryRunner;
 import orm.dsl.step.dml.SelectFromStep;
 import orm.settings.JpaSettings;
 
 public class DQLQueryBuilder implements QueryProvider {
 
     private final JpaSettings settings;
-    private final QueryExecutor queryExecutor;
+    private final QueryRunner queryRunner;
 
     public DQLQueryBuilder() {
-        this(JpaSettings.ofDefault(), new QueryExecutor());
+        this(JpaSettings.ofDefault(), new QueryRunner());
     }
 
-    public DQLQueryBuilder(JpaSettings settings, QueryExecutor queryExecutor) {
+    public DQLQueryBuilder(JpaSettings settings, QueryRunner queryRunner) {
         this.settings = settings;
-        this.queryExecutor = queryExecutor;
+        this.queryRunner = queryRunner;
     }
 
     public DQLQueryBuilder(JdbcTemplate jdbcTemplate) {
-        this(JpaSettings.ofDefault(), new QueryExecutor(jdbcTemplate));
+        this(JpaSettings.ofDefault(), new QueryRunner(jdbcTemplate));
     }
 
     public DQLQueryBuilder(JdbcTemplate jdbcTemplate, JpaSettings settings) {
-        this(settings, new QueryExecutor(jdbcTemplate));
+        this(settings, new QueryRunner(jdbcTemplate));
     }
 
     public <E> SelectFromStep<E> selectFrom(Class<E> entityClass) {
-        return new ImplQueryBuilder(dialect(), queryExecutor)
+        return new ImplQueryBuilder(dialect(), queryRunner)
                 .buildSelect(new TableEntity<>(entityClass, settings));
     }
 

@@ -1,19 +1,18 @@
 package orm.dsl.ddl;
 
-import jdbc.JdbcTemplate;
 import orm.TableEntity;
 import orm.dsl.QueryBuilder;
-import orm.dsl.QueryExecutor;
+import orm.dsl.QueryRunner;
 import orm.dsl.step.ddl.DropTableStep;
 
 public abstract class DropTableImpl<E> implements DropTableStep {
 
-    private final QueryExecutor queryExecutor;
+    private final QueryRunner queryRunner;
     protected final TableEntity<E> tableEntity;
     protected boolean ifNotExist = false;
 
-    public DropTableImpl(TableEntity<E> tableEntity, QueryExecutor queryExecutor) {
-        this.queryExecutor = queryExecutor;
+    public DropTableImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
+        this.queryRunner = queryRunner;
         this.tableEntity = tableEntity;
     }
 

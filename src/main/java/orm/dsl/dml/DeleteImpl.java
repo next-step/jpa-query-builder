@@ -2,7 +2,7 @@ package orm.dsl.dml;
 
 import orm.QueryRenderer;
 import orm.TableEntity;
-import orm.dsl.QueryExecutor;
+import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
 import orm.dsl.step.dml.ConditionStep;
 import orm.dsl.step.dml.DeleteFromStep;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public abstract class DeleteImpl <E> implements DeleteFromStep {
 
-    private final QueryExecutor queryExecutor;
+    private final QueryRunner queryRunner;
     private final TableEntity<E> tableEntity;
     private final List<Condition> deleteConditions;
 
-    public DeleteImpl(TableEntity<E> tableEntity, QueryExecutor queryExecutor) {
+    public DeleteImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
         this.tableEntity = tableEntity;
-        this.queryExecutor = queryExecutor;
+        this.queryRunner = queryRunner;
         this.deleteConditions = new ArrayList<>();
     }
 
