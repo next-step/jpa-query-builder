@@ -24,20 +24,17 @@ public class GenericRowMapper<T> implements RowMapper<T> {
 
             for (Queryable field : tableDefinition.queryableColumns()) {
                 final String databaseColumnName = field.name();
-                final String objectDeclaredName = field.declaredName();
+                final Field objectDeclaredField = clazz.getDeclaredField(field.declaredName());
 
-                final Field declaredField = clazz.getDeclaredField(objectDeclaredName);
-                final boolean wasAccessible = declaredField.canAccess(instance);
-                final Object columnValue = resultSet.getObject(databaseColumnName);
-
+                final boolean wasAccessible = objectDeclaredField.canAccess(instance);
                 if (!wasAccessible) {
-                    declaredField.setAccessible(true);
+                    objectDeclaredField.setAccessible(true);
                 }
 
-                declaredField.set(instance, columnValue);
+                objectDeclaredField.set(instance, resultSet.getObject(databaseColumnName));
 
                 if (!wasAccessible) {
-                    declaredField.setAccessible(false);
+                    objectDeclaredField.setAccessible(false);
                 }
             }
 
