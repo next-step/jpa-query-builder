@@ -1,8 +1,8 @@
 package persistence.sql.dml.impl;
 
 import jakarta.persistence.Id;
-import persistence.sql.clause.Clause;
 import persistence.sql.QueryBuilderFactory;
+import persistence.sql.clause.Clause;
 import persistence.sql.clause.InsertColumnValueClause;
 import persistence.sql.clause.SetValueClause;
 import persistence.sql.clause.WhereConditionalClause;
@@ -18,7 +18,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 public class DefaultEntityManager implements EntityManager {
@@ -71,8 +70,13 @@ public class DefaultEntityManager implements EntityManager {
         if (entity == null) {
             throw new IllegalArgumentException("Entity must not be null");
         }
-
         MetadataLoader<?> loader = new SimpleMetadataLoader<>(entity.getClass());
+
+        if (isNew(entity, loader)) {
+            persist(entity);
+            return;
+        }
+
         List<Field> fields = loader.getFieldAllByPredicate(field -> !field.isAnnotationPresent(Id.class));
 
         Clause[] clauses = fields.stream()
@@ -88,7 +92,6 @@ public class DefaultEntityManager implements EntityManager {
         if (entity == null) {
             throw new IllegalArgumentException("Entity must not be null");
         }
-
 
         MetadataLoader<?> loader = new SimpleMetadataLoader<>(entity.getClass());
         Field pkField = loader.getPrimaryKeyField();
@@ -130,20 +133,16 @@ public class DefaultEntityManager implements EntityManager {
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
         MetadataLoader<T> loader = new SimpleMetadataLoader<>(entityClass);
-
         String findAllQuery = QueryBuilderFactory.getInstance().buildQuery(QueryType.SELECT, loader);
-        try (ResultSet resultSet = database.executeQuery(findAllQuery)) {
 
+        return database.executeQuery(findAllQuery, resultSet -> {
             List<T> entities = new ArrayList<>();
             while (resultSet.next()) {
                 entities.add(mapRowResultSetToEntity(resultSet, loader));
             }
 
             return entities;
-        } catch (SQLException e) {
-            logger.severe("Failed to find all entities");
-            throw new NoSuchElementException(e);
-        }
+        });
     }
 
     private <T> T mapRowResultSetToEntity(ResultSet resultSet, MetadataLoader<T> loader) {

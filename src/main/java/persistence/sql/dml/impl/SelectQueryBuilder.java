@@ -1,13 +1,13 @@
 package persistence.sql.dml.impl;
 
-import persistence.sql.clause.Clause;
-import persistence.sql.clause.ConditionalClause;
 import persistence.sql.QueryBuilder;
+import persistence.sql.clause.Clause;
 import persistence.sql.common.util.NameConverter;
+import persistence.sql.data.ClauseType;
 import persistence.sql.data.QueryType;
 import persistence.sql.dml.MetadataLoader;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class SelectQueryBuilder implements QueryBuilder {
     private final NameConverter nameConverter;
@@ -33,12 +33,9 @@ public class SelectQueryBuilder implements QueryBuilder {
 
         StringBuilder query = new StringBuilder("SELECT %s FROM %s".formatted(columns, tableName));
 
-        ConditionalClause[] conditionalClauses = Arrays.stream(clauses)
-                .filter(clause -> clause instanceof ConditionalClause)
-                .map(clause -> (ConditionalClause) clause)
-                .toArray(ConditionalClause[]::new);
+        List<Clause> conditionalClauses = Clause.filterByClauseType(clauses, ClauseType.WHERE);
 
-        if (conditionalClauses.length > 0) {
+        if (!conditionalClauses.isEmpty()) {
             query.append(" WHERE ");
             query.append(getWhereClause(conditionalClauses));
         }

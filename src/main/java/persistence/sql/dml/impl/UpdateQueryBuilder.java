@@ -1,13 +1,11 @@
 package persistence.sql.dml.impl;
 
-import persistence.sql.clause.Clause;
-import persistence.sql.clause.ConditionalClause;
 import persistence.sql.QueryBuilder;
-import persistence.sql.clause.SetValueClause;
+import persistence.sql.clause.Clause;
+import persistence.sql.data.ClauseType;
 import persistence.sql.data.QueryType;
 import persistence.sql.dml.MetadataLoader;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,37 +23,24 @@ public class UpdateQueryBuilder implements QueryBuilder {
     @Override
     public String build(MetadataLoader<?> loader, Clause... clauses) {
         String tableName = loader.getTableName();
-        String setClause = getSetClause(clauses);
-        String whereClause = getWhereClause(clauses);
-        StringBuilder query = new StringBuilder("UPDATE %s SET %s".formatted(tableName, setClause));
+        List<Clause> setClauses = Clause.filterByClauseType(clauses, ClauseType.SET);
+        List<Clause> whereClauses = Clause.filterByClauseType(clauses, ClauseType.WHERE);
 
-        if (whereClause != null && !whereClause.isBlank()) {
-            query.append(" WHERE ").append(whereClause);
+        StringBuilder query = new StringBuilder("UPDATE %s SET %s".formatted(tableName, getSetClause(setClauses)));
+
+        if (!whereClauses.isEmpty()) {
+            query.append(" WHERE ").append(getWhereClause(whereClauses));
         }
 
         return query.toString();
     }
 
-    private String getWhereClause(Clause[] clauses) {
-        ConditionalClause[] conditionalClauses = Arrays.stream(clauses)
-                .filter(clause -> clause instanceof ConditionalClause)
-                .map(clause -> (ConditionalClause) clause)
-                .toArray(ConditionalClause[]::new);
-
-        return getWhereClause(conditionalClauses);
-    }
-
-    private String getSetClause(Clause... clauses) {
-        List<SetValueClause> setConditionalClauses = Arrays.stream(clauses)
-                .filter(clause -> clause instanceof SetValueClause)
-                .map(clause -> (SetValueClause) clause)
-                .toList();
-
-        if (setConditionalClauses.isEmpty()) {
+    private String getSetClause(List<Clause> clauses) {
+        if (clauses.isEmpty()) {
             throw new IllegalArgumentException("Set clause is required");
         }
-        return setConditionalClauses.stream()
-                .map(SetValueClause::clause)
+        return clauses.stream()
+                .map(Clause::clause)
                 .collect(Collectors.joining(DELIMITER));
     }
 }

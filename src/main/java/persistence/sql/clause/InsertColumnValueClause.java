@@ -2,6 +2,7 @@ package persistence.sql.clause;
 
 import jakarta.persistence.Id;
 import persistence.sql.common.util.NameConverter;
+import persistence.sql.data.ClauseType;
 import persistence.sql.dml.MetadataLoader;
 import persistence.sql.dml.impl.SimpleMetadataLoader;
 
@@ -24,6 +25,11 @@ public record InsertColumnValueClause(String column, String value) implements Va
         }
 
         return new InsertColumnValueClause(String.join(", ", columns), String.join(", ", values));
+    }
+
+    @Override
+    public boolean supported(ClauseType clauseType) {
+        return clauseType == ClauseType.INSERT;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package persistence.sql.clause;
 
+import persistence.sql.data.ClauseType;
+
 import java.lang.reflect.Field;
 
 public record SetValueClause(String column, String value) implements ValueClause {
@@ -12,6 +14,11 @@ public record SetValueClause(String column, String value) implements ValueClause
         return new SetValueClause(columnName, columnValue);
     }
 
+
+    @Override
+    public boolean supported(ClauseType clauseType) {
+        return clauseType == ClauseType.SET;
+    }
 
     @Override
     public String clause() {
