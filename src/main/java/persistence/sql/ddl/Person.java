@@ -23,4 +23,16 @@ public class Person {
         this.id = id;
         this.name = name;
     }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

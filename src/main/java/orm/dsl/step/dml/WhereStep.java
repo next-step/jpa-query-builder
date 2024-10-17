@@ -1,11 +1,10 @@
 package orm.dsl.step.dml;
 
-import orm.dsl.QueryBuilder;
 import orm.dsl.condition.Condition;
 
-public interface WhereStep extends QueryBuilder {
+public interface WhereStep extends ConditionStep {
 
-    QueryBuilder where(Condition condition);
+    ConditionStep where(Condition condition);
 
-    QueryBuilder where(Condition... conditions);
+    ConditionStep where(Condition... conditions);
 }

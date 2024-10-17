@@ -1,5 +1,8 @@
 package orm;
 
+import orm.dsl.condition.Condition;
+import orm.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,5 +41,21 @@ public class QueryRenderer {
         }
 
         return String.join(", ", result);
+    }
+
+    public String renderWhere(List<Condition> conditions) {
+        if (CollectionUtils.isEmpty(conditions)) {
+            return "";
+        }
+
+        final StringBuilder whereBuilder = new StringBuilder();
+        whereBuilder.append(" WHERE ");
+        whereBuilder.append(
+                conditions.stream()
+                        .map(Condition::toString)
+                        .collect(Collectors.joining(" AND "))
+        );
+
+        return whereBuilder.toString();
     }
 }

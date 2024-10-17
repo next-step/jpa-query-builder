@@ -15,6 +15,7 @@ public class PersonWithAI {
     private int age;
 
     public PersonWithAI() {
+
     }
 
     public PersonWithAI(Long id, int age, String name) {

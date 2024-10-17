@@ -1,5 +1,7 @@
 package orm.dsl.step.dml;
 
-public interface SelectFromStep extends WhereStep {
+import orm.dsl.QueryFetcher;
+
+public interface SelectFromStep<E> extends WhereStep, QueryFetcher<E> {
 
 }

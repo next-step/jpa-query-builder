@@ -1,9 +1,11 @@
 package orm.dsl.dml;
 
 import jakarta.persistence.GenerationType;
+import jdbc.JdbcTemplate;
 import orm.QueryRenderer;
 import orm.TableEntity;
 import orm.TableField;
+import orm.dsl.QueryExecutor;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.exception.InvalidEntityException;
 
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class InsertImpl<E> implements InsertIntoStep {
+
+    private final QueryExecutor queryExecutor;
 
     // insert 할 테이블
     protected final TableEntity<E> tableEntity;
@@ -22,9 +26,10 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     // insert 할 값들
     protected List<List<? extends TableField>> inertValues;
 
-    public InsertImpl(TableEntity<E> tableEntity) {
+    public InsertImpl(TableEntity<E> tableEntity, QueryExecutor queryExecutor) {
         this.tableEntity = tableEntity;
         this.inertFields = extractInsertFields(tableEntity);
+        this.queryExecutor = queryExecutor;
     }
 
     @Override
