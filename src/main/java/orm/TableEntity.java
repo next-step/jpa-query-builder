@@ -141,8 +141,8 @@ public class TableEntity<E> {
     /**
      * 모든 영속성 필드 추출
      *
-     * @param entityClass
-     * @return
+     * @param entityClass 엔티티 클래스
+     * @return List<TableField> 모든 영속성 필드
      */
     private List<TableField> extractAllPersistenceFields(Class<E> entityClass) {
         Field[] declaredFields = entityClass.getDeclaredFields();
