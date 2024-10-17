@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.dialect.Dialect;
 
 public class InsertQueryBuilder implements DMLQueryBuilder {
 
@@ -10,7 +10,7 @@ public class InsertQueryBuilder implements DMLQueryBuilder {
     private static final String COLUMN_VALUE_STRING = "values";
 
     @Override
-    public String build(Class<?> clazz, Dialect dialect) {
+    public String build(Class<?> clazz) {
         InsertMetadata insertMetadata = new InsertMetadata(
                 new TableName(clazz),
                 Arrays.stream(clazz.getDeclaredFields())
@@ -22,7 +22,7 @@ public class InsertQueryBuilder implements DMLQueryBuilder {
         builder.append( COLUMN_INSERT_STRING )
                 .append( " " )
                 .append( insertMetadata.tableName().value() )
-                .append( columnsClause(insertMetadata) )
+                .append( columnsClauseWithParentheses(insertMetadata.columnNames()) )
                 .append( " " )
                 .append( COLUMN_VALUE_STRING )
                 .append( valueClause(insertMetadata) );
@@ -30,12 +30,10 @@ public class InsertQueryBuilder implements DMLQueryBuilder {
         return builder.toString();
     }
 
-    private String columnsClause(InsertMetadata metadata) {
+    public String columnsClauseWithParentheses(List<ColumnName> columnNames) {
         StringBuilder builder = new StringBuilder();
         return builder.append( " (" )
-                .append( metadata.columnNames().stream()
-                        .map(ColumnName::value)
-                        .collect(Collectors.joining(", ")))
+                .append( columnsClause(columnNames) )
                 .append(")")
                 .toString();
     }
