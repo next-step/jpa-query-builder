@@ -3,11 +3,13 @@ package persistence.sql.ddl;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class QueryBuilder {
-    private final FieldAnnotationMapper fieldAnnotationMapper = new FieldAnnotationMapper();
+    private final ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper();
 
     public String create(Class<?> entity) {
         String createTableQuery = this.getCreateTableQuery(entity);
@@ -26,11 +28,11 @@ public class QueryBuilder {
 
     private String generateColumnDefinitions(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
-        List<String> columns = Arrays.stream(fields)
+
+        return Arrays.stream(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field), this.getColumnTypeFromAnnotation(field)))
-                .toList();
-        return String.join(", ", columns);
+                .collect(Collectors.joining(", "));
     }
 
     private String getColumnNameFromAnnotation(Field field) {
@@ -45,7 +47,14 @@ public class QueryBuilder {
     }
 
     private String getColumnTypeFromAnnotation(Field field) {
-        return ColumnType.getSqlType(field.getType()) + this.fieldAnnotationMapper.mapFieldAnnotationToSQLType(field);
+        List<String> columnNameWithDefinition = new ArrayList<>();
+        columnNameWithDefinition.add(ColumnType.getSqlType(field.getType()));
+        columnNameWithDefinition.addAll(this.columnDefinitionMapper.mapAnnotationToSQLDefinition(field));
+
+        return columnNameWithDefinition
+                .stream()
+                .filter(definition -> !definition.isEmpty())
+                .collect(Collectors.joining(" "));
     }
 
     private String getTableName(Class<?> entity) {
