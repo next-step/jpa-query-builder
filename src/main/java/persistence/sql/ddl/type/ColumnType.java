@@ -28,8 +28,12 @@ public enum ColumnType {
                 .orElseThrow(() -> new NotExistException("sql type mapped to " + javaType.getName()));
     }
 
+    public static boolean isVarcharType(Class<?> javaType) {
+        return javaType == String.class;
+    }
+
     public static boolean isNotVarcharType(Class<?> javaType) {
-        return Types.VARCHAR != getSqlType(javaType);
+        return !isVarcharType(javaType);
     }
 
     public static boolean isVarcharType(int sqlType) {
