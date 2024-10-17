@@ -20,6 +20,7 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             JpaPersistentEntity jpaPersistentEntity = new JpaPersistentEntity(jdbcTemplate);
             jpaPersistentEntity.createTable(Person.class);
+            jpaPersistentEntity.dropEntity(Person.class);
 
             server.stop();
         } catch (Exception e) {
