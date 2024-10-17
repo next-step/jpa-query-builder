@@ -1,7 +1,6 @@
 package persistence.sql.dml.query;
 
 import persistence.sql.Queryable;
-import persistence.sql.definition.ColumnDefinition;
 import persistence.sql.definition.TableDefinition;
 
 import java.util.LinkedHashMap;
@@ -13,6 +12,7 @@ public class UpdateQueryBuilder {
     private static final String EMPTY_STRING = "";
 
     private final Map<String, String> columns = new LinkedHashMap<>();
+    private final Map<String, String> conditions = new LinkedHashMap<>();
 
     public UpdateQueryBuilder() {
     }
@@ -23,6 +23,15 @@ public class UpdateQueryBuilder {
             final String columnValue = column.hasValue(entity) ? column.getValue(entity) : null;
 
             columns.put(columnName, columnValue);
+        });
+    }
+
+    public void addConditions(List<? extends Queryable> queryableColumns, Object entity) {
+        queryableColumns.forEach(column -> {
+            final String columnName = column.name();
+            final String columnValue = column.hasValue(entity) ? column.getValue(entity) : null;
+
+            conditions.put(columnName, columnValue);
         });
     }
 
@@ -37,9 +46,14 @@ public class UpdateQueryBuilder {
         StringBuilder query = new StringBuilder();
         query.append("UPDATE ");
         query.append(tableDefinition.tableName());
-        query.append(" SET ");
 
+        query.append(" SET ");
         query.append(columnsClause());
+
+        if (!conditions.isEmpty()) {
+            query.append(" WHERE ");
+        }
+        query.append(whereClause());
         query.append(";");
 
         return query.toString();
@@ -51,5 +65,13 @@ public class UpdateQueryBuilder {
                 .stream()
                 .map(entry -> entry.getKey() + " = " + entry.getValue())
                 .collect(Collectors.joining(", "));
+    }
+
+    private String whereClause() {
+        return conditions
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + " = " + entry.getValue())
+                .collect(Collectors.joining(" AND "));
     }
 }
