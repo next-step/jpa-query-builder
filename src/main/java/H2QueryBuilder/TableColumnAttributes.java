@@ -1,7 +1,5 @@
 package H2QueryBuilder;
 
-import jakarta.persistence.Embeddable;
-
 import java.util.ArrayList;
 import java.util.List;
 
