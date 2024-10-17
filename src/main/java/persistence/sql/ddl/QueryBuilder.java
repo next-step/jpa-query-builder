@@ -29,19 +29,17 @@ public class QueryBuilder {
             .filter(field -> !field.isAnnotationPresent(Transient.class))
             .map(field -> {
                 String columnName = new ColumnInfo(field).getColumnName();
+                String columnDataType = ColumnDataType.getSqlType(field.getType());
                 String columnType = this.getColumnTypeFromAnnotation(field);
-                return "%s %s".formatted(columnName, columnType);
+                return "%s %s %s".formatted(columnName, columnDataType, columnType).trim();
             }).collect(Collectors.joining(", "));
     }
 
 
 
     private String getColumnTypeFromAnnotation(Field field) {
-        List<String> columnNameWithDefinition = new ArrayList<>();
-        columnNameWithDefinition.add(ColumnDataType.getSqlType(field.getType()));
-
         ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper(field);
-        columnNameWithDefinition.addAll(columnDefinitionMapper.mapAnnotationToSQLDefinition());
+        List<String> columnNameWithDefinition = new ArrayList<>(columnDefinitionMapper.mapAnnotationToSQLDefinition());
 
         return columnNameWithDefinition
                 .stream()
