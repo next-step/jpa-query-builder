@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.*;
+import persistence.sql.Dialect;
 import persistence.sql.model.EntityColumnName;
 
 import java.lang.reflect.Field;
@@ -17,10 +18,6 @@ public class DDLColumn {
             String.class, "VARCHAR(255)"
     );
 
-    private static final Map<GenerationType, String> ddlStrategyDDLString = Map.of(
-            GenerationType.IDENTITY, "AUTO_INCREMENT"
-    );
-
     private static final Map<Boolean, String> ddlColumnNullableString = Map.of(
             true, "NULL",
             false, "NOT NULL"
@@ -28,12 +25,15 @@ public class DDLColumn {
 
 
     private final List<Field> fields;
+    private final Dialect dialect;
 
 
-    public DDLColumn(Field[] fields) {
+    public DDLColumn(Field[] fields, Dialect dialect) {
         if (fields == null || fields.length <= 0) {
             throw new IllegalArgumentException("필드가 존재하지 않습니다.");
         }
+
+        this.dialect = dialect;
 
         this.fields = new ArrayList<>(Arrays.asList(fields))
                 .stream()
@@ -65,7 +65,7 @@ public class DDLColumn {
 
         if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class)) {
             GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
-            String autoIncrementAnnotationString = getStrategyDDL(annotation.strategy());
+            String autoIncrementAnnotationString = dialect.getGenerationTypeQuery(annotation.strategy());
             columnStringBuilder.append(SPACE);
             columnStringBuilder.append(autoIncrementAnnotationString);
         }
@@ -92,15 +92,4 @@ public class DDLColumn {
         return Optional.ofNullable(ddlFieldTypeString.get(field.getType()))
                 .orElseThrow(() -> new IllegalArgumentException("조건에 맞는 타입이 존재하지 않습니다."));
     }
-
-    private String getStrategyDDL(GenerationType generationType) {
-        if (generationType == null) {
-            throw new IllegalArgumentException("Generation Type이 존재하지 않습니다.");
-        }
-
-        return Optional.ofNullable(ddlStrategyDDLString.get(generationType))
-                .orElseThrow(() -> new IllegalArgumentException("조건에 맞는 Strategy 타입이 존재하지 않습니다."));
-    }
-
-
 }

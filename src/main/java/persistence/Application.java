@@ -5,7 +5,10 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.Dialect;
+import persistence.sql.H2Dialect;
 import persistence.sql.ddl.*;
+import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.dml.*;
 
 import java.util.List;
@@ -16,14 +19,15 @@ public class Application {
     public static void main(String[] args) {
         logger.info("Starting application...");
         try {
-            AbstractCreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(Person.class);
-            DropQueryBuilder dropQueryBuilder = new H2DropQueryBuilder(Person.class);
+            Dialect dialect = new H2Dialect();
+            QueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class, dialect);
 
+            QueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
             final DatabaseServer server = new H2();
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            jdbcTemplate.execute(createQueryBuilder.makeQuery());
+            jdbcTemplate.execute(createQueryBuilder.build());
 
             Person person = new Person("name", 10, "test@email.com", 1);
             InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);

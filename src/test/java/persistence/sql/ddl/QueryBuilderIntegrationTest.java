@@ -2,6 +2,8 @@ package persistence.sql.ddl;
 
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.Test;
+import persistence.sql.Dialect;
+import persistence.sql.H2Dialect;
 import persistence.sql.dml.*;
 import persistence.sql.model.TableName;
 
@@ -13,13 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class QueryBuilderIntegrationTest {
 
     private static final String SELECT_TABLES_SQL = "SELECT table_name FROM information_schema.tables WHERE table_schema='PUBLIC'";
+    private static final Dialect dialect = new H2Dialect();
     @Test
     void 테이블_생성() {
         Class<Person> clazz = Person.class;
 
-        CreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(clazz);
+        QueryBuilder createQueryBuilder = new CreateQueryBuilder(clazz, dialect);
         JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
-        jdbcTemplate.execute(createQueryBuilder.makeQuery());
+        jdbcTemplate.execute(createQueryBuilder.build());
 
         List<String> tableNames = jdbcTemplate.query(
                 SELECT_TABLES_SQL,
@@ -34,12 +37,12 @@ public class QueryBuilderIntegrationTest {
     void 테이블_제거() {
         Class<Person> clazz = Person.class;
 
-        AbstractCreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(clazz);
+        QueryBuilder createQueryBuilder = new CreateQueryBuilder(clazz, dialect);
         JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
-        jdbcTemplate.execute(createQueryBuilder.makeQuery());
+        jdbcTemplate.execute(createQueryBuilder.build());
 
-        H2DropQueryBuilder dropQueryBuilder = new H2DropQueryBuilder(clazz);
-        jdbcTemplate.execute(dropQueryBuilder.makeQuery());
+        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(clazz);
+        jdbcTemplate.execute(dropQueryBuilder.build());
 
         List<String> tableNames = jdbcTemplate.query(
                 SELECT_TABLES_SQL,
@@ -58,8 +61,8 @@ public class QueryBuilderIntegrationTest {
 
         JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
 
-        CreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(Person.class);
-        jdbcTemplate.execute(createQueryBuilder.makeQuery());
+        QueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class, dialect);
+        jdbcTemplate.execute(createQueryBuilder.build());
 
         InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
         jdbcTemplate.execute(insertQueryBuilder.makeQuery());
@@ -69,8 +72,8 @@ public class QueryBuilderIntegrationTest {
     void 데이터_삭제() {
         JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
 
-        CreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(Person.class);
-        jdbcTemplate.execute(createQueryBuilder.makeQuery());
+        QueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class, dialect);
+        jdbcTemplate.execute(createQueryBuilder.build());
 
         final String name = "이름";
         final Integer age = 11;

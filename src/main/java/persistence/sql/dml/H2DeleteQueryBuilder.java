@@ -26,8 +26,6 @@ public class H2DeleteQueryBuilder implements DeleteQueryBuilder {
     public String delete() {
         TableName tableName = new TableName(clazz);
 
-        EntityColumnValues entityColumnValues = new EntityColumnValues(object);
-        String id = entityColumnValues.getField("id");
         StringBuilder deleteStringBuilder = new StringBuilder();
         deleteStringBuilder.append("DELETE FROM");
         deleteStringBuilder.append(SPACE);
