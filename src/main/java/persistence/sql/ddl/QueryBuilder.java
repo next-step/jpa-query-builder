@@ -27,13 +27,12 @@ public class QueryBuilder {
             .filter(field -> !field.isAnnotationPresent(Transient.class))
             .map(field -> {
                 List<String> columnInfo = new ArrayList<>();
-                String columnName = new ColumnInfo(field).getColumnName();
+                ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper(field);
+                String columnName = columnDefinitionMapper.getColumnName();
                 String columnDataType = ColumnDataType.getSqlType(field.getType());
 
                 columnInfo.add(columnName);
                 columnInfo.add(columnDataType);
-
-                ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper(field);
                 columnInfo.addAll(columnDefinitionMapper.mapAnnotationToSQLDefinition());
 
                 columnInfo.removeAll(Arrays.asList("", null));

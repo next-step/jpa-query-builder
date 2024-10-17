@@ -16,6 +16,17 @@ public class ColumnDefinitionMapper {
         this.field = field;
     }
 
+    public String getColumnName() {
+        if (!this.field.isAnnotationPresent(Column.class)) {
+            return this.field.getName();
+        }
+        String columnName = this.field.getAnnotation(Column.class).name();
+        if (columnName.isEmpty()) {
+            return this.field.getName();
+        }
+        return columnName;
+    }
+
     public List<String> mapAnnotationToSQLDefinition() {
         List<String> columnDefinitions = new ArrayList<>();
         columnDefinitions.add(mapIdAnnotation());
