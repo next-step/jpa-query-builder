@@ -20,9 +20,10 @@ public class Application {
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
             QueryBuilder queryBuilder = new QueryBuilder(Person.class);
-            jdbcTemplate.execute("CREATE TABLE USERSid BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL");
-            jdbcTemplate.execute(queryBuilder.getColumns() + queryBuilder.getValue());
-            jdbcTemplate.execute("SELECT * FROM USERS");
+            queryBuilder.getColumns();
+//            jdbcTemplate.execute("CREATE TABLE USERSid BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL");
+//            jdbcTemplate.execute(queryBuilder.getColumns() + queryBuilder.getValue());
+//            jdbcTemplate.execute("SELECT * FROM USERS");
 
             server.stop();
         } catch (Exception e) {
