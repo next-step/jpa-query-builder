@@ -1,4 +1,4 @@
-package persistence.sql.dml;
+package persistence.sql.dml.query.metadata;
 
 import java.util.List;
 

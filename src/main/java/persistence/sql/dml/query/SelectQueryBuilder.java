@@ -1,10 +1,14 @@
-package persistence.sql.dml;
+package persistence.sql.dml.query;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
+import persistence.sql.dml.query.metadata.ColumnName;
+import persistence.sql.dml.query.metadata.SelectMetadata;
+import persistence.sql.dml.query.metadata.TableName;
+import persistence.sql.dml.query.metadata.WhereCondition;
 
 public class SelectQueryBuilder implements DMLQueryBuilder {
 

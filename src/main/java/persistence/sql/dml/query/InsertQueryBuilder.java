@@ -1,8 +1,11 @@
-package persistence.sql.dml;
+package persistence.sql.dml.query;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import persistence.sql.dml.query.metadata.ColumnName;
+import persistence.sql.dml.query.metadata.InsertMetadata;
+import persistence.sql.dml.query.metadata.TableName;
 
 public class InsertQueryBuilder implements DMLQueryBuilder {
 

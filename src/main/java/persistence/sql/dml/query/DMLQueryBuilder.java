@@ -1,7 +1,8 @@
-package persistence.sql.dml;
+package persistence.sql.dml.query;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import persistence.sql.dml.query.metadata.ColumnName;
 
 public interface DMLQueryBuilder {
 

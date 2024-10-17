@@ -1,7 +1,7 @@
-package persistence.sql.dml;
+package persistence.sql.dml.query.metadata;
 
-import static persistence.sql.dml.AnnotationValidator.isNotBlank;
-import static persistence.sql.dml.AnnotationValidator.isPresent;
+import static persistence.validator.AnnotationValidator.isNotBlank;
+import static persistence.validator.AnnotationValidator.isPresent;
 
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;
