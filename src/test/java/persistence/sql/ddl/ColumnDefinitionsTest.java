@@ -1,5 +1,6 @@
 package persistence.sql.ddl;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,8 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ColumnDefinitionsTest {
     private static final String INDENTATION = "    ";
 
+    @DisplayName("테이블 컬럼을 생성 한다.")
     @Test
-    void value() {
+    void createColumn() {
         final ColumnDefinitions columnDefinitions = new ColumnDefinitions(Person.class, new H2Dialect());
         assertEquals(expected(), columnDefinitions.value(Person.class));
     }
