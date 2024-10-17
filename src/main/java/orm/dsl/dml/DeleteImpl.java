@@ -48,4 +48,9 @@ public abstract class DeleteImpl <E> implements DeleteFromStep {
 
         return queryBuilder.toString();
     }
+
+    @Override
+    public void execute() {
+        queryRunner.execute(build());
+    }
 }

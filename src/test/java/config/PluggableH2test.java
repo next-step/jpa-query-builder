@@ -19,6 +19,8 @@ public class PluggableH2test {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             jdbcTemplateConsumer.accept(jdbcTemplate);
+            jdbcTemplate.execute("DROP ALL OBJECTS");
+            server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
             throw new RuntimeException(e);

@@ -1,4 +1,4 @@
-package persistence.mapper;
+package persistence.sql.ddl.mapper;
 
 import jdbc.RowMapper;
 import persistence.sql.ddl.Person;

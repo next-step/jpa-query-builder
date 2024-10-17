@@ -60,7 +60,7 @@ interface InsertIntoStep extends QueryBuilder, QueryExecutor {
 
 }
 
-interface ConditionStep extends QueryBuilder {
+interface ConditionStep extends QueryBuilder, QueryExecutor {
 
 }
 
@@ -110,12 +110,12 @@ class H2InsertImpl implements InsertImpl {
 }
 
 ' SELECT
-abstract class SelectImpl implements SelectFromStep {
+abstract class SelectImpl extends SelectFromStep {
     - JpaSettings
     - TableEntity<ENTITY> tableEntity
 }
 
-class H2SelectImpl extends SelectImpl {
+class H2SelectImpl implements SelectImpl {
 
 }
 

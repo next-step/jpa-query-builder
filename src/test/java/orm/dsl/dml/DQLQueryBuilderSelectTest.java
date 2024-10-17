@@ -1,16 +1,13 @@
 package orm.dsl.dml;
 
 import config.PluggableH2test;
-import jdbc.JdbcTemplate;
-import jdbc.RowMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.mapper.PersonRowMapper;
+import persistence.sql.ddl.mapper.PersonRowMapper;
 import persistence.sql.ddl.Person;
 
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static orm.util.ConditionUtils.eq;
@@ -105,6 +102,48 @@ public class DQLQueryBuilderSelectTest extends PluggableH2test {
 
             // then
             assertThat(person).hasNoNullFieldsOrPropertiesExcept("id", "name", "age");
+        });
+    }
+
+    @Test
+    @DisplayName("SELECT 절 실제 쿼리 실행 테스트 - findById()")
+    void findById_실헹() {
+        runInH2Db((jdbcTemplate) -> {
+            // given
+            Person newPerson = new Person(1L, 30, "설동민");
+            테이블_생성(jdbcTemplate, Person.class);
+            Person_엔티티_생성(jdbcTemplate, newPerson);
+            DQLQueryBuilder dqlQueryBuilder = new DQLQueryBuilder(jdbcTemplate);
+
+            // when
+            Person person = dqlQueryBuilder.selectFrom(Person.class).findById(1L)
+                    .fetchOne(new PersonRowMapper());
+
+            // then
+            assertThat(person).hasNoNullFieldsOrPropertiesExcept("id", "name", "age")
+                    .extracting("id").isEqualTo(1L);
+        });
+    }
+
+    @Test
+    @DisplayName("SELECT 절 실제 쿼리 실행 테스트 - findByAll()")
+    void findAll_실행() {
+        runInH2Db((jdbcTemplate) -> {
+            // given
+            테이블_생성(jdbcTemplate, Person.class);
+            Person_엔티티_생성(jdbcTemplate, new Person(1L, 30, "설동민"));
+            Person_엔티티_생성(jdbcTemplate, new Person(2L, 30, "설동민2"));
+
+            DQLQueryBuilder dqlQueryBuilder = new DQLQueryBuilder(jdbcTemplate);
+
+            // when
+            List<Person> people = dqlQueryBuilder.selectFrom(Person.class).findAll()
+                    .fetch(new PersonRowMapper());
+
+            // then
+            assertThat(people).asList()
+                    .hasSize(2)
+                    .allSatisfy(person -> assertThat(person).hasNoNullFieldsOrPropertiesExcept("id", "name", "age"));
         });
     }
 }

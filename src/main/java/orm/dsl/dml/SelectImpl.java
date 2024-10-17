@@ -5,12 +5,14 @@ import orm.QueryRenderer;
 import orm.TableEntity;
 import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
+import orm.dsl.condition.EqualCondition;
 import orm.dsl.step.dml.ConditionForFetchStep;
 import orm.dsl.step.dml.SelectFromStep;
 import orm.exception.NotYetImplementedException;
 import orm.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class SelectImpl<E> implements SelectFromStep<E>{
@@ -61,6 +63,20 @@ public abstract class SelectImpl<E> implements SelectFromStep<E>{
     @Override
     public <T> T fetchOne(RowMapper<T> rowMapper) {
         return queryRunner.fetchOne(build(), rowMapper);
+    }
+
+    // 모든 검색조건을 날려 findAll로 만듬
+    @Override
+    public ConditionForFetchStep<E> findAll() {
+        this.selectConditions.clear();
+        return this;
+    }
+
+    @Override
+    public ConditionForFetchStep<E> findById(Object id) {
+        this.selectConditions.clear();
+        this.selectConditions.add(new EqualCondition(tableEntity.getId().getFieldName(), id));
+        return this;
     }
 
     @Override
