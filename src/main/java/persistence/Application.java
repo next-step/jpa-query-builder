@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.CreateTableQueryBuilder;
 import persistence.sql.ddl.DropTableQueryBuilder;
-import persistence.sql.ddl.QueryBuilderAdapter;
+import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
@@ -23,9 +23,9 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            QueryBuilderAdapter ddlQueryBuilder = new CreateTableQueryBuilder();
+            QueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder();
 
-            String createTableQuery = ddlQueryBuilder.executeQuery( Person.class);
+            String createTableQuery = ddlQueryBuilder.executeQuery(Person.class);
             jdbcTemplate.execute(createTableQuery); // Create table
 
             Person person = Person.of(null, "2xample", 30, "2xample.gmail.com", null);
@@ -46,7 +46,7 @@ public class Application {
             jdbcTemplate.execute(deleteQueryBuilder.deleteById(Person.class, 1L)); // Delete data
 
             ddlQueryBuilder = new DropTableQueryBuilder();
-            String dropTableQuery = ddlQueryBuilder.executeQuery( Person.class);
+            String dropTableQuery = ddlQueryBuilder.executeQuery(Person.class);
 
             jdbcTemplate.execute(dropTableQuery); // Drop table
 

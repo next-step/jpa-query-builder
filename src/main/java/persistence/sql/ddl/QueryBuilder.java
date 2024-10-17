@@ -1,5 +1,5 @@
 package persistence.sql.ddl;
 
-public interface QueryBuilderAdapter {
+public interface QueryBuilder {
     String executeQuery(Class<?> entityClass);
 }

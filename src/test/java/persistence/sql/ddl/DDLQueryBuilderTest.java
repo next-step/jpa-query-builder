@@ -13,7 +13,7 @@ class DDLQueryBuilderTest {
     @Test
     public void testCreateTableQueryForPerson() {
         // Given: DDLQueryBuilder 인스턴스 생성
-        QueryBuilderAdapter ddlQueryBuilder = new CreateTableQueryBuilder();
+        QueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder();
 
         // When: Person 클래스에 대한 CREATE TABLE 쿼리 생성
         String createTableQuery = ddlQueryBuilder.executeQuery( Person.class);
@@ -35,7 +35,7 @@ class DDLQueryBuilderTest {
     @Test
     public void testDropTableQueryForPerson() {
         // Given: DDLQueryBuilder 인스턴스 생성
-        QueryBuilderAdapter ddlQueryBuilder = new DropTableQueryBuilder();
+        QueryBuilder ddlQueryBuilder = new DropTableQueryBuilder();
 
         // When: Person 클래스에 대한 DROP TABLE 쿼리 생성
         String dropTableQuery = ddlQueryBuilder.executeQuery( Person.class);
