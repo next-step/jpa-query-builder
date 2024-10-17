@@ -39,14 +39,9 @@ public class QueryRenderer {
             return "";
         }
 
-        final StringBuilder whereBuilder = new StringBuilder();
-        whereBuilder.append(" WHERE ");
-        whereBuilder.append(
+        return " WHERE " +
                 conditions.stream()
                         .map(Condition::toString)
-                        .collect(Collectors.joining(" AND "))
-        );
-
-        return whereBuilder.toString();
+                        .collect(Collectors.joining(" AND "));
     }
 }
