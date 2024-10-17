@@ -6,11 +6,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class QueryBuilder {
-    private final ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper();
-
     public String create(Class<?> entity) {
         TableInfo tableInfo = new TableInfo(entity);
         String columnDefinitions = this.generateColumnDefinitions(entity);
@@ -25,28 +25,23 @@ public class QueryBuilder {
 
     private String generateColumnDefinitions(Class<?> entity) {
         Field[] fields = entity.getDeclaredFields();
-
         return Arrays.stream(fields)
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> "%s %s".formatted(this.getColumnNameFromAnnotation(field), this.getColumnTypeFromAnnotation(field)))
-                .collect(Collectors.joining(", "));
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .map(field -> {
+                String columnName = new ColumnInfo(field).getColumnName();
+                String columnType = this.getColumnTypeFromAnnotation(field);
+                return "%s %s".formatted(columnName, columnType);
+            }).collect(Collectors.joining(", "));
     }
 
-    private String getColumnNameFromAnnotation(Field field) {
-        if (!field.isAnnotationPresent(Column.class)) {
-            return field.getName();
-        }
-        String columnName = field.getAnnotation(Column.class).name();
-        if (columnName.isEmpty()) {
-            return field.getName();
-        }
-        return columnName;
-    }
+
 
     private String getColumnTypeFromAnnotation(Field field) {
         List<String> columnNameWithDefinition = new ArrayList<>();
         columnNameWithDefinition.add(ColumnDataType.getSqlType(field.getType()));
-        columnNameWithDefinition.addAll(this.columnDefinitionMapper.mapAnnotationToSQLDefinition(field));
+
+        ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper(field);
+        columnNameWithDefinition.addAll(columnDefinitionMapper.mapAnnotationToSQLDefinition());
 
         return columnNameWithDefinition
                 .stream()

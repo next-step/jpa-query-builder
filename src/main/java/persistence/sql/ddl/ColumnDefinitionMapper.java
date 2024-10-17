@@ -10,41 +10,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColumnDefinitionMapper {
-    public List<String> mapAnnotationToSQLDefinition(Field field) {
+    private final Field field;
+
+    public ColumnDefinitionMapper(Field field) {
+        this.field = field;
+    }
+
+    public List<String> mapAnnotationToSQLDefinition() {
         List<String> columnDefinitions = new ArrayList<>();
-        columnDefinitions.add(mapIdAnnotation(field));
-        columnDefinitions.add(mapNotNullAnnotation(field));
-        columnDefinitions.add(mapGenerationTypeAnnotation(field));
+        columnDefinitions.add(mapIdAnnotation());
+        columnDefinitions.add(mapNotNullAnnotation());
+        columnDefinitions.add(mapGenerationTypeAnnotation());
 
         return columnDefinitions;
 
     }
 
-    private String mapGenerationTypeAnnotation(Field field) {
-        if (!field.isAnnotationPresent(GeneratedValue.class)) {
+    private String mapGenerationTypeAnnotation() {
+        if (!this.field.isAnnotationPresent(GeneratedValue.class)) {
             return "";
         }
-        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        GeneratedValue generatedValue = this.field.getAnnotation(GeneratedValue.class);
         if (generatedValue.strategy().equals(GenerationType.IDENTITY)) {
             return "AUTO_INCREMENT";
         }
         return "";
     }
 
-    private String mapNotNullAnnotation(Field field) {
-        if (!field.isAnnotationPresent(Column.class)) {
+    private String mapNotNullAnnotation() {
+        if (!this.field.isAnnotationPresent(Column.class)) {
             return "";
         }
 
-        Column column = field.getAnnotation(Column.class);
+        Column column = this.field.getAnnotation(Column.class);
         if (!column.nullable()) {
             return "NOT NULL";
         }
         return "";
     }
 
-    private String mapIdAnnotation(Field field) {
-        if (field.isAnnotationPresent(Id.class)) {
+    private String mapIdAnnotation() {
+        if (this.field.isAnnotationPresent(Id.class)) {
             return "PRIMARY KEY";
         }
         return "";
