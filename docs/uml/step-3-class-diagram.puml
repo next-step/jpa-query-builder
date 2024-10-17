@@ -10,13 +10,12 @@ class DDLQueryBuilder {
 }
 
 class DQLQueryBuilder {
-    + SelectStep select ()
     + SelectFromStep selectFrom ()
 }
 
 class DMLQueryBuilder {
-    + InsertIntoStep insert ()
-    + DeleteFromStep delete ()
+    + InsertIntoStep insertFrom ()
+    + DeleteFromStep deleteFrom ()
 }
 
 
@@ -36,7 +35,15 @@ interface DropTableStep extends DDLTableIfNotExistStep {
 
 }
 
-interface SelectFromStep extends WhereStep {
+interface SelectFromStep extends WhereForFetchStep {
+
+}
+
+interface WhereForFetchStep extends ConditionForFetchStep {
+
+}
+
+interface ConditionForFetchStep extends QueryFetcher, QueryBuilder {
 
 }
 
@@ -44,20 +51,33 @@ interface DeleteFromStep extends WhereStep {
 
 }
 
-interface FromStep extends WhereStep, QueryBuilder {
+
+interface WhereStep extends ConditionStep {
 
 }
 
-interface WhereStep extends QueryBuilder {
+interface InsertIntoStep extends QueryBuilder, QueryExecutor {
 
 }
 
-interface InsertIntoStep extends QueryBuilder {
+interface ConditionStep extends QueryBuilder {
 
 }
 
-interface DDLTableIfNotExistStep extends QueryBuilder {
+abstract class DeleteImpl implements DeleteFromStep {
+
+}
+
+class H2DeleteImpl extends DeleteImpl {
+
+}
+
+interface DDLTableIfNotExistStep extends QueryBuilder, QueryExecutor {
     + QueryBuilder ifNotExist()
+}
+
+interface QueryExecutor {
+    + void execute()
 }
 
 abstract class CreateTableImpl extends CreateTableStep{
@@ -65,7 +85,7 @@ abstract class CreateTableImpl extends CreateTableStep{
     - TableEntity<ENTITY> tableEntity
 }
 
-class H2CreateTableImpl extends CreateTableImpl {
+class H2CreateTableImpl implements CreateTableImpl {
 
 }
 
@@ -75,7 +95,7 @@ abstract class DropTableImpl extends DropTableStep {
     - TableEntity<ENTITY> tableEntity
 }
 
-class H2DropTableImpl extends DropTableImpl {
+class H2DropTableImpl implements DropTableImpl {
 
 }
 
@@ -85,12 +105,12 @@ abstract class InsertImpl extends InsertIntoStep {
     - TableEntity<ENTITY> tableEntity
 }
 
-class H2InsertImpl extends InsertImpl {
+class H2InsertImpl implements InsertImpl {
 
 }
 
 ' SELECT
-abstract class SelectImpl extends SelectFromStep {
+abstract class SelectImpl implements SelectFromStep {
     - JpaSettings
     - TableEntity<ENTITY> tableEntity
 }
