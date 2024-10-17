@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 import persistence.sql.model.EntityColumnNames;
 import persistence.sql.model.TableName;
 
@@ -11,7 +12,9 @@ public class SelectQuery {
     private final Class<?> clazz;
 
     public SelectQuery(Class<?> clazz) {
-        ExceptionUtil.requireNonNull(clazz);
+        if (clazz == null) {
+            throw new RequiredClassException(ExceptionMessage.REQUIRED_CLASS);
+        }
         this.clazz = clazz;
     }
 

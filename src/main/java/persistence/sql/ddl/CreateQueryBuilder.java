@@ -2,6 +2,8 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import persistence.sql.Dialect;
+import persistence.sql.exception.RequiredClassException;
+import persistence.sql.exception.ExceptionMessage;
 import persistence.sql.model.TableName;
 
 public class CreateQueryBuilder implements QueryBuilder {
@@ -13,7 +15,9 @@ public class CreateQueryBuilder implements QueryBuilder {
     private final Dialect dialect;
 
     public CreateQueryBuilder(Class<?> clazz, Dialect dialect) {
-        ExceptionUtil.requireNonNull(clazz);
+        if (clazz == null) {
+            throw new RequiredClassException(ExceptionMessage.REQUIRED_CLASS);
+        }
 
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("Entity 클래스가 아닙니다.");

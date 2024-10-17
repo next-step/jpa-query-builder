@@ -1,6 +1,8 @@
 package persistence.sql.model;
 
 import jakarta.persistence.Transient;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredIdException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -18,7 +20,7 @@ public class EntityColumnValues {
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .filter(field -> new EntityColumnName(field).getValue().equals(fieldName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("ID가 존재하지 않습니다."));
+                .orElseThrow(() -> new RequiredIdException(ExceptionMessage.REQUIRED_ID));
 
         try {
             idField.setAccessible(true);

@@ -6,6 +6,8 @@ import persistence.sql.Dialect;
 import persistence.sql.H2Dialect;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.DDLColumn;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredFieldException;
 
 import java.lang.reflect.Field;
 
@@ -29,11 +31,11 @@ class DDLColumnsTest {
         Dialect dialect = new H2Dialect();
         assertAll(() -> {
             assertThatThrownBy(() -> new DDLColumn(null, dialect))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("필드가 존재하지 않습니다.");
+                    .isInstanceOf(RequiredFieldException.class)
+                    .hasMessage(ExceptionMessage.REQUIRED_FIELD.getMessage());
             assertThatThrownBy(() -> new DDLColumn(new Field[0], dialect))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("필드가 존재하지 않습니다.");
+                    .isInstanceOf(RequiredFieldException.class)
+                    .hasMessage(ExceptionMessage.REQUIRED_FIELD.getMessage());
         });
     }
 

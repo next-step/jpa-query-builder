@@ -1,8 +1,9 @@
 package persistence.sql.dml;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.ExceptionUtil;
 import persistence.sql.ddl.Person;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -18,8 +19,8 @@ class SelectQueryBuilderTest {
     @Test
     void 매개변수_NULL로_예외_발생() {
         assertThatThrownBy(() -> new SelectQuery(null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ExceptionUtil.CLASS_NULL_MESSAGE);
+                .isInstanceOf(RequiredClassException.class)
+                .hasMessage(ExceptionMessage.REQUIRED_CLASS.getMessage());
     }
 
     @Test

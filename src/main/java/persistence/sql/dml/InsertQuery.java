@@ -2,7 +2,8 @@ package persistence.sql.dml;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredObjectException;
 import persistence.sql.model.EntityColumnName;
 import persistence.sql.model.EntityColumnValue;
 import persistence.sql.model.TableName;
@@ -16,7 +17,9 @@ public class InsertQuery {
     private final Object object;
 
     public InsertQuery(Object object) {
-        ExceptionUtil.requireNonNull(object);
+        if (object == null) {
+            throw new RequiredObjectException(ExceptionMessage.REQUIRED_OBJECT);
+        }
         this.object = object;
     }
 

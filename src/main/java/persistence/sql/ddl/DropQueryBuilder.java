@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 import persistence.sql.model.TableName;
 
 public class DropQueryBuilder implements QueryBuilder {
@@ -13,7 +15,9 @@ public class DropQueryBuilder implements QueryBuilder {
     private final Class<?> clazz;
 
     public DropQueryBuilder(Class<?> clazz) {
-        ExceptionUtil.requireNonNull(clazz);
+        if (clazz == null) {
+            throw new RequiredClassException(ExceptionMessage.REQUIRED_CLASS);
+        }
 
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException("Entity 클래스가 아닙니다.");

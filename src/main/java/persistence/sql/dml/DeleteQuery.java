@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredObjectException;
 import persistence.sql.model.EntityColumnNames;
 import persistence.sql.model.EntityColumnValues;
 import persistence.sql.model.TableName;
@@ -12,7 +13,9 @@ public class DeleteQuery {
     private final Class<?> clazz;
 
     public DeleteQuery(Object object) {
-        ExceptionUtil.requireNonNull(object);
+        if (object == null) {
+            throw new RequiredObjectException(ExceptionMessage.REQUIRED_OBJECT);
+        }
 
         if (object instanceof Class) {
             throw new IllegalArgumentException("잘못된 Object 타입입니다.");

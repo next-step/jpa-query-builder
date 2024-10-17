@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.Dialect;
 import persistence.sql.H2Dialect;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +25,7 @@ class H2CreateQueryBuilderTest {
     @Test
     void 객체_생성시_클래스_NULL_일경우_예외_발생() {
         assertThatThrownBy(() -> new CreateQueryBuilder(null, dialect))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("class가 존재하지 않습니다.");
+                .isInstanceOf(RequiredClassException.class)
+                .hasMessage(ExceptionMessage.REQUIRED_CLASS.getMessage());
     }
 }

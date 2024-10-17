@@ -2,6 +2,8 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.*;
 import persistence.sql.Dialect;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredFieldException;
 import persistence.sql.model.EntityColumnName;
 
 import java.lang.reflect.Field;
@@ -30,11 +32,10 @@ public class DDLColumn {
 
     public DDLColumn(Field[] fields, Dialect dialect) {
         if (fields == null || fields.length <= 0) {
-            throw new IllegalArgumentException("필드가 존재하지 않습니다.");
+            throw new RequiredFieldException(ExceptionMessage.REQUIRED_FIELD);
         }
 
         this.dialect = dialect;
-
         this.fields = new ArrayList<>(Arrays.asList(fields))
                 .stream()
                 .filter(field -> !field.isAnnotationPresent(Transient.class))

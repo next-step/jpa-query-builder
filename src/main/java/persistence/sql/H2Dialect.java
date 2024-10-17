@@ -1,6 +1,9 @@
 package persistence.sql;
 
 import jakarta.persistence.GenerationType;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.IncorrectGenerationTypeException;
+import persistence.sql.exception.NotSupportStrategyTypeException;
 
 import java.util.Map;
 import java.util.Optional;
@@ -14,10 +17,11 @@ public class H2Dialect implements Dialect {
     @Override
     public String getGenerationTypeQuery(GenerationType generationType) {
         if (generationType == null) {
-            throw new IllegalArgumentException("Generation Type이 존재하지 않습니다.");
+            throw new IncorrectGenerationTypeException(ExceptionMessage.INCORRECT_GENERATION_TYPE);
         }
 
         return Optional.ofNullable(ddlStrategyDDLString.get(generationType))
-                .orElseThrow(() -> new IllegalArgumentException("조건에 맞는 Strategy 타입이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotSupportStrategyTypeException(ExceptionMessage.NOT_SUPPORT_STRATEGY_TYPE));
     }
+
 }
