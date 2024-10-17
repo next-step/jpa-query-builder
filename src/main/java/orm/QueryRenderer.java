@@ -12,19 +12,10 @@ public class QueryRenderer {
     /**
      * 컬럼들을 콤마로 구분하여 반환
      */
-    public String singleColumnListDotted(List<? extends TableField> columns) {
+    public String joinColumnNamesWithComma(List<? extends TableField> columns) {
         return columns.stream()
                 .map(TableField::getFieldName)
                 .collect(Collectors.joining(","));
-    }
-
-    /**
-     * 컬럼들을 콤마로 구분하여 반환, 양 끝을 ()로 감싼다.
-     */
-    public String singleColumnListEnclosed(List<? extends TableField> columns) {
-        return "(%s)".formatted(columns.stream()
-                .map(TableField::getFieldName)
-                .collect(Collectors.joining(",")));
     }
 
     /**
