@@ -64,6 +64,23 @@ public class JdbcTemplate {
         }
     }
 
+    public void verifyTableDeletion(final Class<?> clazz) {
+        final String tableName = getTableName(clazz);
+        final List<String> tableNames = query(
+                "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC' AND TABLE_NAME = '%s'".formatted(tableName),
+                resultSet -> resultSet.getString("TABLE_NAME")
+        );
+
+        final boolean isTableDeleted = tableNames.isEmpty();
+
+        if (isTableDeleted) {
+            logger.info("%s 테이블이 성공적으로 삭제되었습니다.".formatted(tableName));
+        } else {
+            logger.error("%s 테이블 삭제에 실패했습니다.".formatted(tableName));
+            throw new IllegalStateException("%s 테이블 삭제에 실패했습니다.".formatted(tableName));
+        }
+    }
+
     private String getTableName(final Class<?> clazz) {
         final Table tableAnnotation = clazz.getAnnotation(Table.class);
         if (tableAnnotation != null && !tableAnnotation.name().isEmpty()) {

@@ -28,6 +28,7 @@ public class Application {
             jdbcTemplate.verifyTableCreation(Person.class);
             final String dropSql = queryGenerator.drop(Person.class);
             jdbcTemplate.execute(dropSql);
+            jdbcTemplate.verifyTableDeletion(Person.class);
 
             server.stop();
         } catch (Exception e) {
