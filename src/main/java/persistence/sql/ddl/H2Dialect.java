@@ -11,23 +11,23 @@ class H2Dialect implements DatabaseDialect {
     );
 
     @Override
-    public String getColumnTypeDefinition(ColumnType type) {
+    public String getColumnTypeDefinition(final ColumnType type) {
         return Optional.ofNullable(TYPE_DEFINITIONS.get(type))
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported column type: " + type));
     }
 
     @Override
-    public String identityClause(boolean isIdentity) {
+    public String identityClause(final boolean isIdentity) {
         return isIdentity ? " AUTO_INCREMENT" : "";
     }
 
     @Override
-    public String nullableClause(boolean isNullable) {
+    public String nullableClause(final boolean isNullable) {
         return isNullable ? "" : " NOT NULL";
     }
 
     @Override
-    public String primaryKeyClause(boolean isPrimaryKey) {
+    public String primaryKeyClause(final boolean isPrimaryKey) {
         return isPrimaryKey ? " PRIMARY KEY" : "";
     }
 }
