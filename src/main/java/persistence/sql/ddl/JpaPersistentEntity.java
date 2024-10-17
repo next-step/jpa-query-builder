@@ -1,6 +1,9 @@
 package persistence.sql.ddl;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -44,6 +47,7 @@ public class JpaPersistentEntity {
         sql.setLength(sql.length() - 2);
         sql.append("\n);");
 
+        System.out.println("Generated SQL: " + sql);
         jdbcTemplate.execute(sql.toString());
     }
 
@@ -62,13 +66,33 @@ public class JpaPersistentEntity {
         for (Field field : fields) {
             field.setAccessible(true);
 
-            String columnName = field.getName();
-            Class<?> fieldType = field.getType();
+            String columnName;
+            if (field.isAnnotationPresent(Column.class)) {
+                Column column = field.getAnnotation(Column.class);
+                columnName = column.name().isEmpty() ? field.getName() : column.name();
+            } else {
+                columnName = field.getName();
+            }
 
+            Class<?> fieldType = field.getType();
             String columnType = getSqlTypeForField(fieldType);
 
             if (field.isAnnotationPresent(Id.class)) {
                 columnType += " PRIMARY KEY";
+
+                if (field.isAnnotationPresent(GeneratedValue.class)) {
+                    GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+                    if (generatedValue.strategy() == GenerationType.IDENTITY) {
+                        columnType += " AUTO_INCREMENT";
+                    }
+                }
+            }
+
+            if (field.isAnnotationPresent(Column.class)) {
+                Column column = field.getAnnotation(Column.class);
+                if (!column.nullable()) {
+                    columnType += " NOT NULL";
+                }
             }
 
             columnDefinitions.put(columnName, columnType);
