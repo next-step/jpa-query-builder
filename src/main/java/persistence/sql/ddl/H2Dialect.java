@@ -1,16 +1,19 @@
 package persistence.sql.ddl;
 
+import java.util.Map;
+import java.util.Optional;
+
 class H2Dialect implements DatabaseDialect {
-    private static final int VARCHAR_DEFAULT_LENGTH = 255;
+    private static final Map<ColumnType, String> TYPE_DEFINITIONS = Map.of(
+            ColumnType.BIGINT, "BIGINT",
+            ColumnType.INTEGER, "INTEGER",
+            ColumnType.VARCHAR, "VARCHAR(255)"
+    );
 
     @Override
     public String getColumnTypeDefinition(ColumnType type) {
-        return switch (type) {
-            case BIGINT -> "BIGINT";
-            case INTEGER -> "INTEGER";
-            case VARCHAR -> "VARCHAR(" + VARCHAR_DEFAULT_LENGTH + ")";
-            default -> throw new IllegalArgumentException("Unsupported column type: " + type);
-        };
+        return Optional.ofNullable(TYPE_DEFINITIONS.get(type))
+                .orElseThrow(() -> new IllegalArgumentException("Unsupported column type: " + type));
     }
 
     @Override
