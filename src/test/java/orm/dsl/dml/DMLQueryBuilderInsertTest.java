@@ -24,7 +24,7 @@ public class DMLQueryBuilderInsertTest {
                 .build();
 
         // then
-        assertThat(query).isEqualTo("INSERT INTO person (id,name,age) VALUES (1,설동민,30)");
+        assertThat(query).isEqualTo("INSERT INTO person (id,name,age) VALUES (1,'설동민',30)");
     }
 
     @Test
@@ -44,7 +44,7 @@ public class DMLQueryBuilderInsertTest {
                 .build();
 
         // then
-        assertThat(query).isEqualTo("INSERT INTO person (id,name,age) VALUES (1,설동민,30), (2,설동민2,30), (2,설동민3,30)");
+        assertThat(query).isEqualTo("INSERT INTO person (id,name,age) VALUES (1,'설동민',30), (2,'설동민2',30), (2,'설동민3',30)");
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DMLQueryBuilderInsertTest {
                 .build();
 
         // then
-        assertThat(query).isEqualTo("INSERT INTO person_ai (name,age) VALUES (설동민,30), (설동민2,30), (설동민3,30)");
+        assertThat(query).isEqualTo("INSERT INTO person_ai (name,age) VALUES ('설동민',30), ('설동민2',30), ('설동민3',30)");
     }
 }
 

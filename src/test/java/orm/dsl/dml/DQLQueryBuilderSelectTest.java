@@ -1,14 +1,23 @@
 package orm.dsl.dml;
 
+import config.PluggableH2test;
+import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.mapper.PersonRowMapper;
 import persistence.sql.ddl.Person;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static orm.util.ConditionUtils.eq;
+import static steps.Steps.Person_엔티티_생성;
+import static steps.Steps.테이블_생성;
 
-public class DQLQueryBuilderSelectTest {
+public class DQLQueryBuilderSelectTest extends PluggableH2test {
 
     @Test
     @DisplayName("SELECT 절 생성 테스트")
@@ -56,7 +65,7 @@ public class DQLQueryBuilderSelectTest {
                 .build();
 
         // then
-        assertThat(query).isEqualTo("SELECT id,name,age FROM person WHERE id = 1 AND name = 설동민");
+        assertThat(query).isEqualTo("SELECT id,name,age FROM person WHERE id = 1 AND name = '설동민'");
     }
 
     @Test
@@ -70,12 +79,32 @@ public class DQLQueryBuilderSelectTest {
         String query = dqlQueryBuilder.selectFrom(Person.class)
                 .where(
                         eq("id", 1L)
-                        .and(eq("name", "Sight"))
+                        .and(eq("name", "설동민"))
                         .or(eq("age", 30))
                 )
                 .build();
 
         // then
-        assertThat(query).isEqualTo("SELECT id,name,age FROM person WHERE id = 1 AND name = Sight OR age = 30");
+        assertThat(query).isEqualTo("SELECT id,name,age FROM person WHERE id = 1 AND name = '설동민' OR age = 30");
+    }
+
+    @Test
+    @DisplayName("SELECT 절 실제 쿼리 실행 테스트")
+    void DQL_SELECT_실제_쿼리_실행() {
+        runInH2Db((jdbcTemplate) -> {
+            // given
+            Person newPerson = new Person(1L, 30, "설동민");
+            테이블_생성(jdbcTemplate, Person.class);
+            Person_엔티티_생성(jdbcTemplate, newPerson);
+            DQLQueryBuilder dqlQueryBuilder = new DQLQueryBuilder(jdbcTemplate);
+
+            // when
+            Person person = dqlQueryBuilder.selectFrom(Person.class)
+                    .where(eq("id", 1L))
+                    .fetchOne(new PersonRowMapper());
+
+            // then
+            assertThat(person).hasNoNullFieldsOrPropertiesExcept("id", "name", "age");
+        });
     }
 }

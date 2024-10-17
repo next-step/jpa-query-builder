@@ -33,13 +33,13 @@ public class DMLQueryBuilderDeleteTest {
         String query = dmlQueryBuilder.deleteFrom(Person.class)
                 .where(
                     eq("id", 1L)
-                        .and(eq("name", "Sight"))
+                        .and(eq("name", "설동민"))
                         .or(eq("age", 30))
                 )
                 .build();
 
         // then
-        assertThat(query).isEqualTo("DELETE FROM person WHERE id = 1 AND name = Sight OR age = 30");
+        assertThat(query).isEqualTo("DELETE FROM person WHERE id = 1 AND name = '설동민' OR age = 30");
     }
 }
 

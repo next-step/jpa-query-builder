@@ -32,6 +32,11 @@ public abstract class CreateTableImpl<E> implements CreateTableStep {
         return this;
     }
 
+    @Override
+    public void execute() {
+        queryRunner.execute(build());
+    }
+
     protected String renderColumns(TableField column, String mappedRDBType) {
         return column.getFieldName() + " " + mappedRDBType;
     }
@@ -76,4 +81,5 @@ public abstract class CreateTableImpl<E> implements CreateTableStep {
         }
         return "";
     }
+
 }

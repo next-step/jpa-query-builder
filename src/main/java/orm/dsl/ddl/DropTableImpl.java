@@ -22,6 +22,12 @@ public abstract class DropTableImpl<E> implements DropTableStep {
         return this;
     }
 
+    @Override
+    public void execute() {
+        queryRunner.execute(build());
+    }
+
+
     public String renderIfNotExist() {
         return "IF NOT EXISTS";
     }

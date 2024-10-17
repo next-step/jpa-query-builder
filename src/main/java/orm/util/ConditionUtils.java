@@ -1,7 +1,7 @@
 package orm.util;
 
 import orm.dsl.condition.Condition;
-import orm.dsl.step.dml.EqualCondition;
+import orm.dsl.condition.EqualCondition;
 
 public class ConditionUtils {
 

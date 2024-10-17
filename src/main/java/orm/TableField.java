@@ -40,6 +40,9 @@ public class TableField {
     }
 
     public Object getFieldValue() {
+        if (fieldValue instanceof String) {
+            return "'%s'".formatted(fieldValue);
+        }
         return fieldValue;
     }
 

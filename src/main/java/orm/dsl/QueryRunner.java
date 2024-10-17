@@ -1,7 +1,9 @@
 package orm.dsl;
 
 import jdbc.JdbcTemplate;
-import orm.row_mapper.DefaultRowMapper;
+import jdbc.RowMapper;
+
+import java.util.List;
 
 public class QueryRunner {
 
@@ -15,9 +17,19 @@ public class QueryRunner {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public <E> E execute(String sql, Class<E> entityClass) {
+    public <E> E fetchOne(String sql, RowMapper<E> rowMapper) {
         throwIfNoJdbcTemplate();
-        return jdbcTemplate.queryForObject(sql, new DefaultRowMapper<>(entityClass));
+        return jdbcTemplate.queryForObject(sql, rowMapper);
+    }
+
+    public <E> List<E> fetch(String sql, RowMapper<E> rowMapper) {
+        throwIfNoJdbcTemplate();
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public <E> void execute(String sql) {
+        throwIfNoJdbcTemplate();
+        jdbcTemplate.execute(sql);
     }
 
     private void throwIfNoJdbcTemplate() {

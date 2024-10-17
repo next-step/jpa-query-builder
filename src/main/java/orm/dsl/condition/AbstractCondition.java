@@ -5,6 +5,12 @@ import java.util.List;
 
 public abstract class AbstractCondition implements Condition {
 
+    protected final Object value;
+
+    public AbstractCondition(Object value) {
+        this.value = value;
+    }
+
     // 체이닝되는 조건들을 여기에 쌓는다.
     protected final StringBuilder builder = new StringBuilder();
 
@@ -28,5 +34,15 @@ public abstract class AbstractCondition implements Condition {
 
     protected String getAppendedConditions() {
         return builder.toString();
+    }
+
+    /**
+     * SQL 상황에 맞는 데이터로 변환
+     */
+    protected Object getSqlAwareValue() {
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+        return value;
     }
 }

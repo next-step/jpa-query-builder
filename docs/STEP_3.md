@@ -39,12 +39,13 @@
 - [X] 2.1 - 모두 조회(findAll) 기능 구현
 
 - [X] 3.1 - 단건 조회(findById) 기능 구현
-- [ ] 3.2 - RowMapper 상속체 구현
-- [ ] 3.3 - Policies 구현 (optional)
-- [ ] 3.4 - Where 조건절 문자열 없이 구현 (optional)
+- [ ] 3.2 - Policies 구현 (optional)
+- [ ] 3.3 - Where 조건절 문자열 없이 구현 (optional)
 - 
 - [x] 4.1 - delete 쿼리 만들어보기
 - [ ] 4.2 - delete 차단 설정 추가 (optional)
+
+- [x] 5.1 - rowMapper 및 쿼리 실행기 구현
 
 ## UMl
 ![class-diagram](./uml/step-3-class-diagram.puml)

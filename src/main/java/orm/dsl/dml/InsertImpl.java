@@ -8,7 +8,6 @@ import orm.dsl.QueryRunner;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.exception.InvalidEntityException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,17 +65,9 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
         return String.join(" ", queryToken);
     }
 
-    protected String renderInsertValues() {
-        List<String> result = new ArrayList<>(inertValues.size());
-        for (List<? extends TableField> inertValue : inertValues) {
-            result.add("(%s)".formatted(inertValue.stream()
-                    .map(TableField::getFieldValue)
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(",")))
-            );
-        }
-
-        return String.join(", ", result);
+    @Override
+    public void execute() {
+        queryRunner.execute(build());
     }
 
     /**

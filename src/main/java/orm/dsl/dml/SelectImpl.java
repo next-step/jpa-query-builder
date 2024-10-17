@@ -5,7 +5,7 @@ import orm.QueryRenderer;
 import orm.TableEntity;
 import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
-import orm.dsl.step.dml.ConditionStep;
+import orm.dsl.step.dml.ConditionForFetchStep;
 import orm.dsl.step.dml.SelectFromStep;
 import orm.exception.NotYetImplementedException;
 import orm.util.CollectionUtils;
@@ -26,13 +26,13 @@ public abstract class SelectImpl<E> implements SelectFromStep<E>{
     }
 
     @Override
-    public ConditionStep where(Condition condition) {
+    public ConditionForFetchStep<E> where(Condition condition) {
         selectConditions.add(condition);
         return this;
     }
 
     @Override
-    public ConditionStep where(Condition... conditions) {
+    public ConditionForFetchStep<E> where(Condition... conditions) {
         selectConditions.addAll(List.of(conditions));
         return this;
     }
@@ -54,13 +54,13 @@ public abstract class SelectImpl<E> implements SelectFromStep<E>{
     }
 
     @Override
-    public <T> E fetch(RowMapper<T> rowMapper) {
-        return null;
+    public <T> List<T> fetch(RowMapper<T> rowMapper) {
+        return queryRunner.fetch(build(), rowMapper);
     }
 
     @Override
-    public <T> List<E> fetchOne(RowMapper<T> rowMapper) {
-        return List.of();
+    public <T> T fetchOne(RowMapper<T> rowMapper) {
+        return queryRunner.fetchOne(build(), rowMapper);
     }
 
     @Override
