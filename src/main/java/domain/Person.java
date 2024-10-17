@@ -22,4 +22,19 @@ public class Person {
     @Transient
     private Integer index;
 
+    public static Person of(Long id, String name, Integer age, String email, Integer index) {
+        return new Person(id, name, age, email, index);
+    }
+
+    private Person(Long id, String name, Integer age, String email, Integer index) {
+        this.name = name;
+        this.id = id;
+        this.age = age;
+        this.email = email;
+        this.index = index;
+    }
+
+    public Person() {
+
+    }
 }
