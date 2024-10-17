@@ -48,6 +48,6 @@
   - [x] 요구사항1 - find
   - [x] 요구사항2 - persist (insert)
   - [x] 요구사항3 - delete
-  - [ ] 요구사항4 - update
+  - [x] 요구사항4 - update
     - [x] update query builder 생성.
       - [x] null 값인 필드도 포함해서 query 생성
