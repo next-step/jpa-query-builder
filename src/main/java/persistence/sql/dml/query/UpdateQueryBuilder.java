@@ -9,13 +9,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UpdateQueryBuilder {
-    private static final String EMPTY_STRING = "";
-
     private final Map<String, String> columns = new LinkedHashMap<>();
     private final Map<String, String> conditions = new LinkedHashMap<>();
-
-    public UpdateQueryBuilder() {
-    }
 
     public void addColumn(List<? extends Queryable> queryableColumns, Object entity) {
         queryableColumns.forEach(column -> {

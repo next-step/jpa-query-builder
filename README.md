@@ -44,7 +44,7 @@
 - [x] Person 정보를 바탕으로 delete 구현해보기
 
 ## 4단계 - Simple Entity Object 
-- [ ] 간이 Entity Manager Interface 구현해보기
+- [x] 간이 Entity Manager Interface 구현해보기
   - [x] 요구사항1 - find
   - [x] 요구사항2 - persist (insert)
   - [x] 요구사항3 - delete
