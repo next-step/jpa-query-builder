@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new Application().run();
     }
 
@@ -23,7 +23,7 @@ public class Application {
         try {
             server = setUp();
             executeQueries(server);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             handleException(e);
         } finally {
             cleanUp(server);
@@ -43,10 +43,8 @@ public class Application {
         final QueryGenerator queryGenerator = new QueryGenerator();
         final String createSql = queryGenerator.create(Person.class);
         jdbcTemplate.execute(createSql);
-        jdbcTemplate.verifyTableCreation(Person.class);
         final String dropSql = queryGenerator.drop(Person.class);
         jdbcTemplate.execute(dropSql);
-        jdbcTemplate.verifyTableDeletion(Person.class);
     }
 
     private void handleException(final Exception e) {
