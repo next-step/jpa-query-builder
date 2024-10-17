@@ -6,9 +6,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class QueryBuilder {
     public String create(Class<?> entity) {
@@ -28,22 +26,18 @@ public class QueryBuilder {
         return Arrays.stream(fields)
             .filter(field -> !field.isAnnotationPresent(Transient.class))
             .map(field -> {
+                List<String> columnInfo = new ArrayList<>();
                 String columnName = new ColumnInfo(field).getColumnName();
                 String columnDataType = ColumnDataType.getSqlType(field.getType());
-                String columnType = this.getColumnTypeFromAnnotation(field);
-                return "%s %s %s".formatted(columnName, columnDataType, columnType).trim();
+
+                columnInfo.add(columnName);
+                columnInfo.add(columnDataType);
+
+                ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper(field);
+                columnInfo.addAll(columnDefinitionMapper.mapAnnotationToSQLDefinition());
+
+                columnInfo.removeAll(Arrays.asList("", null));
+                return String.join(" ", columnInfo);
             }).collect(Collectors.joining(", "));
-    }
-
-
-
-    private String getColumnTypeFromAnnotation(Field field) {
-        ColumnDefinitionMapper columnDefinitionMapper = new ColumnDefinitionMapper(field);
-        List<String> columnNameWithDefinition = new ArrayList<>(columnDefinitionMapper.mapAnnotationToSQLDefinition());
-
-        return columnNameWithDefinition
-                .stream()
-                .filter(definition -> !definition.isEmpty())
-                .collect(Collectors.joining(" "));
     }
 }
