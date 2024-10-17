@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import repository.QueryBuilderDDL;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,31 +51,12 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
 
     //조립된 컬럼 가져오기
     private List<TableColumnAttribute> getColumn(Class<?> entityClass) {
-        List<TableColumnAttribute> tableColumnAttributes = new ArrayList<>();
+        TableColumnAttribute tableColumnAttribute = new TableColumnAttribute();
 
         Field[] fields = entityClass.getDeclaredFields();
-        Arrays.stream(fields).forEach(field -> generateTableColumnData(tableColumnAttributes, field));
+        Arrays.stream(fields).forEach(tableColumnAttribute::generateTableColumnMeta);
 
-        return tableColumnAttributes;
-    }
-
-    // column 조립
-    private void generateTableColumnData(List<TableColumnAttribute> tableColumnAttributes, Field field) {
-        String columnName = field.getName();
-        boolean isNullable = true;
-
-        if ( field.isAnnotationPresent(Column.class) ) {
-            Column column = field.getAnnotation(Column.class);
-            columnName  = column.name().isEmpty() ? columnName : column.name();
-            isNullable = column.nullable();
-
-        }
-
-        if ( field.isAnnotationPresent(Id.class) ) {
-            tableColumnAttributes.add(new TableColumnAttribute(columnName, field.getType(), true, true, isGenerateValueIdentity(field)));
-        } else {
-            tableColumnAttributes.add(new TableColumnAttribute(columnName, field.getType(), false, !isNullable, isGenerateValueIdentity(field)));
-        }
+        return tableColumnAttribute.getTableAttributes();
     }
 
     // GeneratedType 체크
