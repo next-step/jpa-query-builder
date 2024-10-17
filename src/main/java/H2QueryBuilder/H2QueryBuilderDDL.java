@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class H2QueryBuilderDDL implements QueryBuilderDDL {
-    private final static String CREATE_QUERY   = "CREATE TABLE %s (%s);";  // %s를 사용하여 테이블 이름과 컬럼 정보를 대체
-    private final static String DROP_QUERY     = "DROP TABLE %s;";
-    private final static String PRIMARY_KEY    = " PRIMARY KEY";
-    private final static String NOT_NULL       = " NOT NULL";
+    private final static String CREATE_QUERY = "CREATE TABLE %s (%s);";  // %s를 사용하여 테이블 이름과 컬럼 정보를 대체
+    private final static String DROP_QUERY = "DROP TABLE %s;";
+    private final static String PRIMARY_KEY = " PRIMARY KEY";
+    private final static String NOT_NULL = " NOT NULL";
     private final static String AUTO_INCREMENT = " AUTO_INCREMENT";
 
     @Override
@@ -22,19 +22,19 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     }
 
     private String generateCreateTableQuery(Class<?> entityClass) {
-        if ( !entityClass.isAnnotationPresent(Entity.class) ) {
+        if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(ErrorCode.NOT_EXIST_ENTITY_ANNOTATION.getErrorMsg());
         }
 
         String columnInfo = getColumn(entityClass)
                 .stream()
                 .map(tableColumnAttribute -> {
-                                        String info = tableColumnAttribute.getColumnName() + " " + tableColumnAttribute.getColumnDataType();
-                                        if (tableColumnAttribute.isNotNull()) info += NOT_NULL;
-                                        if (tableColumnAttribute.isAutoIncrement()) info += AUTO_INCREMENT;
-                                        if (tableColumnAttribute.isPrimeKey()) info += PRIMARY_KEY;
-                                        return info;
-                                    })
+                    String info = tableColumnAttribute.getColumnName() + " " + tableColumnAttribute.getColumnDataType();
+                    if (tableColumnAttribute.isNotNull()) info += NOT_NULL;
+                    if (tableColumnAttribute.isAutoIncrement()) info += AUTO_INCREMENT;
+                    if (tableColumnAttribute.isPrimeKey()) info += PRIMARY_KEY;
+                    return info;
+                })
                 .collect(Collectors.joining(", "));
 
         return String.format(CREATE_QUERY, getTableName(entityClass), columnInfo);
@@ -61,7 +61,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
 
     // GeneratedType 체크
     private boolean isGenerateValueIdentity(Field field) {
-        if ( !field.isAnnotationPresent(GeneratedValue.class) ) {
+        if (!field.isAnnotationPresent(GeneratedValue.class)) {
             return false;
         }
 
@@ -70,7 +70,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
 
     @Override
     public String drop(Class<?> entityClass) {
-        if ( !entityClass.isAnnotationPresent(Entity.class) ) {
+        if (!entityClass.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(ErrorCode.NOT_EXIST_ENTITY_ANNOTATION.getErrorMsg());
         }
 
