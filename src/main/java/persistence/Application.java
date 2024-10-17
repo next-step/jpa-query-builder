@@ -30,18 +30,18 @@ public class Application {
 
             Person person = Person.of(null, "2xample", 30, "2xample.gmail.com", null);
 
-            InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+            InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);
             String insertQuery = insertQueryBuilder.insert(person);
             jdbcTemplate.execute(insertQuery); // Insert data
 
-            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
             String selectQuery = selectQueryBuilder.findAll(Person.class);
             jdbcTemplate.execute(selectQuery); // Select data
 
             String findOne = selectQueryBuilder.findById(Person.class, 1L);
             jdbcTemplate.execute(findOne); // Select data
 
-            DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
+            DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(Person.class);
             deleteQueryBuilder.deleteById(Person.class, 1L);
             jdbcTemplate.execute(deleteQueryBuilder.deleteById(Person.class, 1L)); // Delete data
 

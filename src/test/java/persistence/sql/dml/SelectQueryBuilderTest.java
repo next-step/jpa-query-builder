@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SelectQueryBuilderTest {
     @Test
     void findAll() {
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
         String expectedQuery = "SELECT * FROM users;";
         String actualQuery = selectQueryBuilder.findAll(Person.class);
 
@@ -17,7 +17,7 @@ class SelectQueryBuilderTest {
 
     @Test
     void findById() {
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
         String expectedQuery = "SELECT * FROM users WHERE id = 1;";
         String actualQuery = selectQueryBuilder.findById(Person.class, 1L);
 

@@ -7,25 +7,33 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public abstract class DMLQueryBuilder {
+    private final Class<?> clazz;
 
-    String getTableName(Class<?> field) {
-        if (field.isAnnotationPresent(Table.class)) {
-            Table table = field.getAnnotation(Table.class);
-            return !table.name().isEmpty() ? table.name() : field.getSimpleName();
-        }
-        return field.getSimpleName();
+    protected DMLQueryBuilder(Class<?> clazz) {
+        this.clazz = clazz;
     }
 
-    String columnsClause(Class<?> field) {
-        return Arrays.stream(field.getDeclaredFields())
+    String getTableName() {
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table table = clazz.getAnnotation(Table.class);
+            return !table.name().isEmpty() ? table.name() : clazz.getSimpleName();
+        }
+        return clazz.getSimpleName();
+    }
+
+    String columnsClause() {
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(c -> !c.isAnnotationPresent(Id.class) || !c.isAnnotationPresent(GeneratedValue.class))
-                .filter(c -> !c.isAnnotationPresent(Transient.class)).map(this::getColumnName).collect(Collectors.joining(", "));
+                .filter(c -> !c.isAnnotationPresent(Transient.class))
+                .map(this::getColumnName)
+                .collect(Collectors.joining(", "));
     }
 
     String valueClause(Object entity) {
-        return Arrays.stream(entity.getClass().getDeclaredFields())
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Id.class) || !field.isAnnotationPresent(GeneratedValue.class))
-                .filter(field -> !field.isAnnotationPresent(Transient.class)).map(field -> {
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(field -> {
                     field.setAccessible(true);
                     try {
                         Object value = field.get(entity);
