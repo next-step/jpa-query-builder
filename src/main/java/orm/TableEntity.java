@@ -29,11 +29,9 @@ public class TableEntity<E> {
     private final E entity;
     private final Class<E> tableClass;
 
-    // columns
     private final TablePrimaryField id;
     private final List<TableField> allFields;
 
-    // settings
     private final JpaSettings jpaSettings;
 
     public TableEntity(Class<E> entityClass, JpaSettings settings) {
