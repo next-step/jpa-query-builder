@@ -23,28 +23,33 @@ public abstract class DMLQueryBuilder {
 
     String columnsClause() {
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(c -> !c.isAnnotationPresent(Id.class) || !c.isAnnotationPresent(GeneratedValue.class))
-                .filter(c -> !c.isAnnotationPresent(Transient.class))
+                .filter(this::isPersistentField)
                 .map(this::getColumnName)
                 .collect(Collectors.joining(", "));
     }
 
     String valueClause(Object entity) {
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Id.class) || !field.isAnnotationPresent(GeneratedValue.class))
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> {
-                    field.setAccessible(true);
-                    try {
-                        Object value = field.get(entity);
-                        if (value instanceof String) {
-                            return "'" + value + "'";
-                        }
-                        return value != null ? value.toString() : "NULL";
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.joining(", "));
+                .filter(this::isPersistentField)
+                .map(field -> getFieldValue(entity, field))
+                .collect(Collectors.joining(", "));
+    }
+
+    private String getFieldValue(Object entity, Field field) {
+        try {
+            field.setAccessible(true);
+            Object value = field.get(entity);
+            return formatValue(value);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String formatValue(Object value) {
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+        return value != null ? value.toString() : "NULL";
     }
 
     private String getColumnName(Field field) {
@@ -55,5 +60,10 @@ public abstract class DMLQueryBuilder {
             }
         }
         return field.getName();
+    }
+
+    private boolean isPersistentField(Field field) {
+        return !(field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class))
+                && !field.isAnnotationPresent(Transient.class);
     }
 }
