@@ -3,7 +3,7 @@ package persistence.sql.ddl;
 import java.util.Map;
 import java.util.Optional;
 
-class H2Dialect implements DatabaseDialect {
+public class H2Dialect implements DatabaseDialect {
     private static final Map<ColumnType, String> TYPE_DEFINITIONS = Map.of(
             ColumnType.BIGINT, "BIGINT",
             ColumnType.INTEGER, "INTEGER",

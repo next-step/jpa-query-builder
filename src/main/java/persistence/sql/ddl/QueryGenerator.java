@@ -9,9 +9,8 @@ public class QueryGenerator {
         return DROP_TABLE_TEMPLATE.formatted(tableName.value(clazz));
     }
 
-    public String create(final Class<?> clazz) {
+    public String create(final Class<?> clazz, final DatabaseDialect dialect) {
         final TableName tableName = new TableName(clazz);
-        final DatabaseDialect dialect = new H2Dialect();
         final ColumnDefinitions columnDefinitions = new ColumnDefinitions(clazz, dialect);
         return CREATE_TABLE_TEMPLATE.formatted(
                 tableName.value(clazz),

@@ -10,7 +10,7 @@ class QueryGeneratorTest {
     @Test
     void create() {
         final QueryGenerator queryGenerator = new QueryGenerator();
-        assertEquals(expected(), queryGenerator.create(Person.class));
+        assertEquals(expected(), queryGenerator.create(Person.class, new H2Dialect()));
     }
 
     @DisplayName("클래스 정보를 바탕으로 DROP TABLE 쿼리를 생성한다.")

@@ -5,6 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.QueryGenerator;
 
@@ -41,7 +42,7 @@ public class Application {
     private void executeQueries(final DatabaseServer server) throws SQLException {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
         final QueryGenerator queryGenerator = new QueryGenerator();
-        final String createSql = queryGenerator.create(Person.class);
+        final String createSql = queryGenerator.create(Person.class, new H2Dialect());
         jdbcTemplate.execute(createSql);
         final String dropSql = queryGenerator.drop(Person.class);
         jdbcTemplate.execute(dropSql);
