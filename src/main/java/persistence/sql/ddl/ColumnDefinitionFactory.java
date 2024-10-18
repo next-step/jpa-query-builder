@@ -18,8 +18,8 @@ class ColumnDefinitionFactory {
         this.dialect = dialect;
     }
 
-    List<ColumnDefinition> create(final Class<?> entityClass) {
-        final Field[] fields = entityClass.getDeclaredFields();
+    List<ColumnDefinition> create() {
+        final Field[] fields = clazz.getDeclaredFields();
         return Stream.of(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::mapToColumnDefinition)

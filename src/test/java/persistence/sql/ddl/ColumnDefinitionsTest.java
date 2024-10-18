@@ -12,7 +12,7 @@ class ColumnDefinitionsTest {
     @Test
     void createColumn() {
         final ColumnDefinitionFactory columnDefinitions = new ColumnDefinitionFactory(Person.class, new H2Dialect());
-        assertEquals(expected(), columnDefinitions.create(Person.class));
+        assertEquals(expected(), columnDefinitions.create());
     }
 
     private List<ColumnDefinition> expected() {

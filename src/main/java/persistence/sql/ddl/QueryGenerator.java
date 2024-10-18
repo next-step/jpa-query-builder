@@ -22,7 +22,7 @@ public class QueryGenerator {
 
     private String columnDefinitions(final Class<?> clazz) {
         final ColumnDefinitionFactory columnDefinitionFactory = new ColumnDefinitionFactory(clazz, dialect);
-        final ColumnDefinitions columnDefinitions = new ColumnDefinitions(columnDefinitionFactory.create(clazz));
+        final ColumnDefinitions columnDefinitions = new ColumnDefinitions(columnDefinitionFactory.create());
         return columnDefinitions.generate();
     }
 }
