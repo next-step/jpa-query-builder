@@ -1,11 +1,10 @@
 package persistence.sql.dml.query;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import persistence.sql.dml.query.metadata.ColumnName;
 import persistence.sql.dml.query.metadata.InsertMetadata;
-import persistence.sql.dml.query.metadata.TableName;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class InsertQueryBuilder implements DMLQueryBuilder {
 
@@ -14,12 +13,7 @@ public class InsertQueryBuilder implements DMLQueryBuilder {
 
     @Override
     public String build(Class<?> clazz) {
-        InsertMetadata insertMetadata = new InsertMetadata(
-                new TableName(clazz),
-                Arrays.stream(clazz.getDeclaredFields())
-                        .map(ColumnName::new)
-                        .toList()
-        );
+        InsertMetadata insertMetadata = new InsertMetadata(clazz);
 
         StringBuilder builder = new StringBuilder();
         builder.append( COLUMN_INSERT_STRING )

@@ -14,6 +14,10 @@ public interface AnnotationValidator {
         return field.isAnnotationPresent(annotationClass);
     }
 
+    static boolean isNotPresent(Field field, Class<? extends Annotation> annotationClass) {
+        return !isPresent(field, annotationClass);
+    }
+
 
     static boolean isNotBlank(String str) {
         return !str.isBlank();

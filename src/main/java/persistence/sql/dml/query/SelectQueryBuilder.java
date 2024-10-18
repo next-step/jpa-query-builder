@@ -1,14 +1,12 @@
 package persistence.sql.dml.query;
 
-import java.util.Arrays;
+import org.jetbrains.annotations.NotNull;
+import persistence.sql.dml.query.metadata.SelectMetadata;
+import persistence.sql.dml.query.metadata.WhereCondition;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
-import persistence.sql.dml.query.metadata.ColumnName;
-import persistence.sql.dml.query.metadata.SelectMetadata;
-import persistence.sql.dml.query.metadata.TableName;
-import persistence.sql.dml.query.metadata.WhereCondition;
 
 public class SelectQueryBuilder implements DMLQueryBuilder {
 
@@ -23,13 +21,7 @@ public class SelectQueryBuilder implements DMLQueryBuilder {
     }
 
     public String build(Class<?> clazz, List<WhereCondition> whereConditions) {
-        SelectMetadata selectMetadata = new SelectMetadata(
-                new TableName(clazz),
-                Arrays.stream(clazz.getDeclaredFields())
-                        .map(ColumnName::new)
-                        .toList(),
-                whereConditions
-        );
+        SelectMetadata selectMetadata = new SelectMetadata(clazz, whereConditions);
 
         StringBuilder builder = new StringBuilder();
         builder.append( SELECT )
