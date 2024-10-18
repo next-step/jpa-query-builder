@@ -1,15 +1,14 @@
 package persistence.sql.dml.query;
 
-import persistence.sql.dml.query.metadata.SelectMetadata;
+import persistence.sql.dml.query.metadata.DeleteMetadata;
 import persistence.sql.dml.query.metadata.WhereCondition;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SelectQueryBuilder implements DMLQueryBuilder {
+public class DeleteQueryBuilder implements DMLQueryBuilder {
 
-    private static final String SELECT = "select";
-    private static final String FROM = "from";
+    private static final String COLUMN_DELETE_STRING = "delete from";
     private static final String WHERE = "where";
     private static final String AND = "and";
 
@@ -19,17 +18,14 @@ public class SelectQueryBuilder implements DMLQueryBuilder {
     }
 
     public String build(Class<?> clazz, List<WhereCondition> whereConditions) {
-        SelectMetadata selectMetadata = new SelectMetadata(clazz, whereConditions);
+        DeleteMetadata deleteMetadata = new DeleteMetadata(clazz);
 
         StringBuilder builder = new StringBuilder();
-        builder.append( SELECT )
-                .append(" ")
-                .append( columnsClause(selectMetadata.columnNames()) )
+        builder.append( COLUMN_DELETE_STRING )
                 .append( " " )
-                .append( FROM )
+                .append( deleteMetadata.tableName().value() )
                 .append( " " )
-                .append( selectMetadata.tableName().value() )
-                .append( whereClause(selectMetadata.whereConditions()) );
+                .append( whereClause(whereConditions) );
 
         return builder.toString();
     }
@@ -48,5 +44,4 @@ public class SelectQueryBuilder implements DMLQueryBuilder {
                 );
         return builder.toString();
     }
-
 }

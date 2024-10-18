@@ -1,8 +1,11 @@
 package persistence.sql.dml.query;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import persistence.sql.dml.query.metadata.ColumnName;
+import persistence.sql.dml.query.metadata.WhereCondition;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public interface DMLQueryBuilder {
 
@@ -14,6 +17,11 @@ public interface DMLQueryBuilder {
                         .map(ColumnName::value)
                         .collect(Collectors.joining(", ")))
                 .toString();
+    }
+
+    default Function<WhereCondition, String> columnConditionClause() {
+        return condition -> condition.columnName().value()
+                + " " + condition.operator() + " ?";
     }
 
 }
