@@ -1,7 +1,9 @@
-package builder.h2;
+package builder;
 
-import builder.QueryBuilderDML;
-import builder.h2.dml.H2QueryBuilderDML;
+import builder.dml.DMLBuilder;
+import builder.dml.DMLQueryBuilder;
+import builder.dml.DMLType;
+import builder.dml.h2.H2DMLBuilder;
 import entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,21 +17,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 - Object 인스턴스를 받아 findById 쿼리 문자열 생성한다.
 - Object 인스턴스를 받아 UPDATE 쿼리 문자열 생성한다.
 - deleteById 쿼리 문자열 생성하기
-- deleteAll 쿼리 문자열 생성한다.
 - Object를 받아 deleteById 쿼리 문자열 생성한다.
 */
-public class H2QueryBuilderDMLTest {
+public class H2QDMLBuilderTest {
 
     @DisplayName("Insert 쿼리 문자열 생성하기")
     @Test
     void buildInsertTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
-
         Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
 
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
+
         //when, then
-        assertThat(queryBuilderDML.buildInsertQuery(person))
+        assertThat(dmlBuilder.queryBuilder(DMLType.INSERT, person))
                 .isEqualTo("INSERT INTO users (id, nick_name, old, email) VALUES (1, 'sangki', 29, 'test@test.com');");
     }
 
@@ -37,10 +38,11 @@ public class H2QueryBuilderDMLTest {
     @Test
     void buildFindAllTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
+        Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
 
         //when, then
-        assertThat(queryBuilderDML.buildFindAllQuery(Person.class))
+        assertThat(dmlBuilder.queryBuilder(DMLType.SELECT_ALL, person))
                 .isEqualTo("SELECT id, nick_name, old, email FROM users;");
     }
 
@@ -48,10 +50,9 @@ public class H2QueryBuilderDMLTest {
     @Test
     void buildFindByIdTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
-
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
         //when, then
-        assertThat(queryBuilderDML.buildFindByIdQuery(Person.class, 1))
+        assertThat(dmlBuilder.queryBuilder(DMLType.SELECT_BY_ID, Person.class, 1))
                 .isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1;");
     }
 
@@ -59,10 +60,9 @@ public class H2QueryBuilderDMLTest {
     @Test
     void buildFindByIdStringTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
-
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
         //when, then
-        assertThat(queryBuilderDML.buildFindByIdQuery(Person.class, "sangki"))
+        assertThat(dmlBuilder.queryBuilder(DMLType.SELECT_BY_ID, Person.class, "sangki"))
                 .isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 'sangki';");
     }
 
@@ -70,11 +70,12 @@ public class H2QueryBuilderDMLTest {
     @Test
     void buildFindObjectStringTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
         Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
 
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
+
         //when, then
-        assertThat(queryBuilderDML.buildFindObjectQuery(person))
+        assertThat(dmlBuilder.queryBuilder(DMLType.SELECT_BY_ID, person))
                 .isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1;");
     }
 
@@ -82,11 +83,11 @@ public class H2QueryBuilderDMLTest {
     @Test
     void buildUpdateObjectStringTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
         Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
 
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
         //when, then
-        assertThat(queryBuilderDML.buildUpdateQuery(person))
+        assertThat(dmlBuilder.queryBuilder(DMLType.UPDATE, person))
                 .isEqualTo("UPDATE users SET nick_name='sangki', old=29, email='test@test.com' WHERE id = 1;");
     }
 
@@ -94,33 +95,21 @@ public class H2QueryBuilderDMLTest {
     @Test
     void buildDeleteByIdTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
-
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
         //when, then
-        assertThat(queryBuilderDML.buildDeleteByIdQuery(Person.class, "sangki"))
+        assertThat(dmlBuilder.queryBuilder(DMLType.DELETE, Person.class, "sangki"))
                 .isEqualTo("DELETE FROM users WHERE id = 'sangki';");
-    }
-
-    @DisplayName("deleteAll 쿼리 문자열 생성한다.")
-    @Test
-    void buildDeleteTest() {
-        //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
-
-        //when, then
-        assertThat(queryBuilderDML.buildDeleteQuery(Person.class))
-                .isEqualTo("DELETE FROM users;");
     }
 
     @DisplayName("Object를 받아 deleteById 쿼리 문자열 생성한다.")
     @Test
     void buildDeleteObjectTest() {
         //given
-        QueryBuilderDML queryBuilderDML = new H2QueryBuilderDML();
         Person person = new Person(1L, "sangki", 29, "test@test.com", 1);
 
+        DMLBuilder dmlBuilder = new H2DMLBuilder();
         //when, then
-        assertThat(queryBuilderDML.buildDeleteObjectQuery(person))
+        assertThat(dmlBuilder.queryBuilder(DMLType.DELETE, person))
                 .isEqualTo("DELETE FROM users WHERE id = 1;");
     }
 }

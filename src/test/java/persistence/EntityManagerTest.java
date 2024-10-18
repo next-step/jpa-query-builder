@@ -1,8 +1,9 @@
 package persistence;
 
-import builder.QueryBuilderDDL;
-import builder.h2.ddl.H2QueryBuilderDDL;
-import builder.h2.dml.H2QueryBuilderDML;
+import builder.ddl.DDLBuilder;
+import builder.ddl.DDLType;
+import builder.ddl.h2.H2DDLBuilder;
+import builder.dml.h2.H2DMLBuilder;
 import database.H2DBConnection;
 import entity.Person;
 import jdbc.JdbcTemplate;
@@ -18,8 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 /*
-- Persist 를 실행한다.
-- find 를 실행한다.
+- Persist로 Person 저장 후 find로 조회한다.
 - remove 실행한다.
 - update 실행한다.
 - update 실행할 시 존재하지 않은 데이터라면 예외를 발생시킨다.
@@ -36,35 +36,24 @@ public class EntityManagerTest {
         this.jdbcTemplate = this.h2DBConnection.start();
 
         //테이블 생성
-        QueryBuilderDDL queryBuilderDDL = new H2QueryBuilderDDL();
-        String createQuery = queryBuilderDDL.buildCreateQuery(Person.class);
+        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        String createQuery = ddlBuilder.queryBuilder(DDLType.CREATE, Person.class);
 
         jdbcTemplate.execute(createQuery);
 
-        this.em = new EntityManagerImpl(jdbcTemplate, new H2QueryBuilderDML());
+        this.em = new EntityManagerImpl(jdbcTemplate, new H2DMLBuilder());
     }
 
     //정확한 테스트를 위해 메소드마다 테이블 DROP 후 DB종료
     @AfterEach
     void tearDown() {
-        QueryBuilderDDL queryBuilderDDL = new H2QueryBuilderDDL();
-        String dropQuery = queryBuilderDDL.buildDropQuery(Person.class);
+        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        String dropQuery = ddlBuilder.queryBuilder(DDLType.DROP, Person.class);
         jdbcTemplate.execute(dropQuery);
         this.h2DBConnection.stop();
     }
 
-    @DisplayName("Persist를 실행한다.")
-    @Test
-    void persistTest() {
-        Person person = createPerson(1);
-        Person createdPerson = (Person) this.em.persist(person);
-
-        assertThat(createdPerson)
-                .extracting("id", "name", "age", "email")
-                .contains(1L, "test1", 29, "test@test.com");
-    }
-
-    @DisplayName("find를 실행한다.")
+    @DisplayName("Persist로 Person 저장 후 find로 조회한다.")
     @Test
     void findTest() {
         Person person = createPerson(1);
