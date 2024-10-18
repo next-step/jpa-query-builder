@@ -1,0 +1,150 @@
+@startuml
+interface QueryBuilder {
+    + String build()
+}
+
+' QueryBuilder 들
+class DDLQueryBuilder {
+    + CreateTableStep createTable ()
+    + DropTableStep dropTable ()
+}
+
+class DQLQueryBuilder {
+    + SelectFromStep selectFrom ()
+}
+
+class DMLQueryBuilder {
+    + InsertIntoStep insertFrom ()
+    + DeleteFromStep deleteFrom ()
+}
+
+
+' 이거도 그리면 좋지만 안이쁘니 숨기자...
+'DDLQueryBuilder -[hidden]..> CreateTableStep:returns
+'DDLQueryBuilder -[hidden]..> DropTableStep:returns
+
+'DMLQueryBuilder -[hidden]..> InsertIntoStep:returns
+'DMLQueryBuilder -[hidden]..> DeleteFromStep:returns
+
+' Step 들 정의
+interface CreateTableStep extends DDLTableIfNotExistStep {
+
+}
+
+interface DropTableStep extends DDLTableIfNotExistStep {
+
+}
+
+interface SelectFromStep extends WhereForFetchStep {
+
+}
+
+interface WhereForFetchStep extends ConditionForFetchStep {
+
+}
+
+interface ConditionForFetchStep extends QueryFetcher, QueryBuilder {
+
+}
+
+interface DeleteFromStep extends WhereStep {
+
+}
+
+
+interface WhereStep extends ConditionStep {
+
+}
+
+interface InsertIntoStep extends QueryBuilder, QueryExecutor {
+
+}
+
+interface ConditionStep extends QueryBuilder, QueryExecutor {
+
+}
+
+abstract class DeleteImpl implements DeleteFromStep {
+
+}
+
+class H2DeleteImpl extends DeleteImpl {
+
+}
+
+interface DDLTableIfNotExistStep extends QueryBuilder, QueryExecutor {
+    + QueryBuilder ifNotExist()
+}
+
+interface QueryExecutor {
+    + void execute()
+}
+
+abstract class CreateTableImpl extends CreateTableStep{
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2CreateTableImpl implements CreateTableImpl {
+
+}
+
+' DROP
+abstract class DropTableImpl extends DropTableStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2DropTableImpl implements DropTableImpl {
+
+}
+
+' INSERT
+abstract class InsertImpl extends InsertIntoStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2InsertImpl implements InsertImpl {
+
+}
+
+' SELECT
+abstract class SelectImpl extends SelectFromStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+class H2SelectImpl implements SelectImpl {
+
+}
+
+class JpaSettings {
+    + SQLDialect dialect
+    + NamingStrategy
+}
+
+TableEntity *--	TableField
+TableEntity *--	JpaSettings
+
+TableField *-- JpaSettings
+
+class TableEntity {
+    + String tableName;
+    + TablePrimaryField id;
+    + List<? extends TableField> allFields
+}
+
+class TableField {
+    - Field field;
+    - String fieldName;
+    - ColumnMeta columnMeta;
+    - JpaSettings jpaSettings;
+}
+
+class TablePrimaryField extends TableField {
+    - @Id
+    - @GeneratedValue
+}
+
+@enduml

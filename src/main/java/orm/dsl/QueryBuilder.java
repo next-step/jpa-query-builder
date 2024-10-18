@@ -1,5 +1,5 @@
 package orm.dsl;
 
 public interface QueryBuilder {
-    String buildQuery();
+    String build();
 }

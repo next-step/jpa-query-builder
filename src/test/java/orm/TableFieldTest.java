@@ -1,9 +1,6 @@
 package orm;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import orm.exception.InvalidEntityException;
@@ -42,6 +39,22 @@ public class TableFieldTest {
                 .hasMessageContaining("@Transient & @Column cannot be used in same field");
     }
 
+    @Test
+    @DisplayName("데이터가 들어있는 엔티티로 TableEntit y를 만들면 하위 TableField 들이 값을 가지고 있다.")
+    void 테이블_필드_데이터존재_검증() {
+
+        // given
+        Person person = new Person(1L, 30, "설동민");; // 모든 필드에 데이터가 있음
+        var tableEntity = new TableEntity<>(person);
+
+        // when
+        List<TableField> allFields = tableEntity.getAllFields();
+
+        // then
+        assertThat(allFields).allSatisfy(e -> {
+            assertThat(e.getFieldValue()).isNotNull();
+        });
+    }
 }
 
 @Entity
@@ -58,6 +71,10 @@ class DummyEntity {
 
     @Transient
     private String thisIdNotField;
+
+    public void setFieldName2(String fieldName2) {
+        this.fieldName2 = fieldName2;
+    }
 }
 
 @Entity
@@ -70,3 +87,25 @@ class InvalidDummyEntity {
     @Transient
     private String thisIdNotField2; // 사용
 }
+
+@Entity
+@Table(name = "person")
+class Person {
+
+    @Id
+    private Long id;
+
+    private String name;
+
+    private int age;
+
+    public Person() {
+    }
+
+    public Person(Long id, int age, String name) {
+        this.age = age;
+        this.id = id;
+        this.name = name;
+    }
+}
+

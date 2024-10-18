@@ -1,4 +1,4 @@
-package orm.dsl.ddl;
+package orm.dsl.dml;
 
 import jdbc.JdbcTemplate;
 import orm.QueryProvider;
@@ -6,42 +6,43 @@ import orm.SQLDialect;
 import orm.TableEntity;
 import orm.dsl.ImplQueryBuilder;
 import orm.dsl.QueryRunner;
-import orm.dsl.step.ddl.CreateTableStep;
-import orm.dsl.step.ddl.DropTableStep;
+import orm.dsl.step.dml.DeleteFromStep;
+import orm.dsl.step.dml.InsertIntoStep;
 import orm.settings.JpaSettings;
 
-public class DDLQueryBuilder implements QueryProvider {
+public class DMLQueryBuilder implements QueryProvider {
 
     private final JpaSettings settings;
     private final QueryRunner queryRunner;
 
-    public DDLQueryBuilder(JpaSettings settings, QueryRunner queryRunner) {
+    public DMLQueryBuilder(JpaSettings settings, QueryRunner queryRunner) {
         this.settings = settings;
         this.queryRunner = queryRunner;
     }
 
-    public DDLQueryBuilder() {
+    public DMLQueryBuilder() {
         this(JpaSettings.ofDefault(), new QueryRunner());
     }
 
-    public DDLQueryBuilder(JpaSettings settings) {
+    public DMLQueryBuilder(JpaSettings settings) {
         this(settings, new QueryRunner());
     }
 
-    public DDLQueryBuilder(JdbcTemplate jdbcTemplate) {
+    public DMLQueryBuilder(JdbcTemplate jdbcTemplate) {
         this(JpaSettings.ofDefault(), new QueryRunner(jdbcTemplate));
     }
 
-    public <ENTITY> CreateTableStep createTable(Class<ENTITY> entityClass) {
+    public <E> InsertIntoStep insertInto(Class<E> entityClass) {
         return new ImplQueryBuilder(dialect(), queryRunner)
-                .buildCreateTable(new TableEntity<>(entityClass, settings));
+                .buildInsert(new TableEntity<>(entityClass, settings));
     }
 
-    public <ENTITY> DropTableStep dropTable(Class<ENTITY> entityClass) {
+    public <E> DeleteFromStep deleteFrom(Class<E> entityClass) {
         return new ImplQueryBuilder(dialect(), queryRunner)
-                .buildDropTable(new TableEntity<>(entityClass, settings));
+                .buildDelete(new TableEntity<>(entityClass, settings));
     }
 
+    @Override
     public SQLDialect dialect() {
         return this.settings.getDialect();
     }

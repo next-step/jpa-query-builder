@@ -76,5 +76,5 @@ jOOQ 나 JPA처럼 방언기반으로 동작해야 할 것으로 보인다.
 
 트라이 해보고, MySQL 정도만 구현체를 붙여보자
 
-![class-diagram](./uml/class-diagram.puml)
+![class-diagram](./uml/step-2-class-diagram.puml)
 

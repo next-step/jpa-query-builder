@@ -11,8 +11,8 @@ public class TablePrimaryField extends TableField {
     private final Id id;
     private final GeneratedValue generatedValue;
 
-    public TablePrimaryField(Field field, JpaSettings jpaSettings) {
-        super(field, jpaSettings);
+    public <T> TablePrimaryField(Field field, T entity, JpaSettings jpaSettings) {
+        super(field, entity, jpaSettings);
         this.id = field.getAnnotation(Id.class);
         this.generatedValue = field.getAnnotation(GeneratedValue.class);
     }
