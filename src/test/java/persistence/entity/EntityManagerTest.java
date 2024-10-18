@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class EntityManagerTest {
 
     @Entity
-    private static class EntityManagerMergeTestEntity {
+    private static class EntityManagerUpdateTestEntity {
         @Id
         private Long id;
 
@@ -26,15 +26,15 @@ public class EntityManagerTest {
 
         private Integer age;
 
-        public EntityManagerMergeTestEntity() {
+        public EntityManagerUpdateTestEntity() {
         }
 
-        public EntityManagerMergeTestEntity(Long id, Integer age) {
+        public EntityManagerUpdateTestEntity(Long id, Integer age) {
             this.id = id;
             this.age = age;
         }
 
-        public EntityManagerMergeTestEntity(Long id, String name, Integer age) {
+        public EntityManagerUpdateTestEntity(Long id, String name, Integer age) {
             this.id = id;
             this.name = name;
             this.age = age;
@@ -48,13 +48,13 @@ public class EntityManagerTest {
         server = new H2();
         server.start();
 
-        String query = new CreateQueryBuilder(new H2Dialect()).build(EntityManagerMergeTestEntity.class);
+        String query = new CreateQueryBuilder(new H2Dialect()).build(EntityManagerUpdateTestEntity.class);
         new JdbcTemplate(server.getConnection()).execute(query);
     }
 
     @AfterEach
     void tearDown() throws SQLException {
-        String query = new DropQueryBuilder().build(EntityManagerMergeTestEntity.class);
+        String query = new DropQueryBuilder().build(EntityManagerUpdateTestEntity.class);
         new JdbcTemplate(server.getConnection()).execute(query);
         server.stop();
     }
@@ -63,10 +63,10 @@ public class EntityManagerTest {
     @DisplayName("EntityManager.persist()를 통해 엔티티를 저장한다.")
     void testPersist() throws Exception {
         EntityManager entityManager = new EntityManagerImpl(new JdbcTemplate(server.getConnection()));
-        EntityManagerMergeTestEntity entity = new EntityManagerMergeTestEntity(1L, "john_doe", 30);
+        EntityManagerUpdateTestEntity entity = new EntityManagerUpdateTestEntity(1L, "john_doe", 30);
         entityManager.persist(entity);
 
-        EntityManagerMergeTestEntity persistedEntity = entityManager.find(EntityManagerMergeTestEntity.class, 1L);
+        EntityManagerUpdateTestEntity persistedEntity = entityManager.find(EntityManagerUpdateTestEntity.class, 1L);
         assertAll(
                 () -> assertThat(persistedEntity.id).isEqualTo(1L),
                 () -> assertThat(persistedEntity.name).isEqualTo("john_doe"),
@@ -78,7 +78,7 @@ public class EntityManagerTest {
     @DisplayName("EntityManager.update()를 통해 엔티티를 수정한다.")
     void testMerge() throws Exception {
         EntityManager entityManager = new EntityManagerImpl(new JdbcTemplate(server.getConnection()));
-        EntityManagerMergeTestEntity entity = new EntityManagerMergeTestEntity(1L, "john_doe", 30);
+        EntityManagerUpdateTestEntity entity = new EntityManagerUpdateTestEntity(1L, "john_doe", 30);
         entityManager.persist(entity);
 
         entity.name = "jane_doe";
@@ -86,12 +86,12 @@ public class EntityManagerTest {
 
         entityManager.update(entity);
 
-        EntityManagerMergeTestEntity mergedEntity = entityManager.find(EntityManagerMergeTestEntity.class, 1L);
+        EntityManagerUpdateTestEntity updated = entityManager.find(EntityManagerUpdateTestEntity.class, 1L);
 
         assertAll(
-                () -> assertThat(mergedEntity.id).isEqualTo(1L),
-                () -> assertThat(mergedEntity.name).isEqualTo("jane_doe"),
-                () -> assertThat(mergedEntity.age).isEqualTo(40)
+                () -> assertThat(updated.id).isEqualTo(1L),
+                () -> assertThat(updated.name).isEqualTo("jane_doe"),
+                () -> assertThat(updated.age).isEqualTo(40)
         );
     }
 
