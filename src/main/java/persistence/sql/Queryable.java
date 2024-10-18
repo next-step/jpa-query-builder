@@ -10,4 +10,5 @@ public interface Queryable {
 
     String name();
 
+    String declaredName();
 }
