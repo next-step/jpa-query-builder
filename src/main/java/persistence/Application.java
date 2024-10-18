@@ -83,7 +83,7 @@ public class Application {
     }
 
     private static void save(InsertDMLGenerator insertDMLGenerator, JdbcTemplate jdbcTemplate, Person person) {
-        String query = insertDMLGenerator.generate(person);
+        String query = insertDMLGenerator.generateInsert(person);
 
         jdbcTemplate.execute(query);
     }

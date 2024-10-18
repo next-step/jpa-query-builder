@@ -11,7 +11,7 @@ class DefaultInsertDMLGeneratorTest {
         Person person = new Person(null, "soora", 10, "soora@naver.com", 5);
         DefaultInsertDMLGenerator generator = new DefaultInsertDMLGenerator();
 
-        String dml = generator.generate(person);
+        String dml = generator.generateInsert(person);
 
         assertThat(dml).isEqualTo("INSERT INTO users (nick_name,old,email) values ('soora','10','soora@naver.com');");
     }

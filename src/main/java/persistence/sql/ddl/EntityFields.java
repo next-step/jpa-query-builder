@@ -73,6 +73,10 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
         return idField.name();
     }
 
+    public Field getIdField() {
+        return idField.getField();
+    }
+
     public Field getFieldByName(String fieldName) {
         return fields.stream().filter(it -> it.isEqualName(fieldName))
             .findFirst().orElseThrow(NotFoundFieldException::new)

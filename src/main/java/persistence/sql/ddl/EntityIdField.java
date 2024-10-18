@@ -5,7 +5,7 @@ import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
 
-public record EntityIdField(EntityField field, GenerationType generationType) {
+public record EntityIdField(EntityField entityField, GenerationType generationType) {
     public static EntityIdField from(Field field) {
         return new EntityIdField(
             EntityField.from(field),
@@ -24,14 +24,18 @@ public record EntityIdField(EntityField field, GenerationType generationType) {
     }
 
     public String name() {
-        return field.name();
+        return entityField.name();
     }
 
     public Class<?> type() {
-        return field.type();
+        return entityField.type();
     }
 
     public boolean nullable() {
-        return field.nullable();
+        return entityField.nullable();
+    }
+
+    public Field getField() {
+        return entityField.field();
     }
 }

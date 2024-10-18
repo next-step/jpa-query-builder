@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class DefaultInsertDMLGenerator implements InsertDMLGenerator {
     @Override
-    public String generate(Object entity) {
+    public String generateInsert(Object entity) {
         EntityFields entityFields = EntityFields.from(entity.getClass());
 
         List<String> fieldNames = entityFields.getFieldNames();
@@ -16,6 +16,11 @@ public class DefaultInsertDMLGenerator implements InsertDMLGenerator {
         String values = valueClause(entityFields, fieldNames, entity);
 
         return "INSERT INTO %s (%s) values (%s);".formatted(entityFields.tableName(), columns, values);
+    }
+
+    @Override
+    public String generateGetLastKey(EntityFields entityFields) {
+        return null;
     }
 
     private String columnsClause(List<String> fieldNames) {
