@@ -5,6 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.ddl.H2SqlTypeMapper;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.PostgresTypeMapper;
 import persistence.sql.ddl.QueryBuilder;
@@ -19,10 +20,10 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            QueryBuilder queryBuilder = new QueryBuilder(Person.class, new PostgresTypeMapper());
-            jdbcTemplate.execute(queryBuilder.builder());
+            QueryBuilder queryBuilder = new QueryBuilder(Person.class, new H2SqlTypeMapper());
+            jdbcTemplate.execute(queryBuilder.create());
             logger.debug(jdbcTemplate.execute("SELECT * FROM users"));
-            jdbcTemplate.execute(queryBuilder.dropper());
+            jdbcTemplate.execute(queryBuilder.drop());
 
             server.stop();
         } catch (Exception e) {

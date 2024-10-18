@@ -24,11 +24,12 @@ public class PersonTest {
     }
 
     @Test
+    @DisplayName("컬럼 어노테이션 값 출력")
     void getColumnAnnotationValue() throws NoSuchFieldException {
         Field field1 = personClass.getDeclaredField("name");
         Column column = field1.getAnnotation(Column.class);
         String columnName = column.name();
-        System.out.println(columnName);
+        assertThat(columnName).isEqualTo("nick_name");
     }
 }
 

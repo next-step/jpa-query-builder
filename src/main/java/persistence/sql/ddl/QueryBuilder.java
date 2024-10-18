@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class QueryBuilder {
     Class<?> clazz;
@@ -16,15 +18,14 @@ public class QueryBuilder {
         this.sqlTypeMapper = sqlTypeMapper;
     }
 
-    public String builder() {
+    public String create() {
         return "CREATE TABLE " + getTableName() + "(" + getPersonMetadata() + ")";
     }
 
-    public String dropper() {
+    public String drop() {
         return "DROP TABLE " + getTableName() + " IF EXISTS";
     }
 
-    @NotNull
     private String getTableName() {
         if (clazz.isAnnotationPresent(Table.class)) {
             return clazz.getAnnotation(Table.class).name();
@@ -32,19 +33,17 @@ public class QueryBuilder {
         return clazz.getSimpleName();
     }
 
-
     public String getPersonMetadata() {
-        StringBuilder query = new StringBuilder();
-        List<String> columnArrayList = new ArrayList<>();
-        for (Field field : clazz.getDeclaredFields()) {
-            if (field.isAnnotationPresent(Transient.class)) continue;
-
-            String column = getColumnName(field) + " " + getSqlType(field) + getPrimaryKey(field) + getAutoIncrement(field) + getNullable(field);
-            columnArrayList.add(column);
-        }
-        query.append(String.join(", ", columnArrayList));
-
-        return query.toString();
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(field -> getColumnName(field)
+                        + " "
+                        + sqlTypeMapper.getSqlType(field)
+                        + getPrimaryKey(field)
+                        + getAutoIncrement(field)
+                        + getNullable(field)
+                )
+                .collect(Collectors.joining(", "));
     }
 
     private String getNullable(Field field) {
@@ -68,21 +67,10 @@ public class QueryBuilder {
         return "";
     }
 
-    private static String getPrimaryKey(Field field) {
+    private String getPrimaryKey(Field field) {
         if (field.isAnnotationPresent(Id.class) == true) {
             return " PRIMARY KEY";
         }
         return "";
     }
-
-    @NotNull
-    private static String getSqlType(Field field) {
-        if ("Long".equals(field.getType().getSimpleName())) {
-            return "BIGINT";
-        } else if ("String".equals(field.getType().getSimpleName())) {
-            return "VARCHAR(255)";
-        }
-        return field.getType().getSimpleName();
-    }
-
 }

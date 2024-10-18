@@ -1,6 +1,8 @@
 package persistence.sql.ddl;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MySqlTypeMapper implements SqlTypeMapper{
 
