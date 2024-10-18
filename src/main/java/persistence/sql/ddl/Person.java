@@ -22,6 +22,10 @@ public class Person {
     @Transient
     private Integer index;
 
+    public Person() {
+
+    }
+
     public Person(Long id, String name, Integer age, String email) {
         this(id, name, age, email, 0);
     }
