@@ -40,6 +40,10 @@ public class Person {
     public Person() {
     }
 
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,10 +58,6 @@ public class Person {
 
     public String getEmail() {
         return email;
-    }
-
-    public Integer getIndex() {
-        return index;
     }
 
     @Override
