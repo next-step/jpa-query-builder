@@ -16,7 +16,7 @@ public class QueryGenerator {
 
     public String drop(final Class<?> clazz) {
         final TableName tableName = new TableName(clazz);
-        return DROP_TABLE_TEMPLATE.formatted(tableName.value(clazz));
+        return DROP_TABLE_TEMPLATE.formatted(tableName.value());
     }
 
     public String create(final Class<?> clazz) {
@@ -27,7 +27,7 @@ public class QueryGenerator {
 
     private String tableName(final Class<?> clazz) {
         final TableName tableName = new TableName(clazz);
-        return tableName.value(clazz);
+        return tableName.value();
     }
 
     private String columnDefinitions(final Class<?> clazz) {

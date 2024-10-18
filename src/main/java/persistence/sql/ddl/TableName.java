@@ -9,7 +9,7 @@ class TableName {
         this.clazz = clazz;
     }
 
-    String value(final Class<?> clazz) {
+    String value() {
         final Table tableAnnotation = clazz.getAnnotation(Table.class);
         return hasTableName(tableAnnotation) ?
                 tableNameFrom(tableAnnotation) :
