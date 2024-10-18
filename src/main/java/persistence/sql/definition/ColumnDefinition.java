@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import persistence.sql.SqlType;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -86,20 +85,20 @@ public class ColumnDefinition {
 
     public boolean hasValue(Object entity) {
         final Field[] declaredFields = entity.getClass().getDeclaredFields();
-        final Field targetField = findMatchingField(declaredFields);
+        final Field targetField = getMatchingField(declaredFields);
 
-        return getValueFromObject(entity, targetField).isPresent();
+        return findValueFromObject(entity, targetField).isPresent();
     }
 
     public Object valueAsString(Object entity) {
         final Field[] declaredFields = entity.getClass().getDeclaredFields();
-        final Field targetField = findMatchingField(declaredFields);
+        final Field targetField = getMatchingField(declaredFields);
 
-        return getValueFromObject(entity, targetField)
+        return findValueFromObject(entity, targetField)
                 .orElseThrow(() -> new NoSuchElementException("Value is null"));
     }
 
-    private Field findMatchingField(Field[] declaredFields) {
+    private Field getMatchingField(Field[] declaredFields) {
         for (Field field : declaredFields) {
             if (field.getName().equals(declaredName())) {
                 return field;
@@ -110,7 +109,7 @@ public class ColumnDefinition {
     }
 
     @NotNull
-    private static Optional<Object> getValueFromObject(Object entity, Field field) {
+    private Optional<Object> findValueFromObject(Object entity, Field field) {
         boolean wasAccessible = field.canAccess(entity);
         try {
             if (!wasAccessible) {

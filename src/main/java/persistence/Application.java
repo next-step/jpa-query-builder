@@ -3,17 +3,16 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entity.EntityManager;
+import persistence.entity.EntityManagerImpl;
+import persistence.entity.GenericRowMapper;
 import persistence.sql.H2Dialect;
-import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.Person;
+import persistence.sql.ddl.query.CreateQueryBuilder;
 import persistence.sql.ddl.query.DropQueryBuilder;
-import persistence.sql.dml.query.DeleteByIdQueryBuilder;
-import persistence.sql.dml.query.InsertQueryBuilder;
 import persistence.sql.dml.query.SelectAllQueryBuilder;
-import persistence.sql.dml.query.SelectByIdQueryBuilder;
 
 import java.util.List;
 
@@ -28,21 +27,31 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            final EntityManager em = new EntityManagerImpl(jdbcTemplate);
+
+            Person person1 = new Person(1L, "a", 10, "aaa@gmail.com", 1);
+            Person person2 = new Person(2L, "b", 20, "bbb@gmail.com", 2);
+            Person person3 = new Person(3L, "c", 30, "ccc@gmail.com", 3);
 
             // create table
             create(jdbcTemplate, testClass);
 
             // test insert and select
-            insert(jdbcTemplate, testClass);
+            insert(em, person1);
+            insert(em, person2);
+            insert(em, person3);
             selectAll(jdbcTemplate, testClass);
-            selectById(jdbcTemplate, testClass, 1L);
-            selectById(jdbcTemplate, testClass, 2L);
-            selectById(jdbcTemplate, testClass, 3L);
+            select(em, 1L);
+            select(em, 2L);
+            select(em, 3L);
 
-            deleteById(jdbcTemplate, testClass, 1L);
+            logger.info("Remove person1");
+            remove(em, person1);
             selectAll(jdbcTemplate, testClass);
 
-            // drop table
+            logger.info("Update person2");
+            update(em, new Person(2L, "b", 25, "ddd@gmail.com", 5));
+            selectAll(jdbcTemplate, testClass);
             drop(jdbcTemplate);
 
             server.stop();
@@ -63,67 +72,36 @@ public class Application {
         String build = dropQuery.build(Person.class);
         logger.info("Drop query: {}", build);
         jdbcTemplate.execute(build);
-
-//            jdbcTemplate.execute("select * from users");
     }
 
     private static void selectAll(JdbcTemplate jdbcTemplate, Class<?> testClass) {
         SelectAllQueryBuilder selectAllQuery = new SelectAllQueryBuilder();
         String query = selectAllQuery.build(testClass);
 
-        List<Person> people = jdbcTemplate.query(query, (RowMapper) rs -> new Person(
-                rs.getLong("id"),
-                rs.getString("nick_name"),
-                rs.getInt("old"),
-                rs.getString("email"),
-                1 // transient
-        ));
+        List<Person> people = jdbcTemplate.query(query, new GenericRowMapper<>(Person.class));
 
         for (Person person : people) {
             logger.info("Person: {}", person);
         }
     }
 
-    private static void selectById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
-        SelectByIdQueryBuilder selectByIdQueryBuilder = new SelectByIdQueryBuilder();
-        String query = selectByIdQueryBuilder.build(testClass, id);
-
-        List<Person> people = jdbcTemplate.query(query, (RowMapper) rs -> new Person(
-                rs.getLong("id"),
-                rs.getString("nick_name"),
-                rs.getInt("old"),
-                rs.getString("email"),
-                1 // transient
-        ));
-
-        for (Person person : people) {
-            logger.info("Person: {}", person);
-        }
+    private static void select(EntityManager em, Object id) {
+        Person person = em.find(Person.class, id);
+        logger.info("Person: {}", person);
     }
 
-    private static void insert(JdbcTemplate jdbcTemplate, Class<?> testClass) {
-        InsertQueryBuilder insertQuery = new InsertQueryBuilder();
-        Person person1 = new Person(1L, "a", 10, "aaa@gmail.com", 1);
-        Person person2 = new Person(2L, "b", 20, "bbb@gmail.com", 2);
-        Person person3 = new Person(3L, "c", 30, "ccc@gmail.com", 3);
-
-        String query1 = insertQuery.build(person1);
-        String query2 = insertQuery.build(person2);
-        String query3 = insertQuery.build(person3);
-
-        jdbcTemplate.execute(query1);
-        jdbcTemplate.execute(query2);
-        jdbcTemplate.execute(query3);
-
+    private static void insert(EntityManager em, Person person) {
+        em.persist(person);
         logger.info("Data inserted successfully!");
     }
 
-    private static void deleteById(JdbcTemplate jdbcTemplate, Class<?> testClass, Long id) {
-        DeleteByIdQueryBuilder deleteByIdQueryBuilder = new DeleteByIdQueryBuilder();
-        String query = deleteByIdQueryBuilder.build(testClass, id);
+    private static void update(EntityManager em, Person person) {
+        em.update(person);
+        logger.info("Data updated successfully!");
+    }
 
-        jdbcTemplate.execute(query);
-
+    private static void remove(EntityManager em, Person person) {
+        em.remove(person);
         logger.info("Data deleted successfully!");
     }
 }
