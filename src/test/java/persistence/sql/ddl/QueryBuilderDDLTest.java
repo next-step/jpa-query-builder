@@ -85,7 +85,7 @@ class QueryBuilderDDLTest {
 
         logger.info(queryBuilderDDL.buildCreateDdl(DummyPerson.class));
         assertThat(queryBuilderDDL.buildCreateDdl(DummyPerson.class))
-                .isEqualTo("create table dummyperson (id bigint not null, name varchar(255), age integer, primary key (id));");
+                .isEqualTo("create table dummyperson (id bigint not null, name varchar(255), age integer, primary key (id))");
     }
 
     @Test
@@ -95,7 +95,7 @@ class QueryBuilderDDLTest {
 
         logger.info(queryBuilderDDL.buildCreateDdl(DummyPerson2.class));
         assertThat(queryBuilderDDL.buildCreateDdl(DummyPerson2.class))
-                .isEqualTo("create table dummyperson2 (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id));");
+                .isEqualTo("create table dummyperson2 (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id))");
     }
 
     @Test
@@ -105,7 +105,7 @@ class QueryBuilderDDLTest {
 
         logger.info(queryBuilderDDL.buildCreateDdl(DummyPerson3.class));
         assertThat(queryBuilderDDL.buildCreateDdl(DummyPerson3.class))
-                .isEqualTo("create table users (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id));");
+                .isEqualTo("create table users (id bigint not null auto_increment, nick_name varchar(255), old integer, email varchar(255) not null, primary key (id))");
     }
 
     @Test
@@ -115,7 +115,7 @@ class QueryBuilderDDLTest {
 
         logger.info(queryBuilderDDL.buildDropDdl(Person.class));
         assertThat(queryBuilderDDL.buildDropDdl(Person.class))
-                .isEqualTo("drop table if exists users;");
+                .isEqualTo("drop table if exists users");
     }
 
 }

@@ -9,46 +9,46 @@ import java.util.stream.Collectors;
 
 public class ColumnFields {
 
-    private List<ColumnField> columnFields;
+    private final List<ColumnField> columnFields;
 
     public ColumnFields(Class<?> clazz) {
         this.columnFields = extract(clazz);
     }
 
     private List<ColumnField> extract(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields()).map(ColumnField::new)
-                .filter(ColumnField::isNotTransient).collect(Collectors.toList());
-    }
-
-    public String generatePrimaryKeyQuery() {
-        StringBuilder sb = new StringBuilder();
-        List<ColumnField> primaryKey = columnFields.stream().filter(ColumnField::isPrimaryKey).collect(Collectors.toList());
-        if(primaryKey.isEmpty()) {
-            throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
-        }
-        sb.append("primary key (");
-        sb.append(primaryKey.stream().map(ColumnField::getName).collect(Collectors.joining(", ")));
-        sb.append(")");
-        return sb.toString();
-    }
-
-    public String generateDdlQuery() {
-        String columnQuery = columnFields.stream().map(ColumnFields::generateColumnDdlQuery).collect(Collectors.joining(", "));
-        String primaryQuery = generatePrimaryKeyQuery();
-
-        return String.join(", ", columnQuery, primaryQuery);
-    }
-
-    private static String generateColumnDdlQuery(ColumnField columnInfo) {
-        String columnQuery = String.join(" ", columnInfo.getName(), columnInfo.getColumnType().getQueryDefinition());
-        String optionQuery = columnInfo.getOptions().stream().collect(Collectors.joining(" "));
-        if(StringUtils.isNullOrEmpty(optionQuery)) {
-            return columnQuery;
-        }
-        return String.join(" ", columnQuery, optionQuery);
+        return Arrays.stream(clazz.getDeclaredFields())
+                .map(ColumnField::new)
+                .filter(ColumnField::isNotTransient)
+                .collect(Collectors.toList());
     }
 
     public List<ColumnField> getColumnFields() {
         return columnFields;
+    }
+
+    public List<ColumnField> getPrimary() {
+        if(columnFields.stream().noneMatch(ColumnField::isPrimaryKey)) {
+            throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
+        }
+
+        return columnFields.stream().filter(ColumnField::isPrimaryKey).collect(Collectors.toList());
+    }
+
+    public String getColumnClause() {
+        return columnFields
+                .stream().map(ColumnField::getName)
+                .collect(Collectors.joining(", "));
+    }
+
+    public String valueClause(Object object) {
+        List<Field> fields = columnFields.stream().map(ColumnField::getField).collect(Collectors.toList());
+        fields.forEach(field -> field.setAccessible(true));
+        return fields.stream().map(field-> {
+            try {
+                return String.valueOf(field.get(object));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.joining(", "));
     }
 }

@@ -41,38 +41,26 @@ public class QueryBuilderDML {
     }
 
     private String columnsClause(Class<?> clazz) {
-        ColumnFields columnInfos = new ColumnFields(clazz);
-        return columnInfos.getColumnFields()
-                .stream().map(ColumnField::getName)
-                .collect(Collectors.joining(", "));
+        return new ColumnFields(clazz).getColumnClause();
     }
 
-    private String whereClause(String selectQuery, Object object) throws Exception {
+    private String valueClause(Object object) {
+        return new ColumnFields(object.getClass()).valueClause(object);
+    }
+
+    private String whereClause(String selectQuery, Object object) {
         String whereQuery = "%s where %s";
-        List<ColumnField> primaryFields = new ColumnFields(object.getClass())
-                .getColumnFields().stream().filter(ColumnField::isPrimaryKey).collect(Collectors.toList());
-        List<String> whereClauses = new ArrayList<>();
+        List<ColumnField> primaryFields = new ColumnFields(object.getClass()).getPrimary();
 
-        for (ColumnField primaryField : primaryFields) {
-            whereClauses.add(primaryField.generateWhereClause(object));
-        }
+        String primaryWhereClause = primaryFields.stream().map(columnField -> {
+            try {
+                return columnField.generateWhereClause(object);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.joining(" and "));
 
-        return String.format(whereQuery, selectQuery, whereClauses.stream().collect(Collectors.joining(" and ")));
-    }
-
-    private String valueClause(Object object) throws Exception {
-        ColumnFields columnInfos = new ColumnFields(object.getClass());
-        List<Field> fields = columnInfos.getColumnFields().stream()
-                .filter(ColumnField::isNotTransient)
-                .map(ColumnField::getField)
-                .collect(Collectors.toList());
-
-        List<String> values = new ArrayList<>();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            values.add(String.valueOf(field.get(object)));
-        }
-        return String.join(", ", values);
+        return String.format(whereQuery, selectQuery, primaryWhereClause);
     }
 
 }
