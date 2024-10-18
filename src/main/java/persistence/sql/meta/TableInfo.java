@@ -6,7 +6,7 @@ import jakarta.persistence.Table;
 import java.util.Objects;
 
 public class TableInfo {
-    private String tableName;
+    private final String tableName;
 
     public TableInfo(Class<?> clazz) {
         this.tableName = extractTableName(clazz);

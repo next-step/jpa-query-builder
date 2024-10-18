@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ColumnField {
-    private Field field;
+    private final Field field;
 
     public ColumnField(Field field) {
         this.field = field;
