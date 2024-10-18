@@ -24,7 +24,6 @@ public class DeleteQueryBuilder implements DMLQueryBuilder {
         builder.append( COLUMN_DELETE_STRING )
                 .append( " " )
                 .append( deleteMetadata.tableName().value() )
-                .append( " " )
                 .append( whereClause(whereConditions) );
 
         return builder.toString();
