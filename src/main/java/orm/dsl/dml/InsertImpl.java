@@ -7,6 +7,8 @@ import orm.TableField;
 import orm.dsl.QueryRunner;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.exception.InvalidEntityException;
+import orm.exception.OrmPersistenceException;
+import orm.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,12 +55,19 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     @Override
     public String build() {
         QueryRenderer queryRenderer = new QueryRenderer();
+        final String bulkInsertValues = queryRenderer.renderBulkInsertValues(inertValues);
+        final String joinColumnsWithComma = queryRenderer.joinColumnNamesWithComma(inertFields);
+
+        if (StringUtils.isBlank(bulkInsertValues)) {
+            throw new OrmPersistenceException("insert 할 값이 없습니다.");
+        }
+
         var queryToken = List.of(
                 "INSERT INTO",
                 tableEntity.getTableName(),
-                "(%s)".formatted(queryRenderer.joinColumnNamesWithComma(inertFields)),
+                "(%s)".formatted(joinColumnsWithComma),
                 "VALUES",
-                "%s".formatted(queryRenderer.renderBulkInsertValues(inertValues))
+                "%s".formatted(bulkInsertValues)
 
         );
 

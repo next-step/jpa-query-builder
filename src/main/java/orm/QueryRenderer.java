@@ -19,8 +19,10 @@ public class QueryRenderer {
     }
 
     /**
-     * bulk insert 를 위해 (...), (...), (...) 형태로 변환
-     */
+     * 대량 삽입 SQL 문에 대한 값의 문자열 표현을 렌더링 합니다.
+     *
+     * <p>예를 들어, 이러한 형태가 됩니다 : (id,name,age) </p>
+     **/
     public String renderBulkInsertValues(List<List<? extends TableField>> columns) {
         List<String> result = new ArrayList<>(columns.size());
         for (List<? extends TableField> inertValue : columns) {

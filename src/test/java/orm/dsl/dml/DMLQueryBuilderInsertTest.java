@@ -2,12 +2,14 @@ package orm.dsl.dml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import orm.exception.OrmPersistenceException;
 import persistence.sql.ddl.Person;
 import test_entity.PersonWithAI;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 public class DMLQueryBuilderInsertTest {
 
@@ -65,6 +67,22 @@ public class DMLQueryBuilderInsertTest {
 
         // then
         assertThat(query).isEqualTo("INSERT INTO person_ai (name,age) VALUES ('설동민',30), ('설동민2',30), ('설동민3',30)");
+    }
+
+    @Test
+    @DisplayName("INSERT 절에 emptyList가 들어갈 경우 에러가 발생한다.")
+    void DML_INSERT_문_insert할_값이_없는_경우() {
+        // given
+        DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder();
+        final List<PersonWithAI> people = List.of();
+
+        // when & then
+        assertThatThrownBy(
+                () -> dmlQueryBuilder.insertInto(PersonWithAI.class)
+                .values(people)
+                .build()
+        ).isInstanceOf(OrmPersistenceException.class)
+        .hasMessage("insert 할 값이 없습니다.");
     }
 }
 
