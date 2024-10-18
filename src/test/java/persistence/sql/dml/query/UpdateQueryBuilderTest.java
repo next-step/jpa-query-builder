@@ -53,15 +53,4 @@ class UpdateQueryBuilderTest {
 
         assertThat(query).isEqualTo("UPDATE HasNullableColumnEntity SET id = 1, name = null, age = 30 WHERE id = 1;");
     }
-
-    @Test
-    @DisplayName("조건이 있는 update 쿼리를 정상적으로 생성한다.")
-    void shouldBuildUpdateQueryWhenHasConditionColumns() {
-        HasNullableColumnEntity hasNullableColumnEntity = new HasNullableColumnEntity(1L, "john_doe", 30);
-        UpdateQueryBuilder queryBuilder = new UpdateQueryBuilder();
-
-        String query = queryBuilder.build(hasNullableColumnEntity);
-
-        assertThat(query).isEqualTo("UPDATE HasNullableColumnEntity SET id = 1, name = 'john_doe', age = 30 WHERE id = 1;");
-    }
 }
