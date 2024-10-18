@@ -13,7 +13,7 @@ public class DropTableQuery {
 
     public String generateQuery() {
         String tableName = entityTableMetadata.getTableName();
-        return  generateSql(tableName);
+        return generateSql(tableName);
     }
 
     private String generateSql(String tableName) {
