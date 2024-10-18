@@ -3,70 +3,36 @@ package persistence.sql.dml.query;
 import persistence.sql.Queryable;
 import persistence.sql.definition.TableDefinition;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UpdateQueryBuilder {
-    private final Map<String, String> columns = new LinkedHashMap<>();
-    private final Map<String, String> conditions = new LinkedHashMap<>();
-
-    public void addColumn(List<? extends Queryable> queryableColumns, Object entity) {
-        queryableColumns.forEach(column -> {
-            final String columnName = column.name();
-            final String columnValue = column.hasValue(entity) ? column.getValue(entity) : null;
-
-            columns.put(columnName, columnValue);
-        });
-    }
-
-    public void addConditions(List<? extends Queryable> queryableColumns, Object entity) {
-        queryableColumns.forEach(column -> {
-            final String columnName = column.name();
-            final String columnValue = column.hasValue(entity) ? column.getValue(entity) : null;
-
-            conditions.put(columnName, columnValue);
-        });
-    }
-
     public String build(Object entity) {
-        if (columns.isEmpty()) {
-            throw new IllegalStateException("No columns to update");
-        }
-
         final Class<?> entityClass = entity.getClass();
         final TableDefinition tableDefinition = new TableDefinition(entityClass);
+        final List<? extends Queryable> targetColumns = tableDefinition.queryableColumns();
 
         StringBuilder query = new StringBuilder();
         query.append("UPDATE ");
         query.append(tableDefinition.tableName());
 
         query.append(" SET ");
-        query.append(columnsClause());
+        String columnClause = columnClause(tableDefinition, entity, query);
+        query.append(columnClause);
 
-        if (!conditions.isEmpty()) {
-            query.append(" WHERE ");
-        }
-        query.append(whereClause());
+        query.append(" WHERE id = ");
+        query.append(tableDefinition.tableId().getValue(entity));
         query.append(";");
 
         return query.toString();
     }
 
-    private String columnsClause() {
-        return columns
-                .entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + " = " + entry.getValue())
-                .collect(Collectors.joining(", "));
+    private static String columnClause(TableDefinition tableDefinition, Object entity, StringBuilder query) {
+        return tableDefinition.queryableColumns().stream()
+                .map(column -> {
+                    final String columnValue = column.hasValue(entity) ? column.getValue(entity) : "null";
+                    return column.name() + " = " + columnValue;
+                }).reduce((column1, column2) -> column1 + ", " + column2).orElse("");
     }
 
-    private String whereClause() {
-        return conditions
-                .entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + " = " + entry.getValue())
-                .collect(Collectors.joining(" AND "));
-    }
 }

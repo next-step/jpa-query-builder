@@ -10,7 +10,8 @@ class DeleteByIdQueryBuilderTest {
 
     @Test
     void testDeleteById() {
-        final String query = queryBuilder.build(Person.class, 1L);
+        Person person = new Person(1L, "John", 30, "", 1);
+        final String query = queryBuilder.build(person);
 
         assertThat(query).isEqualTo("DELETE FROM users WHERE id = 1;");
     }

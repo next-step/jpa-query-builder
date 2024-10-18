@@ -27,7 +27,7 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final EntityManager em = new EntityManagerImpl(server);
+            final EntityManager em = new EntityManagerImpl(jdbcTemplate);
 
             Person person1 = new Person(1L, "a", 10, "aaa@gmail.com", 1);
             Person person2 = new Person(2L, "b", 20, "bbb@gmail.com", 2);
@@ -96,7 +96,7 @@ public class Application {
     }
 
     private static void update(EntityManager em, Person person) {
-        em.merge(person);
+        em.update(person);
         logger.info("Data updated successfully!");
     }
 
