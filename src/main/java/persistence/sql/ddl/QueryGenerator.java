@@ -4,25 +4,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class QueryGenerator {
-    private static final String DROP_TABLE_TEMPLATE = "DROP TABLE IF EXISTS %s CASCADE;";
-    private static final String CREATE_TABLE_TEMPLATE = "CREATE TABLE %s (\n%s);";
-    private static final String COLUMN_DEFINITION_TEMPLATE = "%s%s %s%s%s%s";
-    private static final String INDENTATION = "    ";
-
     private final DatabaseDialect dialect;
 
     public QueryGenerator(final DatabaseDialect dialect) {
-        this.dialect = dialect;}
+        this.dialect = dialect;
+    }
 
     public String drop(final Class<?> clazz) {
-        final TableName tableName = new TableName(clazz);
-        return DROP_TABLE_TEMPLATE.formatted(tableName.value());
+        return QueryTemplate.DROP_TABLE.format(tableName(clazz));
     }
 
     public String create(final Class<?> clazz) {
-        return CREATE_TABLE_TEMPLATE.formatted(
-                tableName(clazz),
-                columnDefinitions(clazz));
+        return QueryTemplate.CREATE_TABLE.format(tableName(clazz), columnDefinitions(clazz));
     }
 
     private String tableName(final Class<?> clazz) {
@@ -39,8 +32,7 @@ public class QueryGenerator {
     }
 
     private String getColumnDefinition(final ColumnDefinition definition) {
-        return COLUMN_DEFINITION_TEMPLATE.formatted(
-                INDENTATION,
+        return QueryTemplate.COLUMN_DEFINITION.format(
                 definition.name(),
                 definition.type(),
                 definition.identity(),
