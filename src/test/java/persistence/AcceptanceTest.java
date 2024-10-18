@@ -26,7 +26,7 @@ class AcceptanceTest {
         server.start();
         Connection connection = server.getConnection();
         jdbcTemplate = new TestJdbcTemplate(connection);
-        queryGenerator = new QueryGenerator();
+        queryGenerator = new QueryGenerator(new H2Dialect());
     }
 
     @AfterEach
@@ -58,7 +58,7 @@ class AcceptanceTest {
     }
 
     private void createTable() {
-        String createSql = queryGenerator.create(Person.class, new H2Dialect());
+        String createSql = queryGenerator.create(Person.class);
         jdbcTemplate.execute(createSql);
     }
 }

@@ -41,8 +41,8 @@ public class Application {
 
     private void executeQueries(final DatabaseServer server) throws SQLException {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-        final QueryGenerator queryGenerator = new QueryGenerator();
-        final String createSql = queryGenerator.create(Person.class, new H2Dialect());
+        final QueryGenerator queryGenerator = new QueryGenerator(new H2Dialect());
+        final String createSql = queryGenerator.create(Person.class);
         jdbcTemplate.execute(createSql);
         final String dropSql = queryGenerator.drop(Person.class);
         jdbcTemplate.execute(dropSql);
