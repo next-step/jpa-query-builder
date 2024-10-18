@@ -1,9 +1,12 @@
 package persistence.sql.dml;
 
+import kotlin.jvm.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class QueryBuilder {
 
@@ -12,15 +15,28 @@ public class QueryBuilder {
     public QueryBuilder(Class<?> clazz) {
         this.clazz = clazz;
     }
-    public String getColumns() {
+    public String getColumnPart() {
         for (Field field : clazz.getDeclaredFields()) {
             logger.debug(String.valueOf(field));
+            return String.valueOf(field);
         }
 
         return "";
     }
 
-    public String getValue() {
+    public String getColumnPart2() {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Transient.class))
+                .map(field -> getColumnName(field))
+                .collect(Collectors.joining(", "));
+    }
+
+    public String getColumnName(Field field) {
+        field.getName();
+        return "";
+    }
+
+    public String getValuePart() {
 
         return "";
     }

@@ -10,15 +10,22 @@ public class QueryBuilderTest {
 
     QueryBuilder queryBuilder = new QueryBuilder(Person.class);
 
+
     @Test
-    void getColumns() {
-        String query = queryBuilder.getColumns();
+    void getColumnName() {
+
+        String columnName = queryBuilder.getColumnName();
+    }
+
+    @Test
+    void getColumnPart() {
+        String query = queryBuilder.getColumnPart();
         assertThat(query).isEqualTo("nick_name, old, email");
     }
 
     @Test
-    void getValue() {
-        String query = queryBuilder.getValue();
+    void getValuePart() {
+        String query = queryBuilder.getValuePart();
 //        assertThat(query).isEqualTo()
     }
 //INSERT INTO users (nick_name, old, email) VALUES ('jskim', 33, 'qazwsx3745@naver.com');
