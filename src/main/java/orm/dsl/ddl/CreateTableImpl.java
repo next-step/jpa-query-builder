@@ -5,27 +5,36 @@ import orm.TableEntity;
 import orm.TableField;
 import orm.TablePrimaryField;
 import orm.dsl.QueryBuilder;
-import orm.dsl.ddl.dialect.h2.ColumnTypeMapper;
+import orm.dsl.QueryRunner;
+import orm.dsl.sql_dialect.h2.ColumnTypeMapper;
+import orm.dsl.step.ddl.CreateTableStep;
 import orm.exception.InvalidIdGenerationException;
 
 import java.util.StringJoiner;
 
-public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
+public abstract class CreateTableImpl<E> implements CreateTableStep {
 
+    protected final QueryRunner queryRunner;
     protected final ColumnTypeMapper columnTypeMapper;
-    protected final TableEntity<ENTITY> tableEntity;
+    protected final TableEntity<E> tableEntity;
 
     protected boolean ifNotExist = false;
 
-    public CreateTableImpl(TableEntity<ENTITY> tableEntity) {
+    public CreateTableImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
         this.tableEntity = tableEntity;
         this.columnTypeMapper = ColumnTypeMapper.of(tableEntity.getJpaSettings().getDialect());
+        this.queryRunner = queryRunner;
     }
 
     @Override
     public QueryBuilder ifNotExist() {
         this.ifNotExist = true;
         return this;
+    }
+
+    @Override
+    public void execute() {
+        queryRunner.execute(build());
     }
 
     protected String renderColumns(TableField column, String mappedRDBType) {
@@ -67,6 +76,10 @@ public abstract class CreateTableImpl<ENTITY> implements CreateTableStep {
     }
 
     protected String renderIfNotExist() {
-        return ifNotExist ? "IF NOT EXISTS" : "";
+        if (ifNotExist) {
+            return "IF NOT EXISTS";
+        }
+        return "";
     }
+
 }

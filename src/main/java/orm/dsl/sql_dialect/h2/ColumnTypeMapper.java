@@ -1,4 +1,4 @@
-package orm.dsl.ddl.dialect.h2;
+package orm.dsl.sql_dialect.h2;
 
 import orm.ColumnMeta;
 import orm.SQLDialect;

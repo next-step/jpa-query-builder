@@ -8,7 +8,7 @@ import persistence.sql.ddl.Person;
 import static org.assertj.core.api.Assertions.assertThat;
 import static util.SQLUtil.SQL_노멀라이즈;
 
-public class DDLCreateQueryBuilderTest {
+public class DDLQueryBuilderCreateTest {
 
     @Test
     @DisplayName("CREATE 문 생성 테스트, @GeneratedValue 어노테이션이 없는 경우")
@@ -19,14 +19,14 @@ public class DDLCreateQueryBuilderTest {
         Class<Person> entityClass = Person.class;
         String expectedQuery = SQL_노멀라이즈(
                 """
-                        CREATE TABLE person (id BIGINT,name VARCHAR(255),PRIMARY KEY (id));
+                        CREATE TABLE person (id BIGINT,name VARCHAR(255),age INTEGER,PRIMARY KEY (id));
                         """
         );
 
         // when
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
-                        .buildQuery()
+                        .build()
         );
 
         // then
@@ -57,7 +57,7 @@ public class DDLCreateQueryBuilderTest {
         // when
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
-                        .buildQuery()
+                        .build()
         );
 
         // then
@@ -89,7 +89,7 @@ public class DDLCreateQueryBuilderTest {
         String query = SQL_노멀라이즈(
                 ddlQueryBuilder.createTable(entityClass)
                         .ifNotExist()
-                        .buildQuery()
+                        .build()
         );
 
         // then

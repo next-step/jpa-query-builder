@@ -1,7 +1,8 @@
-package orm.dsl.ddl.dialect.h2;
+package orm.dsl.sql_dialect.h2;
 
 import orm.TableEntity;
 import orm.TableField;
+import orm.dsl.QueryRunner;
 import orm.dsl.ddl.CreateTableImpl;
 
 import java.util.StringJoiner;
@@ -9,12 +10,12 @@ import java.util.stream.Collectors;
 
 public class H2CreateTableImpl<ENTITY> extends CreateTableImpl<ENTITY> {
 
-    public H2CreateTableImpl(TableEntity<ENTITY> tableEntity) {
-        super(tableEntity);
+    public H2CreateTableImpl(TableEntity<ENTITY> tableEntity, QueryRunner queryRunner) {
+        super(tableEntity, queryRunner);
     }
 
     @Override
-    public String buildQuery() {
+    public String build() {
         final var stringJoiner = new StringJoiner(" ");
         stringJoiner.add("CREATE TABLE");
         if (super.ifNotExist) {
