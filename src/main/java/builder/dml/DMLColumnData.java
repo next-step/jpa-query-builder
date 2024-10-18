@@ -1,8 +1,8 @@
-package builder.h2.dml;
+package builder.dml;
+
+import util.StringUtil;
 
 public class DMLColumnData {
-
-    private final static String SINGLE_QUOTE = "'";
 
     private final String columnName;
     private Class<?> columnType;
@@ -61,7 +61,7 @@ public class DMLColumnData {
     //Value가 String.class 이면 작은따옴표로 묶어준다.
     public String getColumnValueByType() {
         if (this.columnType == String.class) {
-            return SINGLE_QUOTE + this.getColumnValue() + SINGLE_QUOTE;
+            return StringUtil.wrapSingleQuote(this.columnValue);
         }
 
         return String.valueOf(this.columnValue);

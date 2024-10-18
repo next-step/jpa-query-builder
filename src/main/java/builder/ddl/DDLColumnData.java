@@ -1,6 +1,6 @@
-package builder.h2.ddl;
+package builder.ddl;
 
-import builder.h2.H2DataType;
+import builder.ddl.h2.H2DataType;
 
 public record DDLColumnData(
         String columnName,

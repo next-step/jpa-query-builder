@@ -1,4 +1,4 @@
-package builder.h2;
+package builder.ddl.h2;
 
 import java.util.Arrays;
 

@@ -8,9 +8,9 @@ public interface EntityManager {
 
     <T> List<T> findAll(Class<T> clazz);
 
-    Object persist(Object entityInstance);
+    void persist(Object entityInstance);
 
-    Object update(Object entityInstance);
+    void update(Object entityInstance);
 
     void remove(Object entityInstance);
 
