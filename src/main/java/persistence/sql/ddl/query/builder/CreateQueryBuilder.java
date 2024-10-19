@@ -4,35 +4,51 @@ import static persistence.sql.ddl.query.builder.ColumnDefinition.define;
 import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyColumn;
 import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyConstraint;
 
-import persistence.sql.query.QueryBuilder;
-import persistence.sql.ddl.query.CreateQuery;
+import java.util.List;
+import java.util.stream.Collectors;
 import persistence.sql.ddl.query.CreateQueryColumn;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.metadata.Identifier;
+import persistence.sql.metadata.TableName;
 
-public class CreateQueryBuilder implements QueryBuilder {
+public class CreateQueryBuilder {
 
-    private static final String TABLE_CREATE_STRING = "create table";
+    private static final String CREATE_TABLE = "create table";
 
-    @Override
-    public String build(Class<?> clazz, Dialect dialect) {
-        CreateQuery query = new CreateQuery(clazz);
+    private final Dialect dialect;
+    private final StringBuilder queryString;
 
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append( TABLE_CREATE_STRING )
+    private CreateQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
+        this.queryString = new StringBuilder();
+    }
+
+    public static CreateQueryBuilder builder(Dialect dialect) {
+        return new CreateQueryBuilder(dialect);
+    }
+
+    public String build() {
+        return queryString.toString();
+    }
+
+    public CreateQueryBuilder create(TableName tableName, Identifier identifier, List<CreateQueryColumn> columns) {
+        queryString.append( CREATE_TABLE )
                 .append( " " )
-                .append( query.tableName().value() )
+                .append( tableName.value() )
                 .append( " (" );
 
-        queryBuilder.append( definePrimaryKeyColumn(query.identifier(), dialect) ).append(", ");
+        queryString.append( definePrimaryKeyColumn(identifier, dialect) ).append(", ");
+        queryString.append(
+                columns.stream()
+                .map(column -> define(column, dialect))
+                .collect(Collectors.joining(", "))
+        );
+        queryString.append( definePrimaryKeyConstraint(identifier) );
 
-        for (CreateQueryColumn column : query.columns()) {
-            queryBuilder.append( define(column, dialect) ).append( ", " );
-        }
-
-        queryBuilder.append( definePrimaryKeyConstraint(query.identifier()) );
-
-        queryBuilder.append(")");
-        return queryBuilder.toString();
+        queryString.append(")");
+        return this;
     }
+
+
 
 }

@@ -6,15 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
 import persistence.sql.dialect.H2Dialect;
+import persistence.sql.metadata.TableName;
 
 class DropQueryBuilderTest {
 
     @Test
     @DisplayName("[성공] Person 테이블에 대한 drop query 검증")
     void dropQuery() {
-        DropQueryBuilder queryBuilder = new DropQueryBuilder();
+        DropQueryBuilder queryBuilder = DropQueryBuilder.builder(new H2Dialect())
+                .drop(new TableName(Person.class));
         String dropQuery = "drop table if exists users";
-        assertEquals(queryBuilder.build(Person.class, new H2Dialect()), dropQuery);
+        assertEquals(queryBuilder.build(), dropQuery);
     }
 
 }

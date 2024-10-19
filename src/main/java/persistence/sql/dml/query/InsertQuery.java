@@ -9,15 +9,14 @@ import persistence.sql.metadata.ColumnName;
 import persistence.sql.metadata.TableName;
 
 
-public record InsertQuery(String tableName,
-                          List<String> columnNames) {
+public record InsertQuery(TableName tableName,
+                          List<ColumnName> columnNames) {
     public InsertQuery(Class<?> clazz) {
         this(
-                new TableName(clazz).value(),
+                new TableName(clazz),
                 Arrays.stream(clazz.getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
                         .map(ColumnName::new)
-                        .map(ColumnName::value)
                         .toList()
         );
     }

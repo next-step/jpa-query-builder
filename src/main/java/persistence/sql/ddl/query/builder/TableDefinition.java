@@ -15,7 +15,8 @@ public class TableDefinition {
 
     public static String definePrimaryKeyConstraint(Identifier identifier) {
         StringBuilder builder = new StringBuilder();
-        builder.append("primary key (")
+        builder.append(", ")
+                .append("primary key (")
                 .append(identifier.column().name())
                 .append(")");
         return builder.toString();

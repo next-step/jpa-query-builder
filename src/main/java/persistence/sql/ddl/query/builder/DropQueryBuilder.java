@@ -1,22 +1,33 @@
 package persistence.sql.ddl.query.builder;
 
-import persistence.sql.ddl.query.DropQuery;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.metadata.TableName;
-import persistence.sql.query.QueryBuilder;
 
-public class DropQueryBuilder implements QueryBuilder {
+public class DropQueryBuilder {
 
-    private static final String TABLE_DROP_STRING = "drop table if exists";
+    private static final String DROP_TABLE = "drop table if exists";
 
-    @Override
-    public String build(Class<?> clazz, Dialect dialect) {
-        DropQuery query = new DropQuery(new TableName(clazz));
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append( TABLE_DROP_STRING )
+    private final Dialect dialect;
+    private final StringBuilder queryString;
+
+    private DropQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
+        this.queryString = new StringBuilder();
+    }
+
+    public static DropQueryBuilder builder(Dialect dialect) {
+        return new DropQueryBuilder(dialect);
+    }
+
+    public String build() {
+        return queryString.toString();
+    }
+
+    public DropQueryBuilder drop(TableName tableName) {
+        queryString.append( DROP_TABLE )
                 .append( " " )
-                .append( query.tableName().value() );
-        return queryBuilder.toString();
+                .append( tableName.value() );
+        return this;
     }
 
 }

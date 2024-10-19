@@ -5,6 +5,8 @@ import java.util.List;
 import jdbc.JdbcTemplate;
 import persistence.entity.Person;
 import persistence.sql.dialect.H2Dialect;
+import persistence.sql.dml.query.SelectQuery;
+import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class PersonRepository implements Repository<Person, Long> {
@@ -17,10 +19,13 @@ public class PersonRepository implements Repository<Person, Long> {
 
     @Override
     public List<Person> findAll() {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder();
-        String query = queryBuilder.build(Person.class, new H2Dialect());
+        SelectQuery query = new SelectQuery(Person.class);
+        SelectQueryBuilder queryBuilder = SelectQueryBuilder.builder(new H2Dialect())
+                .select(query.columnNames())
+                .from(query.tableName());
+        String queryString = queryBuilder.build();
 
-        return jdbcTemplate.query(query, (resultSet -> new Person(
+        return jdbcTemplate.query(queryString, (resultSet -> new Person(
                 resultSet.getLong("id"),
                 resultSet.getString("nick_name"),
                 resultSet.getInt("old"),
@@ -29,11 +34,15 @@ public class PersonRepository implements Repository<Person, Long> {
     }
 
     @Override
-    public Person findById() {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder();
-        String query = queryBuilder.build(Person.class, new H2Dialect());
+    public Person findById(Long id) {
+        SelectQuery query = new SelectQuery(Person.class);
+        SelectQueryBuilder queryBuilder = SelectQueryBuilder.builder(new H2Dialect())
+                .select(query.columnNames())
+                .from(query.tableName())
+                .where(List.of(new WhereCondition("id", "=", id)));
+        String queryString = queryBuilder.build();
 
-        return jdbcTemplate.queryForObject(query, (resultSet -> new Person(
+        return jdbcTemplate.queryForObject(queryString, (resultSet -> new Person(
                 resultSet.getLong("id"),
                 resultSet.getString("nick_name"),
                 resultSet.getInt("old"),

@@ -9,7 +9,7 @@ import persistence.sql.metadata.ColumnName;
 import persistence.sql.metadata.TableName;
 
 public record SelectQuery(TableName tableName,
-                          List<String> columnNames) {
+                          List<ColumnName> columnNames) {
 
     public SelectQuery(Class<?> clazz) {
         this(
@@ -17,7 +17,6 @@ public record SelectQuery(TableName tableName,
                 Arrays.stream(clazz.getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
                         .map(ColumnName::new)
-                        .map(ColumnName::value)
                         .toList()
         );
     }

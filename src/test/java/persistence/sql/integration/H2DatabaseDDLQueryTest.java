@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.entity.Person;
+import persistence.sql.ddl.query.CreateQuery;
+import persistence.sql.ddl.query.DropQuery;
 import persistence.sql.ddl.query.builder.CreateQueryBuilder;
 import persistence.sql.ddl.query.builder.DropQueryBuilder;
 import persistence.sql.dialect.H2Dialect;
@@ -35,9 +37,12 @@ public class H2DatabaseDDLQueryTest {
     @DisplayName("[성공] table create")
     void createTable() throws SQLException {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
-        jdbcTemplate.execute(queryBuilder.build(Person.class, new H2Dialect()));
+        CreateQuery query = new CreateQuery(Person.class);
+        CreateQueryBuilder queryBuilder = CreateQueryBuilder.builder(new H2Dialect())
+                .create(query.tableName(), query.identifier(), query.columns());
+
+        jdbcTemplate.execute(queryBuilder.build());
 
         Integer count = jdbcTemplate.queryForObject(
                 getTableExistCheckSelectQuery(),
@@ -51,15 +56,21 @@ public class H2DatabaseDDLQueryTest {
     void dropTable() throws SQLException {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-        CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder();
-        jdbcTemplate.execute(createQueryBuilder.build(Person.class, new H2Dialect()));
+        CreateQuery createQuery = new CreateQuery(Person.class);
+        CreateQueryBuilder queryBuilder = CreateQueryBuilder.builder(new H2Dialect())
+                .create(createQuery.tableName(), createQuery.identifier(), createQuery.columns());
+
+        jdbcTemplate.execute(queryBuilder.build());
         Integer tableCountAfterCreate = jdbcTemplate.queryForObject(
                 getTableExistCheckSelectQuery(),
                 (rs) -> rs.getInt(1)
         );
 
-        DropQueryBuilder dropQueryBuilder = new DropQueryBuilder();
-        jdbcTemplate.execute(dropQueryBuilder.build(Person.class, new H2Dialect()));
+        DropQuery dropQuery = new DropQuery(Person.class);
+        DropQueryBuilder dropQueryBuilder = DropQueryBuilder.builder(new H2Dialect())
+                .drop(dropQuery.tableName());
+
+        jdbcTemplate.execute(dropQueryBuilder.build());
         Integer tableCountAfterDrop = jdbcTemplate.queryForObject(
                 getTableExistCheckSelectQuery(),
                 (rs) -> rs.getInt(1)
