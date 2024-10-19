@@ -75,6 +75,11 @@ public class TableEntity<E> {
         return id;
     }
 
+    public boolean hasIdValue() {
+        Object fieldValue = id.getFieldValue();
+        return fieldValue != null;
+    }
+
     // id(pk) 생성 전략
     public GenerationType getIdGenerationType() {
         GeneratedValue generatedValue = getId().getGeneratedValue();

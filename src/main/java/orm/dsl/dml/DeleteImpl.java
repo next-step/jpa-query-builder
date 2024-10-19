@@ -4,6 +4,7 @@ import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
+import orm.dsl.condition.EqualCondition;
 import orm.dsl.step.dml.ConditionStep;
 import orm.dsl.step.dml.DeleteFromStep;
 import orm.util.CollectionUtils;
@@ -47,6 +48,13 @@ public abstract class DeleteImpl <E> implements DeleteFromStep {
         }
 
         return queryBuilder.toString();
+    }
+
+    @Override
+    public ConditionStep byId(Object id) {
+        this.deleteConditions.clear();
+        this.deleteConditions.add(new EqualCondition(tableEntity.getId().getFieldName(), id));
+        return this;
     }
 
     @Override

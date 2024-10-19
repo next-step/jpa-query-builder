@@ -5,7 +5,9 @@ import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.TableField;
 import orm.dsl.QueryRunner;
+import orm.dsl.step.dml.BulkInsertIntoValuesStep;
 import orm.dsl.step.dml.InsertIntoStep;
+import orm.dsl.step.dml.InsertIntoValuesStep;
 import orm.exception.InvalidEntityException;
 import orm.exception.OrmPersistenceException;
 import orm.util.StringUtils;
@@ -33,14 +35,14 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     }
 
     @Override
-    public <T> InsertIntoStep values(T entity) {
+    public <T> InsertIntoValuesStep values(T entity) {
         throwIfNotMatchingEntity(tableEntity, entity);
         this.inertValues = List.of(extractInsertValues(entity));
         return this;
     }
 
     @Override
-    public <T> InsertIntoStep values(List<T> entityList) {
+    public <T> BulkInsertIntoValuesStep values(List<T> entityList) {
         for (T entity : entityList) {
             throwIfNotMatchingEntity(tableEntity, entity);
         }
