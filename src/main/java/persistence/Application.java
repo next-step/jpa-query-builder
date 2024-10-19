@@ -5,9 +5,7 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import orm.dsl.ddl.DDLQueryBuilder;
-import orm.dsl.dml.DMLQueryBuilder;
-import orm.dsl.dml.DQLQueryBuilder;
+import orm.dsl.QueryBuilder;
 import persistence.sql.ddl.Person;
 
 import java.util.List;
@@ -21,11 +19,13 @@ public class Application {
             final DatabaseServer server = new H2();
             server.start();
 
+            QueryBuilder queryBuilder = new QueryBuilder();
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            final String ddl = new DDLQueryBuilder()
+
+            final String ddl = queryBuilder
                     .createTable(Person.class)
                     .ifNotExist()
-                    .build();
+                    .extractSql();
 
             final List<Person> newPeople = List.of(
                     new Person(1L, 20, "설동민 1"),
@@ -33,12 +33,10 @@ public class Application {
                     new Person(3L, 30, "설동민 3")
             );
 
-            DMLQueryBuilder dmlQueryBuilder = new DMLQueryBuilder();
-            String insertQuery = dmlQueryBuilder.insertInto(Person.class)
+            String insertQuery = queryBuilder.insertInto(Person.class)
                     .values(newPeople)
-                    .build();
+                    .extractSql();
 
-            var queryBuilder = new DQLQueryBuilder(jdbcTemplate);
             List<Person> peopleList = queryBuilder.selectFrom(Person.class)
                     .fetch();
 

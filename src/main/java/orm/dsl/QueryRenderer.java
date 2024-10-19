@@ -1,5 +1,6 @@
-package orm;
+package orm.dsl;
 
+import orm.TableField;
 import orm.dsl.condition.Condition;
 import orm.util.CollectionUtils;
 

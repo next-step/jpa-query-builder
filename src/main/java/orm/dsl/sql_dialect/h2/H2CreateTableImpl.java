@@ -15,7 +15,7 @@ public class H2CreateTableImpl<ENTITY> extends CreateTableImpl<ENTITY> {
     }
 
     @Override
-    public String build() {
+    public String extractSql() {
         final var stringJoiner = new StringJoiner(" ");
         stringJoiner.add("CREATE TABLE");
         if (super.ifNotExist) {

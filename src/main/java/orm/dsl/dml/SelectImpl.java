@@ -1,7 +1,7 @@
 package orm.dsl.dml;
 
 import jdbc.RowMapper;
-import orm.QueryRenderer;
+import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
@@ -39,7 +39,7 @@ public abstract class SelectImpl<E> implements SelectFromStep<E>{
     }
 
     @Override
-    public String build() {
+    public String extractSql() {
         QueryRenderer queryRenderer = new QueryRenderer();
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT ");
@@ -56,12 +56,12 @@ public abstract class SelectImpl<E> implements SelectFromStep<E>{
 
     @Override
     public <T> List<T> fetch(RowMapper<T> rowMapper) {
-        return queryRunner.fetch(build(), rowMapper);
+        return queryRunner.fetch(extractSql(), rowMapper);
     }
 
     @Override
     public <T> T fetchOne(RowMapper<T> rowMapper) {
-        return queryRunner.fetchOne(build(), rowMapper);
+        return queryRunner.fetchOne(extractSql(), rowMapper);
     }
 
     // 모든 검색조건을 날려 findAll로 만듬

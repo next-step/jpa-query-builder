@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import orm.exception.EntityHasNoDefaultConstructorException;
 import orm.exception.InvalidEntityException;
+import test_entity.기본생성자_없는_Entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -71,18 +72,6 @@ class 테이블_애너테이션_있는_Entity {
     }
 
     public 테이블_애너테이션_있는_Entity(Long id) {
-        this.id = id;
-    }
-}
-
-@Entity
-@Table(name = "dummy_table")
-class 기본생성자_없는_Entity {
-
-    @Id
-    private Long id;
-
-    public 기본생성자_없는_Entity(Long id) {
         this.id = id;
     }
 }

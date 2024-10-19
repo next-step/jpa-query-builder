@@ -1,14 +1,17 @@
-package orm;
+package orm.dsl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import orm.TableEntity;
+import orm.TableField;
 import orm.dsl.condition.Condition;
+import persistence.sql.ddl.Person;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static orm.util.ConditionUtils.eq;
+import static orm.dsl.DSL.eq;
 
 public class QueryRendererTest {
 

@@ -1,6 +1,6 @@
 package orm.dsl.dml;
 
-import orm.QueryRenderer;
+import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
@@ -36,7 +36,7 @@ public abstract class DeleteImpl <E> implements DeleteFromStep {
     }
 
     @Override
-    public String build() {
+    public String extractSql() {
         QueryRenderer queryRenderer = new QueryRenderer();
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("DELETE FROM ");
@@ -51,6 +51,6 @@ public abstract class DeleteImpl <E> implements DeleteFromStep {
 
     @Override
     public void execute() {
-        queryRunner.execute(build());
+        queryRunner.execute(extractSql());
     }
 }

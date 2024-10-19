@@ -1,6 +1,7 @@
-package orm.dsl.ddl;
+package orm.dsl;
 
 import jakarta.persistence.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
@@ -8,14 +9,20 @@ import persistence.sql.ddl.Person;
 import static org.assertj.core.api.Assertions.assertThat;
 import static util.SQLUtil.SQL_노멀라이즈;
 
-public class DDLQueryBuilderCreateTest {
+public class QueryBuilderCreateTest {
+
+    QueryBuilder queryBuilder;
+
+    @BeforeEach
+    void setUp() {
+        queryBuilder = new QueryBuilder();
+    }
 
     @Test
     @DisplayName("CREATE 문 생성 테스트, @GeneratedValue 어노테이션이 없는 경우")
     void DDL_CREATE_문_테스트() {
 
         // given
-        DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
         Class<Person> entityClass = Person.class;
         String expectedQuery = SQL_노멀라이즈(
                 """
@@ -25,8 +32,8 @@ public class DDLQueryBuilderCreateTest {
 
         // when
         String query = SQL_노멀라이즈(
-                ddlQueryBuilder.createTable(entityClass)
-                        .build()
+                queryBuilder.createTable(entityClass)
+                        .extractSql()
         );
 
         // then
@@ -38,7 +45,6 @@ public class DDLQueryBuilderCreateTest {
     void DDL_CREATE_문_테스트_1() {
 
         // given
-        DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
         Class<DummyEntity> entityClass = DummyEntity.class;
         String expectedQuery = SQL_노멀라이즈(
                 """
@@ -56,8 +62,8 @@ public class DDLQueryBuilderCreateTest {
 
         // when
         String query = SQL_노멀라이즈(
-                ddlQueryBuilder.createTable(entityClass)
-                        .build()
+                queryBuilder.createTable(entityClass)
+                        .extractSql()
         );
 
         // then
@@ -69,7 +75,6 @@ public class DDLQueryBuilderCreateTest {
     void DDL_CREATE_문_테스트_2() {
 
         // given
-        DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
         Class<DummyEntity> entityClass = DummyEntity.class;
         String expectedQuery = SQL_노멀라이즈(
                 """
@@ -87,9 +92,9 @@ public class DDLQueryBuilderCreateTest {
 
         // when
         String query = SQL_노멀라이즈(
-                ddlQueryBuilder.createTable(entityClass)
+                queryBuilder.createTable(entityClass)
                         .ifNotExist()
-                        .build()
+                        .extractSql()
         );
 
         // then

@@ -1,8 +1,8 @@
 package orm.dsl.step.dml;
 
-import orm.dsl.QueryBuilder;
+import orm.dsl.QueryExtractor;
 import orm.dsl.QueryFetcher;
 
-public interface ConditionForFetchStep<E> extends QueryFetcher<E>, QueryBuilder {
+public interface ConditionForFetchStep<E> extends QueryFetcher<E>, QueryExtractor {
 
 }

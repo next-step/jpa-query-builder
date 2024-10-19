@@ -1,20 +1,27 @@
-package orm.dsl.ddl;
+package orm.dsl;
 
 import jakarta.persistence.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static util.SQLUtil.SQL_노멀라이즈;
 
-public class DDLQueryBuilderDropTest {
+public class QueryBuilderDropTest {
+
+    QueryBuilder queryBuilder;
+
+    @BeforeEach
+    void setUp() {
+        queryBuilder = new QueryBuilder();
+    }
 
     @Test
     @DisplayName("DROP 절 생성 테스트")
     void DDL_DROP_절_테스트_1() {
 
         // given
-        DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
         Class<DummyEntity> entityClass = DummyEntity.class;
         String expectedQuery = SQL_노멀라이즈(
                 """
@@ -24,8 +31,8 @@ public class DDLQueryBuilderDropTest {
 
         // when
         String query = SQL_노멀라이즈(
-                ddlQueryBuilder.dropTable(entityClass)
-                        .build()
+                queryBuilder.dropTable(entityClass)
+                        .extractSql()
         );
 
         // then
@@ -37,7 +44,6 @@ public class DDLQueryBuilderDropTest {
     void DDL_DROP_절_테스트_2() {
 
         // given
-        DDLQueryBuilder ddlQueryBuilder = new DDLQueryBuilder();
         Class<DummyEntity> entityClass = DummyEntity.class;
         String expectedQuery = SQL_노멀라이즈(
                 """
@@ -47,9 +53,9 @@ public class DDLQueryBuilderDropTest {
 
         // when
         String query = SQL_노멀라이즈(
-                ddlQueryBuilder.dropTable(entityClass)
+                queryBuilder.dropTable(entityClass)
                         .ifNotExist()
-                        .build()
+                        .extractSql()
         );
 
         // then

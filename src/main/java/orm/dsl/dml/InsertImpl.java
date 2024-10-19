@@ -1,7 +1,7 @@
 package orm.dsl.dml;
 
 import jakarta.persistence.GenerationType;
-import orm.QueryRenderer;
+import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.TableField;
 import orm.dsl.QueryRunner;
@@ -53,7 +53,7 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     }
 
     @Override
-    public String build() {
+    public String extractSql() {
         QueryRenderer queryRenderer = new QueryRenderer();
         final String bulkInsertValues = queryRenderer.renderBulkInsertValues(inertValues);
         final String joinColumnsWithComma = queryRenderer.joinColumnNamesWithComma(inertFields);
@@ -76,7 +76,7 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
 
     @Override
     public void execute() {
-        queryRunner.execute(build());
+        queryRunner.execute(extractSql());
     }
 
     /**
