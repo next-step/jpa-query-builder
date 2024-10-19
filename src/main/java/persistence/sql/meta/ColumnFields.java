@@ -26,6 +26,11 @@ public class ColumnFields {
         return columnFields;
     }
 
+    public List<String> getDeclaredFieldNames() {
+        return columnFields
+                .stream().map(ColumnField::getName).collect(Collectors.toList());
+    }
+
     public List<ColumnField> getPrimary() {
         if(columnFields.stream().noneMatch(ColumnField::isPrimaryKey)) {
             throw new IllegalArgumentException("Entity에 Id로 정의된 column이 존재하지 않습니다.");
@@ -35,8 +40,7 @@ public class ColumnFields {
     }
 
     public String getColumnClause() {
-        return columnFields
-                .stream().map(ColumnField::getName)
+        return getDeclaredFieldNames().stream()
                 .collect(Collectors.joining(", "));
     }
 
