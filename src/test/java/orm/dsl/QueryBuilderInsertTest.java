@@ -73,9 +73,9 @@ public class QueryBuilderInsertTest {
     void DML_INSERT_문_AI_테스트() {
         // given
         final var people = List.of(
-                new PersonWithAI(1L, 30, "설동민"),
-                new PersonWithAI(2L, 30, "설동민2"),
-                new PersonWithAI(2L, 30, "설동민3")
+                new PersonWithAI(1L, 30L, "설동민"),
+                new PersonWithAI(2L, 30L, "설동민2"),
+                new PersonWithAI(2L, 30L, "설동민3")
         ) ;
 
         // when

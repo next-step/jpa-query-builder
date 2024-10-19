@@ -219,8 +219,13 @@ public class TableEntity<E> {
      * TableField에 세팅된 값들을 엔티티 클래스의 값에 적용한다.
      */
     public void syncFieldValueToEntity() {
-        Map<String, Object> classFieldNameMap = this.getAllFields().stream()
+
+        // non-id field들의 fieldName과 fieldValue를 매핑
+        Map<String, Object> classFieldNameMap = this.getNonIdFields().stream()
                 .collect(Collectors.toMap(TableField::getClassFieldName, TableField::getFieldValue));
+
+        // id field들의 fieldName과 fieldValue를 매핑
+        classFieldNameMap.put(id.getClassFieldName(), id.getFieldValue());
 
         for (Field declaredField : tableClass.getDeclaredFields()) {
             declaredField.setAccessible(true);

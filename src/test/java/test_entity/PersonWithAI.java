@@ -12,15 +12,32 @@ public class PersonWithAI {
 
     private String name;
 
-    private int age;
+    private Long age;
 
     public PersonWithAI() {
 
     }
 
-    public PersonWithAI(Long id, int age, String name) {
-        this.age = age;
+    public PersonWithAI(Long id, Long age, String name) {
         this.id = id;
+        this.age = age;
         this.name = name;
+    }
+
+    public PersonWithAI(Long age, String name) {
+        this.age = age;
+        this.name = name;
+    }
+
+    public Long getAge() {
+        return age;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

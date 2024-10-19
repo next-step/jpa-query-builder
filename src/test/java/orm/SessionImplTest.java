@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import orm.dsl.QueryBuilder;
 import persistence.sql.ddl.Person;
+import test_entity.PersonWithAI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static steps.Steps.테이블_생성;
@@ -55,6 +56,29 @@ public class SessionImplTest extends PluggableH2test {
             // then
             assertThat(person)
                     .isSameAs(newPerson) // Identity 검증
+                    .satisfies(p -> { // Equality 검증
+                        assertThat(p.getId()).isEqualTo(1L);
+                        assertThat(p.getAge()).isEqualTo(30);
+                        assertThat(p.getName()).isEqualTo("설동민");
+                    });
+        });
+    }
+
+    @Test
+    @DisplayName("auto-increment 키를 가진 엔티티를 persist 하면, db애서 채번된 auto-increment 값을 id 필드에 세팅한다.")
+    void persistence_auto_increment_테스트() {
+        runInH2Db(jdbcTemplate -> {
+
+            // given
+            테이블_생성(jdbcTemplate, PersonWithAI.class);
+
+            SessionImpl session = new SessionImpl(new QueryBuilder(jdbcTemplate));
+
+            // when
+            PersonWithAI person = session.persist(new PersonWithAI(30L, "설동민"));
+
+            // then
+            assertThat(person)
                     .satisfies(p -> { // Equality 검증
                         assertThat(p.getId()).isEqualTo(1L);
                         assertThat(p.getAge()).isEqualTo(30);
