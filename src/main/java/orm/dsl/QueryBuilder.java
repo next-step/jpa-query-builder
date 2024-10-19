@@ -8,6 +8,7 @@ import orm.dsl.step.ddl.DropTableStep;
 import orm.dsl.step.dml.DeleteFromStep;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.dsl.step.dml.SelectFromStep;
+import orm.dsl.step.dml.UpdateStep;
 import orm.settings.JpaSettings;
 
 public class QueryBuilder implements QueryProvider {
@@ -65,6 +66,11 @@ public class QueryBuilder implements QueryProvider {
     public <E> DeleteFromStep deleteFrom(E entityClass) {
         return new DialectStatementLocator(dialect(), queryRunner)
                 .deleteFrom(new TableEntity<>(entityClass, settings));
+    }
+
+    public <E> UpdateStep<E> update(E entityClass) {
+        return new DialectStatementLocator(dialect(), queryRunner)
+                .update(new TableEntity<>(entityClass, settings));
     }
 
     public SQLDialect dialect() {

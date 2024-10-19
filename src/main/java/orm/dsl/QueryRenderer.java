@@ -20,6 +20,16 @@ public class QueryRenderer {
     }
 
     /**
+     * 컬럼과 값의 쌍을 콤마로 구분하여 반환
+     * 업데이트 구문에 사용된다.
+     */
+    public String joinColumnAndValuePairWithComma(List<? extends TableField> columns) {
+        return columns.stream()
+                .map(column -> "%s=%s".formatted(column.getFieldName(), renderFieldValue(column)))
+                .collect(Collectors.joining(","));
+    }
+
+    /**
      * 대량 삽입 SQL 문에 대한 값의 문자열 표현을 렌더링 합니다.
      *
      * <p>예를 들어, 이러한 형태가 됩니다 : (id,name,age) </p>

@@ -1,26 +1,27 @@
 package orm.dsl.dml;
 
+import orm.TableEntity;
 import orm.TablePrimaryField;
 import orm.dsl.QueryRenderer;
-import orm.TableEntity;
 import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
 import orm.dsl.condition.EqualCondition;
 import orm.dsl.step.dml.ConditionStep;
 import orm.dsl.step.dml.DeleteFromStep;
+import orm.dsl.step.dml.UpdateStep;
 import orm.exception.IdValueRequiredException;
 import orm.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DeleteImpl <E> implements DeleteFromStep {
+public abstract class UpdateImpl<E> implements UpdateStep<E> {
 
     private final QueryRunner queryRunner;
     private final TableEntity<E> tableEntity;
     private final List<Condition> deleteConditions;
 
-    public DeleteImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
+    public UpdateImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
         this.tableEntity = tableEntity;
         this.queryRunner = queryRunner;
         this.deleteConditions = new ArrayList<>();
@@ -42,8 +43,10 @@ public abstract class DeleteImpl <E> implements DeleteFromStep {
     public String extractSql() {
         QueryRenderer queryRenderer = new QueryRenderer();
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("DELETE FROM ");
+        queryBuilder.append("UPDATE ");
         queryBuilder.append(tableEntity.getTableName());
+        queryBuilder.append(" SET ");
+        queryBuilder.append(queryRenderer.joinColumnAndValuePairWithComma(tableEntity.getNonIdFields()));
 
         if(CollectionUtils.isNotEmpty(deleteConditions)) {
             queryBuilder.append(queryRenderer.renderWhere(deleteConditions));
@@ -63,7 +66,7 @@ public abstract class DeleteImpl <E> implements DeleteFromStep {
 
     private void throwIfNoId(TablePrimaryField id) {
         if(id.getFieldValue() == null) {
-            throw new IdValueRequiredException("Id value is required for delete operation");
+            throw new IdValueRequiredException("Id value is required to update entity");
         }
     }
 

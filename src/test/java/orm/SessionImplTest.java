@@ -83,4 +83,30 @@ public class SessionImplTest extends PluggableH2test {
             assertThat(result).isNull();
         });
     }
+
+    // TODO: 추후 Hibernate 1차 캐시를 구현하면 newPerson 객체와 person 객체의 equality뿐 아리나 identity 까지 같아야 한다. (아직은 다름)
+    @Test
+    @DisplayName("delete 후 find 메서드를 사용하면 엔티티 결과는 null이 리턴된다.")
+    void update_테스트() {
+        runInH2Db(jdbcTemplate -> {
+
+            // given
+            테이블_생성(jdbcTemplate, Person.class);
+            SessionImpl session = new SessionImpl(new QueryBuilder(jdbcTemplate));
+            session.persist(new Person(1L, 30, "설동민"));
+            Person person = session.find(Person.class, 1L);
+
+            // when
+            person.setName("설동민 - 수정함");
+            session.update(person);
+            Person result = session.find(Person.class, 1L);
+
+            // then
+            assertThat(result).satisfies(p -> {
+                assertThat(p.getId()).isEqualTo(1L);
+                assertThat(p.getAge()).isEqualTo(30);
+                assertThat(p.getName()).isEqualTo("설동민 - 수정함");
+            });
+        });
+    }
 }

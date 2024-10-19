@@ -8,6 +8,7 @@ import orm.dsl.step.ddl.DropTableStep;
 import orm.dsl.step.dml.DeleteFromStep;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.dsl.step.dml.SelectFromStep;
+import orm.dsl.step.dml.UpdateStep;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -45,6 +46,10 @@ public class DialectStatementLocator {
 
     public <E> DeleteFromStep deleteFrom(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getDeleteIntoImpl(dialect));
+    }
+
+    public <E> UpdateStep<E> update(TableEntity<E> tableEntity) {
+        return newInstanceOfImpl(tableEntity, statementMap.getUpdateImpl(dialect));
     }
 
     private <E, T extends QueryExtractor> T newInstanceOfImpl(TableEntity<E> tableEntity, Class<T> implClass) {

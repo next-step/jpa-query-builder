@@ -6,6 +6,7 @@ import orm.dsl.ddl.DropTableImpl;
 import orm.dsl.dml.DeleteImpl;
 import orm.dsl.dml.InsertImpl;
 import orm.dsl.dml.SelectImpl;
+import orm.dsl.dml.UpdateImpl;
 import orm.dsl.sql_dialect.h2.*;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ public class DialectStatementMap {
     private final Map<SQLDialect, Class<? extends InsertImpl>> insertImplMap;
     private final Map<SQLDialect, Class<? extends SelectImpl>> selectImplMap;
     private final Map<SQLDialect, Class<? extends DeleteImpl>> deleteImplMap;
+    private final Map<SQLDialect, Class<? extends UpdateImpl>> updateImplMap;
 
     public DialectStatementMap() {
         this.createTableImplMap = initCreateImplMap();
@@ -24,6 +26,7 @@ public class DialectStatementMap {
         this.insertImplMap = initInsertImplMap();
         this.selectImplMap = initSelectImplMap();
         this.deleteImplMap = initDeleteImplMap();
+        this.updateImplMap = initUpdateImplMap();
     }
 
     public Class<? extends CreateTableImpl> getCreateTableImpl(SQLDialect dialect) {
@@ -44,6 +47,10 @@ public class DialectStatementMap {
 
     public Class<? extends DeleteImpl> getDeleteIntoImpl(SQLDialect dialect) {
         return deleteImplMap.get(dialect);
+    }
+
+    public Class<? extends UpdateImpl> getUpdateImpl(SQLDialect dialect) {
+        return updateImplMap.get(dialect);
     }
 
     private Map<SQLDialect, Class<? extends CreateTableImpl>> initCreateImplMap() {
@@ -73,6 +80,12 @@ public class DialectStatementMap {
     private Map<SQLDialect, Class<? extends DeleteImpl>> initDeleteImplMap() {
         return Map.ofEntries(
                 Map.entry(SQLDialect.H2, H2DeleteImpl.class)
+        );
+    }
+
+    private Map<SQLDialect, Class<? extends UpdateImpl>> initUpdateImplMap() {
+        return Map.ofEntries(
+                Map.entry(SQLDialect.H2, H2UpdateImpl.class)
         );
     }
 }

@@ -1,5 +1,5 @@
 package orm.dsl.step.dml;
 
-public interface InsertIntoValuesStep<E> extends InsertIntoReturnStep<E> {
-    InsertIntoReturnStep<E> value(E entity);
+public interface InsertIntoValuesStep<E> extends ReturningStep<E> {
+    ReturningStep<E> value(E entity);
 }

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class H2 implements DatabaseServer {
@@ -19,6 +20,10 @@ public class H2 implements DatabaseServer {
 
     public H2() throws SQLException {
         this(DEFAULT_PROPERTIES);
+    }
+
+    public H2(String schemaName) throws SQLException {
+        this(new DataSourceProperties("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1".formatted(schemaName), "sa", ""));
     }
 
     public H2(final Server server) {

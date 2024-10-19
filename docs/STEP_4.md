@@ -29,5 +29,10 @@ public interface EntityManager {
 }
 ```
 3. insert와 update는 어떻게 구분할 것인가?
-insert와 update를 구분하기 위해, 엔티티 id 필드에 값이 있는지 없는지를 체크하여 구분한다.
-
+- insert와 update를 구분하기 위해, 엔티티 id 필드에 값이 있는지 없는지를 체크하여 구분한다.
+  - 이게 방식이 Auto Increment 컬럼이면 유효하나,
+  - 수동으로 PK를 넣는 케이스에 대해서는 대응이 안됨
+  - 하나의 ```persist(Object entity);```에서 insert, update를 구분해서 하려면 hibernate 1차 캐시가 필요해보인다.
+  - 이번 미션에선 구현하기 너무 많아보임
+  
+- 그냥 인터페이스에 메서드를 하나 더 넣자.

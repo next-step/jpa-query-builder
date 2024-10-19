@@ -72,6 +72,21 @@ public class QueryRendererTest {
     }
 
     @Test
+    @DisplayName("컬럼명 & 값 pair 리스트 렌더링 테스트")
+    void 컬럼명_과_값_페어리스트_렌더링_테스트() {
+
+        // given
+        QueryRenderer queryRenderer = new QueryRenderer();
+        TableEntity<Person> tableEntity = new TableEntity<>(new Person(1L, 30, "설동민"));
+
+        // when
+        String query = queryRenderer.joinColumnAndValuePairWithComma(tableEntity.getNonIdFields());
+
+        // then
+        assertThat(query).isEqualTo("name='설동민',age=30");
+    }
+
+    @Test
     @DisplayName("조건절 렌더링 테스트")
     void 조건절_렌더링_테스트() {
 

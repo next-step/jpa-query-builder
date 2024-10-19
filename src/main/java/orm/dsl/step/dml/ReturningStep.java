@@ -3,7 +3,7 @@ package orm.dsl.step.dml;
 import orm.dsl.QueryExecutor;
 import orm.dsl.QueryExtractor;
 
-public interface InsertIntoReturnStep<E> extends QueryExtractor, QueryExecutor {
+public interface ReturningStep<E> extends QueryExtractor, QueryExecutor {
 
     /**
      * 복합키인 경우 예외 발생,
