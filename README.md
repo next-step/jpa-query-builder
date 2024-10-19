@@ -31,7 +31,7 @@
 
 ### 요구사항
 
-- [] Person class 의 insert query 생성
-- [] Person class 의 findAll query 생성
-- [] Person class 의 findById query 생성
-- [] Person class 의 delete query 생성
+- [X] Person class 의 insert query 생성
+- [X] Person class 의 findAll query 생성
+- [X] Person class 의 findById query 생성
+- [X] Person class 의 delete query 생성
