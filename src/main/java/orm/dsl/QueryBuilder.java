@@ -62,6 +62,11 @@ public class QueryBuilder implements QueryProvider {
                 .deleteFrom(new TableEntity<>(entityClass, settings));
     }
 
+    public <E> DeleteFromStep deleteFrom(E entityClass) {
+        return new DialectStatementLocator(dialect(), queryRunner)
+                .deleteFrom(new TableEntity<>(entityClass, settings));
+    }
+
     public SQLDialect dialect() {
         return this.settings.getDialect();
     }

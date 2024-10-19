@@ -38,6 +38,6 @@ public class SessionImpl implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-        queryBuilder.deleteFrom(entity.getClass());
+        queryBuilder.deleteFrom(entity).byId().execute();
     }
 }

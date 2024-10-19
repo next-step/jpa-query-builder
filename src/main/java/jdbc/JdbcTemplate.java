@@ -36,6 +36,10 @@ public class JdbcTemplate {
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
         final List<T> results = query(sql, rowMapper);
+        if (results.isEmpty()) {
+            return null;
+        }
+
         if (results.size() != 1) {
             throw new RuntimeException("Expected 1 result, got " + results.size());
         }

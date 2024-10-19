@@ -1,5 +1,6 @@
 package orm.dsl.dml;
 
+import orm.TablePrimaryField;
 import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.dsl.QueryRunner;
@@ -51,9 +52,10 @@ public abstract class DeleteImpl <E> implements DeleteFromStep {
     }
 
     @Override
-    public ConditionStep byId(Object id) {
+    public ConditionStep byId() {
+        final TablePrimaryField id = tableEntity.getId();
         this.deleteConditions.clear();
-        this.deleteConditions.add(new EqualCondition(tableEntity.getId().getFieldName(), id));
+        this.deleteConditions.add(new EqualCondition(id.getFieldName(), id.getFieldValue()));
         return this;
     }
 
