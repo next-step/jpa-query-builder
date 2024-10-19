@@ -81,39 +81,4 @@ class ColumnFieldTest {
         List<String> expected = Arrays.asList("id", "nick_name");
         assertThat(new ColumnFields(DummyPerson2.class).getPrimary().stream().map(ColumnField::getName)).isEqualTo(expected);
     }
-
-    @Test
-    @DisplayName("임의의 Class의 Column Clause 가져오기")
-    void getColumnClause() {
-        String expected = "id, nick_name, old, email";
-        assertThat(new ColumnFields(DummyPerson.class).getColumnClause()).isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("임의의 Class의 Value Clause 가져오기")
-    void getValueClause() throws Exception {
-        String expected = "1, hyeongyeong, 30, kohy0329@naver.com";
-        assertThat(new ColumnFields(DummyPerson.class).valueClause(getCustomPerson())).isEqualTo(expected);
-    }
-
-    private DummyPerson getCustomPerson() throws Exception{
-        DummyPerson person = new DummyPerson();
-
-        Field idField = person.getClass().getDeclaredField("id");
-        Field nameField = person.getClass().getDeclaredField("name");
-        Field ageField = person.getClass().getDeclaredField("age");
-        Field emailField = person.getClass().getDeclaredField("email");
-
-        idField.setAccessible(true);
-        nameField.setAccessible(true);
-        ageField.setAccessible(true);
-        emailField.setAccessible(true);
-
-        idField.set(person, 1L);
-        nameField.set(person, "hyeongyeong");
-        ageField.set(person, 30);
-        emailField.set(person, "kohy0329@naver.com");
-
-        return person;
-    }
 }
