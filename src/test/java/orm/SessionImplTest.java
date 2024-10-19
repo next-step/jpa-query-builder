@@ -84,9 +84,9 @@ public class SessionImplTest extends PluggableH2test {
         });
     }
 
-    // TODO: 추후 Hibernate 1차 캐시를 구현하면 newPerson 객체와 person 객체의 equality뿐 아리나 identity 까지 같아야 한다. (아직은 다름)
+    // TODO: 추후 Hibernate 1차 캐시를 구현하면 persistence() 메서드 하나로 insert와 update를 구분 할 수 있어야한다.
     @Test
-    @DisplayName("delete 후 find 메서드를 사용하면 엔티티 결과는 null이 리턴된다.")
+    @DisplayName("update 수정된 엔티티를 조회한다.")
     void update_테스트() {
         runInH2Db(jdbcTemplate -> {
 

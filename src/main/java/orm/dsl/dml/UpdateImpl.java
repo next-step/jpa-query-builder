@@ -5,37 +5,35 @@ import orm.TablePrimaryField;
 import orm.dsl.QueryRenderer;
 import orm.dsl.QueryRunner;
 import orm.dsl.condition.Condition;
+import orm.dsl.condition.Conditions;
 import orm.dsl.condition.EqualCondition;
 import orm.dsl.step.dml.ConditionStep;
-import orm.dsl.step.dml.DeleteFromStep;
 import orm.dsl.step.dml.UpdateStep;
 import orm.exception.IdValueRequiredException;
-import orm.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class UpdateImpl<E> implements UpdateStep<E> {
 
     private final QueryRunner queryRunner;
     private final TableEntity<E> tableEntity;
-    private final List<Condition> deleteConditions;
+    private final Conditions conditions;
 
     public UpdateImpl(TableEntity<E> tableEntity, QueryRunner queryRunner) {
         this.tableEntity = tableEntity;
         this.queryRunner = queryRunner;
-        this.deleteConditions = new ArrayList<>();
+        this.conditions = new Conditions();
     }
 
     @Override
     public ConditionStep where(Condition condition) {
-        deleteConditions.add(condition);
+        conditions.add(condition);
         return this;
     }
 
     @Override
     public ConditionStep where(Condition... conditions) {
-        deleteConditions.addAll(List.of(conditions));
+        this.conditions.addAll(List.of(conditions));
         return this;
     }
 
@@ -48,8 +46,8 @@ public abstract class UpdateImpl<E> implements UpdateStep<E> {
         queryBuilder.append(" SET ");
         queryBuilder.append(queryRenderer.joinColumnAndValuePairWithComma(tableEntity.getNonIdFields()));
 
-        if(CollectionUtils.isNotEmpty(deleteConditions)) {
-            queryBuilder.append(queryRenderer.renderWhere(deleteConditions));
+        if (conditions.hasCondition()) {
+            queryBuilder.append(queryRenderer.renderWhere(conditions));
         }
 
         return queryBuilder.toString();
@@ -59,13 +57,13 @@ public abstract class UpdateImpl<E> implements UpdateStep<E> {
     public ConditionStep byId() {
         final TablePrimaryField id = tableEntity.getId();
         throwIfNoId(id);
-        this.deleteConditions.clear();
-        this.deleteConditions.add(new EqualCondition(id.getFieldName(), id.getFieldValue()));
+        this.conditions.clear();
+        this.conditions.add(new EqualCondition(id.getFieldName(), id.getFieldValue()));
         return this;
     }
 
     private void throwIfNoId(TablePrimaryField id) {
-        if(id.getFieldValue() == null) {
+        if (id.getFieldValue() == null) {
             throw new IdValueRequiredException("Id value is required to update entity");
         }
     }

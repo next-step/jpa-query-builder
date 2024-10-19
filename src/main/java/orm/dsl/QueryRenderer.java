@@ -1,8 +1,7 @@
 package orm.dsl;
 
 import orm.TableField;
-import orm.dsl.condition.Condition;
-import orm.util.CollectionUtils;
+import orm.dsl.condition.Conditions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,14 +54,11 @@ public class QueryRenderer {
         return fieldValue;
     }
 
-    public String renderWhere(List<Condition> conditions) {
-        if (CollectionUtils.isEmpty(conditions)) {
+    public String renderWhere(Conditions conditions) {
+        if (conditions.hasNoCondition()) {
             return "";
         }
 
-        return " WHERE " +
-                conditions.stream()
-                        .map(Condition::toString)
-                        .collect(Collectors.joining(" AND "));
+        return " WHERE " + conditions.renderCondition();
     }
 }

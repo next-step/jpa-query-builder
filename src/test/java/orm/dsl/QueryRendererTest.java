@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import orm.TableEntity;
 import orm.TableField;
 import orm.dsl.condition.Condition;
+import orm.dsl.condition.Conditions;
 import persistence.sql.ddl.Person;
 
 import java.util.List;
@@ -99,7 +100,7 @@ public class QueryRendererTest {
         );
 
         // when
-        String query = queryRenderer.renderWhere(conditionList);
+        String query = queryRenderer.renderWhere(new Conditions(conditionList));
 
         // then
         assertThat(query).isEqualTo(" WHERE id = 1 AND name = '설동민' AND age = 30");
