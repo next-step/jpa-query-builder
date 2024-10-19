@@ -72,15 +72,6 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         return tableColumnAttribute.getTableAttributes();
     }
 
-    // GeneratedType 체크
-    private boolean isGenerateValueIdentity(Field field) {
-        if (!field.isAnnotationPresent(GeneratedValue.class)) {
-            return false;
-        }
-
-        return field.getAnnotation(GeneratedValue.class).strategy() == GenerationType.IDENTITY;
-    }
-
     @Override
     public String drop(Class<?> entityClass) {
         if (!entityClass.isAnnotationPresent(Entity.class)) {
