@@ -15,7 +15,7 @@ public class UpdateQueryBuilder extends DMLQueryBuilder {
         }
 
         String tableName = getTableName();
-        String setClause = setCaluse(entity);
+        String setClause = setClause(entity);
         String idClause =  idClause(entity);
 
         if (idClause.isEmpty()) {

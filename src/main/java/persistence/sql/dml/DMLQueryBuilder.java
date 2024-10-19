@@ -12,9 +12,11 @@ public abstract class DMLQueryBuilder {
     protected DMLQueryBuilder(Class<?> clazz) {
         this.clazz = clazz;
     }
-    String setCaluse(Object entity) {
+
+    String setClause(Object entity) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(this::isPersistentField)
+                .filter(field -> getFieldValue(entity, field) != null)
                 .map(field -> getColumnName(field) + " = " + getFieldValue(entity, field))
                 .collect(Collectors.joining(", "));
     }

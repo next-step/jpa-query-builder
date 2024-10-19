@@ -6,12 +6,13 @@ import domain.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entity.EntityManager;
+import persistence.entity.impl.FakeEntityManager;
 import persistence.sql.ddl.CreateTableQueryBuilder;
 import persistence.sql.ddl.DropTableQueryBuilder;
 import persistence.sql.ddl.QueryBuilder;
-import persistence.sql.dml.DeleteQueryBuilder;
+import persistence.sql.dml.DMLQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -27,28 +28,19 @@ public class Application {
 
             String createTableQuery = ddlQueryBuilder.executeQuery(Person.class);
             jdbcTemplate.execute(createTableQuery); // Create table
+            EntityManager entityManager = new FakeEntityManager(Person.class, jdbcTemplate);
 
-            Person person = Person.of(null, "2xample", 30, "2xample.gmail.com", null);
+            entityManager.persist(Person.of(null,"John", 25,"demian@gmail.com",1));
 
-            InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);
-            String insertQuery = insertQueryBuilder.insert(person);
-            jdbcTemplate.execute(insertQuery); // Insert data
+            entityManager.find(Person.class, 1L);
 
-            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
-            String selectQuery = selectQueryBuilder.findAll(Person.class);
-            jdbcTemplate.execute(selectQuery); // Select data
+            entityManager.remove(Person.class, 1L);
 
-            String findOne = selectQueryBuilder.findById(Person.class, 1L);
-            jdbcTemplate.execute(findOne); // Select data
+            entityManager.update(Person.of(1L,"John", 25,null,null));
 
-            DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder(Person.class);
-            deleteQueryBuilder.deleteById(Person.class, 1L);
-            jdbcTemplate.execute(deleteQueryBuilder.deleteById(Person.class, 1L)); // Delete data
 
             ddlQueryBuilder = new DropTableQueryBuilder();
-            String dropTableQuery = ddlQueryBuilder.executeQuery(Person.class);
-
-            jdbcTemplate.execute(dropTableQuery); // Drop table
+            ddlQueryBuilder.executeQuery(Person.class);
 
             server.stop();
         } catch (Exception e) {

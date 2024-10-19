@@ -10,5 +10,5 @@ public interface EntityManager {
 
     <T> T remove(Class<T> clazz, Long Id);
 
-    <T> T update(Class<T> clazz, Long Id);
+    Object update(Object entity);
 }
