@@ -41,7 +41,7 @@ public class TableEntity<E> {
         this.jpaSettings = settings;
         this.tableName = extractTableName(entityClass);
         this.tableClass = entityClass;
-        this.entity = createNewInstance(entityClass);
+        this.entity = createNewInstanceByDefaultConstructor(entityClass);
         this.id = extractId(entityClass);
         this.allFields = extractAllPersistenceFields(entityClass);
     }
@@ -184,7 +184,7 @@ public class TableEntity<E> {
         return list;
     }
 
-    private E createNewInstance(Class<E> entityClass) {
+    private E createNewInstanceByDefaultConstructor(Class<E> entityClass) {
         try {
             Constructor<E> defaultConstructor = entityClass.getDeclaredConstructor();
             defaultConstructor.setAccessible(true);
