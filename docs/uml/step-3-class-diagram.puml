@@ -44,14 +44,22 @@ interface DeleteFromStep extends WhereStep {
 
 }
 
-
 interface WhereStep extends ConditionStep {
 
 }
 
-interface InsertIntoStep extends QueryExtractor, QueryExecutor {
+interface InsertIntoStep extends InsertIntoValuesStep, BulkInsertIntoValuesStep {
 
 }
+
+interface BulkInsertIntoValuesStep extends QueryExtractor, QueryExecutor {
+
+}
+
+interface InsertIntoValuesStep extends ReturningStep {
+
+}
+
 
 interface ConditionStep extends QueryExtractor, QueryExecutor {
 
@@ -109,6 +117,21 @@ abstract class SelectImpl extends SelectFromStep {
 }
 
 class H2SelectImpl implements SelectImpl {
+
+}
+
+' UPDATE
+interface UpdateStep extends WhereStep {
+
+}
+
+abstract class UpdateImpl implements UpdateStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+
+interface ReturningStep extends QueryExtractor, QueryExecutor {
 
 }
 
