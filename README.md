@@ -1,2 +1,0 @@
-# jpa-query-builder
-
