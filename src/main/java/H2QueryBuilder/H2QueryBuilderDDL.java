@@ -1,6 +1,7 @@
 package H2QueryBuilder;
 
 import common.ErrorCode;
+import common.TableUtil;
 import jakarta.persistence.*;
 import repository.QueryBuilderDDL;
 
@@ -30,7 +31,7 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
                 .map(this::generateColumnMeta)
                 .collect(Collectors.joining(", "));
 
-        return String.format(CREATE_QUERY, getTableName(entityClass), columnInfo);
+        return String.format(CREATE_QUERY, new TableUtil(entityClass).getName(), columnInfo);
     }
 
     private String generateColumnMeta(TableColumnAttribute tableColumnAttribute) {
@@ -78,6 +79,6 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
             throw new IllegalArgumentException(ErrorCode.NOT_EXIST_ENTITY_ANNOTATION.getErrorMsg());
         }
 
-        return String.format(DROP_QUERY, getTableName(entityClass));
+        return String.format(DROP_QUERY, new TableUtil(entityClass).getName());
     }
 }
