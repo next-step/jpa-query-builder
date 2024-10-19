@@ -28,5 +28,6 @@ public interface EntityManager {
     void remove(Object entity);
 }
 ```
-
+3. insert와 update는 어떻게 구분할 것인가?
+insert와 update를 구분하기 위해, 엔티티 id 필드에 값이 있는지 없는지를 체크하여 구분한다.
 

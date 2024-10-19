@@ -77,6 +77,10 @@ public class TableEntity<E> {
         return id;
     }
 
+    public boolean hasIdValue() {
+        return id.getFieldValue() != null;
+    }
+
     public void setIdValue(Object idValue) {
         id.setIdValue(idValue);
     }

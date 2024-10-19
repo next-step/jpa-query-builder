@@ -11,30 +11,6 @@ import static steps.Steps.테이블_생성;
 
 public class SessionImplTest extends PluggableH2test {
 
-    @Test
-    @DisplayName("persist 메서드를 사용하면 엔티티 Object의 Equality와 Identity가 모두 유지된다.")
-    void persistence_테스트_equality_identity() {
-        runInH2Db(jdbcTemplate -> {
-
-            // given
-            테이블_생성(jdbcTemplate, Person.class);
-
-            SessionImpl session = new SessionImpl(new QueryBuilder(jdbcTemplate));
-            Person newPerson = new Person(1L, 30, "설동민");
-
-            // when
-            Person person = session.persist(newPerson);
-
-            // then
-            assertThat(person)
-                    .isSameAs(newPerson) // Identity 검증
-                    .satisfies(p -> { // Equality 검증
-                        assertThat(p.getId()).isEqualTo(1L);
-                        assertThat(p.getAge()).isEqualTo(30);
-                        assertThat(p.getName()).isEqualTo("설동민");
-                    });
-        });
-    }
 
     // TODO: 추후 Hibernate 1차 캐시를 구현하면 newPerson 객체와 person 객체의 equality뿐 아리나 identity 까지 같아야 한다. (아직은 다름)
     @Test
@@ -54,6 +30,31 @@ public class SessionImplTest extends PluggableH2test {
 
             // then
             assertThat(person)
+                    .satisfies(p -> { // Equality 검증
+                        assertThat(p.getId()).isEqualTo(1L);
+                        assertThat(p.getAge()).isEqualTo(30);
+                        assertThat(p.getName()).isEqualTo("설동민");
+                    });
+        });
+    }
+
+    @Test
+    @DisplayName("persist 메서드를 사용하면 엔티티 Object의 Equality와 Identity가 모두 유지된다.")
+    void persistence_테스트() {
+        runInH2Db(jdbcTemplate -> {
+
+            // given
+            테이블_생성(jdbcTemplate, Person.class);
+
+            SessionImpl session = new SessionImpl(new QueryBuilder(jdbcTemplate));
+            Person newPerson = new Person(1L, 30, "설동민");
+
+            // when
+            Person person = session.persist(newPerson);
+
+            // then
+            assertThat(person)
+                    .isSameAs(newPerson) // Identity 검증
                     .satisfies(p -> { // Equality 검증
                         assertThat(p.getId()).isEqualTo(1L);
                         assertThat(p.getAge()).isEqualTo(30);
