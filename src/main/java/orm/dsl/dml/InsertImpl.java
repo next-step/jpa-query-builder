@@ -1,6 +1,7 @@
 package orm.dsl.dml;
 
 import jakarta.persistence.GenerationType;
+import orm.dsl.QueryExecutorWithReturning;
 import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.TableField;
@@ -10,8 +11,9 @@ import orm.dsl.step.dml.InsertIntoStep;
 import orm.dsl.step.dml.InsertIntoValuesStep;
 import orm.exception.InvalidEntityException;
 import orm.exception.OrmPersistenceException;
-import orm.util.StringUtils;
+import orm.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,28 +43,45 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
         return this;
     }
 
+    /**
+     * Bulk Insert는 values() 중복실행 가능
+     * @param entityList insert 할 엔티티 리스트
+     * @param <T> 엔티티
+     */
     @Override
     public <T> BulkInsertIntoValuesStep values(List<T> entityList) {
         for (T entity : entityList) {
             throwIfNotMatchingEntity(tableEntity, entity);
         }
 
-        this.inertValues = entityList.stream()
+        final List<List<? extends TableField>> newEntityList = entityList.stream()
                 .map(this::extractInsertValues)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
 
+        if (CollectionUtils.isEmpty(newEntityList)) {
+            this.inertValues = newEntityList;
+            return this;
+        }
+
+        if(this.inertValues == null) {
+            this.inertValues = new ArrayList<>();
+        }
+
+        this.inertValues.addAll(newEntityList);
         return this;
     }
 
     @Override
+    public <T> QueryExecutorWithReturning<T> returnWithAIkey() {
+        return null;
+    }
+
+    @Override
     public String extractSql() {
+        throwIfNoInsertValues(inertValues);
         QueryRenderer queryRenderer = new QueryRenderer();
         final String bulkInsertValues = queryRenderer.renderBulkInsertValues(inertValues);
         final String joinColumnsWithComma = queryRenderer.joinColumnNamesWithComma(inertFields);
-
-        if (StringUtils.isBlank(bulkInsertValues)) {
-            throw new OrmPersistenceException("insert 할 값이 없습니다.");
-        }
 
         var queryToken = List.of(
                 "INSERT INTO",
@@ -78,6 +97,7 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
 
     @Override
     public void execute() {
+        throwIfNoInsertValues(inertValues);
         queryRunner.execute(extractSql());
     }
 
@@ -101,6 +121,12 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     private <T> void throwIfNotMatchingEntity(TableEntity<E> tableEntity, T entityClass) {
         if (tableEntity.getTableClass() != entityClass.getClass()) {
             throw new InvalidEntityException("insert 할 수 없는 엔티티 클래스입니다.");
+        }
+    }
+
+    private void throwIfNoInsertValues(List<List<? extends TableField>> inertValues) {
+        if (CollectionUtils.isEmpty(inertValues)) {
+            throw new OrmPersistenceException("insert 할 값이 없습니다.");
         }
     }
 }

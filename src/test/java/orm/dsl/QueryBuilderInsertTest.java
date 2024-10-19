@@ -56,6 +56,19 @@ public class QueryBuilderInsertTest {
     }
 
     @Test
+    @DisplayName("INSERT 절 bulkInsert 중복실행 테스트")
+    void DML_INSERT_문_벌크_중복실행_테스트() {
+        // when
+        String query = queryBuilder.insertInto(Person.class)
+                .values(List.of(new Person(1L, 30, "설동민")))
+                .values(List.of(new Person(2L, 30, "설동민2")))
+                .extractSql();
+
+        // then
+        assertThat(query).isEqualTo("INSERT INTO person (id,name,age) VALUES (1,'설동민',30), (2,'설동민2',30)");
+    }
+
+    @Test
     @DisplayName("테이블 pk가 AutoIncrement 인 경우, INSERT 절에 PK를 제외하고 쿼리를 만든다.")
     void DML_INSERT_문_AI_테스트() {
         // given
