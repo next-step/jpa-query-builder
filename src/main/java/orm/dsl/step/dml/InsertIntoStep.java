@@ -1,5 +1,5 @@
 package orm.dsl.step.dml;
 
-public interface InsertIntoStep extends InsertIntoValuesStep, BulkInsertIntoValuesStep {
+public interface InsertIntoStep<E> extends InsertIntoValuesStep<E>, BulkInsertIntoValuesStep {
 
 }

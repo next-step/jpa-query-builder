@@ -28,13 +28,21 @@ public class QueryRenderer {
         List<String> result = new ArrayList<>(columns.size());
         for (List<? extends TableField> inertValue : columns) {
             result.add("(%s)".formatted(inertValue.stream()
-                    .map(TableField::getFieldValue)
+                    .map(this::renderFieldValue)
                     .map(String::valueOf)
                     .collect(Collectors.joining(",")))
             );
         }
 
         return String.join(", ", result);
+    }
+
+    private Object renderFieldValue(TableField tableField) {
+        final Object fieldValue = tableField.getFieldValue();
+        if (fieldValue instanceof String) {
+            return "'%s'".formatted(fieldValue);
+        }
+        return fieldValue;
     }
 
     public String renderWhere(List<Condition> conditions) {

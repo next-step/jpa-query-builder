@@ -15,7 +15,7 @@ public class Steps {
     public static <T> void Person_엔티티_생성(JdbcTemplate jdbcTemplate, Person person) {
         QueryBuilder queryBuilder = new QueryBuilder(jdbcTemplate);
         queryBuilder.insertInto(Person.class)
-                .values(person)
+                .value(person)
                 .execute();
 
     }

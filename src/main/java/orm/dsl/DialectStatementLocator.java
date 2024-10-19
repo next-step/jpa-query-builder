@@ -35,7 +35,7 @@ public class DialectStatementLocator {
         return newInstanceOfImpl(tableEntity, statementMap.getDropTableImpl(dialect));
     }
 
-    public <E> InsertIntoStep insert(TableEntity<E> tableEntity) {
+    public <E> InsertIntoStep<E> insert(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getInsertIntoImpl(dialect));
     }
 

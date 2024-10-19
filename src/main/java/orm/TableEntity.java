@@ -15,6 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 엔티티 클래스로부터 테이블 정보를 추출한 클래스
@@ -75,9 +77,13 @@ public class TableEntity<E> {
         return id;
     }
 
-    public boolean hasIdValue() {
-        Object fieldValue = id.getFieldValue();
-        return fieldValue != null;
+    public void setIdValue(Object idValue) {
+        id.setIdValue(idValue);
+    }
+
+    public boolean hasDbGeneratedId() {
+        GenerationType idGenerationType = getIdGenerationType();
+        return idGenerationType == GenerationType.IDENTITY;
     }
 
     // id(pk) 생성 전략
@@ -108,7 +114,7 @@ public class TableEntity<E> {
     /**
      * 엔티티가 아닌 경우 예외 발생
      *
-     * @param entityClass
+     * @param entityClass 엔티티 클래스
      * @throws InvalidEntityException 엔티티가 아닌 경우
      */
     private void throwIfNotEntity(Class<E> entityClass) {
@@ -184,6 +190,44 @@ public class TableEntity<E> {
         ) {
             logger.error(e.getMessage());
             throw new EntityHasNoDefaultConstructorException("entity must contain default constructor");
+        }
+    }
+
+    public E getEntity() {
+        return entity;
+    }
+
+    /**
+     * 모든 필드를 주어진 필드로 교체한다.
+     * @param tableFields 교체할 필드
+     */
+    public void replaceAllFields(List<? extends TableField> tableFields) {
+        Map<String, Object> fieldValueMap = tableFields.stream()
+                .collect(Collectors.toMap(TableField::getFieldName, TableField::getFieldValue));
+
+        for (TableField field : allFields) {
+            Object fieldValue = fieldValueMap.get(field.getFieldName());
+            field.setFieldValue(fieldValue);
+        }
+    }
+
+    /**
+     * TableField에 세팅된 값들을 엔티티 클래스의 값에 적용한다.
+     */
+    public void syncFieldValueToEntity() {
+        Map<String, Object> classFieldNameMap = this.getAllFields().stream()
+                .collect(Collectors.toMap(TableField::getClassFieldName, TableField::getFieldValue));
+
+        for (Field declaredField : tableClass.getDeclaredFields()) {
+            declaredField.setAccessible(true);
+            try {
+                Object fieldValue = classFieldNameMap.get(declaredField.getName());
+                if (fieldValue != null) {
+                    declaredField.set(entity, fieldValue);
+                }
+            } catch (IllegalAccessException e) {
+                logger.error("Cannot access field: " + declaredField.getName(), e);
+            }
         }
     }
 }

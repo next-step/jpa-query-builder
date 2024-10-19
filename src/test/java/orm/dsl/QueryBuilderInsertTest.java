@@ -29,7 +29,7 @@ public class QueryBuilderInsertTest {
 
         // when
         String query = queryBuilder.insertInto(Person.class)
-                .values(person)
+                .value(person)
                 .extractSql();
 
         // then

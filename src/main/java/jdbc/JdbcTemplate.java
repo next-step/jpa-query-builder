@@ -21,6 +21,19 @@ public class JdbcTemplate {
         }
     }
 
+    public Object executeUpdateWithReturningGenKey(final String sql) {
+        try (final Statement stmt = connection.createStatement()) {
+            int affectedRows = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            if (affectedRows > 0) {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                return generatedKeys.next() ? generatedKeys.getObject(1) : 0L;
+            }
+            return 0L;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
         final List<T> results = query(sql, rowMapper);
         if (results.size() != 1) {

@@ -47,7 +47,12 @@ public class QueryBuilder implements QueryProvider {
                 .selectFrom(new TableEntity<>(entityClass, settings));
     }
 
-    public <E> InsertIntoStep insertInto(Class<E> entityClass) {
+    public <E> InsertIntoStep<E> insertInto(Class<E> entityClass) {
+        return new DialectStatementLocator(dialect(), queryRunner)
+                .insert(new TableEntity<>(entityClass, settings));
+    }
+
+    public <E> InsertIntoStep<E> insertInto(E entityClass) {
         return new DialectStatementLocator(dialect(), queryRunner)
                 .insert(new TableEntity<>(entityClass, settings));
     }

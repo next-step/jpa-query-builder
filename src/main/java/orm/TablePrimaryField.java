@@ -22,6 +22,10 @@ public class TablePrimaryField extends TableField {
         return true;
     }
 
+    public void setIdValue(Object object) {
+        super.setFieldValue(object);
+    }
+
     public Id getId() {
         return id;
     }

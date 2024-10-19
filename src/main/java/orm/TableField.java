@@ -12,23 +12,34 @@ public class TableField {
 
     private static final Logger log = LoggerFactory.getLogger(TableField.class);
     private final Field field;
+
+    // @Column을 고려한 실제 필드명
     private final String fieldName;
+
+    // @Column을 고려하지 않은 엔티티 필드들의 자바 필드명
+    private final String classFieldName;
+
     private final ColumnMeta columnMeta;
 
     private final JpaSettings jpaSettings;
-    private final Object fieldValue;
+    private Object fieldValue;
 
     public <T> TableField(Field field, T entity, JpaSettings jpaSettings) {
         Column column = field.getAnnotation(Column.class);
         this.jpaSettings = jpaSettings;
         this.field = field;
         this.fieldName = extractFieldName(column, field);
+        this.classFieldName = field.getName();
         this.fieldValue = extractFieldValue(field, entity);
         this.columnMeta = ColumnMeta.from(column);
     }
 
     public String getFieldName() {
         return fieldName;
+    }
+
+    public String getClassFieldName() {
+        return classFieldName;
     }
 
     public ColumnMeta getColumnMeta() {
@@ -40,10 +51,11 @@ public class TableField {
     }
 
     public Object getFieldValue() {
-        if (fieldValue instanceof String) {
-            return "'%s'".formatted(fieldValue);
-        }
         return fieldValue;
+    }
+
+    protected void setFieldValue(Object newFieldValue) {
+        this.fieldValue = newFieldValue;
     }
 
     public boolean isId() {

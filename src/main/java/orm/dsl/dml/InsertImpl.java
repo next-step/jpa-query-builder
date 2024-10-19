@@ -1,7 +1,6 @@
 package orm.dsl.dml;
 
 import jakarta.persistence.GenerationType;
-import orm.dsl.QueryExecutorWithReturning;
 import orm.dsl.QueryRenderer;
 import orm.TableEntity;
 import orm.TableField;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class InsertImpl<E> implements InsertIntoStep {
+public abstract class InsertImpl<E> implements InsertIntoStep<E> {
 
     private final QueryRunner queryRunner;
 
@@ -37,7 +36,7 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
     }
 
     @Override
-    public <T> InsertIntoValuesStep values(T entity) {
+    public InsertIntoValuesStep<E> value(E entity) {
         throwIfNotMatchingEntity(tableEntity, entity);
         this.inertValues = List.of(extractInsertValues(entity));
         return this;
@@ -71,9 +70,21 @@ public abstract class InsertImpl<E> implements InsertIntoStep {
         return this;
     }
 
+    /**
+     * 입력한 값을 Auto Increment가 존재하면 포함해서 리턴하는 기능
+     * @return
+     */
     @Override
-    public <T> QueryExecutorWithReturning<T> returnWithAIkey() {
-        return null;
+    public E returnAsEntity() {
+        Object idValue = queryRunner.executeUpdateWithReturningKey(extractSql());
+        tableEntity.replaceAllFields(inertValues.getFirst());
+
+        if (tableEntity.hasDbGeneratedId()) {
+            tableEntity.setIdValue(idValue);
+        }
+
+        tableEntity.syncFieldValueToEntity();
+        return tableEntity.getEntity();
     }
 
     @Override

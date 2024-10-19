@@ -1,6 +1,7 @@
 package orm.row_mapper;
 
 import jdbc.RowMapper;
+import orm.TableEntity;
 import orm.exception.RowMapperException;
 
 import java.lang.reflect.Field;
@@ -12,6 +13,10 @@ public class DefaultRowMapper<T> implements RowMapper<T> {
 
     public DefaultRowMapper(Class<T> type) {
         this.type = type;
+    }
+
+    public DefaultRowMapper(TableEntity<T> tableEntity) {
+        this.type = tableEntity.getTableClass();
     }
 
     public T mapRow(ResultSet rs) throws RowMapperException {
