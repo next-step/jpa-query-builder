@@ -1,15 +1,11 @@
 package persistence.sql.dml.repository;
 
-import static persistence.sql.dml.query.DMLQueryBuilderRegistry.getQueryBuilder;
-import static persistence.sql.dml.query.DMLType.SELECT;
-
 import java.sql.Connection;
 import java.util.List;
 import jdbc.JdbcTemplate;
-import persistence.sql.ddl.Person;
-import persistence.sql.dml.query.SelectQueryBuilder;
-import persistence.sql.dml.query.metadata.ColumnName;
-import persistence.sql.dml.query.metadata.WhereCondition;
+import persistence.entity.Person;
+import persistence.sql.dialect.H2Dialect;
+import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class PersonRepository implements Repository<Person, Long> {
 
@@ -21,8 +17,8 @@ public class PersonRepository implements Repository<Person, Long> {
 
     @Override
     public List<Person> findAll() {
-        SelectQueryBuilder queryBuilder = (SelectQueryBuilder) getQueryBuilder(SELECT);
-        String query = queryBuilder.build(Person.class);
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder();
+        String query = queryBuilder.build(Person.class, new H2Dialect());
 
         return jdbcTemplate.query(query, (resultSet -> new Person(
                 resultSet.getLong("id"),
@@ -34,11 +30,8 @@ public class PersonRepository implements Repository<Person, Long> {
 
     @Override
     public Person findById() {
-        SelectQueryBuilder queryBuilder = (SelectQueryBuilder) getQueryBuilder(SELECT);
-        String query = queryBuilder.build(
-                Person.class,
-                List.of(new WhereCondition(new ColumnName("id"), "="))
-        );
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder();
+        String query = queryBuilder.build(Person.class, new H2Dialect());
 
         return jdbcTemplate.queryForObject(query, (resultSet -> new Person(
                 resultSet.getLong("id"),
