@@ -26,18 +26,31 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
             throw new IllegalArgumentException(ErrorCode.NOT_EXIST_ENTITY_ANNOTATION.getErrorMsg());
         }
 
-        String columnInfo = getColumn(entityClass)
-                .stream()
-                .map(tableColumnAttribute -> {
-                    String info = tableColumnAttribute.getColumnName() + " " + tableColumnAttribute.getColumnDataType();
-                    if (tableColumnAttribute.isNotNull()) info += NOT_NULL;
-                    if (tableColumnAttribute.isAutoIncrement()) info += AUTO_INCREMENT;
-                    if (tableColumnAttribute.isPrimeKey()) info += PRIMARY_KEY;
-                    return info;
-                })
+        String columnInfo = getColumn(entityClass).stream()
+                .map(this::generateColumnMeta)
                 .collect(Collectors.joining(", "));
 
         return String.format(CREATE_QUERY, getTableName(entityClass), columnInfo);
+    }
+
+    private String generateColumnMeta(TableColumnAttribute tableColumnAttribute) {
+        String columnMeta = tableColumnAttribute.getColumnName() + " " + tableColumnAttribute.getColumnDataType();
+        columnMeta += isNotNullConstraint(tableColumnAttribute);
+        columnMeta += isAutoIncrementConstraint(tableColumnAttribute);
+        columnMeta += isPrimaryKeyConstraint(tableColumnAttribute);
+        return columnMeta;
+    }
+
+    private String isNotNullConstraint(TableColumnAttribute tableColumnAttribute) {
+        return tableColumnAttribute.isNotNull() ? NOT_NULL : "";
+    }
+
+    private String isAutoIncrementConstraint(TableColumnAttribute tableColumnAttribute) {
+        return tableColumnAttribute.isAutoIncrement() ? AUTO_INCREMENT : "";
+    }
+
+    private String isPrimaryKeyConstraint(TableColumnAttribute tableColumnAttribute) {
+        return tableColumnAttribute.isPrimeKey() ? PRIMARY_KEY : "";
     }
 
     // table 이름 가져오기
