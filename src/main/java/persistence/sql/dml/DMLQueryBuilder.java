@@ -12,12 +12,26 @@ public abstract class DMLQueryBuilder {
     protected DMLQueryBuilder(Class<?> clazz) {
         this.clazz = clazz;
     }
+    String setCaluse(Object entity) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(this::isPersistentField)
+                .map(field -> getColumnName(field) + " = " + getFieldValue(entity, field))
+                .collect(Collectors.joining(", "));
+    }
+
+    String idClause (Object entity) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .map(field -> getColumnName(field) + " = " + getFieldValue(entity, field))
+                .collect(Collectors.joining(" AND "));
+    }
 
     String getTableName() {
         if (clazz.isAnnotationPresent(Table.class)) {
             Table table = clazz.getAnnotation(Table.class);
             return !table.name().isEmpty() ? table.name() : clazz.getSimpleName();
         }
+
         return clazz.getSimpleName();
     }
 
