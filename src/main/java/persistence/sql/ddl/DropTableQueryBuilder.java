@@ -1,7 +1,5 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
-import persistence.sql.TableMeta;
 
 public class DropTableQueryBuilder extends DDLQueryBuilder  {
     public static final String DROP_TABLE = "DROP TABLE ";

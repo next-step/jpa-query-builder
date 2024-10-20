@@ -5,7 +5,6 @@ import persistence.entity.impl.FakeEntityManager;
 import persistence.entity.impl.FakeEntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import persistence.entity.impl.FakeEntityManager;
 import jdbc.JdbcTemplate;
 import domain.Person;
 import database.H2;
@@ -16,6 +15,7 @@ import persistence.sql.ddl.QueryBuilder;
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 
 public class FakeEntityManagerTest {
     private FakeEntityManager entityManager;

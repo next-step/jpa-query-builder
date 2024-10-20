@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
 
+
 public class SelectQueryBuilder extends DMLQueryBuilder {
     public SelectQueryBuilder(Class<?> clazz) {
         super(clazz);

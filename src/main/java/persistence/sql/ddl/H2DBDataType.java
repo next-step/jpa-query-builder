@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class H2DBDataType {
     private static final Map<Class<?>, String> typeMap = new HashMap<>();

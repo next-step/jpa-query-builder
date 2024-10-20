@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class DDLQueryBuilderTest {
     private static final Logger logger = LoggerFactory.getLogger(DDLQueryBuilderTest.class);
 

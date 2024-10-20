@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
 
+
 public class UpdateQueryBuilder extends DMLQueryBuilder {
 
     public UpdateQueryBuilder(Class<?> clazz) {

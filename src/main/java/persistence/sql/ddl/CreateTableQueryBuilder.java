@@ -1,6 +1,7 @@
 package persistence.sql.ddl;
 
 import domain.Person;
+
 import persistence.sql.TableColumn;
 import persistence.sql.TableId;
 

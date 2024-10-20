@@ -1,7 +1,6 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 public class DeleteQueryBuilder extends DMLQueryBuilder {
 
