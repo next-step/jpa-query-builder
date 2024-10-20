@@ -87,52 +87,6 @@ public class SimpleQueryBuilder {
 
         StringBuilder query = new StringBuilder();
         return operation.buildQuery(this, query);
-
-
-//        switch (operation) {
-//            case SELECT:
-//                String columnsPart = columns.isEmpty() ? "*" : String.join(", ", columns);
-//                query
-//                    .append("SELECT ")
-//                    .append(columnsPart)
-//                    .append(" FROM ")
-//                    .append(tableName);
-//                break;
-//
-//            case DELETE:
-//                query
-//                    .append("DELETE FROM ")
-//                    .append(tableName);
-//                break;
-//
-//            case INSERT:
-//                if (
-//                    columns.isEmpty() ||
-//                    values.isEmpty() ||
-//                    columns.size() != values.size()
-//                ) {
-//                    throw new IllegalStateException(
-//                        "Columns and values must be specified and must match in count for an INSERT operation.");
-//                }
-//                String columnsPartForInsert = String.join(", ", columns);
-//                String valuesPart = String.join(", ", values);
-//                query
-//                    .append("INSERT INTO ").append(tableName)
-//                    .append(" (").append(columnsPartForInsert).append(") ")
-//                    .append("VALUES (").append(valuesPart).append(")");
-//                break;
-//
-//            default:
-//                throw new UnsupportedOperationException("Operation not supported: " + operation);
-//        }
-//
-//        if (!conditions.isEmpty() && operation.equals(SELECT)) {
-//            query.append(" WHERE ").append(String.join(" ", conditions));
-//        }
-//
-//        return query.toString();
     }
-
-
 
 }
