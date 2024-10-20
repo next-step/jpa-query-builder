@@ -42,7 +42,7 @@ public class Person {
         this.index = index;
     }
 
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
