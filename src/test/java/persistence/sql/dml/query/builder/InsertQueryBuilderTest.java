@@ -13,15 +13,16 @@ public class InsertQueryBuilderTest {
     @Test
     @DisplayName("[성공] Person Entity 테이블에 대한 insert query 검증")
     void insertQuery() {
-        InsertQuery query = new InsertQuery(Person.class);
+        Person person = new Person("person name", 20, "person@email.com", 0);
+        InsertQuery query = new InsertQuery(person);
         InsertQueryBuilder queryBuilder = InsertQueryBuilder.builder(new H2Dialect())
                 .insert(
                         query.tableName(),
-                        query.columnNames()
+                        query.columns()
                 )
-                .values(query.columnNames());
+                .values(query.columns());
         String expectedQuery = """
-                insert into table users (id, nick_name, old, email) values (?, ?, ?, ?)""";
+                insert into users (nick_name, old, email) values ('person name', 20, 'person@email.com')""";
         assertEquals(queryBuilder.build(), expectedQuery);
     }
 
