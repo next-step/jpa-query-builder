@@ -9,6 +9,7 @@
     import jakarta.persistence.Transient;
     import lombok.AllArgsConstructor;
     import lombok.Builder;
+    import lombok.Getter;
     import lombok.NoArgsConstructor;
 
     @Table(name = "users")
@@ -16,6 +17,7 @@
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    @Getter
     public class Person {
 
         @Id
