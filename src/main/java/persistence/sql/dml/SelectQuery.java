@@ -1,28 +1,30 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 import persistence.sql.model.EntityColumnNames;
 import persistence.sql.model.TableName;
 
-public class H2SelectQueryBuilder implements SelectQueryBuilder {
+public class SelectQuery {
 
     private static final String SPACE = " ";
 
     private final Class<?> clazz;
 
-    public H2SelectQueryBuilder(Class<?> clazz) {
-        ExceptionUtil.requireNonNull(clazz);
+    public SelectQuery(Class<?> clazz) {
+        if (clazz == null) {
+            throw new RequiredClassException(ExceptionMessage.REQUIRED_CLASS);
+        }
         this.clazz = clazz;
     }
 
-    @Override
     public String findAll() {
         TableName tableName = new TableName(clazz);
         EntityColumnNames entityColumnNames = new EntityColumnNames(clazz);
         return String.format("SELECT %s FROM %s", entityColumnNames.getColumnNames(), tableName.getValue());
     }
 
-    @Override
+
     public String findById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("id가 존재하지 않습니다.");

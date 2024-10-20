@@ -2,6 +2,8 @@
 package persistence.sql.model;
 
 import jakarta.persistence.Column;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredFieldException;
 
 import java.lang.reflect.Field;
 
@@ -11,7 +13,7 @@ public class EntityColumnName {
 
     public EntityColumnName(Field field) {
         if (field == null) {
-            throw new IllegalArgumentException("field가 존재하지 않습니다.");
+            throw new RequiredFieldException(ExceptionMessage.REQUIRED_FIELD);
         }
         this.value = makeColumnName(field);
     }

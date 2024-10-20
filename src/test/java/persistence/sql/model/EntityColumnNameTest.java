@@ -5,6 +5,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import persistence.sql.ddl.Person;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
+import persistence.sql.exception.RequiredFieldException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -34,8 +37,8 @@ class EntityColumnNameTest {
     @NullSource
     void 객체_생성시_Null_일때(Field field) {
         assertThatThrownBy(() -> new EntityColumnName(field))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("field가 존재하지 않습니다.");
+                .isInstanceOf(RequiredFieldException.class)
+                .hasMessage(ExceptionMessage.REQUIRED_FIELD.getMessage());
     }
 
 

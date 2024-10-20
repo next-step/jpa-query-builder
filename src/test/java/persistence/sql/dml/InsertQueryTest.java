@@ -3,13 +3,14 @@ package persistence.sql.dml;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
-import persistence.sql.ddl.ExceptionUtil;
 import persistence.sql.ddl.Person;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredObjectException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class H2InsertQueryBuilderTest {
+class InsertQueryTest {
 
     @Test
     void 데이터_삽입() {
@@ -18,7 +19,7 @@ class H2InsertQueryBuilderTest {
         final String email = "email@test.com";
         Person person = new Person(name, age, email, null);
 
-        InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
+        InsertQuery insertQueryBuilder = new InsertQuery(person);
         String sql = insertQueryBuilder.makeQuery();
 
         assertThat(sql).isEqualTo("INSERT INTO users (nick_name, old, email) VALUES ('이름', 11, 'email@test.com')");
@@ -27,9 +28,9 @@ class H2InsertQueryBuilderTest {
     @ParameterizedTest
     @NullSource
     void 매개변수_값이_Null_일때(Object object) {
-        assertThatThrownBy(() -> new H2InsertQueryBuilder(object))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ExceptionUtil.OBJECT_NULL_MESSAGE);
+        assertThatThrownBy(() -> new InsertQuery(object))
+                .isInstanceOf(RequiredObjectException.class)
+                .hasMessage(ExceptionMessage.REQUIRED_OBJECT.getMessage());
     }
 
 }

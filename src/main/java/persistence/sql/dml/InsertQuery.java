@@ -2,7 +2,8 @@ package persistence.sql.dml;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredObjectException;
 import persistence.sql.model.EntityColumnName;
 import persistence.sql.model.EntityColumnValue;
 import persistence.sql.model.TableName;
@@ -11,16 +12,17 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class H2InsertQueryBuilder implements InsertQueryBuilder {
+public class InsertQuery {
 
     private final Object object;
 
-    public H2InsertQueryBuilder(Object object) {
-        ExceptionUtil.requireNonNull(object);
+    public InsertQuery(Object object) {
+        if (object == null) {
+            throw new RequiredObjectException(ExceptionMessage.REQUIRED_OBJECT);
+        }
         this.object = object;
     }
 
-    @Override
     public String makeQuery() {
         TableName tableName = new TableName(object.getClass());
 

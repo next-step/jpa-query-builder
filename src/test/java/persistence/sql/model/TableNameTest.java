@@ -3,6 +3,8 @@ package persistence.sql.model;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.Person;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 import persistence.sql.model.TableName;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,8 +22,8 @@ class TableNameTest {
     @Test
     void 테이블_이름_생성시_Class가_Null_일경우() {
         assertThatThrownBy(() -> new TableName(null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("class가 존재하지 않습니다.");
+                .isInstanceOf(RequiredClassException.class)
+                .hasMessage(ExceptionMessage.REQUIRED_CLASS.getMessage());
     }
 
 }

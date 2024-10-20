@@ -1,18 +1,21 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredObjectException;
 import persistence.sql.model.EntityColumnNames;
 import persistence.sql.model.EntityColumnValues;
 import persistence.sql.model.TableName;
 
-public class H2DeleteQueryBuilder implements DeleteQueryBuilder {
+public class DeleteQuery {
 
     private static final String SPACE = " ";
     private final Object object;
     private final Class<?> clazz;
 
-    public H2DeleteQueryBuilder(Object object) {
-        ExceptionUtil.requireNonNull(object);
+    public DeleteQuery(Object object) {
+        if (object == null) {
+            throw new RequiredObjectException(ExceptionMessage.REQUIRED_OBJECT);
+        }
 
         if (object instanceof Class) {
             throw new IllegalArgumentException("잘못된 Object 타입입니다.");
@@ -22,12 +25,9 @@ public class H2DeleteQueryBuilder implements DeleteQueryBuilder {
         this.object = object;
     }
 
-    @Override
-    public String delete() {
+    public String makeQuery() {
         TableName tableName = new TableName(clazz);
 
-        EntityColumnValues entityColumnValues = new EntityColumnValues(object);
-        String id = entityColumnValues.getField("id");
         StringBuilder deleteStringBuilder = new StringBuilder();
         deleteStringBuilder.append("DELETE FROM");
         deleteStringBuilder.append(SPACE);

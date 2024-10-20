@@ -1,12 +1,12 @@
 package persistence.sql.model;
 
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.ExceptionUtil;
 import persistence.sql.ddl.Person;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class EntityColumnNamesTest {
 
@@ -21,8 +21,8 @@ class EntityColumnNamesTest {
     @Test
     void 엔티티_컬럼_Class_NULL로_생성_실패() {
         assertThatThrownBy(() -> new EntityColumnNames(null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ExceptionUtil.CLASS_NULL_MESSAGE);
+                .isInstanceOf(RequiredClassException.class)
+                .hasMessage(ExceptionMessage.REQUIRED_CLASS.getMessage());
     }
 
 

@@ -1,14 +1,14 @@
 package persistence.sql.model;
 
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
+import persistence.sql.exception.RequiredIdException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EntityColumnNames {
@@ -17,7 +17,9 @@ public class EntityColumnNames {
     private final Class<?> clazz;
 
     public EntityColumnNames(Class<?> clazz) {
-        ExceptionUtil.requireNonNull(clazz);
+        if (clazz == null) {
+            throw new RequiredClassException(ExceptionMessage.REQUIRED_CLASS);
+        }
 
         this.clazz = clazz;
         this.entityColumnNames = Arrays.stream(clazz.getDeclaredFields())
@@ -35,7 +37,7 @@ public class EntityColumnNames {
     public EntityColumnName getIdColumnName() {
         Field idField = Arrays.stream(this.clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Id 필드가 존재하지 않습니다."));
+                .findFirst().orElseThrow(() -> new RequiredIdException(ExceptionMessage.REQUIRED_ID));
 
         return new EntityColumnName(idField);
     }

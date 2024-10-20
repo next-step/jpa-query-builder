@@ -1,13 +1,16 @@
 package persistence.sql.model;
 
 import jakarta.persistence.Table;
-import persistence.sql.ddl.ExceptionUtil;
+import persistence.sql.exception.ExceptionMessage;
+import persistence.sql.exception.RequiredClassException;
 
 public class TableName {
     private final String value;
 
     public TableName(Class<?> clazz) {
-        ExceptionUtil.requireNonNull(clazz);
+        if (clazz == null) {
+            throw new RequiredClassException(ExceptionMessage.REQUIRED_CLASS);
+        }
 
         this.value = getTableName(clazz);
     }

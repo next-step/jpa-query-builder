@@ -5,7 +5,10 @@ import database.H2;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.sql.Dialect;
+import persistence.sql.H2Dialect;
 import persistence.sql.ddl.*;
+import persistence.sql.ddl.QueryBuilder;
 import persistence.sql.dml.*;
 
 import java.util.List;
@@ -16,20 +19,21 @@ public class Application {
     public static void main(String[] args) {
         logger.info("Starting application...");
         try {
-            AbstractCreateQueryBuilder createQueryBuilder = new H2CreateQueryBuilder(Person.class);
-            DropQueryBuilder dropQueryBuilder = new H2DropQueryBuilder(Person.class);
+            Dialect dialect = new H2Dialect();
+            QueryBuilder createQueryBuilder = new CreateQueryBuilder(Person.class, dialect);
 
+            QueryBuilder dropQueryBuilder = new DropQueryBuilder(Person.class);
             final DatabaseServer server = new H2();
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            jdbcTemplate.execute(createQueryBuilder.makeQuery());
+            jdbcTemplate.execute(createQueryBuilder.build());
 
             Person person = new Person("name", 10, "test@email.com", 1);
-            InsertQueryBuilder insertQueryBuilder = new H2InsertQueryBuilder(person);
+            InsertQuery insertQueryBuilder = new InsertQuery(person);
             jdbcTemplate.execute(insertQueryBuilder.makeQuery());
 
-            SelectQueryBuilder selectQueryBuilder = new H2SelectQueryBuilder(Person.class);
+            SelectQuery selectQueryBuilder = new SelectQuery(Person.class);
             List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(), resultSet -> {
                 String email = resultSet.getString("email");
                 int age = resultSet.getInt("old");
@@ -46,8 +50,8 @@ public class Application {
                 return new Person(id, nickname, age, email);
             });
 
-            DeleteQueryBuilder deleteQueryBuilder = new H2DeleteQueryBuilder(getByIdPerson);
-            jdbcTemplate.execute(deleteQueryBuilder.delete());
+            DeleteQuery deleteQueryBuilder = new DeleteQuery(getByIdPerson);
+            jdbcTemplate.execute(deleteQueryBuilder.makeQuery());
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
