@@ -32,4 +32,4 @@
       - [x] 1 : Entity find 구현
       - [x] 2 : Entity Persists 구현
       - [x] 3 : Entity Remove 구현
-      - [] 4 : Entity Update 구현
+      - [x] 4 : Entity Update 구현
