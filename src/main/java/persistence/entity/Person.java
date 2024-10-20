@@ -26,8 +26,10 @@ public class Person {
 
     }
 
-    public Person(String name, Integer age, String email, Integer index) {
-        this(null, name, age, email, index);
+    public Person(String name, Integer age, String email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
     }
 
     public Person(Long id, String name, Integer age, String email) {
@@ -44,6 +46,14 @@ public class Person {
 
     public String getName() {
         return this.name;
+    }
+
+    public Integer getAge() {
+        return this.age;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
 }

@@ -13,7 +13,7 @@ public class InsertQueryBuilderTest {
     @Test
     @DisplayName("[성공] Person Entity 테이블에 대한 insert query 검증")
     void insertQuery() {
-        Person person = new Person("person name", 20, "person@email.com", 0);
+        Person person = new Person("person name", 20, "person@email.com");
         InsertQuery query = new InsertQuery(person);
         InsertQueryBuilder queryBuilder = InsertQueryBuilder.builder(new H2Dialect())
                 .insert(

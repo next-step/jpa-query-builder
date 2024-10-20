@@ -33,7 +33,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void persist(Object entity) {
-        InsertQuery query = new InsertQuery(entity.getClass());
+        InsertQuery query = new InsertQuery(entity);
         String queryString = InsertQueryBuilder.builder(new H2Dialect())
                 .insert(query.tableName(), query.columns())
                 .values(query.columns())
