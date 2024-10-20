@@ -20,7 +20,7 @@
 + GeneratedValue 어노테이션 정보 가져오기
 + Transient 어노테이션 정보 가져오기
 
-### 2단계 - QueryBuilder DML
+### 3단계 - QueryBuilder DML
 + Insert 쿼리 문자열 생성하기
 + FindAll 쿼리 문자열 생성하기
 + FindAll 호출 시 List로 응답하기
@@ -32,3 +32,9 @@
 + Person 1L 데이터를 삭제한다.
 + Person 1L 데이터를 가져온다.
 + Person 데이터를 전체 가져온다.
+
+### 3단계 - QueryBuilder DML
++ find를 이용하여 단일 데이터를 select한다.
++ persist를 이용하여 데이터를 insert한다.
++ remove를 이용하여 데이터를 delete한다.
++ update를 이용하여 데이터를 수정한다.

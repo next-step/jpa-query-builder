@@ -1,4 +1,6 @@
-package builder.h2.dml;
+package builder.dml;
+
+import util.StringUtil;
 
 public class DMLColumnData {
 
@@ -7,14 +9,14 @@ public class DMLColumnData {
     private Object columnValue;
     private boolean isPrimaryKey;
 
-    public DMLColumnData(String columnName, Class<?> columnType, Object columnValue, boolean isPrimaryKey) {
+    private DMLColumnData(String columnName, Class<?> columnType, Object columnValue, boolean isPrimaryKey) {
         this.columnName = columnName;
         this.columnType = columnType;
         this.columnValue = columnValue;
         this.isPrimaryKey = isPrimaryKey;
     }
 
-    public DMLColumnData(String columnName, Class<?> columnType, boolean isPrimaryKey) {
+    private DMLColumnData(String columnName, Class<?> columnType, boolean isPrimaryKey) {
         this.columnName = columnName;
         this.columnType = columnType;
         this.isPrimaryKey = isPrimaryKey;
@@ -54,5 +56,14 @@ public class DMLColumnData {
 
     public boolean isPrimaryKey() {
         return isPrimaryKey;
+    }
+
+    //Value가 String.class 이면 작은따옴표로 묶어준다.
+    public String getColumnValueByType() {
+        if (this.columnType == String.class) {
+            return StringUtil.wrapSingleQuote(this.columnValue);
+        }
+
+        return String.valueOf(this.columnValue);
     }
 }

@@ -1,5 +1,8 @@
-import builder.QueryBuilderDDL;
-import builder.h2.ddl.H2QueryBuilderDDL;
+import builder.ddl.builder.CreateQueryBuilder;
+import builder.ddl.builder.DropQueryBuilder;
+import builder.ddl.DDLBuilderData;
+import builder.ddl.dataType.DB;
+import builder.ddl.dataType.H2DataType;
 import database.H2DBConnection;
 import entity.Person;
 import jdbc.JdbcTemplate;
@@ -28,8 +31,8 @@ public class ApplicationTest {
     //정확한 테스트를 위해 메소드마다 테이블 DROP
     @AfterEach
     void tearDown() {
-        QueryBuilderDDL queryBuilderDDL = new H2QueryBuilderDDL();
-        String dropQuery = queryBuilderDDL.buildDropQuery(Person.class);
+        DropQueryBuilder queryBuilder = new DropQueryBuilder();
+        String dropQuery = queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2));
         jdbcTemplate.execute(dropQuery);
         this.h2DBConnection.stop();
     }
@@ -38,8 +41,8 @@ public class ApplicationTest {
     @Test
     void createUsersTableTest() {
         //given
-        QueryBuilderDDL queryBuilderDDL = new H2QueryBuilderDDL();
-        String createQuery = queryBuilderDDL.buildCreateQuery(Person.class);
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
+        String createQuery = queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2));
         //when
         jdbcTemplate.execute(createQuery);
 

@@ -5,13 +5,14 @@ import jdbc.JdbcTemplate;
 import java.sql.SQLException;
 
 public class H2DBConnection {
+    private final DatabaseServer server;
 
-    private DatabaseServer server;
+    public H2DBConnection() throws SQLException {
+        this.server = new H2();
+    }
 
     public JdbcTemplate start() throws SQLException {
-        this.server = new H2();
         server.start();
-
         return new JdbcTemplate(server.getConnection());
     }
 
