@@ -54,15 +54,6 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
         return tableColumnAttribute.getIsPrimeKey() ? PRIMARY_KEY : "";
     }
 
-    // table 이름 가져오기
-    private String getTableName(Class<?> entityClass) {
-        if (entityClass.isAnnotationPresent(Table.class)) {
-            Table table = entityClass.getAnnotation(Table.class);
-            return table.name();
-        }
-        return entityClass.getSimpleName();
-    }
-
     //조립된 컬럼 가져오기
     private List<TableColumnAttribute> getColumn(Class<?> entityClass) {
         TableColumnAttribute tableColumnAttribute = new TableColumnAttribute();
