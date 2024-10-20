@@ -1,36 +1,56 @@
-package builder.ddl.h2;
+package builder.ddl;
 
-import builder.ddl.DDLBuilder;
-import builder.ddl.DDLColumnData;
-import builder.ddl.DDLQueryBuilder;
-import builder.ddl.DDLType;
-import builder.ddl.h2.builder.H2CreateQueryBuilder;
-import builder.ddl.h2.builder.H2DropQueryBuilder;
+import builder.ddl.dataType.DB;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class H2DDLBuilder implements DDLBuilder {
+public class DDLBuilderData {
 
     private final static String ID_ANNOTATION_OVER_ONE = "@Id 어노테이션은 한개를 초과할수 없습니다.";
     private final static String NOT_EXIST_ENTITY_ANNOTATION = "@Entity 어노테이션이 존재하지 않습니다.";
 
-    EnumMap<DDLType, DDLQueryBuilder> ddlEnumMap = new EnumMap<>(DDLType.class);
+    private final static String PRIMARY_KEY = " PRIMARY KEY";
+    private final static String NOT_NULL = " NOT NULL";
+    private final static String AUTO_INCREMENT = " AUTO_INCREMENT";
+    private final static String COMMA = ", ";
+    private final static String BLANK = " ";
 
-    public H2DDLBuilder() {
-        ddlEnumMap.put(DDLType.CREATE, new H2CreateQueryBuilder());
-        ddlEnumMap.put(DDLType.DROP, new H2DropQueryBuilder());
+    private final String tableName;
+    private final List<DDLColumnData> columns;
+    private final DB db;
+
+    private <T> DDLBuilderData(Class<T> clazz, DB db) {
+        confirmEntityAnnotation(clazz);
+        this.db = db;
+        this.tableName = getTableName(clazz);
+        this.columns = getDDLColumnData(clazz);
     }
 
-    @Override
-    public <T> String queryBuilder(DDLType ddlType, Class<T> clazz) {
-        confirmEntityAnnotation(clazz);
-        return this.ddlEnumMap.get(ddlType).buildQuery(getTableName(clazz), getDDLColumnData(clazz));
+    public static <T> DDLBuilderData createDDLBuilderData(Class<T> clazz, DB db) {
+        return new DDLBuilderData(clazz, db);
+    }
+
+    // 테이블 열 정의 생성
+    public String getColumnDefinitions() {
+        return this.columns.stream()
+                .map(column -> {
+                    String definition = column.columnName() + BLANK + column.columnDataType();
+                    // primary key인 경우 "PRIMARY KEY" 추가
+                    if (column.isNotNull()) definition += NOT_NULL; //false면 NOT_NULL 조건 추가
+                    if (column.isAutoIncrement()) definition += AUTO_INCREMENT; //true면 AutoIncrement 추가
+                    if (column.isPrimaryKey()) definition += PRIMARY_KEY; //PK면 PK조건 추가
+                    return definition;
+                })
+                .collect(Collectors.joining(COMMA));
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 
     //변수들의 정보를 가져온다.
@@ -57,7 +77,8 @@ public class H2DDLBuilder implements DDLBuilder {
         return DDLColumnData.createPk(
                 field.getName(),
                 field.getType(),
-                confirmGeneratedValueAnnotation(field)
+                confirmGeneratedValueAnnotation(field),
+                this.db
         );
     }
 
@@ -75,13 +96,16 @@ public class H2DDLBuilder implements DDLBuilder {
             return DDLColumnData.createColumn(
                     columnName,
                     field.getType(),
-                    !column.nullable());
+                    !column.nullable(),
+                    this.db
+            );
         }
 
         return DDLColumnData.createColumn(
                 columnName,
                 field.getType(),
-                !isNullable
+                !isNullable,
+                this.db
         );
     }
 

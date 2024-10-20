@@ -1,6 +1,8 @@
 package builder.ddl;
 
-import builder.ddl.h2.H2DataType;
+import builder.ddl.dataType.DB;
+import builder.ddl.dataType.DBDataType;
+import builder.ddl.dataType.DataType;
 
 public record DDLColumnData(
         String columnName,
@@ -10,11 +12,11 @@ public record DDLColumnData(
         boolean isAutoIncrement
 ) {
 
-    //PK 컬럼을 생성한다.
-    public static DDLColumnData createPk(String columnName, Class<?> columnDataType, boolean isAutoIncrement) {
+    // PK 컬럼을 생성한다.
+    public static DDLColumnData createPk(String columnName, Class<?> columnDataType, boolean isAutoIncrement, DB db) {
         return new DDLColumnData(
                 columnName,
-                H2DataType.findH2DataTypeByDataType(columnDataType),
+                DBDataType.findDataType(db, columnDataType),
                 true,
                 true,
                 isAutoIncrement
@@ -22,10 +24,10 @@ public record DDLColumnData(
     }
 
     //일반 컬럼을 생성한다.
-    public static DDLColumnData createColumn(String columnName, Class<?> columnDataType, boolean isNotNull) {
+    public static DDLColumnData createColumn(String columnName, Class<?> columnDataType, boolean isNotNull, DB db) {
         return new DDLColumnData(
                 columnName,
-                H2DataType.findH2DataTypeByDataType(columnDataType),
+                DBDataType.findDataType(db, columnDataType),
                 false,
                 isNotNull,
                 false
