@@ -22,11 +22,4 @@ public class InsertQueryBuilder extends DMLQueryBuilder{
 
             return "INSERT INTO " + tableName + " (" + columns + ") VALUES (" + values + ");";
     }
-
-    public static void main(String[] args) {
-        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);
-        System.out.println(insertQueryBuilder.insert(Person.of(null,"John", 25,"john@gmail.com",1)));
-
-
-    }
 }
