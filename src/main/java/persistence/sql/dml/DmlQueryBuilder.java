@@ -45,7 +45,7 @@ public class DmlQueryBuilder {
                 .map(entityColumn -> String.format(
                         "%s = %s",
                         dialect.getIdentifierQuoted(entityColumn.getName()),
-                        dialect.getValueQuoted(entityColumn.getValue().getValue()))
+                        dialect.getValueQuoted(entityColumn.getValue()))
                 )
                 .collect(Collectors.joining(", "));
 
@@ -64,7 +64,6 @@ public class DmlQueryBuilder {
                 .toList();
         List<Object> insertingValues = insertingColumns.stream()
                 .map(EntityColumn::getValue)
-                .map(Value::getValue)
                 .toList();
 
         String tableName = table.getName();
@@ -145,7 +144,7 @@ public class DmlQueryBuilder {
 
     private List<Map<String, Object>> getDefaultEqualFilters(EntityTable table) {
         return table.getPrimaryColumns().stream()
-                .map(column -> Map.of(column.getName(), column.getValue().getValue()))
+                .map(column -> Map.of(column.getName(), column.getValue()))
                 .toList();
     }
 
