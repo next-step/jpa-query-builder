@@ -1,6 +1,8 @@
 package persistence.sql.dml;
 
 import jakarta.persistence.*;
+import persistence.sql.TableColumn;
+import persistence.sql.TableMeta;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -8,9 +10,11 @@ import java.util.stream.Collectors;
 
 public abstract class DMLQueryBuilder {
     private final Class<?> clazz;
+    TableMeta tableMeta;
 
     protected DMLQueryBuilder(Class<?> clazz) {
         this.clazz = clazz;
+        this.tableMeta = new TableMeta(clazz);
     }
 
     String setClause(Object entity) {
@@ -29,18 +33,12 @@ public abstract class DMLQueryBuilder {
     }
 
     String getTableName() {
-        if (clazz.isAnnotationPresent(Table.class)) {
-            Table table = clazz.getAnnotation(Table.class);
-            return !table.name().isEmpty() ? table.name() : clazz.getSimpleName();
-        }
-        return clazz.getSimpleName();
+        return tableMeta.getTableName();
     }
 
     String columnsClause() {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(this::isPersistentField)
-                .map(this::getColumnName)
-                .collect(Collectors.joining(", "));
+        return tableMeta.getTableColumn().stream()
+                .map(TableColumn::getColumnName).reduce((s1, s2) -> s1 + ", " + s2).orElseThrow();
     }
 
     String valueClause(Object entity) {
