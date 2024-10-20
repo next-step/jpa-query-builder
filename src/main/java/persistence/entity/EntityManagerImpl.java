@@ -27,7 +27,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> void persist(T entity) {
-
+        jdbcTemplate.execute(queryBuilder.buildInsertQuery(entity));
     }
 
     @Override

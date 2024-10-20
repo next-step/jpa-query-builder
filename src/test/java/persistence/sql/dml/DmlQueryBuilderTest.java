@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.model.exception.ColumnNotFoundException;
 import persistence.sql.dialect.DialectFactory;
-import persistence.sql.fixture.PersonWithTransientAnnotation;
+import persistence.fixture.PersonWithTransientAnnotation;
 
 import java.util.LinkedHashMap;
 import java.util.List;

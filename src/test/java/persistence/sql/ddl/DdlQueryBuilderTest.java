@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.dialect.DialectFactory;
-import persistence.sql.fixture.Person;
-import persistence.sql.fixture.PersonWithAnnotations;
-import persistence.sql.fixture.PersonWithTransientAnnotation;
+import persistence.fixture.Person;
+import persistence.fixture.PersonWithAnnotations;
+import persistence.fixture.PersonWithTransientAnnotation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

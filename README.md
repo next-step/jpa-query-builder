@@ -118,7 +118,7 @@
   ```
   <T> T find(Class<T> clazz, Long Id);
   ```
-- [ ] EntityManager 인터페이스를 생성 후 persist 구현
+- [x] EntityManager 인터페이스를 생성 후 persist 구현
   ```
   void persist(Object entity);
   ```

@@ -1,4 +1,4 @@
-package persistence.sql.fixture;
+package persistence.fixture;
 
 import jakarta.persistence.*;
 
