@@ -131,4 +131,38 @@ public class EntityManagerTest {
             });
         }
     }
+
+    @Nested
+    @DisplayName("update 테스트")
+    class UpdateTest {
+        @Test
+        @DisplayName("주어진 엔티티를 디비에서 업데이트한다.")
+        void succeedToUpdate() {
+            // given
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
+                    1L, "홍길동", 20, "test@test.com", 1
+            );
+            entityManager.persist(person);
+
+            // when
+            person.setAge(30);
+            entityManager.update(person);
+
+            // then
+            PersonWithTransientAnnotation foundPerson = entityManager.findById(PersonWithTransientAnnotation.class, 1L);
+            assertEquals(30, foundPerson.getAge());
+        }
+
+        @Test
+        @DisplayName("디비에 존재하지 않는 엔티티에 대해 업데이트하려 하면 에러가 발생한다.")
+        void failToUpdate() {
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
+                    1L, "홍길동", 20, "test@test.com", 1
+            );
+
+            assertThrows(ColumnInvalidException.class, () -> {
+                entityManager.update(person);
+            });
+        }
+    }
 }
