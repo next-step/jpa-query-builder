@@ -1,8 +1,8 @@
 package orm.dsl.step.dml;
 
-import orm.QueryExecutor;
-import orm.dsl.QueryBuilder;
+import orm.dsl.QueryExecutor;
+import orm.dsl.QueryExtractor;
 
-public interface ConditionStep extends QueryBuilder, QueryExecutor {
+public interface ConditionStep extends QueryExtractor, QueryExecutor {
 
 }

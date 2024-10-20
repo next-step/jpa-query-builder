@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import orm.exception.InvalidEntityException;
+import persistence.sql.ddl.Person;
 
 import java.util.List;
 
@@ -87,25 +88,3 @@ class InvalidDummyEntity {
     @Transient
     private String thisIdNotField2; // 사용
 }
-
-@Entity
-@Table(name = "person")
-class Person {
-
-    @Id
-    private Long id;
-
-    private String name;
-
-    private int age;
-
-    public Person() {
-    }
-
-    public Person(Long id, int age, String name) {
-        this.age = age;
-        this.id = id;
-        this.name = name;
-    }
-}
-

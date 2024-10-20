@@ -1,14 +1,18 @@
-package orm;
+package orm.dsl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import orm.TableEntity;
+import orm.TableField;
 import orm.dsl.condition.Condition;
+import orm.dsl.condition.Conditions;
+import persistence.sql.ddl.Person;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static orm.util.ConditionUtils.eq;
+import static orm.dsl.DSL.eq;
 
 public class QueryRendererTest {
 
@@ -69,6 +73,21 @@ public class QueryRendererTest {
     }
 
     @Test
+    @DisplayName("컬럼명 & 값 pair 리스트 렌더링 테스트")
+    void 컬럼명_과_값_페어리스트_렌더링_테스트() {
+
+        // given
+        QueryRenderer queryRenderer = new QueryRenderer();
+        TableEntity<Person> tableEntity = new TableEntity<>(new Person(1L, 30, "설동민"));
+
+        // when
+        String query = queryRenderer.joinColumnAndValuePairWithComma(tableEntity.getNonIdFields());
+
+        // then
+        assertThat(query).isEqualTo("name='설동민',age=30");
+    }
+
+    @Test
     @DisplayName("조건절 렌더링 테스트")
     void 조건절_렌더링_테스트() {
 
@@ -81,7 +100,7 @@ public class QueryRendererTest {
         );
 
         // when
-        String query = queryRenderer.renderWhere(conditionList);
+        String query = queryRenderer.renderWhere(new Conditions(conditionList));
 
         // then
         assertThat(query).isEqualTo(" WHERE id = 1 AND name = '설동민' AND age = 30");

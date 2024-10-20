@@ -4,7 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import orm.TableEntity;
 import orm.TableField;
 import orm.TablePrimaryField;
-import orm.dsl.QueryBuilder;
+import orm.dsl.QueryExtractor;
 import orm.dsl.QueryRunner;
 import orm.dsl.sql_dialect.h2.ColumnTypeMapper;
 import orm.dsl.step.ddl.CreateTableStep;
@@ -27,14 +27,14 @@ public abstract class CreateTableImpl<E> implements CreateTableStep {
     }
 
     @Override
-    public QueryBuilder ifNotExist() {
+    public QueryExtractor ifNotExist() {
         this.ifNotExist = true;
         return this;
     }
 
     @Override
     public void execute() {
-        queryRunner.execute(build());
+        queryRunner.execute(extractSql());
     }
 
     protected String renderColumns(TableField column, String mappedRDBType) {

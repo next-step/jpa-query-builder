@@ -8,46 +8,51 @@ import orm.dsl.step.ddl.DropTableStep;
 import orm.dsl.step.dml.DeleteFromStep;
 import orm.dsl.step.dml.InsertIntoStep;
 import orm.dsl.step.dml.SelectFromStep;
+import orm.dsl.step.dml.UpdateStep;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class ImplQueryBuilder {
+public class DialectStatementLocator {
 
     private static final DialectStatementMap statementMap = new DialectStatementMap();
     private final SQLDialect dialect;
     private final QueryRunner queryRunner;
 
-    public ImplQueryBuilder(SQLDialect dialect) {
+    public DialectStatementLocator(SQLDialect dialect) {
         this.dialect = dialect;
         this.queryRunner = new QueryRunner();
     }
 
-    public ImplQueryBuilder(SQLDialect dialect, QueryRunner queryRunner) {
+    public DialectStatementLocator(SQLDialect dialect, QueryRunner queryRunner) {
         this.dialect = dialect;
         this.queryRunner = queryRunner;
     }
 
-    public <E> CreateTableStep buildCreateTable(TableEntity<E> tableEntity) {
+    public <E> CreateTableStep createTable(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getCreateTableImpl(dialect));
     }
 
-    public <E> DropTableStep buildDropTable(TableEntity<E> tableEntity) {
+    public <E> DropTableStep dropTable(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getDropTableImpl(dialect));
     }
 
-    public <E> InsertIntoStep buildInsert(TableEntity<E> tableEntity) {
+    public <E> InsertIntoStep<E> insert(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getInsertIntoImpl(dialect));
     }
 
-    public <E> SelectFromStep<E> buildSelect(TableEntity<E> tableEntity) {
+    public <E> SelectFromStep<E> selectFrom(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getSelectImpl(dialect));
     }
 
-    public <E> DeleteFromStep buildDelete(TableEntity<E> tableEntity) {
+    public <E> DeleteFromStep deleteFrom(TableEntity<E> tableEntity) {
         return newInstanceOfImpl(tableEntity, statementMap.getDeleteIntoImpl(dialect));
     }
 
-    private <E, T extends QueryBuilder> T newInstanceOfImpl(TableEntity<E> tableEntity, Class<T> implClass) {
+    public <E> UpdateStep<E> update(TableEntity<E> tableEntity) {
+        return newInstanceOfImpl(tableEntity, statementMap.getUpdateImpl(dialect));
+    }
+
+    private <E, T extends QueryExtractor> T newInstanceOfImpl(TableEntity<E> tableEntity, Class<T> implClass) {
         try {
             return implClass.getDeclaredConstructor(TableEntity.class, QueryRunner.class).newInstance(tableEntity, queryRunner);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |

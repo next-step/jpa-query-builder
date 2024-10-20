@@ -15,6 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 엔티티 클래스로부터 테이블 정보를 추출한 클래스
@@ -39,7 +41,7 @@ public class TableEntity<E> {
         this.jpaSettings = settings;
         this.tableName = extractTableName(entityClass);
         this.tableClass = entityClass;
-        this.entity = createNewInstance(entityClass);
+        this.entity = createNewInstanceByDefaultConstructor(entityClass);
         this.id = extractId(entityClass);
         this.allFields = extractAllPersistenceFields(entityClass);
     }
@@ -75,6 +77,19 @@ public class TableEntity<E> {
         return id;
     }
 
+    public boolean hasIdValue() {
+        return id.getFieldValue() != null;
+    }
+
+    public void setIdValue(Object idValue) {
+        id.setIdValue(idValue);
+    }
+
+    public boolean hasDbGeneratedId() {
+        GenerationType idGenerationType = getIdGenerationType();
+        return idGenerationType == GenerationType.IDENTITY;
+    }
+
     // id(pk) 생성 전략
     public GenerationType getIdGenerationType() {
         GeneratedValue generatedValue = getId().getGeneratedValue();
@@ -103,7 +118,7 @@ public class TableEntity<E> {
     /**
      * 엔티티가 아닌 경우 예외 발생
      *
-     * @param entityClass
+     * @param entityClass 엔티티 클래스
      * @throws InvalidEntityException 엔티티가 아닌 경우
      */
     private void throwIfNotEntity(Class<E> entityClass) {
@@ -169,7 +184,7 @@ public class TableEntity<E> {
         return list;
     }
 
-    private E createNewInstance(Class<E> entityClass) {
+    private E createNewInstanceByDefaultConstructor(Class<E> entityClass) {
         try {
             Constructor<E> defaultConstructor = entityClass.getDeclaredConstructor();
             defaultConstructor.setAccessible(true);
@@ -179,6 +194,49 @@ public class TableEntity<E> {
         ) {
             logger.error(e.getMessage());
             throw new EntityHasNoDefaultConstructorException("entity must contain default constructor");
+        }
+    }
+
+    public E getEntity() {
+        return entity;
+    }
+
+    /**
+     * 모든 필드를 주어진 필드로 교체한다.
+     * @param tableFields 교체할 필드
+     */
+    public void replaceAllFields(List<? extends TableField> tableFields) {
+        Map<String, Object> fieldValueMap = tableFields.stream()
+                .collect(Collectors.toMap(TableField::getFieldName, TableField::getFieldValue));
+
+        for (TableField field : allFields) {
+            Object fieldValue = fieldValueMap.get(field.getFieldName());
+            field.setFieldValue(fieldValue);
+        }
+    }
+
+    /**
+     * TableField에 세팅된 값들을 엔티티 클래스의 값에 적용한다.
+     */
+    public void syncFieldValueToEntity() {
+
+        // non-id field들의 fieldName과 fieldValue를 매핑
+        Map<String, Object> classFieldNameMap = this.getNonIdFields().stream()
+                .collect(Collectors.toMap(TableField::getClassFieldName, TableField::getFieldValue));
+
+        // id field들의 fieldName과 fieldValue를 매핑
+        classFieldNameMap.put(id.getClassFieldName(), id.getFieldValue());
+
+        for (Field declaredField : tableClass.getDeclaredFields()) {
+            declaredField.setAccessible(true);
+            try {
+                Object fieldValue = classFieldNameMap.get(declaredField.getName());
+                if (fieldValue != null) {
+                    declaredField.set(entity, fieldValue);
+                }
+            } catch (IllegalAccessException e) {
+                logger.error("Cannot access field: " + declaredField.getName(), e);
+            }
         }
     }
 }

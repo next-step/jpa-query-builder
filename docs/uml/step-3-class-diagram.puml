@@ -1,23 +1,16 @@
 @startuml
-interface QueryBuilder {
-    + String build()
+interface QueryExtractor {
+    + String extractSql()
 }
 
 ' QueryBuilder 들
-class DDLQueryBuilder {
+class QueryBuilder {
     + CreateTableStep createTable ()
     + DropTableStep dropTable ()
-}
-
-class DQLQueryBuilder {
     + SelectFromStep selectFrom ()
-}
-
-class DMLQueryBuilder {
     + InsertIntoStep insertFrom ()
     + DeleteFromStep deleteFrom ()
 }
-
 
 ' 이거도 그리면 좋지만 안이쁘니 숨기자...
 'DDLQueryBuilder -[hidden]..> CreateTableStep:returns
@@ -43,7 +36,7 @@ interface WhereForFetchStep extends ConditionForFetchStep {
 
 }
 
-interface ConditionForFetchStep extends QueryFetcher, QueryBuilder {
+interface ConditionForFetchStep extends QueryFetcher, QueryExtractor {
 
 }
 
@@ -51,16 +44,24 @@ interface DeleteFromStep extends WhereStep {
 
 }
 
-
 interface WhereStep extends ConditionStep {
 
 }
 
-interface InsertIntoStep extends QueryBuilder, QueryExecutor {
+interface InsertIntoStep extends InsertIntoValuesStep, BulkInsertIntoValuesStep {
 
 }
 
-interface ConditionStep extends QueryBuilder, QueryExecutor {
+interface BulkInsertIntoValuesStep extends QueryExtractor, QueryExecutor {
+
+}
+
+interface InsertIntoValuesStep extends ReturningStep {
+
+}
+
+
+interface ConditionStep extends QueryExtractor, QueryExecutor {
 
 }
 
@@ -72,8 +73,8 @@ class H2DeleteImpl extends DeleteImpl {
 
 }
 
-interface DDLTableIfNotExistStep extends QueryBuilder, QueryExecutor {
-    + QueryBuilder ifNotExist()
+interface DDLTableIfNotExistStep extends QueryExtractor, QueryExecutor {
+    + QueryExtractor ifNotExist()
 }
 
 interface QueryExecutor {
@@ -116,6 +117,21 @@ abstract class SelectImpl extends SelectFromStep {
 }
 
 class H2SelectImpl implements SelectImpl {
+
+}
+
+' UPDATE
+interface UpdateStep extends WhereStep {
+
+}
+
+abstract class UpdateImpl implements UpdateStep {
+    - JpaSettings
+    - TableEntity<ENTITY> tableEntity
+}
+
+
+interface ReturningStep extends QueryExtractor, QueryExecutor {
 
 }
 

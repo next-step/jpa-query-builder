@@ -1,7 +1,7 @@
-package orm;
+package orm.dsl;
 
-import orm.dsl.condition.Condition;
-import orm.util.CollectionUtils;
+import orm.TableField;
+import orm.dsl.condition.Conditions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,16 @@ public class QueryRenderer {
     }
 
     /**
+     * 컬럼과 값의 쌍을 콤마로 구분하여 반환
+     * 업데이트 구문에 사용된다.
+     */
+    public String joinColumnAndValuePairWithComma(List<? extends TableField> columns) {
+        return columns.stream()
+                .map(column -> "%s=%s".formatted(column.getFieldName(), renderFieldValue(column)))
+                .collect(Collectors.joining(","));
+    }
+
+    /**
      * 대량 삽입 SQL 문에 대한 값의 문자열 표현을 렌더링 합니다.
      *
      * <p>예를 들어, 이러한 형태가 됩니다 : (id,name,age) </p>
@@ -27,7 +37,7 @@ public class QueryRenderer {
         List<String> result = new ArrayList<>(columns.size());
         for (List<? extends TableField> inertValue : columns) {
             result.add("(%s)".formatted(inertValue.stream()
-                    .map(TableField::getFieldValue)
+                    .map(this::renderFieldValue)
                     .map(String::valueOf)
                     .collect(Collectors.joining(",")))
             );
@@ -36,14 +46,19 @@ public class QueryRenderer {
         return String.join(", ", result);
     }
 
-    public String renderWhere(List<Condition> conditions) {
-        if (CollectionUtils.isEmpty(conditions)) {
+    private Object renderFieldValue(TableField tableField) {
+        final Object fieldValue = tableField.getFieldValue();
+        if (fieldValue instanceof String) {
+            return "'%s'".formatted(fieldValue);
+        }
+        return fieldValue;
+    }
+
+    public String renderWhere(Conditions conditions) {
+        if (conditions.hasNoCondition()) {
             return "";
         }
 
-        return " WHERE " +
-                conditions.stream()
-                        .map(Condition::toString)
-                        .collect(Collectors.joining(" AND "));
+        return " WHERE " + conditions.renderCondition();
     }
 }

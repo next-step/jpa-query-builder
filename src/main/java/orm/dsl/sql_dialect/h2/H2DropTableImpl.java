@@ -13,7 +13,7 @@ public class H2DropTableImpl<ENTITY> extends DropTableImpl<ENTITY> {
     }
 
     @Override
-    public String build() {
+    public String extractSql() {
         final var stringJoiner = new StringJoiner(" ");
         stringJoiner.add("DROP TABLE");
         if (super.ifNotExist) {

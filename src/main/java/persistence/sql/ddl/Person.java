@@ -15,6 +15,10 @@ public class Person {
 
     private Integer age;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Person() {
     }
 

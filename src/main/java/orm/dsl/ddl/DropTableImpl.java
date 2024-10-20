@@ -1,7 +1,7 @@
 package orm.dsl.ddl;
 
 import orm.TableEntity;
-import orm.dsl.QueryBuilder;
+import orm.dsl.QueryExtractor;
 import orm.dsl.QueryRunner;
 import orm.dsl.step.ddl.DropTableStep;
 
@@ -17,14 +17,14 @@ public abstract class DropTableImpl<E> implements DropTableStep {
     }
 
     @Override
-    public QueryBuilder ifNotExist() {
+    public QueryExtractor ifNotExist() {
         this.ifNotExist = true;
         return this;
     }
 
     @Override
     public void execute() {
-        queryRunner.execute(build());
+        queryRunner.execute(extractSql());
     }
 
 

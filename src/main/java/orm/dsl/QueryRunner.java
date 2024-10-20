@@ -27,9 +27,19 @@ public class QueryRunner {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public <E> void execute(String sql) {
+    public void execute(String sql) {
         throwIfNoJdbcTemplate();
         jdbcTemplate.execute(sql);
+    }
+
+    /**
+     * 데이터 write 후 생성된 키를 반환한다.
+     * @param sql 실행쿼리
+     * @return 생성된 키 (Long이 아닌 이유는 PostgreSQL의 경우 문자열 UUID를 생성하기도 하기 때문)
+     */
+    public Object executeUpdateWithReturningKey(String sql) {
+        throwIfNoJdbcTemplate();
+        return jdbcTemplate.executeUpdateWithReturningGenKey(sql);
     }
 
     private void throwIfNoJdbcTemplate() {
