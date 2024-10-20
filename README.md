@@ -122,8 +122,8 @@
   ```
   void persist(Object entity);
   ```
-- [ ] EntityManager 인터페이스를 생성 후 remove 구현
+- [x] EntityManager 인터페이스를 생성 후 remove 구현
   ```
   void remove(Object entity);
   ```
-- [ ] EntityManager 인터페이스를 생성 후 update 구현
+- [x] EntityManager 인터페이스를 생성 후 update 구현

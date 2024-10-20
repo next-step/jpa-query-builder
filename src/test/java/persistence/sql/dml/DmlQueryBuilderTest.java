@@ -25,6 +25,37 @@ public class DmlQueryBuilderTest {
     }
 
     @Nested
+    @DisplayName("Update 쿼리 생성 테스트")
+    class UpdateQueryTests {
+        @Test
+        @DisplayName("엔티티 오브젝트의 PK를 기준으로 업데이트 쿼리를 생성한다.")
+        void succeedToCreateQuery() {
+            String expectedQuery = "UPDATE \"users\" " +
+                    "SET \"id\" = 1, \"nick_name\" = '홍길동2', \"old\" = 30, \"email\" = 'test@test.com' " +
+                    "WHERE (\"id\" = 1);";
+
+            PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
+                    1L, "홍길동2", 30, "test@test.com", 1
+            );
+            String resultQuery = queryBuilder.buildUpdateQuery(user);
+
+            assertEquals(expectedQuery, resultQuery);
+        }
+
+        @Test
+        @DisplayName("엔티티 오브젝트에 PK가 없으면 실패한다.")
+        void failToCreateQuery() {
+            PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
+                    "홍길동2", 30, "test@test.com", 1
+            );
+
+            assertThrows(ColumnInvalidException.class, () -> {
+                queryBuilder.buildDeleteQuery(user);
+            });
+        }
+    }
+
+    @Nested
     @DisplayName("Insert 쿼리 생성 테스트")
     class InsertQueryTests {
         @Test

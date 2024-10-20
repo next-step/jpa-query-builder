@@ -37,6 +37,6 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> void update(T entity) {
-
+        jdbcTemplate.execute(queryBuilder.buildUpdateQuery(entity));
     }
 }

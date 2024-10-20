@@ -154,10 +154,10 @@ public class EntityManagerTest {
         }
 
         @Test
-        @DisplayName("디비에 존재하지 않는 엔티티에 대해 업데이트하려 하면 에러가 발생한다.")
+        @DisplayName("PK가 없는 엔티티 객체를 업데이트하려 하면 에러가 발생한다.")
         void failToUpdate() {
             PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
-                    1L, "홍길동", 20, "test@test.com", 1
+                    "홍길동", 20, "test@test.com", 1
             );
 
             assertThrows(ColumnInvalidException.class, () -> {

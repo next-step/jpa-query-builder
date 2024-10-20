@@ -25,8 +25,34 @@ public class DmlQueryBuilder {
 
     private static final String SELECT_ALL = "*";
 
+    private static final String UPDATE_FORMAT = "UPDATE %s";
+
     public DmlQueryBuilder(Dialect dialect) {
         this.dialect = dialect;
+    }
+
+    public String buildUpdateQuery(Object entityObject) {
+        EntityTable table = EntityFactory.createPopulatedSchema(entityObject);
+
+        if (!table.isPrimaryColumnsValueSet()) {
+            throw new ColumnInvalidException("Primary Column is Required to Find Updating Record.");
+        }
+
+        String query = String.format(UPDATE_FORMAT, dialect.getIdentifierQuoted(table.getName()));
+
+        String setQuery = "SET " + table.getColumns()
+                .stream()
+                .map(entityColumn -> String.format(
+                        "%s = %s",
+                        dialect.getIdentifierQuoted(entityColumn.getName()),
+                        dialect.getValueQuoted(entityColumn.getValue().getValue()))
+                )
+                .collect(Collectors.joining(", "));
+
+        List<Map<String, Object>> equalFilters = getDefaultEqualFilters(table);
+        FindOption findOption = getFindOptionBuilderWithWhere(table, equalFilters).build();
+
+        return query + " " + setQuery + " " + findOption.joinWhereClauses(dialect) + ";";
     }
 
     public String buildInsertQuery(Object entityObject) {
@@ -57,24 +83,16 @@ public class DmlQueryBuilder {
             throw new ColumnInvalidException("column not initialized");
         }
 
-        List<Map<String, Object>> equalFilters = table.getPrimaryColumns().stream()
-                .map(column -> Map.of(column.getName(), column.getValue().getValue()))
-                .collect(Collectors.toList());
-        return buildDeleteQuery(entityObject.getClass(), equalFilters);
+        return buildDeleteQuery(entityObject.getClass(), getDefaultEqualFilters(table));
     }
 
     public String buildDeleteQuery(Class<?> entityClass, List<Map<String, Object>> equalFilters) {
         EntityTable table = EntityFactory.createEmptySchema(entityClass);
 
-        FindOptionBuilder findOptionBuilder = getFindOptionBuilderWithWhere(
-                new FindOptionBuilder(),
-                table,
-                equalFilters
-        );
+        FindOptionBuilder findOptionBuilder = getFindOptionBuilderWithWhere(table, equalFilters);
+        String whereClauseSql = findOptionBuilder.build().joinWhereClauses(dialect);
 
         String deleteSql = String.format(DELETE_FORMAT, dialect.getIdentifierQuoted(table.getName()));
-
-        String whereClauseSql = findOptionBuilder.build().joinWhereClauses(dialect);
         if (whereClauseSql.isEmpty()) {
             return deleteSql;
         }
@@ -99,14 +117,13 @@ public class DmlQueryBuilder {
             List<String> selectingColumns,
             List<Map<String, Object>> equalFilters
     ) {
-        FindOptionBuilder findOptionBuilder = new FindOptionBuilder();
         EntityTable table = EntityFactory.createEmptySchema(entityClass);
 
         EntityColumn[] columns = selectingColumns.stream()
                 .map(table::getColumn)
                 .toArray(EntityColumn[]::new);
 
-        findOptionBuilder = getFindOptionBuilderWithWhere(findOptionBuilder, table, equalFilters)
+        FindOptionBuilder findOptionBuilder = getFindOptionBuilderWithWhere(table, equalFilters)
                 .selectColumns(columns);
 
         return buildSelectQuery(entityClass, findOptionBuilder.build());
@@ -134,11 +151,18 @@ public class DmlQueryBuilder {
         return query + ";";
     }
 
+    private List<Map<String, Object>> getDefaultEqualFilters(EntityTable table) {
+        return table.getPrimaryColumns().stream()
+                .map(column -> Map.of(column.getName(), column.getValue().getValue()))
+                .toList();
+    }
+
     private FindOptionBuilder getFindOptionBuilderWithWhere(
-            FindOptionBuilder findOptionBuilder,
             EntityTable table,
             List<Map<String, Object>> equalFilters
     ) {
+        FindOptionBuilder findOptionBuilder = new FindOptionBuilder();
+
         if (equalFilters.isEmpty()) {
             return findOptionBuilder;
         }
