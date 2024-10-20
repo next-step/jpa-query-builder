@@ -36,7 +36,7 @@ public class EntityColumnValue {
         try {
             Object fieldObject = field.get(object);
 
-            if (field.get(object) == null) {
+            if (fieldObject == null) {
                 return null;
             }
 
