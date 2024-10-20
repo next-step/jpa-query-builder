@@ -33,7 +33,6 @@ public abstract class DMLQueryBuilder {
             Table table = clazz.getAnnotation(Table.class);
             return !table.name().isEmpty() ? table.name() : clazz.getSimpleName();
         }
-
         return clazz.getSimpleName();
     }
 

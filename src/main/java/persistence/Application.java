@@ -24,9 +24,9 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            QueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder();
+            QueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder(Person.class);
 
-            String createTableQuery = ddlQueryBuilder.executeQuery(Person.class);
+            String createTableQuery = ddlQueryBuilder.executeQuery();
             jdbcTemplate.execute(createTableQuery); // Create table
             EntityManager entityManager = new FakeEntityManager(Person.class, jdbcTemplate);
 
@@ -39,8 +39,8 @@ public class Application {
             entityManager.update(Person.of(1L,"John", 25,null,null));
 
 
-            ddlQueryBuilder = new DropTableQueryBuilder();
-            ddlQueryBuilder.executeQuery(Person.class);
+            ddlQueryBuilder = new DropTableQueryBuilder(Person.class);
+            ddlQueryBuilder.executeQuery();
 
             server.stop();
         } catch (Exception e) {

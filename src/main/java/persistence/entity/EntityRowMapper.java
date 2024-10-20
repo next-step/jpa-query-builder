@@ -43,7 +43,7 @@ public class EntityRowMapper<T> implements RowMapper<T> {
         return field.isAnnotationPresent(Transient.class);
     }
 
-    String getColumnName(Field field) {
+    private String getColumnName(Field field) {
 
         // Column 어노테이션이 존재하고 name 속성이 있으면 사용, 없으면 필드 이름 사용
         if (field.isAnnotationPresent(Column.class)) {
