@@ -27,3 +27,9 @@
         - [x] EntityColumnNames 추가
       - [x] 3 : 단건 조회(findById) 기능 구현해보기
       - [x] 4 : delete 쿼리 구현
+  - Step4
+    - 요구사항 및 기능 구현
+      - [x] 1 : Entity find 구현
+      - [x] 2 : Entity Persists 구현
+      - [x] 3 : Entity Remove 구현
+      - [] 4 : Entity Update 구현
