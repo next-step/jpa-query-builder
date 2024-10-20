@@ -1,7 +1,11 @@
 package persistence.entity;
 
 import jdbc.JdbcTemplate;
+import jdbc.RowMapperImpl;
 import persistence.sql.dml.DmlQueryBuilder;
+
+import java.util.List;
+import java.util.Map;
 
 public class EntityManagerImpl implements EntityManager {
     private final DmlQueryBuilder queryBuilder;
@@ -14,8 +18,11 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public <T> T find(Class<T> clazz, Long Id) {
-        return null;
+    public <T> T findById(Class<T> clazz, Long id) {
+        String selectQuery = queryBuilder.buildSelectQuery(clazz, List.of(Map.of("id", id)));
+        return jdbcTemplate.queryForObject(selectQuery, resultSet ->
+                new RowMapperImpl<>(clazz).mapRow(resultSet)
+        );
     }
 
     @Override

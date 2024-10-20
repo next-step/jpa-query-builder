@@ -32,6 +32,10 @@ public class EntityTable {
         return tableColumns.getAll();
     }
 
+    public EntityColumn getColumn(String name) {
+        return tableColumns.findByName(name);
+    }
+
     public List<EntityColumn> getPrimaryColumns() {
         return tableColumns.getPrimaryColumns();
     }
@@ -53,5 +57,4 @@ public class EntityTable {
     private Boolean isPrimaryColumnsValueSet() {
         return getPrimaryColumns().stream().allMatch(EntityColumn::isValueNotNull);
     }
-
 }

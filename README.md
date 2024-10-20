@@ -118,12 +118,12 @@
   ```
   <T> T find(Class<T> clazz, Long Id);
   ```
-- [x] EntityManager 인터페이스를 생성 후 persist 구현
+- [ ] EntityManager 인터페이스를 생성 후 persist 구현
   ```
   void persist(Object entity);
   ```
-- [x] EntityManager 인터페이스를 생성 후 remove 구현
+- [ ] EntityManager 인터페이스를 생성 후 remove 구현
   ```
   void remove(Object entity);
   ```
-- [x] EntityManager 인터페이스를 생성 후 update 구현
+- [ ] EntityManager 인터페이스를 생성 후 update 구현
