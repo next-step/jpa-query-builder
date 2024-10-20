@@ -23,7 +23,7 @@
 
 - [x] Insert query의 columnsClause, valueClause 구현
 - [x] InsertQueryBuilder 구현
-- [ ] SelectQueryBuilder 구현
-- [ ] findAll 기능 구현
-- [ ] findById 기능 구현
-- [ ] deleteQueryBuilder 구현
+- [x] SelectQueryBuilder 구현
+- [x] findAll 기능 구현
+- [x] findById 기능 구현
+- [x] deleteQueryBuilder 구현

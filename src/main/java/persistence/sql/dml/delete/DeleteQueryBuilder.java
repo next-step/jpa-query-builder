@@ -1,4 +1,4 @@
-package persistence.sql.dml.select;
+package persistence.sql.dml.delete;
 
 import jakarta.persistence.Id;
 import persistence.sql.NameUtils;
@@ -8,19 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SelectQueryBuilder {
+public class DeleteQueryBuilder {
     private String tableName;
     private String idColumnName;
     private Map<String, Object> whereCondition = new HashMap<>();
 
-    private SelectQueryBuilder() {
+    private DeleteQueryBuilder() {
     }
 
-    public static SelectQueryBuilder newInstance() {
-        return new SelectQueryBuilder();
+    public static DeleteQueryBuilder newInstance() {
+        return new DeleteQueryBuilder();
     }
 
-    public SelectQueryBuilder entityClass(Class<?> entityClass) {
+    public DeleteQueryBuilder entityClass(Class<?> entityClass) {
         this.tableName = NameUtils.getTableName(entityClass);
         this.idColumnName = NameUtils.getColumnName(getIdColumn(entityClass));
         return this;
@@ -35,22 +35,20 @@ public class SelectQueryBuilder {
         throw new IllegalArgumentException("Inappropriate entity class!");
     }
 
-    public SelectQueryBuilder whereCondition(Map<String, Object> whereCondition) {
+    public DeleteQueryBuilder whereCondition(Map<String, Object> whereCondition) {
         this.whereCondition.putAll(whereCondition);
         return this;
     }
 
-    public SelectQueryBuilder whereIdCondition(String id) {
-        this.whereCondition.put(this.idColumnName, id);
+    public DeleteQueryBuilder whereIdCondition(String id) {
+        this.whereCondition.put(idColumnName, id);
         return this;
     }
 
     public String build() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append("select ")
-                .append("* ")
-                .append("from ")
+                .append("delete from ")
                 .append(this.tableName);
 
         setCondition(stringBuilder);
@@ -60,7 +58,7 @@ public class SelectQueryBuilder {
 
     private void setCondition(StringBuilder stringBuilder) {
         if (whereCondition.isEmpty()) {
-            return;
+            throw new IllegalArgumentException("Inappropriate delete query!");
         }
 
         stringBuilder
@@ -68,7 +66,6 @@ public class SelectQueryBuilder {
 
         whereCondition.forEach(
                 (key, value) -> {
-                    stringBuilder.append(key);
                     if (value instanceof String) {
                         stringBuilder.append(" = ").append(value);
                     } else if (value instanceof List) {
