@@ -1,6 +1,7 @@
 package persistence.sql.dml.query;
 
 import java.lang.reflect.Field;
+import persistence.sql.ddl.type.ColumnType;
 import persistence.sql.metadata.ColumnName;
 
 public record ColumnNameValue(ColumnName columnName,
@@ -23,4 +24,12 @@ public record ColumnNameValue(ColumnName columnName,
             throw new RuntimeException(ex);
         }
     }
+
+    public String columnValueString() {
+        if (ColumnType.isVarcharType(columnValue.getClass())) {
+            return "'" + columnValue + "'";
+        }
+        return columnValue.toString();
+    }
+
 }

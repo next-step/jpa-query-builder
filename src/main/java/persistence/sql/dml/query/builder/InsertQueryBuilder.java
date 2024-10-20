@@ -40,7 +40,7 @@ public class InsertQueryBuilder {
     public InsertQueryBuilder values(List<ColumnNameValue> columns) {
         queryString.append( " " )
                 .append( VALUES )
-                .append( valueClause(columns.stream().map(ColumnNameValue::columnValue).toList()) );
+                .append( valueClause(columns) );
         return this;
     }
 
@@ -52,11 +52,11 @@ public class InsertQueryBuilder {
                 .toString();
     }
 
-    private String valueClause(List<Object> columnValues) {
+    private String valueClause(List<ColumnNameValue> columns) {
         return new StringBuilder()
                 .append(" (")
-                .append( columnValues.stream()
-                        .map(columnValue -> dialect.getColumnValueFormat(columnValue.getClass(), columnValue) )
+                .append( columns.stream()
+                        .map(ColumnNameValue::columnValueString)
                         .collect(Collectors.joining(", ")) )
                 .append(")")
                 .toString();
