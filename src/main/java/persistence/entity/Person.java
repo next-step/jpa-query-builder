@@ -26,6 +26,10 @@ public class Person {
 
     }
 
+    public Person(String name, Integer age, String email, Integer index) {
+        this(null, name, age, email, index);
+    }
+
     public Person(Long id, String name, Integer age, String email) {
         this(id, name, age, email, 0);
     }
@@ -37,4 +41,9 @@ public class Person {
         this.email = email;
         this.index = index;
     }
+
+    public String name() {
+        return this.name;
+    }
+
 }
