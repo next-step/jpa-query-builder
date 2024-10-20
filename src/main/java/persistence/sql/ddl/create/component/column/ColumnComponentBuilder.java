@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import persistence.sql.NameUtils;
+import persistence.sql.datatype.JavaType;
+import persistence.sql.datatype.dialect.H2Dialect;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -35,7 +37,10 @@ public class ColumnComponentBuilder {
     }
 
     private void setType(Field field) {
-        this.type = ColumnDataType.convert(field.getType());
+        JavaType javaType = new JavaType();
+        H2Dialect h2Dialect = new H2Dialect();
+        Integer typeConst = javaType.getTypeConst(field.getType());
+        this.type = h2Dialect.getTypeName(typeConst);
     }
 
     private void setOptions(Field field) {
