@@ -96,4 +96,38 @@ public class EntityManagerTest {
             assertEquals(foundPerson.getName(), person.getName());
         }
     }
+
+    @Nested
+    @DisplayName("remove 테스트")
+    class RemoveTest {
+        @Test
+        @DisplayName("주어진 엔티티를 디비에서 제거한다.")
+        void succeedToRemove() {
+            // given
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
+                    1L, "홍길동", 20, "test@test.com", 1
+            );
+            entityManager.persist(person);
+
+            // when
+            entityManager.remove(person);
+
+            // then
+            assertThrows(RuntimeException.class, () -> {
+                entityManager.findById(PersonWithTransientAnnotation.class, 1L);
+            });
+        }
+
+        @Test
+        @DisplayName("디비에 저장되지 않은 객체를 제거하려 하면 에러가 발생한다.")
+        void failToRemove() {
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
+                    1L, "홍길동", 20, "test@test.com", 1
+            );
+
+            assertThrows(RuntimeException.class, () -> {
+                entityManager.remove(person);
+            });
+        }
+    }
 }
