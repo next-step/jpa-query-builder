@@ -7,14 +7,14 @@ import java.lang.reflect.Field;
 import persistence.sql.ddl.type.ColumnType;
 import persistence.sql.metadata.ColumnName;
 
-public record CreateQueryColumn(int type,
-                                String name,
-                                int length,
-                                boolean nullable) {
+public record ColumnMeta(int type,
+                         String name,
+                         int length,
+                         boolean nullable) {
 
     private static final int DEFAULT_LENGTH = 255;
 
-    public CreateQueryColumn(Field field) {
+    public ColumnMeta(Field field) {
         this(
           ColumnType.getSqlType(field.getType()),
           new ColumnName(field).value(),

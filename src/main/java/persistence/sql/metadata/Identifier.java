@@ -6,9 +6,9 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import persistence.exception.NotExistException;
-import persistence.sql.ddl.query.CreateQueryColumn;
+import persistence.sql.ddl.query.ColumnMeta;
 
-public record Identifier(CreateQueryColumn column,
+public record Identifier(ColumnMeta column,
                          GenerationType generationType) {
 
     public static Identifier from(Field[] fields) {
@@ -16,7 +16,7 @@ public record Identifier(CreateQueryColumn column,
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
                 .orElseThrow(() -> new NotExistException("identification."));
-        return new Identifier(new CreateQueryColumn(identifierField), generationType(identifierField));
+        return new Identifier(new ColumnMeta(identifierField), generationType(identifierField));
     }
 
     private static GenerationType generationType(Field field) {

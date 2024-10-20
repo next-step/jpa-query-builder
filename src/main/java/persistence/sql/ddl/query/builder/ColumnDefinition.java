@@ -1,12 +1,12 @@
 package persistence.sql.ddl.query.builder;
 
 import persistence.sql.dialect.Dialect;
-import persistence.sql.ddl.query.CreateQueryColumn;
+import persistence.sql.ddl.query.ColumnMeta;
 import persistence.sql.ddl.type.ColumnType;
 
 public class ColumnDefinition {
 
-    public static String define(CreateQueryColumn column, Dialect dialect) {
+    public static String define(ColumnMeta column, Dialect dialect) {
         StringBuilder builder = new StringBuilder();
 
         builder.append( column.name() )

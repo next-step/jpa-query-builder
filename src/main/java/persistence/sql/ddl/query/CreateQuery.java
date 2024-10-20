@@ -12,7 +12,7 @@ import persistence.sql.metadata.Identifier;
 import persistence.sql.metadata.TableName;
 
 public record CreateQuery(TableName tableName,
-                          List<CreateQueryColumn> columns,
+                          List<ColumnMeta> columns,
                           Identifier identifier) {
 
     public CreateQuery(Class<?> clazz) {
@@ -21,7 +21,7 @@ public record CreateQuery(TableName tableName,
                 Arrays.stream(clazz.getDeclaredFields())
                         .filter(notIdField())
                         .filter(notTransientField())
-                        .map(CreateQueryColumn::new)
+                        .map(ColumnMeta::new)
                         .toList(),
                 Identifier.from(clazz.getDeclaredFields())
         );

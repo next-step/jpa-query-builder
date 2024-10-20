@@ -6,7 +6,7 @@ import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKey
 
 import java.util.List;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.query.CreateQueryColumn;
+import persistence.sql.ddl.query.ColumnMeta;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.metadata.Identifier;
 import persistence.sql.metadata.TableName;
@@ -31,7 +31,7 @@ public class CreateQueryBuilder {
         return queryString.toString();
     }
 
-    public CreateQueryBuilder create(TableName tableName, Identifier identifier, List<CreateQueryColumn> columns) {
+    public CreateQueryBuilder create(TableName tableName, Identifier identifier, List<ColumnMeta> columns) {
         queryString.append( CREATE_TABLE )
                 .append( " " )
                 .append( tableName.value() )
