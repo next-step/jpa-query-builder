@@ -35,6 +35,17 @@ public class CreateQueryBuilder implements QueryBuilder {
         return makeStringBuilder.toString();
     }
 
+    private String createTableIfNotExistsStatement() {
+        TableName tableName = new TableName(clazz);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("CREATE TABLE IF NOT EXISTS");
+        stringBuilder.append(SPACE);
+        stringBuilder.append(tableName.getValue());
+
+        return stringBuilder.toString();
+    }
+
     private String generateColumnDefinitions() {
         DDLColumn ddlColumns = new DDLColumn(this.clazz.getDeclaredFields(), dialect);
 
@@ -45,14 +56,5 @@ public class CreateQueryBuilder implements QueryBuilder {
         return columnDefinitionStringBuilder.toString();
     }
 
-    private String createTableIfNotExistsStatement() {
-        TableName tableName = new TableName(clazz);
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("CREATE TABLE IF NOT EXISTS");
-        stringBuilder.append(SPACE);
-        stringBuilder.append(tableName.getValue());
-
-        return "CREATE TABLE IF NOT EXISTS " + tableName.getValue();
-    }
 }

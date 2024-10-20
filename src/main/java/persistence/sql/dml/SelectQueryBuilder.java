@@ -5,13 +5,13 @@ import persistence.sql.exception.RequiredClassException;
 import persistence.sql.model.EntityColumnNames;
 import persistence.sql.model.TableName;
 
-public class SelectQuery {
+public class SelectQueryBuilder {
 
     private static final String SPACE = " ";
 
     private final Class<?> clazz;
 
-    public SelectQuery(Class<?> clazz) {
+    public SelectQueryBuilder(Class<?> clazz) {
         if (clazz == null) {
             throw new RequiredClassException(ExceptionMessage.REQUIRED_CLASS);
         }

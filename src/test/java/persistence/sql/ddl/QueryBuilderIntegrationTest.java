@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.Dialect;
 import persistence.sql.H2Dialect;
 import persistence.sql.dml.*;
+import persistence.sql.entity.EntityManagerImpl;
 import persistence.sql.model.TableName;
 
 import java.util.List;
@@ -82,7 +83,7 @@ public class QueryBuilderIntegrationTest {
         InsertQuery insertQueryBuilder = new InsertQuery(person);
         jdbcTemplate.execute(insertQueryBuilder.makeQuery());
 
-        SelectQuery selectQueryBuilder = new SelectQuery(Person.class);
+        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
         Person findByIdPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(1L), resultSet -> {
             long id = resultSet.getLong("id");
             int old = resultSet.getInt("old");
@@ -93,5 +94,24 @@ public class QueryBuilderIntegrationTest {
 
         DeleteQuery deleteQueryBuilder = new DeleteQuery(findByIdPerson);
         jdbcTemplate.execute(deleteQueryBuilder.makeQuery());
+    }
+
+    @Test
+    void test() {
+        Class<Person> clazz = Person.class;
+
+        QueryBuilder createQueryBuilder = new CreateQueryBuilder(clazz, dialect);
+        JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
+        jdbcTemplate.execute(createQueryBuilder.build());
+
+        final String name = "이름";
+        final Integer age = 11;
+        final String email = "email@test.com";
+        Person person = new Person(name, age, email, null);
+        InsertQuery insertQueryBuilder = new InsertQuery(person);
+        jdbcTemplate.execute(insertQueryBuilder.makeQuery());
+
+        EntityManagerImpl entityManager = new EntityManagerImpl(jdbcTemplate);
+        Person person1 = entityManager.find(clazz, 1L);
     }
 }
