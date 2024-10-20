@@ -1,8 +1,9 @@
 package builder;
 
-import builder.ddl.DDLBuilder;
-import builder.ddl.DDLType;
-import builder.ddl.h2.H2DDLBuilder;
+import builder.ddl.DDLBuilderData;
+import builder.ddl.builder.CreateQueryBuilder;
+import builder.ddl.builder.DropQueryBuilder;
+import builder.ddl.dataType.DB;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,10 +46,10 @@ public class H2DDLBuilderTest {
             private String email;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when, then
-        assertThatThrownBy(() -> ddlBuilder.queryBuilder(DDLType.CREATE, Person.class))
+        assertThatThrownBy(() -> queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("@Entity 어노테이션이 존재하지 않습니다.");
     }
@@ -64,10 +65,10 @@ public class H2DDLBuilderTest {
             private Long id;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when
-        String createQuery = ddlBuilder.queryBuilder(DDLType.CREATE, Person.class);
+        String createQuery = queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2));
 
         //then
         assertThat(createQuery).isEqualTo(
@@ -92,10 +93,10 @@ public class H2DDLBuilderTest {
             private String email;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when
-        assertThat(ddlBuilder.queryBuilder(DDLType.CREATE, Person.class)).isEqualTo(
+        assertThat(queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2))).isEqualTo(
                 "CREATE TABLE Person (id BIGINT NOT NULL PRIMARY KEY, name VARCHAR(255), age INTEGER, email VARCHAR(255));"
         );
     }
@@ -120,10 +121,10 @@ public class H2DDLBuilderTest {
             private String email;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when
-        assertThat(ddlBuilder.queryBuilder(DDLType.CREATE, Person.class)).isEqualTo(
+        assertThat(queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2))).isEqualTo(
                 "CREATE TABLE Person (id BIGINT NOT NULL PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);"
         );
     }
@@ -142,10 +143,10 @@ public class H2DDLBuilderTest {
             private String name;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when, then
-        assertThatThrownBy(() -> ddlBuilder.queryBuilder(DDLType.CREATE, Person.class))
+        assertThatThrownBy(() -> queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("@Id 어노테이션은 한개를 초과할수 없습니다.");
     }
@@ -171,10 +172,10 @@ public class H2DDLBuilderTest {
             private String email;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when, then
-        assertThat(ddlBuilder.queryBuilder(DDLType.CREATE, Person.class)).isEqualTo(
+        assertThat(queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2))).isEqualTo(
                 "CREATE TABLE users (id BIGINT NOT NULL PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);"
         );
     }
@@ -201,10 +202,10 @@ public class H2DDLBuilderTest {
             private String email;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when, then
-        assertThat(ddlBuilder.queryBuilder(DDLType.CREATE, Person.class)).isEqualTo(
+        assertThat(queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2))).isEqualTo(
                 "CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);"
         );
     }
@@ -234,10 +235,10 @@ public class H2DDLBuilderTest {
             private Integer index;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
 
         //when, then
-        assertThat(ddlBuilder.queryBuilder(DDLType.CREATE, Person.class)).isEqualTo(
+        assertThat(queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2))).isEqualTo(
                 "CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);"
         );
     }
@@ -267,10 +268,10 @@ public class H2DDLBuilderTest {
             private Integer index;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        DropQueryBuilder queryBuilder = new DropQueryBuilder();
 
         //when, then
-        assertThat(ddlBuilder.queryBuilder(DDLType.DROP, Person.class)).isEqualTo(
+        assertThat(queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2))).isEqualTo(
                 "DROP TABLE users;"
         );
     }
@@ -299,10 +300,10 @@ public class H2DDLBuilderTest {
             private Integer index;
 
         }
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
+        DropQueryBuilder queryBuilder = new DropQueryBuilder();
 
         //when, then
-        assertThatThrownBy(() -> ddlBuilder.queryBuilder(DDLType.DROP, Person.class))
+        assertThatThrownBy(() -> queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("@Entity 어노테이션이 존재하지 않습니다.");
     }

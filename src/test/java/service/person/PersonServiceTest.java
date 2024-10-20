@@ -1,9 +1,9 @@
 package service.person;
 
-import builder.ddl.DDLBuilder;
-import builder.ddl.DDLType;
-import builder.ddl.h2.H2DDLBuilder;
-import builder.dml.h2.H2DMLBuilder;
+import builder.ddl.DDLBuilderData;
+import builder.ddl.builder.CreateQueryBuilder;
+import builder.ddl.builder.DropQueryBuilder;
+import builder.ddl.dataType.DB;
 import database.H2DBConnection;
 import entity.Person;
 import jdbc.JdbcTemplate;
@@ -40,12 +40,12 @@ public class PersonServiceTest {
         this.jdbcTemplate = this.h2DBConnection.start();
 
         //테이블 생성
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
-        String createQuery = ddlBuilder.queryBuilder(DDLType.CREATE, Person.class);
+        CreateQueryBuilder queryBuilder = new CreateQueryBuilder();
+        String createQuery = queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2));
 
         jdbcTemplate.execute(createQuery);
 
-        this.personService = new PersonService(new EntityManagerImpl(jdbcTemplate, new H2DMLBuilder()));
+        this.personService = new PersonService(new EntityManagerImpl(jdbcTemplate));
 
         this.personService.save(createPersonRequest(1));
         this.personService.save(createPersonRequest(2));
@@ -54,8 +54,8 @@ public class PersonServiceTest {
     //정확한 테스트를 위해 메소드마다 테이블 DROP 후 DB종료
     @AfterEach
     void tearDown() {
-        DDLBuilder ddlBuilder = new H2DDLBuilder();
-        String dropQuery = ddlBuilder.queryBuilder(DDLType.DROP, Person.class);
+        DropQueryBuilder queryBuilder = new DropQueryBuilder();
+        String dropQuery = queryBuilder.buildQuery(DDLBuilderData.createDDLBuilderData(Person.class, DB.H2));
         jdbcTemplate.execute(dropQuery);
         this.h2DBConnection.stop();
     }
