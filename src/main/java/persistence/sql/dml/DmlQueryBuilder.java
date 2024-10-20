@@ -3,6 +3,7 @@ package persistence.sql.dml;
 import persistence.model.EntityColumn;
 import persistence.model.EntityFactory;
 import persistence.model.EntityTable;
+import persistence.model.exception.ColumnInvalidException;
 import persistence.model.meta.Value;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dml.clause.Clause;
@@ -11,6 +12,7 @@ import persistence.sql.dml.clause.FindOption;
 import persistence.sql.dml.clause.FindOptionBuilder;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DmlQueryBuilder {
     private final Dialect dialect;
@@ -46,6 +48,19 @@ public class DmlQueryBuilder {
                 dialect.getIdentifierQuoted(tableName),
                 dialect.getIdentifiersQuoted(insertingColumnNames),
                 dialect.getValuesQuoted(insertingValues));
+    }
+
+    public String buildDeleteQuery(Object entityObject) {
+        EntityTable table = EntityFactory.createPopulatedSchema(entityObject);
+
+        if (!table.isPrimaryColumnsValueSet()) {
+            throw new ColumnInvalidException("column not initialized");
+        }
+
+        List<Map<String, Object>> equalFilters = table.getPrimaryColumns().stream()
+                .map(column -> Map.of(column.getName(), column.getValue().getValue()))
+                .collect(Collectors.toList());
+        return buildDeleteQuery(entityObject.getClass(), equalFilters);
     }
 
     public String buildDeleteQuery(Class<?> entityClass, List<Map<String, Object>> equalFilters) {

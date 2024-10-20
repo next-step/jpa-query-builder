@@ -54,7 +54,7 @@ public class EntityTable {
                 : table.getNonPrimaryColumns();
     }
 
-    private Boolean isPrimaryColumnsValueSet() {
+    public Boolean isPrimaryColumnsValueSet() {
         return getPrimaryColumns().stream().allMatch(EntityColumn::isValueNotNull);
     }
 }

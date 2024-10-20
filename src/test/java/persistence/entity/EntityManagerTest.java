@@ -4,6 +4,7 @@ import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.*;
+import persistence.model.exception.ColumnInvalidException;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.DialectFactory;
@@ -119,13 +120,13 @@ public class EntityManagerTest {
         }
 
         @Test
-        @DisplayName("디비에 저장되지 않은 객체를 제거하려 하면 에러가 발생한다.")
+        @DisplayName("PK가 없는 객체를 제거하려 하면 에러가 발생한다.")
         void failToRemove() {
             PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
-                    1L, "홍길동", 20, "test@test.com", 1
+                    "홍길동", 20, "test@test.com", 1
             );
 
-            assertThrows(RuntimeException.class, () -> {
+            assertThrows(ColumnInvalidException.class, () -> {
                 entityManager.remove(person);
             });
         }

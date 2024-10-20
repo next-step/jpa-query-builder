@@ -32,7 +32,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> void remove(T entity) {
-
+        jdbcTemplate.execute(queryBuilder.buildDeleteQuery(entity));
     }
 
     @Override
