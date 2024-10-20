@@ -14,10 +14,7 @@ public class DeleteQueryBuilderTest {
     void deleteQueryTest() {
         Class<PersonV3> personV3Class = PersonV3.class;
 
-        String deleteQuery = DeleteQueryBuilder.newInstance()
-                .entityClass(personV3Class)
-                .whereIdCondition(String.valueOf(1L))
-                .build();
+        String deleteQuery = DeleteQueryBuilder.generateQuery(personV3Class, String.valueOf(1L));
 
         logger.debug("{}", deleteQuery);
     }

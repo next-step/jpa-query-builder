@@ -20,16 +20,17 @@ public class InsertQueryBuilder {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append("insert into {TABLE_NAME} ")
+                .append("insert into ")
+                .append(tableName)
                 .append(columnClause)
                 .append(" values ")
                 .append(valueClause)
                 .append(";");
-        return stringBuilder.toString().replace("{TABLE_NAME}", tableName);
+        return stringBuilder.toString();
     }
 
     private static String columnClause(Class<?> clazz) {
-        StringBuilder stringBuilder = new StringBuilder("(");
+        StringBuilder stringBuilder = new StringBuilder(" (");
 
         Field[] managedFields = getManagedFields(clazz);
         for (Field field : managedFields) {
