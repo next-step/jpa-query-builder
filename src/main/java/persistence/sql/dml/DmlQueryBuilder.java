@@ -83,19 +83,11 @@ public class DmlQueryBuilder {
             throw new ColumnInvalidException("column not initialized");
         }
 
-        return buildDeleteQuery(entityObject.getClass(), getDefaultEqualFilters(table));
-    }
-
-    public String buildDeleteQuery(Class<?> entityClass, List<Map<String, Object>> equalFilters) {
-        EntityTable table = EntityFactory.createEmptySchema(entityClass);
-
-        FindOptionBuilder findOptionBuilder = getFindOptionBuilderWithWhere(table, equalFilters);
-        String whereClauseSql = findOptionBuilder.build().joinWhereClauses(dialect);
-
         String deleteSql = String.format(DELETE_FORMAT, dialect.getIdentifierQuoted(table.getName()));
-        if (whereClauseSql.isEmpty()) {
-            return deleteSql;
-        }
+
+        FindOption findOption = getFindOptionBuilderWithWhere(table, getDefaultEqualFilters(table)).build();
+        String whereClauseSql = findOption.joinWhereClauses(dialect);
+
         return deleteSql + " " + whereClauseSql + ";";
     }
 

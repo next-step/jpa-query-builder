@@ -180,18 +180,6 @@ public class DmlQueryBuilderTest {
     @Nested
     @DisplayName("Delete 쿼리 생성 테스트")
     class DeleteQueryTests {
-        @Test
-        @DisplayName("pk로 테이블의 특정 레코드를 삭제한다.")
-        void succeedToDeleteByClass() {
-            String expectedQuery = "DELETE FROM \"users\" WHERE (\"id\" = 1);";
-
-            String resultQuery = queryBuilder.buildDeleteQuery(
-                    PersonWithTransientAnnotation.class,
-                    List.of(new LinkedHashMap<>(Map.of("id", 1L)))
-            );
-
-            assertEquals(expectedQuery, resultQuery);
-        }
 
         @Test
         @DisplayName("엔티티 객체가 주어지면 PK를 찾아 레코드를 삭제한다.")
@@ -204,17 +192,6 @@ public class DmlQueryBuilderTest {
             String resultQuery = queryBuilder.buildDeleteQuery(person);
 
             assertEquals(expectedQuery, resultQuery);
-        }
-
-        @Test
-        @DisplayName("존재하지 않는 컬럼에 대한 비교절을 제시하면 에러를 내뱉는다.")
-        void testThrowForUnknownColumn() {
-            assertThrows(ColumnNotFoundException.class, () -> {
-                queryBuilder.buildDeleteQuery(
-                        PersonWithTransientAnnotation.class,
-                        List.of(new LinkedHashMap<>(Map.of("hobby", "잠자기")))
-                );
-            });
         }
 
         @Test
