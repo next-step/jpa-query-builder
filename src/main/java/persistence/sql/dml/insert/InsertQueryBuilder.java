@@ -25,7 +25,6 @@ public class InsertQueryBuilder {
                 .append(" values ")
                 .append(valueClause)
                 .append(";");
-
         return stringBuilder.toString().replace("{TABLE_NAME}", tableName);
     }
 

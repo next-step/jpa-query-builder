@@ -4,87 +4,44 @@ import jakarta.persistence.Id;
 import persistence.sql.NameUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SelectQueryBuilder {
-    private String tableName;
-    private String idColumnName;
-    private Map<String, Object> whereCondition = new HashMap<>();
-
     private SelectQueryBuilder() {
     }
 
-    public static SelectQueryBuilder newInstance() {
-        return new SelectQueryBuilder();
+    public static String generateQuery(Class<?> entityClass) {
+        String tableName = NameUtils.getTableName(entityClass);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("select * from ")
+                .append(tableName)
+                .append(";");
+        return stringBuilder.toString();
     }
 
-    public SelectQueryBuilder entityClass(Class<?> entityClass) {
-        this.tableName = NameUtils.getTableName(entityClass);
-        this.idColumnName = NameUtils.getColumnName(getIdColumn(entityClass));
-        return this;
+    public static String generateQuery(Class<?> entityClass, String id) {
+        String tableName = NameUtils.getTableName(entityClass);
+        String idColumnName = NameUtils.getColumnName(getIdColumn(entityClass));
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("select * from ")
+                .append(tableName)
+                .append(" where ")
+                .append(idColumnName)
+                .append(" = ")
+                .append(id)
+                .append(";");
+        return stringBuilder.toString();
     }
 
-    private Field getIdColumn(Class<?> entityClass) {
+    private static Field getIdColumn(Class<?> entityClass) {
         for (Field field : entityClass.getDeclaredFields()) {
             if (field.isAnnotationPresent(Id.class)) {
                 return field;
             }
         }
         throw new IllegalArgumentException("Inappropriate entity class!");
-    }
-
-    public SelectQueryBuilder whereCondition(Map<String, Object> whereCondition) {
-        this.whereCondition.putAll(whereCondition);
-        return this;
-    }
-
-    public SelectQueryBuilder whereIdCondition(String id) {
-        this.whereCondition.put(this.idColumnName, id);
-        return this;
-    }
-
-    public String build() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("select ")
-                .append("* ")
-                .append("from ")
-                .append(this.tableName);
-
-        setCondition(stringBuilder);
-
-        return stringBuilder.append(";").toString();
-    }
-
-    private void setCondition(StringBuilder stringBuilder) {
-        if (whereCondition.isEmpty()) {
-            return;
-        }
-
-        stringBuilder
-                .append(" where");
-
-        whereCondition.forEach(
-                (key, value) -> {
-                    stringBuilder.append(key);
-                    if (value instanceof String) {
-                        stringBuilder.append(" = ").append(value);
-                    } else if (value instanceof List) {
-                        stringBuilder.append(" in (");
-                        ((List<String>) value).forEach(
-                                item -> stringBuilder.append(item).append(", ")
-                        );
-                        stringBuilder.setLength(stringBuilder.length() - 2);
-                        stringBuilder.append(")");
-                    } else {
-                        throw new IllegalArgumentException("Inappropriate where condition!");
-                    }
-                    stringBuilder.append(" and ");
-                }
-        );
-
-        stringBuilder.setLength(stringBuilder.length() - 5);
     }
 }

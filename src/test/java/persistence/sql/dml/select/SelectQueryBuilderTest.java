@@ -13,9 +13,7 @@ public class SelectQueryBuilderTest {
     @DisplayName("FindAll query 테스트")
     void findAllQueryTest() {
         Class<PersonV3> personV3Class = PersonV3.class;
-        String selectQuery = SelectQueryBuilder.newInstance()
-                .entityClass(personV3Class)
-                .build();
+        String selectQuery = SelectQueryBuilder.generateQuery(personV3Class);
 
         logger.debug("query : {}", selectQuery);
     }
@@ -25,10 +23,7 @@ public class SelectQueryBuilderTest {
     void findByIdTest() {
         Class<PersonV3> personV3Class = PersonV3.class;
 
-        String selectQuery = SelectQueryBuilder.newInstance()
-                .entityClass(personV3Class)
-                .whereIdCondition(String.valueOf(1L))
-                .build();
+        String selectQuery = SelectQueryBuilder.generateQuery(personV3Class, String.valueOf(1L));
 
         logger.debug("query : {}", selectQuery);
     }
