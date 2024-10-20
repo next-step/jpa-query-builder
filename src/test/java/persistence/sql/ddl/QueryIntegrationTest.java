@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.Dialect;
 import persistence.sql.H2Dialect;
 import persistence.sql.dml.*;
-import persistence.sql.entity.EntityManagerImpl;
 import persistence.sql.model.TableName;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcServerTest
-public class QueryBuilderIntegrationTest {
+public class QueryIntegrationTest {
 
     private static final String SELECT_TABLES_SQL = "SELECT table_name FROM information_schema.tables WHERE table_schema='PUBLIC'";
     private static final Dialect dialect = new H2Dialect();
@@ -96,25 +95,4 @@ public class QueryBuilderIntegrationTest {
         jdbcTemplate.execute(deleteQueryBuilder.makeQuery());
     }
 
-    @Test
-    void test() {
-        Class<Person> clazz = Person.class;
-
-        QueryBuilder createQueryBuilder = new CreateQueryBuilder(clazz, dialect);
-        JdbcTemplate jdbcTemplate = JdbcServerExtension.getJdbcTemplate();
-        jdbcTemplate.execute(createQueryBuilder.build());
-
-        final String name = "이름";
-        final Integer age = 11;
-        final String email = "email@test.com";
-        Person person = new Person(name, age, email, null);
-        InsertQuery insertQueryBuilder = new InsertQuery(person);
-        jdbcTemplate.execute(insertQueryBuilder.makeQuery());
-
-        EntityManagerImpl entityManager = new EntityManagerImpl(jdbcTemplate);
-        Person person1 = entityManager.find(clazz, 1L);
-
-        person1.setEmail("test123123@aaa.com");
-        entityManager.update(person1);
-    }
 }

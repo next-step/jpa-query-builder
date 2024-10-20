@@ -30,4 +30,19 @@ public class EntityColumnValue {
             throw new RuntimeException("해당 객체에 접근할 수 없습니다.");
         }
     }
+
+    public String getValue() {
+        field.setAccessible(true);
+        try {
+            Object fieldObject = field.get(object);
+
+            if (field.get(object) == null) {
+                return null;
+            }
+
+            return String.valueOf(fieldObject);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("해당 객체에 접근할 수 없습니다.");
+        }
+    }
 }

@@ -10,7 +10,7 @@ import persistence.sql.exception.RequiredObjectException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class InsertQueryBuilderTest {
+class InsertQueryTest {
 
     @Test
     void 데이터_삽입() {

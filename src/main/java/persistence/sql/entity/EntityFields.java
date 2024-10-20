@@ -31,13 +31,6 @@ public class EntityFields {
                 .collect(Collectors.toList());
     }
 
-    public List<Field> getNonIdPersistentFields() {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .filter(field -> !field.isAnnotationPresent(GeneratedValue.class))
-                .collect(Collectors.toList());
-    }
-
     public List<Field> getIdFields() {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Id.class))

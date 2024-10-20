@@ -8,7 +8,7 @@ import persistence.sql.exception.RequiredClassException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class SelectQueryBuilderTest {
+class SelectQueryTest {
 
     @Test
     void SELECT_쿼리_조회() {

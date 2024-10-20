@@ -8,7 +8,7 @@ import persistence.sql.exception.RequiredObjectException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DeleteQueryBuilderTest {
+class DeleteQueryTest {
 
     @Test
     void DELETE_쿼리_생성() {
