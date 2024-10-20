@@ -2,10 +2,10 @@ package persistence.sql.dml.query;
 
 import persistence.sql.metadata.TableName;
 
-public record DeleteQuery(String tableName) {
+public record DeleteQuery(TableName tableName) {
 
-    public DeleteQuery(TableName tableName) {
-        this(tableName.value());
+    public DeleteQuery(Class<?> clazz) {
+        this(new TableName(clazz));
     }
 
 }
