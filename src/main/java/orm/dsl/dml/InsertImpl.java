@@ -71,8 +71,8 @@ public abstract class InsertImpl<E> implements InsertIntoStep<E> {
     }
 
     /**
-     * 입력한 값을 Auto Increment가 존재하면 포함해서 리턴하는 기능
-     * @return
+     * 사용된 엔티티를 Auto Increment가 존재하면 포함해서 반환
+     * @return 엔티티 클래스
      */
     @Override
     public E returnAsEntity() {

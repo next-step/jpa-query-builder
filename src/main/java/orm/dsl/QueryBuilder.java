@@ -20,10 +20,6 @@ public class QueryBuilder implements QueryProvider {
         this(JpaSettings.ofDefault(), new QueryRunner());
     }
 
-    public QueryBuilder(JpaSettings settings) {
-        this(settings, new QueryRunner());
-    }
-
     public QueryBuilder(JdbcTemplate jdbcTemplate) {
         this(JpaSettings.ofDefault(), new QueryRunner(jdbcTemplate));
     }
