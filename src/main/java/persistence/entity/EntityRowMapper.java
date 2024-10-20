@@ -26,7 +26,7 @@ public class EntityRowMapper<T> implements RowMapper<T> {
             Object object = mapObject(clazz);
             mapFields(object, resultSet);
             return clazz.cast(object);
-        } catch(NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
     }

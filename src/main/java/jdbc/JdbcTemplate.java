@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcTemplate {
+
     private final Connection connection;
 
     public JdbcTemplate(final Connection connection) {
@@ -22,7 +23,7 @@ public class JdbcTemplate {
     }
 
     public <T> T queryForObject(final String sql, final RowMapper<T> rowMapper) {
-            final List<T> results = query(sql, rowMapper);
+        final List<T> results = query(sql, rowMapper);
         if (results.size() != 1) {
             throw new RuntimeException("Expected 1 result, got " + results.size());
         }
