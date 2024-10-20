@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import persistence.model.exception.ColumnInvalidException;
 import persistence.model.exception.ColumnNotFoundException;
 import persistence.sql.dialect.DialectFactory;
 import persistence.fixture.PersonWithTransientAnnotation;
@@ -150,13 +151,26 @@ public class DmlQueryBuilderTest {
     class DeleteQueryTests {
         @Test
         @DisplayName("pk로 테이블의 특정 레코드를 삭제한다.")
-        void testCreateDeleteQueryById() {
+        void succeedToDeleteByClass() {
             String expectedQuery = "DELETE FROM \"users\" WHERE (\"id\" = 1);";
 
             String resultQuery = queryBuilder.buildDeleteQuery(
                     PersonWithTransientAnnotation.class,
                     List.of(new LinkedHashMap<>(Map.of("id", 1L)))
             );
+
+            assertEquals(expectedQuery, resultQuery);
+        }
+
+        @Test
+        @DisplayName("엔티티 객체가 주어지면 PK를 찾아 레코드를 삭제한다.")
+        void succeedToDeleteByObject() {
+            String expectedQuery = "DELETE FROM \"users\" WHERE (\"id\" = 1);";
+
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
+                    1L, "홍길동", 20, "test@test.com", 1
+            );
+            String resultQuery = queryBuilder.buildDeleteQuery(person);
 
             assertEquals(expectedQuery, resultQuery);
         }
@@ -169,6 +183,16 @@ public class DmlQueryBuilderTest {
                         PersonWithTransientAnnotation.class,
                         List.of(new LinkedHashMap<>(Map.of("hobby", "잠자기")))
                 );
+            });
+        }
+
+        @Test
+        @DisplayName("PK가 없는 객체가 주어지면 에러를 내뱉는다.")
+        void failToDeleteForEmptyPK() {
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation("test@test.com");
+
+            assertThrows(ColumnInvalidException.class, () -> {
+                queryBuilder.buildDeleteQuery(person);
             });
         }
     }

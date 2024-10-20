@@ -59,4 +59,18 @@ public class EntityTableUnitTest {
 
         assertEquals(1, entityTable.getPrimaryColumns().size());
     }
+
+    @Test
+    @DisplayName("테이블의 PK 컬럼에 값이 셋팅되어 있는지 확인할 수 있다.")
+    public void testIsPrimaryColumnsSet() {
+        EntityTable tableWithId = EntityFactory.createPopulatedSchema(
+                new UnitTestEntity(1L, "홍길동", "test@test.com", 1)
+        );
+        EntityTable tableWithoutId = EntityFactory.createPopulatedSchema(new UnitTestEntity());
+
+        assertAll(
+                () -> assertTrue(tableWithId.isPrimaryColumnsValueSet()),
+                () -> assertFalse(tableWithoutId.isPrimaryColumnsValueSet())
+        );
+    }
 }

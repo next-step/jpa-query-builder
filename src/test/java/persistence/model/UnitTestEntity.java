@@ -16,4 +16,14 @@ public class UnitTestEntity {
     private String email;
 
     private Integer age;
+
+    public UnitTestEntity(Long id, String name, String email, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.age = age;
+    }
+
+    public UnitTestEntity() {
+    }
 }
