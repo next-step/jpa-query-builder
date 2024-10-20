@@ -1,49 +1,108 @@
-package builder.dml.h2;
+package builder.dml;
 
-import builder.dml.DMLBuilder;
-import builder.dml.DMLColumnData;
-import builder.dml.DMLQueryBuilder;
-import builder.dml.DMLType;
-import builder.dml.h2.builder.*;
 import jakarta.persistence.*;
+import util.StringUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class H2DMLBuilder implements DMLBuilder {
+public class DMLBuilderData {
 
     private final static String PK_NOT_EXIST_MESSAGE = "PK 컬럼을 찾을 수 없습니다.";
     private final static String NOT_EXIST_ENTITY_ANNOTATION = "@Entity 어노테이션이 존재하지 않습니다.";
     private final static String GET_FIELD_VALUE_ERROR_MESSAGE = "필드 값을 가져오는 중 에러가 발생했습니다.";
+    private final static String COMMA = ", ";
+    private final static String EQUALS = "=";
 
-    EnumMap<DMLType, DMLQueryBuilder> dmlEnumMap = new EnumMap<>(DMLType.class);
+    private final String tableName;
+    private final List<DMLColumnData> columns;
+    private Object id;
 
-    public H2DMLBuilder() {
-        dmlEnumMap.put(DMLType.SELECT_ALL, new H2SelectAllQueryBuilder());
-        dmlEnumMap.put(DMLType.SELECT_BY_ID, new H2SelectByIdQueryBuilder());
-        dmlEnumMap.put(DMLType.INSERT, new H2InsertQueryBuilder());
-        dmlEnumMap.put(DMLType.UPDATE, new H2UpdateQueryBuilder());
-        dmlEnumMap.put(DMLType.DELETE, new H2DeleteQueryBuilder());
-    }
-
-    @Override
-    public <T> String queryBuilder(DMLType dmlType, Class<T> clazz) {
+    private <T> DMLBuilderData(Class<T> clazz) {
         confirmEntityAnnotation(clazz);
-        return dmlEnumMap.get(dmlType).buildQuery(getTableName(clazz), getEntityColumnData(clazz));
+        this.tableName = getTableName(clazz);
+        this.columns = getEntityColumnData(clazz);
     }
 
-    @Override
-    public String queryBuilder(DMLType dmlType, Object entityInstance) {
-        List<DMLColumnData> dmlColumnData = getInstanceColumnData(entityInstance);
-        return dmlEnumMap.get(dmlType).buildQuery(getTableName(entityInstance.getClass()), dmlColumnData, getPkValue(dmlColumnData));
+    private DMLBuilderData(Object entityInstance) {
+        confirmEntityAnnotation(entityInstance.getClass());
+        this.tableName = getTableName(entityInstance.getClass());
+        this.columns = getInstanceColumnData(entityInstance);
+        this.id = getPkValue(this.columns);
     }
 
-    @Override
-    public <T> String queryBuilder(DMLType dmlType, Class<T> clazz, Object Id) {
+    private <T> DMLBuilderData(Class<T> clazz, Object id) {
         confirmEntityAnnotation(clazz);
-        return dmlEnumMap.get(dmlType).buildQuery(getTableName(clazz), getEntityColumnData(clazz), Id);
+        this.tableName = getTableName(clazz);
+        this.columns = getEntityColumnData(clazz);
+        this.id = id;
+    }
+
+    public static <T> DMLBuilderData createDMLBuilderData(Class<T> clazz) {
+        return new DMLBuilderData(clazz);
+    }
+
+    public static DMLBuilderData createDMLBuilderData(Object entityInstance) {
+        return new DMLBuilderData(entityInstance);
+    }
+
+    public static <T> DMLBuilderData createDMLBuilderData(Class<T> clazz, Object id) {
+        return new DMLBuilderData(clazz, id);
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public List<DMLColumnData> getColumns() {
+        return columns;
+    }
+
+    public Object getId() {
+        return id;
+    }
+
+    public String wrapString() {
+        return (this.id instanceof String) ? StringUtil.wrapSingleQuote(this.id) : String.valueOf(this.id);
+    }
+
+    // 테이블 열 정의 생성
+    public String getColumnDefinitions() {
+        return this.columns.stream()
+                .filter(column -> !column.isPrimaryKey())
+                .map(column -> column.getColumnName() + EQUALS + column.getColumnValueByType())
+                .collect(Collectors.joining(COMMA));
+    }
+
+    // 테이블 컬럼명 생성
+    public String getColumnNames() {
+        return this.columns.stream()
+                .map(DMLColumnData::getColumnName)
+                .collect(Collectors.joining(COMMA));
+    }
+
+    //테이블 컬럼 Value 값들 생성
+    public String getColumnValues() {
+        return this.columns.stream()
+                .map(dmlColumnData -> {
+                    Object value = dmlColumnData.getColumnValue();
+                    if (dmlColumnData.getColumnType() == String.class) { //데이터 타입이 String 이면 작은 따옴표로 묶어준다.
+                        return StringUtil.wrapSingleQuote(value);
+                    }
+                    return String.valueOf(value);
+                })
+                .collect(Collectors.joining(COMMA));
+    }
+
+    //PkName를 가져온다.
+    public String getPkName() {
+        return this.columns.stream()
+                .filter(DMLColumnData::isPrimaryKey)
+                .map(DMLColumnData::getColumnName)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(PK_NOT_EXIST_MESSAGE));
     }
 
     //Entity Class의 컬럼명과 컬럼데이터타입을 가져온다.
@@ -148,12 +207,4 @@ public class H2DMLBuilder implements DMLBuilder {
                 .orElseThrow(() -> new IllegalArgumentException(PK_NOT_EXIST_MESSAGE));
     }
 
-    //PkValue를 가져온다.
-    public static String getPkName(List<DMLColumnData> DMLColumnDataList) {
-        return DMLColumnDataList.stream()
-                .filter(DMLColumnData::isPrimaryKey)
-                .map(DMLColumnData::getColumnName)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(PK_NOT_EXIST_MESSAGE));
-    }
 }
