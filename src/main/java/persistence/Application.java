@@ -33,7 +33,7 @@ public class Application {
             InsertQuery insertQueryBuilder = new InsertQuery(person);
             jdbcTemplate.execute(insertQueryBuilder.makeQuery());
 
-            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
+            SelectQuery selectQueryBuilder = new SelectQuery(Person.class);
             List<Person> persons = jdbcTemplate.query(selectQueryBuilder.findAll(), resultSet -> {
                 String email = resultSet.getString("email");
                 int age = resultSet.getInt("old");

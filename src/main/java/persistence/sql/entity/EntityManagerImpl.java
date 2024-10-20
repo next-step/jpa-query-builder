@@ -3,7 +3,8 @@ package persistence.sql.entity;
 import jdbc.JdbcTemplate;
 import persistence.sql.dml.DeleteQuery;
 import persistence.sql.dml.InsertQuery;
-import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.SelectQuery;
+import persistence.sql.dml.UpdateQuery;
 
 public class EntityManagerImpl implements EntityManager {
     private final JdbcTemplate jdbcTemplate;
@@ -14,7 +15,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> T find(Class<T> clazz, Long id) {
-        SelectQueryBuilder selectQuery = new SelectQueryBuilder(clazz);
+        SelectQuery selectQuery = new SelectQuery(clazz);
         selectQuery.findById(id);
         return jdbcTemplate.queryForObject(selectQuery.findById(id), new EntityRowMapper<>(clazz));
     }
@@ -29,8 +30,13 @@ public class EntityManagerImpl implements EntityManager {
     @Override
     public void remove(Object entity) {
         DeleteQuery deleteQuery = new DeleteQuery(entity);
-        deleteQuery.makeQuery();
         jdbcTemplate.execute(deleteQuery.makeQuery());
+    }
+
+    @Override
+    public void update(Object entity) {
+        UpdateQuery updateQuery = new UpdateQuery(entity);
+        jdbcTemplate.execute(updateQuery.makeQuery());
     }
 
 }

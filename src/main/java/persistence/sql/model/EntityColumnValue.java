@@ -18,7 +18,7 @@ public class EntityColumnValue {
             Object fieldObject = field.get(object);
 
             if (field.get(object) instanceof String) {
-                return String.format("'%s'", String.valueOf(fieldObject));
+                return String.format("'%s'", fieldObject);
             }
 
             if (field.get(object) == null) {

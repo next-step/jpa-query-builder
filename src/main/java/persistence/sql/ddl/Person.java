@@ -38,4 +38,8 @@ public class Person {
         this.age = age;
         this.email = email;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

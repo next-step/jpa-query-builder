@@ -83,7 +83,7 @@ public class QueryBuilderIntegrationTest {
         InsertQuery insertQueryBuilder = new InsertQuery(person);
         jdbcTemplate.execute(insertQueryBuilder.makeQuery());
 
-        SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(Person.class);
+        SelectQuery selectQueryBuilder = new SelectQuery(Person.class);
         Person findByIdPerson = jdbcTemplate.queryForObject(selectQueryBuilder.findById(1L), resultSet -> {
             long id = resultSet.getLong("id");
             int old = resultSet.getInt("old");
@@ -113,5 +113,8 @@ public class QueryBuilderIntegrationTest {
 
         EntityManagerImpl entityManager = new EntityManagerImpl(jdbcTemplate);
         Person person1 = entityManager.find(clazz, 1L);
+
+        person1.setEmail("test123123@aaa.com");
+        entityManager.update(person1);
     }
 }
