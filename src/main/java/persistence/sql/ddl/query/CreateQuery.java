@@ -1,13 +1,11 @@
 package persistence.sql.ddl.query;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import static persistence.validator.AnnotationValidator.notIdentifier;
+import static persistence.validator.AnnotationValidator.notPredicate;
+
 import jakarta.persistence.Transient;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
-import org.jetbrains.annotations.NotNull;
 import persistence.sql.metadata.Identifier;
 import persistence.sql.metadata.TableName;
 
@@ -19,23 +17,12 @@ public record CreateQuery(TableName tableName,
         this(
                 new TableName(clazz),
                 Arrays.stream(clazz.getDeclaredFields())
-                        .filter(notIdField())
-                        .filter(notTransientField())
+                        .filter(notIdentifier())
+                        .filter(notPredicate(Transient.class))
                         .map(ColumnMeta::new)
                         .toList(),
                 Identifier.from(clazz.getDeclaredFields())
         );
-    }
-
-    @NotNull
-    private static Predicate<Field> notIdField() {
-        return field -> !field.isAnnotationPresent(Id.class)
-                && !field.isAnnotationPresent(GeneratedValue.class);
-    }
-
-    @NotNull
-    private static Predicate<Field> notTransientField() {
-        return field -> !field.isAnnotationPresent(Transient.class);
     }
 
 }
