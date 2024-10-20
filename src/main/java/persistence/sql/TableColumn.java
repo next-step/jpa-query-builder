@@ -9,6 +9,7 @@ public class TableColumn {
     private final Class<?> type;
     private final String name;
     private final boolean isNotNullable;
+    private Object value;
 
     public TableColumn(Field column) {
         this.type = column.getType();
