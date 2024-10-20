@@ -6,6 +6,6 @@ public interface Repository<T, ID> {
 
     List<T> findAll();
 
-    T findById();
+    T findById(ID id);
 
 }

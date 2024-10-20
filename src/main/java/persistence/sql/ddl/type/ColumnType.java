@@ -1,6 +1,6 @@
 package persistence.sql.ddl.type;
 
-import persistence.sql.ddl.exception.NotExistException;
+import persistence.exception.NotExistException;
 
 import java.sql.Types;
 import java.util.Arrays;

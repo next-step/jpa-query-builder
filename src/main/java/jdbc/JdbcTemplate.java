@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcTemplate {
+
     private final Connection connection;
 
     public JdbcTemplate(final Connection connection) {
