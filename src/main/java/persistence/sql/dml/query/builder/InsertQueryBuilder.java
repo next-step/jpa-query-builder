@@ -3,13 +3,14 @@ package persistence.sql.dml.query.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 import persistence.sql.dialect.Dialect;
+import persistence.sql.dml.query.ColumnNameValue;
 import persistence.sql.metadata.ColumnName;
 import persistence.sql.metadata.TableName;
 import persistence.sql.query.QueryClauseGenerator;
 
 public class InsertQueryBuilder {
 
-    private static final String INSERT_INTO_TABLE = "insert into table";
+    private static final String INSERT_INTO = "insert into";
     private static final String VALUES = "values";
 
     private final Dialect dialect;
@@ -28,34 +29,34 @@ public class InsertQueryBuilder {
         return queryString.toString();
     }
 
-    public InsertQueryBuilder insert(TableName tableName, List<ColumnName> columnNames) {
-        queryString.append( INSERT_INTO_TABLE )
+    public InsertQueryBuilder insert(TableName tableName, List<ColumnNameValue> columns) {
+        queryString.append( INSERT_INTO )
                 .append( " " )
                 .append( tableName.value() )
-                .append( columnClause(columnNames) );
+                .append( columnClause(columns.stream().map(ColumnNameValue::columnName).toList()) );
         return this;
     }
 
-    public InsertQueryBuilder values(List<ColumnName> columnNames) {
+    public InsertQueryBuilder values(List<ColumnNameValue> columns) {
         queryString.append( " " )
                 .append( VALUES )
-                .append( valueClause(columnNames) );
+                .append( valueClause(columns.stream().map(ColumnNameValue::columnValue).toList()) );
         return this;
     }
 
     private String columnClause(List<ColumnName> columnNames) {
         return new StringBuilder()
                 .append( " (" )
-                .append( QueryClauseGenerator.columnClause(columnNames) )
+                .append( QueryClauseGenerator.columnClause(columnNames))
                 .append( ")" )
                 .toString();
     }
 
-    private String valueClause(List<ColumnName> columnNames) {
+    private String valueClause(List<Object> columnValues) {
         return new StringBuilder()
                 .append(" (")
-                .append( columnNames.stream()
-                        .map(name -> "?")
+                .append( columnValues.stream()
+                        .map(columnValue -> dialect.getColumnValueFormat(columnValue.getClass(), columnValue) )
                         .collect(Collectors.joining(", ")) )
                 .append(")")
                 .toString();

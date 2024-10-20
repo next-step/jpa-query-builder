@@ -4,6 +4,7 @@ import jakarta.persistence.GenerationType;
 import persistence.exception.UnknownException;
 
 import java.sql.Types;
+import persistence.sql.ddl.type.ColumnType;
 
 public interface Dialect {
 
@@ -21,6 +22,13 @@ public interface Dialect {
         }
 
         throw new UnknownException("sql type : " + type);
+    }
+
+    default String getColumnValueFormat(Class<?> type, Object columnValue) {
+        if (ColumnType.isVarcharType(type)) {
+            return "'" + columnValue + "'";
+        }
+        return columnValue.toString();
     }
 
     default String getIdentifierGenerationType(GenerationType type) {
