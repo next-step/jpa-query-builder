@@ -10,25 +10,26 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class InsertQueryBuilder {
-    private String tableName;
-    private String columnClause;
-    private String valueClause;
-
     private InsertQueryBuilder() {
     }
 
-    public static InsertQueryBuilder newInstance() {
-        return new InsertQueryBuilder();
+    public static String generateQuery(Object entity) throws IllegalAccessException {
+        String tableName = NameUtils.getTableName(entity.getClass());
+        String columnClause = columnClause(entity.getClass());
+        String valueClause = valueClause(entity);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("insert into {TABLE_NAME} ")
+                .append(columnClause)
+                .append(" values ")
+                .append(valueClause)
+                .append(";");
+
+        return stringBuilder.toString().replace("{TABLE_NAME}", tableName);
     }
 
-    public InsertQueryBuilder entity(Object entity) throws IllegalAccessException {
-        this.tableName = NameUtils.getTableName(entity.getClass());
-        this.setColumnClause(entity.getClass());
-        this.setValueClause(entity);
-        return this;
-    }
-
-    private void setColumnClause(Class<?> clazz) {
+    private static String columnClause(Class<?> clazz) {
         StringBuilder stringBuilder = new StringBuilder("(");
 
         Field[] managedFields = getManagedFields(clazz);
@@ -41,10 +42,10 @@ public class InsertQueryBuilder {
         stringBuilder.setLength(stringBuilder.length() - 2);
         stringBuilder.append(")");
 
-        this.columnClause = stringBuilder.toString();
+        return stringBuilder.toString();
     }
 
-    private void setValueClause(Object object) throws IllegalAccessException {
+    private static String valueClause(Object object) throws IllegalAccessException {
         StringBuilder stringBuilder = new StringBuilder("(");
 
         Class<?> clazz = object.getClass();
@@ -58,16 +59,16 @@ public class InsertQueryBuilder {
 
         stringBuilder.setLength(stringBuilder.length() - 2);
         stringBuilder.append(")");
-        this.valueClause = stringBuilder.toString();
+        return stringBuilder.toString();
     }
 
-    private Field[] getManagedFields(Class<?> clazz) {
+    private static Field[] getManagedFields(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(this::isManagedField)
+                .filter(InsertQueryBuilder::isManagedField)
                 .toArray(Field[]::new);
     }
 
-    private boolean isManagedField(Field field) {
+    private static boolean isManagedField(Field field) {
         if (field.isAnnotationPresent(Transient.class)) {
             return false;
         }
@@ -77,17 +78,5 @@ public class InsertQueryBuilder {
             return false;
         }
         return true;
-    }
-
-    public String build() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("insert into {TABLE_NAME} ")
-                .append(this.columnClause)
-                .append(" values ")
-                .append(this.valueClause)
-                .append(";");
-
-        return stringBuilder.toString().replace("{TABLE_NAME}", this.tableName);
     }
 }

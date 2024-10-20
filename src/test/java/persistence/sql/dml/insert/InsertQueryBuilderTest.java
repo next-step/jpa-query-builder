@@ -16,9 +16,7 @@ public class InsertQueryBuilderTest {
         personV3.setName("sdgvas");
         personV3.setAge(123);
 
-        String insertQuery = InsertQueryBuilder.newInstance()
-                .entity(personV3)
-                .build();
+        String insertQuery = InsertQueryBuilder.generateQuery(personV3);
 
         logger.debug("{}", insertQuery);
     }
