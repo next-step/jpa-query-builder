@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import persistence.sql.ddl.TableName;
 import persistence.sql.ddl.ValidateEntity;
+import persistence.sql.dml.querybuilder.QueryBuilder;
 
 public class DeleteQuery<T> {
 
@@ -13,7 +14,7 @@ public class DeleteQuery<T> {
     }
 
     public String generateQuery() {
-        return new SimpleQueryBuilder()
+        return new QueryBuilder()
             .delete()
             .from(new TableName(entity.getClass()).getTableName())
             .where("id = " + new EntityId<>(entity).getId())

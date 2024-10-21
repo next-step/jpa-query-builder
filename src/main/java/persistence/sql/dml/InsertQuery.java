@@ -6,6 +6,7 @@ import persistence.sql.ddl.ColumnName;
 import persistence.sql.ddl.ColumnType;
 import persistence.sql.ddl.EntityTableMetadata;
 import persistence.sql.ddl.ValidateEntity;
+import persistence.sql.dml.querybuilder.QueryBuilder;
 
 public class InsertQuery<T> {
 
@@ -27,7 +28,7 @@ public class InsertQuery<T> {
     }
 
     private String generateInsertQuery(String tableName, String columns, String values) {
-        return new SimpleQueryBuilder()
+        return new QueryBuilder()
             .insertInto(tableName)
             .columns(columns)
             .values(values)
