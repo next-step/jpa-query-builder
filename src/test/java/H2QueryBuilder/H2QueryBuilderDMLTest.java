@@ -71,4 +71,18 @@ class H2QueryBuilderDMLTest {
         Assertions.assertThat(findByIdResult).isEqualTo("select id, nick_name, old, email from users where id = 1;");
     }
 
+    @Test
+    @DisplayName("delete 쿼리 정상 테스트")
+    void deleteTest() {
+        //given
+        H2QueryBuilderDML h2QueryBuilderDML = new H2QueryBuilderDML();
+        Person person = 완벽한_사람_객체(1L, "장현준", 29, "qwerty@naver.com", 0);
+
+        //when
+        String deleteResult = h2QueryBuilderDML.delete(person);
+
+        //then
+        Assertions.assertThat(deleteResult).isEqualTo("delete from users where id = 1 and nick_name = '장현준' and old = 29 and email = 'qwerty@naver.com';");
+    }
+
 }

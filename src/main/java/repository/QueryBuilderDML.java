@@ -6,4 +6,6 @@ public interface QueryBuilderDML {
     String findAll(Object object);
 
     String findById(Object object);
+
+    String delete(Object object);
 }
