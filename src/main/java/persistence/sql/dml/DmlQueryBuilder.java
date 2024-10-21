@@ -49,8 +49,7 @@ public class DmlQueryBuilder {
                 )
                 .collect(Collectors.joining(", "));
 
-        List<Map<String, Object>> equalFilters = getDefaultEqualFilters(table);
-        FindOption findOption = getFindOptionBuilderWithWhere(table, equalFilters).build();
+        FindOption findOption = getDefaultFindOptionWithPrimaryEqualClause(table);
 
         return query + " " + setQuery + " " + findOption.joinWhereClauses(dialect) + ";";
     }
@@ -84,40 +83,20 @@ public class DmlQueryBuilder {
 
         String deleteSql = String.format(DELETE_FORMAT, dialect.getIdentifierQuoted(table.getName()));
 
-        FindOption findOption = getFindOptionBuilderWithWhere(table, getDefaultEqualFilters(table)).build();
-        String whereClauseSql = findOption.joinWhereClauses(dialect);
+        FindOption findOption = getDefaultFindOptionWithPrimaryEqualClause(table);
 
-        return deleteSql + " " + whereClauseSql + ";";
+        return deleteSql + " " + findOption.joinWhereClauses(dialect) + ";";
     }
 
-    public String buildSelectQuery(
-            Class<?> entityClass
-    ) {
-        return buildSelectQuery(entityClass, new ArrayList<>(), new ArrayList<>());
-    }
-
-    public String buildSelectQuery(
-            Class<?> entityClass,
-            List<Map<String, Object>> equalFilters
-    ) {
-        return buildSelectQuery(entityClass, new ArrayList<>(), equalFilters);
-    }
-
-    public String buildSelectQuery(
-            Class<?> entityClass,
-            List<String> selectingColumns,
-            List<Map<String, Object>> equalFilters
-    ) {
+    public String buildSelectByIdQuery(Class<?> entityClass, Long id) {
         EntityTable table = EntityFactory.createEmptySchema(entityClass);
 
-        EntityColumn[] columns = selectingColumns.stream()
-                .map(table::getColumn)
-                .toArray(EntityColumn[]::new);
+        EntityColumn conditionColumn = table.getColumn("id");
+        FindOption findOption = new FindOptionBuilder()
+                .where(new EqualClause(conditionColumn, id))
+                .build();
 
-        FindOptionBuilder findOptionBuilder = getFindOptionBuilderWithWhere(table, equalFilters)
-                .selectColumns(columns);
-
-        return buildSelectQuery(entityClass, findOptionBuilder.build());
+        return buildSelectQuery(entityClass, findOption);
     }
 
     private String buildSelectQuery(Class<?> entityClass, FindOption findOption) {
@@ -142,41 +121,10 @@ public class DmlQueryBuilder {
         return query + ";";
     }
 
-    private List<Map<String, Object>> getDefaultEqualFilters(EntityTable table) {
-        return table.getPrimaryColumns().stream()
-                .map(column -> Map.of(column.getName(), column.getValue()))
-                .toList();
-    }
-
-    private FindOptionBuilder getFindOptionBuilderWithWhere(
-            EntityTable table,
-            List<Map<String, Object>> equalFilters
-    ) {
-        FindOptionBuilder findOptionBuilder = new FindOptionBuilder();
-
-        if (equalFilters.isEmpty()) {
-            return findOptionBuilder;
-        }
-
-        for (Map<String, Object> filter : equalFilters) {
-            if (!equalFilters.isEmpty()) {
-                Clause[] equalClauses = toEqualClauses(table, filter);
-                findOptionBuilder.where(equalClauses);
-            }
-        }
-
-        return findOptionBuilder;
-    }
-
-    private Clause[] toEqualClauses(EntityTable table, Map<String, Object> equalFilter) {
-        List<Clause> currentGroup = new ArrayList<>();
-
-        for (Map.Entry<String, Object> entry : equalFilter.entrySet()) {
-            EntityColumn column = table.getColumn(entry.getKey());
-            Clause clause = new EqualClause(column, entry.getValue());
-            currentGroup.add(clause);
-        }
-
-        return currentGroup.toArray(Clause[]::new);
+    private FindOption getDefaultFindOptionWithPrimaryEqualClause(EntityTable table) {
+        EntityColumn conditionColumn = table.getColumn("id");
+        return new FindOptionBuilder()
+                .where(new EqualClause(conditionColumn, conditionColumn.getValue()))
+                .build();
     }
 }

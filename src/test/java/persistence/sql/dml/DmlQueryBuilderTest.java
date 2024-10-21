@@ -6,13 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import persistence.model.exception.ColumnInvalidException;
-import persistence.model.exception.ColumnNotFoundException;
 import persistence.sql.dialect.DialectFactory;
 import persistence.fixture.PersonWithTransientAnnotation;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -106,74 +101,14 @@ public class DmlQueryBuilderTest {
     @DisplayName("Select 쿼리 생성 테스트")
     class SelectQueryTests {
         @Test
-        @DisplayName("조건절 없이 테이블의 모든 레코드를 조회한다.")
-        void testCreateSelectQueryWithoutClauses() {
-            String expectedQuery = "SELECT * FROM \"users\";";
-
-            String resultQuery = queryBuilder.buildSelectQuery(PersonWithTransientAnnotation.class);
-
-            assertEquals(expectedQuery, resultQuery);
-        }
-
-        @Test
-        @DisplayName("조건절로 테이블의 모든 레코드를 조회한다.")
-        void testCreateSelectQueryWithClauses() {
-            // AND로 구분된 clause끼리는 순서보장 안되어도 상관 없음
-            String expectedQuery1 = "SELECT * FROM \"users\" " +
-                    "WHERE (\"email\" = 'test@test.com' AND \"nick_name\" = '홍길동') " +
-                    "OR (\"id\" = 1);";
-            String expectedQuery2 = "SELECT * FROM \"users\" " +
-                    "WHERE (\"nick_name\" = '홍길동' AND \"email\" = 'test@test.com') " +
-                    "OR (\"id\" = 1);";
-
-
-            String resultQuery = queryBuilder.buildSelectQuery(
-                    PersonWithTransientAnnotation.class,
-                    List.of(
-                            Map.of("email", "test@test.com", "nick_name", "홍길동"),
-                            Map.of("id", 1L)
-                    )
-            );
-
-            assertTrue(resultQuery.equals(expectedQuery1) || resultQuery.equals(expectedQuery2));
-        }
-
-        @Test
         @DisplayName("pk로 테이블의 특정 필드를 조회한다.")
         void testCreateSelectSpecificColumnsQueryWithClauses() {
-            String expectedQuery = "SELECT \"email\", \"nick_name\", \"id\" FROM \"users\" " +
+            String expectedQuery = "SELECT * FROM \"users\" " +
                     "WHERE (\"id\" = 1);";
 
-            String resultQuery = queryBuilder.buildSelectQuery(
-                    PersonWithTransientAnnotation.class,
-                    List.of("email", "nick_name", "id"),
-                    List.of(new LinkedHashMap<>(Map.of("id", 1L)))
-            );
+            String resultQuery = queryBuilder.buildSelectByIdQuery(PersonWithTransientAnnotation.class, 1L);
 
             assertEquals(expectedQuery, resultQuery);
-        }
-
-        @Test
-        @DisplayName("존재하지 않는 컬럼에 대한 비교절을 제시하면 에러를 내뱉는다.")
-        void testThrowForUnknownClauses() {
-            assertThrows(ColumnNotFoundException.class, () -> {
-                queryBuilder.buildSelectQuery(
-                        PersonWithTransientAnnotation.class,
-                        List.of(new LinkedHashMap<>(Map.of("hobby", "잠자기")))
-                );
-            });
-        }
-
-        @Test
-        @DisplayName("존재하지 않는 컬럼을 SELECT하려 한다면 에러를 내뱉는다.")
-        void testThrowForUnknownSelections() {
-            assertThrows(ColumnNotFoundException.class, () -> {
-                queryBuilder.buildSelectQuery(
-                        PersonWithTransientAnnotation.class,
-                        List.of("id", "hobby"),
-                        List.of(new LinkedHashMap<>(Map.of("id", 1L)))
-                );
-            });
         }
     }
 

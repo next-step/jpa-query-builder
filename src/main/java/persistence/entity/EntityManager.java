@@ -3,9 +3,9 @@ package persistence.entity;
 public interface EntityManager {
     <T> T findById(Class<T> clazz, Long Id);
 
-    <T> void persist(T entity);
+    void persist(Object entity);
 
-    <T> void remove(T entity);
+    void remove(Object entity);
 
-    <T> void update(T entity);
+    void update(Object entity);
 }

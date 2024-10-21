@@ -4,9 +4,6 @@ import jdbc.JdbcTemplate;
 import jdbc.RowMapperImpl;
 import persistence.sql.dml.DmlQueryBuilder;
 
-import java.util.List;
-import java.util.Map;
-
 public class EntityManagerImpl implements EntityManager {
     private final DmlQueryBuilder queryBuilder;
 
@@ -19,24 +16,24 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> T findById(Class<T> clazz, Long id) {
-        String selectQuery = queryBuilder.buildSelectQuery(clazz, List.of(Map.of("id", id)));
+        String selectQuery = queryBuilder.buildSelectByIdQuery(clazz, id);
         return jdbcTemplate.queryForObject(selectQuery, resultSet ->
                 new RowMapperImpl<>(clazz).mapRow(resultSet)
         );
     }
 
     @Override
-    public <T> void persist(T entity) {
+    public void persist(Object entity) {
         jdbcTemplate.execute(queryBuilder.buildInsertQuery(entity));
     }
 
     @Override
-    public <T> void remove(T entity) {
+    public void remove(Object entity) {
         jdbcTemplate.execute(queryBuilder.buildDeleteQuery(entity));
     }
 
     @Override
-    public <T> void update(T entity) {
+    public void update(Object entity) {
         jdbcTemplate.execute(queryBuilder.buildUpdateQuery(entity));
     }
 }
