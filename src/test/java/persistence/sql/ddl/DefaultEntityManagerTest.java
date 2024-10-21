@@ -21,6 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DefaultEntityManagerTest {
     private DatabaseServer server;
 
+    private static void executeQuery(Connection connection, String query) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(query);
+        }
+    }
+
     @BeforeEach
     public void setUp() throws SQLException {
         Dialect dialect = new H2Dialect();
@@ -133,12 +139,6 @@ class DefaultEntityManagerTest {
         Person found = entityManager.find(Person.class, saved.getId());
 
         assertThat(found.getEmail()).isEqualTo("bobong");
-    }
-
-    private static void executeQuery(Connection connection, String query) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
-        }
     }
 
     @AfterEach
