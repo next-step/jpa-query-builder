@@ -1,4 +1,4 @@
-package persistence.sql.fixture;
+package persistence.fixture;
 
 import jakarta.persistence.*;
 
@@ -41,5 +41,41 @@ public class PersonWithTransientAnnotation {
     }
 
     public PersonWithTransientAnnotation() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 }

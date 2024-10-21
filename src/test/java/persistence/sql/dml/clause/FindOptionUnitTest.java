@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import persistence.model.EntityColumn;
 import persistence.sql.dialect.Dialect;
-import persistence.sql.fixture.PersonWithTransientAnnotation;
+import persistence.fixture.PersonWithTransientAnnotation;
 
 import java.util.List;
 import java.util.Optional;

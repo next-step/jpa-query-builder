@@ -1,5 +1,7 @@
 package persistence.model;
 
+import persistence.model.exception.ColumnNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,5 +34,12 @@ public class EntityTableColumns {
         return columns.stream()
                 .filter(column -> !column.isPrimary())
                 .collect(Collectors.toList());
+    }
+
+    public EntityColumn findByName(String name) {
+        return columns.stream()
+                .filter(column -> column.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new ColumnNotFoundException(name));
     }
 }

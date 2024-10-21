@@ -106,3 +106,24 @@
 - [x] 위의 정보를 바탕으로 모두 조회(findAll) 기능 구현해보기
 - [x] 위의 정보를 바탕으로 단건 조회(findById) 기능 구현해보기
 - [x] 위의 정보를 바탕으로 delete 쿼리 만들어보기
+
+
+---
+
+## step4
+
+요구사항
+
+- [x] EntityManager 인터페이스를 생성 후 find 구현
+  ```
+  <T> T find(Class<T> clazz, Long Id);
+  ```
+- [x] EntityManager 인터페이스를 생성 후 persist 구현
+  ```
+  void persist(Object entity);
+  ```
+- [x] EntityManager 인터페이스를 생성 후 remove 구현
+  ```
+  void remove(Object entity);
+  ```
+- [x] EntityManager 인터페이스를 생성 후 update 구현

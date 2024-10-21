@@ -3,17 +3,13 @@ package persistence.sql.dml;
 import database.H2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import persistence.model.EntityColumn;
-import persistence.model.EntityFactory;
-import persistence.model.EntityTable;
+import persistence.model.exception.ColumnInvalidException;
 import persistence.sql.dialect.DialectFactory;
-import persistence.sql.dml.clause.EqualClause;
-import persistence.sql.dml.clause.FindOption;
-import persistence.sql.dml.clause.FindOptionBuilder;
-import persistence.sql.fixture.PersonWithTransientAnnotation;
+import persistence.fixture.PersonWithTransientAnnotation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DmlQueryBuilderTest {
     DmlQueryBuilder queryBuilder;
@@ -23,139 +19,124 @@ public class DmlQueryBuilderTest {
         queryBuilder = new DmlQueryBuilder(DialectFactory.create(H2.class));
     }
 
-    @Test
-    @DisplayName("모든 필드의 값이 채워진 객체의 insert문을 생성한다.")
-    void testCreateInsertQueryWithAllColumnsSet() {
-        String expectedQuery = "INSERT INTO \"users\" " +
-                "(\"id\", \"nick_name\", \"old\", \"email\") " +
-                "VALUES (1, '홍길동', 20, 'test@test.com')";
+    @Nested
+    @DisplayName("Update 쿼리 생성 테스트")
+    class UpdateQueryTests {
+        @Test
+        @DisplayName("엔티티 오브젝트의 PK를 기준으로 업데이트 쿼리를 생성한다.")
+        void succeedToCreateQuery() {
+            String expectedQuery = "UPDATE \"users\" " +
+                    "SET \"id\" = 1, \"nick_name\" = '홍길동2', \"old\" = 30, \"email\" = 'test@test.com' " +
+                    "WHERE (\"id\" = 1);";
 
-        PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
-                1L, "홍길동", 20, "test@test.com", 1
-        );
-        String resultQuery = queryBuilder.buildInsertQuery(user);
+            PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
+                    1L, "홍길동2", 30, "test@test.com", 1
+            );
+            String resultQuery = queryBuilder.buildUpdateQuery(user);
 
-        assertEquals(expectedQuery, resultQuery);
+            assertEquals(expectedQuery, resultQuery);
+        }
+
+        @Test
+        @DisplayName("엔티티 오브젝트에 PK가 없으면 실패한다.")
+        void failToCreateQuery() {
+            PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
+                    "홍길동2", 30, "test@test.com", 1
+            );
+
+            assertThrows(ColumnInvalidException.class, () -> {
+                queryBuilder.buildDeleteQuery(user);
+            });
+        }
     }
 
-    @Test
-    @DisplayName("id가 없는 객체의 insert문을 생성한다.")
-    void testCreateInsertQueryWithoutId() {
-        String expectedQuery = "INSERT INTO \"users\" " +
-                "(\"nick_name\", \"old\", \"email\") " +
-                "VALUES ('홍길동', 20, 'test@test.com')";
+    @Nested
+    @DisplayName("Insert 쿼리 생성 테스트")
+    class InsertQueryTests {
+        @Test
+        @DisplayName("모든 필드의 값이 채워진 객체의 insert문을 생성한다.")
+        void testCreateInsertQueryWithAllColumnsSet() {
+            String expectedQuery = "INSERT INTO \"users\" " +
+                    "(\"id\", \"nick_name\", \"old\", \"email\") " +
+                    "VALUES (1, '홍길동', 20, 'test@test.com');";
 
-        PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
-                "홍길동", 20, "test@test.com", 1
-        );
-        String resultQuery = queryBuilder.buildInsertQuery(user);
+            PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
+                    1L, "홍길동", 20, "test@test.com", 1
+            );
+            String resultQuery = queryBuilder.buildInsertQuery(user);
 
-        assertEquals(expectedQuery, resultQuery);
+            assertEquals(expectedQuery, resultQuery);
+        }
+
+        @Test
+        @DisplayName("id가 없는 객체의 insert문을 생성한다.")
+        void testCreateInsertQueryWithoutId() {
+            String expectedQuery = "INSERT INTO \"users\" " +
+                    "(\"nick_name\", \"old\", \"email\") " +
+                    "VALUES ('홍길동', 20, 'test@test.com');";
+
+            PersonWithTransientAnnotation user = new PersonWithTransientAnnotation(
+                    "홍길동", 20, "test@test.com", 1
+            );
+            String resultQuery = queryBuilder.buildInsertQuery(user);
+
+            assertEquals(expectedQuery, resultQuery);
+        }
+
+        @Test
+        @DisplayName("null이 포함된 객체의 insert문을 생성한다.")
+        void testCreateInsertQueryWithNull() {
+            String expectedQuery = "INSERT INTO \"users\" " +
+                    "(\"nick_name\", \"old\", \"email\") " +
+                    "VALUES (NULL, NULL, 'test@test.com');";
+
+            PersonWithTransientAnnotation user = new PersonWithTransientAnnotation("test@test.com");
+            String resultQuery = queryBuilder.buildInsertQuery(user);
+
+            assertEquals(expectedQuery, resultQuery);
+        }
     }
 
-    @Test
-    @DisplayName("null이 포함된 객체의 insert문을 생성한다.")
-    void testCreateInsertQueryWithNull() {
-        String expectedQuery = "INSERT INTO \"users\" " +
-                "(\"nick_name\", \"old\", \"email\") " +
-                "VALUES (NULL, NULL, 'test@test.com')";
+    @Nested
+    @DisplayName("Select 쿼리 생성 테스트")
+    class SelectQueryTests {
+        @Test
+        @DisplayName("pk로 테이블의 특정 필드를 조회한다.")
+        void testCreateSelectSpecificColumnsQueryWithClauses() {
+            String expectedQuery = "SELECT * FROM \"users\" " +
+                    "WHERE (\"id\" = 1);";
 
-        PersonWithTransientAnnotation user = new PersonWithTransientAnnotation("test@test.com");
-        String resultQuery = queryBuilder.buildInsertQuery(user);
+            String resultQuery = queryBuilder.buildSelectByIdQuery(PersonWithTransientAnnotation.class, 1L);
 
-        assertEquals(expectedQuery, resultQuery);
+            assertEquals(expectedQuery, resultQuery);
+        }
     }
 
-    @Test
-    @DisplayName("조건절 없이 테이블의 모든 레코드를 조회한다.")
-    void testCreateSelectQueryWithoutClauses() {
-        String expectedQuery = "SELECT * FROM \"users\"";
+    @Nested
+    @DisplayName("Delete 쿼리 생성 테스트")
+    class DeleteQueryTests {
 
-        FindOption findOption = new FindOptionBuilder().build();
+        @Test
+        @DisplayName("엔티티 객체가 주어지면 PK를 찾아 레코드를 삭제한다.")
+        void succeedToDeleteByObject() {
+            String expectedQuery = "DELETE FROM \"users\" WHERE (\"id\" = 1);";
 
-        String resultQuery =  queryBuilder.buildSelectQuery(
-                PersonWithTransientAnnotation.class,
-                findOption
-        );
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation(
+                    1L, "홍길동", 20, "test@test.com", 1
+            );
+            String resultQuery = queryBuilder.buildDeleteQuery(person);
 
-        assertEquals(expectedQuery, resultQuery);
-    }
+            assertEquals(expectedQuery, resultQuery);
+        }
 
-    @Test
-    @DisplayName("조건절로 테이블의 모든 레코드를 조회한다.")
-    void testCreateSelectQueryWithClauses() {
-        String expectedQuery = "SELECT * FROM \"users\" " +
-                "WHERE (\"email\" = 'test@test.com' AND \"nick_name\" = '홍길동') " +
-                "OR (\"id\" = 1)";
+        @Test
+        @DisplayName("PK가 없는 객체가 주어지면 에러를 내뱉는다.")
+        void failToDeleteForEmptyPK() {
+            PersonWithTransientAnnotation person = new PersonWithTransientAnnotation("test@test.com");
 
-        EntityTable table = EntityFactory.createEmptySchema(PersonWithTransientAnnotation.class);
-
-        EqualClause equalClause1 = new EqualClause(getColumnByName(table, "email"), "test@test.com");
-        EqualClause equalClause2 = new EqualClause(getColumnByName(table, "nick_name"), "홍길동");
-        EqualClause equalClause3 = new EqualClause(getColumnByName(table, "id"), 1);
-
-        FindOption findOption = new FindOptionBuilder()
-                .where(equalClause1, equalClause2)
-                .where(equalClause3)
-                .build();
-
-        String resultQuery = queryBuilder.buildSelectQuery(
-                PersonWithTransientAnnotation.class,
-                findOption
-        );
-
-        assertEquals(expectedQuery, resultQuery);
-    }
-
-    @Test
-    @DisplayName("pk로 테이블의 특정 레코드를 조회한다.")
-    void testCreateSelectSpecificColumnsQueryWithClauses() {
-        String expectedQuery = "SELECT \"email\", \"nick_name\", \"id\" FROM \"users\" " +
-                "WHERE (\"id\" = 1)";
-
-        EntityTable table = EntityFactory.createEmptySchema(PersonWithTransientAnnotation.class);
-
-        EntityColumn emailColumn = getColumnByName(table, "email");
-        EntityColumn nameColumn = getColumnByName(table, "nick_name");
-        EntityColumn idColumn = getColumnByName(table, "id");
-
-        EqualClause equalClause = new EqualClause(idColumn, 1);
-
-        FindOption findOption = new FindOptionBuilder()
-                .selectColumns(emailColumn, nameColumn, idColumn)
-                .where(equalClause)
-                .build();
-
-        String resultQuery = queryBuilder.buildSelectQuery(
-                PersonWithTransientAnnotation.class,
-                findOption
-        );
-
-        assertEquals(expectedQuery, resultQuery);
-    }
-
-    @Test
-    @DisplayName("pk로 테이블의 특정 레코드를 삭제한다.")
-    void testCreateDeleteQueryById() {
-        String expectedQuery = "DELETE FROM \"users\" WHERE (\"id\" = 1)";
-
-        EntityTable table = EntityFactory.createEmptySchema(PersonWithTransientAnnotation.class);
-        EntityColumn idColumn = getColumnByName(table, "id");
-
-        String resultQuery = queryBuilder.buildDeleteQuery(
-                PersonWithTransientAnnotation.class,
-                new FindOptionBuilder()
-                        .where(new EqualClause(idColumn, 1L))
-                        .build()
-        );
-
-        assertEquals(expectedQuery, resultQuery);
-    }
-
-    private EntityColumn getColumnByName(EntityTable table, String name) {
-        return table.getColumns().stream()
-                .filter(column -> column.getName().equals(name))
-                .findFirst()
-                .orElseThrow();
+            assertThrows(ColumnInvalidException.class, () -> {
+                queryBuilder.buildDeleteQuery(person);
+            });
+        }
     }
 }

@@ -13,9 +13,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EntityTableColumnsUnitTest {
     private EntityTableColumns entityTableColumns;
 
+    private EntityColumn idColumn;
+
+    private EntityColumn nameColumn;
+
+    private EntityColumn emailColumn;
+
+    private EntityColumn ageColumn;
+
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException {
         entityTableColumns = new EntityTableColumns();
+
+        idColumn = EntityColumn.build(UnitTestEntity.class.getDeclaredField("id"), Optional.empty());
+        nameColumn = EntityColumn.build(UnitTestEntity.class.getDeclaredField("name"), Optional.empty());
+        emailColumn = EntityColumn.build(UnitTestEntity.class.getDeclaredField("email"), Optional.empty());
+        ageColumn = EntityColumn.build(UnitTestEntity.class.getDeclaredField("age"), Optional.empty());
     }
 
     @Test
@@ -24,12 +37,7 @@ public class EntityTableColumnsUnitTest {
         int initialColumnSize = entityTableColumns.getAll().size();
 
         // given
-        entityTableColumns.setColumns(List.of(
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("id"), Optional.empty()),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("name"), Optional.empty()),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("email"), Optional.empty()),
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("age"), Optional.empty())
-        ));
+        entityTableColumns.setColumns(List.of(idColumn, nameColumn, emailColumn, ageColumn));
 
         // when
         int setColumnSize = entityTableColumns.getAll().size();
@@ -44,10 +52,16 @@ public class EntityTableColumnsUnitTest {
     @Test
     @DisplayName("primary 컬럼을 조회할 수 있다.")
     void testGetPrimaryColumns() throws NoSuchFieldException {
-        entityTableColumns.setColumns(List.of(
-                EntityColumn.build(UnitTestEntity.class.getDeclaredField("id"), Optional.empty())
-        ));
+        entityTableColumns.setColumns(List.of(idColumn));
 
         assertEquals(1, entityTableColumns.getPrimaryColumns().size());
+    }
+
+    @Test
+    @DisplayName("컬럼 이름으로 컬럼을 조회할 수 있다.")
+    void testGetColumn() throws NoSuchFieldException {
+        entityTableColumns.setColumns(List.of(idColumn));
+
+        assertEquals(idColumn, entityTableColumns.findByName("id"));
     }
 }
