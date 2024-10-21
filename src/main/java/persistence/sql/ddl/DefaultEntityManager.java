@@ -57,6 +57,18 @@ public class DefaultEntityManager implements EntityManager {
         return (T) results.get(0);
     }
 
+    private boolean containsCache(Class clazz, Object id) {
+        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
+
+        return cache.containsKey(entry);
+    }
+
+    private Object getCache(Class clazz, Object id) {
+        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
+
+        return cache.get(entry);
+    }
+
     @Override
     public Object persist(Object entity) {
         Class<?> clazz = entity.getClass();
@@ -151,22 +163,10 @@ public class DefaultEntityManager implements EntityManager {
         };
     }
 
-    private boolean containsCache(Class clazz, Object id) {
-        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
-
-        return cache.containsKey(entry);
-    }
-
     private void putCache(Class clazz, Object id, Object entity) {
         Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
 
         cache.put(entry, entity);
-    }
-
-    private Object getCache(Class clazz, Object id) {
-        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
-
-        return cache.get(entry);
     }
 
     private void removeCache(Class clazz, Object id) {
