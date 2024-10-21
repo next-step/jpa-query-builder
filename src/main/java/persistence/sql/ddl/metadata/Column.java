@@ -48,10 +48,6 @@ public record Column(
         return field.isAnnotationPresent(jakarta.persistence.Column.class) && !field.getDeclaredAnnotation(jakarta.persistence.Column.class).nullable();
     }
 
-    public boolean isPrimaryKey() {
-        return primaryKey;
-    }
-
     public String getSqlType() {
         return columnType.getSqlType();
     }

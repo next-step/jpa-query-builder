@@ -28,7 +28,7 @@ public class ColumnMetadata {
 
     private void validate(List<Column> columns) {
         boolean hasIdAnnotation = columns.stream()
-                .anyMatch(Column::isPrimaryKey);
+                .anyMatch(Column::primaryKey);
 
         if (!hasIdAnnotation) {
             throw new IllegalArgumentException("@Id가 필수로 지정되어야 합니다");
@@ -41,7 +41,7 @@ public class ColumnMetadata {
 
     public List<Column> getPrimaryKeys() {
         return columns.stream()
-                .filter(Column::isPrimaryKey)
+                .filter(Column::primaryKey)
                 .toList();
     }
 }

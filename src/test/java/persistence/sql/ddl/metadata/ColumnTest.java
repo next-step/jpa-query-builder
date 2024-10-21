@@ -21,7 +21,7 @@ class ColumnTest {
         assertSoftly(softly -> {
             softly.assertThat(column.getName()).isEqualTo("name");
             softly.assertThat(column.getSqlType()).isEqualTo("varchar(255)");
-            softly.assertThat(column.isPrimaryKey()).isFalse();
+            softly.assertThat(column.primaryKey()).isFalse();
         });
     }
 
@@ -34,7 +34,7 @@ class ColumnTest {
         assertSoftly(softly -> {
             softly.assertThat(column.getName()).isEqualTo("id");
             softly.assertThat(column.getSqlType()).isEqualTo("bigint");
-            softly.assertThat(column.isPrimaryKey()).isTrue();
+            softly.assertThat(column.primaryKey()).isTrue();
         });
     }
 
