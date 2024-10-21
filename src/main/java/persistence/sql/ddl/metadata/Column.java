@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public record Column(
         ColumnName name,
@@ -59,18 +58,5 @@ public record Column(
 
     public String getName() {
         return name.name();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return primaryKey == column.primaryKey && Objects.equals(name, column.name) && columnType == column.columnType && Objects.equals(options, column.options);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, columnType, options, primaryKey);
     }
 }
