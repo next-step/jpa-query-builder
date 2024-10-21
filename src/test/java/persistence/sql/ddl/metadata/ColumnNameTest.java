@@ -24,7 +24,7 @@ class ColumnNameTest {
     void notIncludeColumn() throws NoSuchFieldException {
         ColumnName columnName = ColumnName.from(EntityWithColumn.class.getDeclaredField("withoutColumn"));
 
-        assertThat(columnName.name()).isEqualTo("without_column");
+        assertThat(columnName.value()).isEqualTo("without_column");
     }
 
     @DisplayName("@Column이 name을 포함한 경우 그 값이 컬럼 이름이 된다")
@@ -32,7 +32,7 @@ class ColumnNameTest {
     void includeColumn() throws NoSuchFieldException {
         ColumnName columnName = ColumnName.from(EntityWithColumn.class.getDeclaredField("withColumn"));
 
-        assertThat(columnName.name()).isEqualTo("my_column");
+        assertThat(columnName.value()).isEqualTo("my_column");
 
     }
 

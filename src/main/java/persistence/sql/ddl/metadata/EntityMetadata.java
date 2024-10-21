@@ -4,22 +4,22 @@ import java.util.List;
 
 public class EntityMetadata {
 
-    private final TableMetadata tableMetadata;
+    private final TableName tableName;
     private final ColumnMetadata columnMetadata;
 
-    private EntityMetadata(TableMetadata tableMetadata, ColumnMetadata columnMetadata) {
-        this.tableMetadata = tableMetadata;
+    private EntityMetadata(TableName tableName, ColumnMetadata columnMetadata) {
+        this.tableName = tableName;
         this.columnMetadata = columnMetadata;
     }
 
     public static EntityMetadata from(Class<?> clazz) {
-        TableMetadata tableMetadata = TableMetadata.from(clazz);
+        TableName tableName = TableName.from(clazz);
         ColumnMetadata columnMetadata = ColumnMetadata.from(clazz);
-        return new EntityMetadata(tableMetadata, columnMetadata);
+        return new EntityMetadata(tableName, columnMetadata);
     }
 
     public String getTableName() {
-        return tableMetadata.getName();
+        return tableName.value();
     }
 
     public ColumnMetadata getColumnMetadata() {

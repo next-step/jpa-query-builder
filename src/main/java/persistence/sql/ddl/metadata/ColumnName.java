@@ -6,10 +6,10 @@ import persistence.utils.StringUtils;
 import java.lang.reflect.Field;
 
 public record ColumnName(
-        String name
+        String value
 ) {
     public ColumnName {
-        if (name == null || name.isEmpty()) {
+        if (value == null || value.isEmpty()) {
             throw new IllegalArgumentException("컬럼 이름은 비어있을 수 없습니다");
         }
     }

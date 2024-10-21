@@ -53,6 +53,6 @@ public record Column(
     }
 
     public String getName() {
-        return name.name();
+        return name.value();
     }
 }
