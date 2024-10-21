@@ -4,6 +4,7 @@ import jakarta.persistence.Transient;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class ColumnMetadata {
     }
 
     public List<Column> getColumns() {
-        return columns;
+        return Collections.unmodifiableList(columns);
     }
 
     public List<Column> getPrimaryKeys() {
