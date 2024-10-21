@@ -8,6 +8,12 @@ import java.lang.reflect.Field;
 public record ColumnName(
         String name
 ) {
+    public ColumnName {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("컬럼 이름은 비어있을 수 없습니다");
+        }
+    }
+
     public static ColumnName from(Field field) {
         if (field.isAnnotationPresent(Column.class)) {
             String name = field.getDeclaredAnnotation(Column.class).name();
