@@ -14,4 +14,7 @@ public class EntityWithColumn {
     private String withColumn;
 
     private String withoutColumn;
+
+    @Column(nullable = false)
+    private String notNullColumn;
 }

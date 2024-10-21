@@ -2,6 +2,7 @@ package persistence.sql.ddl.metadata;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.fixture.EntityWithColumn;
 import persistence.sql.ddl.fixture.IdentityStrategy;
 import persistence.sql.ddl.fixture.IncludeId;
 
@@ -45,5 +46,35 @@ class ColumnTest {
         Column autoIncrementColumn = Column.from(field);
 
         assertThat(autoIncrementColumn.options()).contains(ColumnOption.AUTO_INCREMENT);
+    }
+
+    @DisplayName("nullable=false인 필드는 not null 제약조건을 갖는다.")
+    @Test
+    void notNullField() throws Exception {
+        Field field = EntityWithColumn.class.getDeclaredField("notNullColumn");
+
+        Column column = Column.from(field);
+
+        assertThat(column.options()).contains(ColumnOption.NOT_NULL);
+    }
+
+    @DisplayName("Column에 options가 있는지 확인한다.")
+    @Test
+    void hasOptions() throws Exception {
+        Field field = EntityWithColumn.class.getDeclaredField("withoutColumn");
+
+        Column column = Column.from(field);
+
+        assertThat(column.hasOptions()).isFalse();
+    }
+
+    @DisplayName("SqlOptions를 반환한다.")
+    @Test
+    void getSqlOptions() throws Exception {
+        Field field = EntityWithColumn.class.getDeclaredField("notNullColumn");
+
+        Column column = Column.from(field);
+
+        assertThat(column.getSqlOptions()).containsExactly("not null");
     }
 }
