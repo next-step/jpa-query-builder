@@ -1,8 +1,8 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.EntityField;
-import persistence.sql.ddl.EntityFields;
-import persistence.sql.ddl.EntityIdField;
+import persistence.sql.ddl.EntityColumn;
+import persistence.sql.ddl.Table;
+import persistence.sql.ddl.EntityIdColumn;
 import persistence.sql.ddl.SqlJdbcTypes;
 import persistence.sql.ddl.dialect.Dialect;
 
@@ -18,27 +18,27 @@ public final class DefaultCreateDDLGenerator implements CreateDDLGenerator {
     }
 
     @Override
-    public String generate(EntityFields entityFields) {
-        String command = createCommand(entityFields);
-        String definition = getDefinition(entityFields);
+    public String generate(Table table) {
+        String command = createCommand(table);
+        String definition = getDefinition(table);
 
         return "%s (%s);".formatted(command, definition);
     }
 
-    private String createCommand(EntityFields entityFields) {
-        String name = entityFields.tableName();
+    private String createCommand(Table table) {
+        String name = table.tableName();
 
         return "CREATE TABLE %s".formatted(name);
     }
 
-    private String getDefinition(EntityFields entityFields) {
-        String idDefinition = getIdFieldDefinition(entityFields.idField());
-        Stream<String> fieldDefinitions = entityFields.fields().stream().map(this::getFieldDefinition);
+    private String getDefinition(Table table) {
+        String idDefinition = getIdFieldDefinition(table.idField());
+        Stream<String> fieldDefinitions = table.fields().stream().map(this::getFieldDefinition);
 
         return Stream.concat(Stream.of(idDefinition), fieldDefinitions).collect(Collectors.joining(", "));
     }
 
-    private String getIdFieldDefinition(EntityIdField idField) {
+    private String getIdFieldDefinition(EntityIdColumn idField) {
         Integer type = SqlJdbcTypes.typeOf(idField.type());
 
         String name = idField.name();
@@ -48,7 +48,7 @@ public final class DefaultCreateDDLGenerator implements CreateDDLGenerator {
         return "%s %s %s".formatted(name, typeDefinition, strategy);
     }
 
-    private String getFieldDefinition(EntityField field) {
+    private String getFieldDefinition(EntityColumn field) {
         String name = field.name();
         String typeDefinition = getFieldTypeDefinition(field);
         String nullable = field.nullable() ? "" : "not null";
@@ -56,7 +56,7 @@ public final class DefaultCreateDDLGenerator implements CreateDDLGenerator {
         return "%s %s %s".formatted(name, typeDefinition, nullable);
     }
 
-    private String getFieldTypeDefinition(EntityField field) {
+    private String getFieldTypeDefinition(EntityColumn field) {
         Integer type = SqlJdbcTypes.typeOf(field.type());
 
         String typeDefinition = dialect.getFieldDefinition(type);

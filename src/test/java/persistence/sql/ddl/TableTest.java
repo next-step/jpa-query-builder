@@ -12,18 +12,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class EntityFieldsTest {
+class TableTest {
     @Test
     void 클래스를_분석하여_Entity로_변경한다() {
         Class<NormalEntity> clazz = NormalEntity.class;
 
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
         assertAll(
-            () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
-            () -> assertThat(entityFields.getAllFieldNames()).containsExactlyInAnyOrder("id", "name", "address"),
-            () -> assertThat(entityFields.idField().entityField().name()).isEqualTo("id"),
-            () -> assertThat(entityFields.getFieldNames()).containsExactlyInAnyOrder("name", "address")
+            () -> assertThat(table.tableName()).isEqualTo("NormalEntity"),
+            () -> assertThat(table.getAllFieldNames()).containsExactlyInAnyOrder("id", "name", "address"),
+            () -> assertThat(table.idField().entityColumn().name()).isEqualTo("id"),
+            () -> assertThat(table.getFieldNames()).containsExactlyInAnyOrder("name", "address")
         );
     }
 
@@ -31,9 +31,9 @@ class EntityFieldsTest {
     void Table이_있으면_이름을_Table의_이름을_사용한다() {
         Class<TableEntity> clazz = TableEntity.class;
 
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        assertThat(entityFields.tableName()).isEqualTo("table");
+        assertThat(table.tableName()).isEqualTo("table");
     }
 
     @Test
@@ -41,7 +41,7 @@ class EntityFieldsTest {
         Class<NotEntityAnnotationEntity> clazz = NotEntityAnnotationEntity.class;
 
         assertThatExceptionOfType(NotEntityException.class)
-            .isThrownBy(() -> EntityFields.from(clazz));
+            .isThrownBy(() -> Table.from(clazz));
     }
 
     @Test
@@ -49,7 +49,7 @@ class EntityFieldsTest {
         Class<EmptyIdEntity> clazz = EmptyIdEntity.class;
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
-            .isThrownBy(() -> EntityFields.from(clazz));
+            .isThrownBy(() -> Table.from(clazz));
     }
 
     @Test
@@ -57,32 +57,32 @@ class EntityFieldsTest {
         Class<ManyIdsEntity> clazz = ManyIdsEntity.class;
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
-            .isThrownBy(() -> EntityFields.from(clazz));
+            .isThrownBy(() -> Table.from(clazz));
     }
 
     @Test
     void 전체_필드_이름_전체를_가져온다() {
         Class<NormalEntity> clazz = NormalEntity.class;
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        assertThat(entityFields.getAllFieldNames()).containsExactlyInAnyOrder("id", "name", "address");
+        assertThat(table.getAllFieldNames()).containsExactlyInAnyOrder("id", "name", "address");
     }
 
     @Test
     void 필드_이름_전체를_가져온다() {
         Class<NormalEntity> clazz = NormalEntity.class;
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        assertThat(entityFields.getFieldNames()).containsExactlyInAnyOrder("name", "address");
+        assertThat(table.getFieldNames()).containsExactlyInAnyOrder("name", "address");
     }
 
     @Test
     void 이름으로_필드를_가져올_수_있다() throws NoSuchFieldException {
         Class<NormalEntity> clazz = NormalEntity.class;
         Field field = clazz.getDeclaredField("name");
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        Field result = entityFields.getFieldByName("name");
+        Field result = table.getFieldByName("name");
 
         assertThat(result).isEqualTo(field);
     }
@@ -90,18 +90,18 @@ class EntityFieldsTest {
     @Test
     void 없는_이름으로_필드를_가져올시_실패한다() {
         Class<NormalEntity> clazz = NormalEntity.class;
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
         assertThatExceptionOfType(NotFoundFieldException.class)
-            .isThrownBy(() -> entityFields.getFieldByName("fake"));
+            .isThrownBy(() -> table.getFieldByName("fake"));
     }
 
     @Test
     void Id필드의_이름을_가져올_수_있다() {
         Class<NormalEntity> clazz = NormalEntity.class;
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        String idFieldName = entityFields.getIdFieldName();
+        String idFieldName = table.getIdFieldName();
 
         assertThat(idFieldName).isEqualTo("id");
     }

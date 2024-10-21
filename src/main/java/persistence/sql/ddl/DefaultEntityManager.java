@@ -42,11 +42,11 @@ public class DefaultEntityManager implements EntityManager {
             return (T) getCache(clazz, id);
         }
 
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        String query = selectDMLGenerator.generateFindById(entityFields, id);
+        String query = selectDMLGenerator.generateFindById(table, id);
 
-        List<Object> results = jdbcTemplate.query(query, toObject(clazz, id, entityFields));
+        List<Object> results = jdbcTemplate.query(query, toObject(clazz, id, table));
 
         if (results.isEmpty()) {
             return null;
@@ -60,9 +60,9 @@ public class DefaultEntityManager implements EntityManager {
     @Override
     public Object persist(Object entity) {
         Class<?> clazz = entity.getClass();
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        Field idField = entityFields.getIdField();
+        Field idField = table.getIdField();
 
         Object id = FieldUtils.getValue(idField, entity);
 
@@ -115,26 +115,26 @@ public class DefaultEntityManager implements EntityManager {
     @Override
     public void remove(Object entity) {
         Class<?> clazz = entity.getClass();
-        EntityFields entityFields = EntityFields.from(clazz);
+        Table table = Table.from(clazz);
 
-        Field idField = entityFields.getIdField();
+        Field idField = table.getIdField();
 
         Object id = FieldUtils.getValue(idField, entity);
 
         removeCache(clazz, id);
 
-        String query = deleteDMLGenerator.generateDeleteById(entityFields, id);
+        String query = deleteDMLGenerator.generateDeleteById(table, id);
 
         jdbcTemplate.execute(query);
     }
 
     @NotNull
-    private <T> RowMapper<Object> toObject(Class<T> clazz, Object id, EntityFields entityFields) {
+    private <T> RowMapper<Object> toObject(Class<T> clazz, Object id, Table table) {
         return resultSet -> {
             T t = clazz.newInstance();
 
-            entityFields.getAllFieldNames().forEach(it -> {
-                Field fieldByName = entityFields.getFieldByName(it);
+            table.getAllFieldNames().forEach(it -> {
+                Field fieldByName = table.getFieldByName(it);
 
                 try {
                     Object value = resultSet.getObject(it);

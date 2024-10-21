@@ -1,7 +1,7 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.EntityFields;
+import persistence.sql.ddl.Table;
 
 public interface DropDDLGenerator {
-    String generate(EntityFields entityFields);
+    String generate(Table table);
 }

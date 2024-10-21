@@ -1,9 +1,9 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.EntityFields;
+import persistence.sql.ddl.Table;
 
 public interface DeleteDMLGenerator {
-    String generateDeleteAll(EntityFields entityFields);
+    String generateDeleteAll(Table table);
 
-    String generateDeleteById(EntityFields entityFields, Object id);
+    String generateDeleteById(Table table, Object id);
 }

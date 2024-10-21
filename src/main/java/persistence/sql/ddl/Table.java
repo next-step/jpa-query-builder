@@ -2,7 +2,6 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.exception.IncorrectIdFieldException;
 import persistence.sql.ddl.exception.NotEntityException;
@@ -12,16 +11,16 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public record EntityFields(String tableName, List<EntityField> allFields, EntityIdField idField,
-                           List<EntityField> fields) {
-    public static <T> EntityFields from(Class<T> clazz) {
+public record Table(String tableName, List<EntityColumn> allFields, EntityIdColumn idField,
+                    List<EntityColumn> fields) {
+    public static <T> Table from(Class<T> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new NotEntityException();
         }
 
         Field[] declaredFields = clazz.getDeclaredFields();
 
-        return new EntityFields(
+        return new Table(
             getTableName(clazz),
             getAllFields(declaredFields),
             getIdField(declaredFields),
@@ -30,7 +29,7 @@ public record EntityFields(String tableName, List<EntityField> allFields, Entity
     }
 
     private static <T> String getTableName(Class<T> clazz) {
-        Table table = clazz.getAnnotation(Table.class);
+        jakarta.persistence.Table table = clazz.getAnnotation(jakarta.persistence.Table.class);
 
         if (table == null) {
             return clazz.getSimpleName();
@@ -39,14 +38,14 @@ public record EntityFields(String tableName, List<EntityField> allFields, Entity
         return table.name();
     }
 
-    private static List<EntityField> getAllFields(Field[] fields) {
+    private static List<EntityColumn> getAllFields(Field[] fields) {
         return Arrays.stream(fields)
             .filter(it -> !it.isAnnotationPresent(Transient.class))
-            .map(EntityField::from)
+            .map(EntityColumn::from)
             .toList();
     }
 
-    private static EntityIdField getIdField(Field[] fields) {
+    private static EntityIdColumn getIdField(Field[] fields) {
         List<Field> ids = Arrays.stream(fields)
             .filter(it -> it.isAnnotationPresent(Id.class))
             .toList();
@@ -55,24 +54,24 @@ public record EntityFields(String tableName, List<EntityField> allFields, Entity
             throw new IncorrectIdFieldException();
         }
 
-        return EntityIdField.from(ids.get(0));
+        return EntityIdColumn.from(ids.get(0));
     }
 
 
-    private static List<EntityField> getFields(Field[] fields) {
+    private static List<EntityColumn> getFields(Field[] fields) {
         return Arrays.stream(fields)
             .filter(it -> !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class))
-            .map(EntityField::from)
+            .map(EntityColumn::from)
             .toList();
     }
 
     public List<String> getFieldNames() {
-        return fields.stream().map(EntityField::name)
+        return fields.stream().map(EntityColumn::name)
             .toList();
     }
 
     public List<String> getAllFieldNames() {
-        return allFields.stream().map(EntityField::name)
+        return allFields.stream().map(EntityColumn::name)
             .toList();
     }
 
