@@ -29,7 +29,7 @@ public class Application {
             queryBuilder.findById(jdbcTemplate, 1L);
             queryBuilder.deleteById(jdbcTemplate, 1L);
             jdbcTemplate.execute("SELECT * FROM USERS");
-            
+
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);
