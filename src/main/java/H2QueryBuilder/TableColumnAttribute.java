@@ -124,7 +124,7 @@ public class TableColumnAttribute {
                         return value.toString();
                     })
                     .orElse("NULL");
-
+            field.setAccessible(false);
         } catch (IllegalAccessException e) {
             throw new IllegalAccessException(ErrorCode.ACCESS_NOT_PERMITTED.getErrorMsg());
         } catch (IllegalArgumentException e) {
