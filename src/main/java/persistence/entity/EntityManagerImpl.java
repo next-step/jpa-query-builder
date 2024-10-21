@@ -18,19 +18,19 @@ public class EntityManagerImpl<T, ID> implements EntityManager<T, ID> {
     }
 
     @Override
-    public T findById(ID id) { //요구사항 1
+    public T findById(ID id) {
         String sql = new FindByIdQuery<>(entityClass, id).generateQuery();
         return jdbcTemplate.queryForObject(sql, new GenericRowMapper<>(entityClass));
     }
 
     @Override
-    public void persist(T entity) throws IllegalAccessException { //요구사항 2
+    public void persist(T entity) throws IllegalAccessException {
         String sql = new InsertQuery<>(entity).generateQuery();
         jdbcTemplate.execute(sql);
     }
 
     @Override
-    public void remove(T entity) { //요구사항 3
+    public void remove(T entity) {
         String sql = new DeleteQuery<>(entity).generateQuery();
         jdbcTemplate.execute(sql);
     }
