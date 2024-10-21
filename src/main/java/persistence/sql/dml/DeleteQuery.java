@@ -2,22 +2,21 @@ package persistence.sql.dml;
 
 import persistence.sql.ddl.TableName;
 import persistence.sql.ddl.ValidateEntity;
+import persistence.sql.dml.querybuilder.QueryBuilder;
 
 public class DeleteQuery<T> {
 
-    private final Class<?> entityClass;
     private final T entity;
 
-    public DeleteQuery(Class<?> entityClass, T entity) {
-        new ValidateEntity(entityClass);
-        this.entityClass = entityClass;
+    public DeleteQuery(T entity) {
+        new ValidateEntity(entity.getClass());
         this.entity = entity;
     }
 
     public String generateQuery() {
-        return new SimpleQueryBuilder()
+        return new QueryBuilder()
             .delete()
-            .from(new TableName(entityClass).getTableName())
+            .from(new TableName(entity.getClass()).getTableName())
             .where("id = " + new EntityId<>(entity).getId())
             .build();
     }

@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import persistence.sql.ddl.TableName;
 import persistence.sql.ddl.ValidateEntity;
+import persistence.sql.dml.querybuilder.QueryBuilder;
 
 public class FindAllQuery {
 
@@ -13,7 +14,7 @@ public class FindAllQuery {
     }
 
     public String generateQuery() {
-        return new SimpleQueryBuilder()
+        return new QueryBuilder()
             .select("*")
             .from(new TableName(entityClass).getTableName())
             .build();

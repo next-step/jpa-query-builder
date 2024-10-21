@@ -5,16 +5,14 @@ import java.util.stream.Collectors;
 import persistence.sql.ddl.ColumnName;
 import persistence.sql.ddl.ColumnType;
 import persistence.sql.ddl.EntityTableMetadata;
-import persistence.sql.ddl.ValidateEntity;
 import persistence.sql.dml.querybuilder.QueryBuilder;
 
-public class InsertQuery<T> {
+public class UpdateQuery<T> {
 
     private final T entity;
     private final EntityTableMetadata entityTableMetadata;
 
-    public InsertQuery(T entity) {
-        new ValidateEntity(entity.getClass());
+    public UpdateQuery(T entity) {
         this.entity = entity;
         this.entityTableMetadata = new EntityTableMetadata(entity.getClass());
     }
@@ -23,15 +21,22 @@ public class InsertQuery<T> {
         String tableName = entityTableMetadata.getTableName();
         String columns = getColumns(entityTableMetadata.getColumnDefinitions());
         String values = new ValueClause<>(entity).getClause();
+        Long id = new EntityId<T>(entity).getId();
 
-        return generateInsertQuery(tableName, columns, values);
+        return generateUpdateQuery(tableName, columns, values, id);
     }
 
-    private String generateInsertQuery(String tableName, String columns, String values) {
+    private String generateUpdateQuery(
+        String tableName,
+        String columns,
+        String values,
+        Long id
+    ) {
         return new QueryBuilder()
-            .insertInto(tableName)
+            .update(tableName)
             .columns(columns)
             .values(values)
+            .where("id = " + id)
             .build();
     }
 

@@ -2,6 +2,7 @@ package persistence.sql.dml;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import database.DatabaseServer;
 import database.H2;
@@ -56,10 +57,12 @@ class JpaRepositoryImplTest {
 
         Person personOne = jpaRepository.findById(1L);
 
-        assertThat(personOne.getId()).isNotNull();
-        assertThat(personOne.getName()).isEqualTo("John");
-        assertThat(personOne.getAge()).isEqualTo(20);
-        assertThat(personOne.getEmail()).isEqualTo("John@naver.com");
+        assertAll(
+            () -> assertThat(personOne.getId()).isNotNull(),
+            () -> assertThat(personOne.getName()).isEqualTo("John"),
+            () -> assertThat(personOne.getAge()).isEqualTo(20),
+            () -> assertThat(personOne.getEmail()).isEqualTo("John@naver.com")
+        );
     }
 
     @Test

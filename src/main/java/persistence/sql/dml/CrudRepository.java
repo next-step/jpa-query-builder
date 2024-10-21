@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CrudRepository<T, ID> {
 
-    T save(T entity) throws IllegalAccessException;
+    void save(T entity) throws IllegalAccessException;
 
     T findById(ID id);
 
