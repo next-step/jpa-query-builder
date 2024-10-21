@@ -1,11 +1,9 @@
 package persistence.entity;
 
-import example.entity.Person;
+public interface EntityManager<T, U> {
+    T find(Class<T> clazz, U id);
 
-public interface EntityManager {
-    Person find(Class<Person> clazz, Long id);
+    void persist(T entity) throws IllegalAccessException;
 
-    Object persist(Object entity);
-
-    void remove(Object entity);
+    void remove(T entity);
 }

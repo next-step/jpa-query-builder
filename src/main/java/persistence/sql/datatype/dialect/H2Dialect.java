@@ -10,7 +10,7 @@ public class H2Dialect {
     public H2Dialect() {
         map = new HashMap<>();
         map.put(Types.INTEGER, "integer");
-        map.put(Types.BIGINT, "biginteger");
+        map.put(Types.BIGINT, "bigint");
         map.put(Types.VARCHAR, "varchar(100)");
     }
 
