@@ -22,10 +22,11 @@ public record TableName(
     }
 
     private static String extractName(Class<?> clazz) {
-        if (clazz.isAnnotationPresent(Table.class) && !clazz.getDeclaredAnnotation(Table.class).name().isEmpty()) {
-            return clazz.getDeclaredAnnotation(Table.class).name();
+        Table tableAnnotation = clazz.getDeclaredAnnotation(Table.class);
+        if (tableAnnotation == null || tableAnnotation.name().isEmpty()) {
+            return StringUtils.convertToSnakeCase(clazz.getSimpleName());
         }
 
-        return StringUtils.convertToSnakeCase(clazz.getSimpleName());
+        return tableAnnotation.name();
     }
 }
