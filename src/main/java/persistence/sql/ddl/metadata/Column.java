@@ -26,18 +26,21 @@ public record Column(
 
     private static List<ColumnOption> extractOptions(Field field) {
         List<ColumnOption> options = new ArrayList<>();
+
         if (hasNotNullOption(field)) {
             options.add(ColumnOption.NOT_NULL);
         }
 
-        if (field.isAnnotationPresent(GeneratedValue.class)) {
-            GenerationType generationType = field.getDeclaredAnnotation(GeneratedValue.class).strategy();
-            if (generationType == GenerationType.IDENTITY) {
-                options.add(ColumnOption.AUTO_INCREMENT);
-            }
+        if (isIdentityStrategy(field)) {
+            options.add(ColumnOption.AUTO_INCREMENT);
         }
 
         return options;
+    }
+
+    private static boolean isIdentityStrategy(Field field) {
+        return field.isAnnotationPresent(GeneratedValue.class)
+                && field.getDeclaredAnnotation(GeneratedValue.class).strategy() == GenerationType.IDENTITY;
     }
 
     private static boolean hasNotNullOption(Field field) {
@@ -45,7 +48,8 @@ public record Column(
     }
 
     private static boolean notNull(Field field) {
-        return field.isAnnotationPresent(jakarta.persistence.Column.class) && !field.getDeclaredAnnotation(jakarta.persistence.Column.class).nullable();
+        return field.isAnnotationPresent(jakarta.persistence.Column.class)
+                && !field.getDeclaredAnnotation(jakarta.persistence.Column.class).nullable();
     }
 
     public String getSqlType() {
