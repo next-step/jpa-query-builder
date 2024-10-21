@@ -7,12 +7,10 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.entity.EntityManager;
-import persistence.entity.impl.FakeEntityManager;
+import persistence.entity.impl.DefaultEntityManager;
 import persistence.sql.ddl.CreateTableQueryBuilder;
 import persistence.sql.ddl.DropTableQueryBuilder;
 import persistence.sql.ddl.QueryBuilder;
-import persistence.sql.dml.DMLQueryBuilder;
-import persistence.sql.dml.InsertQueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -28,7 +26,7 @@ public class Application {
 
             String createTableQuery = ddlQueryBuilder.executeQuery();
             jdbcTemplate.execute(createTableQuery); // Create table
-            EntityManager entityManager = new FakeEntityManager(Person.class, jdbcTemplate);
+            EntityManager entityManager = new DefaultEntityManager(Person.class, jdbcTemplate);
 
             entityManager.persist(Person.of(null,"John", 25,"demian@gmail.com",1));
 

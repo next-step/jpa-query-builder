@@ -1,8 +1,6 @@
 package persistence.entity.impl;
 
 import org.junit.jupiter.api.AfterEach;
-import persistence.entity.impl.FakeEntityManager;
-import persistence.entity.impl.FakeEntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import jdbc.JdbcTemplate;
@@ -17,8 +15,8 @@ import java.sql.Connection;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class FakeEntityManagerTest {
-    private FakeEntityManager entityManager;
+public class DefaultEntityManagerTest {
+    private DefaultEntityManager entityManager;
     private JdbcTemplate jdbcTemplate;
     private Connection connection;
 
@@ -28,7 +26,7 @@ public class FakeEntityManagerTest {
         databaseServer.start();
         connection = databaseServer.getConnection();
         jdbcTemplate = new JdbcTemplate(connection);
-        entityManager = new FakeEntityManager(Person.class, jdbcTemplate);
+        entityManager = new DefaultEntityManager(Person.class, jdbcTemplate);
 
         // Create table for Person
         QueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder(Person.class);

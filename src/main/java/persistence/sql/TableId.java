@@ -7,9 +7,9 @@ import jakarta.persistence.GenerationType;
 import java.lang.reflect.Field;
 
 public class TableId {
-    private Class<?> type;
-    private String name;
-    private boolean isAutoIncrement;
+    private final Class<?> type;
+    private final String name;
+    private final boolean isAutoIncrement;
 
 
     public TableId(Field field) {

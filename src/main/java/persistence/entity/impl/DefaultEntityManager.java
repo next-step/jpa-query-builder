@@ -11,11 +11,11 @@ import persistence.sql.dml.UpdateQueryBuilder;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class FakeEntityManager implements EntityManager {
+public class DefaultEntityManager implements EntityManager {
     final Class<?> clazz;
     private final JdbcTemplate jdbcTemplate;
 
-    public FakeEntityManager(Class<?> clazz, JdbcTemplate jdbcTemplate) {
+    public DefaultEntityManager(Class<?> clazz, JdbcTemplate jdbcTemplate) {
         this.clazz = clazz;
         this.jdbcTemplate = jdbcTemplate;
     }
