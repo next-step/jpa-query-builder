@@ -26,13 +26,11 @@ public class QueryBuilder {
     }
 
     private String getDefinitions(EntityMetadata entityMetadata) {
-        return generateColumnDefinitions(entityMetadata.getColumnMetadata()) + ", primary key (" + getPrimaryKeyNames(entityMetadata) + ")";
+        return generateColumnDefinitions(entityMetadata.getColumnMetadata()) + ", primary key (" + generatePrimaryKeyNames(entityMetadata) + ")";
     }
 
-    private String getPrimaryKeyNames(EntityMetadata entityMetadata) {
-        return entityMetadata.getPrimaryKeys().stream()
-                .map(Column::getName)
-                .collect(Collectors.joining(JOIN_DELIMITER));
+    private String generatePrimaryKeyNames(EntityMetadata entityMetadata) {
+        return String.join(JOIN_DELIMITER, entityMetadata.getPrimaryKeyNames());
     }
 
     private String generateColumnDefinitions(ColumnMetadata columnMetadata) {
@@ -42,19 +40,14 @@ public class QueryBuilder {
     }
 
     private String generateColumnDefinition(Column column) {
-        StringBuilder columnDefinition = new StringBuilder();
-        columnDefinition.append(column.getName())
-                .append(" ")
-                .append(column.getSqlType());
-
         String options = column.options().stream()
                 .map(ColumnOption::getOption)
                 .collect(Collectors.joining(" "));
 
         if (!options.isEmpty()) {
-            columnDefinition.append(" ").append(options);
+            return column.getName() + " " + column.getSqlType() + " " + options;
         }
 
-        return columnDefinition.toString();
+        return column.getName() + " " + column.getSqlType();
     }
 }
