@@ -4,9 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jdbc.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
+import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,53 +20,60 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class QueryBuilder implements Database{
+public class QueryBuilder{
 
     private static final String INSERT_QUERY_FORMAT = "INSERT INTO %s (%s) VALUES (%s)";
     private static final String SELECT_QUERY_FORMAT = "SELECT * FROM %s";
+    private JdbcTemplate jdbcTemplate;
     Class<?> clazz;
+    public QueryBuilder(Class<?> clazz, JdbcTemplate jdbcTemplate) {
+        this.clazz = clazz;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public QueryBuilder(Class<?> clazz) {
         this.clazz = clazz;
     }
 
-    @Override
-    public ResultSet executeQuery(String sql) {
-
-        try {
-
-        } catch (Exception e) {
-
-        }
-         return null;
-    }
-
-    public List<Object> findAll() {
+    public List<Person> findAll(JdbcTemplate jdbcTemplate) {
         String sql = String.format(SELECT_QUERY_FORMAT, getTableName());
-        ResultSet rs = executeQuery(sql);
-        List<Object> results = new ArrayList<>();
+        PersonRowMapper personRowMapper = new PersonRowMapper();
 
-        try {
-            while(rs.next()) {
-                Object instance = clazz.getDeclaredConstructor().newInstance();
+        return jdbcTemplate.query(sql, personRowMapper);
+    }
 
-                for(Field field : clazz.getDeclaredFields()) {
-                    field.setAccessible(true);
 
-                    if(!field.isAnnotationPresent(Transient.class)) {
-                        Object value = rs.getObject(field.getName());
-                        field.set(instance, value);
-                    }
-                }
-                results.add(instance);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void run(JdbcTemplate jdbcTemplate) {
+        List<Person> personData = generatePersonData();
+
+        for(Person person : personData) {
+            String insertQuery = insert(person);
+            jdbcTemplate.execute(insertQuery);
         }
 
-        return results;
     }
-    public String insert() {
-        return String.format(INSERT_QUERY_FORMAT, getTableName(), columnsClause(clazz), valueClause(setValueData()));
+    public String insert(Object entity) {
+        return String.format(INSERT_QUERY_FORMAT, getTableName(), columnsClause(clazz), valueClause(entity));
+    }
+
+    public Person findById(JdbcTemplate jdbcTemplate, Long id) {
+        String selectQuery = "SELECT * FROM users";
+        String query = whereClause(selectQuery, id);
+        return jdbcTemplate.queryForObject(query, new PersonRowMapper());
+    }
+
+    public void deleteById(JdbcTemplate jdbcTemplate, Long id) {
+        String deleteQuery = "DELETE FROM users";
+        String query = whereClause(deleteQuery, id);
+        jdbcTemplate.executeUpdate(query);
+    }
+
+    private String whereClause(String query, Long id) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(query);
+        stringBuilder.append(" where id = " + id);
+
+        return stringBuilder.toString();
     }
     public String columnsClause(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
@@ -70,14 +83,14 @@ public class QueryBuilder implements Database{
                 .collect(Collectors.joining(", "));
     }
 
-    public String valueClause(Object object) {
-        return Arrays.stream(object.getClass().getDeclaredFields())
+    public String valueClause(Object entity) {
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .filter(field -> !field.isAnnotationPresent(GeneratedValue.class))
                 .map(field -> {
                     field.setAccessible(true);
                     try {
-                        Object value = field.get(object);
+                        Object value = field.get(entity);
                         if(value instanceof  String) {
                             return "'" + value + "'";
                         }
@@ -88,12 +101,12 @@ public class QueryBuilder implements Database{
                 })
                 .collect(Collectors.joining(", "));
     }
+    public List<Person> generatePersonData() {
+        List<Person> personList = new ArrayList<>();
+        personList.add(new Person(1L,"jskim", 33, "qazwsx3745@naver.com"));
+        personList.add(new Person(2L,"ian", 30, "aa@naver.com"));
 
-    public Object setValueData() {
-        Person person = new Person();
-        person.setAllData(1L,"jskim", 33, "qazwsx3745@naver.com");
-        person.setAllData(2L,"ian", 30, "aa@naver.com");
-        return person;
+        return personList;
     }
 
     public String getColumnName(Field field) {

@@ -3,9 +3,11 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
+import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.dml.Person;
+import persistence.sql.dml.PersonRowMapper;
 import persistence.sql.dml.QueryBuilder;
 
 public class Application {
@@ -19,12 +21,15 @@ public class Application {
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-            QueryBuilder queryBuilder = new QueryBuilder(Person.class);
+            QueryBuilder queryBuilder = new QueryBuilder(Person.class, jdbcTemplate);
 
             jdbcTemplate.execute("CREATE TABLE USERS (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL)");
-            jdbcTemplate.execute(queryBuilder.insert());
+            queryBuilder.run(jdbcTemplate);
+            queryBuilder.findAll(jdbcTemplate);
+            queryBuilder.findById(jdbcTemplate, 1L);
+            queryBuilder.deleteById(jdbcTemplate, 1L);
             jdbcTemplate.execute("SELECT * FROM USERS");
-
+            
             server.stop();
         } catch (Exception e) {
             logger.error("Error occurred", e);

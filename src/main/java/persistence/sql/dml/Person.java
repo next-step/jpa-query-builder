@@ -22,6 +22,17 @@ public class Person {
     @Transient
     private Integer index;
 
+    public Person(long id, String name, int age, String email) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
+    public Person() {
+
+    }
+
     public Long getId() {
         return id;
     }

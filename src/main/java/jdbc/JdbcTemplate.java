@@ -40,4 +40,12 @@ public class JdbcTemplate {
             throw new RuntimeException(e);
         }
     }
+
+    public void executeUpdate(final String sql) {
+        try (final Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sql); // executeUpdate를 사용하여 DML 쿼리 실행
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
