@@ -1,6 +1,6 @@
 package persistence.sql.dml.insert;
 
-import example.entity.PersonV3;
+import example.entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,11 +12,11 @@ public class InsertQueryBuilderTest {
     @Test
     @DisplayName("Insert query 테스트")
     void insertQueryTest() throws Exception {
-        PersonV3 personV3 = new PersonV3();
-        personV3.setName("sdgvas");
-        personV3.setAge(123);
+        Person person = new Person();
+        person.setName("sdgvas");
+        person.setAge(123);
 
-        String insertQuery = InsertQueryBuilder.generateQuery(personV3);
+        String insertQuery = InsertQueryBuilder.generateQuery(person);
 
         logger.debug("{}", insertQuery);
     }

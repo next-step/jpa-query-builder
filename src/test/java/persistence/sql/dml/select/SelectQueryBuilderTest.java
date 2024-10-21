@@ -1,6 +1,6 @@
 package persistence.sql.dml.select;
 
-import example.entity.PersonV3;
+import example.entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,8 +12,8 @@ public class SelectQueryBuilderTest {
     @Test
     @DisplayName("FindAll query 테스트")
     void findAllQueryTest() {
-        Class<PersonV3> personV3Class = PersonV3.class;
-        String selectQuery = SelectQueryBuilder.generateQuery(personV3Class);
+        Class<Person> personClass = Person.class;
+        String selectQuery = SelectQueryBuilder.generateQuery(personClass);
 
         logger.debug("query : {}", selectQuery);
     }
@@ -21,9 +21,9 @@ public class SelectQueryBuilderTest {
     @Test
     @DisplayName("FindById query 테스트")
     void findByIdTest() {
-        Class<PersonV3> personV3Class = PersonV3.class;
+        Class<Person> personClass = Person.class;
 
-        String selectQuery = SelectQueryBuilder.generateQuery(personV3Class, String.valueOf(1L));
+        String selectQuery = SelectQueryBuilder.generateQuery(personClass, String.valueOf(1L));
 
         logger.debug("query : {}", selectQuery);
     }

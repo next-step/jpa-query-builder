@@ -1,6 +1,6 @@
 package persistence.sql.ddl.drop;
 
-import example.entity.PersonV2;
+import example.entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ public class DropQueryBuilderTest {
     @Test
     @DisplayName("DDL Drop query 생성 테스트")
     void createDdlDropQueryTest() {
-        Class<PersonV2> personClass = PersonV2.class;
+        Class<Person> personClass = Person.class;
         DropQueryBuilder queryBuilder = DropQueryBuilder.newInstance();
         String dropQuery = queryBuilder.build(personClass.getSimpleName());
         logger.debug("DDL drop query : {}", dropQuery);
