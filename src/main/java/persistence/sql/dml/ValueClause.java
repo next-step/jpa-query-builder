@@ -1,6 +1,7 @@
 package persistence.sql.dml;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ValueClause<T> {
 
@@ -11,20 +12,11 @@ public class ValueClause<T> {
     }
 
     public String getClause() throws IllegalAccessException {
-        StringBuilder clause = new StringBuilder();
-
         List<ColumnValue> columnValues = new ColumnValues<>(entity).getValues();
-        for (ColumnValue columnValue : columnValues) {
-            clause
-                .append(columnValue.toSqlValue())
-                .append(", ");
-        }
 
-        if (clause.length() > 1) {
-            clause.setLength(clause.length() - 2);
-        }
-
-        return clause.toString();
+        return columnValues.stream()
+            .map(ColumnValue::toSqlValue)
+            .collect(Collectors.joining(", "));
     }
 
 }
