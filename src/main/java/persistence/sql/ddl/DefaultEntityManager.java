@@ -143,24 +143,41 @@ public class DefaultEntityManager implements EntityManager {
     @NotNull
     private <T> RowMapper<Object> toObject(Class<T> clazz, Object id, EntityTable entityTable) {
         return resultSet -> {
-            T t = clazz.newInstance();
+            T entity = newInstance(clazz);
 
             entityTable.getAllColumnNames().forEach(it -> {
                 Field field = entityTable.getFieldByColumnName(it);
 
-                try {
-                    Object value = resultSet.getObject(it);
-
-                    FieldUtils.setValue(field, t, value);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                applyValue(resultSet, it, field, entity);
             });
 
-            putCache(clazz, id, t);
+            putCache(clazz, id, entity);
 
-            return t;
+            return entity;
         };
+    }
+
+    private static <T> void applyValue(ResultSet resultSet, String it, Field field, T entity) {
+        try {
+            Object value = resultSet.getObject(it);
+
+            FieldUtils.setValue(field, entity, value);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    private <T> T newInstance(Class<T> clazz) {
+        T t = null;
+        try {
+            t = clazz.newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return t;
     }
 
     private void putCache(Class clazz, Object id, Object entity) {
