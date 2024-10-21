@@ -14,10 +14,9 @@ public class JpaRepositoryImpl<T, ID> implements JpaRepository<T, ID> {
     }
 
     @Override
-    public T save(T entity) throws IllegalAccessException {
-        String sql = new InsertQuery<>(entityClass, entity).generateQuery();
+    public void save(T entity) throws IllegalAccessException {
+        String sql = new InsertQuery<>(entity).generateQuery();
         jdbcTemplate.execute(sql);
-        return entity;
     }
 
     @Override
@@ -40,7 +39,7 @@ public class JpaRepositoryImpl<T, ID> implements JpaRepository<T, ID> {
 
     @Override
     public void delete(T entity) {
-        String sql = new DeleteQuery<>(entityClass, entity).generateQuery();
+        String sql = new DeleteQuery<>(entity).generateQuery();
         jdbcTemplate.execute(sql);
     }
 
