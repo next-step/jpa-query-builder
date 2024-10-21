@@ -43,5 +43,18 @@ class H2QueryBuilderDMLTest {
         Assertions.assertThat(tableName.getName()).isEqualTo("users");
     }
 
+    @Test
+    @DisplayName("findAll 쿼리 정상 테스트")
+    void fidAllHappyTest() {
+        //given
+        H2QueryBuilderDML h2QueryBuilderDML = new H2QueryBuilderDML();
+        Person person = 완벽한_사람_객체(1L, "장현준", 29, "qwerty@naver.com", 0);
+
+        //when
+        String findAllResult = h2QueryBuilderDML.findAll(person);
+
+        //then
+        Assertions.assertThat(findAllResult).isEqualTo("select id, nick_name, old, email from users;");
+    }
 
 }

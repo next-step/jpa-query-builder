@@ -9,10 +9,23 @@ import java.util.stream.Collectors;
 
 public class H2QueryBuilderDML implements QueryBuilderDML {
     private final static String INSERT_QUERY = "insert into %s (%s) values (%s);";
+    private final static String FIND_ALL_QUERY = "select %s from %s;";
 
     @Override
     public String insert(Object object) {
         return generateInsertTableQuery(object);
+    }
+
+    @Override
+    public String findAll(Object object) {
+        return String.format(FIND_ALL_QUERY, this.generateSelectTableQuery(object), new TableName(object.getClass()).getName());
+    }
+
+    private String generateSelectTableQuery(Object object) {
+        return this.getColumn(object.getClass(), object).stream()
+                .filter(tableColumnAttribute -> !tableColumnAttribute.isTransient())
+                .map(TableColumnAttribute::getColumnName)
+                .collect(Collectors.joining(", "));
     }
 
     private String generateInsertTableQuery(Object object) {
