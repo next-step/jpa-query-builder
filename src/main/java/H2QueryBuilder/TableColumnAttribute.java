@@ -63,19 +63,19 @@ public class TableColumnAttribute {
         return this.columnDataType;
     }
 
-    public boolean getIsPrimeKey() {
+    public boolean isPrimeKey() {
         return this.isPrimeKey;
     }
 
-    public boolean getIsNotNull() {
+    public boolean isNotNull() {
         return this.isNotNull;
     }
 
-    public boolean getIsAutoIncrement() {
+    public boolean isAutoIncrement() {
         return this.isAutoIncrement;
     }
 
-    public boolean getIsTransient() {
+    public boolean isTransient() {
         return this.isTransient;
     }
 

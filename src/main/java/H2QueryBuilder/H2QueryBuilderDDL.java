@@ -43,15 +43,15 @@ public class H2QueryBuilderDDL implements QueryBuilderDDL {
     }
 
     private String isNotNullConstraint(TableColumnAttribute tableColumnAttribute) {
-        return tableColumnAttribute.getIsNotNull() ? NOT_NULL : "";
+        return tableColumnAttribute.isNotNull() ? NOT_NULL : "";
     }
 
     private String isAutoIncrementConstraint(TableColumnAttribute tableColumnAttribute) {
-        return tableColumnAttribute.getIsAutoIncrement() ? AUTO_INCREMENT : "";
+        return tableColumnAttribute.isAutoIncrement() ? AUTO_INCREMENT : "";
     }
 
     private String isPrimaryKeyConstraint(TableColumnAttribute tableColumnAttribute) {
-        return tableColumnAttribute.getIsPrimeKey() ? PRIMARY_KEY : "";
+        return tableColumnAttribute.isPrimeKey() ? PRIMARY_KEY : "";
     }
 
     //조립된 컬럼 가져오기

@@ -27,8 +27,8 @@ public class H2QueryBuilderDML implements QueryBuilderDML {
     private String valuesClause(Object object) {
         return this.getColumn(object.getClass(), object)
                 .stream()
-                .filter(tableColumnAttribute -> !tableColumnAttribute.getIsTransient())
-                .filter(tableColumnAttribute -> !tableColumnAttribute.getIsAutoIncrement())
+                .filter(tableColumnAttribute -> !tableColumnAttribute.isTransient())
+                .filter(tableColumnAttribute -> !tableColumnAttribute.isAutoIncrement())
                 .map(TableColumnAttribute::getFieldValue)
                 .collect(Collectors.joining(", "));
     }
@@ -36,8 +36,8 @@ public class H2QueryBuilderDML implements QueryBuilderDML {
     private String columnsClause(Object object) {
         return this.getColumn(object.getClass(), object)
                 .stream()
-                .filter(tableColumnAttribute -> !tableColumnAttribute.getIsTransient())
-                .filter(tableColumnAttribute -> !tableColumnAttribute.getIsAutoIncrement())
+                .filter(tableColumnAttribute -> !tableColumnAttribute.isTransient())
+                .filter(tableColumnAttribute -> !tableColumnAttribute.isAutoIncrement())
                 .map(TableColumnAttribute::getColumnName)
                 .collect(Collectors.joining(", "));
     }
