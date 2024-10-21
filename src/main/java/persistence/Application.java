@@ -3,11 +3,9 @@ package persistence;
 import database.DatabaseServer;
 import database.H2;
 import jdbc.JdbcTemplate;
-import jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.dml.Person;
-import persistence.sql.dml.PersonRowMapper;
 import persistence.sql.dml.QueryBuilder;
 
 public class Application {

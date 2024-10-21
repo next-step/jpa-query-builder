@@ -5,27 +5,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jdbc.JdbcTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class QueryBuilder{
+public class QueryBuilder {
 
     private static final String INSERT_QUERY_FORMAT = "INSERT INTO %s (%s) VALUES (%s)";
     private static final String SELECT_QUERY_FORMAT = "SELECT * FROM %s";
     private JdbcTemplate jdbcTemplate;
     Class<?> clazz;
+
     public QueryBuilder(Class<?> clazz, JdbcTemplate jdbcTemplate) {
         this.clazz = clazz;
         this.jdbcTemplate = jdbcTemplate;
@@ -46,12 +39,13 @@ public class QueryBuilder{
     public void run(JdbcTemplate jdbcTemplate) {
         List<Person> personData = generatePersonData();
 
-        for(Person person : personData) {
+        for (Person person : personData) {
             String insertQuery = insert(person);
             jdbcTemplate.execute(insertQuery);
         }
 
     }
+
     public String insert(Object entity) {
         return String.format(INSERT_QUERY_FORMAT, getTableName(), columnsClause(clazz), valueClause(entity));
     }
@@ -75,6 +69,7 @@ public class QueryBuilder{
 
         return stringBuilder.toString();
     }
+
     public String columnsClause(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
@@ -91,7 +86,7 @@ public class QueryBuilder{
                     field.setAccessible(true);
                     try {
                         Object value = field.get(entity);
-                        if(value instanceof  String) {
+                        if (value instanceof String) {
                             return "'" + value + "'";
                         }
                         return String.valueOf(value);
@@ -101,23 +96,24 @@ public class QueryBuilder{
                 })
                 .collect(Collectors.joining(", "));
     }
+
     public List<Person> generatePersonData() {
         List<Person> personList = new ArrayList<>();
-        personList.add(new Person(1L,"jskim", 33, "qazwsx3745@naver.com"));
-        personList.add(new Person(2L,"ian", 30, "aa@naver.com"));
+        personList.add(new Person(1L, "jskim", 33, "qazwsx3745@naver.com"));
+        personList.add(new Person(2L, "ian", 30, "aa@naver.com"));
 
         return personList;
     }
 
     public String getColumnName(Field field) {
-        if(field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isEmpty()) {
+        if (field.isAnnotationPresent(Column.class) && !field.getAnnotation(Column.class).name().isEmpty()) {
             return field.getAnnotation(Column.class).name();
         }
         return field.getName();
     }
 
     public String getTableName() {
-        if(clazz.isAnnotationPresent(Table.class)){
+        if (clazz.isAnnotationPresent(Table.class)) {
             return clazz.getAnnotation(Table.class).name();
         }
         return clazz.getName();
