@@ -22,13 +22,13 @@ public class EntityMetadata {
         return tableName.value();
     }
 
-    public ColumnMetadata getColumnMetadata() {
-        return columnMetadata;
-    }
-
     public List<String> getPrimaryKeyNames() {
         return columnMetadata.getPrimaryKeys().stream()
                 .map(Column::getName)
                 .toList();
+    }
+
+    public List<Column> getColumns() {
+        return columnMetadata.getColumns();
     }
 }

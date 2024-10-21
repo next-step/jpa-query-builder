@@ -1,8 +1,6 @@
 package persistence.sql.ddl;
 
 import persistence.sql.ddl.metadata.Column;
-import persistence.sql.ddl.metadata.ColumnMetadata;
-import persistence.sql.ddl.metadata.ColumnOption;
 import persistence.sql.ddl.metadata.EntityMetadata;
 
 import java.util.stream.Collectors;
@@ -26,26 +24,22 @@ public class QueryBuilder {
     }
 
     private String getDefinitions(EntityMetadata entityMetadata) {
-        return generateColumnDefinitions(entityMetadata.getColumnMetadata()) + ", primary key (" + generatePrimaryKeyNames(entityMetadata) + ")";
+        return generateColumnDefinitions(entityMetadata) + ", primary key (" + generatePrimaryKeyNames(entityMetadata) + ")";
     }
 
     private String generatePrimaryKeyNames(EntityMetadata entityMetadata) {
         return String.join(JOIN_DELIMITER, entityMetadata.getPrimaryKeyNames());
     }
 
-    private String generateColumnDefinitions(ColumnMetadata columnMetadata) {
-        return columnMetadata.getColumns().stream()
+    private String generateColumnDefinitions(EntityMetadata entityMetadata) {
+        return entityMetadata.getColumns().stream()
                 .map(this::generateColumnDefinition)
                 .collect(Collectors.joining(JOIN_DELIMITER));
     }
 
     private String generateColumnDefinition(Column column) {
-        String options = column.options().stream()
-                .map(ColumnOption::getOption)
-                .collect(Collectors.joining(" "));
-
-        if (!options.isEmpty()) {
-            return column.getName() + " " + column.getSqlType() + " " + options;
+        if (column.hasOptions()) {
+            return column.getName() + " " + column.getSqlType() + " " + String.join(" ", column.getSqlOptions());
         }
 
         return column.getName() + " " + column.getSqlType();

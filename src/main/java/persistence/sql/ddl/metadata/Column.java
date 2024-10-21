@@ -55,4 +55,14 @@ public record Column(
     public String getName() {
         return name.value();
     }
+
+    public List<String> getSqlOptions() {
+        return options.stream()
+                .map(ColumnOption::getOption)
+                .toList();
+    }
+
+    public boolean hasOptions() {
+        return !options.isEmpty();
+    }
 }
