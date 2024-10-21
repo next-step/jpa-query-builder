@@ -21,6 +21,7 @@ class EntityFieldsTest {
 
         assertAll(
             () -> assertThat(entityFields.tableName()).isEqualTo("NormalEntity"),
+            () -> assertThat(entityFields.getAllFieldNames()).containsExactlyInAnyOrder("id", "name", "address"),
             () -> assertThat(entityFields.idField().entityField().name()).isEqualTo("id"),
             () -> assertThat(entityFields.getFieldNames()).containsExactlyInAnyOrder("name", "address")
         );
@@ -57,6 +58,14 @@ class EntityFieldsTest {
 
         assertThatExceptionOfType(IncorrectIdFieldException.class)
             .isThrownBy(() -> EntityFields.from(clazz));
+    }
+
+    @Test
+    void 전체_필드_이름_전체를_가져온다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityFields entityFields = EntityFields.from(clazz);
+
+        assertThat(entityFields.getAllFieldNames()).containsExactlyInAnyOrder("id", "name", "address");
     }
 
     @Test

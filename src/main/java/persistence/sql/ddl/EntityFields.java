@@ -12,7 +12,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public record EntityFields(String tableName, EntityIdField idField, List<EntityField> fields) {
+public record EntityFields(String tableName, List<EntityField> allFields, EntityIdField idField,
+                           List<EntityField> fields) {
     public static <T> EntityFields from(Class<T> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new NotEntityException();
@@ -22,6 +23,7 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
 
         return new EntityFields(
             getTableName(clazz),
+            getAllFields(declaredFields),
             getIdField(declaredFields),
             getFields(declaredFields)
         );
@@ -37,9 +39,16 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
         return table.name();
     }
 
+    private static List<EntityField> getAllFields(Field[] fields) {
+        return Arrays.stream(fields)
+            .filter(it -> !it.isAnnotationPresent(Transient.class))
+            .map(EntityField::from)
+            .toList();
+    }
+
     private static EntityIdField getIdField(Field[] fields) {
         List<Field> ids = Arrays.stream(fields)
-            .filter(EntityFields::isIdField)
+            .filter(it -> it.isAnnotationPresent(Id.class))
             .toList();
 
         if (ids.size() != 1) {
@@ -49,23 +58,21 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
         return EntityIdField.from(ids.get(0));
     }
 
-    private static boolean isIdField(Field it) {
-        return it.isAnnotationPresent(Id.class);
-    }
 
     private static List<EntityField> getFields(Field[] fields) {
         return Arrays.stream(fields)
-            .filter(EntityFields::isNormalField)
+            .filter(it -> !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class))
             .map(EntityField::from)
             .toList();
     }
 
-    private static boolean isNormalField(Field it) {
-        return !it.isAnnotationPresent(Id.class) && !it.isAnnotationPresent(Transient.class);
-    }
-
     public List<String> getFieldNames() {
         return fields.stream().map(EntityField::name)
+            .toList();
+    }
+
+    public List<String> getAllFieldNames() {
+        return allFields.stream().map(EntityField::name)
             .toList();
     }
 
@@ -78,7 +85,7 @@ public record EntityFields(String tableName, EntityIdField idField, List<EntityF
     }
 
     public Field getFieldByName(String fieldName) {
-        return fields.stream().filter(it -> it.isEqualName(fieldName))
+        return allFields.stream().filter(it -> it.isEqualName(fieldName))
             .findFirst().orElseThrow(NotFoundFieldException::new)
             .field();
     }

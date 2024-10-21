@@ -3,29 +3,37 @@ package persistence.sql.ddl;
 import jdbc.JdbcTemplate;
 import jdbc.RowMapper;
 import org.jetbrains.annotations.NotNull;
-import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.generator.*;
 
 import java.lang.reflect.Field;
-import java.sql.SQLException;
-import java.util.AbstractMap;
+import java.sql.*;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class DefaultEntityManager implements EntityManager {
-    private final Map<Map.Entry<Class, Object>, Object> cache = new HashMap<>();
+    private final Map<Entry<Class, Object>, Object> cache;
+    private final Connection connection;
     private final JdbcTemplate jdbcTemplate;
-    private final CreateDDLGenerator createDDLGenerator;
     private final InsertDMLGenerator insertDMLGenerator;
+    private final UpdateDMLGenerator updateDMLGenerator;
     private final SelectDMLGenerator selectDMLGenerator;
     private final DeleteDMLGenerator deleteDMLGenerator;
 
-    public DefaultEntityManager(JdbcTemplate jdbcTemplate, Dialect dialect) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.createDDLGenerator = new DefaultCreateDDLGenerator(dialect);
+    public DefaultEntityManager(Map<Entry<Class, Object>, Object> cache, Connection connection) {
+        this.cache = cache;
+        this.connection = connection;
+        this.jdbcTemplate = new JdbcTemplate(connection);
         this.insertDMLGenerator = new DefaultInsertDMLGenerator();
+        this.updateDMLGenerator = new DefaultUpdateDMLGenerator();
         this.selectDMLGenerator = new DefaultSelectDMLGenerator();
         this.deleteDMLGenerator = new DefaultDeleteDMLGenerator();
+    }
+
+    public DefaultEntityManager(Connection connection) {
+        this(new HashMap<>(), connection);
     }
 
     @Override
@@ -38,41 +46,15 @@ public class DefaultEntityManager implements EntityManager {
 
         String query = selectDMLGenerator.generateFindById(entityFields, id);
 
-        return (T) jdbcTemplate.queryForObject(query, toObject(clazz, id, entityFields));
-    }
+        List<Object> results = jdbcTemplate.query(query, toObject(clazz, id, entityFields));
 
-    @NotNull
-    private <T> RowMapper<Object> toObject(Class<T> clazz, Object id, EntityFields entityFields) {
-        return resultSet -> {
-            try {
-                T t = clazz.newInstance();
-                entityFields.getFieldNames().forEach(it -> {
-                    Field fieldByName = entityFields.getFieldByName(it);
+        if (results.isEmpty()) {
+            return null;
+        } else if (results.size() >= 2) {
+            throw new RuntimeException("Expected 1 result, got " + results.size());
+        }
 
-                    try {
-                        Object object = resultSet.getObject(it);
-
-                        fieldByName.setAccessible(true);
-
-                        fieldByName.set(t, object);
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    } finally {
-                        fieldByName.setAccessible(false);
-                    }
-                });
-
-                putCache(clazz, id, t);
-
-                return t;
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        };
+        return (T) results.get(0);
     }
 
     @Override
@@ -80,28 +62,54 @@ public class DefaultEntityManager implements EntityManager {
         Class<?> clazz = entity.getClass();
         EntityFields entityFields = EntityFields.from(clazz);
 
-        Field field = entityFields.getIdField();
+        Field idField = entityFields.getIdField();
 
-        try {
-            field.setAccessible(true);
+        Object id = FieldUtils.getValue(idField, entity);
 
-            Object id = field.get(entity);
+        if (id == null) {
+            Object valueOfId = insert(entity, Statement.RETURN_GENERATED_KEYS);
 
-            if (id == null) {
-                String query = insertDMLGenerator.generateInsert(field);
+            FieldUtils.setValue(idField, entity, valueOfId);
 
-                jdbcTemplate.execute(query);
-                // id 가져오기
-                putCache(clazz, id, entity);
+            // id 가져오기
+            putCache(clazz, valueOfId, entity);
+        } else {
+            if (find(clazz, id) == null) {
+                insert(entity, Statement.NO_GENERATED_KEYS);
             } else {
-                putCache(clazz, id, entity);
+                update(entity);
             }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } finally {
-            field.setAccessible(false);
+
+            putCache(clazz, id, entity);
         }
+
+        return entity;
+    }
+
+    private Object insert(Object entity, int autoGeneratedKeys) {
+        String queryOfInsert = insertDMLGenerator.generate(entity);
+
+        try (PreparedStatement statement = connection.prepareStatement(queryOfInsert, autoGeneratedKeys)) {
+            statement.execute();
+
+            if (autoGeneratedKeys == PreparedStatement.RETURN_GENERATED_KEYS) {
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+
+                generatedKeys.next();
+
+                return generatedKeys.getObject(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return null;
+    }
+
+    private void update(Object entity) {
+        String query = updateDMLGenerator.generate(entity);
+
+        jdbcTemplate.execute(query);
     }
 
     @Override
@@ -109,46 +117,60 @@ public class DefaultEntityManager implements EntityManager {
         Class<?> clazz = entity.getClass();
         EntityFields entityFields = EntityFields.from(clazz);
 
-        Field field = entityFields.getIdField();
+        Field idField = entityFields.getIdField();
 
-        try {
-            field.setAccessible(true);
+        Object id = FieldUtils.getValue(idField, entity);
 
-            Object id = field.get(entity);
+        removeCache(clazz, id);
 
-            removeCache(clazz, id);
+        String query = deleteDMLGenerator.generateDeleteById(entityFields, id);
 
-            String query = deleteDMLGenerator.generateDeleteById(entityFields, id);
+        jdbcTemplate.execute(query);
+    }
 
-            jdbcTemplate.execute(query);
+    @NotNull
+    private <T> RowMapper<Object> toObject(Class<T> clazz, Object id, EntityFields entityFields) {
+        return resultSet -> {
+            T t = clazz.newInstance();
 
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } finally {
-            field.setAccessible(false);
-        }
+            entityFields.getAllFieldNames().forEach(it -> {
+                Field fieldByName = entityFields.getFieldByName(it);
+
+                try {
+                    Object value = resultSet.getObject(it);
+
+                    FieldUtils.setValue(fieldByName, t, value);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            putCache(clazz, id, t);
+
+            return t;
+        };
     }
 
     private boolean containsCache(Class clazz, Object id) {
-        AbstractMap.SimpleEntry<Class, Object> entry = new AbstractMap.SimpleEntry<>(clazz, id);
+        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
 
         return cache.containsKey(entry);
     }
 
     private void putCache(Class clazz, Object id, Object entity) {
-        AbstractMap.SimpleEntry<Class, Object> entry = new AbstractMap.SimpleEntry<>(clazz, id);
+        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
 
         cache.put(entry, entity);
     }
 
     private Object getCache(Class clazz, Object id) {
-        AbstractMap.SimpleEntry<Class, Object> entry = new AbstractMap.SimpleEntry<>(clazz, id);
+        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
 
         return cache.get(entry);
     }
 
     private void removeCache(Class clazz, Object id) {
-        AbstractMap.SimpleEntry<Class, Object> entry = new AbstractMap.SimpleEntry<>(clazz, id);
+        Entry<Class, Object> entry = new SimpleEntry<>(clazz, id);
 
         cache.remove(entry);
     }
