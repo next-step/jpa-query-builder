@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import persistence.sql.ddl.EntityColumn;
 import persistence.sql.ddl.SqlJdbcTypes;
 import persistence.sql.ddl.exception.NotSupportException;
 
@@ -17,7 +18,7 @@ class H2DialectTest {
     static Stream<Arguments> fields() {
         return Stream.of(
             Arguments.of(Long.class, "BIGINT"),
-            Arguments.of(String.class, "VARCHAR(%d)"),
+            Arguments.of(String.class, "VARCHAR(255)"),
             Arguments.of(Integer.class, "INTEGER")
         );
     }
@@ -26,9 +27,10 @@ class H2DialectTest {
     @ParameterizedTest
     void 필드_정의를_구할_수_있다(Class<?> clazz, String definition) {
         H2Dialect h2Dialect = new H2Dialect();
+        EntityColumn column = new EntityColumn(null, null, null, false, 255);
         Integer type = SqlJdbcTypes.typeOf(clazz);
 
-        String result = h2Dialect.getFieldDefinition(type);
+        String result = h2Dialect.getColumnDefinition(type, column);
 
         assertThat(result).isEqualTo(definition);
     }
@@ -38,7 +40,7 @@ class H2DialectTest {
         H2Dialect h2Dialect = new H2Dialect();
 
         assertThatExceptionOfType(NotSupportException.class)
-            .isThrownBy(() -> h2Dialect.getFieldDefinition(Integer.MAX_VALUE));
+            .isThrownBy(() -> h2Dialect.getColumnDefinition(Integer.MAX_VALUE, null));
     }
 
     @Test

@@ -9,17 +9,17 @@ import java.lang.reflect.Field;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class EntityIdFieldTest {
+class EntityIdColumnTest {
     @Test
     void GeneratedValue가_없으면_generationType은_Auto이다() throws NoSuchFieldException {
         Field field = TestEntity.class.getDeclaredField("defaultId");
 
-        EntityIdField entityIdField = EntityIdField.from(field);
+        EntityIdColumn entityIdColumn = EntityIdColumn.from(field);
 
         assertAll(
-            () -> assertThat(entityIdField.generationType()).isEqualTo(GenerationType.AUTO),
-            () -> assertThat(entityIdField.name()).isEqualTo("defaultId"),
-            () -> assertThat(entityIdField.nullable()).isTrue()
+            () -> assertThat(entityIdColumn.generationType()).isEqualTo(GenerationType.AUTO),
+            () -> assertThat(entityIdColumn.name()).isEqualTo("defaultId"),
+            () -> assertThat(entityIdColumn.nullable()).isTrue()
         );
     }
 
@@ -27,8 +27,8 @@ class EntityIdFieldTest {
     void GeneratedValue가_있으면_generationType은_GeneratedValue의_stratgy를_사용한다() throws NoSuchFieldException {
         Field field = TestEntity.class.getDeclaredField("identityId");
 
-        EntityIdField entityIdField = EntityIdField.from(field);
+        EntityIdColumn entityIdColumn = EntityIdColumn.from(field);
 
-        assertThat(entityIdField.generationType()).isEqualTo(GenerationType.IDENTITY);
+        assertThat(entityIdColumn.generationType()).isEqualTo(GenerationType.IDENTITY);
     }
 }

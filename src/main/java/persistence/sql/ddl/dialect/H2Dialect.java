@@ -1,15 +1,16 @@
 package persistence.sql.ddl.dialect;
 
 import jakarta.persistence.GenerationType;
+import persistence.sql.ddl.EntityColumn;
 import persistence.sql.ddl.exception.NotSupportException;
 
 import java.sql.Types;
 
 public class H2Dialect implements Dialect {
     @Override
-    public String getFieldDefinition(int type) {
+    public String getColumnDefinition(int type, EntityColumn column) {
         return switch (type) {
-            case Types.VARCHAR -> "VARCHAR(%d)";
+            case Types.VARCHAR -> "VARCHAR(%d)".formatted(column.length());
             case Types.BIGINT -> "BIGINT";
             case Types.INTEGER -> "INTEGER";
             default -> throw new NotSupportException();

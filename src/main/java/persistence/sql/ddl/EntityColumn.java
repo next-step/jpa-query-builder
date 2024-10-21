@@ -4,11 +4,11 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public record EntityField(Field field, String name, Class<?> type, boolean nullable, int length) {
-    public static EntityField from(Field field) {
+public record EntityColumn(Field field, String name, Class<?> type, boolean nullable, int length) {
+    public static EntityColumn from(Field field) {
         Column column = field.getAnnotation(Column.class);
 
-        return new EntityField(
+        return new EntityColumn(
             field,
             getName(field, column),
             field.getType(),
