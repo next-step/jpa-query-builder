@@ -53,8 +53,9 @@ public class InsertQueryBuilder {
         for (Field field : fields) {
             field.setAccessible(true);
             stringBuilder
+                    .append("'")
                     .append(field.get(object))
-                    .append(", ");
+                    .append("', ");
         }
 
         stringBuilder.setLength(stringBuilder.length() - 2);
