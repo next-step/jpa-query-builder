@@ -1,15 +1,15 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.Table;
+import persistence.sql.ddl.EntityTable;
 
 public class DefaultSelectDMLGenerator implements SelectDMLGenerator {
     @Override
-    public String generateFindAll(Table table) {
-        return "select * from %s;".formatted(table.tableName());
+    public String generateFindAll(EntityTable entityTable) {
+        return "select * from %s;".formatted(entityTable.tableName());
     }
 
     @Override
-    public String generateFindById(Table table, Object id) {
-        return "select * from %s where %s = %s;".formatted(table.tableName(), table.getIdFieldName(), id);
+    public String generateFindById(EntityTable entityTable, Object id) {
+        return "select * from %s where %s = %s;".formatted(entityTable.tableName(), entityTable.getNameOfIdColumn(), id);
     }
 }

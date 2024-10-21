@@ -42,11 +42,11 @@ public class DefaultEntityManager implements EntityManager {
             return (T) getCache(clazz, id);
         }
 
-        Table table = Table.from(clazz);
+        EntityTable entityTable = EntityTable.from(clazz);
 
-        String query = selectDMLGenerator.generateFindById(table, id);
+        String query = selectDMLGenerator.generateFindById(entityTable, id);
 
-        List<Object> results = jdbcTemplate.query(query, toObject(clazz, id, table));
+        List<Object> results = jdbcTemplate.query(query, toObject(clazz, id, entityTable));
 
         if (results.isEmpty()) {
             return null;
@@ -60,16 +60,16 @@ public class DefaultEntityManager implements EntityManager {
     @Override
     public Object persist(Object entity) {
         Class<?> clazz = entity.getClass();
-        Table table = Table.from(clazz);
+        EntityTable entityTable = EntityTable.from(clazz);
 
-        Field idField = table.getIdField();
+        Field field = entityTable.getFieldByIdColumn();
 
-        Object id = FieldUtils.getValue(idField, entity);
+        Object id = FieldUtils.getValue(field, entity);
 
         if (id == null) {
             Object valueOfId = insert(entity, Statement.RETURN_GENERATED_KEYS);
 
-            FieldUtils.setValue(idField, entity, valueOfId);
+            FieldUtils.setValue(field, entity, valueOfId);
 
             // id 가져오기
             putCache(clazz, valueOfId, entity);
@@ -115,31 +115,31 @@ public class DefaultEntityManager implements EntityManager {
     @Override
     public void remove(Object entity) {
         Class<?> clazz = entity.getClass();
-        Table table = Table.from(clazz);
+        EntityTable entityTable = EntityTable.from(clazz);
 
-        Field idField = table.getIdField();
+        Field field = entityTable.getFieldByIdColumn();
 
-        Object id = FieldUtils.getValue(idField, entity);
+        Object id = FieldUtils.getValue(field, entity);
 
         removeCache(clazz, id);
 
-        String query = deleteDMLGenerator.generateDeleteById(table, id);
+        String query = deleteDMLGenerator.generateDeleteById(entityTable, id);
 
         jdbcTemplate.execute(query);
     }
 
     @NotNull
-    private <T> RowMapper<Object> toObject(Class<T> clazz, Object id, Table table) {
+    private <T> RowMapper<Object> toObject(Class<T> clazz, Object id, EntityTable entityTable) {
         return resultSet -> {
             T t = clazz.newInstance();
 
-            table.getAllFieldNames().forEach(it -> {
-                Field fieldByName = table.getFieldByName(it);
+            entityTable.getAllColumnNames().forEach(it -> {
+                Field field = entityTable.getFieldByColumnName(it);
 
                 try {
                     Object value = resultSet.getObject(it);
 
-                    FieldUtils.setValue(fieldByName, t, value);
+                    FieldUtils.setValue(field, t, value);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

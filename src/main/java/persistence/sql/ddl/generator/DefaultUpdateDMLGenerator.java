@@ -1,6 +1,6 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.Table;
+import persistence.sql.ddl.EntityTable;
 import persistence.sql.ddl.FieldUtils;
 
 import java.lang.reflect.Field;
@@ -10,44 +10,44 @@ import java.util.stream.Collectors;
 public class DefaultUpdateDMLGenerator implements UpdateDMLGenerator {
     @Override
     public String generate(Object entity) {
-        Table table = Table.from(entity.getClass());
+        EntityTable entityTable = EntityTable.from(entity.getClass());
 
-        List<String> fieldNames = getFieldNames(table, entity);
-        String set = setClause(table, fieldNames, entity);
-        String where = whereClause(table, entity);
+        List<String> columnNames = getColumnNames(entityTable, entity);
+        String set = setClause(entityTable, columnNames, entity);
+        String where = whereClause(entityTable, entity);
 
-        return "UPDATE %s SET %s WHERE %s;".formatted(table.tableName(), set, where);
+        return "UPDATE %s SET %s WHERE %s;".formatted(entityTable.tableName(), set, where);
     }
 
-    private String whereClause(Table table, Object entity) {
-        String idFieldName = table.getIdFieldName();
+    private String whereClause(EntityTable entityTable, Object entity) {
+        String idColumnName = entityTable.getNameOfIdColumn();
 
-        Object idValue = getValue(table, idFieldName, entity);
+        Object idValue = getValue(entityTable, idColumnName, entity);
 
-        return "%s = %s".formatted(idFieldName, idValue);
+        return "%s = %s".formatted(idColumnName, idValue);
     }
 
-    private String setClause(Table table, List<String> fieldNames, Object object) {
-        return fieldNames.stream().map(fieldName -> "%s = %s".formatted(fieldName, getValue(table, fieldName, object)))
+    private String setClause(EntityTable entityTable, List<String> columnNames, Object object) {
+        return columnNames.stream().map(columnName -> "%s = %s".formatted(columnName, getValue(entityTable, columnName, object)))
             .collect(Collectors.joining(","));
     }
 
-    private List<String> getFieldNames(Table table, Object entity) {
-        if (hasIdValue(table, entity)) {
-            return table.getAllFieldNames();
+    private List<String> getColumnNames(EntityTable entityTable, Object entity) {
+        if (hasIdValue(entityTable, entity)) {
+            return entityTable.getAllColumnNames();
         } else {
-            return table.getFieldNames();
+            return entityTable.getColumnNames();
         }
     }
 
-    private boolean hasIdValue(Table table, Object object) {
-        Field field = table.getIdField();
+    private boolean hasIdValue(EntityTable entityTable, Object object) {
+        Field field = entityTable.getFieldByIdColumn();
 
         return FieldUtils.getValue(field, object) != null;
     }
 
-    private Object getValue(Table table, String fieldName, Object object) {
-        Field field = table.getFieldByName(fieldName);
+    private Object getValue(EntityTable entityTable, String columnName, Object object) {
+        Field field = entityTable.getFieldByColumnName(columnName);
 
         Object value = FieldUtils.getValue(field, object);
 

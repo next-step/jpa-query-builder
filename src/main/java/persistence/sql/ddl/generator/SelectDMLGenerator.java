@@ -1,9 +1,9 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.Table;
+import persistence.sql.ddl.EntityTable;
 
 public interface SelectDMLGenerator {
-    String generateFindAll(Table table);
+    String generateFindAll(EntityTable entityTable);
 
-    String generateFindById(Table table, Object id);
+    String generateFindById(EntityTable entityTable, Object id);
 }

@@ -30,10 +30,10 @@ class DefaultEntityManagerTest {
     @BeforeEach
     public void setUp() throws SQLException {
         Dialect dialect = new H2Dialect();
-        Table table = Table.from(Person.class);
+        EntityTable entityTable = EntityTable.from(Person.class);
         CreateDDLGenerator createDDLGenerator = new DefaultCreateDDLGenerator(dialect);
 
-        String createQuery = createDDLGenerator.generate(table);
+        String createQuery = createDDLGenerator.generate(entityTable);
 
         server = new H2();
 
@@ -143,10 +143,10 @@ class DefaultEntityManagerTest {
 
     @AfterEach
     public void tearDown() throws SQLException {
-        Table table = Table.from(Person.class);
+        EntityTable entityTable = EntityTable.from(Person.class);
         DropDDLGenerator dropDDLGenerator = new DefaultDropDDLGenerator();
 
-        String dropQuery = dropDDLGenerator.generate(table);
+        String dropQuery = dropDDLGenerator.generate(entityTable);
 
         executeQuery(server.getConnection(), dropQuery);
 

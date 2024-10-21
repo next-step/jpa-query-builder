@@ -6,7 +6,7 @@ import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import persistence.sql.ddl.DefaultEntityManager;
-import persistence.sql.ddl.Table;
+import persistence.sql.ddl.EntityTable;
 import persistence.sql.ddl.EntityManager;
 import persistence.sql.ddl.Person;
 import persistence.sql.ddl.dialect.Dialect;
@@ -27,7 +27,7 @@ public class Application {
         CreateDDLGenerator createDDLGenerator = new DefaultCreateDDLGenerator(h2Dialect);
         DropDDLGenerator dropDDLGenerator = new DefaultDropDDLGenerator();
 
-        Table table = Table.from(Person.class);
+        EntityTable entityTable = EntityTable.from(Person.class);
 
         Person personForSave = new Person(null, "soora", 10, "soora@naver.com", 5);
 
@@ -41,7 +41,7 @@ public class Application {
             final EntityManager entityManager = new DefaultEntityManager(connection);
 
 
-            String createDDL = createDDLGenerator.generate(table);
+            String createDDL = createDDLGenerator.generate(entityTable);
 
             jdbcTemplate.execute(createDDL);
 
@@ -57,7 +57,7 @@ public class Application {
 
             System.out.println(found2);
 
-            String dropDDL = dropDDLGenerator.generate(table);
+            String dropDDL = dropDDLGenerator.generate(entityTable);
 
             jdbcTemplate.execute(dropDDL);
 
