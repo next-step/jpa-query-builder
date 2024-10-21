@@ -30,7 +30,7 @@ public class EntityManagerImpl<T, ID> implements EntityManager<T, ID> {
     }
 
     @Override
-    public void remove(T entity) {
+    public void remove(T entity) { //요구사항 3
         String sql = new DeleteQuery<>(entity).generateQuery();
         jdbcTemplate.execute(sql);
     }
