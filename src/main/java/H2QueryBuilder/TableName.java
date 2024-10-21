@@ -1,11 +1,11 @@
-package common;
+package H2QueryBuilder;
 
 import jakarta.persistence.Table;
 
-public class TableUtil {
+public class TableName {
     private final String name;
 
-    public TableUtil(Class<?> clazz) {
+    public TableName(Class<?> clazz) {
         this.name = getTableName(clazz);
     }
 

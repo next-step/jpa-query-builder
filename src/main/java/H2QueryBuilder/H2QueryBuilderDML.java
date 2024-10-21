@@ -1,6 +1,5 @@
 package H2QueryBuilder;
 
-import common.TableUtil;
 import repository.QueryBuilderDML;
 
 import java.lang.reflect.Field;
@@ -21,7 +20,7 @@ public class H2QueryBuilderDML implements QueryBuilderDML {
         String fieldValues = valuesClause(object);
 
 
-        return String.format(INSERT_QUERY, new TableUtil(object.getClass()).getName(), columnNames, fieldValues);
+        return String.format(INSERT_QUERY, new TableName(object.getClass()).getName(), columnNames, fieldValues);
     }
 
     private String valuesClause(Object object) {
