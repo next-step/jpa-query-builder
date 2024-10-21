@@ -4,13 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ddl.create.component.ComponentBuilder;
+import persistence.sql.NameUtils;
+import persistence.sql.datatype.JavaType;
+import persistence.sql.datatype.dialect.H2Dialect;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColumnComponentBuilder implements ComponentBuilder {
+public class ColumnComponentBuilder {
     private String name;
     private String type;
     private final List<String> options = new ArrayList<>();
@@ -31,11 +33,14 @@ public class ColumnComponentBuilder implements ComponentBuilder {
     }
 
     private void setName(Field field) {
-        this.name = getNameFromField(field);
+        this.name = NameUtils.getColumnName(field);
     }
 
     private void setType(Field field) {
-        this.type = DataTypeConverter.convert(field.getType());
+        JavaType javaType = new JavaType();
+        H2Dialect h2Dialect = new H2Dialect();
+        Integer typeConst = javaType.getTypeConst(field.getType());
+        this.type = h2Dialect.getTypeName(typeConst);
     }
 
     private void setOptions(Field field) {

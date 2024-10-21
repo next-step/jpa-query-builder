@@ -1,12 +1,12 @@
 package persistence;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import persistence.sql.ddl.create.DdlCreateQueryBuilder;
+import persistence.sql.NameUtils;
+import persistence.sql.ddl.create.CreateQueryBuilder;
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
 import persistence.sql.ddl.create.component.constraint.ConstraintComponentBuilder;
-import persistence.sql.ddl.drop.DdlDropQueryBuilder;
+import persistence.sql.ddl.drop.DropQueryBuilder;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -69,7 +69,7 @@ public class EntityScanner {
 
     private String generateDdlCreateQuery(Class<?> entityClass) {
         Field[] fields = entityClass.getDeclaredFields();
-        DdlCreateQueryBuilder queryBuilder = DdlCreateQueryBuilder.newInstance();
+        CreateQueryBuilder queryBuilder = CreateQueryBuilder.newInstance();
         for (Field field : fields) {
             if (field.isAnnotationPresent(Transient.class)) {
                 continue;
@@ -77,19 +77,11 @@ public class EntityScanner {
             queryBuilder.add(ColumnComponentBuilder.from(field));
             queryBuilder.add(ConstraintComponentBuilder.from(field));
         }
-        return queryBuilder.build(getNameFromClass(entityClass));
+        return queryBuilder.build(NameUtils.getTableName(entityClass));
     }
 
     private String generateDdlDropQuery(Class<?> entityClass) {
-        DdlDropQueryBuilder ddlDropQueryBuilder = DdlDropQueryBuilder.newInstance();
-        return ddlDropQueryBuilder.build(getNameFromClass(entityClass));
-    }
-
-    private String getNameFromClass(Class<?> entityClass) {
-        if (entityClass.isAnnotationPresent(Table.class)
-                && !"".equals(entityClass.getAnnotation(Table.class).name())) {
-            return entityClass.getAnnotation(Table.class).name();
-        }
-        return entityClass.getSimpleName();
+        DropQueryBuilder dropQueryBuilder = DropQueryBuilder.newInstance();
+        return dropQueryBuilder.build(NameUtils.getTableName(entityClass));
     }
 }

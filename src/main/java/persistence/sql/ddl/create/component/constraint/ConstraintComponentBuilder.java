@@ -1,13 +1,13 @@
 package persistence.sql.ddl.create.component.constraint;
 
 import jakarta.persistence.Id;
-import persistence.sql.ddl.create.component.ComponentBuilder;
+import persistence.sql.NameUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConstraintComponentBuilder implements ComponentBuilder {
+public class ConstraintComponentBuilder {
     private String name;
     private String type;
     private String columnName;
@@ -38,7 +38,7 @@ public class ConstraintComponentBuilder implements ComponentBuilder {
     }
 
     private void setPrimaryKeyName(Field field) {
-        this.name = "{TABLE_NAME}_pk_" + getNameFromField(field);
+        this.name = "{TABLE_NAME}_pk_" + NameUtils.getColumnName(field);
     }
 
     private void setPrimaryKeyType() {
@@ -46,7 +46,7 @@ public class ConstraintComponentBuilder implements ComponentBuilder {
     }
 
     private void setColumnName(Field field) {
-        this.columnName = getNameFromField(field);
+        this.columnName = NameUtils.getColumnName(field);
     }
 
     /* TODO : foreign key constraint, etc. */
