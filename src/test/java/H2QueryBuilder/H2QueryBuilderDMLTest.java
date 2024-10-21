@@ -45,7 +45,7 @@ class H2QueryBuilderDMLTest {
 
     @Test
     @DisplayName("findAll 쿼리 정상 테스트")
-    void fidAllHappyTest() {
+    void fidAllTest() {
         //given
         H2QueryBuilderDML h2QueryBuilderDML = new H2QueryBuilderDML();
         Person person = 완벽한_사람_객체(1L, "장현준", 29, "qwerty@naver.com", 0);
@@ -55,6 +55,20 @@ class H2QueryBuilderDMLTest {
 
         //then
         Assertions.assertThat(findAllResult).isEqualTo("select id, nick_name, old, email from users;");
+    }
+
+    @Test
+    @DisplayName("findById 쿼리 정상 테스트")
+    void findByIdTest() {
+        //given
+        H2QueryBuilderDML h2QueryBuilderDML = new H2QueryBuilderDML();
+        Person person = 완벽한_사람_객체(1L, "장현준", 29, "qwerty@naver.com", 0);
+
+        //when
+        String findByIdResult = h2QueryBuilderDML.findById(person);
+
+        //then
+        Assertions.assertThat(findByIdResult).isEqualTo("select id, nick_name, old, email from users where id = 1;");
     }
 
 }
