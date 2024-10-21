@@ -20,7 +20,7 @@ class H2QueryBuilderDDLTest {
 
         //then
         assertThat(createQuery).isEqualTo(
-                "CREATE TABLE Person (id BIGINT NOT NULL PRIMARY KEY);"
+                "CREATE TABLE person (id BIGINT NOT NULL PRIMARY KEY);"
         );
     }
 
@@ -32,7 +32,7 @@ class H2QueryBuilderDDLTest {
 
         //when
         assertThat(h2QueryBuilderDDL.create(컬럼어노테이션_존재하지않는_클래스())).isEqualTo(
-                "CREATE TABLE Person (id BIGINT NOT NULL PRIMARY KEY, name VARCHAR, age INT, email VARCHAR);"
+                "CREATE TABLE person (id BIGINT NOT NULL PRIMARY KEY, name VARCHAR, age INT, email VARCHAR);"
         );
     }
 
