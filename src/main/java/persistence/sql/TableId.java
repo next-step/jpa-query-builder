@@ -11,6 +11,7 @@ public class TableId {
     private final String name;
     private final boolean isAutoIncrement;
 
+    
 
     public TableId(Field field) {
         this.type = field.getType();

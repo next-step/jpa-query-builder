@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import domain.Person;
 
+import org.jetbrains.annotations.NotNull;
 import persistence.sql.TableColumn;
 import persistence.sql.TableId;
 
@@ -25,20 +26,19 @@ public class CreateTableQueryBuilder extends DDLQueryBuilder {
     private String createTable() {
         List<TableColumn> tableColumn = tableMeta.getTableColumn();
         TableId tableId = tableMeta.getTableId();
-        String idColumn = tableId.getName() + " " + H2DBDataType.castType(tableId.getType()) + " PRIMARY KEY" + (tableId.isAutoIncrement() ? " AUTO_INCREMENT, " : ", ");
-        String columns = tableColumn.stream().map(column -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append(column.getColumnName()).append(" ");
-            sb.append(H2DBDataType.castType(column.getType()));
-            sb.append(column.isNotNullable() ? " NOT NULL" : "");
-            return sb.toString();
-        }).collect(Collectors.joining(", "));
-
+        String idColumn = createIdColumn(tableId);
+        String columns = createColumns(tableColumn);
         return CREATE_TABLE + tableMeta.getTableName() + " ("+ idColumn + columns + ");";
     }
 
-    public static void main(String[] args) {
-        CreateTableQueryBuilder createTableQueryBuilder = new CreateTableQueryBuilder(Person.class);
-        System.out.println(createTableQueryBuilder.executeQuery());
+    private static String createColumns(List<TableColumn> tableColumn) {
+        return tableColumn.stream().map(column -> column.columnName() + " " +
+                H2DBDataType.castType(column.type()) +
+                (column.isNotNullable() ? " NOT NULL" : "")).collect(Collectors.joining(", "));
+    }
+
+    @NotNull
+    private static String createIdColumn(TableId tableId) {
+        return tableId.getName() + " " + H2DBDataType.castType(tableId.getType()) + " PRIMARY KEY" + (tableId.isAutoIncrement() ? " AUTO_INCREMENT, " : ", ");
     }
 }

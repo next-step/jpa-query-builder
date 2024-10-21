@@ -8,29 +8,29 @@ import java.lang.reflect.Field;
 public class TableColumn {
     private final Class<?> type;
     private final String name;
-    private final boolean isNotNullable;
+    private final boolean isNullable;
     private Object value;
 
     public TableColumn(Field column) {
         this.type = column.getType();
         this.name = setColumnName(column);
-        this.isNotNullable = isNotNullable(column);
+        this.isNullable = nullable(column);
     }
 
-    public Class<?> getType() {
+    public Class<?> type() {
         return type;
     }
-    public String getColumnName() {
+    public String columnName() {
         return name;
     }
 
     public boolean isNotNullable() {
-        return isNotNullable;
+        return !isNullable;
     }
 
-    private static boolean isNotNullable(Field field) {
+    private boolean nullable(Field field) {
         Column column = field.getAnnotation(Column.class);
-        return column != null && !column.nullable();
+        return column == null || column.nullable();
     }
 
     private String setColumnName(Field field) {
