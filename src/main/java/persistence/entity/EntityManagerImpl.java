@@ -24,7 +24,7 @@ public class EntityManagerImpl<T, ID> implements EntityManager<T, ID> {
     }
 
     @Override
-    public void persist(T entity) throws IllegalAccessException {
+    public void persist(T entity) throws IllegalAccessException { //요구사항 2
         String sql = new InsertQuery<>(entity).generateQuery();
         jdbcTemplate.execute(sql);
     }

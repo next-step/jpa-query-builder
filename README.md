@@ -15,6 +15,6 @@
 
 ## 4단계
 ### 요구사항1 - find[O]
-### 요구사항2 - persist (insert)[]
+### 요구사항2 - persist (insert)[O]
 ### 요구사항3 - remove (delete)[]
 ### 요구사항4 - update[]
