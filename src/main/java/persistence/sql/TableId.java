@@ -30,7 +30,7 @@ public class TableId {
         return type;
     }
 
-    private static boolean isAutoIncrement(Field field) {
+    private boolean isAutoIncrement(Field field) {
         return field.isAnnotationPresent(GeneratedValue.class) &&
                 field.getAnnotation(GeneratedValue.class).strategy() == GenerationType.IDENTITY;
     }
