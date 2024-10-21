@@ -21,7 +21,7 @@ class H2QueryBuilderDMLTest {
 
     @Test
     @DisplayName("INSERT query NULL 값 확인")
-    void NullValueTest() {
+    void nullValueTest() {
         H2QueryBuilderDML h2QueryBuilderDML = new H2QueryBuilderDML();
         Person person = 이름이_없는_사람_객체(1L, 29, "qwerty@naver.com", 0);
 
@@ -29,5 +29,19 @@ class H2QueryBuilderDMLTest {
 
         Assertions.assertThat(insertQuery).isEqualTo("insert into users (nick_name, old, email) values (NULL, 29, 'qwerty@naver.com');");
     }
+
+    @Test
+    @DisplayName("테이블 이름 값 확인하기")
+    void tableNameCheck() {
+        //given
+        Person person = 완벽한_사람_객체(1L, "장현준", 29, "qwerty@naver.com", 0);
+
+        //when
+        TableName tableName = new TableName(person.getClass());
+
+        //then
+        Assertions.assertThat(tableName.getName()).isEqualTo("users");
+    }
+
 
 }
