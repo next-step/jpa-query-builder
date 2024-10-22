@@ -4,11 +4,11 @@ import jakarta.persistence.Column;
 
 import java.lang.reflect.Field;
 
-public record EntityField(Field field, String name, Class<?> type, boolean nullable, int length) {
-    public static EntityField from(Field field) {
+public record EntityColumn(Field field, String name, Class<?> type, boolean nullable, int length) {
+    public static EntityColumn from(Field field) {
         Column column = field.getAnnotation(Column.class);
 
-        return new EntityField(
+        return new EntityColumn(
             field,
             getName(field, column),
             field.getType(),
@@ -43,5 +43,13 @@ public record EntityField(Field field, String name, Class<?> type, boolean nulla
 
     public boolean isEqualName(String name) {
         return this.name.equals(name);
+    }
+
+    public Object getValue(Object entity) {
+        return FieldUtils.getValue(this.field, entity);
+    }
+
+    public void applyValue(Object entity, Object value) {
+        FieldUtils.setValue(this.field, entity, value);
     }
 }

@@ -15,4 +15,14 @@ public class NormalEntity {
 
     @Transient
     private String fake;
+
+    public NormalEntity() {
+    }
+
+    public NormalEntity(Long id, String name, String address, String fake) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.fake = fake;
+    }
 }

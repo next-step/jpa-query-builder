@@ -7,24 +7,28 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DefaultInsertDMLGenerator implements InsertDMLGenerator {
+public class DefaultUpdateDMLGenerator implements UpdateDMLGenerator {
     @Override
     public String generate(Object entity) {
         EntityTable entityTable = EntityTable.from(entity.getClass());
 
         List<String> columnNames = getColumnNames(entityTable, entity);
-        String columns = columnsClause(columnNames);
-        String values = valueClause(entityTable, columnNames, entity);
+        String set = setClause(entityTable, columnNames, entity);
+        String where = whereClause(entityTable, entity);
 
-        return "INSERT INTO %s (%s) values (%s);".formatted(entityTable.tableName(), columns, values);
+        return "UPDATE %s SET %s WHERE %s;".formatted(entityTable.tableName(), set, where);
     }
 
-    private String columnsClause(List<String> columnNames) {
-        return String.join(",", columnNames);
+    private String whereClause(EntityTable entityTable, Object entity) {
+        String idColumnName = entityTable.getNameOfIdColumn();
+
+        Object idValue = getValue(entityTable, idColumnName, entity);
+
+        return "%s = %s".formatted(idColumnName, idValue);
     }
 
-    private String valueClause(EntityTable entityTable, List<String> columnNames, Object object) {
-        return columnNames.stream().map(columnName -> "%s".formatted(getValue(entityTable, columnName, object)))
+    private String setClause(EntityTable entityTable, List<String> columnNames, Object object) {
+        return columnNames.stream().map(columnName -> "%s = %s".formatted(columnName, getValue(entityTable, columnName, object)))
             .collect(Collectors.joining(","));
     }
 

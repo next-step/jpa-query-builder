@@ -5,10 +5,10 @@ import jakarta.persistence.GenerationType;
 
 import java.lang.reflect.Field;
 
-public record EntityIdField(EntityField field, GenerationType generationType) {
-    public static EntityIdField from(Field field) {
-        return new EntityIdField(
-            EntityField.from(field),
+public record EntityIdColumn(EntityColumn entityColumn, GenerationType generationType) {
+    public static EntityIdColumn from(Field field) {
+        return new EntityIdColumn(
+            EntityColumn.from(field),
             getGenerationType(field)
         );
     }
@@ -24,14 +24,26 @@ public record EntityIdField(EntityField field, GenerationType generationType) {
     }
 
     public String name() {
-        return field.name();
+        return entityColumn.name();
     }
 
     public Class<?> type() {
-        return field.type();
+        return entityColumn.type();
     }
 
     public boolean nullable() {
-        return field.nullable();
+        return entityColumn.nullable();
+    }
+
+    public Field getField() {
+        return entityColumn.field();
+    }
+
+    public Object getValue(Object entity) {
+        return entityColumn.getValue(entity);
+    }
+
+    public void applyId(Object entity, Object valueOfId) {
+        entityColumn.applyValue(entity, valueOfId);
     }
 }

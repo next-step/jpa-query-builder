@@ -1,5 +1,5 @@
 package persistence.sql.ddl.generator;
 
-public interface InsertDMLGenerator {
+public interface UpdateDMLGenerator {
     String generate(Object entity);
 }

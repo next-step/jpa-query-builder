@@ -1,12 +1,11 @@
 package persistence.sql.ddl.generator;
 
-import persistence.sql.ddl.EntityField;
-import persistence.sql.ddl.EntityFields;
-import persistence.sql.ddl.EntityIdField;
+import persistence.sql.ddl.EntityColumn;
+import persistence.sql.ddl.EntityIdColumn;
+import persistence.sql.ddl.EntityTable;
 import persistence.sql.ddl.SqlJdbcTypes;
 import persistence.sql.ddl.dialect.Dialect;
 
-import java.sql.Types;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,53 +17,48 @@ public final class DefaultCreateDDLGenerator implements CreateDDLGenerator {
     }
 
     @Override
-    public String generate(EntityFields entityFields) {
-        String command = createCommand(entityFields);
-        String definition = getDefinition(entityFields);
+    public String generate(EntityTable entityTable) {
+        String command = createCommand(entityTable);
+        String definition = getDefinition(entityTable);
 
         return "%s (%s);".formatted(command, definition);
     }
 
-    private String createCommand(EntityFields entityFields) {
-        String name = entityFields.tableName();
+    private String createCommand(EntityTable entityTable) {
+        String name = entityTable.tableName();
 
         return "CREATE TABLE %s".formatted(name);
     }
 
-    private String getDefinition(EntityFields entityFields) {
-        String idDefinition = getIdFieldDefinition(entityFields.idField());
-        Stream<String> fieldDefinitions = entityFields.fields().stream().map(this::getFieldDefinition);
+    private String getDefinition(EntityTable entityTable) {
+        String idDefinition = getIdColumnDefinition(entityTable.idColumn());
+        Stream<String> columnDefinitions = entityTable.columns().stream()
+            .map(this::getColumnDefinition);
 
-        return Stream.concat(Stream.of(idDefinition), fieldDefinitions).collect(Collectors.joining(", "));
+        return Stream.concat(Stream.of(idDefinition), columnDefinitions).collect(Collectors.joining(", "));
     }
 
-    private String getIdFieldDefinition(EntityIdField idField) {
-        Integer type = SqlJdbcTypes.typeOf(idField.type());
+    private String getIdColumnDefinition(EntityIdColumn idColumn) {
+        Integer type = SqlJdbcTypes.typeOf(idColumn.type());
 
-        String name = idField.name();
-        String typeDefinition = dialect.getFieldDefinition(type);
-        String strategy = dialect.getGenerationDefinition(idField.generationType());
+        String name = idColumn.name();
+        String typeDefinition = dialect.getColumnDefinition(type, idColumn.entityColumn());
+        String strategy = dialect.getGenerationDefinition(idColumn.generationType());
 
         return "%s %s %s".formatted(name, typeDefinition, strategy);
     }
 
-    private String getFieldDefinition(EntityField field) {
-        String name = field.name();
-        String typeDefinition = getFieldTypeDefinition(field);
-        String nullable = field.nullable() ? "" : "not null";
+    private String getColumnDefinition(EntityColumn column) {
+        String name = column.name();
+        String typeDefinition = getColumnTypeDefinition(column);
+        String nullable = column.nullable() ? "" : "not null";
 
         return "%s %s %s".formatted(name, typeDefinition, nullable);
     }
 
-    private String getFieldTypeDefinition(EntityField field) {
-        Integer type = SqlJdbcTypes.typeOf(field.type());
+    private String getColumnTypeDefinition(EntityColumn column) {
+        Integer type = SqlJdbcTypes.typeOf(column.type());
 
-        String typeDefinition = dialect.getFieldDefinition(type);
-
-        if (type == Types.VARCHAR) {
-            return typeDefinition.formatted(field.length());
-        }
-
-        return typeDefinition;
+        return dialect.getColumnDefinition(type, column);
     }
 }
