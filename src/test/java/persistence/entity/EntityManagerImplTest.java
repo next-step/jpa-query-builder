@@ -37,6 +37,9 @@ public class EntityManagerImplTest {
         entityManagerImpl.persist(inserting);
 
         Person found = entityManagerImpl.find(Person.class, 1L);
+
         logger.debug("Found : {}", found);
+
+        entityManagerImpl.remove(found);
     }
 }

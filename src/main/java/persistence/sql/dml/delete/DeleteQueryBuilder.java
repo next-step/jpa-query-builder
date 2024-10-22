@@ -9,9 +9,28 @@ public class DeleteQueryBuilder {
     private DeleteQueryBuilder() {
     }
 
+    public static String generateQuery(Class<?> entityClass, Object entity) throws IllegalAccessException {
+        String tableName = NameUtils.getTableName(entityClass);
+        Field idColumnField = getIdColumnField(entityClass);
+        String idColumnName = NameUtils.getColumnName(idColumnField);
+        idColumnField.setAccessible(true);
+        Object idValue = idColumnField.get(entity);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("delete from ")
+                .append(tableName)
+                .append(" where ")
+                .append(idColumnName)
+                .append(" = ")
+                .append(idValue)
+                .append(";");
+        return stringBuilder.toString();
+    }
+
     public static String generateQuery(Class<?> entityClass, String id) {
         String tableName = NameUtils.getTableName(entityClass);
-        String idColumnName = NameUtils.getColumnName(getIdColumn(entityClass));
+        String idColumnName = NameUtils.getColumnName(getIdColumnField(entityClass));
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
@@ -25,7 +44,7 @@ public class DeleteQueryBuilder {
         return stringBuilder.toString();
     }
 
-    private static Field getIdColumn(Class<?> entityClass) {
+    private static Field getIdColumnField(Class<?> entityClass) {
         for (Field field : entityClass.getDeclaredFields()) {
             if (field.isAnnotationPresent(Id.class)) {
                 return field;
