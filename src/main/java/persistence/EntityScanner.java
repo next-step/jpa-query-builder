@@ -2,6 +2,8 @@ package persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import persistence.sql.NameUtils;
 import persistence.sql.ddl.create.CreateQueryBuilder;
 import persistence.sql.ddl.create.component.column.ColumnComponentBuilder;
@@ -19,11 +21,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EntityScanner {
+    private static final Logger logger = LoggerFactory.getLogger(EntityScanner.class);
 
     private final Set<Class<?>> entityClasses = new HashSet<>();
 
-    public void scan(String basePackage) throws ClassNotFoundException {
-        List<Class<?>> classes = findClassesInPackage(basePackage);
+    public void scan(String basePackage) {
+        List<Class<?>> classes;
+        try {
+            classes = findClassesInPackage(basePackage);
+        } catch (ClassNotFoundException e) {
+            logger.error("Error while scanning entity!");
+            throw new RuntimeException(e);
+        }
 
         for (Class<?> clazz : classes) {
             if (clazz.isAnnotationPresent(Entity.class)) {
