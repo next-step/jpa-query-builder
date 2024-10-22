@@ -103,7 +103,7 @@ public record EntityTable(Class<?> clazz, String tableName, List<EntityColumn> a
         }
     }
 
-    public boolean isEmptyId(Object entity) {
+    public boolean isNotAssignedId(Object entity) {
         return getId(entity) == null;
     }
 

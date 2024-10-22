@@ -122,7 +122,7 @@ class EntityTableTest {
         EntityTable entityTable = EntityTable.from(clazz);
         NormalEntity normalEntity = new NormalEntity(10L, "soora", "soora", "fake");
 
-        boolean result = entityTable.isEmptyId(normalEntity);
+        boolean result = entityTable.isNotAssignedId(normalEntity);
 
         assertThat(result).isFalse();
     }
@@ -133,7 +133,7 @@ class EntityTableTest {
         EntityTable entityTable = EntityTable.from(clazz);
         NormalEntity normalEntity = new NormalEntity(null, "soora", "soora", "fake");
 
-        boolean result = entityTable.isEmptyId(normalEntity);
+        boolean result = entityTable.isNotAssignedId(normalEntity);
 
         assertThat(result).isTrue();
     }

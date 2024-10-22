@@ -26,21 +26,11 @@ public class DefaultEntityManager implements EntityManager {
         this.deleteDMLGenerator = new DefaultDeleteDMLGenerator();
     }
 
-    private static <T> void applyValue(ResultSet resultSet, String it, Field field, T entity) {
-        try {
-            Object value = resultSet.getObject(it);
-
-            FieldUtils.setValue(field, entity, value);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public <T> T persist(T entity) {
         EntityTable entityTable = EntityTable.from(entity);
 
-        if (entityTable.isEmptyId(entity)) {
+        if (entityTable.isNotAssignedId(entity)) {
             Object valueOfId = insert(entity, Statement.RETURN_GENERATED_KEYS);
 
             entityTable.applyId(entity, valueOfId);
@@ -124,5 +114,15 @@ public class DefaultEntityManager implements EntityManager {
 
             return entity;
         };
+    }
+
+    private <T> void applyValue(ResultSet resultSet, String it, Field field, T entity) {
+        try {
+            Object value = resultSet.getObject(it);
+
+            FieldUtils.setValue(field, entity, value);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
