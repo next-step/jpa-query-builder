@@ -22,14 +22,12 @@ public class EntityRowMapper<T> implements RowMapper<T> {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             T entity = constructor.newInstance();
-            System.out.println("Mapping row to entity: " + clazz.getSimpleName());
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
                 if (isTransient(field)) {
                     continue;
                 }
                 Object value = resultSet.getObject(getColumnName(field));
-                System.out.println(value);
                 field.set(entity, value);
             }
 

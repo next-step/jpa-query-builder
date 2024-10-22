@@ -8,9 +8,9 @@ import java.util.List;
 
 
 public class TableMeta {
-    private String tableName;
-    private TableId tableId;
-    private List<TableColumn> tableColumns;
+    private final String tableName;
+    private final TableId tableId;
+    private final List<TableColumn> tableColumns;
 
     public TableMeta(Class<?> entityClass) {
         if(isNotEntity(entityClass)) {
@@ -21,11 +21,11 @@ public class TableMeta {
         this.tableId = tableId(entityClass);
     }
 
-    public String getTableName() {
+    public String tableName() {
         return tableName;
     }
 
-    public List<TableColumn> getTableColumn() {
+    public List<TableColumn> tableColumn() {
         return tableColumns;
     }
 

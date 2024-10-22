@@ -33,12 +33,12 @@ public abstract class DMLQueryBuilder {
     }
 
     String getTableName() {
-        return tableMeta.getTableName();
+        return tableMeta.tableName();
     }
 
     String columnsClause() {
-        return tableMeta.getTableColumn().stream()
-                .map(TableColumn::columnName).reduce((s1, s2) -> s1 + ", " + s2).orElseThrow();
+        return tableMeta.tableColumn().stream()
+                .map(TableColumn::name).reduce((s1, s2) -> s1 + ", " + s2).orElseThrow();
     }
 
     String valueClause(Object entity) {
@@ -62,7 +62,7 @@ public abstract class DMLQueryBuilder {
         if (value instanceof String) {
             return "'" + value + "'";
         }
-        return value != null ? value.toString() : "NULL";
+        return value != null ? value.toString() : null;
     }
 
     private String getColumnName(Field field) {

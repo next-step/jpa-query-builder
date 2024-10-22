@@ -26,16 +26,15 @@ public class Application {
 
             String createTableQuery = ddlQueryBuilder.executeQuery();
             jdbcTemplate.execute(createTableQuery); // Create table
-            EntityManager entityManager = new DefaultEntityManager(Person.class, jdbcTemplate);
+            EntityManager entityManager = new DefaultEntityManager(jdbcTemplate);
 
             entityManager.persist(Person.of(null,"John", 25,"demian@gmail.com",1));
 
             entityManager.find(Person.class, 1L);
 
-            entityManager.remove(Person.class, 1L);
-
             entityManager.update(Person.of(1L,"John", 25,null,null));
 
+            entityManager.remove(Person.class, 1L);
 
             ddlQueryBuilder = new DropTableQueryBuilder(Person.class);
             ddlQueryBuilder.executeQuery();

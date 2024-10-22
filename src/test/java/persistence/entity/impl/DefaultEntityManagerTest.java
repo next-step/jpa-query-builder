@@ -26,7 +26,7 @@ public class DefaultEntityManagerTest {
         databaseServer.start();
         connection = databaseServer.getConnection();
         jdbcTemplate = new JdbcTemplate(connection);
-        entityManager = new DefaultEntityManager(Person.class, jdbcTemplate);
+        entityManager = new DefaultEntityManager(jdbcTemplate);
 
         // Create table for Person
         QueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder(Person.class);
@@ -62,7 +62,7 @@ public class DefaultEntityManagerTest {
     public void testRemove() {
         Person person = Person.of(null, "John", 25, "john@example.com", 1);
         entityManager.persist(person);
-        entityManager.remove(person, 1L);
+        entityManager.remove(Person.class, 1L);
         assertNull(entityManager.find(Person.class, 1L));
     }
 

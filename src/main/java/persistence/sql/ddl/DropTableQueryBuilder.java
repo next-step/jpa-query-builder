@@ -14,7 +14,7 @@ public class DropTableQueryBuilder extends DDLQueryBuilder  {
     }
 
     public  String dropTable() {
-        String tableName = tableMeta.getTableName();
+        String tableName = tableMeta.tableName();
         return DROP_TABLE + tableName + ";";
     }
 }

@@ -17,7 +17,7 @@ public class UpdateQueryBuilder extends DMLQueryBuilder {
 
         String tableName = getTableName();
         String setClause = setClause(entity);
-        String idClause =  idClause(entity);
+        String idClause = idClause(entity);
 
         if (idClause.isEmpty()) {
             throw new IllegalArgumentException("Entity must have an @Id field");

@@ -9,18 +9,17 @@ public class TableColumn {
     private final Class<?> type;
     private final String name;
     private final boolean isNullable;
-    private Object value;
 
     public TableColumn(Field column) {
         this.type = column.getType();
-        this.name = setColumnName(column);
+        this.name = columnName(column);
         this.isNullable = nullable(column);
     }
 
     public Class<?> type() {
         return type;
     }
-    public String columnName() {
+    public String name() {
         return name;
     }
 
@@ -33,7 +32,7 @@ public class TableColumn {
         return column == null || column.nullable();
     }
 
-    private String setColumnName(Field field) {
+    private String columnName(Field field) {
         if (field.isAnnotationPresent(Column.class)) {
             Column column = field.getAnnotation(Column.class);
             if (!column.name().isEmpty()) {

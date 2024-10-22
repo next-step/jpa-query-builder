@@ -41,4 +41,15 @@ public class JdbcTemplate {
             throw new RuntimeException(e);
         }
     }
+    public Long executeInsert(final String sql) {
+        try (final Statement statement = connection.createStatement()) {
+            statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+            try (final ResultSet resultSet = statement.getGeneratedKeys()) {
+                resultSet.next();
+                return resultSet.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

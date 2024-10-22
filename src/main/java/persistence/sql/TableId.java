@@ -11,11 +11,11 @@ public class TableId {
     private final String name;
     private final boolean isAutoIncrement;
 
-    
+
 
     public TableId(Field field) {
         this.type = field.getType();
-        this.name = setColumnName(field);
+        this.name = idName(field);
         this.isAutoIncrement = isAutoIncrement(field);
     }
 
@@ -23,11 +23,11 @@ public class TableId {
         return isAutoIncrement;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public Class<?> getType() {
+    public Class<?> type() {
         return type;
     }
 
@@ -36,7 +36,7 @@ public class TableId {
                 field.getAnnotation(GeneratedValue.class).strategy() == GenerationType.IDENTITY;
     }
 
-    private String setColumnName(Field field) {
+    private String idName(Field field) {
         if (field.isAnnotationPresent(Column.class)) {
             Column column = field.getAnnotation(Column.class);
             if (!column.name().isEmpty()) {
