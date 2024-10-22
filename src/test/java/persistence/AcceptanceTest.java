@@ -6,9 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.Person;
-import persistence.sql.ddl.QueryGenerator;
 
 import java.sql.Connection;
 
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AcceptanceTest {
     private DatabaseServer server;
     private TestJdbcTemplate jdbcTemplate;
-    private QueryGenerator queryGenerator;
+    private DdlQueryBuilder ddlQueryBuilder;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -26,7 +26,7 @@ class AcceptanceTest {
         server.start();
         Connection connection = server.getConnection();
         jdbcTemplate = new TestJdbcTemplate(connection);
-        queryGenerator = new QueryGenerator(new H2Dialect());
+        ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect());
     }
 
     @AfterEach
@@ -49,7 +49,7 @@ class AcceptanceTest {
     }
 
     private void deleteTable() {
-        String dropSql = queryGenerator.drop(Person.class);
+        String dropSql = ddlQueryBuilder.drop(Person.class);
         jdbcTemplate.execute(dropSql);
     }
 
@@ -58,7 +58,7 @@ class AcceptanceTest {
     }
 
     private void createTable() {
-        String createSql = queryGenerator.create(Person.class);
+        String createSql = ddlQueryBuilder.create(Person.class);
         jdbcTemplate.execute(createSql);
     }
 }

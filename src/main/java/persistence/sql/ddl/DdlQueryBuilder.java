@@ -2,10 +2,10 @@ package persistence.sql.ddl;
 
 import java.util.stream.Collectors;
 
-public class QueryGenerator {
+public class DdlQueryBuilder {
     private final DatabaseDialect dialect;
 
-    public QueryGenerator(final DatabaseDialect dialect) {
+    public DdlQueryBuilder(final DatabaseDialect dialect) {
         this.dialect = dialect;
     }
 

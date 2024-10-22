@@ -5,19 +5,19 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class QueryGeneratorTest {
+class DdlQueryBuilderTest {
     @DisplayName("클래스 정보를 바탕으로 CREATE TABLE 쿼리를 생성한다.")
     @Test
     void create() {
-        final QueryGenerator queryGenerator = new QueryGenerator(new H2Dialect());
-        assertEquals(expected(), queryGenerator.create(Person.class));
+        final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect());
+        assertEquals(expected(), ddlQueryBuilder.create(Person.class));
     }
 
     @DisplayName("클래스 정보를 바탕으로 DROP TABLE 쿼리를 생성한다.")
     @Test
     void drop() {
-        final QueryGenerator queryGenerator = new QueryGenerator(new H2Dialect());
-        assertEquals("DROP TABLE IF EXISTS USERS CASCADE;", queryGenerator.drop(Person.class));
+        final DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect());
+        assertEquals("DROP TABLE IF EXISTS USERS CASCADE;", ddlQueryBuilder.drop(Person.class));
     }
 
     private String expected() {
