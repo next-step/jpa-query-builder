@@ -16,6 +16,13 @@ class DmlQueryBuilderTest {
         assertEquals(getExpected(), dmlQueryBuilder.insert(Person.class, person));
     }
 
+    @DisplayName("클래스 정보를 바탕으로 SELECT 쿼리를 생성한다.")
+    @Test
+    void select() {
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        assertEquals("SELECT * FROM USERS;", dmlQueryBuilder.select(Person.class));
+    }
+
     private String getExpected() {
         return "INSERT INTO USERS (nick_name, old, email) VALUES ('Kent Beck', 64, 'beck@example.com');";
     }

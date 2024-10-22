@@ -19,6 +19,10 @@ public class DmlQueryBuilder {
         this.dialect = h2Dialect;
     }
 
+    public String select(final Class<?> clazz) {
+        throw new UnsupportedOperationException();
+    }
+
     public String insert(final Class<?> clazz, final Object object) {
         final String tableName = new TableName(clazz).value();
         final String columns = columnsClause(object.getClass());
