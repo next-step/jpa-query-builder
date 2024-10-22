@@ -10,9 +10,9 @@ class DmlQueryBuilderTest {
     @DisplayName("클래스 정보를 바탕으로 INSERT 쿼리를 생성한다.")
     @Test
     void insert() {
-        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(Person.class);
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         final Person person = new Person("Kent Beck", 64, "beck@example.com");
-        assertEquals(getExpected(), dmlQueryBuilder.insert(person));
+        assertEquals(getExpected(), dmlQueryBuilder.insert(Person.class, person));
     }
 
     private String getExpected() {

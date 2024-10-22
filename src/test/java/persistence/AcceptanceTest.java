@@ -29,7 +29,7 @@ class AcceptanceTest {
         Connection connection = server.getConnection();
         jdbcTemplate = new TestJdbcTemplate(connection);
         ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect());
-        dmlQueryBuilder = new DmlQueryBuilder(Person.class);
+        dmlQueryBuilder = new DmlQueryBuilder();
     }
 
     @AfterEach
@@ -51,7 +51,7 @@ class AcceptanceTest {
 
     private void insert() {
         final Person person = new Person("Kent Beck", 64, "beck@example.com");
-        jdbcTemplate.execute(dmlQueryBuilder.insert(person));
+        jdbcTemplate.execute(dmlQueryBuilder.insert(Person.class, person));
     }
 
     private void assertTableDeleted() {

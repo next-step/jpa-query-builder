@@ -11,13 +11,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class DmlQueryBuilder {
-    private final Class<?> clazz;
-
-    public DmlQueryBuilder(final Class<?> clazz) {
-        this.clazz = clazz;
-    }
-
-    public String insert(final Object object) {
+    public String insert(final Class<?> clazz, final Object object) {
         final String tableName = new TableName(clazz).value();
         final String columns = columnsClause(object.getClass());
         final String values = valueClause(object);
