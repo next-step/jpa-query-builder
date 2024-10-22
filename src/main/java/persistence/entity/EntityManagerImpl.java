@@ -2,10 +2,15 @@ package persistence.entity;
 
 import jdbc.EntityRowMapper;
 import jdbc.JdbcTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import persistence.sql.dml.delete.DeleteQueryBuilder;
 import persistence.sql.dml.insert.InsertQueryBuilder;
 import persistence.sql.dml.select.SelectQueryBuilder;
 
 public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
+    private static final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
+
     private final JdbcTemplate jdbcTemplate;
 
     public EntityManagerImpl(JdbcTemplate jdbcTemplate) {
@@ -19,14 +24,24 @@ public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
     }
 
     @Override
-    public void persist(T entity) throws IllegalAccessException {
-        String insertQuery = InsertQueryBuilder.generateQuery(entity);
-        jdbcTemplate.execute(insertQuery);
+    public void persist(T entity) {
+        try {
+            String insertQuery = InsertQueryBuilder.generateQuery(entity);
+            jdbcTemplate.execute(insertQuery);
+        } catch (IllegalAccessException e) {
+            logger.error("Error while generating insert query!");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void remove(T entity) {
-        /* TODO */
-        throw new RuntimeException();
+        try {
+            String deleteQuery = DeleteQueryBuilder.generateQuery(entity.getClass(), entity);
+            jdbcTemplate.execute(deleteQuery);
+        } catch (IllegalAccessException e) {
+            logger.error("Error while generating delete query!");
+            throw new RuntimeException(e);
+        }
     }
 }
