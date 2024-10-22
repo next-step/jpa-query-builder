@@ -42,24 +42,38 @@ class AcceptanceTest {
     @DisplayName("시나리오 테스트")
     @Test
     void scenario() {
+        createTableAndVerify();
+        insertPeopleAndVerify();
+        findPersonByIdAndVerify(1L);
+        deletePersonAndVerify(1L);
+        deleteTableAndVerify();
+    }
+
+    private void createTableAndVerify() {
         createTable();
         assertTableCreated();
+    }
 
+    private void insertPeopleAndVerify() {
         final Person kentBeck = new Person(1L, "Kent Beck", 64, "beck@example.com");
         final Person martinFowler = new Person(2L, "Martin Fowler", 62, "martin@example.com");
         insert(kentBeck, martinFowler);
 
         final List<Person> people = findAll(dmlQueryBuilder.select(Person.class));
         assertInsertion(people);
+    }
 
-        final Long personId = 1L;
+    private void findPersonByIdAndVerify(final Long personId) {
         final Person person = findById(personId);
         assertThat(person.getId()).isEqualTo(personId);
+    }
 
+    private void deletePersonAndVerify(final Long personId) {
         delete(personId);
         assertDeletion();
+    }
 
-
+    private void deleteTableAndVerify() {
         deleteTable();
         assertTableDeleted();
     }
