@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.Person;
+import persistence.sql.dml.DmlQueryBuilder;
 
 import java.sql.Connection;
 
@@ -19,6 +20,7 @@ class AcceptanceTest {
     private DatabaseServer server;
     private TestJdbcTemplate jdbcTemplate;
     private DdlQueryBuilder ddlQueryBuilder;
+    private DmlQueryBuilder dmlQueryBuilder;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -27,6 +29,7 @@ class AcceptanceTest {
         Connection connection = server.getConnection();
         jdbcTemplate = new TestJdbcTemplate(connection);
         ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect());
+        dmlQueryBuilder = new DmlQueryBuilder(Person.class);
     }
 
     @AfterEach
@@ -40,8 +43,15 @@ class AcceptanceTest {
         createTable();
         assertTableCreated();
 
+        insert();
+
         deleteTable();
         assertTableDeleted();
+    }
+
+    private void insert() {
+        final Person person = new Person("Kent Beck", 64, "beck@example.com");
+        jdbcTemplate.execute(dmlQueryBuilder.insert(person));
     }
 
     private void assertTableDeleted() {
