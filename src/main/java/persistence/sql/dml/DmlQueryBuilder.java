@@ -15,11 +15,22 @@ public class DmlQueryBuilder {
     private static final String SELECT_ALL_TEMPLATE = "SELECT * FROM %s;";
     private static final String SELECT_BY_ID_TEMPLATE = "SELECT * FROM %s WHERE %s = %s;";
     private static final String INSERT_TEMPLATE =  "INSERT INTO %s (%s) VALUES (%s);";
+    private static final String DELETE_TEMPLATE = "DELETE FROM %s WHERE %s = %s;";
 
     private final DatabaseDialect dialect;
 
     public DmlQueryBuilder(final H2Dialect h2Dialect) {
         this.dialect = h2Dialect;
+    }
+
+    public String delete(final Class<?> clazz, final Long id) {
+        final String tableName = new TableName(clazz).value();
+        final String idColumnName = getIdColumnName(clazz);
+        return DELETE_TEMPLATE.formatted(
+                tableName,
+                idColumnName,
+                formatValue(id)
+        );
     }
 
     public String select(final Class<?> clazz) {
