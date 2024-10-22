@@ -11,13 +11,11 @@ class DmlQueryBuilderTest {
     @Test
     void insert() {
         final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(Person.class);
-        assertEquals(getExpected(), dmlQueryBuilder.insert());
+        final Person person = new Person("Kent Beck", 64, "beck@example.com");
+        assertEquals(getExpected(), dmlQueryBuilder.insert(person));
     }
 
     private String getExpected() {
-        return """
-                INSERT INTO users (nick_name, old, email)
-                VALUES ('Kent Beck', 64, 'beck@example.com');
-                """;
+        return "INSERT INTO USERS (nick_name, old, email) VALUES ('Kent Beck', 64, 'beck@example.com');";
     }
 }
