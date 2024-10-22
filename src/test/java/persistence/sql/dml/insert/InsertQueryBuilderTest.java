@@ -11,7 +11,7 @@ public class InsertQueryBuilderTest {
 
     @Test
     @DisplayName("Insert query 테스트")
-    void insertQueryTest() throws Exception {
+    void insertQueryTest() {
         Person person = new Person();
         person.setName("sdgvas");
         person.setAge(123);

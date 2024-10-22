@@ -17,7 +17,7 @@ public class EntityManagerImplTest {
 
     @Test
     @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
-    void persistAndFindTest() throws SQLException, IllegalAccessException, ClassNotFoundException {
+    void persistAndFindTest() throws SQLException {
         final DatabaseServer server = new H2();
         server.start();
 

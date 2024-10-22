@@ -25,23 +25,13 @@ public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
 
     @Override
     public void persist(T entity) {
-        try {
-            String insertQuery = InsertQueryBuilder.generateQuery(entity);
-            jdbcTemplate.execute(insertQuery);
-        } catch (IllegalAccessException e) {
-            logger.error("Error while generating insert query!");
-            throw new RuntimeException(e);
-        }
+        String insertQuery = InsertQueryBuilder.generateQuery(entity);
+        jdbcTemplate.execute(insertQuery);
     }
 
     @Override
     public void remove(T entity) {
-        try {
-            String deleteQuery = DeleteQueryBuilder.generateQuery(entity.getClass(), entity);
-            jdbcTemplate.execute(deleteQuery);
-        } catch (IllegalAccessException e) {
-            logger.error("Error while generating delete query!");
-            throw new RuntimeException(e);
-        }
+        String deleteQuery = DeleteQueryBuilder.generateQuery(entity.getClass(), entity);
+        jdbcTemplate.execute(deleteQuery);
     }
 }
