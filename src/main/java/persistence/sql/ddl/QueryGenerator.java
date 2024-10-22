@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import java.util.stream.Collectors;
+
 public class QueryGenerator {
     private final DatabaseDialect dialect;
 
@@ -22,7 +24,17 @@ public class QueryGenerator {
 
     private String columnDefinitions(final Class<?> clazz) {
         final ColumnDefinitionFactory columnDefinitionFactory = new ColumnDefinitionFactory(clazz, dialect);
-        final ColumnDefinitions columnDefinitions = new ColumnDefinitions(columnDefinitionFactory.create());
-        return columnDefinitions.generate();
+        return columnDefinitionFactory.create().stream()
+                .map(this::formatColumnDefinition)
+                .collect(Collectors.joining(",\n"));
+    }
+
+    private String formatColumnDefinition(ColumnDefinition definition) {
+        return QueryTemplate.COLUMN_DEFINITION.format(
+                definition.name(),
+                definition.type(),
+                definition.identity(),
+                definition.nullable(),
+                definition.primaryKey());
     }
 }
