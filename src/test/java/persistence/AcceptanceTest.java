@@ -29,7 +29,7 @@ class AcceptanceTest {
         Connection connection = server.getConnection();
         jdbcTemplate = new TestJdbcTemplate(connection);
         ddlQueryBuilder = new DdlQueryBuilder(new H2Dialect());
-        dmlQueryBuilder = new DmlQueryBuilder();
+        dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
     }
 
     @AfterEach

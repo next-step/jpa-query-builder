@@ -1,5 +1,7 @@
 package persistence.sql.dml;
 
+import persistence.sql.ddl.DatabaseDialect;
+import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.TableName;
 
 import jakarta.persistence.Column;
@@ -11,6 +13,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class DmlQueryBuilder {
+    private final DatabaseDialect dialect;
+
+    public DmlQueryBuilder(final H2Dialect h2Dialect) {
+        this.dialect = h2Dialect;
+    }
+
     public String insert(final Class<?> clazz, final Object object) {
         final String tableName = new TableName(clazz).value();
         final String columns = columnsClause(object.getClass());
