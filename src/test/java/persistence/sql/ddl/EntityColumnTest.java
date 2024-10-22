@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.entity.TestEntity;
+import study.Car;
 
 import java.lang.reflect.Field;
 
@@ -66,5 +67,29 @@ class EntityColumnTest {
         EntityColumn entityColumn = EntityColumn.from(field);
 
         assertThat(entityColumn.isEqualName("address")).isFalse();
+    }
+
+    @Test
+    void 값을_가져올_수_있다() throws NoSuchFieldException {
+        Field field = Car.class.getDeclaredField("name");
+        Car car = new Car("name", 100);
+
+        EntityColumn entityColumn = new EntityColumn(field, "name", field.getClass(), false, 100);
+
+        Object result = entityColumn.getValue(car);
+
+        assertThat(result).isEqualTo("name");
+    }
+
+    @Test
+    void 값을_설정올_수_있다() throws NoSuchFieldException {
+        Field field = Car.class.getDeclaredField("name");
+        Car car = new Car("name", 100);
+
+        EntityColumn entityColumn = new EntityColumn(field, "name", field.getClass(), false, 100);
+
+        entityColumn.applyValue(car, "kyoing");
+
+        assertThat(car.name()).isEqualTo("kyoing");
     }
 }

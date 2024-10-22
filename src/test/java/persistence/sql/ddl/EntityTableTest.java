@@ -105,4 +105,47 @@ class EntityTableTest {
 
         assertThat(idFieldName).isEqualTo("id");
     }
+
+    @Test
+    void 객체를_생성한다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityTable entityTable = EntityTable.from(clazz);
+
+        NormalEntity normalEntity = (NormalEntity) entityTable.newInstance();
+
+        assertThat(normalEntity.getClass()).isEqualTo(clazz);
+    }
+
+    @Test
+    void Id를_가지고_있으면_아이디_빈_여부는_거짓이다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityTable entityTable = EntityTable.from(clazz);
+        NormalEntity normalEntity = new NormalEntity(10L, "soora", "soora", "fake");
+
+        boolean result = entityTable.isEmptyId(normalEntity);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void Id를_가지고_있지_않다면_아이디_빈_여부는_참이다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityTable entityTable = EntityTable.from(clazz);
+        NormalEntity normalEntity = new NormalEntity(null, "soora", "soora", "fake");
+
+        boolean result = entityTable.isEmptyId(normalEntity);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void Id값을_가져올_수_있다() {
+        Class<NormalEntity> clazz = NormalEntity.class;
+        EntityTable entityTable = EntityTable.from(clazz);
+        NormalEntity normalEntity = new NormalEntity(10L, "soora", "soora", "fake");
+
+        Object id = entityTable.getId(normalEntity);
+
+        assertThat(id).isEqualTo(10L);
+    }
 }

@@ -44,4 +44,12 @@ public record EntityColumn(Field field, String name, Class<?> type, boolean null
     public boolean isEqualName(String name) {
         return this.name.equals(name);
     }
+
+    public Object getValue(Object entity) {
+        return FieldUtils.getValue(this.field, entity);
+    }
+
+    public void applyValue(Object entity, Object value) {
+        FieldUtils.setValue(this.field, entity, value);
+    }
 }

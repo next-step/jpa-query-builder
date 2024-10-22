@@ -38,4 +38,12 @@ public record EntityIdColumn(EntityColumn entityColumn, GenerationType generatio
     public Field getField() {
         return entityColumn.field();
     }
+
+    public Object getValue(Object entity) {
+        return entityColumn.getValue(entity);
+    }
+
+    public void applyId(Object entity, Object valueOfId) {
+        entityColumn.applyValue(entity, valueOfId);
+    }
 }

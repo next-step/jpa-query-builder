@@ -2,6 +2,7 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import persistence.sql.ddl.exception.IncorrectIdColumnException;
 import persistence.sql.ddl.exception.NotEntityException;
@@ -11,9 +12,13 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public record EntityTable(String tableName, List<EntityColumn> allColumns, EntityIdColumn idColumn,
+public record EntityTable(Class<?> clazz, String tableName, List<EntityColumn> allColumns, EntityIdColumn idColumn,
                           List<EntityColumn> columns) {
-    public static <T> EntityTable from(Class<T> clazz) {
+    public static EntityTable from(Object entity) {
+        return from(entity.getClass());
+    }
+
+    public static EntityTable from(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new NotEntityException();
         }
@@ -21,6 +26,7 @@ public record EntityTable(String tableName, List<EntityColumn> allColumns, Entit
         Field[] declaredFields = clazz.getDeclaredFields();
 
         return new EntityTable(
+            clazz,
             getTableName(clazz),
             getAllColumns(declaredFields),
             getFieldByIdColumn(declaredFields),
@@ -28,8 +34,8 @@ public record EntityTable(String tableName, List<EntityColumn> allColumns, Entit
         );
     }
 
-    private static <T> String getTableName(Class<T> clazz) {
-        jakarta.persistence.Table table = clazz.getAnnotation(jakarta.persistence.Table.class);
+    private static String getTableName(Class<?> clazz) {
+        Table table = clazz.getAnnotation(Table.class);
 
         if (table == null) {
             return clazz.getSimpleName();
@@ -54,7 +60,7 @@ public record EntityTable(String tableName, List<EntityColumn> allColumns, Entit
             throw new IncorrectIdColumnException();
         }
 
-        return EntityIdColumn.from(ids.get(0));
+        return EntityIdColumn.from(ids.getFirst());
     }
 
 
@@ -87,5 +93,25 @@ public record EntityTable(String tableName, List<EntityColumn> allColumns, Entit
         return allColumns.stream().filter(it -> it.isEqualName(columnName))
             .findFirst().orElseThrow(NotFoundColumnException::new)
             .field();
+    }
+
+    public Object newInstance() {
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isEmptyId(Object entity) {
+        return getId(entity) == null;
+    }
+
+    public Object getId(Object entity) {
+        return idColumn.getValue(entity);
+    }
+
+    public void applyId(Object entity, Object id) {
+        idColumn.applyId(entity, id);
     }
 }
