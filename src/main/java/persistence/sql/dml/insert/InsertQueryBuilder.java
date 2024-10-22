@@ -90,7 +90,7 @@ public class InsertQueryBuilder {
         try {
             return field.get(entity);
         } catch (IllegalAccessException e) {
-            logger.debug("Error while generating query!");
+            logger.error("Error while generating query!");
             throw new RuntimeException(e);
         }
     }

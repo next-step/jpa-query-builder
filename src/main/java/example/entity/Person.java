@@ -23,6 +23,10 @@ public class Person {
     @Transient
     private Integer index;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
