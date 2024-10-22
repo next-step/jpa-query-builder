@@ -52,9 +52,23 @@ class AcceptanceTest {
         final List<Person> people = findAll(dmlQueryBuilder.select(Person.class));
         assertInsertion(people);
 
+        final long personId = 1L;
+        final Person person = findById(personId);
+        assertThat(person.getId()).isEqualTo(personId);
         deleteTable();
         assertTableDeleted();
     }
+
+    private Person findById(final Long personId) {
+        final String selectQuery = dmlQueryBuilder.select(Person.class, personId);
+        return jdbcTemplate.queryForObject(selectQuery, resultSet -> {
+            final String nickName = resultSet.getString("nick_name");
+            final int old = resultSet.getInt("old");
+            final String email = resultSet.getString("email");
+            return new Person(nickName, old, email);
+        });
+    }
+
 
     private void assertInsertion(final List<Person> people) {
         assertThat(people).hasSize(2);

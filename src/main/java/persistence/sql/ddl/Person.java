@@ -35,7 +35,21 @@ public class Person {
         this.email = email;
     }
 
-    protected Person(final Long id) {
-        this.id = id;
+    protected Person() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", age=" + age +
+               ", email='" + email + '\'' +
+               ", index=" + index +
+               '}';
     }
 }
