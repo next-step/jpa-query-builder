@@ -4,16 +4,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import persistence.sql.NameUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class InsertQueryBuilder {
+    private static final Logger logger = LoggerFactory.getLogger(InsertQueryBuilder.class);
+
     private InsertQueryBuilder() {
     }
 
-    public static String generateQuery(Object entity) throws IllegalAccessException {
+    public static String generateQuery(Object entity) {
         String tableName = NameUtils.getTableName(entity.getClass());
         String columnClause = columnClause(entity.getClass());
         String valueClause = valueClause(entity);
@@ -45,16 +49,18 @@ public class InsertQueryBuilder {
         return stringBuilder.toString();
     }
 
-    private static String valueClause(Object object) throws IllegalAccessException {
+    private static String valueClause(Object entity) {
         StringBuilder stringBuilder = new StringBuilder("(");
 
-        Class<?> clazz = object.getClass();
+        Class<?> clazz = entity.getClass();
         Field[] fields = getManagedFields(clazz);
         for (Field field : fields) {
             field.setAccessible(true);
+            Object fieldValue = getFieldValue(field, entity);
             stringBuilder
-                    .append(field.get(object))
-                    .append(", ");
+                    .append("'")
+                    .append(fieldValue)
+                    .append("', ");
         }
 
         stringBuilder.setLength(stringBuilder.length() - 2);
@@ -78,5 +84,14 @@ public class InsertQueryBuilder {
             return false;
         }
         return true;
+    }
+
+    private static Object getFieldValue(Field field, Object entity) {
+        try {
+            return field.get(entity);
+        } catch (IllegalAccessException e) {
+            logger.error("Error while generating query!");
+            throw new RuntimeException(e);
+        }
     }
 }

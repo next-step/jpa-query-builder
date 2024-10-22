@@ -10,7 +10,7 @@ import jakarta.persistence.Transient;
 
 @Table(name = "users")
 @Entity
-public class PersonV3 {
+public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +23,10 @@ public class PersonV3 {
     @Transient
     private Integer index;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -33,5 +37,10 @@ public class PersonV3 {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Person[id=" + id + ", name=" + name + ", age=" + age + ", email=" + email + "]";
     }
 }

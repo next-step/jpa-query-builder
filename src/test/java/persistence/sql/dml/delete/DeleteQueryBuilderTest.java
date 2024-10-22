@@ -1,6 +1,6 @@
 package persistence.sql.dml.delete;
 
-import example.entity.PersonV3;
+import example.entity.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,9 +12,9 @@ public class DeleteQueryBuilderTest {
     @Test
     @DisplayName("Delete query 테스트")
     void deleteQueryTest() {
-        Class<PersonV3> personV3Class = PersonV3.class;
+        Class<Person> personClass = Person.class;
 
-        String deleteQuery = DeleteQueryBuilder.generateQuery(personV3Class, String.valueOf(1L));
+        String deleteQuery = DeleteQueryBuilder.generateQuery(personClass, String.valueOf(1L));
 
         logger.debug("{}", deleteQuery);
     }

@@ -27,3 +27,11 @@
 - [x] findAll 기능 구현
 - [x] findById 기능 구현
 - [x] deleteQueryBuilder 구현
+
+### 1-4. Simple Entity Object
+
+- [ ] EntityManager 인터페이스 및 구현체 작성
+- [ ] find 구현
+- [ ] persist 구현
+- [ ] remove 구현
+- [ ] update 구현
