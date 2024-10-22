@@ -12,7 +12,9 @@ import persistence.sql.ddl.Person;
 import persistence.sql.dml.DmlQueryBuilder;
 
 import java.sql.Connection;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,15 +45,33 @@ class AcceptanceTest {
         createTable();
         assertTableCreated();
 
-        insert();
+        final Person kentBeck = new Person("Kent Beck", 64, "beck@example.com");
+        final Person martinFowler = new Person("Martin Fowler", 62, "martin@example.com");
+        insert(kentBeck, martinFowler);
+
+        final List<Person> people = findAll(dmlQueryBuilder.select(Person.class));
+        assertInsertion(people);
 
         deleteTable();
         assertTableDeleted();
     }
 
-    private void insert() {
-        final Person person = new Person("Kent Beck", 64, "beck@example.com");
-        jdbcTemplate.execute(dmlQueryBuilder.insert(Person.class, person));
+    private void assertInsertion(final List<Person> people) {
+        assertThat(people).hasSize(2);
+    }
+
+    private List<Person> findAll(final String select) {
+        return jdbcTemplate.query(select, resultSet -> {
+            final String nickName = resultSet.getString("nick_name");
+            final int old = resultSet.getInt("old");
+            final String email = resultSet.getString("email");
+            return new Person(nickName, old, email);
+        });
+    }
+
+    private void insert(final Person person1, final Person person2) {
+        jdbcTemplate.execute(dmlQueryBuilder.insert(Person.class, person1));
+        jdbcTemplate.execute(dmlQueryBuilder.insert(Person.class, person2));
     }
 
     private void assertTableDeleted() {
