@@ -52,13 +52,21 @@ class AcceptanceTest {
         final List<Person> people = findAll(dmlQueryBuilder.select(Person.class));
         assertInsertion(people);
 
-        final long personId = 1L;
+        final Long personId = 1L;
         final Person person = findById(personId);
-        System.out.println("person = " + person);
         assertThat(person.getId()).isEqualTo(personId);
+
+        delete(personId);
+        assertDeletion();
+
 
         deleteTable();
         assertTableDeleted();
+    }
+
+    private void delete(final Long personId) {
+        final String deleteQuery = dmlQueryBuilder.delete(Person.class, personId);
+        jdbcTemplate.execute(deleteQuery);
     }
 
     private Person findById(final Long personId) {
@@ -72,6 +80,10 @@ class AcceptanceTest {
         });
     }
 
+    private void assertDeletion() {
+        final List<Person> people = findAll(dmlQueryBuilder.select(Person.class));
+        assertThat(people).hasSize(1);
+    }
 
     private void assertInsertion(final List<Person> people) {
         assertThat(people).hasSize(2);
