@@ -29,7 +29,8 @@ public class Person {
     @Transient
     private Integer index;
 
-    public Person(final String name, final Integer age, final String email) {
+    public Person(final Long id, final String name, final Integer age, final String email) {
+        this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;

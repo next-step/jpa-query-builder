@@ -12,7 +12,7 @@ class DmlQueryBuilderTest {
     @Test
     void insert() {
         final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
-        final Person person = new Person("Kent Beck", 64, "beck@example.com");
+        final Person person = new Person(1L, "Kent Beck", 64, "beck@example.com");
         assertEquals(expectedForInsert(), dmlQueryBuilder.insert(Person.class, person));
     }
 
@@ -39,6 +39,6 @@ class DmlQueryBuilderTest {
     }
 
     private String expectedForInsert() {
-        return "INSERT INTO USERS (nick_name, old, email) VALUES ('Kent Beck', 64, 'beck@example.com');";
+        return "INSERT INTO USERS (id, nick_name, old, email) VALUES (1, 'Kent Beck', 64, 'beck@example.com');";
     }
 }

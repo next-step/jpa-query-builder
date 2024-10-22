@@ -5,7 +5,6 @@ import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.TableName;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
@@ -57,7 +56,6 @@ public class DmlQueryBuilder {
     private String columnsClause(final Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .filter(field -> !isGeneratedId(field))
                 .map(this::extractColumnName)
                 .collect(Collectors.joining(", "));
     }
@@ -69,18 +67,9 @@ public class DmlQueryBuilder {
                 : field.getName().toLowerCase();
     }
 
-    private boolean isGeneratedId(final Field field) {
-        if (!field.isAnnotationPresent(Id.class)) {
-            return false;
-        }
-        final GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-        return generatedValue != null;
-    }
-
     private String valueClause(final Object object) {
         return Arrays.stream(object.getClass().getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .filter(field -> !isGeneratedId(field))
                 .map(field -> extractValue(field, object))
                 .collect(Collectors.joining(", "));
     }

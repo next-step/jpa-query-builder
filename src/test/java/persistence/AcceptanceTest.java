@@ -45,8 +45,8 @@ class AcceptanceTest {
         createTable();
         assertTableCreated();
 
-        final Person kentBeck = new Person("Kent Beck", 64, "beck@example.com");
-        final Person martinFowler = new Person("Martin Fowler", 62, "martin@example.com");
+        final Person kentBeck = new Person(1L, "Kent Beck", 64, "beck@example.com");
+        final Person martinFowler = new Person(2L, "Martin Fowler", 62, "martin@example.com");
         insert(kentBeck, martinFowler);
 
         final List<Person> people = findAll(dmlQueryBuilder.select(Person.class));
@@ -54,7 +54,9 @@ class AcceptanceTest {
 
         final long personId = 1L;
         final Person person = findById(personId);
+        System.out.println("person = " + person);
         assertThat(person.getId()).isEqualTo(personId);
+
         deleteTable();
         assertTableDeleted();
     }
@@ -62,10 +64,11 @@ class AcceptanceTest {
     private Person findById(final Long personId) {
         final String selectQuery = dmlQueryBuilder.select(Person.class, personId);
         return jdbcTemplate.queryForObject(selectQuery, resultSet -> {
+            final Long id = resultSet.getLong("id");
             final String nickName = resultSet.getString("nick_name");
             final int old = resultSet.getInt("old");
             final String email = resultSet.getString("email");
-            return new Person(nickName, old, email);
+            return new Person(id, nickName, old, email);
         });
     }
 
@@ -76,10 +79,11 @@ class AcceptanceTest {
 
     private List<Person> findAll(final String select) {
         return jdbcTemplate.query(select, resultSet -> {
+            final Long id = resultSet.getLong("id");
             final String nickName = resultSet.getString("nick_name");
             final int old = resultSet.getInt("old");
             final String email = resultSet.getString("email");
-            return new Person(nickName, old, email);
+            return new Person(id, nickName, old, email);
         });
     }
 
