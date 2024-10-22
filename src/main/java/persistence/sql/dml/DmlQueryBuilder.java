@@ -25,7 +25,21 @@ public class DmlQueryBuilder {
     }
 
     public String select(final Class<?> clazz, final Long id) {
-        throw new UnsupportedOperationException();
+        final String tableName = new TableName(clazz).value();
+        final String idColumnName = getIdColumnName(clazz);
+        return "SELECT * FROM %s WHERE %s = %s;".formatted(
+                tableName,
+                idColumnName,
+                formatValue(id)
+        );
+    }
+
+    private String getIdColumnName(final Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst()
+                .map(this::extractColumnName)
+                .orElseThrow(() -> new IllegalArgumentException("No @Id field found in " + clazz.getName()));
     }
 
     public String insert(final Class<?> clazz, final Object object) {
