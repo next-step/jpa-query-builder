@@ -20,7 +20,8 @@ public class DmlQueryBuilder {
     }
 
     public String select(final Class<?> clazz) {
-        throw new UnsupportedOperationException();
+        final String tableName = new TableName(clazz).value();
+        return "SELECT * FROM %s;".formatted(tableName);
     }
 
     public String insert(final Class<?> clazz, final Object object) {
