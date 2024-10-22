@@ -30,6 +30,17 @@ class DmlQueryBuilderTest {
         assertEquals(expectedForFindById(), dmlQueryBuilder.select(Person.class, 1L));
     }
 
+    @DisplayName("클래스 정보를 바탕으로 DELETE 쿼리를 생성한다.")
+    @Test
+    void delete() {
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        assertEquals(expectedForDelete(), dmlQueryBuilder.delete(Person.class, 1L));
+    }
+
+    private String expectedForDelete() {
+        return "DELETE FROM USERS WHERE id = 1;";
+    }
+
     private String expectedForFindById() {
         return "SELECT * FROM USERS WHERE id = 1;";
     }
