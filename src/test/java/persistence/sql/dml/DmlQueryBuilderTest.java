@@ -16,14 +16,25 @@ class DmlQueryBuilderTest {
         assertEquals(expectedForInsert(), dmlQueryBuilder.insert(Person.class, person));
     }
 
-    @DisplayName("클래스 정보를 바탕으로 SELECT 쿼리를 생성한다.")
+    @DisplayName("클래스 정보를 바탕으로 리스트를 위한 SELECT 쿼리를 생성한다.")
     @Test
-    void select() {
+    void findAll() {
         final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
-        assertEquals(expectedForSelect(), dmlQueryBuilder.select(Person.class));
+        assertEquals(expectedForFindAll(), dmlQueryBuilder.select(Person.class));
     }
 
-    private String expectedForSelect() {
+    @DisplayName("클래스 정보를 바탕으로 단건을 위한 SELECT 쿼리를 생성한다.")
+    @Test
+    void findById(){
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        assertEquals(expectedForFindById(), dmlQueryBuilder.select(Person.class, 1L));
+    }
+
+    private String expectedForFindById() {
+        return "SELECT * FROM USERS WHERE id = 1;";
+    }
+
+    private String expectedForFindAll() {
         return "SELECT * FROM USERS;";
     }
 
