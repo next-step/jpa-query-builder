@@ -28,7 +28,7 @@ public class DmlQueryBuilder {
         return DELETE_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
-                formatValue(id)
+                whereClause(id)
         );
     }
 
@@ -43,7 +43,7 @@ public class DmlQueryBuilder {
         return SELECT_BY_ID_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
-                formatValue(id)
+                whereClause(id)
         );
     }
 
@@ -80,13 +80,13 @@ public class DmlQueryBuilder {
         try {
             field.setAccessible(true);
             final Object value = field.get(object);
-            return formatValue(value);
+            return whereClause(value);
         } catch (final IllegalAccessException e) {
             throw new RuntimeException("Failed to access field: " + field.getName(), e);
         }
     }
 
-    private String formatValue(final Object value) {
+    private String whereClause(final Object value) {
         return switch (value) {
             case null -> "NULL";
             case final String s -> String.format("'%s'", s.replace("'", "''"));
