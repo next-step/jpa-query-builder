@@ -5,10 +5,10 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public class IdColumn {
+public class IdColumnName {
     private final Class<?> clazz;
 
-    public IdColumn(final Class<?> clazz) {
+    public IdColumnName(final Class<?> clazz) {
         this.clazz = clazz;
     }
 

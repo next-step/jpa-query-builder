@@ -24,7 +24,7 @@ public class DmlQueryBuilder {
 
     public String delete(final Class<?> clazz, final Long id) {
         final String tableName = new TableName(clazz).value();
-        final String idColumnName = new IdColumn(clazz).getIdColumnName();
+        final String idColumnName = new IdColumnName(clazz).getIdColumnName();
         return DELETE_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
@@ -39,7 +39,7 @@ public class DmlQueryBuilder {
 
     public String select(final Class<?> clazz, final Long id) {
         final String tableName = new TableName(clazz).value();
-        final String idColumnName = new IdColumn(clazz).getIdColumnName();
+        final String idColumnName = new IdColumnName(clazz).getIdColumnName();
         return SELECT_BY_ID_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
