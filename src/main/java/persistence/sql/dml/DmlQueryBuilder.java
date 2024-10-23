@@ -4,6 +4,8 @@ import persistence.sql.ddl.DatabaseDialect;
 import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.TableName;
 
+import java.util.List;
+
 public class DmlQueryBuilder {
     private static final String SELECT_ALL_TEMPLATE = "SELECT * FROM %s;";
     private static final String SELECT_BY_ID_TEMPLATE = "SELECT * FROM %s WHERE %s = %s;";
@@ -22,7 +24,7 @@ public class DmlQueryBuilder {
         return DELETE_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
-                whereClause(id)
+                formatSqlValue(id)
         );
     }
 
@@ -37,19 +39,26 @@ public class DmlQueryBuilder {
         return SELECT_BY_ID_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
-                whereClause(id)
+                formatSqlValue(id)
         );
     }
 
     public String insert(final Class<?> clazz, final Object object) {
         final String tableName = new TableName(clazz).value();
         final String columns = new ColumnName(clazz).value();
-        final String values = new InsertValues(clazz).value(object);
+        final List<Object> value = new InsertValues(clazz).value(object);
 
-        return String.format(INSERT_TEMPLATE, tableName, columns, values);
+        return String.format(INSERT_TEMPLATE, tableName, columns, formatSqlValues(value));
     }
 
-    private String whereClause(final Object value) {
+    private String formatSqlValues(final List<Object> value) {
+        return value.stream()
+                .map(this::formatSqlValue)
+                .reduce((a, b) -> a + ", " + b)
+                .orElseThrow();
+    }
+
+    private String formatSqlValue(final Object value) {
         return switch (value) {
             case null -> "NULL";
             case final String s -> String.format("'%s'", s.replace("'", "''"));
