@@ -5,7 +5,6 @@ import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.TableName;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -25,7 +24,7 @@ public class DmlQueryBuilder {
 
     public String delete(final Class<?> clazz, final Long id) {
         final String tableName = new TableName(clazz).value();
-        final String idColumnName = getIdColumnName(clazz);
+        final String idColumnName = new IdColumn(clazz).getIdColumnName();
         return DELETE_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
@@ -40,20 +39,12 @@ public class DmlQueryBuilder {
 
     public String select(final Class<?> clazz, final Long id) {
         final String tableName = new TableName(clazz).value();
-        final String idColumnName = getIdColumnName(clazz);
+        final String idColumnName = new IdColumn(clazz).getIdColumnName();
         return SELECT_BY_ID_TEMPLATE.formatted(
                 tableName,
                 idColumnName,
                 formatValue(id)
         );
-    }
-
-    private String getIdColumnName(final Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .map(this::extractColumnName)
-                .orElseThrow(() -> new IllegalArgumentException("No @Id field found in " + clazz.getName()));
     }
 
     public String insert(final Class<?> clazz, final Object object) {
