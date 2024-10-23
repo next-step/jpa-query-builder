@@ -4,7 +4,6 @@ import persistence.sql.ddl.DatabaseDialect;
 import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.TableName;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -49,24 +48,10 @@ public class DmlQueryBuilder {
 
     public String insert(final Class<?> clazz, final Object object) {
         final String tableName = new TableName(clazz).value();
-        final String columns = columnsClause(object.getClass());
+        final String columns = new ColumnName(clazz).value();
         final String values = valueClause(object);
 
         return String.format(INSERT_TEMPLATE, tableName, columns, values);
-    }
-
-    private String columnsClause(final Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(this::extractColumnName)
-                .collect(Collectors.joining(", "));
-    }
-
-    private String extractColumnName(final Field field) {
-        final Column column = field.getAnnotation(Column.class);
-        return (column != null && !column.name().isEmpty())
-                ? column.name()
-                : field.getName().toLowerCase();
     }
 
     private String valueClause(final Object object) {
