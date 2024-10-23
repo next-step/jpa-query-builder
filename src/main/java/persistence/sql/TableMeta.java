@@ -29,7 +29,7 @@ public class TableMeta {
         return tableColumns;
     }
 
-    public TableId getTableId() {
+    public TableId tableId() {
         return tableId;
     }
 

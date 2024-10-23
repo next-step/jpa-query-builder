@@ -12,7 +12,7 @@ public class TableColumn {
 
     public TableColumn(Field column) {
         this.type = column.getType();
-        this.name = columnName(column);
+        this.name = resolveColumnName(column);
         this.isNullable = nullable(column);
     }
 
@@ -32,7 +32,7 @@ public class TableColumn {
         return column == null || column.nullable();
     }
 
-    private String columnName(Field field) {
+    private String resolveColumnName(Field field) {
         if (field.isAnnotationPresent(Column.class)) {
             Column column = field.getAnnotation(Column.class);
             if (!column.name().isEmpty()) {

@@ -11,6 +11,7 @@ import persistence.sql.dml.UpdateQueryBuilder;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultEntityManager implements EntityManager {
@@ -24,18 +25,28 @@ public class DefaultEntityManager implements EntityManager {
     }
 
     @Override
-    public <T> Object find(Class<T> clazz, Long id) {
+    public <T> Optional<T> find(Class<T> clazz, Long id) {
+        // 캐시에서 찾기
         Map<Long, Object> entityMap = entityCache.get(clazz);
         Object cachedEntity = entityMap == null ? null : entityMap.get(id);
         if (cachedEntity != null) {
-            return cachedEntity;
+            return Optional.of(clazz.cast(cachedEntity));  // 캐시된 엔티티 반환
         }
+
+        // DB에서 엔티티 조회
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder(clazz);
         String selectQuery = selectQueryBuilder.findById(clazz, id);
         List<T> query = jdbcTemplate.query(selectQuery, new EntityRowMapper<>(clazz));
-        return query.isEmpty() ? null : clazz.cast(query.getFirst());
-    }
 
+        if (query.isEmpty()) {
+            return Optional.empty();  // 엔티티가 없는 경우 빈 Optional 반환
+        }
+
+        // 엔티티가 타입에 맞는지 확인하고 캐시
+        T entity = query.getFirst();
+        entityCache.computeIfAbsent(clazz, k -> new ConcurrentHashMap<>()).put(id, entity);
+        return Optional.of(entity);  // 조회된 엔티티 반환
+    }
 
     @Override
     public Object persist(Object entity) {

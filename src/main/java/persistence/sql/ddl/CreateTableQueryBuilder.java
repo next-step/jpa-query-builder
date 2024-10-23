@@ -23,7 +23,7 @@ public class CreateTableQueryBuilder extends DDLQueryBuilder {
 
     private String createTable() {
         List<TableColumn> tableColumn = tableMeta.tableColumn();
-        TableId tableId = tableMeta.getTableId();
+        TableId tableId = tableMeta.tableId();
         String idColumn = createIdColumn(tableId);
         String columns = createColumns(tableColumn);
         return CREATE_TABLE + tableMeta.tableName() + " ("+ idColumn + columns + ");";

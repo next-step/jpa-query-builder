@@ -11,6 +11,7 @@ import persistence.sql.ddl.DropTableQueryBuilder;
 import persistence.sql.ddl.QueryBuilder;
 
 import java.sql.Connection;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,8 +55,8 @@ public class DefaultEntityManagerTest {
     public void testFind() {
         Person person = Person.of(null, "John", 25, "john@example.com", 1);
         entityManager.persist(person);
-        Person foundPerson = entityManager.find(Person.class, 1L);
-        assertNotNull(foundPerson);
+        Optional<Person> foundedPerson = entityManager.find(Person.class, 1L);
+        assertTrue(foundedPerson.isPresent());
     }
 
     @Test
@@ -63,7 +64,8 @@ public class DefaultEntityManagerTest {
         Person person = Person.of(null, "John", 25, "john@example.com", 1);
         entityManager.persist(person);
         entityManager.remove(Person.class, 1L);
-        assertNull(entityManager.find(Person.class, 1L));
+        Optional<Person> foundedPerson = entityManager.find(Person.class, 1L);
+        assertTrue(foundedPerson.isEmpty());
     }
 
     @Test
@@ -72,7 +74,7 @@ public class DefaultEntityManagerTest {
         entityManager.persist(person);
         Person updatedPerson = Person.of(1L, "John Updated", 26, "john.updated@example.com", 1);
         entityManager.update(updatedPerson);
-        Person foundPerson = entityManager.find(Person.class, 1L);
-        assertNotNull(foundPerson);
+        Optional<Person> foundedPerson = entityManager.find(Person.class, 1L);
+        assertTrue(foundedPerson.isPresent());
     }
 }
