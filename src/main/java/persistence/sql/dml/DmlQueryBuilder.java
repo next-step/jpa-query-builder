@@ -4,11 +4,6 @@ import persistence.sql.ddl.DatabaseDialect;
 import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.TableName;
 
-import jakarta.persistence.Transient;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 public class DmlQueryBuilder {
     private static final String SELECT_ALL_TEMPLATE = "SELECT * FROM %s;";
     private static final String SELECT_BY_ID_TEMPLATE = "SELECT * FROM %s WHERE %s = %s;";
@@ -49,26 +44,9 @@ public class DmlQueryBuilder {
     public String insert(final Class<?> clazz, final Object object) {
         final String tableName = new TableName(clazz).value();
         final String columns = new ColumnName(clazz).value();
-        final String values = valueClause(object);
+        final String values = new InsertValues(clazz).value(object);
 
         return String.format(INSERT_TEMPLATE, tableName, columns, values);
-    }
-
-    private String valueClause(final Object object) {
-        return Arrays.stream(object.getClass().getDeclaredFields())
-                .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> extractValue(field, object))
-                .collect(Collectors.joining(", "));
-    }
-
-    private String extractValue(final Field field, final Object object) {
-        try {
-            field.setAccessible(true);
-            final Object value = field.get(object);
-            return whereClause(value);
-        } catch (final IllegalAccessException e) {
-            throw new RuntimeException("Failed to access field: " + field.getName(), e);
-        }
     }
 
     private String whereClause(final Object value) {
