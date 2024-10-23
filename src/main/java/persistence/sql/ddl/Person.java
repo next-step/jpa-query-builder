@@ -29,4 +29,28 @@ public class Person {
     @Transient
     private Integer index;
 
+    public Person(final Long id, final String name, final Integer age, final String email) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
+    protected Person() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", age=" + age +
+               ", email='" + email + '\'' +
+               ", index=" + index +
+               '}';
+    }
 }

@@ -2,14 +2,14 @@ package persistence.sql.ddl;
 
 import jakarta.persistence.Table;
 
-class TableName {
+public class TableName {
     private final Class<?> clazz;
 
-    TableName(final Class<?> clazz) {
+    public TableName(final Class<?> clazz) {
         this.clazz = clazz;
     }
 
-    String value(final Class<?> clazz) {
+    public String value() {
         final Table tableAnnotation = clazz.getAnnotation(Table.class);
         return hasTableName(tableAnnotation) ?
                 tableNameFrom(tableAnnotation) :

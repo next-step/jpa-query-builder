@@ -1,6 +1,6 @@
 package persistence.sql.ddl;
 
-interface DatabaseDialect {
+public interface DatabaseDialect {
     String getColumnTypeDefinition(ColumnType type);
     String identityClause(boolean isIdentity);
     String nullableClause(boolean isNullable);

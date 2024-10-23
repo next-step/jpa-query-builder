@@ -6,36 +6,34 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
-import java.util.stream.Collectors;
+import java.util.List;
 import java.util.stream.Stream;
 
-class ColumnDefinitions {
-    private static final String INDENTATION = "    ";
-
+class ColumnDefinitionFactory {
     private final Class<?> clazz;
     private final DatabaseDialect dialect;
 
-    ColumnDefinitions(final Class<?> clazz, final DatabaseDialect dialect) {
+    ColumnDefinitionFactory(final Class<?> clazz, final DatabaseDialect dialect) {
         this.clazz = clazz;
         this.dialect = dialect;
     }
 
-    String value(final Class<?> entityClass) {
-        final Field[] fields = entityClass.getDeclaredFields();
+    List<ColumnDefinition> create() {
+        final Field[] fields = clazz.getDeclaredFields();
         return Stream.of(fields)
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(this::getColumnDefinition)
-                .collect(Collectors.joining(",\n"));
+                .map(this::mapToColumnDefinition)
+                .toList();
     }
 
-    private String getColumnDefinition(final Field field) {
-        return "%s%s %s%s%s%s".formatted(
-                INDENTATION,
+    private ColumnDefinition mapToColumnDefinition(final Field field) {
+        return new ColumnDefinition(
                 columnName(field),
                 columnType(field),
                 dialect.identityClause(isIdentity(field)),
                 dialect.nullableClause(isNullable(field)),
-                dialect.primaryKeyClause(isIdField(field)));
+                dialect.primaryKeyClause(isIdField(field))
+        );
     }
 
     private String columnName(final Field field) {

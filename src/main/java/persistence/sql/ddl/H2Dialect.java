@@ -1,30 +1,33 @@
 package persistence.sql.ddl;
 
-class H2Dialect implements DatabaseDialect {
-    private static final int VARCHAR_DEFAULT_LENGTH = 255;
+import java.util.Map;
+import java.util.Optional;
+
+public class H2Dialect implements DatabaseDialect {
+    private static final Map<ColumnType, String> TYPE_DEFINITIONS = Map.of(
+            ColumnType.BIGINT, "BIGINT",
+            ColumnType.INTEGER, "INTEGER",
+            ColumnType.VARCHAR, "VARCHAR(255)"
+    );
 
     @Override
-    public String getColumnTypeDefinition(ColumnType type) {
-        return switch (type) {
-            case BIGINT -> "BIGINT";
-            case INTEGER -> "INTEGER";
-            case VARCHAR -> "VARCHAR(" + VARCHAR_DEFAULT_LENGTH + ")";
-            default -> throw new IllegalArgumentException("Unsupported column type: " + type);
-        };
+    public String getColumnTypeDefinition(final ColumnType type) {
+        return Optional.ofNullable(TYPE_DEFINITIONS.get(type))
+                .orElseThrow(() -> new IllegalArgumentException("Unsupported column type: " + type));
     }
 
     @Override
-    public String identityClause(boolean isIdentity) {
+    public String identityClause(final boolean isIdentity) {
         return isIdentity ? " AUTO_INCREMENT" : "";
     }
 
     @Override
-    public String nullableClause(boolean isNullable) {
+    public String nullableClause(final boolean isNullable) {
         return isNullable ? "" : " NOT NULL";
     }
 
     @Override
-    public String primaryKeyClause(boolean isPrimaryKey) {
+    public String primaryKeyClause(final boolean isPrimaryKey) {
         return isPrimaryKey ? " PRIMARY KEY" : "";
     }
 }

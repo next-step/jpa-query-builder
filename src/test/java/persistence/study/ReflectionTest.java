@@ -21,15 +21,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
-    @Test
     @DisplayName("Car 클래스가 존재하는지 테스트")
+    @Test
     void testCarClassExists() {
         final Class<Car> carClass = Car.class;
         assertNotNull(carClass);
     }
 
-    @Test
     @DisplayName("Car 클래스의 모든 필드 정보를 출력한다")
+    @Test
     void printAllFields() {
         final Class<Car> carClass = Car.class;
         final Field[] declaredFields = carClass.getDeclaredFields();
@@ -41,8 +41,8 @@ class ReflectionTest {
         }
     }
 
-    @Test
     @DisplayName("Car 클래스의 모든 생성자 정보를 출력한다")
+    @Test
     void printAllConstructors() {
         final Class<Car> carClass = Car.class;
         final Constructor<?>[] constructors = carClass.getDeclaredConstructors();
@@ -54,8 +54,8 @@ class ReflectionTest {
         }
     }
 
-    @Test
     @DisplayName("Car 클래스의 모든 메서드 정보를 출력한다")
+    @Test
     void printAllMethods() {
         final Class<Car> carClass = Car.class;
         final Method[] declaredMethods = carClass.getDeclaredMethods();
@@ -68,8 +68,8 @@ class ReflectionTest {
         }
     }
 
-    @Test
     @DisplayName("Car 클래스의 test로 시작하는 메서드를 실행한다")
+    @Test
     void testMethodRun() throws Exception {
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getDeclaredConstructor().newInstance();
@@ -78,8 +78,8 @@ class ReflectionTest {
         assertThat(results).containsExactly("test : null", "test : 0");
     }
 
-    @Test
     @DisplayName("Car 클래스의 @PrintView 어노테이션이 붙은 메서드를 실행한다")
+    @Test
     void testAnnotationMethodRun() throws Exception {
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getDeclaredConstructor().newInstance();
@@ -91,8 +91,8 @@ class ReflectionTest {
         }
     }
 
-    @Test
     @DisplayName("Car 클래스의 필드에 값을 설정하고, getter를 호출한다")
+    @Test
     void privateFieldAccess() throws Exception {
         final Class<Car> carClass = Car.class;
         final Car car = carClass.getDeclaredConstructor().newInstance();
@@ -107,8 +107,8 @@ class ReflectionTest {
         assertThat(car.getPrice()).isEqualTo(1000);
     }
 
-    @Test
     @DisplayName("Car 클래스의 인자가 있는 생성자를 이용하여 인스턴스를 생성한다")
+    @Test
     void constructorWithArgs() throws Exception {
         final Class<Car> carClass = Car.class;
         final Constructor<Car> constructor = getCarConstructor(carClass);
