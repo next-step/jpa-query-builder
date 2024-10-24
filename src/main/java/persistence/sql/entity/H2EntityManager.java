@@ -23,4 +23,9 @@ public class H2EntityManager implements EntityManager {
         final String select = dmlQueryBuilder.select(clazz, id);
         return jdbcTemplate.queryForObject(select, new GenericRowMapper<>(clazz));
     }
+
+    @Override
+    public void remove(final Object entity) {
+        throw new UnsupportedOperationException();
+    }
 }

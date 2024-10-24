@@ -13,6 +13,7 @@ import persistence.sql.ddl.Person;
 import persistence.sql.dml.DmlQueryBuilder;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -59,6 +60,32 @@ class H2EntityManagerTest {
         final Person actualPerson = entityManager.find(Person.class, 1L);
 
         assertThat(actualPerson.getId()).isEqualTo(expectedPerson.getId());
+    }
+
+    @DisplayName("Person 객체를 저장하고 조회하고 삭제한다.")
+    @Test
+    void remove_and_find_and_remove() {
+        final Person expectedPerson = new Person(1L, "Kent Beck", 64, "beck@example.com");
+        entityManager.persist(expectedPerson);
+
+        final Person actualPerson = entityManager.find(Person.class, 1L);
+        assertThat(actualPerson.getId()).isEqualTo(expectedPerson.getId());
+
+        entityManager.remove(expectedPerson);
+        assertRemove();
+    }
+
+    private void assertRemove() {
+        final List<Person> query = jdbcTemplate.query(dmlQueryBuilder.select(Person.class), resultSet -> {
+            resultSet.next();
+            return new Person(
+                    resultSet.getLong("id"),
+                    resultSet.getString("nick_name"),
+                    resultSet.getInt("old"),
+                    resultSet.getString("email")
+            );
+        });
+        assertThat(query).hasSize(0);
     }
 
     private void createTableAndVerify() {
