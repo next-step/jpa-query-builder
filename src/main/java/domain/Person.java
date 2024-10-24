@@ -22,9 +22,7 @@ public class Person {
     @Transient
     private Integer index;
 
-    public static Person of(Long id, String name, Integer age, String email, Integer index) {
-        return new Person(id, name, age, email, index);
-    }
+    public Person() {}
 
     private Person(Long id, String name, Integer age, String email, Integer index) {
         this.name = name;
@@ -34,7 +32,7 @@ public class Person {
         this.index = index;
     }
 
-    public Person() {
-
+    public static Person of(Long id, String name, Integer age, String email, Integer index) {
+        return new Person(id, name, age, email, index);
     }
 }

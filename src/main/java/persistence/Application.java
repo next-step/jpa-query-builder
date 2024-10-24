@@ -6,12 +6,11 @@ import domain.Person;
 import jdbc.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import persistence.entity.EntityManager;
+import persistence.entity.impl.DefaultEntityManager;
 import persistence.sql.ddl.CreateTableQueryBuilder;
 import persistence.sql.ddl.DropTableQueryBuilder;
-import persistence.sql.ddl.QueryBuilderAdapter;
-import persistence.sql.dml.DeleteQueryBuilder;
-import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.ddl.QueryBuilder;
 
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -23,32 +22,22 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-            QueryBuilderAdapter ddlQueryBuilder = new CreateTableQueryBuilder();
+            QueryBuilder ddlQueryBuilder = new CreateTableQueryBuilder(Person.class);
 
-            String createTableQuery = ddlQueryBuilder.executeQuery( Person.class);
+            String createTableQuery = ddlQueryBuilder.executeQuery();
             jdbcTemplate.execute(createTableQuery); // Create table
+            EntityManager entityManager = new DefaultEntityManager(jdbcTemplate);
 
-            Person person = Person.of(null, "2xample", 30, "2xample.gmail.com", null);
+            entityManager.persist(Person.of(null,"John", 25,"demian@gmail.com",1));
 
-            InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
-            String insertQuery = insertQueryBuilder.insert(person);
-            jdbcTemplate.execute(insertQuery); // Insert data
+            entityManager.find(Person.class, 1L);
 
-            SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
-            String selectQuery = selectQueryBuilder.findAll(Person.class);
-            jdbcTemplate.execute(selectQuery); // Select data
+            entityManager.update(Person.of(1L,"John", 25,null,null));
 
-            String findOne = selectQueryBuilder.findById(Person.class, 1L);
-            jdbcTemplate.execute(findOne); // Select data
+            entityManager.remove(Person.class, 1L);
 
-            DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
-            deleteQueryBuilder.deleteById(Person.class, 1L);
-            jdbcTemplate.execute(deleteQueryBuilder.deleteById(Person.class, 1L)); // Delete data
-
-            ddlQueryBuilder = new DropTableQueryBuilder();
-            String dropTableQuery = ddlQueryBuilder.executeQuery( Person.class);
-
-            jdbcTemplate.execute(dropTableQuery); // Drop table
+            ddlQueryBuilder = new DropTableQueryBuilder(Person.class);
+            ddlQueryBuilder.executeQuery();
 
             server.stop();
         } catch (Exception e) {

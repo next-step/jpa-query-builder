@@ -1,20 +1,20 @@
 package persistence.sql.ddl;
 
-import jakarta.persistence.Entity;
 
 public class DropTableQueryBuilder extends DDLQueryBuilder  {
     public static final String DROP_TABLE = "DROP TABLE ";
 
-    @Override
-    public String executeQuery(Class<?> entityClass) {
-        return dropTable(entityClass);
+    public DropTableQueryBuilder(Class<?> entityClass) {
+        super(entityClass);
     }
 
-    public  String dropTable(Class<?> entityClass) {
-        if (!entityClass.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("This Class is not an Entity ");
-        }
-        String tableName = CreateTableQueryBuilder.getTableName(entityClass);
+    @Override
+    public String executeQuery() {
+        return dropTable();
+    }
+
+    public  String dropTable() {
+        String tableName = tableMeta.tableName();
         return DROP_TABLE + tableName + ";";
     }
 }

@@ -24,3 +24,10 @@
 + [x] Person 클래스 정보를 바탕으로 select 쿼리를 만들어본다.(findAll)
 + [x] Person 클래스 정보를 바탕으로 select 쿼리를 만들어본다.(findById)
 + [x] Person 클래스 정보를 바탕으로 delete 쿼리를 만들어본다.
+
+## Step 4 - Simple Entity Object
+### 요구 사항
++ [x] EntityManager 인터페이스에서 find()를 생성 후 구현
++ [x] EntityManager 인터페이스에서 persist()를 생성 후 구현 (insert)
++ [x] EntityManager 인터페이스에서 remove()를 생성 후 구현 (delete)
++ [x] EntityManager 인터페이스에서 update()를 생성 후 구현.

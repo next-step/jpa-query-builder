@@ -9,7 +9,7 @@ class InsertQueryBuilderTest {
 
     @Test
     public void testInsertQuery() {
-        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder();
+        InsertQueryBuilder insertQueryBuilder = new InsertQueryBuilder(Person.class);
         Person person = Person.of(null, "2xample", 30, "2xample@gmail.com", null);
 
         String expectedQuery = "INSERT INTO users (nick_name, old, email) VALUES ('2xample', 30, '2xample@gmail.com');";

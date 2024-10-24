@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class H2DBDataType {
     private static final Map<Class<?>, String> typeMap = new HashMap<>();
@@ -23,6 +23,8 @@ public class H2DBDataType {
         typeMap.put(Date.class, "DATE");
     }
 
+    private H2DBDataType() {}
+
     public static String castType(Class<?> columnType) {
         return castType(columnType, 255);
     }
@@ -37,7 +39,6 @@ public class H2DBDataType {
         if (sqlType == null) {
             throw new IllegalArgumentException("Unsupported data type: " + columnType.getName());
         }
-
         return sqlType;
     }
 }
