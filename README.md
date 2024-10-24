@@ -26,7 +26,7 @@
 
 ## Step4
 - [x] EntityManger를 활용한다.
-- [ ] find를 구현한다.
+- [x] find를 구현한다.
 - [x] persist를 구현한다.
 - [ ] remove를 구현한다.
 - [ ] update를 구현한다.

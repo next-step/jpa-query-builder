@@ -19,7 +19,8 @@ public class H2EntityManager implements EntityManager {
     }
 
     @Override
-    public <T> T find(final Class<T> clazz, final Long Id) {
-        throw new UnsupportedOperationException();
+    public <T> T find(final Class<T> clazz, final Long id) {
+        final String select = dmlQueryBuilder.select(clazz, id);
+        return jdbcTemplate.queryForObject(select, new GenericRowMapper<>(clazz));
     }
 }
