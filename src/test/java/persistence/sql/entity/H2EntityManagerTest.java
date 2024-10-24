@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class H2EntityManagerTest {
@@ -44,24 +43,6 @@ class H2EntityManagerTest {
         server.stop();
     }
 
-    @DisplayName("Person 객체를 저장한다.")
-    @Test
-    void persist() {
-        final Person person = new Person(1L, "Kent Beck", 64, "beck@example.com");
-        assertDoesNotThrow(() -> entityManager.persist(person));
-    }
-
-    @DisplayName("Person 객체를 조회한다.")
-    @Test
-    void find() {
-        final Person expectedPerson = new Person(1L, "Kent Beck", 64, "beck@example.com");
-        entityManager.persist(expectedPerson);
-
-        final Person actualPerson = entityManager.find(Person.class, 1L);
-
-        assertThat(actualPerson.getId()).isEqualTo(expectedPerson.getId());
-    }
-
     @DisplayName("Person 객체를 저장하고 조회하고 삭제한다.")
     @Test
     void remove_and_find_and_remove() {
@@ -71,7 +52,7 @@ class H2EntityManagerTest {
         final Person actualPerson = entityManager.find(Person.class, 1L);
         assertThat(actualPerson.getId()).isEqualTo(expectedPerson.getId());
 
-        entityManager.remove(expectedPerson);
+        entityManager.remove(actualPerson);
         assertRemove();
     }
 
