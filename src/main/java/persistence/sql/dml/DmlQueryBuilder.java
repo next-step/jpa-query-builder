@@ -1,7 +1,5 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.DatabaseDialect;
-import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.TableName;
 
 import java.util.List;
@@ -12,12 +10,6 @@ public class DmlQueryBuilder {
     private static final String SELECT_BY_ID_TEMPLATE = "SELECT * FROM %s WHERE %s = %s;";
     private static final String INSERT_TEMPLATE =  "INSERT INTO %s (%s) VALUES (%s);";
     private static final String DELETE_TEMPLATE = "DELETE FROM %s WHERE %s = %s;";
-
-    private final DatabaseDialect dialect;
-
-    public DmlQueryBuilder(final H2Dialect h2Dialect) {
-        this.dialect = h2Dialect;
-    }
 
     public String delete(final Class<?> clazz, final Long id) {
         final String tableName = new TableName(clazz).value();

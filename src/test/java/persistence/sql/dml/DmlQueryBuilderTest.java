@@ -2,7 +2,6 @@ package persistence.sql.dml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.H2Dialect;
 import persistence.sql.ddl.Person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,7 +10,7 @@ class DmlQueryBuilderTest {
     @DisplayName("클래스 정보를 바탕으로 INSERT 쿼리를 생성한다.")
     @Test
     void insert() {
-        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         final Person person = new Person(1L, "Kent Beck", 64, "beck@example.com");
         assertEquals(expectedForInsert(), dmlQueryBuilder.insert(Person.class, person));
     }
@@ -19,28 +18,28 @@ class DmlQueryBuilderTest {
     @DisplayName("클래스 정보를 바탕으로 리스트를 위한 SELECT 쿼리를 생성한다.")
     @Test
     void findAll() {
-        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         assertEquals(expectedForFindAll(), dmlQueryBuilder.select(Person.class));
     }
 
     @DisplayName("클래스 정보를 바탕으로 단건을 위한 SELECT 쿼리를 생성한다.")
     @Test
     void findById(){
-        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         assertEquals(expectedForFindById(), dmlQueryBuilder.select(Person.class, 1L));
     }
 
     @DisplayName("클래스 정보를 바탕으로 MAX ID를 조회하는 SELECT 쿼리를 생성한다.")
     @Test
     void selectMaxId() {
-        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         assertEquals("SELECT MAX(id) FROM USERS;", dmlQueryBuilder.selectMaxId(Person.class));
     }
 
     @DisplayName("클래스 정보를 바탕으로 DELETE 쿼리를 생성한다.")
     @Test
     void delete() {
-        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         assertEquals(expectedForDelete(), dmlQueryBuilder.delete(Person.class, 1L));
     }
 
