@@ -30,6 +30,13 @@ class DmlQueryBuilderTest {
         assertEquals(expectedForFindById(), dmlQueryBuilder.select(Person.class, 1L));
     }
 
+    @DisplayName("클래스 정보를 바탕으로 MAX ID를 조회하는 SELECT 쿼리를 생성한다.")
+    @Test
+    void selectMaxId() {
+        final DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder(new H2Dialect());
+        assertEquals("SELECT MAX(id) FROM USERS;", dmlQueryBuilder.selectMaxId(Person.class));
+    }
+
     @DisplayName("클래스 정보를 바탕으로 DELETE 쿼리를 생성한다.")
     @Test
     void delete() {
