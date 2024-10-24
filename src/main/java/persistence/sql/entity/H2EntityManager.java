@@ -1,8 +1,20 @@
 package persistence.sql.entity;
 
+import jdbc.JdbcTemplate;
+import persistence.sql.dml.DmlQueryBuilder;
+
 public class H2EntityManager implements EntityManager {
+    private final JdbcTemplate jdbcTemplate;
+    private final DmlQueryBuilder dmlQueryBuilder;
+
+    public H2EntityManager(final JdbcTemplate jdbcTemplate, final DmlQueryBuilder dmlQueryBuilder) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.dmlQueryBuilder = dmlQueryBuilder;
+    }
+
     @Override
-    public Object persist(final Object entity) {
-        throw new UnsupportedOperationException();
+    public void persist(final Object entity) {
+        final String insert = dmlQueryBuilder.insert(entity.getClass(), entity);
+        jdbcTemplate.execute(insert);
     }
 }
