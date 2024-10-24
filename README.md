@@ -24,3 +24,10 @@
 - [x] 단건 조회 쿼리를 생성한다.
 - [x] Delete 쿼리를 생성한다.
 
+## Step4
+- [] EntityManger를 활용한다.
+- [] find를 구현한다.
+- [] persist를 구현한다.
+- [] remove를 구현한다.
+- [] update를 구현한다.
+
