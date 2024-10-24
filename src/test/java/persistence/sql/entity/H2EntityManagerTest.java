@@ -2,6 +2,7 @@ package persistence.sql.entity;
 
 import database.DatabaseServer;
 import database.H2;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,11 @@ class H2EntityManagerTest {
         dmlQueryBuilder = new DmlQueryBuilder();
         createTableAndVerify();
         entityManager = new H2EntityManager(jdbcTemplate, dmlQueryBuilder);
+    }
+
+    @AfterEach
+    void tearDown() {
+        server.stop();
     }
 
     @DisplayName("Person 객체를 저장한다.")
