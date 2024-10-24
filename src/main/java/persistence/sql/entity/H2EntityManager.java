@@ -17,4 +17,9 @@ public class H2EntityManager implements EntityManager {
         final String insert = dmlQueryBuilder.insert(entity.getClass(), entity);
         jdbcTemplate.execute(insert);
     }
+
+    @Override
+    public <T> T find(final Class<T> clazz, final Long Id) {
+        throw new UnsupportedOperationException();
+    }
 }

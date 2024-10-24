@@ -14,6 +14,7 @@ import persistence.sql.dml.DmlQueryBuilder;
 
 import java.sql.Connection;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -47,6 +48,17 @@ class H2EntityManagerTest {
     void persist() {
         final Person person = new Person(1L, "Kent Beck", 64, "beck@example.com");
         assertDoesNotThrow(() -> entityManager.persist(person));
+    }
+
+    @DisplayName("Person 객체를 조회한다.")
+    @Test
+    void find() {
+        final Person expectedPerson = new Person(1L, "Kent Beck", 64, "beck@example.com");
+        entityManager.persist(expectedPerson);
+
+        final Person actualPerson = entityManager.find(Person.class, 1L);
+
+        assertThat(actualPerson.getId()).isEqualTo(expectedPerson.getId());
     }
 
     private void createTableAndVerify() {
