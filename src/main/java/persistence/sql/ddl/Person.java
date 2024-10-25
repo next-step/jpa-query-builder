@@ -43,6 +43,10 @@ public class Person {
         return id;
     }
 
+    public Integer getAge() {
+        return age;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
