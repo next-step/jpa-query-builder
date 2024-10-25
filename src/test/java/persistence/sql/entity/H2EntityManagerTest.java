@@ -43,9 +43,9 @@ class H2EntityManagerTest {
         server.stop();
     }
 
-    @DisplayName("Person 객체를 저장하고 조회하고 삭제한다.")
+    @DisplayName("Person 객체를 저장하고 조회하고 수정하고 삭제한다.")
     @Test
-    void remove_and_find_and_remove() {
+    void scenario() {
         final Person expectedPerson = new Person(1L, "Kent Beck", 64, "beck@example.com");
         entityManager.persist(expectedPerson);
 
