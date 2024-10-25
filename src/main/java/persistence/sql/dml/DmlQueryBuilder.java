@@ -3,6 +3,8 @@ package persistence.sql.dml;
 import persistence.sql.ddl.TableName;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DmlQueryBuilder {
     private static final String SELECT_MAX_ID_TEMPLATE = "SELECT MAX(%s) FROM %s;";
@@ -10,9 +12,29 @@ public class DmlQueryBuilder {
     private static final String SELECT_BY_ID_TEMPLATE = "SELECT * FROM %s WHERE %s = %s;";
     private static final String INSERT_TEMPLATE =  "INSERT INTO %s (%s) VALUES (%s);";
     private static final String DELETE_TEMPLATE = "DELETE FROM %s WHERE %s = %s;";
+    private static final String UPDATE_TEMPLATE = "UPDATE %s SET %s WHERE %s = %s;";
 
-    public void update(final Class<?> aClass, final Object entity) {
-        throw new UnsupportedOperationException();
+    public String update(final Class<?> clazz, final Object entity, final Long id) {
+        final String tableName = new TableName(clazz).value();
+        final String setClause = formatSetClause(clazz, entity);
+        final String idColumnName = new IdColumnName(clazz).getIdColumnName();
+
+        return UPDATE_TEMPLATE.formatted(
+                tableName,
+                setClause,
+                idColumnName,
+                formatSqlValue(id)
+        );
+    }
+
+    private String formatSetClause(final Class<?> clazz, final Object entity) {
+        final Map<String, Object> updateValues = new UpdateValues(clazz).value(entity);
+
+        return updateValues.entrySet().stream()
+                .map(entry -> String.format("%s = %s",
+                        entry.getKey(),
+                        formatSqlValue(entry.getValue())))
+                .collect(Collectors.joining(", "));
     }
 
     public String delete(final Class<?> clazz, final Long id) {

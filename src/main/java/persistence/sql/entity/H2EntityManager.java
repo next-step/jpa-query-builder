@@ -33,7 +33,8 @@ public class H2EntityManager implements EntityManager {
 
     @Override
     public void update(final Object entity) {
-        dmlQueryBuilder.update(entity.getClass(), entity);
-        throw new UnsupportedOperationException();
+        final IdValue idValue = new IdValue(entity);
+        final String update = dmlQueryBuilder.update(entity.getClass(), entity, idValue.value());
+        jdbcTemplate.execute(update);
     }
 }
