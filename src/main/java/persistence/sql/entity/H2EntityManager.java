@@ -30,4 +30,9 @@ public class H2EntityManager implements EntityManager {
         final String delete = dmlQueryBuilder.delete(entity.getClass(), idValue.value());
         jdbcTemplate.execute(delete);
     }
+
+    @Override
+    public void update(final Object entity) {
+        throw new UnsupportedOperationException();
+    }
 }

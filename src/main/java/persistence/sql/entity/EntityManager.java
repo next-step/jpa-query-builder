@@ -6,4 +6,6 @@ public interface EntityManager {
     <T> T find(Class<T> clazz, Long Id);
 
     void remove(Object entity);
+
+    void update(Object entity);
 }
