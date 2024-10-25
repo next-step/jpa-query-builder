@@ -11,6 +11,10 @@ public class DmlQueryBuilder {
     private static final String INSERT_TEMPLATE =  "INSERT INTO %s (%s) VALUES (%s);";
     private static final String DELETE_TEMPLATE = "DELETE FROM %s WHERE %s = %s;";
 
+    public void update(final Class<?> aClass, final Object entity) {
+        throw new UnsupportedOperationException();
+    }
+
     public String delete(final Class<?> clazz, final Long id) {
         final String tableName = new TableName(clazz).value();
         final String idColumnName = new IdColumnName(clazz).getIdColumnName();
