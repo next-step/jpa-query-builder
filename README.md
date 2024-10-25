@@ -1,5 +1,13 @@
 # jpa-query-builder
 
+## 3단계 - QueryBuilder DML
+
+### 요구 사항
+
+- [X] insert query를 만든다.
+  - [X] `@GeneratedValue` 필드는 제외한다.
+  - [X] `@Transient` 필드는 제외한다.
+
 ## 2단계 - QueryBuilder DDL
 
 ### 요구 사항

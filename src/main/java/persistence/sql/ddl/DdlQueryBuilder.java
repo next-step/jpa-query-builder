@@ -5,11 +5,11 @@ import persistence.sql.ddl.metadata.EntityMetadata;
 
 import java.util.stream.Collectors;
 
-public class QueryBuilder {
+public class DdlQueryBuilder {
 
     private static final String JOIN_DELIMITER = ", ";
 
-    public String buildCreateDdl(Class<?> clazz) {
+    public String buildCreateQuery(Class<?> clazz) {
         EntityMetadata entityMetadata = EntityMetadata.from(clazz);
         return "create table " +
                 entityMetadata.getTableName() +
