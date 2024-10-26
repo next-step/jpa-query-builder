@@ -25,4 +25,14 @@ class DmlQueryBuilderTest {
         assertThat(insertDml).isEqualTo("insert into users (nick_name, old, email) values ('test', 20, 'test@email.com');");
     }
 
+    @DisplayName("클래스 정보를 받아 select 쿼리를 생성한다")
+    @Test
+    void buildSelectQuery() {
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+
+        String selectDml = dmlQueryBuilder.buildSelectQuery(InsertPerson.class);
+
+        assertThat(selectDml).isEqualTo("select * from users;");
+    }
+
 }

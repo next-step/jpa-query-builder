@@ -2,6 +2,8 @@ package persistence.domain;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Table(name = "users")
 @Entity
 public class InsertPerson {
@@ -31,5 +33,18 @@ public class InsertPerson {
         this.age = age;
         this.email = email;
         this.index = index;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        InsertPerson that = (InsertPerson) object;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

@@ -13,4 +13,9 @@ public class DmlQueryBuilder {
                 String.join(", ", columns.getInsertColumnValues()) +
                 ");";
     }
+
+    public String buildSelectQuery(Class<?> clazz) {
+        TableName tableName = TableName.from(clazz);
+        return "select * from " + tableName.value() + ";";
+    }
 }
