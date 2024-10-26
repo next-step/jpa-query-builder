@@ -17,10 +17,11 @@ public final class DmlColumn {
     }
 
     public static DmlColumn from(Object o, Field field) {
-        if (!field.isAnnotationPresent(GeneratedValue.class)) {
-            return new DmlColumn(ColumnName.from(field), new DmlColumnValue(getFieldValue(o, field)), false);
-        }
-        return new DmlColumn(ColumnName.from(field), new DmlColumnValue(getFieldValue(o, field)), true);
+        return new DmlColumn(
+                ColumnName.from(field),
+                new DmlColumnValue(getFieldValue(o, field)),
+                field.isAnnotationPresent(GeneratedValue.class)
+        );
     }
 
     private static Object getFieldValue(Object object, Field field) {
