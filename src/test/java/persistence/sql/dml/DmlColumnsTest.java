@@ -20,9 +20,9 @@ class DmlColumnsTest {
                 .doesNotThrowAnyException();
     }
 
-    @DisplayName("Identity 전략을 사용하는 경우 id 컬럼을 제외한 컬럼 이름 목록을 반환한다")
+    @DisplayName("@Transient 필드를 제외한 컬럼 이름 목록을 반환한다")
     @Test
-    void getInsertColumnNames() {
+    void ignoreTransient() {
         IdentityStrategy entity = new IdentityStrategy(1L, "test", "transient");
         DmlColumns columns = DmlColumns.from(entity);
 
@@ -33,7 +33,7 @@ class DmlColumnsTest {
 
     @DisplayName("Identity 전략을 사용하는 경우 id 컬럼을 제외한 컬럼 이름 목록을 반환한다")
     @Test
-    void ignoreTransient() {
+    void getInsertColumnNames() {
         IdentityStrategy entity = new IdentityStrategy(1L, "test", "transient");
         DmlColumns columns = DmlColumns.from(entity);
 
