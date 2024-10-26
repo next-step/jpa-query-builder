@@ -4,18 +4,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class ColumnName {
     private final Class<?> clazz;
 
     public ColumnName(final Class<?> clazz) {this.clazz = clazz;}
 
-    String value() {
+    List<String> value() {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
                 .map(this::extractColumnName)
-                .collect(Collectors.joining(", "));
+                .toList();
     }
 
     private String extractColumnName(final Field field) {
