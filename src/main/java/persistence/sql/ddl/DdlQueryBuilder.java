@@ -1,5 +1,7 @@
 package persistence.sql.ddl;
 
+import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.ddl.dialect.H2Dialect;
 import persistence.sql.ddl.metadata.Column;
 import persistence.sql.ddl.metadata.EntityMetadata;
 
@@ -8,6 +10,16 @@ import java.util.stream.Collectors;
 public class DdlQueryBuilder {
 
     private static final String JOIN_DELIMITER = ", ";
+
+    private final Dialect dialect;
+
+    public DdlQueryBuilder() {
+        this(new H2Dialect());
+    }
+
+    public DdlQueryBuilder(Dialect dialect) {
+        this.dialect = dialect;
+    }
 
     public String buildCreateQuery(Class<?> clazz) {
         EntityMetadata entityMetadata = EntityMetadata.from(clazz);
@@ -39,9 +51,9 @@ public class DdlQueryBuilder {
 
     private String generateColumnDefinition(Column column) {
         if (column.hasOptions()) {
-            return column.getName() + " " + column.getSqlType() + " " + String.join(" ", column.getSqlOptions());
+            return column.getName() + " " + column.getSqlType(dialect) + " " + String.join(" ", column.getSqlOptions(dialect));
         }
 
-        return column.getName() + " " + column.getSqlType();
+        return column.getName() + " " + column.getSqlType(dialect);
     }
 }

@@ -2,6 +2,8 @@ package persistence.sql.ddl.metadata;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.sql.ddl.dialect.Dialect;
+import persistence.sql.ddl.dialect.H2Dialect;
 import persistence.sql.ddl.fixture.EntityWithColumn;
 import persistence.sql.ddl.fixture.IdentityStrategy;
 import persistence.sql.ddl.fixture.IncludeId;
@@ -13,6 +15,8 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class ColumnTest {
 
+    private final Dialect dialect = new H2Dialect();
+
     @DisplayName("필드를 받아 컬럼으로 변환한다")
     @Test
     void fromField() throws Exception {
@@ -21,7 +25,7 @@ class ColumnTest {
 
         assertSoftly(softly -> {
             softly.assertThat(column.getName()).isEqualTo("name");
-            softly.assertThat(column.getSqlType()).isEqualTo("varchar(255)");
+            softly.assertThat(column.getSqlType(dialect)).isEqualTo("varchar(255)");
             softly.assertThat(column.primaryKey()).isFalse();
         });
     }
@@ -34,7 +38,7 @@ class ColumnTest {
 
         assertSoftly(softly -> {
             softly.assertThat(column.getName()).isEqualTo("id");
-            softly.assertThat(column.getSqlType()).isEqualTo("bigint");
+            softly.assertThat(column.getSqlType(dialect)).isEqualTo("bigint");
             softly.assertThat(column.primaryKey()).isTrue();
         });
     }
@@ -45,7 +49,7 @@ class ColumnTest {
         Field field = IdentityStrategy.class.getDeclaredField("id");
         Column autoIncrementColumn = Column.from(field);
 
-        assertThat(autoIncrementColumn.options()).contains(ColumnOption.AUTO_INCREMENT);
+        assertThat(autoIncrementColumn.options()).contains(ColumnOption.IDENTITY);
     }
 
     @DisplayName("nullable=false인 필드는 not null 제약조건을 갖는다.")
@@ -75,6 +79,6 @@ class ColumnTest {
 
         Column column = Column.from(field);
 
-        assertThat(column.getSqlOptions()).containsExactly("not null");
+        assertThat(column.getSqlOptions(dialect)).containsExactly("not null");
     }
 }
