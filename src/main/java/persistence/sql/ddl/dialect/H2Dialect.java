@@ -18,7 +18,7 @@ public class H2Dialect implements Dialect {
     @Override
     public String getSqlType(Class<?> columnType) {
         if (!JAVA_TO_SQL_TYPES.containsKey(columnType)) {
-            throw new IllegalArgumentException("No column type found for " + columnType);
+            throw new IllegalArgumentException("지원하지 않는 컬럼 타입: " + columnType);
         }
 
         return JAVA_TO_SQL_TYPES.get(columnType);
