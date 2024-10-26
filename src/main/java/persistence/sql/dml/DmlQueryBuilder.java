@@ -24,4 +24,9 @@ public class DmlQueryBuilder {
         return "select * from " + tableName.value() + " where id = " + id + ";";
     }
 
+    public String buildDeleteQuery(Class<?> clazz, Object id) {
+        TableName tableName = TableName.from(clazz);
+        return "delete from " + tableName.value() + " where id = " + id + ";";
+    }
+
 }
