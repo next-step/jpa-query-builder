@@ -1,5 +1,7 @@
 package persistence.sql.ddl.metadata;
 
+import persistence.sql.TableName;
+
 import java.util.List;
 
 public class EntityMetadata {

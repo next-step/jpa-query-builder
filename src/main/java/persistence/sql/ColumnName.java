@@ -1,4 +1,4 @@
-package persistence.sql.ddl.metadata;
+package persistence.sql;
 
 import jakarta.persistence.Column;
 import persistence.utils.StringUtils;
