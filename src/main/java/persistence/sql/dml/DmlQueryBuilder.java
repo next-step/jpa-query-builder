@@ -18,4 +18,10 @@ public class DmlQueryBuilder {
         TableName tableName = TableName.from(clazz);
         return "select * from " + tableName.value() + ";";
     }
+
+    public String buildSelectQuery(Class<?> clazz, Object id) {
+        TableName tableName = TableName.from(clazz);
+        return "select * from " + tableName.value() + " where id = " + id + ";";
+    }
+
 }

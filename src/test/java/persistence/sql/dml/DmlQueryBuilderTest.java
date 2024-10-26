@@ -35,4 +35,13 @@ class DmlQueryBuilderTest {
         assertThat(selectDml).isEqualTo("select * from users;");
     }
 
+    @DisplayName("클래스 정보와 id를 받아 select 쿼리를 생성한다")
+    @Test
+    void buildSelectQueryWithId() {
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+
+        String selectDml = dmlQueryBuilder.buildSelectQuery(InsertPerson.class, 1L);
+
+        assertThat(selectDml).isEqualTo("select * from users where id = 1;");
+    }
 }

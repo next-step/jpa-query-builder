@@ -4,7 +4,8 @@
 
 ### 요구 사항
 
-- [X] 클래스 정보를 받아 select 쿼리를 생선하는 기능을 추가한다.
+- [X] 클래스 정보와 id를 받아 select 쿼리를 생성하는 기능을 추가한다.
+- [X] 클래스 정보를 받아 select 쿼리를 생성하는 기능을 추가한다.
 - [X] insert query를 만든다.
   - [X] `@GeneratedValue` 필드는 제외한다.
   - [X] `@Transient` 필드는 제외한다.
