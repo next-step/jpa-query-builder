@@ -70,10 +70,16 @@ public class DmlQueryBuilder {
 
     public String insert(final Class<?> clazz, final Object object) {
         final String tableName = new TableName(clazz).value();
-        final String columns = new ColumnName(clazz).value();
+        final String columns = formatColumns(clazz);
         final List<Object> value = new InsertValues(clazz).value(object);
 
         return String.format(INSERT_TEMPLATE, tableName, columns, formatSqlValues(value));
+    }
+
+    private String formatColumns(final Class<?> clazz) {
+        final List<String> columns = new ColumnName(clazz).value();
+        return columns.stream()
+                .collect(Collectors.joining(", "));
     }
 
     private String formatSqlValues(final List<Object> value) {
