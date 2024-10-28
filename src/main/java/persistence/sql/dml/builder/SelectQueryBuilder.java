@@ -15,11 +15,9 @@ public class SelectQueryBuilder {
     private static final String SELECT = "select";
     private static final String FROM = "from";
 
-    private final Dialect dialect;
     private final StringBuilder queryString;
 
     public SelectQueryBuilder(Dialect dialect) {
-        this.dialect = dialect;
         this.queryString = new StringBuilder();
     }
 
@@ -32,12 +30,12 @@ public class SelectQueryBuilder {
     }
 
     public SelectQueryBuilder select(List<ColumnName> columnNames) {
-        this.queryString.append(" ").append(SELECT).append(" ").append(columnClause(columnNames));
+        this.queryString.append(SELECT).append(" ").append(columnClause(columnNames));
         return this;
     }
 
     public SelectQueryBuilder from(TableName table) {
-        this.queryString.append(FROM).append(" ").append(table.name());
+        this.queryString.append(" ").append(FROM).append(" ").append(table.name());
         return this;
     }
 
