@@ -1,5 +1,7 @@
 package common;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -34,4 +36,11 @@ public class AnnotationValidation {
     public static Predicate<Field> notPredicate(Class<? extends Annotation> annotationClass) {
         return field -> isNotPresent(field, annotationClass);
     }
+
+    @NotNull
+    public static Predicate<Field> notIdentifier() {
+        return field -> isNotPresent(field, Id.class)
+                && isNotPresent(field, GeneratedValue.class);
+    }
+
 }
