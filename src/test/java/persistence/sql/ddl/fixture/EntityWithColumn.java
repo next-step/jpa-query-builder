@@ -17,4 +17,30 @@ public class EntityWithColumn {
 
     @Column(nullable = false)
     private String notNullColumn;
+
+    protected EntityWithColumn() {
+    }
+
+    public EntityWithColumn(Long id, String withColumn, String withoutColumn, String notNullColumn) {
+        this.id = id;
+        this.withColumn = withColumn;
+        this.withoutColumn = withoutColumn;
+        this.notNullColumn = notNullColumn;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getWithColumn() {
+        return withColumn;
+    }
+
+    public String getWithoutColumn() {
+        return withoutColumn;
+    }
+
+    public String getNotNullColumn() {
+        return notNullColumn;
+    }
 }

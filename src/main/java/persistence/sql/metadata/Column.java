@@ -1,8 +1,9 @@
-package persistence.sql.ddl.metadata;
+package persistence.sql.metadata;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import persistence.sql.ddl.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public record Column(
         ColumnName name,
-        ColumnType columnType,
+        Class<?> columnType,
         List<ColumnOption> options,
         boolean primaryKey
 ) {
@@ -18,7 +19,7 @@ public record Column(
     public static Column from(Field field) {
         return new Column(
                 ColumnName.from(field),
-                ColumnType.of(field.getType()),
+                field.getType(),
                 extractOptions(field),
                 field.isAnnotationPresent(Id.class)
         );
@@ -32,7 +33,7 @@ public record Column(
         }
 
         if (isIdentityStrategy(field)) {
-            options.add(ColumnOption.AUTO_INCREMENT);
+            options.add(ColumnOption.IDENTITY);
         }
 
         return options;
@@ -52,21 +53,29 @@ public record Column(
                 && !field.getDeclaredAnnotation(jakarta.persistence.Column.class).nullable();
     }
 
-    public String getSqlType() {
-        return columnType.getSqlType();
+    public String getSqlType(Dialect dialect) {
+        return dialect.getSqlType(columnType);
     }
 
     public String getName() {
         return name.value();
     }
 
-    public List<String> getSqlOptions() {
+    public List<String> getSqlOptions(Dialect dialect) {
         return options.stream()
-                .map(ColumnOption::getOption)
+                .map(dialect::getClause)
                 .toList();
     }
 
     public boolean hasOptions() {
         return !options.isEmpty();
+    }
+
+    public boolean hasNotIdentityStrategy() {
+        return !options.contains(ColumnOption.IDENTITY);
+    }
+
+    public boolean sameName(Field field) {
+        return name.equals(ColumnName.from(field));
     }
 }

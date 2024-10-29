@@ -1,4 +1,4 @@
-package persistence.sql.ddl.metadata;
+package persistence.sql.metadata;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,0 +1,85 @@
+package persistence.sql.metadata;
+
+import jakarta.persistence.Transient;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ColumnMetadata<T> {
+    private final List<Column> columns;
+    private final List<Column> insertColumns;
+
+    private ColumnMetadata(List<Column> columns) {
+        validate(columns);
+        this.columns = columns;
+        this.insertColumns = getInsertColumns(columns);
+    }
+
+    private List<Column> getInsertColumns(List<Column> columns) {
+        return columns.stream()
+                .filter(Column::hasNotIdentityStrategy)
+                .toList();
+    }
+
+    public static <T> ColumnMetadata<T> from(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(ColumnMetadata::isNotTransient)
+                .map(Column::from)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), ColumnMetadata::new));
+    }
+
+    private static boolean isNotTransient(Field field) {
+        return !field.isAnnotationPresent(Transient.class);
+    }
+
+    private void validate(List<Column> columns) {
+        boolean hasIdAnnotation = columns.stream()
+                .anyMatch(Column::primaryKey);
+
+        if (!hasIdAnnotation) {
+            throw new IllegalArgumentException("@Id가 필수로 지정되어야 합니다");
+        }
+    }
+
+    public List<Column> getColumns() {
+        return Collections.unmodifiableList(columns);
+    }
+
+    public Column getPrimaryKey() {
+        return columns.stream()
+                .filter(Column::primaryKey)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    public List<String> getInsertColumnNames() {
+        return insertColumns.stream()
+                .map(Column::getName)
+                .toList();
+    }
+
+    public List<String> getInsertColumnValues(T entity) {
+        return Arrays.stream(entity.getClass().getDeclaredFields())
+                .filter(this::isInsertColumnName)
+                .map(field -> getValue(entity, field))
+                .map(ColumnValue::toString)
+                .toList();
+    }
+
+    private boolean isInsertColumnName(Field field) {
+        return insertColumns.stream()
+                .anyMatch(column -> column.sameName(field));
+    }
+
+    private ColumnValue getValue(Object object, Field field) {
+        field.setAccessible(true);
+        try {
+            return new ColumnValue(field.get(object));
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("접근할 수 없는 필드입니다: " + field.getName());
+        }
+    }
+}
