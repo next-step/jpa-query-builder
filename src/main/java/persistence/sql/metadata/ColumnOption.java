@@ -1,4 +1,4 @@
-package persistence.sql.ddl.metadata;
+package persistence.sql.metadata;
 
 public enum ColumnOption {
     NOT_NULL,

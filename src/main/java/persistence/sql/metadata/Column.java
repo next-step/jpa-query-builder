@@ -1,9 +1,8 @@
-package persistence.sql.ddl.metadata;
+package persistence.sql.metadata;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import persistence.sql.ColumnName;
 import persistence.sql.ddl.dialect.Dialect;
 
 import java.lang.reflect.Field;
@@ -70,5 +69,13 @@ public record Column(
 
     public boolean hasOptions() {
         return !options.isEmpty();
+    }
+
+    public boolean hasNotIdentityStrategy() {
+        return !options.contains(ColumnOption.IDENTITY);
+    }
+
+    public boolean sameName(Field field) {
+        return name.equals(ColumnName.from(field));
     }
 }

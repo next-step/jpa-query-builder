@@ -1,7 +1,9 @@
-package persistence.sql;
+package persistence.sql.metadata;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import persistence.sql.ddl.fixture.EntityWithTable;
 import persistence.sql.ddl.fixture.EntityWithoutTable;
 import persistence.sql.ddl.fixture.IncludeId;
@@ -10,6 +12,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TableNameTest {
+
+    @DisplayName("이름은 비어있을 수 없다")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void invalidName(String name) {
+        assertThatThrownBy(() -> new TableName(name))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 
     @DisplayName("@Entity를 포함하지 않은 경우 예외가 발생한다")
     @Test

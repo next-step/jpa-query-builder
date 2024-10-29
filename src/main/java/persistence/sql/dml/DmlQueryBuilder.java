@@ -1,12 +1,12 @@
 package persistence.sql.dml;
 
-import persistence.sql.ddl.metadata.EntityMetadata;
+import persistence.sql.metadata.EntityMetadata;
 
 public class DmlQueryBuilder<T> {
 
-    private final EntityMetadata entityMetadata;
+    private final EntityMetadata<T> entityMetadata;
 
-    private DmlQueryBuilder(EntityMetadata entityMetadata) {
+    private DmlQueryBuilder(EntityMetadata<T> entityMetadata) {
         this.entityMetadata = entityMetadata;
     }
 
@@ -15,11 +15,10 @@ public class DmlQueryBuilder<T> {
     }
 
     public String buildInsertQuery(T entity) {
-        DmlColumns columns = DmlColumns.from(entity);
         return "insert into " + entityMetadata.getTableName() + " (" +
-                String.join(", ", columns.getInsertColumnNames()) +
+                String.join(", ", entityMetadata.getInsertColumnNames()) +
                 ") values (" +
-                String.join(", ", columns.getInsertColumnValues()) +
+                String.join(", ", entityMetadata.getInsertColumnValues(entity)) +
                 ");";
     }
 

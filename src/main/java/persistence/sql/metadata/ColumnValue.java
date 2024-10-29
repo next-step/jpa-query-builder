@@ -1,4 +1,4 @@
-package persistence.sql;
+package persistence.sql.metadata;
 
 public record ColumnValue(
         Object value

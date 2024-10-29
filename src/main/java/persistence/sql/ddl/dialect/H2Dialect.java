@@ -1,6 +1,6 @@
 package persistence.sql.ddl.dialect;
 
-import persistence.sql.ddl.metadata.ColumnOption;
+import persistence.sql.metadata.ColumnOption;
 
 import java.util.Map;
 

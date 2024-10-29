@@ -2,8 +2,8 @@ package persistence.sql.ddl;
 
 import persistence.sql.ddl.dialect.Dialect;
 import persistence.sql.ddl.dialect.H2Dialect;
-import persistence.sql.ddl.metadata.Column;
-import persistence.sql.ddl.metadata.EntityMetadata;
+import persistence.sql.metadata.Column;
+import persistence.sql.metadata.EntityMetadata;
 
 import java.util.stream.Collectors;
 
@@ -22,7 +22,7 @@ public class DdlQueryBuilder {
     }
 
     public String buildCreateQuery(Class<?> clazz) {
-        EntityMetadata entityMetadata = EntityMetadata.from(clazz);
+        EntityMetadata<?> entityMetadata = EntityMetadata.from(clazz);
         return "create table " +
                 entityMetadata.getTableName() +
                 " (" +
@@ -31,19 +31,19 @@ public class DdlQueryBuilder {
     }
 
     public String buildDropDdl(Class<?> clazz) {
-        EntityMetadata entityMetadata = EntityMetadata.from(clazz);
+        EntityMetadata<?> entityMetadata = EntityMetadata.from(clazz);
         return "drop table " + entityMetadata.getTableName() + ";";
     }
 
-    private String getDefinitions(EntityMetadata entityMetadata) {
+    private String getDefinitions(EntityMetadata<?> entityMetadata) {
         return generateColumnDefinitions(entityMetadata) + ", primary key (" + generatePrimaryKeyNames(entityMetadata) + ")";
     }
 
-    private String generatePrimaryKeyNames(EntityMetadata entityMetadata) {
+    private String generatePrimaryKeyNames(EntityMetadata<?> entityMetadata) {
         return String.join(JOIN_DELIMITER, entityMetadata.getPrimaryKeyName());
     }
 
-    private String generateColumnDefinitions(EntityMetadata entityMetadata) {
+    private String generateColumnDefinitions(EntityMetadata<?> entityMetadata) {
         return entityMetadata.getColumns().stream()
                 .map(this::generateColumnDefinition)
                 .collect(Collectors.joining(JOIN_DELIMITER));
