@@ -20,10 +20,10 @@ class EntityMetadataTest {
 
     @DisplayName("기본키 이름 목록을 반환한다")
     @Test
-    void getPrimaryKeyNames() {
+    void getPrimaryKeyName() {
         EntityMetadata entityMetadata = EntityMetadata.from(EntityWithTable.class);
 
-        assertThat(entityMetadata.getPrimaryKeyNames()).containsExactly("id");
+        assertThat(entityMetadata.getPrimaryKeyName()).isEqualTo("id");
     }
 
     @DisplayName("컬럼 목록을 반환한다")

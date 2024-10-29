@@ -24,10 +24,8 @@ public class EntityMetadata {
         return tableName.value();
     }
 
-    public List<String> getPrimaryKeyNames() {
-        return columnMetadata.getPrimaryKeys().stream()
-                .map(Column::getName)
-                .toList();
+    public String getPrimaryKeyName() {
+        return columnMetadata.getPrimaryKey().getName();
     }
 
     public List<Column> getColumns() {

@@ -1,32 +1,38 @@
 package persistence.sql.dml;
 
-import persistence.sql.TableName;
+import persistence.sql.ddl.metadata.EntityMetadata;
 
-public class DmlQueryBuilder {
+public class DmlQueryBuilder<T> {
 
-    public String buildInsertQuery(Object instance) {
-        TableName tableName = TableName.from(instance.getClass());
-        DmlColumns columns = DmlColumns.from(instance);
-        return "insert into " + tableName.value() + " (" +
+    private final EntityMetadata entityMetadata;
+
+    private DmlQueryBuilder(EntityMetadata entityMetadata) {
+        this.entityMetadata = entityMetadata;
+    }
+
+    public static <T> DmlQueryBuilder<T> from(Class<T> entityClass) {
+        return new DmlQueryBuilder<>(EntityMetadata.from(entityClass));
+    }
+
+    public String buildInsertQuery(T entity) {
+        DmlColumns columns = DmlColumns.from(entity);
+        return "insert into " + entityMetadata.getTableName() + " (" +
                 String.join(", ", columns.getInsertColumnNames()) +
                 ") values (" +
                 String.join(", ", columns.getInsertColumnValues()) +
                 ");";
     }
 
-    public String buildSelectQuery(Class<?> clazz) {
-        TableName tableName = TableName.from(clazz);
-        return "select * from " + tableName.value() + ";";
+    public String buildSelectByIdQuery() {
+        return "select * from " + entityMetadata.getTableName() + ";";
     }
 
-    public String buildSelectQuery(Class<?> clazz, Object id) {
-        TableName tableName = TableName.from(clazz);
-        return "select * from " + tableName.value() + " where id = " + id + ";";
+    public String buildSelectByIdQuery(Object id) {
+        return "select * from " + entityMetadata.getTableName() + " where " + entityMetadata.getPrimaryKeyName() + " = " + id + ";";
     }
 
-    public String buildDeleteQuery(Class<?> clazz, Object id) {
-        TableName tableName = TableName.from(clazz);
-        return "delete from " + tableName.value() + " where id = " + id + ";";
+    public String buildDeleteByIdQuery(Object id) {
+        return "delete from " + entityMetadata.getTableName() + " where " + entityMetadata.getPrimaryKeyName() + " = " + id + ";";
     }
 
 }

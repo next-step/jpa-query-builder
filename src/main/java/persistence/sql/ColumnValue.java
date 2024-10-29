@@ -1,6 +1,8 @@
-package persistence.sql.dml;
+package persistence.sql;
 
-public record DmlColumnValue(Object value) {
+public record ColumnValue(
+        Object value
+) {
 
     @Override
     public String toString() {

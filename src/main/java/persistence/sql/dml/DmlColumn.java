@@ -2,15 +2,16 @@ package persistence.sql.dml;
 
 import jakarta.persistence.GeneratedValue;
 import persistence.sql.ColumnName;
+import persistence.sql.ColumnValue;
 
 import java.lang.reflect.Field;
 
-public final class DmlColumn {
+public class DmlColumn {
     private final ColumnName name;
-    private final DmlColumnValue value;
+    private final ColumnValue value;
     private final boolean generatedValue;
 
-    private DmlColumn(ColumnName name, DmlColumnValue value, boolean generatedValue) {
+    private DmlColumn(ColumnName name, ColumnValue value, boolean generatedValue) {
         this.name = name;
         this.value = value;
         this.generatedValue = generatedValue;
@@ -19,7 +20,7 @@ public final class DmlColumn {
     public static DmlColumn from(Object o, Field field) {
         return new DmlColumn(
                 ColumnName.from(field),
-                new DmlColumnValue(getFieldValue(o, field)),
+                new ColumnValue(getFieldValue(o, field)),
                 field.isAnnotationPresent(GeneratedValue.class)
         );
     }

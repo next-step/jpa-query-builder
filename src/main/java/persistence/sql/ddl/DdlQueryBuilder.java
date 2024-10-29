@@ -40,7 +40,7 @@ public class DdlQueryBuilder {
     }
 
     private String generatePrimaryKeyNames(EntityMetadata entityMetadata) {
-        return String.join(JOIN_DELIMITER, entityMetadata.getPrimaryKeyNames());
+        return String.join(JOIN_DELIMITER, entityMetadata.getPrimaryKeyName());
     }
 
     private String generateColumnDefinitions(EntityMetadata entityMetadata) {

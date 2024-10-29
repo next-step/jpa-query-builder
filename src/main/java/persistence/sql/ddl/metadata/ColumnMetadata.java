@@ -40,9 +40,10 @@ public class ColumnMetadata {
         return Collections.unmodifiableList(columns);
     }
 
-    public List<Column> getPrimaryKeys() {
+    public Column getPrimaryKey() {
         return columns.stream()
                 .filter(Column::primaryKey)
-                .toList();
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 }
