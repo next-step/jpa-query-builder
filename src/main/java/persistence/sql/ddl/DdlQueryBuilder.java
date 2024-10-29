@@ -30,7 +30,7 @@ public class DdlQueryBuilder {
                 ");";
     }
 
-    public String buildDropDdl(Class<?> clazz) {
+    public String buildDropQuery(Class<?> clazz) {
         EntityMetadata<?> entityMetadata = EntityMetadata.from(clazz);
         return "drop table " + entityMetadata.getTableName() + ";";
     }

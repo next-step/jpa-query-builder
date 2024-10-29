@@ -27,17 +27,17 @@ class DmlQueryBuilderTest {
 
     @DisplayName("클래스 정보를 받아 select 쿼리를 생성한다")
     @Test
-    void buildSelectByIdQuery() {
+    void buildSelectAllQuery() {
         DmlQueryBuilder<InsertPerson> dmlQueryBuilder = DmlQueryBuilder.from(InsertPerson.class);
 
-        String selectDml = dmlQueryBuilder.buildSelectByIdQuery();
+        String selectDml = dmlQueryBuilder.buildSelectAllQuery();
 
         assertThat(selectDml).isEqualTo("select * from users;");
     }
 
     @DisplayName("클래스 정보와 id를 받아 select 쿼리를 생성한다")
     @Test
-    void buildSelectByIdQueryWithId() {
+    void buildSelectAll() {
         DmlQueryBuilder<InsertPerson> dmlQueryBuilder = DmlQueryBuilder.from(InsertPerson.class);
 
         String selectDml = dmlQueryBuilder.buildSelectByIdQuery(1L);

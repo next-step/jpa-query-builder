@@ -30,7 +30,7 @@ public class Application {
             jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(insertPerson2));
 
             List<InsertPerson> results = jdbcTemplate.query(
-                    dmlQueryBuilder.buildSelectByIdQuery(),
+                    dmlQueryBuilder.buildSelectAllQuery(),
                     rs -> new InsertPerson(
                             rs.getLong("id"),
                             rs.getString("nick_name"),

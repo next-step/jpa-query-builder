@@ -20,7 +20,7 @@ class DdlQueryBuilderTest {
     void dropDdl() {
         String expectedQuery = "drop table users;";
         DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
-        String dropDdl = ddlQueryBuilder.buildDropDdl(Person.class);
+        String dropDdl = ddlQueryBuilder.buildDropQuery(Person.class);
 
         assertThat(dropDdl).isEqualTo(expectedQuery);
     }

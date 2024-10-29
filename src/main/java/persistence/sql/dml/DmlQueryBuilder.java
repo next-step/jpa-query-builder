@@ -22,7 +22,7 @@ public class DmlQueryBuilder<T> {
                 ");";
     }
 
-    public String buildSelectByIdQuery() {
+    public String buildSelectAllQuery() {
         return "select * from " + entityMetadata.getTableName() + ";";
     }
 
