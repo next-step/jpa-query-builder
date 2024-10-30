@@ -20,7 +20,7 @@ public class SelectQueryBuilder {
         return stringBuilder.toString();
     }
 
-    public static String generateQuery(Class<?> entityClass, Object id) {
+    public static String generateQuery(Class<?> entityClass, Long id) {
         String tableName = NameUtils.getTableName(entityClass);
         String idColumnName = NameUtils.getColumnName(getIdColumn(entityClass));
 

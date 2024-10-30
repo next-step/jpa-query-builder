@@ -13,7 +13,7 @@ import persistence.sql.dml.update.UpdateQueryBuilder;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
+public class EntityManagerImpl<T> implements EntityManager<T> {
     private static final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
 
     private final JdbcTemplate jdbcTemplate;
@@ -23,7 +23,7 @@ public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
     }
 
     @Override
-    public T find(Class<T> clazz, U id) {
+    public T find(Class<T> clazz, Long id) {
         if (id == null) {
             return null;
         }
@@ -33,7 +33,7 @@ public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
 
     @Override
     public void persist(T newEntity) {
-        U idValue = getIdValue(newEntity);
+        Long idValue = getIdValue(newEntity);
         T originalEntity = find((Class<T>) newEntity.getClass(), idValue);
 
         if (idValue == null || originalEntity == null) {
@@ -51,14 +51,14 @@ public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
         jdbcTemplate.execute(deleteQuery);
     }
 
-    private U getIdValue(T entity) {
+    private Long getIdValue(T entity) {
         Field[] declaredFields = entity.getClass().getDeclaredFields();
         Field idField = Arrays.stream(declaredFields)
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findAny().orElseThrow();
         idField.setAccessible(true);
         try {
-            return (U) idField.get(entity);
+            return (Long) idField.get(entity);
         } catch (IllegalAccessException e) {
             logger.error("Inappropriate entity class!");
             throw new RuntimeException(e);
