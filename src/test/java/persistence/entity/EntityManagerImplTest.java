@@ -4,6 +4,8 @@ import database.DatabaseServer;
 import database.H2;
 import example.entity.Person;
 import jdbc.JdbcTemplate;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -15,19 +17,32 @@ import java.sql.SQLException;
 public class EntityManagerImplTest {
     private static final Logger logger = LoggerFactory.getLogger(EntityManagerImplTest.class);
 
-    @Test
-    @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
-    void persistAndFindAndRemoveTest() throws SQLException {
-        final DatabaseServer server = new H2();
+    private static DatabaseServer server;
+    private static JdbcTemplate jdbcTemplate;
+    private static EntityScanner entityScanner;
+
+    @BeforeEach
+    void init() throws SQLException {
+        server = new H2();
         server.start();
 
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+        jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-        EntityManagerImpl<Person, Long> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
-
-        EntityScanner entityScanner = new EntityScanner();
+        entityScanner = new EntityScanner();
         entityScanner.scan("example.entity");
         entityScanner.getDdlCreateQueries().forEach(jdbcTemplate::execute);
+    }
+
+    @AfterEach
+    void teardown() {
+        entityScanner.getDdlDropQueries().forEach(jdbcTemplate::execute);
+        server.stop();
+    }
+
+    @Test
+    @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
+    void persistAndFindAndRemoveTest() {
+        EntityManagerImpl<Person, Long> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
 
         Person inserting = new Person();
         inserting.setName("이름");
@@ -45,17 +60,8 @@ public class EntityManagerImplTest {
 
     @Test
     @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
-    void persistAndUpdateTest() throws SQLException {
-        final DatabaseServer server = new H2();
-        server.start();
-
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
-
+    void persistAndUpdateTest() {
         EntityManagerImpl<Person, Long> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
-
-        EntityScanner entityScanner = new EntityScanner();
-        entityScanner.scan("example.entity");
-        entityScanner.getDdlCreateQueries().forEach(jdbcTemplate::execute);
 
         Person inserting = new Person();
         inserting.setName("이름");

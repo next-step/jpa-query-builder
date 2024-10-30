@@ -40,8 +40,8 @@ public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
             String insertQuery = InsertQueryBuilder.generateQuery(newEntity);
             jdbcTemplate.execute(insertQuery);
         } else {
-            String updateQueyr = UpdateQueryBuilder.generateQuery(newEntity);
-            jdbcTemplate.execute(updateQueyr);
+            String updateQuery = UpdateQueryBuilder.generateQuery(newEntity);
+            jdbcTemplate.execute(updateQuery);
         }
     }
 
