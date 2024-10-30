@@ -10,8 +10,8 @@ import java.util.List;
 
 import static common.AnnotationValidation.isNotPresent;
 
-public record SelectQuery(TableName tableName, List<ColumnName> columnNames) {
-    public SelectQuery(Class<?> clazz) {
+public record SelectColumnName(TableName tableName, List<ColumnName> columnNames) {
+    public SelectColumnName(Class<?> clazz) {
         this( new TableName(clazz), Arrays.stream(clazz.getDeclaredFields()).filter(field -> isNotPresent(field, Transient.class)).map(ColumnName::new).toList());
     }
 

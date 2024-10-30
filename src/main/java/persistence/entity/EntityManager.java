@@ -6,7 +6,7 @@ import persistence.metadata.WhereCondition;
 import persistence.sql.dml.builder.InsertQueryBuilder;
 import persistence.sql.dml.builder.SelectQueryBuilder;
 import persistence.sql.dml.query.InsertQuery;
-import persistence.sql.dml.query.SelectQuery;
+import persistence.sql.dml.query.SelectColumnName;
 
 import java.sql.Connection;
 import java.util.List;
@@ -23,7 +23,7 @@ public class EntityManager {
     }
 
     public <T> T find(Class<T> clazz, Long id) {
-        SelectQuery extractor = new SelectQuery(clazz);
+        SelectColumnName extractor = new SelectColumnName(clazz);
         String sql = this.selectQueryBuilder
                 .select(extractor.columnNames())
                 .from(extractor.tableName())
