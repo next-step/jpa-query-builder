@@ -16,7 +16,7 @@ public class InsertQueryBuilder {
     private final Dialect dialect;
     private final StringBuilder queryString;
 
-    private InsertQueryBuilder(Dialect dialect) {
+    public InsertQueryBuilder(Dialect dialect) {
         this.dialect = dialect;
         this.queryString = new StringBuilder();
     }
