@@ -42,7 +42,7 @@ public class EntityManagerImplTest {
     @Test
     @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
     void persistAndFindAndRemoveTest() {
-        EntityManagerImpl<Person, Long> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
+        EntityManagerImpl<Person> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
 
         Person inserting = new Person();
         inserting.setName("이름");
@@ -61,7 +61,7 @@ public class EntityManagerImplTest {
     @Test
     @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
     void persistAndUpdateTest() {
-        EntityManagerImpl<Person, Long> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
+        EntityManagerImpl<Person> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
 
         Person inserting = new Person();
         inserting.setName("이름");
