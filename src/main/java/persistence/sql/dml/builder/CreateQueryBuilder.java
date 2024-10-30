@@ -35,14 +35,18 @@ public class CreateQueryBuilder {
 
         queryString.append( definePrimaryKeyColumn(identifier, dialect) ).append(", ");
         queryString.append(
-                columns.stream()
-                        .map(column -> define(column, dialect))
-                        .collect(Collectors.joining(", "))
+                getColumnMetaValue(columns)
         );
         queryString.append( definePrimaryKeyConstraint(identifier) );
 
         queryString.append(")");
         return this;
+    }
+
+    private String getColumnMetaValue(List<ColumnMeta> columns) {
+        return columns.stream()
+                .map(column -> define(column, dialect))
+                .collect(Collectors.joining(", "));
     }
 
     public static String define(ColumnMeta column, Dialect dialect) {
