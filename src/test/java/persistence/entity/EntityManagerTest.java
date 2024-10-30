@@ -48,4 +48,16 @@ class EntityManagerTest {
         );
     }
 
+    @Test
+    @DisplayName(" Person Entity 저장 ")
+    void persistPersonHappyCaseTest() throws SQLException {
+        //given
+        Person person = 완벽한_사람_객체(1L, "장장이", 22, "qwerty@naver.com", 1);
+        EntityManager em = new EntityManager(server.getConnection());
+
+        //then
+        assertDoesNotThrow(() -> em.persist(person));
+
+    }
+
 }
