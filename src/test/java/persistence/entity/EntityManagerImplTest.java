@@ -42,7 +42,7 @@ public class EntityManagerImplTest {
     @Test
     @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
     void persistAndFindAndRemoveTest() {
-        EntityManagerImpl<Person> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
+        EntityManagerImpl entityManagerImpl = new EntityManagerImpl(jdbcTemplate);
 
         Person inserting = new Person();
         inserting.setName("이름");
@@ -51,7 +51,7 @@ public class EntityManagerImplTest {
 
         entityManagerImpl.persist(inserting);
 
-        Person found = entityManagerImpl.find(Person.class, 1L);
+        Person found = (Person) entityManagerImpl.find(Person.class, 1L);
 
         logger.debug("Found : {}", found);
 
@@ -61,7 +61,7 @@ public class EntityManagerImplTest {
     @Test
     @DisplayName("USERS 테이블 생성 > 데이터 저장 > 조회 테스트")
     void persistAndUpdateTest() {
-        EntityManagerImpl<Person> entityManagerImpl = new EntityManagerImpl<>(jdbcTemplate);
+        EntityManagerImpl entityManagerImpl = new EntityManagerImpl(jdbcTemplate);
 
         Person inserting = new Person();
         inserting.setName("이름");
@@ -70,7 +70,7 @@ public class EntityManagerImplTest {
 
         entityManagerImpl.persist(inserting);
 
-        Person found = entityManagerImpl.find(Person.class, 1L);
+        Person found = (Person) entityManagerImpl.find(Person.class, 1L);
 
         logger.debug("Found : {}", found);
 
@@ -80,7 +80,7 @@ public class EntityManagerImplTest {
 
         entityManagerImpl.persist(found);
 
-        Person reFound = entityManagerImpl.find(Person.class, 1L);
+        Person reFound = (Person) entityManagerImpl.find(Person.class, 1L);
 
         logger.debug("Re found : {}", reFound);
     }

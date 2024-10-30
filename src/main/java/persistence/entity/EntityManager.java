@@ -1,9 +1,9 @@
 package persistence.entity;
 
-public interface EntityManager<T> {
-    T find(Class<T> clazz, Long id);
+public interface EntityManager {
+    Object find(Class<?> clazz, Long id);
 
-    void persist(T entity);
+    void persist(Object entity);
 
-    void remove(T entity);
+    void remove(Object entity);
 }
