@@ -60,4 +60,17 @@ class EntityManagerTest {
 
     }
 
+    @Test
+    @DisplayName(" Person Entity 삭제 ")
+    void removePersonHappyCaseTest() throws SQLException {
+        //given
+        Person person = 완벽한_사람_객체(1L, "장장이", 22, "qwerty@naver.com", 1);
+        insert(person, new JdbcTemplate(server.getConnection()));
+        EntityManager em = new EntityManager(server.getConnection());
+
+        //then
+        assertDoesNotThrow(() -> em.remove(person));
+
+    }
+
 }

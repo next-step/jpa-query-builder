@@ -3,8 +3,10 @@ package persistence.entity;
 import jdbc.JdbcTemplate;
 import persistence.dialect.H2Dialect;
 import persistence.metadata.WhereCondition;
+import persistence.sql.dml.builder.DeleteQueryBuilder;
 import persistence.sql.dml.builder.InsertQueryBuilder;
 import persistence.sql.dml.builder.SelectQueryBuilder;
+import persistence.sql.dml.query.DeleteQuery;
 import persistence.sql.dml.query.InsertQuery;
 import persistence.sql.dml.query.SelectColumnName;
 
@@ -44,6 +46,9 @@ public class EntityManager {
     }
 
     public void remove(Object object) {
-
+        DeleteQuery query = new DeleteQuery(object.getClass());
+        String queryString = DeleteQueryBuilder.builder(new H2Dialect())
+                .delete(query.tableName())
+                .build();
     }
 }
