@@ -20,7 +20,7 @@ public class SelectQueryBuilder {
         return stringBuilder.toString();
     }
 
-    public static String generateQuery(Class<?> entityClass, String id) {
+    public static String generateQuery(Class<?> entityClass, Object id) {
         String tableName = NameUtils.getTableName(entityClass);
         String idColumnName = NameUtils.getColumnName(getIdColumn(entityClass));
 
@@ -31,7 +31,7 @@ public class SelectQueryBuilder {
                 .append(" where ")
                 .append(idColumnName)
                 .append(" = ")
-                .append(id)
+                .append(id.toString())
                 .append(";");
         return stringBuilder.toString();
     }

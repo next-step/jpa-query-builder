@@ -27,7 +27,7 @@ public class EntityManagerImpl<T, U> implements EntityManager<T, U> {
         if (id == null) {
             return null;
         }
-        String findByIdQuery = SelectQueryBuilder.generateQuery(clazz, String.valueOf(id));
+        String findByIdQuery = SelectQueryBuilder.generateQuery(clazz, id);
         return jdbcTemplate.queryForObject(findByIdQuery, new EntityRowMapper<>(clazz));
     }
 
