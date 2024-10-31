@@ -88,7 +88,7 @@ class H2IntegrationTest {
         assertThat(count).isEqualTo(1);
     }
 
-    @DisplayName("H2 데이터베이스dptj 데이터를 조회한다")
+    @DisplayName("H2 데이터베이스에서 데이터를 조회한다")
     @Test
     void select() throws Exception {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(h2.getConnection());
