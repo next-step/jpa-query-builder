@@ -202,3 +202,28 @@ private String whereClause(String selectQuery, Class<?> clazz) {
 > 구현은 src/main/java/persistence > sql/dml > 하위에 구현한다. </br>
 @Entity, @Table, @Id, @Column, @Transient 를 고려해서 잘 작성해보자.
 
+## 4단계 - Simple Entity Object
+## 요구사항 1 - find
+```java
+// <T> T find(Class<T> clazz, Long Id); 제네릭을 사용해보셔도 됩니다.
+    Person find(Class<Person> clazz, Long id);
+```
+
+## 요구사항 2 - persist(insert)
+```java
+void persist(Object entity);
+
+or
+
+Object persist(Object entity);
+```
+
+## 요구사항 3 - remove(delete)
+```java
+void remove(Object entity);
+```
+
+## 요구사항 4 - update
+```java
+// 수정은 어떻게 처리할 수 있을지 고민해보자
+```
