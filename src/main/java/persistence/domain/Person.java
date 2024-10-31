@@ -2,7 +2,7 @@ package persistence.domain;
 
 import jakarta.persistence.*;
 
-@Table(name = "users")
+@Table(name = "my_users")
 @Entity
 public class Person {
 
@@ -22,4 +22,32 @@ public class Person {
     @Transient
     private Integer index;
 
+    public Person() {
+    }
+
+    public Person(String name, Integer age, String email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
 }

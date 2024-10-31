@@ -4,7 +4,7 @@
 
 ### 요구 사항
 
-- [ ] EntityManager.find() 구현
+- [X] EntityManager.find() 구현
 - [ ] EntityManager.persist() 구현
 - [ ] EntityManager.remove() 구현
 - [ ] update 구현

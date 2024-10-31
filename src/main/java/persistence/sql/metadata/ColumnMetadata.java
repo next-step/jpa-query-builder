@@ -82,4 +82,16 @@ public class ColumnMetadata<T> {
             throw new IllegalArgumentException("접근할 수 없는 필드입니다: " + field.getName());
         }
     }
+
+    public boolean hasColumn(String fieldName) {
+        return columns.stream()
+                .anyMatch(column -> column.sameFieldName(fieldName));
+    }
+
+    public Column getColumn(String fieldName) {
+        return columns.stream()
+                .filter(column -> column.sameFieldName(fieldName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("컬럼을 찾을 수 없습니다"));
+    }
 }

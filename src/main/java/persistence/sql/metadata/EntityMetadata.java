@@ -1,5 +1,6 @@
 package persistence.sql.metadata;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class EntityMetadata<T> {
@@ -36,5 +37,13 @@ public class EntityMetadata<T> {
 
     public List<String> getInsertColumnValues(T entity) {
         return columnMetadata.getInsertColumnValues(entity);
+    }
+
+    public boolean hasColumn(String fieldName) {
+        return columnMetadata.hasColumn(fieldName);
+    }
+
+    public Column getColumn(Field field) {
+        return columnMetadata.getColumn(field.getName());
     }
 }

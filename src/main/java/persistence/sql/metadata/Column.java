@@ -11,6 +11,7 @@ import java.util.List;
 
 public record Column(
         ColumnName name,
+        String fieldName,
         Class<?> columnType,
         List<ColumnOption> options,
         boolean primaryKey
@@ -19,6 +20,7 @@ public record Column(
     public static Column from(Field field) {
         return new Column(
                 ColumnName.from(field),
+                field.getName(),
                 field.getType(),
                 extractOptions(field),
                 field.isAnnotationPresent(Id.class)
@@ -77,5 +79,13 @@ public record Column(
 
     public boolean sameName(Field field) {
         return name.equals(ColumnName.from(field));
+    }
+
+    public boolean sameFieldName(String fieldName) {
+        return fieldName.equals(fieldName);
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 }
