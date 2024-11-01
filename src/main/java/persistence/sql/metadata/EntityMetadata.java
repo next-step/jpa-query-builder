@@ -31,23 +31,15 @@ public class EntityMetadata {
         return columnMetadata.getColumns();
     }
 
-    public List<String> getInsertColumnNames() {
-        return columnMetadata.getInsertColumnNames();
-    }
-
-    public List<String> extractInsertColumnValues(Object entity) {
-        return columnMetadata.extractInsertColumnValues(entity);
-    }
-
-    public ColumnValue extractPrimaryKeyValue(Object entity) {
-        return columnMetadata.extractPrimaryKeyValue(entity);
-    }
-
     public boolean hasColumn(String fieldName) {
         return columnMetadata.hasColumn(fieldName);
     }
 
     public Column getColumn(Field field) {
         return columnMetadata.getColumn(field.getName());
+    }
+
+    public ColumnMetadata getColumnMetadata() {
+        return columnMetadata;
     }
 }

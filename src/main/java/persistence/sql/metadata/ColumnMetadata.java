@@ -61,28 +61,6 @@ public class ColumnMetadata {
                 .toList();
     }
 
-    public List<String> extractInsertColumnValues(Object entity) {
-        return Arrays.stream(entity.getClass().getDeclaredFields())
-                .filter(this::isInsertColumnName)
-                .map(field -> getValue(entity, field))
-                .map(ColumnValue::toString)
-                .toList();
-    }
-
-    private boolean isInsertColumnName(Field field) {
-        return insertColumns.stream()
-                .anyMatch(column -> column.sameName(field));
-    }
-
-    private ColumnValue getValue(Object object, Field field) {
-        field.setAccessible(true);
-        try {
-            return new ColumnValue(field.get(object));
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("접근할 수 없는 필드입니다: " + field.getName());
-        }
-    }
-
     public boolean hasColumn(String fieldName) {
         return columns.stream()
                 .anyMatch(column -> column.sameFieldName(fieldName));
@@ -95,15 +73,9 @@ public class ColumnMetadata {
                 .orElseThrow(() -> new IllegalArgumentException("컬럼을 찾을 수 없습니다"));
     }
 
-    public ColumnValue extractPrimaryKeyValue(Object entity) {
-        return Arrays.stream(entity.getClass().getDeclaredFields())
-                .filter(this::isPrimaryKey)
-                .findFirst()
-                .map(field -> getValue(entity, field))
-                .orElseThrow(() -> new IllegalStateException("Id 필드를 찾을 수 없습니다"));
-    }
-
-    private boolean isPrimaryKey(Field field) {
-        return getPrimaryKey().sameName(field);
+    public List<ColumnData> withData(Object entity) {
+        return columns.stream()
+                .map(column -> column.withData(entity))
+                .toList();
     }
 }

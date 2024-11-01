@@ -1,15 +1,19 @@
 package persistence.sql.dml;
 
+import persistence.sql.metadata.ColumnData;
+import persistence.sql.metadata.ColumnDatas;
+import persistence.sql.metadata.EntityData;
 import persistence.sql.metadata.EntityMetadata;
 
 public class DmlQueryBuilder {
 
     public String buildInsertQuery(Object entity) {
-        EntityMetadata metadata = EntityMetadata.from(entity.getClass());
-        return "insert into " + metadata.getTableName() + " (" +
-                String.join(", ", metadata.getInsertColumnNames()) +
+        EntityData entityData = EntityData.from(entity);
+        ColumnDatas insertColumns = entityData.getInsertColumns();
+        return "insert into " + entityData.getTableName() + " (" +
+                String.join(", ", insertColumns.getColumnNames()) +
                 ") values (" +
-                String.join(", ", metadata.extractInsertColumnValues(entity)) +
+                String.join(", ", insertColumns.getColumnValues()) +
                 ");";
     }
 
@@ -26,9 +30,12 @@ public class DmlQueryBuilder {
     }
 
     public String buildDeleteQuery(Object entity) {
-        EntityMetadata metadata = EntityMetadata.from(entity.getClass());
+        EntityData entityData = EntityData.from(entity);
 
-        return "delete from " + metadata.getTableName() + " where " + metadata.getPrimaryKeyName() + " = " + metadata.extractPrimaryKeyValue(entity) + ";";
+        return "delete from " + entityData.getTableName() + " where " + buildWhereClause(entityData.getPrimaryKey()) + ";";
     }
 
+    private String buildWhereClause(ColumnData columnData) {
+        return columnData.getName() + " = " + columnData.getValue();
+    }
 }
