@@ -44,7 +44,7 @@ class H2IntegrationTest extends DatabaseTest {
     @DisplayName("H2 데이터베이스에 데이터를 삽입한다")
     @Test
     void insert() throws Exception {
-        DmlQueryBuilder<EntityWithColumn> dmlQueryBuilder = DmlQueryBuilder.from(EntityWithColumn.class);
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         EntityWithColumn entityWithColumn = new EntityWithColumn(1L, "my_column", "without_column", "not_null_column");
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
@@ -64,8 +64,8 @@ class H2IntegrationTest extends DatabaseTest {
         jdbcTemplate.execute("create table entity_with_column (id bigint not null, my_column varchar(255), without_column varchar(255), not_null_column varchar(255) not null, primary key (id))");
         jdbcTemplate.execute("insert into entity_with_column (id, my_column, without_column, not_null_column) values (1, 'my_column', 'without_column', 'not_null_column')");
 
-        DmlQueryBuilder<EntityWithColumn> dmlQueryBuilder = DmlQueryBuilder.from(EntityWithColumn.class);
-        EntityWithColumn entityWithColumn = jdbcTemplate.queryForObject(dmlQueryBuilder.buildSelectByIdQuery(1L), rs -> new EntityWithColumn(
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+        EntityWithColumn entityWithColumn = jdbcTemplate.queryForObject(dmlQueryBuilder.buildSelectByIdQuery(EntityWithColumn.class, 1L), rs -> new EntityWithColumn(
                 rs.getLong("id"),
                 rs.getString("my_column"),
                 rs.getString("without_column"),
@@ -87,8 +87,8 @@ class H2IntegrationTest extends DatabaseTest {
         jdbcTemplate.execute("create table entity_with_column (id bigint not null, my_column varchar(255), without_column varchar(255), not_null_column varchar(255) not null, primary key (id))");
         jdbcTemplate.execute("insert into entity_with_column (id, my_column, without_column, not_null_column) values (1, 'my_column', 'without_column', 'not_null_column')");
 
-        DmlQueryBuilder<EntityWithColumn> dmlQueryBuilder = DmlQueryBuilder.from(EntityWithColumn.class);
-        jdbcTemplate.execute(dmlQueryBuilder.buildDeleteByIdQuery(1L));
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+        jdbcTemplate.execute(dmlQueryBuilder.buildDeleteByIdQuery(EntityWithColumn.class, 1L));
 
         String existsQuery = "SELECT COUNT(*) AS cnt FROM entity_with_column WHERE id = 1";
         Integer count = jdbcTemplate.queryForObject(existsQuery, rs -> rs.getInt("cnt"));

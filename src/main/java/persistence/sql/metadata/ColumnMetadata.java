@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColumnMetadata<T> {
+public class ColumnMetadata {
     private final List<Column> columns;
     private final List<Column> insertColumns;
 
@@ -24,7 +24,7 @@ public class ColumnMetadata<T> {
                 .toList();
     }
 
-    public static <T> ColumnMetadata<T> from(Class<?> clazz) {
+    public static ColumnMetadata from(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(ColumnMetadata::isNotTransient)
                 .map(Column::from)
@@ -61,7 +61,7 @@ public class ColumnMetadata<T> {
                 .toList();
     }
 
-    public List<String> getInsertColumnValues(T entity) {
+    public List<String> getInsertColumnValues(Object entity) {
         return Arrays.stream(entity.getClass().getDeclaredFields())
                 .filter(this::isInsertColumnName)
                 .map(field -> getValue(entity, field))

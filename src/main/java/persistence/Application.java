@@ -22,7 +22,7 @@ public class Application {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
             createTables(jdbcTemplate);
 
-            DmlQueryBuilder<InsertPerson> dmlQueryBuilder = DmlQueryBuilder.from(InsertPerson.class);
+            DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
             InsertPerson insertPerson1 = new InsertPerson(1L, "test1", 20, "test@email.com", 1);
             jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(insertPerson1));
 
@@ -30,7 +30,7 @@ public class Application {
             jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(insertPerson2));
 
             List<InsertPerson> results = jdbcTemplate.query(
-                    dmlQueryBuilder.buildSelectAllQuery(),
+                    dmlQueryBuilder.buildSelectAllQuery(InsertPerson.class),
                     rs -> new InsertPerson(
                             rs.getLong("id"),
                             rs.getString("nick_name"),

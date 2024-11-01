@@ -18,7 +18,7 @@ class DmlQueryBuilderTest {
                 "test@email.com",
                 1
         );
-        DmlQueryBuilder<InsertPerson> dmlQueryBuilder = DmlQueryBuilder.from(InsertPerson.class);
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
 
         String insertDml = dmlQueryBuilder.buildInsertQuery(insertPerson);
 
@@ -28,9 +28,9 @@ class DmlQueryBuilderTest {
     @DisplayName("클래스 정보를 받아 select 쿼리를 생성한다")
     @Test
     void buildSelectAllQuery() {
-        DmlQueryBuilder<InsertPerson> dmlQueryBuilder = DmlQueryBuilder.from(InsertPerson.class);
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
 
-        String selectDml = dmlQueryBuilder.buildSelectAllQuery();
+        String selectDml = dmlQueryBuilder.buildSelectAllQuery(InsertPerson.class);
 
         assertThat(selectDml).isEqualTo("select * from users;");
     }
@@ -38,9 +38,9 @@ class DmlQueryBuilderTest {
     @DisplayName("클래스 정보와 id를 받아 select 쿼리를 생성한다")
     @Test
     void buildSelectAll() {
-        DmlQueryBuilder<InsertPerson> dmlQueryBuilder = DmlQueryBuilder.from(InsertPerson.class);
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
 
-        String selectDml = dmlQueryBuilder.buildSelectByIdQuery(1L);
+        String selectDml = dmlQueryBuilder.buildSelectByIdQuery(InsertPerson.class, 1L);
 
         assertThat(selectDml).isEqualTo("select * from users where id = 1;");
     }
@@ -48,9 +48,9 @@ class DmlQueryBuilderTest {
     @DisplayName("클래스 정보와 id를 받아 delete 쿼리를 생성한다")
     @Test
     void buildDeleteByIdQuery() {
-        DmlQueryBuilder<InsertPerson> dmlQueryBuilder = DmlQueryBuilder.from(InsertPerson.class);
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
 
-        String deleteDml = dmlQueryBuilder.buildDeleteByIdQuery(1L);
+        String deleteDml = dmlQueryBuilder.buildDeleteByIdQuery(InsertPerson.class, 1L);
 
         assertThat(deleteDml).isEqualTo("delete from users where id = 1;");
     }

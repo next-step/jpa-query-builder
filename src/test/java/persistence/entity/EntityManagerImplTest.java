@@ -1,6 +1,7 @@
 package persistence.entity;
 
 import jdbc.JdbcTemplate;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
 import persistence.domain.Person;
@@ -17,6 +18,7 @@ class EntityManagerImplTest extends DatabaseTest {
         return List.of("my_users");
     }
 
+    @DisplayName("데이터베이스에서 객체를 조회한다")
     @Test
     void find() throws Exception {
         createTable(Person.class);
@@ -32,12 +34,30 @@ class EntityManagerImplTest extends DatabaseTest {
             softly.assertThat(person.getAge()).isEqualTo(32);
             softly.assertThat(person.getEmail()).isEqualTo("test@email.com");
         });
-
     }
 
     private void insertData(Person person) throws Exception {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
-        DmlQueryBuilder<Person> dmlQueryBuilder = DmlQueryBuilder.from(Person.class);
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(person));
+    }
+
+    @DisplayName("객체를 데이터베이스에 저장한다")
+    @Test
+    void persist() throws Exception {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
+        EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
+
+        createTable(Person.class);
+        entityManager.persist(new Person("bob", 32, "test@email.com"));
+
+        Person savedPerson = jdbcTemplate.queryForObject("select * from my_users", new DefaultRowMapper<>(Person.class));
+
+        assertSoftly(softly -> {
+            softly.assertThat(savedPerson.getId()).isEqualTo(1L);
+            softly.assertThat(savedPerson.getName()).isEqualTo("bob");
+            softly.assertThat(savedPerson.getAge()).isEqualTo(32);
+            softly.assertThat(savedPerson.getEmail()).isEqualTo("test@email.com");
+        });
     }
 }

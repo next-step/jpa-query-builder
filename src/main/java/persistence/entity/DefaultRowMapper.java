@@ -26,7 +26,7 @@ public class DefaultRowMapper<T> implements RowMapper<T> {
     }
 
     private void fillEntityFields(T entity, ResultSet resultSet) {
-        EntityMetadata<T> entityMetadata = EntityMetadata.from(clazz);
+        EntityMetadata entityMetadata = EntityMetadata.from(clazz);
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> entityMetadata.hasColumn(field.getName()))
                 .forEach(field -> setField(resultSet, entityMetadata.getColumn(field), entity));

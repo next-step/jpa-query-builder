@@ -2,36 +2,33 @@ package persistence.sql.dml;
 
 import persistence.sql.metadata.EntityMetadata;
 
-public class DmlQueryBuilder<T> {
+public class DmlQueryBuilder {
 
-    private final EntityMetadata<T> entityMetadata;
-
-    private DmlQueryBuilder(EntityMetadata<T> entityMetadata) {
-        this.entityMetadata = entityMetadata;
-    }
-
-    public static <T> DmlQueryBuilder<T> from(Class<T> entityClass) {
-        return new DmlQueryBuilder<>(EntityMetadata.from(entityClass));
-    }
-
-    public String buildInsertQuery(T entity) {
-        return "insert into " + entityMetadata.getTableName() + " (" +
-                String.join(", ", entityMetadata.getInsertColumnNames()) +
+    public String buildInsertQuery(Object entity) {
+        EntityMetadata metadata = EntityMetadata.from(entity.getClass());
+        return "insert into " + metadata.getTableName() + " (" +
+                String.join(", ", metadata.getInsertColumnNames()) +
                 ") values (" +
-                String.join(", ", entityMetadata.getInsertColumnValues(entity)) +
+                String.join(", ", metadata.getInsertColumnValues(entity)) +
                 ");";
     }
 
-    public String buildSelectAllQuery() {
-        return "select * from " + entityMetadata.getTableName() + ";";
+    public String buildSelectAllQuery(Class<?> entityClass) {
+        EntityMetadata metadata = EntityMetadata.from(entityClass);
+
+        return "select * from " + metadata.getTableName() + ";";
     }
 
-    public String buildSelectByIdQuery(Object id) {
-        return "select * from " + entityMetadata.getTableName() + " where " + entityMetadata.getPrimaryKeyName() + " = " + id + ";";
+    public String buildSelectByIdQuery(Class<?> entityClass, Object id) {
+        EntityMetadata metadata = EntityMetadata.from(entityClass);
+
+        return "select * from " + metadata.getTableName() + " where " + metadata.getPrimaryKeyName() + " = " + id + ";";
     }
 
-    public String buildDeleteByIdQuery(Object id) {
-        return "delete from " + entityMetadata.getTableName() + " where " + entityMetadata.getPrimaryKeyName() + " = " + id + ";";
+    public String buildDeleteByIdQuery(Class<?> entityClass, Object id) {
+        EntityMetadata metadata = EntityMetadata.from(entityClass);
+
+        return "delete from " + metadata.getTableName() + " where " + metadata.getPrimaryKeyName() + " = " + id + ";";
     }
 
 }

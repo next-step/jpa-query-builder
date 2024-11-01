@@ -13,14 +13,17 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
 
     @Override
     public T find(Class<T> clazz, Long id) {
-        DmlQueryBuilder<T> dmlQueryBuilder = DmlQueryBuilder.from(clazz);
-        String query = dmlQueryBuilder.buildSelectByIdQuery(id);
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+        String query = dmlQueryBuilder.buildSelectByIdQuery(clazz, id);
         return jdbcTemplate.queryForObject(query, new DefaultRowMapper<>(clazz));
     }
 
     @Override
-    public Object persist(Object entity) {
-        return null;
+    public T persist(T entity) {
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+        String query = dmlQueryBuilder.buildInsertQuery(entity);
+        jdbcTemplate.execute(query);
+        return entity;
     }
 
     @Override

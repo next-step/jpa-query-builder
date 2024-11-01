@@ -23,7 +23,7 @@ class ColumnMetadataTest {
     @DisplayName("@Id가 지정된 컬럼을 반환한다")
     @Test
     void getIdField() throws Exception {
-        ColumnMetadata<IncludeId> columnMetadata = ColumnMetadata.from(IncludeId.class);
+        ColumnMetadata columnMetadata = ColumnMetadata.from(IncludeId.class);
 
         Column expected = Column.from(IncludeId.class.getDeclaredField("id"));
 
@@ -33,7 +33,7 @@ class ColumnMetadataTest {
     @DisplayName("@Transient 필드를 제외한 컬럼 목록을 반환한다")
     @Test
     void ignoreTransient() {
-        ColumnMetadata<IdentityStrategy> columnMetadata = ColumnMetadata.from(IdentityStrategy.class);
+        ColumnMetadata columnMetadata = ColumnMetadata.from(IdentityStrategy.class);
 
         List<String> insertColumnNames = columnMetadata.getInsertColumnNames();
 
@@ -43,7 +43,7 @@ class ColumnMetadataTest {
     @DisplayName("Identity 전략을 사용하는 경우 id 컬럼을 제외한 컬럼 이름 목록을 반환한다")
     @Test
     void getInsertColumnNames() {
-        ColumnMetadata<IdentityStrategy> columnMetadata = ColumnMetadata.from(IdentityStrategy.class);
+        ColumnMetadata columnMetadata = ColumnMetadata.from(IdentityStrategy.class);
 
         List<String> insertColumnNames = columnMetadata.getInsertColumnNames();
 
