@@ -82,7 +82,7 @@ public record Column(
     }
 
     public boolean sameFieldName(String fieldName) {
-        return fieldName.equals(fieldName);
+        return this.fieldName.equals(fieldName);
     }
 
     public String getFieldName() {
