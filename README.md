@@ -6,7 +6,7 @@
 
 - [X] EntityManager.find() 구현
 - [X] EntityManager.persist() 구현
-- [ ] EntityManager.remove() 구현
+- [X] EntityManager.remove() 구현
 - [ ] update 구현
 
 ## 3단계 - QueryBuilder DML

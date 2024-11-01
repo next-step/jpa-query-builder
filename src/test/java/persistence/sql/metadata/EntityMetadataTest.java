@@ -20,7 +20,7 @@ class EntityMetadataTest {
 
     @DisplayName("기본키 이름 목록을 반환한다")
     @Test
-    void getPrimaryKeyName() {
+    void getPrimaryKey() {
         EntityMetadata entityMetadata = EntityMetadata.from(EntityWithTable.class);
 
         assertThat(entityMetadata.getPrimaryKeyName()).isEqualTo("id");

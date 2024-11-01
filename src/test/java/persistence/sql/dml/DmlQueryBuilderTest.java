@@ -47,10 +47,10 @@ class DmlQueryBuilderTest {
 
     @DisplayName("클래스 정보와 id를 받아 delete 쿼리를 생성한다")
     @Test
-    void buildDeleteByIdQuery() {
+    void buildDeleteQuery() {
         DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
 
-        String deleteDml = dmlQueryBuilder.buildDeleteByIdQuery(InsertPerson.class, 1L);
+        String deleteDml = dmlQueryBuilder.buildDeleteQuery(new InsertPerson(1L, "test", 20, "test@email.com", 1));
 
         assertThat(deleteDml).isEqualTo("delete from users where id = 1;");
     }

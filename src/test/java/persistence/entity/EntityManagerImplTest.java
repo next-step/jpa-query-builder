@@ -9,6 +9,7 @@ import persistence.sql.dml.DmlQueryBuilder;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class EntityManagerImplTest extends DatabaseTest {
@@ -59,5 +60,22 @@ class EntityManagerImplTest extends DatabaseTest {
             softly.assertThat(savedPerson.getAge()).isEqualTo(32);
             softly.assertThat(savedPerson.getEmail()).isEqualTo("test@email.com");
         });
+    }
+
+    @DisplayName("객체를 데이터베이스에서 삭제한다")
+    @Test
+    void remove() throws Exception {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
+        EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
+
+        createTable(Person.class);
+        insertData(new Person("bob", 32, "test@email.com"));
+
+        Person person = new Person(1L, "bob", 32, "test@email.com", 1);
+        entityManager.remove(person);
+
+        List<Person> users = jdbcTemplate.query("select * from my_users", new DefaultRowMapper<>(Person.class));
+
+        assertThat(users).isEmpty();
     }
 }

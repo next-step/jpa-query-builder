@@ -34,7 +34,7 @@ public class DefaultRowMapper<T> implements RowMapper<T> {
 
     private void setField(ResultSet resultSet, Column column, T targetInstance) {
         try {
-            Field field = clazz.getDeclaredField(column.getFieldName());
+            Field field = clazz.getDeclaredField(column.fieldName());
             field.setAccessible(true);
             field.set(targetInstance, resultSet.getObject(column.getName(), column.columnType()));
         } catch (Exception e) {

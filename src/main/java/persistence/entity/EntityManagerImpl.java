@@ -27,7 +27,9 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
     }
 
     @Override
-    public void remove(Object entity) {
-
+    public void remove(T entity) {
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+        String query = dmlQueryBuilder.buildDeleteQuery(entity);
+        jdbcTemplate.execute(query);
     }
 }

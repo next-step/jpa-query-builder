@@ -84,8 +84,4 @@ public record Column(
     public boolean sameFieldName(String fieldName) {
         return this.fieldName.equals(fieldName);
     }
-
-    public String getFieldName() {
-        return fieldName;
-    }
 }

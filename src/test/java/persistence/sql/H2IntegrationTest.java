@@ -88,7 +88,7 @@ class H2IntegrationTest extends DatabaseTest {
         jdbcTemplate.execute("insert into entity_with_column (id, my_column, without_column, not_null_column) values (1, 'my_column', 'without_column', 'not_null_column')");
 
         DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
-        jdbcTemplate.execute(dmlQueryBuilder.buildDeleteByIdQuery(EntityWithColumn.class, 1L));
+        jdbcTemplate.execute(dmlQueryBuilder.buildDeleteQuery(new EntityWithColumn(1L, "my_column", "without_column", "not_null_column")));
 
         String existsQuery = "SELECT COUNT(*) AS cnt FROM entity_with_column WHERE id = 1";
         Integer count = jdbcTemplate.queryForObject(existsQuery, rs -> rs.getInt("cnt"));

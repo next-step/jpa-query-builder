@@ -35,8 +35,12 @@ public class EntityMetadata {
         return columnMetadata.getInsertColumnNames();
     }
 
-    public List<String> getInsertColumnValues(Object entity) {
-        return columnMetadata.getInsertColumnValues(entity);
+    public List<String> extractInsertColumnValues(Object entity) {
+        return columnMetadata.extractInsertColumnValues(entity);
+    }
+
+    public ColumnValue extractPrimaryKeyValue(Object entity) {
+        return columnMetadata.extractPrimaryKeyValue(entity);
     }
 
     public boolean hasColumn(String fieldName) {
