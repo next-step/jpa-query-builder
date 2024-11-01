@@ -1,5 +1,6 @@
 package persistence.sql.metadata;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,5 +35,9 @@ public class EntityData {
         return columnDataList.stream()
                 .filter(ColumnData::hasNotIdentityStrategy)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), ColumnDatas::new));
+    }
+
+    public ColumnDatas getColumns() {
+        return new ColumnDatas(Collections.unmodifiableList(columnDataList));
     }
 }

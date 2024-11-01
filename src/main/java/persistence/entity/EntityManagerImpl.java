@@ -32,4 +32,11 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
         String query = dmlQueryBuilder.buildDeleteQuery(entity);
         jdbcTemplate.execute(query);
     }
+
+    @Override
+    public void update(T entity) {
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+        String query = dmlQueryBuilder.buildUpdateQuery(entity);
+        jdbcTemplate.execute(query);
+    }
 }

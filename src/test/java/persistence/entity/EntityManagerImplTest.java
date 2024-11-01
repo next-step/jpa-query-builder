@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.DatabaseTest;
 import persistence.domain.Person;
+import persistence.sql.ddl.DdlQueryBuilder;
 import persistence.sql.dml.DmlQueryBuilder;
 
 import java.util.List;
@@ -22,9 +23,11 @@ class EntityManagerImplTest extends DatabaseTest {
     @DisplayName("데이터베이스에서 객체를 조회한다")
     @Test
     void find() throws Exception {
-        createTable(Person.class);
-        insertData(new Person("bob", 32, "test@email.com"));
+        DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
+        jdbcTemplate.execute(ddlQueryBuilder.buildCreateQuery(Person.class));
+        jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(new Person("bob", 32, "test@email.com")));
 
         EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
         Person person = entityManager.find(Person.class, 1L);
@@ -37,19 +40,13 @@ class EntityManagerImplTest extends DatabaseTest {
         });
     }
 
-    private void insertData(Person person) throws Exception {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
-        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
-        jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(person));
-    }
-
     @DisplayName("객체를 데이터베이스에 저장한다")
     @Test
     void persist() throws Exception {
+        DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
         JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
+        jdbcTemplate.execute(ddlQueryBuilder.buildCreateQuery(Person.class));
         EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
-
-        createTable(Person.class);
         entityManager.persist(new Person("bob", 32, "test@email.com"));
 
         Person savedPerson = jdbcTemplate.queryForObject("select * from my_users", new DefaultRowMapper<>(Person.class));
@@ -65,17 +62,41 @@ class EntityManagerImplTest extends DatabaseTest {
     @DisplayName("객체를 데이터베이스에서 삭제한다")
     @Test
     void remove() throws Exception {
+        DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
-        EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
-
-        createTable(Person.class);
-        insertData(new Person("bob", 32, "test@email.com"));
+        jdbcTemplate.execute(ddlQueryBuilder.buildCreateQuery(Person.class));
+        jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(new Person("bob", 32, "test@email.com")));
 
         Person person = new Person(1L, "bob", 32, "test@email.com", 1);
+        EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
         entityManager.remove(person);
 
         List<Person> users = jdbcTemplate.query("select * from my_users", new DefaultRowMapper<>(Person.class));
 
         assertThat(users).isEmpty();
+    }
+
+    @DisplayName("객체를 데이터베이스에서 수정한다")
+    @Test
+    void update() throws Exception {
+        DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
+        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
+        jdbcTemplate.execute(ddlQueryBuilder.buildCreateQuery(Person.class));
+        jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(new Person("bob", 32, "test@email.com")));
+
+        Person updatedPerson = new Person(1L, "alice", 25, "test@email.com", 1);
+        EntityManager<Person> entityManager = new EntityManagerImpl<>(jdbcTemplate);
+        entityManager.update(updatedPerson);
+
+        Person person = jdbcTemplate.queryForObject("select * from my_users", new DefaultRowMapper<>(Person.class));
+
+        assertSoftly(softly -> {
+            softly.assertThat(person.getId()).isEqualTo(1L);
+            softly.assertThat(person.getName()).isEqualTo("alice");
+            softly.assertThat(person.getAge()).isEqualTo(25);
+            softly.assertThat(person.getEmail()).isEqualTo("test@email.com");
+        });
     }
 }

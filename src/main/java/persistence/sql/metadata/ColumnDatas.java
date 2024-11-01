@@ -1,5 +1,7 @@
 package persistence.sql.metadata;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ColumnDatas {
@@ -19,5 +21,9 @@ public class ColumnDatas {
         return values.stream()
                 .map(ColumnData::getValue)
                 .toList();
+    }
+
+    public List<ColumnData> getAll() {
+        return Collections.unmodifiableList(values);
     }
 }

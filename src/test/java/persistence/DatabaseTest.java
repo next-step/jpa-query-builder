@@ -7,8 +7,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistence.domain.Person;
-import persistence.sql.ddl.DdlQueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -54,9 +52,4 @@ public abstract class DatabaseTest {
 
     protected abstract List<String> getTableNames();
 
-    public void createTable(Class<Person> clazz) throws Exception {
-        DdlQueryBuilder ddlQueryBuilder = new DdlQueryBuilder();
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(database.getConnection());
-        jdbcTemplate.execute(ddlQueryBuilder.buildCreateQuery(clazz));
-    }
 }

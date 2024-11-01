@@ -7,4 +7,6 @@ public interface EntityManager<T> {
     T persist(T entity);
 
     void remove(T entity);
+
+    void update(T entity);
 }
