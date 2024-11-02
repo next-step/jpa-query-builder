@@ -10,18 +10,10 @@ import java.util.stream.Collectors;
 
 public class ColumnMetadata {
     private final List<Column> columns;
-    private final List<Column> insertColumns;
 
     private ColumnMetadata(List<Column> columns) {
         validate(columns);
         this.columns = columns;
-        this.insertColumns = getInsertColumns(columns);
-    }
-
-    private List<Column> getInsertColumns(List<Column> columns) {
-        return columns.stream()
-                .filter(Column::hasNotIdentityStrategy)
-                .toList();
     }
 
     public static ColumnMetadata from(Class<?> clazz) {
@@ -53,12 +45,6 @@ public class ColumnMetadata {
                 .filter(Column::primaryKey)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
-    }
-
-    public List<String> getInsertColumnNames() {
-        return insertColumns.stream()
-                .map(Column::getName)
-                .toList();
     }
 
     public boolean hasColumn(String fieldName) {
