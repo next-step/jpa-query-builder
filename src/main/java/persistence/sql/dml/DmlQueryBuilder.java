@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jdbc.JdbcTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -12,19 +14,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class QueryBuilder {
+public class DmlQueryBuilder {
 
     private static final String INSERT_QUERY_FORMAT = "INSERT INTO %s (%s) VALUES (%s)";
     private static final String SELECT_QUERY_FORMAT = "SELECT * FROM %s";
     private JdbcTemplate jdbcTemplate;
     Class<?> clazz;
 
-    public QueryBuilder(Class<?> clazz, JdbcTemplate jdbcTemplate) {
+
+    public DmlQueryBuilder(Class<?> clazz, JdbcTemplate jdbcTemplate) {
         this.clazz = clazz;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public QueryBuilder(Class<?> clazz) {
+    public DmlQueryBuilder(Class<?> clazz) {
         this.clazz = clazz;
     }
 

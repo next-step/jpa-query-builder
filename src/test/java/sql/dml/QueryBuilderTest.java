@@ -6,7 +6,7 @@ import jdbc.JdbcTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.dml.Person;
-import persistence.sql.dml.QueryBuilder;
+import persistence.sql.dml.DmlQueryBuilder;
 
 import java.sql.SQLException;
 
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class QueryBuilderTest {
 
-    QueryBuilder queryBuilder = new QueryBuilder(Person.class);
+    DmlQueryBuilder queryBuilder = new DmlQueryBuilder(Person.class);
     Class<?> clazz = Person.class;
 
     final DatabaseServer server = new H2();
@@ -29,8 +29,10 @@ public class QueryBuilderTest {
     void findAll() {
         jdbcTemplate.execute("CREATE TABLE USERS (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL)");
         queryBuilder.run(jdbcTemplate);
+        jdbcTemplate.execute("SELECT * FROM USERS");
         assertThat(queryBuilder.findAll(jdbcTemplate)).isEqualTo("");
     }
+
 
     @Test
     @DisplayName("findById테스트")
