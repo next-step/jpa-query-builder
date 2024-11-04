@@ -23,20 +23,16 @@ public class DdlQueryBuilder {
 
     public String buildCreateQuery(Class<?> clazz) {
         EntityMetadata entityMetadata = EntityMetadata.from(clazz);
-        return "create table " +
-                entityMetadata.getTableName() +
-                " (" +
-                getDefinitions(entityMetadata) +
-                ");";
+        return "create table %s (%s);".formatted(entityMetadata.getTableName(), getDefinitions(entityMetadata));
     }
 
     public String buildDropQuery(Class<?> clazz) {
         EntityMetadata entityMetadata = EntityMetadata.from(clazz);
-        return "drop table " + entityMetadata.getTableName() + ";";
+        return "drop table %s;".formatted(entityMetadata.getTableName());
     }
 
     private String getDefinitions(EntityMetadata entityMetadata) {
-        return generateColumnDefinitions(entityMetadata) + ", primary key (" + generatePrimaryKeyNames(entityMetadata) + ")";
+        return "%s, primary key (%s)".formatted(generateColumnDefinitions(entityMetadata), generatePrimaryKeyNames(entityMetadata));
     }
 
     private String generatePrimaryKeyNames(EntityMetadata entityMetadata) {
@@ -51,9 +47,9 @@ public class DdlQueryBuilder {
 
     private String generateColumnDefinition(Column column) {
         if (column.hasOptions()) {
-            return column.getName() + " " + column.getSqlType(dialect) + " " + String.join(" ", column.getSqlOptions(dialect));
+            return "%s %s %s".formatted(column.getName(), column.getSqlType(dialect), String.join(" ", column.getSqlOptions(dialect)));
         }
 
-        return column.getName() + " " + column.getSqlType(dialect);
+        return "%s %s".formatted(column.getName(), column.getSqlType(dialect));
     }
 }
