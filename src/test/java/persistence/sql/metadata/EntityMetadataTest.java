@@ -11,7 +11,7 @@ class EntityMetadataTest {
     @DisplayName("테이블 이름을 반환한다")
     @Test
     void getTableName() {
-        EntityMetadata<EntityWithTable> entityMetadata = EntityMetadata.from(EntityWithTable.class);
+        EntityMetadata entityMetadata = EntityMetadata.from(EntityWithTable.class);
 
         String tableName = entityMetadata.getTableName();
 
@@ -20,8 +20,8 @@ class EntityMetadataTest {
 
     @DisplayName("기본키 이름 목록을 반환한다")
     @Test
-    void getPrimaryKeyName() {
-        EntityMetadata<EntityWithTable> entityMetadata = EntityMetadata.from(EntityWithTable.class);
+    void getPrimaryKey() {
+        EntityMetadata entityMetadata = EntityMetadata.from(EntityWithTable.class);
 
         assertThat(entityMetadata.getPrimaryKeyName()).isEqualTo("id");
     }
@@ -29,7 +29,7 @@ class EntityMetadataTest {
     @DisplayName("컬럼 목록을 반환한다")
     @Test
     void getColumns() {
-        EntityMetadata<EntityWithTable> entityMetadata = EntityMetadata.from(EntityWithTable.class);
+        EntityMetadata entityMetadata = EntityMetadata.from(EntityWithTable.class);
 
         assertThat(entityMetadata.getColumns()).hasSize(2);
     }

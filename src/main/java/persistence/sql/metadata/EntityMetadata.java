@@ -1,21 +1,22 @@
 package persistence.sql.metadata;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
-public class EntityMetadata<T> {
+public class EntityMetadata {
 
     private final TableName tableName;
-    private final ColumnMetadata<T> columnMetadata;
+    private final ColumnMetadata columnMetadata;
 
-    private EntityMetadata(TableName tableName, ColumnMetadata<T> columnMetadata) {
+    private EntityMetadata(TableName tableName, ColumnMetadata columnMetadata) {
         this.tableName = tableName;
         this.columnMetadata = columnMetadata;
     }
 
-    public static <T> EntityMetadata<T> from(Class<?> clazz) {
+    public static EntityMetadata from(Class<?> clazz) {
         TableName tableName = TableName.from(clazz);
-        ColumnMetadata<T> columnMetadata = ColumnMetadata.from(clazz);
-        return new EntityMetadata<>(tableName, columnMetadata);
+        ColumnMetadata columnMetadata = ColumnMetadata.from(clazz);
+        return new EntityMetadata(tableName, columnMetadata);
     }
 
     public String getTableName() {
@@ -30,11 +31,19 @@ public class EntityMetadata<T> {
         return columnMetadata.getColumns();
     }
 
-    public List<String> getInsertColumnNames() {
-        return columnMetadata.getInsertColumnNames();
+    public boolean hasColumn(String fieldName) {
+        return columnMetadata.hasColumn(fieldName);
     }
 
-    public List<String> getInsertColumnValues(T entity) {
-        return columnMetadata.getInsertColumnValues(entity);
+    public Column getColumn(Field field) {
+        return columnMetadata.getColumn(field.getName());
+    }
+
+    public ColumnMetadata getColumnMetadata() {
+        return columnMetadata;
+    }
+
+    public List<String> getColumnNames() {
+        return columnMetadata.getColumnNames();
     }
 }

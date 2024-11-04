@@ -8,23 +8,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColumnMetadata<T> {
+public class ColumnMetadata {
     private final List<Column> columns;
-    private final List<Column> insertColumns;
 
     private ColumnMetadata(List<Column> columns) {
         validate(columns);
         this.columns = columns;
-        this.insertColumns = getInsertColumns(columns);
     }
 
-    private List<Column> getInsertColumns(List<Column> columns) {
-        return columns.stream()
-                .filter(Column::hasNotIdentityStrategy)
-                .toList();
-    }
-
-    public static <T> ColumnMetadata<T> from(Class<?> clazz) {
+    public static ColumnMetadata from(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(ColumnMetadata::isNotTransient)
                 .map(Column::from)
@@ -55,31 +47,27 @@ public class ColumnMetadata<T> {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    public List<String> getInsertColumnNames() {
-        return insertColumns.stream()
+    public boolean hasColumn(String fieldName) {
+        return columns.stream()
+                .anyMatch(column -> column.sameFieldName(fieldName));
+    }
+
+    public Column getColumn(String fieldName) {
+        return columns.stream()
+                .filter(column -> column.sameFieldName(fieldName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("컬럼을 찾을 수 없습니다"));
+    }
+
+    public EntityData withData(Object entity) {
+        return columns.stream()
+                .map(column -> column.withData(entity))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), EntityData::new));
+    }
+
+    public List<String> getColumnNames() {
+        return columns.stream()
                 .map(Column::getName)
                 .toList();
-    }
-
-    public List<String> getInsertColumnValues(T entity) {
-        return Arrays.stream(entity.getClass().getDeclaredFields())
-                .filter(this::isInsertColumnName)
-                .map(field -> getValue(entity, field))
-                .map(ColumnValue::toString)
-                .toList();
-    }
-
-    private boolean isInsertColumnName(Field field) {
-        return insertColumns.stream()
-                .anyMatch(column -> column.sameName(field));
-    }
-
-    private ColumnValue getValue(Object object, Field field) {
-        field.setAccessible(true);
-        try {
-            return new ColumnValue(field.get(object));
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("접근할 수 없는 필드입니다: " + field.getName());
-        }
     }
 }
