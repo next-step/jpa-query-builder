@@ -62,4 +62,12 @@ public abstract class DatabaseTest {
     protected void insert(Object entity) {
         jdbcTemplate.execute(dmlQueryBuilder.buildInsertQuery(entity));
     }
+
+    protected void dropTable(Class<?> clazz) {
+        jdbcTemplate.execute(ddlQueryBuilder.buildDropQuery(clazz));
+    }
+
+    protected void delete(Object entity) {
+        jdbcTemplate.execute(dmlQueryBuilder.buildDeleteQuery(entity));
+    }
 }
