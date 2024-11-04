@@ -64,4 +64,10 @@ public class ColumnMetadata {
                 .map(column -> column.withData(entity))
                 .toList();
     }
+
+    public List<String> getColumnNames() {
+        return columns.stream()
+                .map(Column::getName)
+                .toList();
+    }
 }

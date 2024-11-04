@@ -32,7 +32,7 @@ class DmlQueryBuilderTest {
 
         String selectDml = dmlQueryBuilder.buildSelectAllQuery(InsertPerson.class);
 
-        assertThat(selectDml).isEqualTo("select * from users;");
+        assertThat(selectDml).isEqualTo("select id, nick_name, old, email from users;");
     }
 
     @DisplayName("클래스 정보와 id를 받아 select 쿼리를 생성한다")
@@ -42,7 +42,7 @@ class DmlQueryBuilderTest {
 
         String selectDml = dmlQueryBuilder.buildSelectByIdQuery(InsertPerson.class, 1L);
 
-        assertThat(selectDml).isEqualTo("select * from users where id = 1;");
+        assertThat(selectDml).isEqualTo("select id, nick_name, old, email from users where id = 1;");
     }
 
     @DisplayName("클래스 정보와 id를 받아 delete 쿼리를 생성한다")

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.fixture.IncludeId;
 import persistence.sql.ddl.fixture.NotIncludeId;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ColumnMetadataTest {
@@ -25,5 +27,15 @@ class ColumnMetadataTest {
         Column expected = Column.from(IncludeId.class.getDeclaredField("id"));
 
         assertThat(columnMetadata.getPrimaryKey()).isEqualTo(expected);
+    }
+
+    @DisplayName("컬럼 이름 목록을 반환한다")
+    @Test
+    void getNames() {
+        ColumnMetadata columnMetadata = ColumnMetadata.from(IncludeId.class);
+
+        List<String> columnNames = columnMetadata.getColumnNames();
+
+        assertThat(columnNames).containsExactly("id", "name");
     }
 }

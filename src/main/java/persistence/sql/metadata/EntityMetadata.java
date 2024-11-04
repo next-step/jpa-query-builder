@@ -42,4 +42,8 @@ public class EntityMetadata {
     public ColumnMetadata getColumnMetadata() {
         return columnMetadata;
     }
+
+    public List<String> getColumnNames() {
+        return columnMetadata.getColumnNames();
+    }
 }

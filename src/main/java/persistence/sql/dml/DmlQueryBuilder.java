@@ -9,18 +9,20 @@ import java.util.List;
 
 public class DmlQueryBuilder {
 
+    private static final String JOIN_DELIMITER = ", ";
+
     public String buildInsertQuery(Object entity) {
         EntityData entityData = EntityData.from(entity);
         ColumnDatas insertColumns = entityData.getInsertColumns();
         return "insert into " + entityData.getTableName() + " (" + String.join(", ", insertColumns.getColumnNames()) + ")"
-                + " values (" + String.join(", ", insertColumns.getColumnValues()) + ")"
+                + " values (" + String.join(JOIN_DELIMITER, insertColumns.getColumnValues()) + ")"
                 + ";";
     }
 
     public String buildSelectAllQuery(Class<?> entityClass) {
         EntityMetadata metadata = EntityMetadata.from(entityClass);
 
-        return "select *"
+        return "select " + String.join(JOIN_DELIMITER, metadata.getColumnNames())
                 + " from " + metadata.getTableName()
                 + ";";
     }
@@ -28,7 +30,7 @@ public class DmlQueryBuilder {
     public String buildSelectByIdQuery(Class<?> entityClass, Object id) {
         EntityMetadata metadata = EntityMetadata.from(entityClass);
 
-        return "select *"
+        return "select " + String.join(JOIN_DELIMITER, metadata.getColumnNames())
                 + " from " + metadata.getTableName()
                 + " where " + metadata.getPrimaryKeyName() + " = " + id
                 + ";";
@@ -48,7 +50,7 @@ public class DmlQueryBuilder {
         List<ColumnData> columns = entityData.getColumns().getAll();
 
         return "update " + entityData.getTableName()
-                + " set " + String.join(", ", equalityExpressions(columns))
+                + " set " + String.join(JOIN_DELIMITER, equalityExpressions(columns))
                 + " where " + equalityExpression(entityData.getPrimaryKey())
                 + ";";
     }
