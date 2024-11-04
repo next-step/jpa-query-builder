@@ -1,8 +1,8 @@
 package persistence.sql.dml;
 
 import persistence.sql.metadata.ColumnData;
-import persistence.sql.metadata.ColumnDatas;
 import persistence.sql.metadata.EntityData;
+import persistence.sql.metadata.EntityWrapper;
 import persistence.sql.metadata.EntityMetadata;
 
 import java.util.List;
@@ -12,12 +12,12 @@ public class DmlQueryBuilder {
     private static final String JOIN_DELIMITER = ", ";
 
     public String buildInsertQuery(Object entity) {
-        EntityData entityData = EntityData.from(entity);
-        ColumnDatas insertColumns = entityData.getInsertColumns();
+        EntityWrapper entityWrapper = EntityWrapper.from(entity);
+        EntityData insertColumns = entityWrapper.getInsertColumns();
         return """
                 insert into %s (%s)\s
                 values (%s)
-                ;""".formatted(entityData.getTableName(), String.join(", ", insertColumns.getColumnNames()), String.join(JOIN_DELIMITER, insertColumns.getColumnValues()));
+                ;""".formatted(entityWrapper.getTableName(), String.join(", ", insertColumns.getColumnNames()), String.join(JOIN_DELIMITER, insertColumns.getColumnValues()));
     }
 
     public String buildSelectAllQuery(Class<?> entityClass) {
@@ -40,24 +40,24 @@ public class DmlQueryBuilder {
     }
 
     public String buildDeleteQuery(Object entity) {
-        EntityData entityData = EntityData.from(entity);
+        EntityWrapper entityWrapper = EntityWrapper.from(entity);
 
         return """
                 delete\s
                 from %s\s
                 where %s
-                ;""".formatted(entityData.getTableName(), equalityExpression(entityData.getPrimaryKey()));
+                ;""".formatted(entityWrapper.getTableName(), equalityExpression(entityWrapper.getPrimaryKey()));
     }
 
     public String buildUpdateQuery(Object entity) {
-        EntityData entityData = EntityData.from(entity);
-        List<ColumnData> columns = entityData.getColumns().getAll();
+        EntityWrapper entityWrapper = EntityWrapper.from(entity);
+        List<ColumnData> columns = entityWrapper.getColumns().getAll();
 
         return """
                 update %s\s
                 set %s\s
                 where %s
-                ;""".formatted(entityData.getTableName(), String.join(JOIN_DELIMITER, equalityExpressions(columns)), equalityExpression(entityData.getPrimaryKey()));
+                ;""".formatted(entityWrapper.getTableName(), String.join(JOIN_DELIMITER, equalityExpressions(columns)), equalityExpression(entityWrapper.getPrimaryKey()));
     }
 
     private List<String> equalityExpressions(List<ColumnData> columns) {

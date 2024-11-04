@@ -2,7 +2,6 @@ package persistence.sql.metadata;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.domain.Person;
 
 import java.util.List;
 
@@ -10,42 +9,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EntityDataTest {
 
-    @DisplayName("테이블 이름을 반환한다")
+    @DisplayName("컬럼 이름 목록을 반환한다")
     @Test
-    void getTableName() {
-        Person entity = createPerson();
-        EntityData entityData = EntityData.from(entity);
+    void getColumnNames() {
+        List<ColumnData> datas = List.of(
+                new ColumnData(new Column(new ColumnName("id"), "id", Long.class, List.of(ColumnOption.NOT_NULL), true), new ColumnValue(1)),
+                new ColumnData(new Column(new ColumnName("name"), "name", String.class, List.of(ColumnOption.NOT_NULL), false), new ColumnValue("name"))
+        );
 
-        String tableName = entityData.getTableName();
+        EntityData entityData = new EntityData(datas);
 
-        assertThat(tableName).isEqualTo("my_users");
+        assertThat(entityData.getColumnNames()).containsExactly("id", "name");
     }
 
-    private Person createPerson() {
-        return new Person(1L, "name", 10, "test@email.com", 1);
+    @DisplayName("컬럼 값 목록을 반환한다")
+    @Test
+    void getColumnValues() {
+        List<ColumnData> datas = List.of(
+                new ColumnData(new Column(new ColumnName("id"), "id", Long.class, List.of(ColumnOption.NOT_NULL), true), new ColumnValue(1)),
+                new ColumnData(new Column(new ColumnName("name"), "name", String.class, List.of(ColumnOption.NOT_NULL), false), new ColumnValue("name"))
+        );
+
+        EntityData entityData = new EntityData(datas);
+
+        assertThat(entityData.getColumnValues()).containsExactly("1", "'name'");
     }
 
-    @DisplayName("기본 키 컬럼을 반환한다")
+    @DisplayName("모든 컬럼 데이터를 반환한다")
     @Test
-    void getPrimaryKey() {
-        Person person = createPerson();
-        EntityData entityData = EntityData.from(person);
-        ColumnData primaryKey = entityData.getPrimaryKey();
+    void getAll() {
+        List<ColumnData> datas = List.of(
+                new ColumnData(new Column(new ColumnName("id"), "id", Long.class, List.of(ColumnOption.NOT_NULL), true), new ColumnValue(1)),
+                new ColumnData(new Column(new ColumnName("name"), "name", String.class, List.of(ColumnOption.NOT_NULL), false), new ColumnValue("name"))
+        );
 
-        String primaryKeyName = primaryKey.getName();
+        EntityData entityData = new EntityData(datas);
 
-        assertThat(primaryKeyName).isEqualTo("id");
-    }
-
-    @DisplayName("insert 컬럼 목록을 반환한다")
-    @Test
-    void getInsertColumns() {
-        Person person = createPerson();
-        EntityData entityData = EntityData.from(person);
-        ColumnDatas insertColumns = entityData.getInsertColumns();
-
-        List<String> insertColumnNames = insertColumns.getColumnNames();
-
-        assertThat(insertColumnNames).containsExactly("nick_name", "old", "email");
+        assertThat(entityData.getAll()).containsExactlyElementsOf(datas);
     }
 }

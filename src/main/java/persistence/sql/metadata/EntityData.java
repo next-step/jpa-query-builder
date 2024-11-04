@@ -1,33 +1,42 @@
 package persistence.sql.metadata;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class EntityData {
-    private final EntityMetadata entityMetadata;
-    private final ColumnDatas columnDatas;
+    private final List<ColumnData> values;
 
-    private EntityData(EntityMetadata entityMetadata, ColumnDatas columnDatas) {
-        this.entityMetadata = entityMetadata;
-        this.columnDatas = columnDatas;
+    public EntityData(List<ColumnData> values) {
+        this.values = values;
     }
 
-    public static EntityData from(Object entity) {
-        EntityMetadata entityMetadata = EntityMetadata.from(entity.getClass());
-        ColumnDatas columnDatas = entityMetadata.getColumnMetadata().withData(entity);
-        return new EntityData(entityMetadata, columnDatas);
+    public List<String> getColumnNames() {
+        return values.stream()
+                .map(ColumnData::getName)
+                .toList();
     }
 
-    public String getTableName() {
-        return entityMetadata.getTableName();
+    public List<String> getColumnValues() {
+        return values.stream()
+                .map(ColumnData::getValue)
+                .toList();
+    }
+
+    public List<ColumnData> getAll() {
+        return Collections.unmodifiableList(values);
     }
 
     public ColumnData getPrimaryKey() {
-        return columnDatas.getPrimaryKey();
+        return values.stream()
+                .filter(ColumnData::isPrimaryKey)
+                .findFirst()
+                .orElseThrow();
     }
 
-    public ColumnDatas getInsertColumns() {
-        return columnDatas.getInsertColumns();
-    }
-
-    public ColumnDatas getColumns() {
-        return columnDatas;
+    public EntityData getInsertColumns() {
+        return values.stream()
+                .filter(ColumnData::hasNotIdentityStrategy)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), EntityData::new));
     }
 }
