@@ -5,22 +5,22 @@ import persistence.sql.dml.DmlQueryBuilder;
 
 public class EntityManagerImpl<T> implements EntityManager<T> {
 
+    private final DmlQueryBuilder dmlQueryBuilder;
     private final JdbcTemplate jdbcTemplate;
 
     public EntityManagerImpl(JdbcTemplate jdbcTemplate) {
+        this.dmlQueryBuilder = new DmlQueryBuilder();
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public T find(Class<T> clazz, Long id) {
-        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         String query = dmlQueryBuilder.buildSelectByIdQuery(clazz, id);
         return jdbcTemplate.queryForObject(query, new DefaultRowMapper<>(clazz));
     }
 
     @Override
     public T persist(T entity) {
-        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         String query = dmlQueryBuilder.buildInsertQuery(entity);
         jdbcTemplate.execute(query);
         return entity;
@@ -28,14 +28,12 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
 
     @Override
     public void remove(T entity) {
-        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         String query = dmlQueryBuilder.buildDeleteQuery(entity);
         jdbcTemplate.execute(query);
     }
 
     @Override
     public void update(T entity) {
-        DmlQueryBuilder dmlQueryBuilder = new DmlQueryBuilder();
         String query = dmlQueryBuilder.buildUpdateQuery(entity);
         jdbcTemplate.execute(query);
     }
