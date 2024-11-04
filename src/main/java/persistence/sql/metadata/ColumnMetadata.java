@@ -59,10 +59,10 @@ public class ColumnMetadata {
                 .orElseThrow(() -> new IllegalArgumentException("컬럼을 찾을 수 없습니다"));
     }
 
-    public List<ColumnData> withData(Object entity) {
+    public ColumnDatas withData(Object entity) {
         return columns.stream()
                 .map(column -> column.withData(entity))
-                .toList();
+                .collect(Collectors.collectingAndThen(Collectors.toList(), ColumnDatas::new));
     }
 
     public List<String> getColumnNames() {
