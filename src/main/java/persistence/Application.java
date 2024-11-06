@@ -18,6 +18,10 @@ public class Application {
             server.start();
 
             final JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
+            QueryBuilder queryBuilder = new QueryBuilder(Person.class, new H2SqlTypeMapper());
+            jdbcTemplate.execute(queryBuilder.create());
+            logger.debug(jdbcTemplate.execute("SELECT * FROM users"));
+            jdbcTemplate.execute(queryBuilder.drop());
 
             DmlQueryBuilder queryBuilder = new DmlQueryBuilder(Person.class, jdbcTemplate);
 
@@ -36,3 +40,5 @@ public class Application {
         }
     }
 }
+
+//CREATE TABLE Person (id BIGINT PRIMARY KEY AUTO_INCREMENT, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL);
