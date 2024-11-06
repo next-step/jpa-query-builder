@@ -9,8 +9,10 @@ import persistence.sql.dml.Person;
 import persistence.sql.dml.DmlQueryBuilder;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class QueryBuilderTest {
 
@@ -27,10 +29,20 @@ public class QueryBuilderTest {
     @Test
     @DisplayName("findAll 테스트")
     void findAll() {
+        //given
         jdbcTemplate.execute("CREATE TABLE USERS (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(255), old INTEGER, email VARCHAR(255) NOT NULL)");
-        queryBuilder.run(jdbcTemplate);
-        jdbcTemplate.execute("SELECT * FROM USERS");
-        assertThat(queryBuilder.findAll(jdbcTemplate)).isEqualTo("");
+        jdbcTemplate.execute("INSERT INTO USERS (nick_name, old, email) VALUES ('jskim', 33, 'qazwsx3745@naver.com')");
+        jdbcTemplate.execute("INSERT INTO USERS (nick_name, old, email) VALUES ('ian', 30, 'abc@naver.com')");
+
+        //when
+        List<Person> persons = queryBuilder.findAll(jdbcTemplate);
+
+        //then
+        assertAll(
+                () -> assertThat(persons.get(0).getName()).isEqualTo("jskim"),
+                () -> assertThat(persons.get(0).getAge()).isEqualTo("20"),
+                () -> assertThat(persons.get(1).getName()).isEqualTo("aaa")
+        );
     }
 
 
